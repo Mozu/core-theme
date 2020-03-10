@@ -6,8 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
-using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.Core;
 using Mozu.Core.Api.Serialization;
@@ -15,7 +15,6 @@ using Mozu.Core.Extensions;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -39,6 +38,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
+using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -86,9 +86,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <returns>Returns information about a single product given its product code including its ... to be continued.</returns>
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [HttpHead]
-        [HttpGet]
-        public async Task<ActionResult> ProductDetail(string productCode, string vpc = null)
+        [System.Web.Http.HttpHead]
+        [System.Web.Http.HttpGet]
+        public async Task<IActionResult> ProductDetail(string productCode, string vpc = null)
         {
             var productResponse = await _productClient.GetProduct(productCode, vpc, 
                 "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
@@ -98,21 +98,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (productResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     // show detailed error message if previewing from Admin
-                    if (this.SbApiContext.DataViewMode == DataViewModeType.Pending)
-                    {
-                        if (productResponse.HasException)
-                        {
-                            var ex = productResponse.ReadException();
-                            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found.", ex);
-                        }
-                    }
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found");
+                    if (this.SbApiContext.DataViewMode != DataViewModeType.Pending)
+                        return NotFound("Product not found");
+                    if (!productResponse.HasException) return NotFound("Product not found");
+                    var ex = productResponse.ReadException();
+                    return NotFound(ex);
                 }
             }
 
             var prod = await productResponse.ReadAsAsync();
-
-
 
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
@@ -124,9 +118,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return redirect;
             }
 
-            if (Request.Method == HttpMethod.Head)
+            if (Request.Method == HttpMethod.Head.Method)
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return Ok();
             }
 
             PageContext.PageType = "product";
@@ -163,10 +157,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             SetCatalogContext(product);
             var dynamicProd = JObject.FromObject(product, ProductSerializer).ToObject<ExpandoObject>(ProductSerializer);
             var result = View(template, dynamicProd);
-            return Request.CreateResponse(HttpStatusCode.OK, result);
+            return Ok(result);
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public async Task<UX.Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         {
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
@@ -229,10 +223,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Store()
+        [System.Web.Http.HttpGet]
+        public async Task<IActionResult> Store()
         {
-            var catList =  _categoryTreeProvider.GetAllCategories();
+            var catList = _categoryTreeProvider.GetAllCategories();
             var cat = new Category
             {
                 Content = new CategoryContent { Name = "Store" }
@@ -240,7 +234,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "category";
             PageContext.CategoryId = -1;
             cat.ChildrenCategories = catList.AllCategories.Where(x => x.ParentCategory == null).ToList();
-            return View("Category", cat);
+            return await Task.Run(() => View("Category", cat));
         }
 
 
@@ -271,35 +265,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
       
         async Task<Category> AddCrawlerLinks(Category category)
         {
+            //var catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
 
-            var catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
-
-
-            
-
-           
-
-            var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
+            //var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
 
             var urlBase = (_customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true)) ?? category.Url;
 
             PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
 
-
             var pageLimit = DeepPagingLimitingRequestHandler.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
-            var defaultPageSize = this.PageContext.Search.PageSize  ??  SiteContext.ThemeSettings.GetInt("defaultPageSize") ?? 15;
-            var currentIdx = this.PageContext.Search.StartIndex.GetValueOrDefault(0);
+            var defaultPageSize = PageContext.Search.PageSize  ??  SiteContext.ThemeSettings.GetInt("defaultPageSize") ?? 15;
+            var currentIdx = PageContext.Search.StartIndex.GetValueOrDefault(0);
 
-
-
-            if ( this.PageContext.Search.StartIndex.GetValueOrDefault(0) > 0)
+            if (PageContext.Search.StartIndex.GetValueOrDefault(0) > 0)
             {
                 var previousIdx = Math.Max(0, currentIdx - defaultPageSize);
-                this.PageContext.CrawlerInfo.PreviousUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = previousIdx });
+                PageContext.CrawlerInfo.PreviousUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = previousIdx });
             }
             var key = "categoryproductcount-" + category.Id;
             var totCount = _storeFrontCache.Get<int?>(key);
-            if ( !totCount .HasValue)
+            if (!totCount.HasValue)
             {
                 try
                 {
@@ -318,12 +303,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                    
             }
 
-            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0)  && currentIdx / defaultPageSize < pageLimit )
-            {
-                var nextIndx = currentIdx + defaultPageSize;
-                this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
-            }
+            if (currentIdx + defaultPageSize >= totCount.GetValueOrDefault(0) ||
+                currentIdx / defaultPageSize >= pageLimit) return category;
 
+            var nextIndx = currentIdx + defaultPageSize;
+            PageContext.CrawlerInfo.NextUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
 
             return category;
 
@@ -332,16 +316,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [HttpHead]
-        [HttpGet]
-        public async Task<ActionResult> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
+        [System.Web.Http.HttpHead]
+        [System.Web.Http.HttpGet]
+        public async Task<IActionResult> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
         {
 
             var catTree = ( _categoryTreeProvider.GetAllCategories());
             var cat = catTree.FindById(categoryId) ?? catTree.FindByCode(categoryCode);
             if (cat == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
+                return NotFound("category not found");
             }
 
             if (!string.IsNullOrEmpty(variationId))
@@ -354,9 +338,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return redirect;
             }
-            if ( Request.Method == HttpMethod.Head)
+            if (Request.Method == HttpMethod.Head.Method)
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return Ok();
             }
 
             PageContext.PageType = "category";
@@ -401,11 +385,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 await AddCrawlerLinks(cat).ConfigureAwait(false);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, result);
+            return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> CategoryFeed(int? categoryId = null)
+        [System.Web.Http.HttpGet]
+        public async Task<IActionResult> CategoryFeed(int? categoryId = null)
         {
             var itemsPerPage = 10;
             var startIdx = 0;
@@ -416,7 +400,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cat = catList.FirstOrDefault(x => x.CategoryId == categoryId.GetValueOrDefault(-1));
             if (cat == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
+                return NotFound("category not found");
             }
 
             var feedUrl = new Uri(PageContext.Url);
@@ -458,7 +442,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var res = new RssActionResult { Feed = feed };
-            return Request.CreateResponse(HttpStatusCode.OK, res);
+            return Ok(res);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Order summary, a.k.a. "Print Order".
         /// </summary>
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
+        public async Task<IActionResult> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("order-details"));
             if (template == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order details template for the current Theme.");
+                return NotFound("Could not find order details template for the current Theme.");
 
             return await RenderWithContext(template, order);
         }
@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
         {
-            if (weight == null || !weight.Value.HasValue) return null;
+            if (weight?.Value == null) return null;
             return new Measurement { Unit = weight.Unit, Value = decimal.Round(weight.Value.Value * quantity, 1) };
         }
 
@@ -187,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Packing Slip.
         /// </summary>
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        public async Task<IActionResult> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
             var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
+                return NotFound("Could not find packing slip template for the current Theme.");
 
             var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
@@ -212,11 +212,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Preview(string templateid)
+        public async Task<IActionResult> Preview(string templateid)
         {
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(templateid));
             if (template == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order template " + templateid);
+                return NotFound("could not find order template " + templateid);
 
             if (templateid == "order-details")
             {
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Takes a template, smooshes it with any page settings stored in CMS
         /// and returns the renderable result.
         /// </summary>
-        private Task<ActionResult> RenderWithContext(PageTypeDefinition template, object model)
+        private Task<IActionResult> RenderWithContext(PageTypeDefinition template, object model)
         {
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -256,14 +256,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
             return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
                 ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
-                return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
+                return Ok(View(template.Template, model));
             });
         }
 
         private HttpResponseException TokenExpiredException()
         {
-            var resp = new ActionResult(HttpStatusCode.NotFound);
-            resp.Content = new StringContent("Aw, poop! Your access to this page has expired. Please re-request this resource from admin.");
+            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+            {
+                Content = new StringContent(
+                    "Aw, poop! Your access to this page has expired. Please re-request this resource from admin.")
+            };
             return new HttpResponseException(resp);
         }
 
@@ -289,7 +292,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // ensure things are on the up and up
             var isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
-            if (!isAuthorized) throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource."));
+            if (!isAuthorized) throw new HttpResponseException(HttpStatusCode.Forbidden);
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
 

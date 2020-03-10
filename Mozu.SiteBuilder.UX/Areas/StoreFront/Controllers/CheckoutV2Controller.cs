@@ -16,7 +16,6 @@ using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -29,6 +28,7 @@ using Mozu.Core.Actions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.ProductRuntime.Contracts.Clients;
 
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [System.Web.Http.HttpPost]
-        public async Task<ActionResult> Index(string id = null, HttpRequestMessage requestMessage = null)
+        public async Task<IActionResult> Index(string id = null, HttpRequestMessage requestMessage = null)
         {
             if (id == null)
             {
@@ -121,9 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 UpdateCartWithExceptionMessage(id, e);
                 redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/cart/");
             }
-            var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
-            req.Headers.Location = redirectUrl;
-            return req;
+            return new RedirectResult(redirectUrl.ToString());
         }
 
         /// <summary>
@@ -165,9 +163,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
-        public async Task<ActionResult> Index(string checkoutId)
+        public async Task<IActionResult> Index(string checkoutId)
         {
-            var pc = this.PageContext;
+            var pc = PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
@@ -178,7 +176,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             pc.PageType = "checkoutv2";
 
-            if (string.IsNullOrWhiteSpace(checkoutId)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+            if (string.IsNullOrWhiteSpace(checkoutId)) return new RedirectResult(SiteContext.SiteSubdirectory + "/cart");
             Checkout model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
@@ -202,8 +200,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             catch
             {
             }
-            if (model == null) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            if (model.SubmittedDate.HasValue) return Redirect(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + model.Id + "/confirmation");
+            if (model == null) return new RedirectResult(this.SiteContext.SiteSubdirectory + "/cart");
+            if (model.SubmittedDate.HasValue) return new RedirectResult(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
             var priceListChanged = await HasPriceListChanged(model.PriceListCode).ConfigureAwait(false);
@@ -220,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
                     // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
                     // Dump them back to the cart to fix the problem. The error message should show on the cart page.
-                    return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+                    return new RedirectResult(this.SiteContext.SiteSubdirectory + "/cart");
                 }
                 else
                 {
@@ -243,26 +241,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var addedPrimaryShippingContactToOrderJustNow = false;
 
             // dynamic dOrder = jOrder;
-            this.PageContext.BillingCountries = billTask.Result;
-            this.PageContext.ShippingCountries = shipTask.Result;
+            PageContext.BillingCountries = billTask.Result;
+            PageContext.ShippingCountries = shipTask.Result;
 
-            this.PageContext.BillingStates = billStateTask.Result;
-            this.PageContext.ShippingStates = shipStateTask.Result;
-            this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
-            this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
+            PageContext.BillingStates = billStateTask.Result;
+            PageContext.ShippingStates = shipStateTask.Result;
+            PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+            PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
 
-            this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
+            PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
 
-            if (!this.PageContext.User.IsAnonymous)
+            if (!PageContext.User.IsAnonymous)
             {
                 if (!model.CustomerAccountId.HasValue)
                     model = (await _checkoutWebApiClient.UpdateCheckout(model.Id, model)).ReadAsSync();
 
-                account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
-                cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
-                accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
+                account = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId)).ReadAsSync();
+                cards = (await _customerAccountWebApiClient.GetAccountCards(PageContext.User.AccountId)).ReadAsSync();
+                accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(PageContext.User.AccountId)).ReadAsSync();
                 credits = (await _creditWebApiClient.GetCredits(0, 25, null, string.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
-                CustomerContact defaultShippingContact = null;
+                CustomerContact defaultShippingContact;
 
 
                 //TO-DO : Do we have the idea of primary shipping contact in Checkout?
@@ -286,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 //var itemsByDestination = model.Items.GroupBy(item => item.DestinationId);
 
-                Func<bool> ExpressCheckoutNeed = () =>
+                bool ExpressCheckoutNeed()
                 {
                     //if(itemsByDestination.FirstOrDefault(item => item.Key == null) != null)
                     //{
@@ -300,30 +298,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     //    return true;
                     //}
                     //return false;
-                    if(model.Destinations.Count() > 0)
-                    {
-                        return false;
-                    }
-                    return true;
-                };
+                    return !model.Destinations.Any();
+                }
 
                 if (defaultShippingContact != null && ExpressCheckoutNeed())
                 {
 
                     var primaryDestination = model.Destinations.Find(destination =>
-                    destination.DestinationContact.Address.Address1 == defaultShippingContact.Address.Address1 &&
-                    destination.DestinationContact.Address.Address2 == defaultShippingContact.Address.Address2 &&
-                    destination.DestinationContact.Address.StateOrProvince == defaultShippingContact.Address.StateOrProvince &&
-                    destination.DestinationContact.Address.CityOrTown == defaultShippingContact.Address.CityOrTown &&
-                    destination.DestinationContact.Address.PostalOrZipCode == defaultShippingContact.Address.PostalOrZipCode);
-
-                    if (primaryDestination == null)
-                    {
-                        primaryDestination = (await _checkoutWebApiClient.AddDestination(model.Id, new Destination
-                        {
-                            DestinationContact = defaultShippingContact
-                        })).ReadAsSync();
-                    }
+                                                 destination.DestinationContact.Address.Address1 == defaultShippingContact.Address.Address1 &&
+                                                 destination.DestinationContact.Address.Address2 == defaultShippingContact.Address.Address2 &&
+                                                 destination.DestinationContact.Address.StateOrProvince == defaultShippingContact.Address.StateOrProvince &&
+                                                 destination.DestinationContact.Address.CityOrTown == defaultShippingContact.Address.CityOrTown &&
+                                                 destination.DestinationContact.Address.PostalOrZipCode == defaultShippingContact.Address.PostalOrZipCode) ??
+                                             (await _checkoutWebApiClient.AddDestination(model.Id, new Destination
+                                             {
+                                                 DestinationContact = defaultShippingContact
+                                             })).ReadAsSync();
 
                     var itemsFordestination = new List<ItemsForDestination>()
                     {
@@ -344,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             model.IPAddress = PageContext.IpAddress;
 
-            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            //var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();
 
             if (priceListChanged)
@@ -371,16 +361,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && accountPurchaseOrder != null)
                 {
                     var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(accountPurchaseOrder);
-                    var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
+                    //var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
                     // helper object that inherits from contract, filters for specific site, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
-                    var paymentTermList = new List<PurchaseOrderPaymentTerm>();
-                    foreach (var term in customerPurchaseOrder.PaymentTerms)
-                    {
-                        if (term.SiteId == SiteContext.SiteId)
-                        {
-                            paymentTermList.Add(term);
-                        }
-                    }
+                    var paymentTermList = customerPurchaseOrder.PaymentTerms.Where(term => term.SiteId == SiteContext.SiteId).ToList();
                     customerPurchaseOrder.PaymentTerms = paymentTermList;
                     var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
                     accountJson.Add("purchaseOrder", purchaseOrderJObject);
@@ -410,9 +393,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("shippingMethods", asm);
             }
 
-            if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            if (SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
             {
-                this.HttpContext.Response.Headers.Add("X-Frame-Options", "sameorigin");
+                HttpContext.Response.Headers.Add("X-Frame-Options", "sameorigin");
             }
 
             return View("checkoutv2", jOrder);
@@ -421,22 +404,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         async Task<bool> HasPriceListChanged(string priceListCode)
         {
-            if (this.SbApiContext.PriceListCode.EqualsIgnoreCase(priceListCode))
+            if (SbApiContext.PriceListCode.EqualsIgnoreCase(priceListCode))
             {
                 return false;
             }
             //filter out condition when default pricelist is explictly set.
-            if (string.IsNullOrEmpty(this.SbApiContext.PriceListCode) || string.IsNullOrEmpty(priceListCode))
+            if (!string.IsNullOrEmpty(this.SbApiContext.PriceListCode) &&
+                !string.IsNullOrEmpty(priceListCode)) return true;
+
+            var nonEmptyPriceListCode = string.IsNullOrEmpty(SbApiContext.PriceListCode) ? priceListCode : SbApiContext.PriceListCode;
+
+            var defaultPriceListRes = await _priceListRuntimeWebApiClient.Value.CloneWithoutUserClaims().GetDefaultPriceList().ConfigureAwait(false);
+            if (!defaultPriceListRes.HasException)
             {
-                var nonEmptyPriceListCode = string.IsNullOrEmpty(this.SbApiContext.PriceListCode) ? priceListCode : this.SbApiContext.PriceListCode;
-
-                var defaultPriceListRes = await _priceListRuntimeWebApiClient.Value.CloneWithoutUserClaims().GetDefaultPriceList().ConfigureAwait(false);
-                if (!defaultPriceListRes.HasException)
-                {
-                    return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
-                }
-
-
+                return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
             }
             return true;
         }
@@ -449,7 +430,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Confirmation(string checkoutId)
+        public async Task<IActionResult> Confirmation(string checkoutId)
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var checkoutTask = _checkoutWebApiClient.GetCheckout(checkoutId);
@@ -466,7 +447,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            var pc = this.PageContext;
+            var pc = PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
@@ -480,13 +461,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var shopperOrderAttributesTask = GetShopperOrderAttributes();
 
-            this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
+            PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
 
             if (checkout == null)
-                return Redirect(this.SiteContext.SiteSubdirectory + "/");
+                return new RedirectResult(SiteContext.SiteSubdirectory + "/");
 
             // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
-            Mozu.Location.Contracts.LocationCollection locations = null;
+            Location.Contracts.LocationCollection locations = null;
             var pickUpItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP);
             if (pickUpItems.NotIsNullOrEmpty())
             {
@@ -500,7 +481,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (locations != null)
             {
-
                 var jFulfillmentLocations = new JArray();
 
                 locations.Items.ForEach(x => jFulfillmentLocations.Add(new JObject(

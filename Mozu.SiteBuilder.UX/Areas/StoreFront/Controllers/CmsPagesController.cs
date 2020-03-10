@@ -5,7 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Mozu.Content.Contracts;
 using Mozu.Core.Actions;
 using Mozu.Core.Expressions;
@@ -51,17 +53,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpHead]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> ContentIndex(string documentListName, string listView = null)
+        public async Task<IActionResult> ContentIndex(string documentListName, string listView = null)
         {
             var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList,
                 () => new Dictionary<string, object> {{"listName", documentListName}, {"listView", listView}});
 
             if (redirect != null) return redirect;
-            if (Request.Method == HttpMethod.Head) return Request.CreateResponse(HttpStatusCode.OK);
+            if (Request.Method == HttpMethod.Head.Method) return Ok();
 
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x =>
                 x.ListFQN == documentListName &&
                 string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+
             var template = pageType != null ? pageType.Template : "document-list";
 
             PageContext.CmsContext = new CmsPageContext
@@ -97,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             await Task.WhenAll(ContextInitializationTasks);
             var view = View(template, new {listFQN = documentListName});
-            return Request.CreateResponse(HttpStatusCode.OK, view);
+            return Ok(view);
         }
 
         [System.Web.Http.HttpHead]
@@ -106,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
         //    ActionExtensionExecutionTypes.AfterController)]
-        public async Task<ActionResult> Page(string documentListName, string documentName, string variationId = "")
+        public async Task<IActionResult> Page(string documentListName, string documentName, string variationId = "")
         {
             PageContext.CmsContext = new CmsPageContext
             {
@@ -126,14 +129,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             await Task.WhenAll(ContextInitializationTasks);
 
             if (PageContext.CmsContext.Page.Document == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+                return NotFound("page not found");
 
             var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage,
                 () => ToRouteDictionary(PageContext.CmsContext.Page.Document));
             
             if (redirect != null) return redirect;
             
-            if (Request.Method == HttpMethod.Head) return Request.CreateResponse(HttpStatusCode.OK);
+            if (Request.Method == HttpMethod.Head.Method) return Ok();
             
             var vm = PageContext.CmsContext.Page.Document;
         
@@ -149,9 +152,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!PageContext.IsEditMode)
             {
                 if (PageContext.CmsContext.Page.Document.Get("hidden", false))
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, " not found");
+                    return NotFound(" not found");
                 if (PageContext.CmsContext.Page.Document.TryGet("redirect_url", out string redir) &&
-                    !string.IsNullOrEmpty(redir)) return Request.CreateResponse(HttpStatusCode.OK, Redirect(redir));
+                    !string.IsNullOrEmpty(redir)) return new RedirectResult(redir);
             }
 
             PageTypeDefinition pageDefinition = null;
@@ -178,24 +181,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var template = pageDefinition != null ? pageDefinition.Template : "blank-page";
 
-            
-            
-
-
             if (PageContext.CmsContext.Template == null || PageContext.CmsContext.Template.Path != template)
                 PageContext.CmsContext.Template = new DocumentRequest
                 {
                     Path = template
                 };
-            if (((Request.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage))
+            if (((Request.HttpContext.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage))
                 .GetValueOrDefault(false))
-                PageContext.CrawlerInfo.CanonicalUrl = Request.RequestUri.AbsolutePath;
+                PageContext.CrawlerInfo.CanonicalUrl = new Uri(Request.GetDisplayUrl()).AbsolutePath;
             else
                 PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.Value.MakeUrl(UrlHelper.UrlType.Document,
                     PageContext.CmsContext.Page.Document, null);
             
             var result = View(template, vm);
-            return Request.CreateResponse(HttpStatusCode.OK, result);
+            return Ok(result);
         }
 
         private static IDictionary<string, object> ToRouteDictionary(Document doc)

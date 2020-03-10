@@ -26,6 +26,7 @@ using System.Web.Http.Filters;
 using System.Linq.Expressions;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.Core.Exceptions;
@@ -188,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (!string.IsNullOrEmpty(returnUrl)) return new Uri(returnUrl, UriKind.Relative);
 
-            returnUrl = Request.Headers.Referrer?.ToString();
+            returnUrl = Request.GetTypedHeaders().Referer?.ToString();
             return string.IsNullOrEmpty(returnUrl) ? new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative) : new Uri(returnUrl, UriKind.Absolute);
 
         }
@@ -634,9 +635,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return new OkResult();
         }
 
-        private ActionResult GenerateInvalidChallengeResponse()
+        private IActionResult GenerateInvalidChallengeResponse()
         {
-            return Request.CreateResponse(HttpStatusCode.BadRequest, new
+            return BadRequest(new
             {
                 Message = "anonAuthError"
             });
@@ -646,7 +647,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
         {
-            if (Request.Method.Method == "OPTIONS")
+            if (Request.Method.ToUpper() == "OPTIONS")
                 return new OkResult();
 
             var res = await DoResetPassword(info);

@@ -1,7 +1,6 @@
 ﻿using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -13,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.OAF;
 using System;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -27,10 +27,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            
-
             PageContext.CmsContext = new CmsPageContext()
             {
                 Initialized = false,
@@ -42,16 +40,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             PageContext.PageType = string.IsNullOrEmpty(PageContext.PageType) ? "web_page" : PageContext.PageType;
 
-            return this.View("home");
-
-
+            return View("home");
         }
         
       
         [System.Web.Http.HttpGet]
-        public new ActionResult NotFound()
+        public new IActionResult NotFound()
         {
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
+            return NotFound("Page not found.");
             //PageContext.CmsContext = new CmsPageContext()
             //{
             //    Initialized = false,
@@ -67,32 +63,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //return this.View("404");
         }
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> SeoProcessor(string url = null)
+        public async Task<IActionResult> SeoProcessor(string url = null)
         {
-            return this.Request.CreateResponse();
+            return Ok();
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> GoogleSiteVerification(string hash)
+        public async Task<IActionResult> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
             var resp = await webToolsRepository.GetWebMasterToolsFile($"google{hash}.html");
-            if (resp.ResponseMessage.IsSuccessStatusCode)
-            {
-                var stream = await resp.ResponseMessage.Content.ReadAsStreamAsync();
-                return this.Request.CreateResponse(HttpStatusCode.OK, File(stream, "text/html"));
-            }
-
-            return this.NotFound();
+            if (!resp.ResponseMessage.IsSuccessStatusCode) return NotFound();
+            var stream = await resp.ResponseMessage.Content.ReadAsStreamAsync();
+            return File(stream, "text/html");
 
         }
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> RobotsTxt()
+        public async Task<IActionResult> RobotsTxt()
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
             var content = await webToolsRepository.GetRobotsContent();
 
-            return Content(content, "text/plain");
+            return Ok(content);
         }
     }
 }

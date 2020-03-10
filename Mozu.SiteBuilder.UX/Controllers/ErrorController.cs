@@ -14,11 +14,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
     {
         public object  NotFound()
         {
-            var sc = this.SiteContext;
-            return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
-
-            
-
+            return new NotFoundResult();
         }
 
     }

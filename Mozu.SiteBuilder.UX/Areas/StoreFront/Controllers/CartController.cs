@@ -17,7 +17,6 @@ using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
@@ -32,6 +31,7 @@ using Mozu.SiteBuilder.Mvc.OAF;
 using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.SEO;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
             if (redirect != null) return redirect;
@@ -96,10 +96,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "cart";
 
             var viewResult = await RenderCartViewWithMessage(null);
-            return Request.CreateResponse(HttpStatusCode.OK, viewResult);
+            return Ok(viewResult);
         }
 
-        private async Task<ActionResult> RenderCartViewWithMessage(Exception error)
+        private async Task<IActionResult> RenderCartViewWithMessage(Exception error)
         {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
@@ -120,18 +120,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (cart.CartMessages != null)
             {
-                Func<string, int> rank = messageType =>
+                static int Rank(string messageType)
                 {
-                    switch (messageType)
+                    return messageType switch
                     {
-                        case "newPriceList": return 2;
-                        case "exclusivePriceList": return 1;
-                        default: return 0;
-                    }
-                };
+                        "newPriceList" => 2,
+                        "exclusivePriceList" => 1,
+                        _ => 0
+                    };
+                }
 
                 var messages = cart.CartMessages.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
-                messages.Sort((a, b) => rank(b.MessageType).CompareTo(rank(a.MessageType))); // Sort descending
+                messages.Sort((a, b) => Rank(b.MessageType).CompareTo(Rank(a.MessageType))); // Sort descending
                 foreach (var cartMessage in messages)
                 {
                     messagesArray.Add(new
@@ -148,13 +148,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jCart.Add("messages", messagesArray);
             }
 
-            if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
-            {
-                this.HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-                this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
-                this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
-            }
-
+            if (!SiteContext.CheckoutSettings.VisaCheckout.IsEnabled) return View("cart", jCart);
+            HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+            PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
 
             return View("cart", jCart);
         }
@@ -184,12 +181,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
         [System.Web.Http.HttpPost]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Checkout(CheckoutModel model)
+        public async Task<IActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
             Exception error = null;
-            CommerceRuntime.Contracts.Orders.Order order = null;
-            CommerceRuntime.Contracts.Checkouts.Checkout checkout = null;
+            Order order = null;
+            Checkout checkout = null;
             if (model == null || string.IsNullOrEmpty(model.Id))
             {
                 cart = (await _cartClient.GetOrCreateCart()).ReadAsSync();
@@ -222,41 +219,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         checkout = (await checkoutWebApiClient.CreateCheckoutFromCart(model.Id)).ReadAsSync();
                     }
-                    return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id).ToString());
+                    return new RedirectResult(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id).ToString());
+                }
+
+                // add visit id to UserClaims bag for this call.
+                var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext =>
+                {
+                    apiContext.UserClaims = apiContext.UserClaims.Copy();
+                    apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
+                });
+
+                if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
+                {
+                    order = (await orderWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
+                                                            new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id }
+                                                            )).ReadAsSync();
                 }
                 else
                 {
-
-                    // add visit id to UserClaims bag for this call.
-                    var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext =>
-                    {
-                        apiContext.UserClaims = apiContext.UserClaims.Copy();
-                        apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
-                    });
-
-                    if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
-                    {
-                        order = (await orderWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
-                                                                new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id }
-                                                                )).ReadAsSync();
-                    }
-                    else
-                    {
-                        order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
-                    }
-                    return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
+                    order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
                 }
+                return new RedirectResult(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
             }
             catch (Exception e)
             {
                 error = e;
             }
-            // lame, can't await a task in an exception handler so have to do this here
-            if (error != null)
+
+            switch (error)
             {
-                var apiException = error as ApiWebClientException;
-                if (apiException != null && apiException.ErrorCode.Equals(ErrorCodes.VALIDATION_CONFLICT))
-                {
+                case ApiWebClientException apiException when apiException.ErrorCode.Equals(ErrorCodes.VALIDATION_CONFLICT):
                     // If order failed validation, show the message to say what happened and refresh the cart to try to fix the problem.
                     // Price change - item repriced
                     // Product/variant no longer active - item dropped
@@ -265,7 +257,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                     try
                     {
-                        cart = cart ?? (await _cartClient.GetOrCreateCart()).ReadAsSync();
+                        cart ??= (await _cartClient.GetOrCreateCart()).ReadAsSync();
                         var updatedCart = (await _cartClient.UpdateCart(cart)).ReadAsSync();
                         var cartHasItems = updatedCart.Items != null && updatedCart.Items.Any();
 
@@ -273,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         var message = error.Message.StartsWith(prefix) ? error.Message.Substring(prefix.Length) : error.Message;
                         if (cartHasItems)
                         {
-                            message = message + " Please review your cart and proceed to checkout.";
+                            message += " Please review your cart and proceed to checkout.";
                         }
                         error = new Exception(message, error);
                     }
@@ -281,22 +273,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         // ignored
                     }
-                }
-                return await RenderCartViewWithMessage(error);
+
+                    break;
             }
 
-            return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
+            return await RenderCartViewWithMessage(error);
+
         }
 
         private Uri CreateRedirectUrl(string path)
         {
-            Uri redirectUrl = null;
+            Uri redirectUrl;
             if (_settings.CoreSettings.IsSSLValidationEnabled && this.PageContext.HandledByProxy && !this.PageContext.IsSecure)
             {
-                var uriBuilder = new UriBuilder(PageContext.Url);
-                uriBuilder.Scheme = "https";
-                uriBuilder.Port = 443;
-                uriBuilder.Path = path;
+                var uriBuilder = new UriBuilder(PageContext.Url) {Scheme = "https", Port = 443, Path = path};
                 redirectUrl = uriBuilder.Uri;
             }
             else

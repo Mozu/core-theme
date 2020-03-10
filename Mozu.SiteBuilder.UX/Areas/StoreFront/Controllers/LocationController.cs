@@ -1,17 +1,17 @@
 ﻿using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.OAF;
 using System.Threading;
 using Mozu.Location.Contracts.Clients;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Api.Session;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -31,19 +31,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Locations/
 
-        [HttpGet]
-        public ActionResult Index()
+        [System.Web.Http.HttpGet]
+        public IActionResult Index()
         {
             return View("location");
         }
 
-        [HttpGet]
-        public ActionResult ProductGet(string productCode)
+        [System.Web.Http.HttpGet]
+        public IActionResult ProductGet(string productCode)
         {
             return View("product-location");
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public async Task<Mozu.Location.Contracts.Location> Set(string code)
         {
             Mozu.Location.Contracts.Location location = null;
@@ -54,16 +54,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             await _session.SetValueAsync(Mozu.Core.Constants.Session.PURCHASE_LOCATION_KEY, location?.Code);
 
             return location;
-
         }
 
-        [HttpPost]
-        public ActionResult Product()
+        [System.Web.Http.HttpPost]
+        public IActionResult Product()
         {
-            var form = this.Request.Content.ReadAsFormDataAsync().Result;
+            var form = Request.Form;
             var prod = JObject.Parse(form["item"]);
             return View("product-location", prod);
         }
-
     }
 }

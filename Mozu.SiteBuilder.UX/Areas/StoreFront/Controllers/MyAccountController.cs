@@ -76,22 +76,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             //var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
             // If there isn't an active user or account id for the user, then we are going to redirect to the user/login page.
-            if (this.PageContext.User == null || this.PageContext.User.AccountId == null)
+            if (PageContext.User?.AccountId == null)
             {
-                var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-                redir.Headers.Location = new Uri(this.SiteContext.SiteSubdirectory+ "/user/login", UriKind.Relative);
-                return redir;
+                var uri = new Uri(SiteContext.SiteSubdirectory+ "/user/login", UriKind.Relative);
+                return new RedirectResult(uri.ToString());
             }
 
-            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId, null, this.PageContext.User.UserId)).ReadAsSync();
+            var account = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId, null, PageContext.User.UserId)).ReadAsSync();
 
             if (account == null)
             {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+                return NotFound();
             }
 
             var pageType = "my_account";
@@ -136,15 +135,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
 
-            this.PageContext.ShippingCountries = shipTask.Result;
-            this.PageContext.BillingCountries  = billTask.Result;
+            PageContext.ShippingCountries = shipTask.Result;
+            PageContext.BillingCountries  = billTask.Result;
 
-            this.PageContext.BillingStates = billStateTask.Result;
-            this.PageContext.ShippingStates = shipStateTask.Result;
+            PageContext.BillingStates = billStateTask.Result;
+            PageContext.ShippingStates = shipStateTask.Result;
 
-            this.PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
+            PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
 
-            this.PageContext.StorefrontOrderAttributes = GetShopperOrderAttributes().Result;
+            PageContext.StorefrontOrderAttributes = GetShopperOrderAttributes().Result;
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
@@ -180,16 +179,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && purchaseOrderAccount != null)
             {
                 var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(purchaseOrderAccount);
-                var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
+                //var paymentTermOptions = this.SiteContext.CheckoutSettings.PurchaseOrder.PaymentTerms;
                 // helper object that inherits from contract, filters for specific site, then create new payment array and apply it to accountPurchaseOrder before doing .toJObject()
-                var paymentTermList = new List<PurchaseOrderPaymentTerm>();
-                foreach (var term in customerPurchaseOrder.PaymentTerms)
-                {
-                    if (term.SiteId == SiteContext.SiteId)
-                    {
-                        paymentTermList.Add(term);
-                    }
-                }
+                var paymentTermList = customerPurchaseOrder.PaymentTerms.Where(term => term.SiteId == SiteContext.SiteId).ToList();
                 customerPurchaseOrder.PaymentTerms = paymentTermList;
                 var purchaseOrderJObject = customerPurchaseOrder.ToJObject();
 
@@ -202,13 +194,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jAccount.Add("totalCreditAmount", credits.Items.Select(c => c.CurrentBalance).Aggregate((x, y) => x + y));
             }
 
-            if (wishlist != null) {
-                var wishlistObj = wishlist.ToJObject();
-                wishlistObj.Add("hasItems", wishlist.Items.Count() > 0);
-                jAccount.Add("wishlist", wishlistObj);
-            }
+            if (wishlist == null) return Ok(View(pagePath, jAccount));
 
-            return this.Request.CreateResponse(HttpStatusCode.OK,  View(pagePath, jAccount));
+            var wishlistObj = wishlist.ToJObject();
+            wishlistObj.Add("hasItems", wishlist.Items.Any());
+            jAccount.Add("wishlist", wishlistObj);
+
+            return Ok(View(pagePath, jAccount));
         }
 
         //private string BuildOpenOrdersFilter(int accountId)

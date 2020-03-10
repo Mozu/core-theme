@@ -18,6 +18,7 @@ using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Users;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;

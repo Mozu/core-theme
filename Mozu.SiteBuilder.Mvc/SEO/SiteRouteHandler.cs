@@ -16,6 +16,9 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -183,19 +186,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return new Tuple<HttpRouteCollection, List<CustomRoute>>(routeCollection, routes);
         }
 
-        public HttpResponseMessage RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
+        public IActionResult RedirectWithContext(HttpRequest request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
             if (_siteBuilderApiContext.Value.IsEditMode || _siteBuilderApiContext.Value.IsAdminMode)
             {
                 return null;
             }
             object tmp;
-            if (request.Properties.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out tmp) && tmp is bool && ((bool)tmp))
+            if (request.HttpContext.Items.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out tmp) && tmp is bool && ((bool)tmp))
             {
                 return null;
             }
 
-            var currentRouteData  = request.GetRouteData();
+            var currentRouteData  = request.HttpContext.GetRouteData();
             var routeCollection =  GetRouteCollection();
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
@@ -209,9 +212,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .ChainSet("httproute", true);
 
             var newReq = new HttpRequestMessage();
-            foreach ( var rp in _requestMessage.Properties)
+            foreach ( var (key, value) in _requestMessage.Properties)
             {
-                newReq.Properties[rp.Key]= rp.Value;
+                newReq.Properties[key]= value;
             }
 
             
@@ -238,9 +241,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                             return null;
                         }
 
-                        var preStrippedRequest = request.Properties.ContainsKey(SeoDelegatingHandler.MzPreCleanedUri) ?
-                        (Uri)request.Properties[SeoDelegatingHandler.MzPreCleanedUri] :
-                        request.RequestUri;
+                        var preStrippedRequest = request.HttpContext.Items.ContainsKey(SeoDelegatingHandler.MzPreCleanedUri) ?
+                        (Uri)request.HttpContext.Items[SeoDelegatingHandler.MzPreCleanedUri] :
+                        new Uri(request.GetDisplayUrl());
 
                         uri = new Uri(uri.GetLeftPart(UriPartial.Path) + preStrippedRequest.Query);
                         var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
@@ -249,12 +252,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         return redirect;
                     }
 
-                    IEnumerable<string> values;
-                    if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
-                    {
-                        uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                        request.Resolve<HttpContext>().Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
-                    }
+                    if (!request.Headers.TryGetValue(Constants.HEADER_ALTERNATIVE_VIEW, out var values) ||
+                        values.All(string.IsNullOrWhiteSpace)) return null;
+                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.QueryString);
+                    request.HttpContext.Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     return null;
                 }
                 //if current route didnt match??? load bearing code do not remove
@@ -266,10 +267,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
         }
 
-        private static bool IsValidForExistingContext(HttpRequestMessage currentRequest, Uri candidateUri, HttpRouteCollection siteCollection, HttpRouteCollection defaultCollection)
+        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, HttpRouteCollection siteCollection, HttpRouteCollection defaultCollection)
         {
-            var testHttmMessage = new HttpRequestMessage(currentRequest.Method, candidateUri);
-            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] =currentRequest.Properties[HttpPropertyKeys.DependencyScope];
+            var testHttmMessage = new HttpRequest(new HttpMethod(currentRequest.Method), candidateUri);
+            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] = currentRequest.Properties[HttpPropertyKeys.DependencyScope];
             var reverseResolvedRoute = (siteCollection?.GetRouteData(testHttmMessage)?.Route as CustomRoute) ?? (defaultCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute);
             var resolvedRoute = currentRequest.GetRouteData().Route as CustomRoute;
             if (reverseResolvedRoute == null)

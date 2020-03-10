@@ -30,14 +30,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index(string templateId)
+        public async Task<IActionResult> Index(string templateId)
         {
            
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);
             if (pageType == null)
             {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
-                
+                return NotFound("not found");
             }
 
             var view = View(pageType.Template, GetModel(pageType));
@@ -72,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                          };
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, view );
+            return Ok(view);
         }
 
         object GetModel(PageTypeDefinition template)

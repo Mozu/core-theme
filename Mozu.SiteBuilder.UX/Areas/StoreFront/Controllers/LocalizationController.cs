@@ -14,20 +14,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         public LocalizationController(ILocalizationRepository localizationRepository)
         {
-            if(localizationRepository == null)
-            {
-                throw new ArgumentNullException("localizationRepository");
-            }
-
-            _localizationRepository = localizationRepository;
+            _localizationRepository = localizationRepository ?? throw new ArgumentNullException(nameof(localizationRepository));
         }
 
         public JObject Index(string colKey, string key)
         {
             var res = _localizationRepository.Get(colKey, key);
-            var o = new JObject();
-            
-            o.Add("foo", res);
+            var o = new JObject {{"foo", res}};
 
             return o;
         }
@@ -36,34 +29,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var j = new JObject();
 
-            if (!string.IsNullOrEmpty(keys))
+            if (string.IsNullOrEmpty(keys)) return j;
+
+            var arrK = keys.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            var collections = _localizationRepository.GetCollections(arrK);
+
+            if (collections == null || collections.Count <= 0) return j;
+
+            foreach (var key in collections.Keys)
             {
-                var arrK = keys.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                var collections = _localizationRepository.GetCollections(arrK);
+                var c = new JObject();
 
-                if(collections != null && collections.Count > 0)
+                if(collections.TryGetValue(key, out var dic))
                 {
-                    foreach (var key in collections.Keys)
+                    foreach (var k in dic.Keys)
                     {
-                        var c = new JObject();
-
-                        if(collections.TryGetValue(key, out var dic))
-                        {
-                            foreach (var k in dic.Keys)
-                            {
-                                c.Add(k, dic[k]);
-                            }
-                        }
-
-                        j.Add(key, c);
+                        c.Add(k, dic[k]);
                     }
                 }
+
+                j.Add(key, c);
             }
 
             // TODO: STUFF GOES HERE
             return j;
         }
-
-       
     }
 }

@@ -28,7 +28,9 @@ using System.Net.Http.Headers;
 using System.IO;
 using System.Net;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -57,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index(
+        public async Task<IActionResult> Index(
             string query = null, 
             int? categoryId = null, 
             string categoryCode = null , 
@@ -125,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 .ResponseMessage
                 .Content
                 .ReadAsStringAsync();
-                return this.CreateDebugResponse(debugTxt);
+                return CreateDebugResponse(debugTxt);
             }
 
             var searchResponse = (await _searchClient.Search(
@@ -174,60 +176,49 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 },
             };
 
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK, View(searchPageType, pc));
+            return Ok(View(searchPageType, pc));
         }
 
-        ActionResult CreateDebugResponse (string debugTxt)
+        SolrDebugActionResult CreateDebugResponse (string debugTxt)
         {
-            var jsonPfn =Request.GetQueryNameValuePairs().Where(kvp => kvp.Key.Equals("json.wrf", StringComparison.OrdinalIgnoreCase)).Select(kvp=> kvp.Value).FirstOrDefault();
+            var jsonPfn = Request.Query.Where(kvp => kvp.Key.Equals("json.wrf", StringComparison.OrdinalIgnoreCase)).Select(kvp=> kvp.Value).FirstOrDefault();
 
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK, 
-                new SolrDebugResp() {
-                    JsonPFn = jsonPfn,
-                    SolrDebug = debugTxt }, 
-                formatter: SolrDebugMediaTypeFormatter.Default, 
-                mediaType: "text/plain");
+            var resp = new SolrDebugResp()
+            {
+                JsonPFn = jsonPfn,
+                SolrDebug = debugTxt
+            };
+
+            return new SolrDebugActionResult(resp);
         }
-        class SolrDebugResp
+        public class SolrDebugResp
         {
             public string SolrDebug;
             public string JsonPFn;
         }
-        public class SolrDebugMediaTypeFormatter : MediaTypeFormatter
+        public class SolrDebugActionResult : IActionResult
         {
-            public static SolrDebugMediaTypeFormatter Default = new SolrDebugMediaTypeFormatter();
-            public SolrDebugMediaTypeFormatter()
-            { 
-                SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
-           
-            }
-            public override async Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
+            private readonly SolrDebugResp _solrDebugResp;
+
+            public SolrDebugActionResult(SolrDebugResp solrDebugResp)
             {
-                var resp = (SolrDebugResp)value;
-                using (var sw = new StreamWriter(writeStream, Encoding.UTF8, 4096, true))
-                {
-                    if (!string.IsNullOrEmpty(resp.JsonPFn))
-                    {
-                        await sw.WriteAsync($"{resp.JsonPFn}(");
-                    }
-                    await sw.WriteAsync(resp.SolrDebug);
-                    if (!string.IsNullOrEmpty(resp.JsonPFn))
-                    {
-                        await sw.WriteAsync(");");
-                    }
-                }
-                    
-            }
-                      
-          
-            public override bool CanWriteType(Type type)
-            {
-                return true;
+                _solrDebugResp = solrDebugResp;
             }
 
-            public override bool CanReadType(Type type)
+            public async Task ExecuteResultAsync(ActionContext context)
             {
-                return true;
+                var response = context.HttpContext.Response;
+
+                await using var sw = new StreamWriter(response.Body, Encoding.UTF8, 4096, true);
+                if (!string.IsNullOrEmpty(_solrDebugResp.JsonPFn))
+                {
+                    await sw.WriteAsync($"{_solrDebugResp.JsonPFn}(");
+                }
+                await sw.WriteAsync(_solrDebugResp.SolrDebug);
+                if (!string.IsNullOrEmpty(_solrDebugResp.JsonPFn))
+                {
+                    await sw.WriteAsync(");");
+                }
             }
         }
         class AdvancdSearchParamterModelBinder : IModelBinder
@@ -264,14 +255,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     avp.pageSize = pc.Search.PageSize = ((int?)sc.ThemeSettings["defaultPageSize"]) ?? 20;
                 }
 
-
                 if (avp.startIndex == null && pageInt > 0)
                 {
                     avp.startIndex = pc.Search.StartIndex = (pageInt - 1) * avp.pageSize;
                 }
-
-
-
 
                 avp.sortBy = pc.Search.SortBy;
 
@@ -341,7 +328,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.ModelBinding.ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
         public class AdvancedSearchParamaters
         {
-
             public string query { get; set; }
             public string filter { get; set; }
             public string facetTemplate { get; set; }
@@ -377,8 +363,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 {"query", query },
                 {"categoryId", categoryId },
-                { "page", page},
-                { "w", w}
+                {"page", page},
+                {"w", w}
             };
         }
     }

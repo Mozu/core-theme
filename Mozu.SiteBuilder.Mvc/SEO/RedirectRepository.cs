@@ -15,6 +15,8 @@ using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="internalRoute"></param>
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
-        HttpResponseMessage RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
+        IActionResult RedirectWithContext(HttpRequest request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
 
         /// <summary>
         /// Given a particular type of route that we want to canonicalize, we find all routes of that they where canonical is true, 

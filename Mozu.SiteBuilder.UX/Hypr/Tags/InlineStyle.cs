@@ -23,20 +23,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             try
             {
                 var controller = context.Resolve<ResourceController>();
-                controller.RequestContext = context.ViewContext().RequestMessage.GetRequestContext();
-                controller.Request = context.ViewContext().RequestMessage;
+                //controller.RequestContext = context.ViewContext().RequestMessage.GetRequestContext();
+                //controller.Request = context.ViewContext().RequestMessage;
                 var path = (string)arguments[0].Value;
 
-                var result = controller.Stylesheets(path);
-                if (result != HttpStatusCode.OK)
+                if (!(controller.Stylesheets(path) is ResourceController.MozuVirtualFileResult result))
                 {
                     return new[] {WalkResultHelpers.Buffer("error rendering stylesheet " + path)};
                 }
 
-                var oc = result as ResourceController.MozuVirtualFileResult;
-                var fileResult = oc;
                 using var stream = new System.IO.MemoryStream();
-                fileResult.WriteFile(stream);
+                result.WriteFile(stream);
                 stream.Position = 0;
                 using var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
                 return new[] { WalkResultHelpers.Buffer(sr.ReadToEnd()) };

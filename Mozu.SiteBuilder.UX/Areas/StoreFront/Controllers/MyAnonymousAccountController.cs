@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //todo:hyper  remiplement auth att.
         // [SiteBuilderAuthorize()]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var userClaims = _apiContext.UserClaims;
             string orderId = null;
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // If there isn't an orderId, cancel!
             if (string.IsNullOrWhiteSpace(orderId) && string.IsNullOrWhiteSpace(orderId))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
+                return NotFound("Page not found.");
             }
 
             var idFilter = string.Format("id eq {0} or parentCheckoutId eq {0}", orderId);
@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             retObject.Add("returnHistory", returnResult.ToJObject());
 
 
-            return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", retObject));
+            return Ok(View("my-anonymous-account", retObject));
         }
     }
 }

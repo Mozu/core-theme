@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -41,9 +42,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             wpd.Definition = def;
             wpd.IsPreview = true;
-            wpd.Id = wpd.Id ?? Guid.NewGuid().ToString();
-            wpd.Config = wpd.Config ?? def.DefaultConfig;
-            wpd.Source = wpd.Source ?? GetWidgetSource(wpd);
+            wpd.Id ??= Guid.NewGuid().ToString();
+            wpd.Config ??= def.DefaultConfig;
+            wpd.Source ??= GetWidgetSource(wpd);
             wpd.Output = await RenderTemplate(wpd, d=> d.DisplayTemplate);
 
             return wpd;
@@ -60,9 +61,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             wpd.Definition = def;
             wpd.IsPreview = true;
-            wpd.Id = wpd.Id ?? Guid.NewGuid().ToString();
-            wpd.Config = wpd.Config ?? def.DefaultConfig;
-            wpd.Source = wpd.Source ?? GetWidgetSource(wpd);
+            wpd.Id ??= Guid.NewGuid().ToString();
+            wpd.Config ??= def.DefaultConfig;
+            wpd.Source ??= GetWidgetSource(wpd);
             wpd.Output = await RenderTemplate(wpd, d => d.DisplayTemplate);
 
             return wpd;
@@ -83,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView(root + template);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd });
+                var viewContext = new HyprViewContext(TestingController.CreateProxyHttpRequest(Request.HttpContext, new Uri(string.Empty)), new ViewDataDictionary { Model = wpd });
                 await view.AsyncRender(viewContext, tw).ConfigureAwait(false);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }

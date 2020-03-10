@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var cursor = (await _productSearchWebApiClient
                 .CloneWithoutUserClaims()
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 .ConfigureAwait(false))
                 .ReadAsSync();
 
-            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            var resp = Ok();
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
             var nakedDomain = GetNakedSitePrimaryDomain();
             var scheme = PageContext.IsSecure ? "https://" : "http://";
@@ -128,13 +128,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Categories()
+        public async Task<IActionResult> Categories()
         {
             // var primaryNavTask = _gandalf.GetTreeNavigation();
             //var domainTask = GetSitePrimaryDomain();
             var nodes = _gandalf.GetFlatList();
             var domain = GetPrefixedSitePrimaryDomain();
-            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            var resp = Ok();
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
 
             // resp.Content.
@@ -166,11 +166,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> ProductBatch(string page)
+        public async Task<IActionResult> ProductBatch(string page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();
-            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            var resp = Ok();
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
 
             // resp.Content.
@@ -205,11 +205,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Products(int page)
+        public async Task<IActionResult> Products(int page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();
-            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
+            var resp = Ok();
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
 
             // resp.Content.
