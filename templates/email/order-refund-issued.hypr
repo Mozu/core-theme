@@ -1,7 +1,7 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-
+    <div class="mz-productdetails">
 	<dl class="mz-orderheader">
 		<dt>{{ labels.orderNo }}</dt>
 		<dd>{{ model.orderNumber }}</dd>
@@ -21,7 +21,7 @@
 	</p>
 
 	{{ labels.orderRefundBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
-
+	</div>
 	<table class="mz-ordersummary">
         <thead>
             <tr>
