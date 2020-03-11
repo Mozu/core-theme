@@ -80,8 +80,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //}
             
             //set back for post actions
-            this.ActionContext.ActionArguments["query"] = query ?? _.query;
-            this.ActionContext.ActionArguments["categoryId"] = categoryId ?? this.PageContext.Search.CategoryId;
+            //todo:cole revisit for server-side JS
+            //this.ActionContext.ActionArguments["query"] = query ?? _.query;
+            //this.ActionContext.ActionArguments["categoryId"] = categoryId ?? this.PageContext.Search.CategoryId;
             PageContext.PageType = "search";
 
             var parsedFilter = _.filter;

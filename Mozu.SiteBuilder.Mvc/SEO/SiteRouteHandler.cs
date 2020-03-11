@@ -192,8 +192,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 return null;
             }
-            object tmp;
-            if (request.HttpContext.Items.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out tmp) && tmp is bool && ((bool)tmp))
+
+            if (request.HttpContext.Items.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out var tmp) && tmp is bool b && b)
             {
                 return null;
             }
@@ -254,6 +254,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
                     if (!request.Headers.TryGetValue(Constants.HEADER_ALTERNATIVE_VIEW, out var values) ||
                         values.All(string.IsNullOrWhiteSpace)) return null;
+
                     uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.QueryString);
                     request.HttpContext.Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     return null;
@@ -269,10 +270,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, HttpRouteCollection siteCollection, HttpRouteCollection defaultCollection)
         {
-            var testHttmMessage = new HttpRequest(new HttpMethod(currentRequest.Method), candidateUri);
-            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] = currentRequest.Properties[HttpPropertyKeys.DependencyScope];
-            var reverseResolvedRoute = (siteCollection?.GetRouteData(testHttmMessage)?.Route as CustomRoute) ?? (defaultCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute);
-            var resolvedRoute = currentRequest.GetRouteData().Route as CustomRoute;
+            var testHttmMessage = new HttpRequestMessage(new HttpMethod(currentRequest.Method), candidateUri);
+            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] = currentRequest.HttpContext.Items[HttpPropertyKeys.DependencyScope];
+            var reverseResolvedRoute = siteCollection?.GetRouteData(testHttmMessage)?.Route as CustomRoute ?? defaultCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute;
+            var resolvedRoute = currentRequest.HttpContext.GetRouteData().Routers.Last() as CustomRoute;
             if (reverseResolvedRoute == null)
             {
                 return false;

@@ -17,7 +17,6 @@ using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
-
     public class DeepPagingLimitingRequestHandler : DelegatingHandler
     {
         protected override  Task<HttpResponseMessage> SendAsync(

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
+using Microsoft.AspNetCore.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
@@ -11,7 +12,7 @@ using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-    public class CustomRoute : HttpRoute
+    public class CustomRoute : Microsoft.AspNetCore.Routing.Route
     {
         public enum Scheme
         {
@@ -110,23 +111,23 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return values;
         }
 
-        protected override bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
-        {
-            var origional = values;
-            if( PreMappings.Count > 0 )
-            {
-                values= new HttpRouteValueDictionary( values);
-                DoRewriteRouteData(request, values, PreMappings);
-            }
-            var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
-            if (ret && !Equals( origional,values ))
-            {
-                origional.Clear();
-                origional.AddRange(values);
-            }
-            //todo: should pre mappings persist?
-            return ret;
-        }
+        //protected bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
+        //{
+        //    var origional = values;
+        //    if( PreMappings.Count > 0 )
+        //    {
+        //        values= new HttpRouteValueDictionary( values);
+        //        DoRewriteRouteData(request, values, PreMappings);
+        //    }
+        //    var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
+        //    if (ret && !Equals( origional,values ))
+        //    {
+        //        origional.Clear();
+        //        origional.AddRange(values);
+        //    }
+        //    //todo: should pre mappings persist?
+        //    return ret;
+        //}
 
         public bool IsCanonicalFor(FancyRoute route)
         {

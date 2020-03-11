@@ -17,6 +17,7 @@ using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -70,7 +71,7 @@ namespace Mozu.SiteBuilder.UX
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            app.ReigsterMozuMiddleware();
         }
     }
 }

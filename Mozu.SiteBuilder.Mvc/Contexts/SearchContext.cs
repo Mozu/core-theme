@@ -8,6 +8,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
@@ -19,22 +22,22 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class SearchContext : IProductListingState
     {
-        private readonly HttpRequestMessage _request;
-        const string RouteDataKey = "facetValueFilter";
-        const string QueryStringKey = "facetValueFilter";
-        const string RouteDataValueKeySuffix = "-facet";
-        static readonly Regex KvpRegex = new Regex(@"(?<key>[^,\:]+)(\:(?<val>[^,]*))?");
-        IHttpRouteData _initedData;
+        private readonly HttpContext _context;
+        private const string ROUTE_DATA_KEY = "facetValueFilter";
+        private const string QUERY_STRING_KEY = "facetValueFilter";
+        private const string ROUTE_DATA_VALUE_KEY_SUFFIX = "-facet";
+        private static readonly Regex KvpRegex = new Regex(@"(?<key>[^,\:]+)(\:(?<val>[^,]*))?");
+        private RouteData _initedData;
 
         private SearchContext()
         {
         }
-        public SearchContext(HttpRequestMessage request)
+        public SearchContext(HttpContext context)
         {
-            _request = request;
+            _context = context;
             Facets = new NameValueCollection(StringComparer.OrdinalIgnoreCase);
-            InitFromQstring(request);
-            InitFromRouteData(request.GetRouteData());
+            InitFromQstring(context);
+            InitFromRouteData(context.GetRouteData());
         }
         public static SearchContext CreateForTest()
         {
@@ -44,22 +47,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             return new SearchContext() { Facets = new NameValueCollection(Facets) };
         }
-       
-        void InitFromQstring(HttpRequestMessage request)
+
+        private void InitFromQstring(HttpContext context)
         {
-            var qs = request.RequestUri.ParseQueryString();
-            var routeData = request.GetRouteData();
-            var facetValueQsValue = qs[QueryStringKey];
+            var qs = context.Request.Query;
+            var routeData = context.GetRouteData();
+            var facetValueQsValue = qs[QUERY_STRING_KEY];
+
             if (!string.IsNullOrWhiteSpace(facetValueQsValue))
             {
                 var matchesw = KvpRegex.Matches(facetValueQsValue);
                 foreach (Match m in matchesw)
                 {
-                    this.Facets.Add(m.Groups["key"].Value, m.Groups["val"].Value);
+                    Facets.Add(m.Groups["key"].Value, m.Groups["val"].Value);
                 }
             }
-            int tmpInt;
-            if ( !routeData.Values.ContainsKey("pageSize") && int.TryParse( qs["pageSize"], out tmpInt))
+
+            if (!routeData.Values.ContainsKey("pageSize") && int.TryParse( qs["pageSize"], out var tmpInt))
             {
                 routeData.Values["pageSize"] = tmpInt;
             }
@@ -83,10 +87,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 routeData.Values["categoryId"] = qs["categoryId"];
             }
-            return;
         }
-       
-        void InitFromRouteData(IHttpRouteData httpRouteData)
+
+        private void InitFromRouteData(RouteData httpRouteData)
         {
             if (_initedData == httpRouteData)
             {
@@ -94,79 +97,72 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             _initedData = httpRouteData;
 
-            foreach (var key in httpRouteData.Values.Keys.Where(x => x.EndsWith(RouteDataValueKeySuffix, StringComparison.OrdinalIgnoreCase)))
+            foreach (var key in httpRouteData.Values.Keys.Where(x => x.EndsWith(ROUTE_DATA_VALUE_KEY_SUFFIX, StringComparison.OrdinalIgnoreCase)))
             {
-                string facetValueKey = key.Substring(0, key.Length - RouteDataValueKeySuffix.Length);
+                var facetValueKey = key.Substring(0, key.Length - ROUTE_DATA_VALUE_KEY_SUFFIX.Length);
                 var existingValues = this.Facets.GetValues(facetValueKey) ?? new string[0];
-
 
                 var valObj = httpRouteData.Values[key];
 
-                var val = valObj as string;
-                if (val != null &&
+                if (valObj is string val &&
                     !existingValues.Any(x => string.Equals(x, val, StringComparison.OrdinalIgnoreCase)))
                 {
-                    this.Facets.Add(facetValueKey, val);
+                    Facets.Add(facetValueKey, val);
                 }
                 else
                 {
-                    var obj = valObj as IEnumerable;
-                    if (obj == null)
+                    if (!(valObj is IEnumerable obj))
                     {
                         continue;
                     }
+
                     foreach (var subVal in obj.OfType<string>().Where(y => !existingValues.Any(x => string.Equals(x, y, StringComparison.OrdinalIgnoreCase))))
                     {
-                        this.Facets.Add(facetValueKey, subVal);
+                        Facets.Add(facetValueKey, subVal);
                     }
                 }
             }
 
 
-            object temp;
-            int tempInt;
-            if (httpRouteData.Values.TryGetInt ( "pageSize", out tempInt) )
+            if (httpRouteData.Values.TryGetInt ("pageSize", out var tempInt))
             {
-                httpRouteData.Values["pageSize"] = this.PageSize = tempInt;
+                httpRouteData.Values["pageSize"] = PageSize = tempInt;
             }
-            if (httpRouteData.Values.TryGetInt("startIndex", out tempInt) )
+            if (httpRouteData.Values.TryGetInt("startIndex", out tempInt))
             {
-                httpRouteData.Values["startIndex"] = this.StartIndex = tempInt;
+                httpRouteData.Values["startIndex"] = StartIndex = tempInt;
             }
             if (httpRouteData.Values.TryGetInt("categoryId", out tempInt))
             {
-                httpRouteData.Values["categoryId"] = this.CategoryId = tempInt;
+                httpRouteData.Values["categoryId"] = CategoryId = tempInt;
             }
-            if (httpRouteData.Values.TryGetValue("sortBy", out temp) && !string.IsNullOrWhiteSpace(temp as string))
+            if (httpRouteData.Values.TryGetValue("sortBy", out var temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
-                this.SortBy = (string)temp;
+                SortBy = (string)temp;
             }
             if (httpRouteData.Values.TryGetValue("inStockLocation", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
-                this.InStockLocation = (string)temp;
+                InStockLocation = (string)temp;
             }
             if (httpRouteData.Values.TryGetValue("query", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
-                this.Query = (string)temp;
+                Query = (string)temp;
             }
-
         }
-
-     
 
         internal void InitRouteData(IDictionary<string, object> httpRouteData)
         {
-            httpRouteData[RouteDataKey] = this;
-            foreach (string key in this.Facets.Keys)
+            httpRouteData[ROUTE_DATA_KEY] = this;
+            foreach (string key in Facets.Keys)
             {
-                var vals = this.Facets.GetValues(key);
-                httpRouteData[key + RouteDataValueKeySuffix] = (vals != null && vals.Length > 1) ? (object)vals : (object)this.Facets[key];
+                var vals = Facets.GetValues(key);
+                httpRouteData[key + ROUTE_DATA_VALUE_KEY_SUFFIX] = (vals != null && vals.Length > 1) ? vals : (object)Facets[key];
             }
         }
 
         public string ToFacetValueFilter()
         {
-            return ToFacetValueFilterString(this.Facets);
+            return ToFacetValueFilterString(Facets);
         }
         
         public static string ToFacetValueFilterString(NameValueCollection facets)
@@ -176,7 +172,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return null;
             }
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string key in facets.Keys)
             {
                 foreach (var val in facets.GetValues(key))
@@ -193,24 +189,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             return sb.ToString();
         }
-        public static string GetStringFromRequest(HttpRequestMessage requestMessage)
+        public static string GetStringFromRequest(HttpRequest requestMessage)
         {
             return Get(requestMessage).ToFacetValueFilter();
         }
-        public static SearchContext Get(HttpRequestMessage requestMessage)
+        public static SearchContext Get(HttpRequest requestMessage)
         {
-            SearchContext col = null;
-            object tmp;
-            var rd = requestMessage.GetRouteData().Values;
-            if (rd.TryGetValue(RouteDataKey, out tmp))
+            SearchContext col;
+            var rd = requestMessage.HttpContext.GetRouteData().Values;
+            if (rd.TryGetValue(ROUTE_DATA_KEY, out var tmp))
             {
                 col = (SearchContext)tmp;
             }
             else
             {
-                col = new SearchContext(requestMessage);
+                col = new SearchContext(requestMessage.HttpContext);
             }
-            col.InitFromRouteData(requestMessage.GetRouteData());
+            col.InitFromRouteData(requestMessage.HttpContext.GetRouteData());
             return col;
         }
 
@@ -226,33 +221,29 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string ToClearUrl(ICustomRouteHandler routeHandler, SearchContext searchContext, bool clearFacets = false)
         {
-            var routeData = this._request.GetRouteData();
-            int catId = searchContext.CategoryId != null ? (int)searchContext.CategoryId : -1;
-        
-            object tmp;
+            var routeData = _context.GetRouteData();
+            var catId = searchContext.CategoryId ?? -1;
 
-            if (routeData.Values.TryGetValue("categoryId", out tmp))
+            if (routeData.Values.TryGetValue("categoryId", out var tmp))
             {
                 int.TryParse((tmp ?? new object()).ToString(), out catId);
             }
 
-            bool isSearchRoute = routeData.Values.TryGetValue("controller", out tmp) && string.Equals(tmp as string, "search", StringComparison.OrdinalIgnoreCase);
+            var isSearchRoute = routeData.Values.TryGetValue("controller", out tmp) && string.Equals(tmp as string, "search", StringComparison.OrdinalIgnoreCase);
             var routeType = isSearchRoute ? FancyRoute.Search : FancyRoute.Category;
 
-            Func<IDictionary<string, object>> dicFn = () =>
+            IDictionary<string, object> DicFn()
             {
-
                 var routeValues = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
-                foreach (var key in routeData.Values.Keys.Where(x => x.EndsWith(RouteDataValueKeySuffix, StringComparison.OrdinalIgnoreCase)))
+                foreach (var key in routeData.Values.Keys.Where(x => x.EndsWith(ROUTE_DATA_VALUE_KEY_SUFFIX, StringComparison.OrdinalIgnoreCase)))
                 {
                     routeValues.Remove(key);
                 }
+
                 return routeValues;
-            };
+            }
 
-
-
-            var baseUrl = routeHandler.GetCanonicalUrl(routeType, dicFn, false);
+            var baseUrl = routeHandler.GetCanonicalUrl(routeType, DicFn, false);
             if (baseUrl == null)
             {
                 string categorySlug = null;
@@ -275,11 +266,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         baseUrl ="/"+  categorySlug + "/c/" + CategoryId;
                     }
-                    
                 }
-                
             }
-            if( isSearchRoute || clearFacets )
+            if(isSearchRoute || clearFacets)
             {
                 return ToUrl(new SearchContextOverrides()
                 {
@@ -290,58 +279,58 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             
             return baseUrl;
-            
-
         }
 
         public string ToUrl(SearchContextOverrides overrides= null)
         {
             var clearFacets = overrides != null && overrides.ClearFacets;
             string facetQsVal = null;
-            string urlBase = overrides != null ? overrides.UrlBase : null;
-            string sortBy = overrides != null && overrides.SortByOverwritten  ? overrides.SortBy : this.SortBy;
-            string inStockLocation = overrides != null && overrides.InStockLocationOverwritten ? overrides.InStockLocation : this.InStockLocation;
-            var pageSize = overrides != null && overrides.PageSize.HasValue ? overrides.PageSize : this.PageSize;
-            var startIndex = overrides != null && overrides.StartIndex.HasValue ? overrides.StartIndex : this.StartIndex;
-            var query = overrides != null && overrides.QueryOverwritten ? overrides.Query : this.Query;
-            var categoryId = overrides != null && overrides.CategoryId.HasValue ? overrides.CategoryId : this.CategoryId;
+            var urlBase = overrides?.UrlBase;
+            var sortBy = overrides != null && overrides.SortByOverwritten  ? overrides.SortBy : SortBy;
+            var inStockLocation = overrides != null && overrides.InStockLocationOverwritten ? overrides.InStockLocation : InStockLocation;
+            var pageSize = overrides?.PageSize ?? PageSize;
+            var startIndex = overrides?.StartIndex ?? StartIndex;
+            var query = overrides != null && overrides.QueryOverwritten ? overrides.Query : Query;
+            var categoryId = overrides?.CategoryId ?? CategoryId;
             #region doFacets
-            if ( !clearFacets && ( 
+            if (!clearFacets && ( 
                 (   
-                this.Facets != null && 
-                this.Facets.Count> 0 
+                Facets != null && 
+                Facets.Count > 0 
                 )
                 || 
                 (
-                overrides != null && 
-                 overrides.AddFacet.HasValue )
+                overrides?.AddFacet != null )
                 )
                 )
             {
-                var removeFacet = overrides != null && overrides.RemoveFacet.HasValue ? overrides.RemoveFacet.Value : new KeyValuePair<string, string>();
-                var addFacet = overrides != null && overrides.AddFacet.HasValue ? overrides.AddFacet : null;
+                var (s, value) = overrides?.RemoveFacet ?? new KeyValuePair<string, string>();
+                var addFacet = overrides?.AddFacet;
 
 
-                StringBuilder sb = new StringBuilder();
-                foreach (string key in Facets.Keys)
-                {
-                    foreach (var val in Facets.GetValues(key))
+                var sb = new StringBuilder();
+                if (Facets != null)
+                    foreach (string key in Facets.Keys)
                     {
-                        if ( string.Equals( key, removeFacet.Key, StringComparison.OrdinalIgnoreCase) &&
-                            string.Equals(val, removeFacet.Value, StringComparison.OrdinalIgnoreCase) )
+                        foreach (var val in Facets.GetValues(key))
                         {
-                            continue;
+                            if (string.Equals(key, s, StringComparison.OrdinalIgnoreCase) &&
+                                string.Equals(val, value, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            if (sb.Length > 0)
+                            {
+                                sb.Append(",");
+                            }
+
+                            sb.Append(key);
+                            sb.Append(':');
+                            sb.Append(val);
                         }
-                        if (sb.Length > 0)
-                        {
-                            sb.Append(",");
-                        }
-                        sb.Append(key);
-                        sb.Append(':');
-                        sb.Append(val);
                     }
 
-                }
                 if (addFacet.HasValue)
                 {
                     if (sb.Length > 0)
@@ -358,9 +347,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             #endregion doFacets
 
-
-
-            var queryCollection = System.Web.HttpUtility.ParseQueryString("");
+            var queryCollection = HttpUtility.ParseQueryString("");
 
             if (pageSize != null && pageSize.Value > 0)
             {
@@ -386,7 +373,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 queryCollection.Add("startIndex", startIndex.ToString());
             }
-
             
 
             if (!string.IsNullOrEmpty(query))
@@ -404,15 +390,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
 
-            return queryCollection.Count > 0 ? urlBase + "?" + queryCollection.ToString() :
+            return queryCollection.Count > 0 ? urlBase + "?" + queryCollection :
                 (string.IsNullOrWhiteSpace(urlBase) ? "?" : urlBase);
-                
-
         }
 
         public T Resolve<T>()
         {
-            return _request.Resolve<T>();
+            return _context.RequestServices.Resolve<T>();
         }
     }
 
@@ -423,34 +407,29 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
        
         public SearchContextOverrides(Dictionary<string, object> config)
         {
-            int startIndex;
-            if (config.TryGetInt("startIndex", out startIndex))
+            if (config.TryGetInt("startIndex", out var startIndex))
             {
-                this.StartIndex = startIndex;
+                StartIndex = startIndex;
             }
 
-            object sortBy;
-            if (config.TryGetValue("sortBy", out sortBy))
+            if (config.TryGetValue("sortBy", out var sortBy))
             {
-                this.SortBy = Convert.ToString(sortBy);
+                SortBy = Convert.ToString(sortBy);
             }
 
-            object inStockLocation;
-            if (config.TryGetValue("inStockLocation", out inStockLocation))
+            if (config.TryGetValue("inStockLocation", out var inStockLocation))
             {
-                this.InStockLocation = Convert.ToString(inStockLocation);
+                InStockLocation = Convert.ToString(inStockLocation);
             }
 
-            object query;
-            if (config.TryGetValue("query", out query))
+            if (config.TryGetValue("query", out var query))
             {
-                this.Query = Convert.ToString(query);
+                Query = Convert.ToString(query);
             }
 
-            int pageSize;
-            if (config.TryGetInt("pageSize", out pageSize))
+            if (config.TryGetInt("pageSize", out var pageSize))
             {
-                this.PageSize = pageSize;
+                PageSize = pageSize;
             }
         }
 
@@ -471,7 +450,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public int? CategoryId { get; set; }
         public string SortBy
         {
-            get { return _sortBy; }
+            get => _sortBy;
             set
             {
                 SortByOverwritten = true;
@@ -482,7 +461,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string InStockLocation
         {
-            get { return _inStockLocation; }
+            get => _inStockLocation;
             set
             {
                 InStockLocationOverwritten = true;
@@ -503,7 +482,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string Query
         {
-            get { return _query; }
+            get => _query;
             set
             {
                 QueryOverwritten = true;
@@ -530,7 +509,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public T Resolve<T>()
         {
-            return default(T);
+            return default;
         }
     }
 

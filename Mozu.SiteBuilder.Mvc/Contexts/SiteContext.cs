@@ -12,8 +12,10 @@ using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Money;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
@@ -89,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private string _themeOverrideId = null;
 
 
-        public SiteContext(HttpRequestMessage requestMessage ,
+        public SiteContext(HttpContext context,
             ISiteBuilderApiContext siteBuilderApiContext,
             ISiteBuilderContextProvider siteBuilderContextDataProvider , 
             IMobileDetectionProvider mobileDetectionProvider,
@@ -105,84 +107,67 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _siteBuilderApiContext = siteBuilderApiContext;
             _themeRepository = themeRepository;
             _themeSettingsRepository = themeSettingsRepository;
-            _themeOverrideId = ProcessThemeOverride(requestMessage, cookieProvider);
+            _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
             SiteExists = siteBuilderApiContext.SiteId.HasValue;
-            string url = requestMessage.RequestUri.ToString();
-            
-            IEnumerable<string> values;
-            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            var url = new Uri(context.Request.GetDisplayUrl()).ToString();
+
+            if (context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out var values))
             {
                 url = values.FirstOrDefault();
             }
-
-           
 
             var uriBuilder = new UriBuilder(url);
 
             _currentHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Port = 443;
             uriBuilder.Scheme = "https";
-            string secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+            var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
 
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
-            
-            Mozu.Core.Money.CurrencyCode cc;
-            if (Mozu.Core.Money.CurrencyCode.TryParse(_siteBuilderApiContext.CurrencyCode, out cc))
-            {
-                this.CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
 
-                this.NumberFormat = new NumberFormatInfo()
-                {
-                    CurrencyDecimalDigits = this.CurrencyInfo.Precision,
-                    CurrencySymbol = this.CurrencyInfo.Symbol
-                };
-            }
-            
+            if (!Enum.TryParse(_siteBuilderApiContext.CurrencyCode, out CurrencyCode cc)) return;
+
+            CurrencyInfo = CurrencyRepository.Get(cc);
+
+            NumberFormat = new NumberFormatInfo()
+            {
+                CurrencyDecimalDigits = this.CurrencyInfo.Precision,
+                CurrencySymbol = this.CurrencyInfo.Symbol
+            };
         }
 
-       
-
-        private string ProcessThemeOverride(HttpRequestMessage requestMessage, ICookieProvider cookieProvider)
+        private string ProcessThemeOverride(HttpContext context, ICookieProvider cookieProvider)
         {
-            var nvc = requestMessage.RequestUri.ParseQueryString();
-            if ( nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
+            var nvc = context.Request.Query;
+            if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
             {
                 return nvc[FORCE_THEME_COOKIE_NAME];
             }
-           
-            else
+            
+            var cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
+            if (cookie != null && !string.IsNullOrEmpty(cookie.Value ))
             {
-                var cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
-                if (cookie != null && !string.IsNullOrEmpty(cookie.Value ))
-                {
-                   return  cookie.Value;
-                }
+               return cookie.Value;
             }
             return null;
-
         }
 
-        public int TenantId
-        {
-            get { return _siteBuilderApiContext.TenantId; }
-        }
-        public int SiteId
-        {
-            get { return _siteBuilderApiContext.SiteId.GetValueOrDefault(-1); }
-        }
-        
+        public int TenantId => _siteBuilderApiContext.TenantId;
+
+        public int SiteId => _siteBuilderApiContext.SiteId.GetValueOrDefault(-1);
+
         public string HashString
         {
             get
             {
-                Task task = Init();
+                var task = Init();
                 if (!task.IsCompleted)
                 {
                     task.Wait();
                 }
                 return _hash;
             }
-            set { _hash = value; }
+            set => _hash = value;
         }
 
 
@@ -190,19 +175,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                if (_labels == null)
-                {
-                    ThemeLabelCollection tlc;
-                    if (!Theme.MergedLabels.TryGetValue(_siteBuilderApiContext.LocaleCode, out tlc))
-                    {
-                        tlc = Theme.MergedLabels["en-US"];
-                    }
-                    _labels = tlc;
+                if (_labels != null) return _labels;
 
+                if (!Theme.MergedLabels.TryGetValue(_siteBuilderApiContext.LocaleCode, out var tlc))
+                {
+                    tlc = Theme.MergedLabels["en-US"];
                 }
+                _labels = tlc;
                 return _labels;
             }
-            set { _labels = value; }
+            set => _labels = value;
         }
 
         public string ThemeId
@@ -230,7 +212,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                 return _generalSettings;
             }
-            set { _generalSettings = value; }
+            set => _generalSettings = value;
         }
 
         public CheckoutSettings CheckoutSettings
@@ -244,7 +226,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                 return _checkoutSettings;
             }
-            set { _checkoutSettings = value; }
+            set => _checkoutSettings = value;
         }
 
         public ThemeRuntimeSettingsCollection ThemeSettings
@@ -257,7 +239,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 return _themeRuntimeSettingsCollection;
             }
-            set { _themeRuntimeSettingsCollection = value; }
+            set => _themeRuntimeSettingsCollection = value;
         }
 
         [IgnoreDataMember]
@@ -272,7 +254,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                 return _theme;
             }
-            set { _theme = value; }
+            set => _theme = value;
         }
         
         public bool IsEditMode { get; set; }
@@ -282,23 +264,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                if (_cdnPrefix == null)
-                {
-                    if (this._siteBuilderApiContext.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn))
-                    {
-                        _cdnPrefix = this._currentHost;
-                    }
-                    else {
-                        _cdnPrefix = "//" + (
-                            string.IsNullOrWhiteSpace(this.GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : this.GeneralSettings.CustomCdnHostName)
-                            + "/" + _siteBuilderApiContext.TenantId + "-" + _siteBuilderApiContext.SiteId;
-                    }
+                if (_cdnPrefix != null) return _cdnPrefix;
 
-                    if (_settings.AppSettings("disableCDN") == "true")
-                    {
-                        _cdnPrefix = "";
-                    }
-                   
+                if (_siteBuilderApiContext.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn))
+                {
+                    _cdnPrefix = _currentHost;
+                }
+                else {
+                    _cdnPrefix = "//" + (
+                                          string.IsNullOrWhiteSpace(GeneralSettings.CustomCdnHostName) ? _settings.AppSettings("CdnHost") : GeneralSettings.CustomCdnHostName)
+                                      + "/" + _siteBuilderApiContext.TenantId + "-" + _siteBuilderApiContext.SiteId;
+                }
+
+                if (_settings.AppSettings("disableCDN") == "true")
+                {
+                    _cdnPrefix = "";
                 }
                 return _cdnPrefix;
             }
@@ -306,7 +286,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         public string SecureHost { get; set; }
-
 
         public bool SupportsInStorePickup
         {
@@ -318,7 +297,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 return _supportsInStorePickup.GetValueOrDefault(false);
             }
-            set { _supportsInStorePickup = value; }
+            set => _supportsInStorePickup = value;
         }
         SiteDomains _domains;
         public SiteDomains Domains
@@ -362,23 +341,20 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                if (_assbmlyHash == null)
-                {
-                    var ass = typeof(SiteContext).Assembly;
-                    var assemblyInfo = ((AssemblyInformationalVersionAttribute)ass.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new AssemblyInformationalVersionAttribute("local")).InformationalVersion;
-                    var version = ass.GetName().Version.ToString();
-                    _assbmlyHash = System.Text.Encoding.UTF8.GetBytes(assemblyInfo + version);
-                }
+                if (_assbmlyHash != null) return _assbmlyHash;
+
+                var ass = typeof(SiteContext).Assembly;
+                var assemblyInfo = ((AssemblyInformationalVersionAttribute)ass.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new AssemblyInformationalVersionAttribute("local")).InformationalVersion;
+                var version = ass.GetName().Version.ToString();
+                _assbmlyHash = Encoding.UTF8.GetBytes(assemblyInfo + version);
                 return _assbmlyHash;
 
             }
         }
-
-        
        
         public  Task Init()
         {
-            return _initTask = _initTask ?? DoInit();
+            return _initTask ??= DoInit();
         }
         private async Task DoInit()
         { 
@@ -388,7 +364,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             var data = await _siteBuilderContextDataProvider.GetContextDataAsync().ConfigureAwait(false);
             _domains = new SiteDomains(_currentHost, data.GetMappedSiteDomains());
-            this.SiteSubdirectory = data.GetSiteSubDirectory();
+            SiteSubdirectory = data.GetSiteSubDirectory();
             _generalSettings  = data.GetMappedGeneralSettings();
             _checkoutSettings = data.GetMappedCheckoutSettings();
 
@@ -396,7 +372,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 SupportsInStorePickup = data.LocationUsages.Items.Any(x => x.LocationUsageTypeCode == "SP" && x.LocationTypeCodes != null && x.LocationTypeCodes.Any());
             }
-
             
             if (!string.IsNullOrEmpty(_themeOverrideId))
             {
@@ -420,8 +395,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 _themeSelection = ThemeRepository.DefaultThemeSelection;
             }
-            Tuple<Theme, ThemeRuntimeSettingsCollection> entry;
-            if (data.Themes.TryGetValue(_themeSelection.Id, out entry))
+
+            if (data.Themes.TryGetValue(_themeSelection.Id, out var entry))
             {
                 _theme = entry.Item1;
                 _themeRuntimeSettingsCollection = entry.Item2 ?? ((entry.Item1 == null) ? null : new ThemeRuntimeSettingsCollection());
@@ -435,14 +410,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             
             _themeRepository.Value.FixupPaths(_theme);
             
-            _themeRuntimeSettingsCollection = _themeRuntimeSettingsCollection ?? await _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ConfigureAwait(false);
-
+            _themeRuntimeSettingsCollection ??= await _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ConfigureAwait(false);
 
             bool isSandBox = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
             var hash = data.ThemeHash;
             if (isSandBox && _theme != null)
             {
-               
                 await _themeRepository.Value.ValidateLatest(_theme).ConfigureAwait(false);
                 hash += _theme.Hash;
             }
@@ -455,10 +428,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         [IgnoreDataMember]
-        public Mozu.ProductRuntime.Contracts.CurrencyExchangeRate CurrencyExchangeRate { get; set; }
+        public ProductRuntime.Contracts.CurrencyExchangeRate CurrencyExchangeRate { get; set; }
 
-
-        public Core.Money.Currency CurrencyInfo { get; set; }
+        public Currency CurrencyInfo { get; set; }
 
         [Newtonsoft.Json.JsonIgnore()]
         public NumberFormatInfo NumberFormat { get; set; }
@@ -467,7 +439,5 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get;set;
         }
-
-      
     }
 }

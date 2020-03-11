@@ -32,30 +32,25 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                return _tree ?? (_tree = _navigationGandalf.GetTreeNavigation() ?? new List<IRuntimeNavigationNode>());
+                return _tree ??= _navigationGandalf.GetTreeNavigation() ?? new List<IRuntimeNavigationNode>();
             }
         }
 
 
         object ITagFilterFindable.Filter(IEnumerable<object> parameter)
         {
-            var count = parameter == null ? 0 : parameter.Count();
-            if (count == 0)
+            var count = parameter?.Count() ?? 0;
+            switch (count)
             {
-                return null;
-            }
-            if (count == 1)
-            {
-                var key = parameter.FirstOrDefault();
-                if (key == null)
-                {
+                case 0:
                     return null;
+                case 1:
+                {
+                    var key = parameter.FirstOrDefault();
+                    return key == null ? null : Tree.FindNode(null, key.ToString());
                 }
-                return this.Tree.FindNode(null, key.ToString());
-            }
-            else
-            {
-                return parameter.Where(x => x != null).Select(key => this.Tree.FindNode(null, key.ToString())).ToList();
+                default:
+                    return parameter.Where(x => x != null).Select(key => Tree.FindNode(null, key.ToString())).ToList();
             }
         }
 
@@ -115,33 +110,36 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 ParentId = x.ParentId ,
                 Url = x.Url })
             .ToList())); }
-            set { _breadCrumbs = value; }
+            set => _breadCrumbs = value;
         }
 
 
         public class BreadCrubmsImpl : System.Collections.ObjectModel.Collection<BreadCrumb>
         {
-            public BreadCrubmsImpl ( IList<BreadCrumb> crumbs): base(crumbs)
+            public BreadCrubmsImpl (IList<BreadCrumb> crumbs): base(crumbs)
             {
 
             }
             public void Add ( object obj )
             {
-                if (obj == null)
+                switch (obj)
                 {
-                    return;
+                    case null:
+                        return;
+                    case BreadCrumb crumb:
+                        base.Add(crumb);
+                        return;
+                    default:
+                    {
+                        var bc = Newtonsoft.Json.Linq.JObject.FromObject(obj).ToObject<BreadCrumb>();
+                        //if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)
+                        //{
+                        //    ((IDisposable)obj).Dispose();
+                        //}
+                        base.Add((BreadCrumb)bc);
+                        break;
+                    }
                 }
-                if ( obj is BreadCrumb)
-                {
-                    base.Add((BreadCrumb)obj);
-                    return;
-                }
-                var bc = Newtonsoft.Json.Linq.JObject.FromObject(obj).ToObject<BreadCrumb>();
-                //if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)
-                //{
-                //    ((IDisposable)obj).Dispose();
-                //}
-                base.Add((BreadCrumb)bc);
             }
         }
         /// <summary>
@@ -185,11 +183,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (stack == null)
                 stack = new Stack<IRuntimeNavigationNode>();
 
-            if (leaf != null)
-            {
-                stack.Push(leaf);
-                GetBreadcrumbs(leaf.Parent, stack);
-            }
+            if (leaf == null) return stack;
+
+            stack.Push(leaf);
+            GetBreadcrumbs(leaf.Parent, stack);
 
             return stack;
         }
@@ -259,8 +256,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (productNode == null)
             {
                 productNode = Mapper.Map<SimpleRuntimeNavigationNode>(product);
-              
-
 
                 if (product.Categories != null && product.Categories.Count > 0)
                 {
@@ -285,13 +280,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// </summary>
         public void SetContext(Category category)
         {
-            var categoryNode = Tree.FindByCategory(category);
-
-            if (categoryNode == null)
-            {
-                categoryNode = Mapper.Map<SimpleRuntimeNavigationNode>(category);
-                //Tree.Add(categoryNode);
-            }
+            var categoryNode = Tree.FindByCategory(category) ?? Mapper.Map<SimpleRuntimeNavigationNode>(category);
 
             CurrentNode = categoryNode;
         }
@@ -301,18 +290,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         /// </summary>
         public void SetContext(Document doc)
         {
-            var docNode = Tree.FindByDocument(doc);
-
-            if (docNode == null)
-            {
-                docNode = Mapper.Map<SimpleRuntimeNavigationNode>(doc);
-            }
+            var docNode = Tree.FindByDocument(doc) ?? Mapper.Map<SimpleRuntimeNavigationNode>(doc);
 
             CurrentNode = docNode;
         }
-
-
-
-       
     }
 }

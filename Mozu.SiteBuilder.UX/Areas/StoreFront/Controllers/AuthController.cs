@@ -456,7 +456,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return _siteContext.Labels.TryGetValue(id, out var val) ? val : defaultValue;
         }
 
-        private ActionResult LoginFailed(string email = null, string code = null)
+        private IActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
             FourHundredMessageHandler.BypassErrorHandler(Request);

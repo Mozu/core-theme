@@ -1,0 +1,149 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Mozu.Core;
+using Mozu.Core.Api.Handlers.Message;
+using Mozu.Core.Api.Session;
+using Mozu.Core.Configuration;
+using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Handler;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.Mvc.Security;
+
+namespace Mozu.SiteBuilder.Mvc.Middleware
+{
+    public class SessionMiddleware
+    {
+        private const int MAX_TIME_IN_MINUTES = 30;
+        private const string NULL_PRICE_LIST_CODE = "nullPriceListCode";
+
+        private readonly RequestDelegate _next;
+        private readonly ISiteBuilderApiContext _apiContext;
+        private readonly IRequestUrlFinderOuter _requestHelper;
+        private readonly IAuthenticationHelper _authHelper;
+        private readonly IMozuSession _session;
+
+        public SessionMiddleware(RequestDelegate next, ISiteBuilderApiContext apiContext, IRequestUrlFinderOuter requestHelper, IAuthenticationHelper authHelper, IMozuSession session)
+        {
+            _next = next;
+            _apiContext = apiContext;
+            _requestHelper = requestHelper;
+            _authHelper = authHelper;
+            _session = session;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            if (!TryGetPriceListOverride(_apiContext, context, out var priceListOverride) && !RequiresUpdatedSession(_apiContext, _requestHelper, _authHelper))
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
+            var logger = LoggingService.LoggerFor<SessionHandler>();
+            if (!Equals(priceListOverride, NULL_PRICE_LIST_CODE))
+            {
+                SetOveridePriceList(_apiContext, _authHelper, _session, priceListOverride, logger);
+            }
+            else
+            {
+                await InitSession(_apiContext, _authHelper, _session, context.RequestServices.Resolve<IPriceListResolutionHandler>(), logger).ConfigureAwait(false);
+            }
+
+            await _next.Invoke(context);
+        }
+
+        private static void SetOveridePriceList(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper, IMozuSession session, string priceListOverride, ILogger logger)
+        {
+            apiContext.SetPriceListCode(priceListOverride);
+            try
+            {
+                session.SetValue(SessionMessageHandler.PristListCodeKey, priceListOverride);
+                authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("error writing to session", ex);
+
+            }
+        }
+
+        private static async Task InitSession(ISiteBuilderApiContext apiContext, IAuthenticationHelper authHelper, IMozuSession session, IPriceListResolutionHandler priceListResolutionHandler, ILogger logger)
+        {
+            apiContext.UserClaims.SessionInfo = new SessionInfo();
+
+            try
+            {
+                apiContext.UserClaims.SessionInfo.LastModified = DateTime.UtcNow;
+                var res = await priceListResolutionHandler.ResolvePriceList().ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(res))
+                {
+                    session.SetValue(SessionMessageHandler.PristListCodeKey, res);
+                }
+                apiContext.SetPriceListCode(res);
+                authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());
+            }
+            catch (Exception ex)
+            {
+                logger.Warn("error accessing pricelist resolver", ex);
+                //should we reset the session or let it try to fail again?
+            }
+        }
+
+        private static bool RequiresUpdatedSession(IApiContext apiContext, IRequestUrlFinderOuter requestHelper, IAuthenticationHelper authHelper)
+        {
+            if (apiContext.UserClaims == null || apiContext.SiteId == null || requestHelper.IsCdnRequest())
+            {
+                return false;
+            }
+
+            LightweightUserClaims.TryParse(authHelper.GetStoreFrontSessionAccessToken(), out var sUserClaims);
+            LightweightUserClaims.TryParse(authHelper.GetStoreFrontAccessToken(), out var pUserClaims);
+            var cookieDate = authHelper.GetStoreFrontSessionAccessTokenDate();
+
+            if (sUserClaims == null && pUserClaims == null)
+            {
+                return false;
+                //first request or bot or something ... do nothing..
+            }
+
+            if (sUserClaims?.SessionInfo?.Id != pUserClaims?.SessionInfo?.Id) return true;
+            if (cookieDate == null)
+            {
+                return false;
+            }
+            var mins = (cookieDate.Value.ToUniversalTime() - DateTime.UtcNow).TotalMinutes;
+
+            if (mins < MAX_TIME_IN_MINUTES / 2)
+            {
+                return false;
+            }
+
+            if (!(mins < MAX_TIME_IN_MINUTES)) return true;
+
+            //reset cookietime
+            authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());
+            return false;
+        }
+
+        private static bool TryGetPriceListOverride(IApiContext apiContext, HttpContext context, out string priceList)
+        {
+            priceList = NULL_PRICE_LIST_CODE;
+            if (apiContext.DataViewMode != DataViewModeType.Pending)
+            {
+                return false;
+            }
+
+            var val = context.Request.Query.Where(x => string.Equals(x.Key, "mz_pricelist", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val.Count == 0) return false;
+
+            priceList = val;
+            return true;
+        }
+    }
+}

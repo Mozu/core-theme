@@ -120,10 +120,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 }
 public static class ResponseHeaderExtensions
 {
-    const  string GetRespnoseHeadersKey = "Mozu.SiteBuilder.Mvc.MessageHandler.GetRespnoseHeaders";
+    const string GetRespnoseHeadersKey = "Mozu.SiteBuilder.Mvc.MessageHandler.GetRespnoseHeaders";
     public static List<NameValueHeaderValue> GetAdditionalRespnoseHeaders ( this HttpRequestMessage req )
     {
-    
         object tmp;
         if (!req.Properties.TryGetValue(GetRespnoseHeadersKey, out tmp))
         {
