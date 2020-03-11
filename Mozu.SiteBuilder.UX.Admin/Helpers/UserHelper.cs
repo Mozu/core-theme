@@ -17,8 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
     {
         public static bool IsFulfillerUserWithOrderAccess(this IApiContext _apiContext)
         {
-            var isBehaviourIdPresentinBag = _apiContext?.UserClaims?.Bag?.Any(x => x.Key.StartsWith("loc|") && x.Value.Contains("73")) ?? false;
-            return (isBehaviourIdPresentinBag );
+            var IsFulfillerUser = _apiContext?.UserClaims?.Bag?.Any(x => x.Key.Equals("FulfillerOnly", StringComparison.OrdinalIgnoreCase) && x.Value.Equals("1")) ?? false;
+            return IsFulfillerUser;
         }
     }
 }
