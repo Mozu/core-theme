@@ -42,6 +42,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.CreateDate, opt => opt.Ignore());
 
             CreateMap<F.CanceledItem, Mozu.CommerceRuntime.Contracts.Fulfillment.CanceledItem>()
+                .ForMember(dest => dest.Data, opt =>
+                {
+                    opt.PreCondition(src => src.Data != null);
+                    opt.ResolveUsing(src => JObject.FromObject(src.Data));
+                })
                 .ForMember(x => x.FulfillmentLocationCode, opt => opt.Ignore())
                 .ForMember(x => x.IsPackagedStandAlone, opt => opt.Ignore())
                 .ForMember(x => x.Measurements, opt => opt.Ignore());
