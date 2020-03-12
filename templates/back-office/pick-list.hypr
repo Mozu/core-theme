@@ -21,7 +21,7 @@
             <th>SKU</th>
             <th>Product Name</th>
             <th>Order#s</th>
-			{% if displayExternalId %}<th>External Order#s</th>{% endif %}
+			<th>External Order#s</th>
             <th>Qty Needed</th>
             <th>Qty Picked</th>
         </tr></thead>
@@ -47,11 +47,9 @@
                   <td>
                       {{ item.orderNumber }}
                   </td>
-				  {% if displayExternalId %}
 				  <td>
                       {{ item.externalOrderId }}
                   </td>
-				  {% endif %}
                   <td>
                       {{ item.quantity }}
                   </td>

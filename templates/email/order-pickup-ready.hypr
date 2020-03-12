@@ -6,7 +6,7 @@
         {{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!
     </p>
     <br>
-    <p>{{ labels.orderPickupReadyBlob1|string_format(siteContext.generalSettings.websiteName |safe }}</p>
+    <p>{{ labels.orderPickupReadyBlob1|string_format(siteContext.generalSettings.websiteName,  model.orderNumber,  model.externalId |safe }}</p>
 
     <table class="mz-ordersummary">
         <thead>

@@ -3,7 +3,8 @@
 {% block body-content %}
     <dl class="mz-orderheader">
 		    <dt>{{ labels.backorder }}</dt>
-		    <dt>{{ labels.orderNo }} <a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dt><dd></dd>
+		    <dt>{{ labels.orderNo }} <a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dt>
+			 <dt>{{ labels.externalOrderId }} {{ model.externalId }}</dt><dd></dd>
     </dl>  
     <br>
     <p>{{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!</p>

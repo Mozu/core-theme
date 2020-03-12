@@ -1,12 +1,13 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
-
+  <div class="mz-productdetails">
 	<dl class="mz-orderheader">
-	<!--
 		<dt>{{ labels.orderNo }}</dt>
-		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
-		-->
+		<dd>{{ model.order.orderNumber }}</dd>
+
+		<dt>{{ labels.externalOrderId }}</dt>
+		<dd>{{ model.order.externalId }}</dd>
 
 		<dt>{{ labels.return }}</dt>
 		<dd>{{ model.returnNumber }}</dd>
@@ -28,7 +29,7 @@
 	</p>
 
 	{{ labels.returnOtherBlob1|string_format(siteContext.generalSettings.websiteName, model.status, domainName)|safe }}
-
+	</div>
 	<table class="mz-ordersummary">
         <thead>
             <tr>

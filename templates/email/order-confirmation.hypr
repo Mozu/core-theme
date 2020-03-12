@@ -19,6 +19,7 @@
             <tr>
                 <td>
                     <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
+					<b>{{ labels.externalOrderId }}</b>: {{ model.externalId }}<br/><br/>
                     <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br><br>
                     {% if model.fulfillmentInfo.shippingMethodName %}
                     <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}<br>
