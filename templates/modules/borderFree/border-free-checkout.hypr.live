@@ -6,10 +6,10 @@
             <div class="borderFree">
             <iframe name="envoy" id="envoyId" src="{{model.borderFreeData.fullEnvoyUrl}}" frameBorder="0" scrolling="no" style="width: 100%;"></iframe>
             <!--Used to call Success, Failure or Pending URL -->
-            <iframe id="__frame" width="0" height="0" frameborder="0" src="https://{{model.borderFreeData.checkoutDomain2}}.borderfree.com/utils/empty.jsp" ></iframe>
+            <iframe id="__frame" width="0" height="0" frameborder="0" src="https://{{model.borderFreeData.checkoutDomain2}}.borderfree.com/checkoutapi/utils/empty.jsp"></iframe>
             <!-- Your custom footer here -->
             </div>
-            <script type="text/javascript" src="https://{{model.borderFreeData.checkoutDomain1}}.borderfree.com/htmlcheckout/resources/js/merchant.js"></script>
+            <script type="text/javascript" src="https://{{model.borderFreeData.checkoutDomain1}}.borderfree.com/cdn/checkout/v5/dist/merchant.js"></script>
         {% endif %}
     {% endif %}
     
