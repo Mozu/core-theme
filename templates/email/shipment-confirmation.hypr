@@ -21,15 +21,22 @@
                     <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
 					<b>{{ labels.externalOrderId }}</b>: {{ model.externalId }}<br/><br/>
                     <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
-                    {% if model.shippingMethodName %}
-                    <b>{{ labels.shippingMethod }}</b>: {{ model.shippingMethodName }}<br><br>
-                    {% endif %}
-                    <b>{{labels.trackingNumber}}</b>: 
+                    <b>{{ labels.trackingInfo }}</b>:<br><br>
                     {% for package in model.packages %}
-                        {% if package.trackingNumbers %}
-                        {% for trackingNumber in package.trackingNumbers %}
-                            {{ trackingNumber }}</br>
-                        {% endfor %}
+                        {% if package.shippingMethodName %}
+                            {{ labels.shippingMethod }}: {{ package.shippingMethodName }}<br>
+                        {% endif %}
+                        {% if package.trackings %}
+                            {{labels.trackingNumber}}:
+                            {% for tracking in package.trackings %}
+                                {% if not forloop.first %}, {% endif %}
+                                {% if tracking.url %}
+                                    <a href="{{ tracking.url }}">{{ tracking.number }}</a>
+                                {% else %}
+                                    {{ tracking.number }}
+                                {% endif %}
+                            {% endfor %}
+                            <br><br>
                         {% endif %}
                     {% endfor %}
                 </td>
