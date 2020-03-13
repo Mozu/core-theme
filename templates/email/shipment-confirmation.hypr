@@ -21,12 +21,13 @@
                     <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
 					<b>{{ labels.externalOrderId }}</b>: {{ model.externalId }}<br/><br/>
                     <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
+                    <b>{{ labels.trackingInfo }}</b>:<br><br>
                     {% for package in model.packages %}
                         {% if package.shippingMethodName %}
-                            <b>{{ labels.shippingMethod }}</b>: {{ package.shippingMethodName }}<br><br>
+                            {{ labels.shippingMethod }}: {{ package.shippingMethodName }}<br>
                         {% endif %}
                         {% if package.trackings %}
-                            <b>{{labels.trackingNumber}}</b>:
+                            {{labels.trackingNumber}}:
                             {% for tracking in package.trackings %}
                                 {% if not forloop.first %}, {% endif %}
                                 {% if tracking.url %}
