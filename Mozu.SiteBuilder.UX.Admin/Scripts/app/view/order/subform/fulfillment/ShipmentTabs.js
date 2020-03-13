@@ -75,12 +75,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             }));
         }
 
-        //todo: following static data is only for demo
-        //this.shipmentRecord.trackingNumbers = ['TR1873917231973917', 'TR1873917231973954'];
+        var tracking = this.fetchTrackingNumbersfromPackages();
 
-        if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length > 0) {
+        if (tracking.count>0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
                 record: this.record,
+                tracking: tracking,
                 shipmentRecord: this.shipmentRecord,
                 listeners: {
                     shipmentRefresh: function () {
@@ -89,9 +89,6 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 }
             }));
         }
-
-        //todo: following static data is only for demo
-        //this.shipmentRecord.canceledItems = this.shipmentRecord.items;
         
         if (this.shipmentRecord.canceledItems && this.shipmentRecord.canceledItems.length > 0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
@@ -105,5 +102,43 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             }));
         }
         this.items = items;
+    },
+
+    fetchTrackingNumbersfromPackages: function () {
+        var result = {
+            count: 0,
+            trackingData:[]
+        };
+        if (this.shipmentRecord.packages && this.shipmentRecord.packages.length > 0) {
+            for (var count = 0; count < this.shipmentRecord.packages.length; count++) {
+                if (this.shipmentRecord.packages[count].trackingNumbers && this.shipmentRecord.packages[count].trackingNumbers.length > 0) {
+                    var isMethodExists = this.isShippingMethodExists(result.trackingData, this.shipmentRecord.packages[count].shippingMethodCode);
+                    if (isMethodExists >= 0) {
+                        result.trackingData[isMethodExists].trackingNumbers = result.trackingData[isMethodExists].trackingNumbers.concat(this.shipmentRecord.packages[count].trackingNumbers);
+                    }
+                    else {
+                        result.trackingData.push({
+                            shippingMethodCode: this.shipmentRecord.packages[count].shippingMethodCode,
+                            trackingNumbers: this.shipmentRecord.packages[count].trackingNumbers
+                        });
+                    }
+                    result.count += parseInt(this.shipmentRecord.packages[count].trackingNumbers.length);
+                }
+            }
+        }
+        return result;
+    },
+
+    isShippingMethodExists: function (trackingData, methodCode) {
+        var trackingIndex = -1;
+        if (methodCode) {
+            for (var count = 0; count < trackingData.length; count++) {
+                if (trackingData[count].shippingMethodCode == methodCode)
+                    return count;
+            }
+        }
+        else if (trackingData.length > 0)
+            trackingIndex = 0;
+        return trackingIndex;
     }
 })
