@@ -1531,7 +1531,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         }
 
       
-        public CustomRouteRepository.HttpRouteCollectionContainer RouteCollection
+        public CustomRouteRepository.RouteCollectionContainer RouteCollection
         {
             get
             {
@@ -1695,7 +1695,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         [JsonIgnore]
         public RuntimeRedirects RuntimeRedirects { get;  set; }
         [JsonIgnore]
-        public CustomRouteRepository.HttpRouteCollectionContainer RouteCollection { get; set; }
+        public CustomRouteRepository.RouteCollectionContainer RouteCollection { get; set; }
         [JsonConverter(typeof(NavigationSetJsonConverter))]
         public NavigationSet NavigationSet { get;  set; }
         public Dictionary<string, Dictionary<string, object>> RouteValidatorData { get;  set; }

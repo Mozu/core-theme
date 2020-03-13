@@ -30,20 +30,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
         public IRouteDataMapping BuildMapping(string key , Mapping mapping)
         {
-            switch (mapping.type.ToLowerInvariant())
+            return mapping.type.ToLowerInvariant() switch
             {
-                case Mapping.TypeConst.direct:
-                    return new DirectMapping(mapping);
-                case Mapping.TypeConst.facet:
-                    return new FacetValueFilterMapping(mapping);
-                case Mapping.TypeConst.mzdb:
-                    return new MZDBMap(key, mapping, _contextProvider);
-                case Mapping.TypeConst.category:
-                    return new CategoryMapping(mapping);
-                case Mapping.TypeConst.regex:
-                    return new RegexMapping(mapping);
-            }
-            throw new ArgumentException(string.Format("mapping type {0} not known", mapping.type));
+                Mapping.TypeConst.direct => (new DirectMapping(mapping) as IRouteDataMapping),
+                Mapping.TypeConst.facet => new FacetValueFilterMapping(mapping),
+                Mapping.TypeConst.mzdb => new MZDBMap(key, mapping, _contextProvider),
+                Mapping.TypeConst.category => new CategoryMapping(mapping),
+                Mapping.TypeConst.regex => new RegexMapping(mapping),
+                _ => throw new ArgumentException($"mapping type {mapping.type} not known")
+            };
         }
 
        

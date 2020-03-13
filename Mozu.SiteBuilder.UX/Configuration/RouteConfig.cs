@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
+using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
@@ -14,44 +15,21 @@ using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
-
-   
     public class RouteConfig : IRouteConfig
     {
+        private static HttpRouteCollection _systemRoutes;
+        private static HttpRouteCollection _standarRoutes;
 
-        static System.Web.Http.HttpRouteCollection _systemRoutes;
-        static System.Web.Http.HttpRouteCollection _standarRoutes;
-        public  HttpRouteCollection SystemRoutes
-        {
-            get
-            {
-                if (_systemRoutes == null)
-                {
-                    _systemRoutes = GetSystemRoutes();
-                }
-                return _systemRoutes;
-            }
-        }
-
-        public  HttpRouteCollection DefaultRoutes
-        {
-            get
-            {
-                if (_standarRoutes == null)
-                {
-                    _standarRoutes = GetStandardRoutes();
-                }
-                return _standarRoutes;
-            }
-        }
+        public  HttpRouteCollection SystemRoutes => _systemRoutes ??= GetSystemRoutes();
+        public  HttpRouteCollection DefaultRoutes => _standarRoutes ??= GetStandardRoutes();
 
         public void Register(System.Web.Http.HttpRouteCollection routes)
         {
             GetSystemRoutes(routes);
         }
-        public static HttpRouteCollection GetSystemRoutes(System.Web.Http.HttpRouteCollection routes = null)
+        public static HttpRouteCollection GetSystemRoutes(HttpRouteCollection routes = null)
         {
-            routes = routes??new System.Web.Http.HttpRouteCollection();
+            routes ??= new HttpRouteCollection();
             routes.MapHttpRoute(
              "favicon",
              "favicon.ico",
@@ -638,7 +616,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
             }
         }
 
-
         private class QuseryStringConstraint : IHttpRouteConstraint
         {
             private readonly string _queryString;
@@ -666,33 +643,29 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 return true;
             }
         }
-        public void RouteIncomingSystemRouteRequest(HttpRequestMessage request)
+
+        public void RouteIncomingSystemRouteRequest(HttpContext context)
         {
-            DoReRoute(request, SystemRoutes);
+            DoReRoute(context, SystemRoutes);
         }
 
-        public void RouteIncomingDefaultRouteRequest(HttpRequestMessage request)
+        public void RouteIncomingDefaultRouteRequest(HttpContext context)
         {
-            DoReRoute(request, DefaultRoutes);
-            
+            DoReRoute(context, DefaultRoutes);
         }
 
-        void DoReRoute(HttpRequestMessage request , HttpRouteCollection routeCollection )
+        private static void DoReRoute(HttpContext context, HttpRouteCollection routeCollection )
         {
-            var rerouteData = routeCollection.GetRouteData(request);
-            if (rerouteData != null)
+            var reqMessage = context.GetRequestMessage(context.GetRequestUri());
+            var rerouteData = routeCollection.GetRouteData(reqMessage);
+
+            if (rerouteData == null) return;
+
+            context.Items[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+
+            if (rerouteData.Route is CustomRoute cr)
             {
-                request.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
-
-                if (rerouteData.Route is CustomRoute)
-                {
-                    var cr = rerouteData.Route as CustomRoute;
-
-                    cr.RewriteRouteData(request, rerouteData.Values);
-                }
-
-                var rctx = request.GetRequestContext();
-                rctx.RouteData = rerouteData;
+                cr.RewriteRouteData(reqMessage, rerouteData.Values);
             }
         }
     }

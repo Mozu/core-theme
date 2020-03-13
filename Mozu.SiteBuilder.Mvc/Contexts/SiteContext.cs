@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _themeSettingsRepository = themeSettingsRepository;
             _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
             SiteExists = siteBuilderApiContext.SiteId.HasValue;
-            var url = new Uri(context.Request.GetDisplayUrl()).ToString();
+            var url = context.GetRequestUri().ToString();
 
             if (context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out var values))
             {

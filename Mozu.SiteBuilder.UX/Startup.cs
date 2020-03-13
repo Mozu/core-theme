@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.AdminUser.Contracts.Clients;
@@ -71,6 +72,10 @@ namespace Mozu.SiteBuilder.UX
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var rewriteOptions = new RewriteOptions().Add(UrlRewritingMiddleware.RewriteIncomingUrl);
+
+            app.UseRewriter(rewriteOptions);
+
             app.ReigsterMozuMiddleware();
         }
     }

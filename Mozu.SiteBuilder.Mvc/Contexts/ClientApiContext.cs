@@ -9,6 +9,7 @@ using APIConstants = Mozu.Core.Api.Contracts.Constants;
 using static Mozu.SiteBuilder.Mvc.Tags.PreloadJsonTag;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var secureHost = string.Empty;
 
 
-            var uriBuilder = new UriBuilder(_pageContext.Url ?? new Uri(_context.Request.GetDisplayUrl()).ToString());
+            var uriBuilder = new UriBuilder(_pageContext.Url ?? _context.GetRequestUri().ToString());
             defaultHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Scheme = "https";
             uriBuilder.Port = 443;

@@ -188,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 };
             if (((Request.HttpContext.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage))
                 .GetValueOrDefault(false))
-                PageContext.CrawlerInfo.CanonicalUrl = new Uri(Request.GetDisplayUrl()).AbsolutePath;
+                PageContext.CrawlerInfo.CanonicalUrl = Request.HttpContext.GetRequestUri().AbsolutePath;
             else
                 PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.Value.MakeUrl(UrlHelper.UrlType.Document,
                     PageContext.CmsContext.Page.Document, null);

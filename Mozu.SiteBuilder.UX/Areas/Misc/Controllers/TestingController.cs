@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _client.MaxResponseContentBufferSize = int.MaxValue;
             _client.Timeout = new TimeSpan(0, 1, 3, 0);
 
-            var reqUri = new Uri(Request.GetDisplayUrl());
+            var reqUri = Request.HttpContext.GetRequestUri();
 
             var reqMessage =
                 CreateProxyHttpRequest(Request.HttpContext, new Uri(resource + reqUri.PathAndQuery.Substring(4)));

@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             return builder
                 .UseMiddleware<RedisHealthCheckMiddleware>()
                 .UseMiddleware<SessionMiddleware>()
+                .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
                 .UseMiddleware<SiteContextInitializationMiddleware>()
                 .UseMiddleware<FourHundredMiddleware>()
                 .UseMiddleware<DeepPagingLimitingMiddleware>()

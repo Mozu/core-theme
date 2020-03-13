@@ -1,0 +1,188 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Rewrite;
+using Mozu.Core.Configuration;
+using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+
+namespace Mozu.SiteBuilder.Mvc.Middleware
+{
+    public static class UrlRewritingMiddleware
+    {
+        public const string IsSeoRewrite = "IsSeoRewrite";
+        public const string OriginalUri = "OriginalUri";
+        public const string MzPreCleanedUri = "MzPreCleanedUri";
+        // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
+        internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
+
+        public static IRedirectHandler Redirecter { get; set; } = RedirectHandler.Instance;
+
+        public static void RewriteIncomingUrl(RewriteContext context)
+        {
+            var services = context.HttpContext.RequestServices;
+
+            var apiContext = services.Resolve<ISiteBuilderApiContext>();
+            if (!apiContext.SiteId.HasValue) return;
+
+            var siteContext = services.Resolve<ISiteContext>();
+            var pageContext = services.Resolve<PageContext>();
+            Uri requestUri;
+
+            if (context.HttpContext.Items.TryGetValue(OriginalUri, out var temp))
+            {
+                requestUri = (Uri) temp;
+            }
+            else
+            {
+                requestUri = context.HttpContext.GetRequestUri();
+            }
+            // try redirects
+            var redirect = Redirecter.GetRedirectForRequestUri(services.Resolve<IRedirectRepository>(), requestUri);
+            if (redirect != null)
+            {
+                // we short-circuit the rewrite if this request has already been rewritten this go around.
+                if (redirect.IsRewrite.GetValueOrDefault(false) && context.HttpContext.Items.ContainsKey(IsSeoRewrite))
+                {
+                    return;
+                }
+
+                if (redirect.IsRewrite.GetValueOrDefault(false))
+                {
+                    RewriteCurrentRequest(context.HttpContext, redirect.Destination);
+                    services.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(context.HttpContext);
+                    return;
+                }
+
+                if (!apiContext.IsEditMode)
+                {
+                    return Task.FromResult(
+                        RedirectTo(
+                            redirect.Destination,
+                            redirect.IsTemporary.GetValueOrDefault(false),
+                            siteContext?.GeneralSettings?.EnforceSitewideSSL.GetValueOrDefault(false) == true,
+                            pageContext.IsSecure,
+                            pageContext.SecureHost,
+                            request
+                        )
+                    );
+                }
+            }
+
+            var settings = services.Resolve<ISettings>();
+            // try any custom routes
+            if (request.GetRouteData().Route is NonSystemRoute)
+            {
+                var rerouted = PerformCustomRouting(request);
+                return HandleReroutedRequest(rerouted, pageContext, siteContext, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
+            }
+        }
+
+        private static Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, IPageContext pageContext, ISiteContext siteContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
+        {
+
+            if (rerouted.Method != HttpMethod.Get ||
+                pageContext.IsEditMode ||
+                !pageContext.HandledByProxy ||
+                !sslValidationEnabled)
+            {
+                return continuation();
+            }
+
+            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
+            var currentUrl = new Uri(pageContext.Url);
+
+
+            if (customRoute?.UrlScheme.HasValue == true)
+            {
+                if (customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme))
+                {
+                    return continuation();
+                }
+            }
+            else if (!siteContext.GeneralSettings.EnforceSitewideSSL.GetValueOrDefault(false))
+            {
+                return continuation();
+            }
+            else if (currentUrl.Scheme.EqualsIgnoreCase("https"))
+            {
+                return continuation();
+            }
+
+            var scheme = customRoute?.UrlScheme.HasValue == true ? customRoute.UrlScheme.Value.ToStringQuickly() : "https";
+
+            var builder = new UriBuilder(scheme, currentUrl.Host);
+            builder.Path = currentUrl.AbsolutePath;
+            builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' });
+            return Task.FromResult(
+                RedirectTo(
+                    builder.Uri.ToString(),
+                    isTemporary: false,
+                    enforceSsl: false,
+                    isSecureRequest: pageContext.IsSecure,
+                    secureHost: pageContext.SecureHost,
+                    request: rerouted
+                )
+           );
+        }
+
+        private static HttpRequestMessage PerformCustomRouting(HttpRequestMessage request)
+        {
+            var routeHandler = request.Resolve<ICustomRouteHandler>();
+            if (routeHandler == null) return request;
+
+            var found = routeHandler.RouteIncomingRequest();
+            if (!found)
+            {
+                request.Resolve<IRouteConfig>().RouteIncomingDefaultRouteRequest(request);
+            }
+            return request;
+        }
+
+        private static HttpResponseMessage RedirectTo(string location, bool isTemporary, bool enforceSsl, bool isSecureRequest, string secureHost, HttpRequestMessage request)
+        {
+            HttpResponseMessage resp = request.CreateResponse(isTemporary ? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
+            var redirectUri = new Uri(location, UriKind.RelativeOrAbsolute);
+            if (!redirectUri.IsAbsoluteUri)
+            {
+                if (!location.StartsWith("/"))
+                {
+                    location = "/" + location;
+                    redirectUri = new Uri(location, UriKind.RelativeOrAbsolute);
+                }
+
+                if (enforceSsl && !isSecureRequest)
+                {
+                    redirectUri = new Uri(secureHost + location);
+                }
+            }
+
+            resp.Headers.Location = redirectUri;
+            return resp;
+        }
+
+        /// <summary>
+        /// rewriting the request just means hard-setting the URI to the new location, and then magically erasing some state that webapi stuffs into the request context for routing purposes.
+        /// </summary>
+        static void RewriteCurrentRequest(HttpContext context, string destination)
+        {
+            context.Items[IsSeoRewrite] = true;
+            //var uri = new Uri("http://localhost/" + destination);
+
+            // set new uri and clear out the old request context, which was built off of that old uri
+            context.Request.Path = destination;
+            context.Items[MS_HTTP_RoutingContextKey] = null;
+        }
+    }
+}

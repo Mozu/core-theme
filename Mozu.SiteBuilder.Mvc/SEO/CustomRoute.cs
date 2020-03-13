@@ -12,7 +12,7 @@ using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-    public class CustomRoute : Microsoft.AspNetCore.Routing.Route
+    public class CustomRoute : HttpRoute
     {
         public enum Scheme
         {
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             IsCanonical = isCanonical;
             UrlScheme = scheme;
 
-            if ( !string.IsNullOrWhiteSpace(queryString))
+            if (!string.IsNullOrWhiteSpace(queryString))
             {
                 QueryString = System.Web.HttpUtility.ParseQueryString(queryString);
             }
@@ -58,17 +58,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             PreMappings = mappings.Where(x => x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x=>x.Key, y=> y.Value );
             PostMappings = mappings.Where(x => !x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x => x.Key, y => y.Value);
 
-            object temp;
             if (constraints == null)
             {
                 return;
             }
-            foreach ( var (key, value) in constraints)
+            foreach (var (key, value) in constraints)
             {
                 var paramNames = value == null || value.Length == 0 ? new [] { "*" } : value;
-                foreach( var paramName in paramNames)
+                foreach(var paramName in paramNames)
                 {
-                    if ( !Constraints.TryGetValue( paramName, out temp))
+                    if (!Constraints.TryGetValue( paramName, out var temp))
                     {
                         temp = new CustomRouteConstraintGroup();
                         Constraints[paramName] = temp;
@@ -111,23 +110,23 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return values;
         }
 
-        //protected bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
-        //{
-        //    var origional = values;
-        //    if( PreMappings.Count > 0 )
-        //    {
-        //        values= new HttpRouteValueDictionary( values);
-        //        DoRewriteRouteData(request, values, PreMappings);
-        //    }
-        //    var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
-        //    if (ret && !Equals( origional,values ))
-        //    {
-        //        origional.Clear();
-        //        origional.AddRange(values);
-        //    }
-        //    //todo: should pre mappings persist?
-        //    return ret;
-        //}
+        protected bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
+        {
+            var original = values;
+            if (PreMappings.Count > 0)
+            {
+                values = new HttpRouteValueDictionary(values);
+                DoRewriteRouteData(request, values, PreMappings);
+            }
+            var ret = base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
+            if (ret && !Equals(original, values))
+            {
+                original.Clear();
+                original.AddRange(values);
+            }
+            //todo: should pre mappings persist?
+            return ret;
+        }
 
         public bool IsCanonicalFor(FancyRoute route)
         {

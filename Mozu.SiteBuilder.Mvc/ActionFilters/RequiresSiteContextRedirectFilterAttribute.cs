@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
 
 
@@ -26,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var apiContext = context.HttpContext.RequestServices.Resolve<IApiContext>();
-            var requestUri = new Uri(context.HttpContext.Request.GetDisplayUrl());
+            var requestUri = context.HttpContext.GetRequestUri();
             if (!apiContext.SiteId.HasValue)
             {
                 var redirLoc = "/admin/auth/launchpad";
