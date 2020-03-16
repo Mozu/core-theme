@@ -100,7 +100,7 @@
       "id": "shipment.itemscanceled",
       "properties": {},
       "template": "email/item-cancel",
-      "title": "Shipment Item Canceled"
+      "title": "Item Canceled"
     },
     {
       "id": "checkout.changed",
