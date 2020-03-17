@@ -412,5 +412,10 @@
     "volumePriceSavings": "Ersparnisse",
     "volumePriceMinMaxQty": "{0} - {1}",
     "volumePriceMinOnlyQty": "{0}+",
-    "mapPrice": "in den Warenkorb Endpreis zu sehen"
+    "mapPrice": "in den Warenkorb Endpreis zu sehen",
+    "readyForPickup": "Abholbereit",
+    "onItsWay": "Auf dem Weg",
+    "unitPrice": "Stückpreis",
+    "quantity": "Menge",
+    "partialPickupReadyBlob": "Vielen Dank für Ihren Einkauf bei {0}. Ein Teil Ihrer Bestellung steht zur Abholung bereit."
 }
