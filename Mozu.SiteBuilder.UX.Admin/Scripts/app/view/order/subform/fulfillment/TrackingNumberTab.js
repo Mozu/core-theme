@@ -44,7 +44,7 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
                             {
                                 minWidth: '300',
                                 tpl: [
-                                    '<div class="labelvalue">' + me.defaultShippingMethod + '</div>'
+                                    '<div class="labelvalue">'+this.tracking.trackingData[count].shippingMethodCode+'</div>'
                                 ]
                             },
                             {
