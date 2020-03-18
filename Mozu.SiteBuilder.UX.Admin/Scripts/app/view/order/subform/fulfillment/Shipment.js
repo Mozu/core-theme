@@ -45,21 +45,21 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             items:
                 [
                     {
-                        padding: '0 40 0 0',
+                        cls:'taco-shipment-item-header',
                         tpl: [
                             '<span class="label">Type</span>',
                             '<div class="labelvalue">' + shipmentTypeDescription + '</div>'
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         tpl: [
                             '<span class="label">Shipment</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.number + '</div>'
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Last Updated</span>',
@@ -67,14 +67,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         tpl: [
                             '<span class="label">Status</span>',
                             '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus) + '</div>'
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         hidden: !(this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled'),
                         tpl: [
                             '<span class="label">Reason</span>',
@@ -85,7 +85,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         width: 200
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Shipment Step Id</span>',
@@ -93,7 +93,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Fulfillment Step</span>',
@@ -101,7 +101,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         ]
                     },
                     {
-                        padding: '0 40 0 0',
+                        cls: 'taco-shipment-item-header',
                         tpl: [
                             '<span class="label">Total</span>',
                             '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
@@ -113,7 +113,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         xtype: 'container',
-                        padding: '0 20 0 0',
+                        cls: 'taco-shipment-item-header',
                         items: [
                             Ext.widget('splitbutton', {
                                 menuAlign: 'tr-br?',
