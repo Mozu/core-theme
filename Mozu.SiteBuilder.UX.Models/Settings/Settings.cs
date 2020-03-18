@@ -259,6 +259,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? PartialPickupReady { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? TransferShipmentCreatedByFulfiller { get; set; } 
+        
     }
 
     [DataContract]

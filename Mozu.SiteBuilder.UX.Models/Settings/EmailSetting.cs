@@ -77,6 +77,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         ShipmentAssigned,
         TransferShipmentCreated,
         TransferShipmentShipped,
-        PartialPickupReady
+        PartialPickupReady,
+        TransferShipmentCreatedByFulfiller
     };
 }

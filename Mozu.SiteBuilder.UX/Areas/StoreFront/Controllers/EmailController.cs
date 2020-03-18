@@ -201,6 +201,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.PartialPickupReady
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentCreatedByFulfiller 
                                            }
 
 
@@ -583,7 +588,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
 			public const string ShipmentItemCanceled = "shipment.itemscanceled";
             public const string ShipmentAssigned = "shipment.assigned"; 
-
+            public const string TransferShipmentCreatedByFulfiller = "shipment.transfercreatedbyfulfiller";
             public const string TransferShipmentCreated = "shipment.transfercreated";
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
