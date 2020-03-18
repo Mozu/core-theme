@@ -12,5 +12,5 @@
             </div>       
         </div>
     </div>
-    <header-oms-navigation *ngIf="headerModel.isOMSEnabledTenant && headerModel.isUpgradeOMSClient"></header-oms-navigation>
+    <header-oms-navigation *ngIf="headerModel.isOMSEnabledTenant && headerModel.isUpgradeOMSClient && navigationContainerType != navigationType.locationGroups"></header-oms-navigation>
 </nav>
