@@ -36,7 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IFulfillmentSettingsWebApiClient _fulfillmentSettingsWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
-        private readonly IShippingAdminProvisioningWebApiClient _shippingAdminProvisioningWebApiClient;
         private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
 
         public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient, IFulfillmentSettingsWebApiClient fulfillmentSettingsWebApiClient, IReturnSettingsWebApiClient returnSettingsWebApiClient,
@@ -51,7 +50,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
             _fulfillmentProxyClient = fulfillmentProxyClient;
-            _shippingAdminProvisioningWebApiClient = shippingAdminProvisioningWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -212,29 +210,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [HttpGetRoute(UriTemplate = "shipmentBpmSteps/{shipmentType}")]
-        public Response<List<FulfillmentListView>> GetShipmentBpmSteps(string shipmentType)
-        {
-            if (shipmentType == "STH")
-            {
-                return List2(new List<FulfillmentListView>() {
-                  new FulfillmentListView(){Text="Accept Shipment",Value="10" },
-                  new FulfillmentListView(){Text="Validate Items In Stock",Value="29" },
-                  new FulfillmentListView(){Text="Print Packing Slip",Value="22" },
-                  new FulfillmentListView(){Text="Prepare for Shipment",Value="25" }
-              });
-            }
-            else
-            {
-                return List2(new List<FulfillmentListView>() {
-                  new FulfillmentListView(){Text="Accept Shipment",Value="13" },
-                  new FulfillmentListView(){Text="Print Pick List",Value="21" },
-                  new FulfillmentListView(){Text="Validate Items In Stock",Value="26" },
-                  new FulfillmentListView(){Text="Customer Pickup",Value="23" }
-              });
-            }
-        }
-
         [HttpPostRoute(UriTemplate = "updateShippingSettings")]
         public async Task<Response<SiteShippingSettings>> UpdateShippingSettings(SiteShippingSettings shippingSettings)
         {
@@ -311,6 +286,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return await GetEmailTypes(new PagingParamaters(), new FilterCollection());
+        }
+
+        [HttpGetRoute(UriTemplate = "serviceTypes/read")]
+        public Response<List<ServiceType>> GetDefaultServiceTypes()
+        {
+            var serviceTypes = new List<ServiceType>();
+            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboStandardServiceTypeCode, DeliveryDuration = "Standard" });
+            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboOneDayServiceTypeCode, DeliveryDuration = "1 day" });
+            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboTwoDayServiceTypeCode, DeliveryDuration = "2 day" });
+            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboThreeDayServiceTypeCode, DeliveryDuration = "3 day" });
+            return List2<ServiceType>(serviceTypes);
         }
 
         [HttpGetRoute(UriTemplate = "shipmentBpmSteps/{shipmentType}")]
