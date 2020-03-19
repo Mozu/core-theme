@@ -1,28 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.ShippingAdmin.Contracts;
+using Mozu.ShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Mozu.SiteSettings.Shipping.Contracts;
-using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
-using DC = Mozu.SiteSettings.Order.Contracts;
+using Mozu.SiteSettings.Shipping.Contracts.Clients;
 using Newtonsoft.Json.Linq;
-using Mozu.ShippingAdmin.Contracts.Clients;
-using Mozu.ShippingAdmin.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http;
 using Constants = Mozu.ShippingAdmin.Contracts.Constants;
 using Mozu.Core.Exceptions;
 using System.Net;
 using System.Net.Http;
+using DC = Mozu.SiteSettings.Order.Contracts;
+using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -70,12 +70,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "updateCacheKey")]
         public async Task<Response<GeneralSettings>> UpdateCacheKey(GeneralSettings settings)
         {
-            var previousSettings = (await this.GetSettings()).Items.First();
+            var previousSettings = (await GetSettings()).Items.First();
             previousSettings.CdnCacheBustKey = settings.CdnCacheBustKey;
 
             var savedSettings = _wrapper.UpdateGeneralSettings(previousSettings);
 
-            return Single2((await this.GetSettings()).Items.First());
+            return Single2((await GetSettings()).Items.First());
         }
 
         [HttpPostRoute(UriTemplate = "save")]
@@ -87,11 +87,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             settingsToSave.CdnCacheBustKey = cdnCacheKey;
 
             if (!previousSettings.IsMultishipEnabled.GetValueOrDefault() && settingsToSave.IsMultishipEnabled.GetValueOrDefault())
+            {
                 paymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
+            }
 
             var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
             if (!string.IsNullOrWhiteSpace(paymentProcessingFlowType))
+            {
                 orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
+            }
 
             var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
 
@@ -106,15 +110,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     channel.SiteIds = new List<int>();
                 }
-                if (!channel.SiteIds.Contains(this.SbApiContext.SiteId.Value))
+                if (!channel.SiteIds.Contains(SbApiContext.SiteId.Value))
                 {
-                    channel.SiteIds.Add(this.SbApiContext.SiteId.Value);
+                    channel.SiteIds.Add(SbApiContext.SiteId.Value);
                     _channelWebApiClient.UpdateChannel(settingsToSave.ChannelId, channel).Wait();
                 }
             }
-            await this.SaveEmailTypes(settingsToSave.EmailTypes);
+            await SaveEmailTypes(settingsToSave.EmailTypes);
 
-            return Single2((await this.GetSettings()).Items.First());
+            return Single2((await GetSettings()).Items.First());
         }
 
         [HttpPostRoute(UriTemplate = "updatePaymentSettings")]
@@ -266,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     var onlyOnApiRequest = (bool?)prop.GetValue(results.EmailTransactionsOnlyOnRequest);
                     emailEntry.OnlyOnApiRequest = onlyOnApiRequest.GetValueOrDefault(false);
-
+                    
                     dic[emailEntry.Id] = emailEntry;
                 }
             }
@@ -291,11 +295,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "serviceTypes/read")]
         public Response<List<ServiceType>> GetDefaultServiceTypes()
         {
-            var serviceTypes = new List<ServiceType>();
-            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboStandardServiceTypeCode, DeliveryDuration = "Standard" });
-            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboOneDayServiceTypeCode, DeliveryDuration = "1 day" });
-            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboTwoDayServiceTypeCode, DeliveryDuration = "2 day" });
-            serviceTypes.Add(new ServiceType() { Code = Constants.ServiceTypes.KiboThreeDayServiceTypeCode, DeliveryDuration = "3 day" });
+            var serviceTypes = new List<ServiceType>
+            {
+                new ServiceType() { Code = Constants.ServiceTypes.KiboStandardServiceTypeCode, DeliveryDuration = "Standard" },
+                new ServiceType() { Code = Constants.ServiceTypes.KiboOneDayServiceTypeCode, DeliveryDuration = "1 day" },
+                new ServiceType() { Code = Constants.ServiceTypes.KiboTwoDayServiceTypeCode, DeliveryDuration = "2 day" },
+                new ServiceType() { Code = Constants.ServiceTypes.KiboThreeDayServiceTypeCode, DeliveryDuration = "3 day" }
+            };
             return List2<ServiceType>(serviceTypes);
         }
 

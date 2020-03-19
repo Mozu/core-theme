@@ -1,9 +1,9 @@
+using Mozu.SiteSettings.Order.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Mozu.SiteSettings.Order.Contracts;
-using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
@@ -18,12 +18,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         private SiteDomain _primary;
         private SiteDomain _current;
-        private string _currenthostAndPrefix;
+        private readonly string _currenthostAndPrefix;
 
         public SiteDomains(string currenthostAndPrefix, List<SiteDomain> all)
         {
-            this._currenthostAndPrefix = currenthostAndPrefix;
-            this.All = all;
+            _currenthostAndPrefix = currenthostAndPrefix;
+            All = all;
         }
 
         public SiteDomain Current
@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? GiftCardCreated { get; set; }
-        
+
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? OrderCancellation { get; set; }
 
@@ -249,6 +249,16 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ShipmentAssigned { get; set; }
+
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? TransferShipmentCreated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? TransferShipmentShipped { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? PartialPickupReady { get; set; }
     }
 
     [DataContract]
@@ -366,8 +376,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
-        
-        public CheckoutSettings CheckoutSetting { get; set; } 
+
+        public CheckoutSettings CheckoutSetting { get; set; }
     }
 
     public class ViewModeToggles

@@ -1,20 +1,14 @@
+using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Settings;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using AutoMapper;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.OAF;
-using Mozu.SiteBuilder.UX.Models.Settings;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
-using Stact.Routing.Nodes;
-using GDC = Mozu.SiteSettings.General.Contracts;
 using DC = Mozu.SiteSettings.Order.Contracts;
-using StringExtensions = Mozu.Core.Extensions.StringExtensions;
+using GDC = Mozu.SiteSettings.General.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 {
@@ -71,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             CreateMap<DC.CheckoutSettings, CheckoutSettings>()
                 .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
-                .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
+                .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => string.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
                 .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.ResolveUsing(GetExternalPaymentWorkflowSettings))
                 .ForMember(x => x.VisaCheckout, opt => opt.ResolveUsing(GetVisaCheckoutSettings))
                 .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
@@ -100,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
 
                 //  .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CustomCdnHostName))
-              //  .ForMember(m => m.CheckoutSetting, op => op.ResolveUsing(x => x.CheckoutSetting))
+                //  .ForMember(m => m.CheckoutSetting, op => op.ResolveUsing(x => x.CheckoutSetting))
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.IsMultishipEnabled, op => op.ResolveUsing(x => x.IsMultishipEnabled))
                 .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
@@ -220,7 +214,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         private static List<ExternalPaymentWorkflowSettings> GetExternalPaymentWorkflowSettings(DC.CheckoutSettings checkoutSettings)
         {
             if (checkoutSettings == null || checkoutSettings.PaymentSettings == null || checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions == null)
+            {
                 return new List<ExternalPaymentWorkflowSettings>();
+            }
 
             return
                 Mapper.Map<List<ExternalPaymentWorkflowSettings>>(checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions);
@@ -234,7 +230,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 DC.ExternalPaymentWorkflowDefinition externalPayment = checkoutSettings.PaymentSettings
                     .ExternalPaymentWorkflowDefinitions.Find(
                         expwd =>
-                            String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.VISA_CHECKOUT,
+                            string.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.VISA_CHECKOUT,
                                 System.StringComparison.OrdinalIgnoreCase));
                 if (externalPayment != null)
                 {
@@ -243,11 +239,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                     {
                         settings.ClientId = externalPayment.Credentials.Any(data => data.APIName == "CLIENTID")
                             ? externalPayment.Credentials.Find(data => data.APIName == "CLIENTID").Value
-                            : String.Empty;
+                            : string.Empty;
 
                         settings.ApiKey = externalPayment.Credentials.Any(data => data.APIName == "APIKEY")
                             ? externalPayment.Credentials.Find(data => data.APIName == "APIKEY").Value
-                            : String.Empty;
+                            : string.Empty;
 
                     }
                 }
