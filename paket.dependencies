@@ -49,8 +49,8 @@ nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts 1.2002.0-ngshot-contracts-4
 nuget Mozu.PricingRuntime.Contracts >= 1.1916.0-develop-6
-nuget Mozu.SiteSettings.General.Contracts 1.2012.0-1459-contracts-75
-nuget Mozu.SiteSettings.Order.Contracts 1.2012.0-1459-contracts-75
+nuget Mozu.SiteSettings.General.Contracts 1.2012.0-gshot-contracts-77
+nuget Mozu.SiteSettings.Order.Contracts 1.2012.0-gshot-contracts-77
 nuget Mozu.SiteSettings.Ship.Contracts 1.1936.0-gshot-contracts-40
 nuget protobuf-net 2.0.0.668
 nuget FAKE
