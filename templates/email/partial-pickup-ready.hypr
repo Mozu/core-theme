@@ -81,32 +81,32 @@
     <table width="100%" cellpadding="1" cellspacing="1" width="50%">
         <thead>
             <tr>
-                <td><font color="#FFFFFF">{{ labels.item }}</font></td>
-                <td><font color="#FFFFFF"></font></td>
-                <td><font color="#FFFFFF">{{ labels.unitPrice }}</font></td>
-                <td><font color="#FFFFFF">{{ labels.quantity }}</font></td>
-                <td style="text-align: right;"><font color="#FFFFFF">{{ labels.itemTotal }}</font></td>
+                <td bgcolor="#666666" colspan="2"><font color="#FFFFFF">{{ labels.item }}</font></td>                
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.unitPrice }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.quantity }}</font></td>
+                <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.itemTotal }}</font></td>
             </tr>
         </thead>
-        
-        {% for item in model.items %}
-            {% if item.readyForPickupQuantity < item.quantity %}
-                <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-                    <td>
-                        <img style="height: 100px;" src="{{ item.imageUrl }}">
-                    </td>
-                    <td>
-                    {{ item.name }}
-                    <dl>
-                        <dd>{{ item.productCode }}</dd>&nbsp;
-                    </dl>
-                    </td>
-                    <td> {{ item.unitPrice }} </td>
-                    <td> {{ item.readyForPickupQuantity }} </td>
-                    <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.readyForPickupQuantity) }} {% endfilter %}</span></td>
-                </tr>
-            {% endif %}
-        {% endfor %}
+        <tbody>
+          {% for item in model.items %}
+              {% if item.readyForPickupQuantity < item.quantity %}
+                  <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                      <td>
+                          <img style="height: 100px;" src="{{ item.imageUrl }}">
+                      </td>
+                      <td>
+                      {{ item.name }}
+                      <dl>
+                          <dd>{{ item.productCode }}</dd>&nbsp;
+                      </dl>
+                      </td>
+                      <td> {{ item.unitPrice }} </td>
+                      <td> {{ item.readyForPickupQuantity }} </td>
+                      <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.readyForPickupQuantity) }} {% endfilter %}</span></td>
+                  </tr>
+              {% endif %}
+          {% endfor %}
+        </tbody>
     </table>
 
      <h3>{{ labels.onItsWay }}</h3>
@@ -114,30 +114,30 @@
     <table width="100%" cellpadding="1" cellspacing="1" width="50%">
         <thead>
             <tr>
-                <td><font color="#FFFFFF">{{ labels.item }}</font></td>
-                <td><font color="#FFFFFF"></font></td>
-                <td><font color="#FFFFFF">{{ labels.unitPrice }}</font></td>
-                <td><font color="#FFFFFF">{{ labels.quantity }}</font></td>
-                <td style="text-align: right;"><font color="#FFFFFF">{{ labels.itemTotal }}</font></td>
+                <td bgcolor="#666666" colspan="2"><font color="#FFFFFF">{{ labels.item }}</font></td>                
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.unitPrice }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.quantity }}</font></td>
+                <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.itemTotal }}</font></td>
             </tr>
         </thead>
-        
-        {% for item in model.items %}         
-            <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-                <td>
-                    <img style="height: 100px;" src="{{ item.imageUrl }}">
-                </td>
-                <td>
-                    {{ item.name }}
-                    <dl>
-                        <dd>{{ item.productCode }}</dd>&nbsp;
-                    </dl>
-                </td>
-                <td> {{ item.unitPrice }} </td>
-                <td> {{ item.quantity|subtract(item.readyForPickupQuantity) }} </td>
-                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity|subtract(item.readyForPickupQuantity)) }} {% endfilter %}</span></td>
-            </tr>         
-        {% endfor %}
+        <tbody>
+          {% for item in model.items %}         
+              <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                  <td>
+                      <img style="height: 100px;" src="{{ item.imageUrl }}">
+                  </td>
+                  <td>
+                      {{ item.name }}
+                      <dl>
+                          <dd>{{ item.productCode }}</dd>&nbsp;
+                      </dl>
+                  </td>
+                  <td> {{ item.unitPrice }} </td>
+                  <td> {{ item.quantity|subtract(item.readyForPickupQuantity) }} </td>
+                  <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.quantity|subtract(item.readyForPickupQuantity)|multiply(item.actualPrice) }} {% endfilter %}</span></td>
+              </tr>         
+          {% endfor %}
+        </tbody>
     </table>
 
     <p>{{ labels.orderPickupReadyBlob2 }}</p>
