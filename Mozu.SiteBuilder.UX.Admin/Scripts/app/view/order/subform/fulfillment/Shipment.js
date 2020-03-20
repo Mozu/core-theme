@@ -66,7 +66,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         hidden: this.shipmentRecord.shipmentType != "Transfer",
                         tpl: [
                             '<span class="label">Parent Shipment No</span>',
-                            '<div class="labelvalue">' + this.shipmentRecord.parentShipmentNumber + '</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.originalShipmentNumber + '</div>'
                         ]
                     },
                     {
