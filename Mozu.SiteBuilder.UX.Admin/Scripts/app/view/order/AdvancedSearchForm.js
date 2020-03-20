@@ -137,6 +137,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     data: [
                         { name: "Not Fulfilled", id: "NotFulfilled" },
                         { name: "Partially Fulfilled", id: "PartiallyFulfilled" },
+                        { name: "Customer Care", id: "CustomerCare" },
                         { name: "Fulfilled", id: "Fulfilled" }
                     ]
                 })

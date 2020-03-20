@@ -315,6 +315,17 @@ Ext.define('Taco.view.order.Grid', {
                 width: 100
             },
             {
+                stateId: 'externalId',
+                text: 'External Order ID',
+                dataIndex: 'externalId',
+                itemId: 'externalId',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: true,
+                hidden: true
+            },
+            {
                 stateId: 'parentCheckoutNumber',
                 dataIndex: 'parentCheckoutNumber',
                 text: 'Order Reference Number',
