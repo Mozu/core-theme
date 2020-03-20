@@ -176,6 +176,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 EditShipment = fulfillmentSettings?.FulfillerSettings?.EditShipment ?? false
             };
 
+            currentFulfillmentSettings.ActionOnBOPISReject = fulfillmentSettings.ActionOnBOPISReject;
+
             var itemOut = (await _fulfillmentSettingsWebApiClient.UpdateFulfillmentSettings(currentFulfillmentSettings)).ReadAsSync();
             return Single2(itemOut);
 
