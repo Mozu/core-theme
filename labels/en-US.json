@@ -566,5 +566,10 @@
   "width": "Width",
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yourAccount": "Your Account",
-  "yourOrderNumber": "Your order number is <strong>{0}</strong>."
+  "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
+  "readyForPickup": "Ready for pickup",
+  "onItsWay": "On its way",
+  "unitPrice": "Unit Price",
+  "quantity": "Qty",
+  "partialPickupReadyBlob": "Thank you for shopping at {0}. Part of your order is ready for pickup."
 }

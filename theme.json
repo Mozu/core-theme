@@ -129,6 +129,12 @@
       "title": "Order Pickup Reminder"
     },
     {
+      "id": "shipment.partialpickupready",
+      "properties": {},
+      "template": "email/partial-pickup-ready",
+      "title": "Partial Pickup Ready"
+    },
+    {
       "id": "refund.created",
       "properties": {},
       "template": "email/order-refund-issued",
