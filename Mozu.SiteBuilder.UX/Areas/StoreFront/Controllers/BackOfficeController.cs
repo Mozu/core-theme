@@ -189,14 +189,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (item.Product.ProductCode == productCode || item.Product.VariationProductCode == productCode)
                 {
-                    simpleProduct.Weight = item.Product.Measurements.Weight;
+                    simpleProduct.Weight = item.Product.Measurements?.Weight;
                     simpleProduct.Name = item.Product.Name;
                     break;
                 }
                 var bundledProduct = item.Product.BundledProducts.FirstOrDefault(bp => bp.ProductCode.Equals(productCode));
                 if (bundledProduct != null)
                 {
-                    simpleProduct.Weight = bundledProduct.Measurements.Weight;
+                    simpleProduct.Weight = bundledProduct.Measurements?.Weight;
                     simpleProduct.Name = bundledProduct.Name;
                     break;
                 }
