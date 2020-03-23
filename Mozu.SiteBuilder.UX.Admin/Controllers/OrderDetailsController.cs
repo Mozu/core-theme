@@ -31,18 +31,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// on storefront and sends a 302 redirects to storefront.
         /// </summary>
         [HttpGet]
-        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber)
+        public HttpResponseMessage Deets(int siteId, string orderId)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
-            string tok = claim.ToAccessToken();
+            string token = claim.ToAccessToken();
+            string urlEncodedToken = HttpUtility.UrlEncode(token);
 
-            string destinationUrl = "/back-office/orders/" + orderId;
-            if (shipmentNumber > 0)
-            {
-                destinationUrl += "/shipments/" + shipmentNumber;
+            string destinationUrl = $"/back-office/orders/{orderId}?t={urlEncodedToken}";
+
+            var resp = Request.CreateResponse(HttpStatusCode.Found);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage PackingSlip(int siteId, string orderId, int shipmentNumber)
+        {
+            if (shipmentNumber <= 0) {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
+            var claim = CreateLimitedUserClaimsForOrder(orderId);
+            string token = claim.ToAccessToken();
+            string urlEncodedToken = HttpUtility.UrlEncode(token);
+
+            string destinationUrl = $"/back-office/orders/{orderId}/shipments/{shipmentNumber}?t={urlEncodedToken}";
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
             resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
