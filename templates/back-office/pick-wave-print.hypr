@@ -1,4 +1,5 @@
-﻿{% block body-content %}
+﻿{% extends "back-office/base" %}
+{% block body-content %}
     {% if printPickwave %}
         <div>{% include "back-office/pick-list" %}</div>
         <br>
