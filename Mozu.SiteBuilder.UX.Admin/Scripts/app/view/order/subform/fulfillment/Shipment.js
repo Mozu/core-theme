@@ -527,6 +527,44 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         return model;
     },
+   
+    getReassignTransferShipmentPayload: function () {
+        var me = this;
+        var shipment = me.shipmentRecord;
+        var model = {
+            orderType: 'TRANSFER', //me.record.get('orderType'),
+            items: [],
+            inventoryRequestType: 'ALL'
+        }
+
+        if (model && shipment.fulfillmentLocationCode) {
+            model.exclusionListLocationCode = [];
+        }
+        shipment.items.forEach(function (element) {
+            model.items.push({
+                upc: element.variationProductCode ? element.variationProductCode : element.productCode,
+                quantity: element.quantity
+            });
+
+            if (model && shipment.fulfillmentLocationCode) {
+                model.exclusionListLocationCode.push({
+                    locationCode: shipment.fulfillmentLocationCode,
+                    orderItemID: element.lineId
+                });
+            }
+        });
+
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
+            model.shippingAddress = {
+                postalCode: me.shipmentRecord.location.address.postalOrZipCode,
+                countryCode: me.shipmentRecord.location.address.countryCode,
+                latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
+                longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
+            }
+        }
+
+        return model;
+    },
 
     openUpdateBackorderDatePopUp: function () {
         var me = this;
@@ -567,6 +605,40 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         inventoryData: json,
                         shipmentData: payload,
                         isInventory: true,
+                        shipmentRecord: me.shipmentRecord,
+                        listeners: {
+                            saveSuccess: {
+                                fn: function (json) {
+                                    me.fireEvent('shipmentRefresh', json);
+                                },
+                                scope: me
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
+                    // close the dialog
+                    //me.close();
+                }
+            });
+        }
+        else if (me.shipmentRecord.shipmentType == "Transfer") {
+            var payload = me.getReassignTransferShipmentPayload();
+            me.record.getCandidateSuggestions({
+                jsonData: payload,
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
+                    Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+                        layout: 'hbox',
+                        width: 1080,
+                        height: 450,
+                        record: me.record,
+                        inventoryData: json,
+                        shipmentData: payload,
+                        isInventory: false,
                         shipmentRecord: me.shipmentRecord,
                         listeners: {
                             saveSuccess: {

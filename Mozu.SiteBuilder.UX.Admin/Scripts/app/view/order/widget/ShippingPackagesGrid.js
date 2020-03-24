@@ -611,7 +611,6 @@
         //var shipment = me.shipmentRecord;
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
-
         var model = {
             type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',
             items: []
@@ -621,11 +620,14 @@
             model.locationBlacklist = [me.shipmentRecord.location.code];
 
 
-        if (model && me.shipmentRecord.shipmentType == "BOPIS") {
+        if (model && me.shipmentRecord.shipmentType === "BOPIS") {
             model.pickup = true;
         }
-        else if (model && me.shipmentRecord.shipmentType == "STH") {
+        else if (model && me.shipmentRecord.shipmentType === "STH") {
             model.directShip = true;
+        }
+        else if (model && me.shipmentRecord.shipmentType === "Transfer") {
+            model.transferEnabled = true;
         }
 
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
@@ -637,7 +639,7 @@
                 countryCode: me.shipmentRecord.location.address.countryCode
             }
             //only showing 500 miles radius locations for BOPIS
-            if (model.requestLocation && me.shipmentRecord.shipmentType == "BOPIS") {
+            if (model.requestLocation && me.shipmentRecord.shipmentType === "BOPIS") {
                 model.requestLocation.radius = 500;
                 model.requestLocation.unit = 'MILES';
             }
