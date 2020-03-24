@@ -144,6 +144,10 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/order-history-list",
+        initialize: function() {
+            var self = this;
+            this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+        },
         getRenderContext: function() {
             var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
             context.returning = this.returning;
