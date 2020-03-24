@@ -355,6 +355,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         var actionMarkAsShipped = {
             text: 'Mark as shipped',
+            hidden: this.shipmentRecord.shipmentType.toLowerCase() == 'transfer',
             handler: function () {
                 me.shipmentMarkAsShipped();
             }
