@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             }));
         }
 
-        var tracking = this.fetchTrackingNumbersfromPackages();
+        var tracking = this.fetchTrackingDatafromPackages();
 
         if (tracking.count>0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
@@ -104,41 +104,24 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
         this.items = items;
     },
 
-    fetchTrackingNumbersfromPackages: function () {
+    fetchTrackingDatafromPackages: function () {
         var result = {
             count: 0,
             trackingData:[]
         };
         if (this.shipmentRecord.packages && this.shipmentRecord.packages.length > 0) {
             for (var count = 0; count < this.shipmentRecord.packages.length; count++) {
-                if (this.shipmentRecord.packages[count].trackingNumbers && this.shipmentRecord.packages[count].trackingNumbers.length > 0) {
-                    var isMethodExists = this.isShippingMethodExists(result.trackingData, this.shipmentRecord.packages[count].shippingMethodCode);
-                    if (isMethodExists >= 0) {
-                        result.trackingData[isMethodExists].trackingNumbers = result.trackingData[isMethodExists].trackingNumbers.concat(this.shipmentRecord.packages[count].trackingNumbers);
-                    }
-                    else {
-                        result.trackingData.push({
-                            shippingMethodCode: this.shipmentRecord.packages[count].shippingMethodCode,
-                            trackingNumbers: this.shipmentRecord.packages[count].trackingNumbers
-                        });
-                    }
-                    result.count += parseInt(this.shipmentRecord.packages[count].trackingNumbers.length);
+                if (this.shipmentRecord.packages[count].trackings && this.shipmentRecord.packages[count].trackings.length > 0) {
+                    result.trackingData.push({
+                        shippingMethodCode: this.shipmentRecord.packages[count].shippingMethodCode,
+                        shippingMethodName: this.shipmentRecord.packages[count].shippingMethodName,
+                        carrier: this.shipmentRecord.packages[count].carrier,
+                        trackings: this.shipmentRecord.packages[count].trackings
+                    });
+                    result.count += parseInt(this.shipmentRecord.packages[count].trackings.length);
                 }
             }
         }
         return result;
-    },
-
-    isShippingMethodExists: function (trackingData, methodCode) {
-        var trackingIndex = -1;
-        if (methodCode) {
-            for (var count = 0; count < trackingData.length; count++) {
-                if (trackingData[count].shippingMethodCode == methodCode)
-                    return count;
-            }
-        }
-        else if (trackingData.length > 0)
-            trackingIndex = 0;
-        return trackingIndex;
     }
 })

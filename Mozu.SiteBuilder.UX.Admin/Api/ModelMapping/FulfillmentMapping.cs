@@ -23,6 +23,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Items, opt => opt.Ignore())
                 .ForMember(x => x.AuditInfo, opt => opt.Ignore());
 
+            CreateMap<F.Tracking, CR.Tracking>()
+               .ForMember(x => x.Attributes, opt => opt.ResolveUsing(dc => dc.Attributes))
+               .ForMember(x => x.Number, opt => opt.ResolveUsing(dc => dc.Number))
+               .ForMember(x => x.Url, opt => opt.ResolveUsing(dc => dc.Url));
+
             CreateMap<F.Item, CR.ShipmentItem>()
                 .ForMember(x => x.FulfillmentLocationCode, opt => opt.Ignore())
                 .ForMember(x => x.IsPackagedStandAlone, opt => opt.Ignore())
