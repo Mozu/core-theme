@@ -58,7 +58,7 @@
                 property: 'location',
                 direction: 'asc'
             }],
-            fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
+            fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty', 'blockAssignment'],
             groupField: 'locationName',
             data: me.inventoryItemList.items,
             proxy: {
@@ -99,6 +99,21 @@
                     autoSizeColumn: true,
                     minWidth: 150,
                     renderer: Ext.util.Format.numberRenderer('0.00')
+                },
+                {
+                    header: 'Location excluded',
+                    dataIndex: 'blockAssignment',
+                    flex: 1,
+                    width: 50,
+                    autoSizeColumn: true,
+                    hidden: me.shipmentRecord.shipmentType != "STH",
+                    //minWidth: 150,
+                    renderer: function (val, meta, record) {
+                        if (val)
+                            return 'Y';
+                        else
+                            return 'N';
+                    }
                 },
                 {
                     text: 'Available',
