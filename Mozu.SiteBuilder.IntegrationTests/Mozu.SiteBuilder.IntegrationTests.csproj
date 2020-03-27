@@ -203,6 +203,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Siesta\SiestaRunner.js" />
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>

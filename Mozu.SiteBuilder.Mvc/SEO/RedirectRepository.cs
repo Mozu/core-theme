@@ -17,6 +17,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,16 +28,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public interface ICustomRouteCollectionRepository
     {
-        HttpRouteCollection GetHttpRouteCollection();
+        IList<IRouter> GetRouteCollection();
     }
 
     public interface ICustomRouteHandler
     {
-        bool RouteIncomingRequest();
+        bool RouteIncomingRequest(RouteContext routeContext);
 
        // Task<bool> Init();
 
-        IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request);
+        RouteData GetRouteData();
 
         /// <summary>
         /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that relative url, with potentially new viewdata that can be injected.
@@ -119,11 +120,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         RuntimeRedirects IRedirectRepository.GetRuntimeRedirectEntries(int? siteId)
         {
-            var data =  _sbCp.GetContextData();
-            return data.RuntimeRedirects = data.RuntimeRedirects ?? BuildRuntimeRedirects(data.Redirects);
+            var data =  _sbCp.GetContextData() ?? _sbCp.GetContextDataAsync().Result;
+            return data.RuntimeRedirects ??= BuildRuntimeRedirects(data.Redirects);
         }
-        
-      
 
         Task<List<RedirectEntry>> DoFetchEntries( IDocumentListWebApiClient client)
         {

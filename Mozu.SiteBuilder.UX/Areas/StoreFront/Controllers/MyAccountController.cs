@@ -241,31 +241,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> UpdateCustomerContact(CustomerAccountContact contact)
+        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> UpdateCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
-            return  await  _accountContactRepository.Update(contact, account.Id);
+            return  await  _accountContactRepository.Update(incomingContact, account.Id);
 
           
         }
 
         [System.Web.Http.HttpPost]
-        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> AddCustomerContact(CustomerAccountContact contact)
+        public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> AddCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
-            return  await _accountContactRepository.Create(contact, account.Id);
+            return  await _accountContactRepository.Create(incomingContact, account.Id);
 
           
         }
 
         [System.Web.Http.HttpPost]
-        public async Task<bool> DeleteCustomerContact(CustomerAccountContact contact)
+        public async Task<bool> DeleteCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
 
-            _accountContactRepository.Delete(contact, account.Id);
+            _accountContactRepository.Delete(incomingContact, account.Id);
 
             return true;
             

@@ -12,7 +12,6 @@ using Mozu.Core.Api.Session;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Handler;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Security;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
@@ -23,36 +22,28 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
         private const string NULL_PRICE_LIST_CODE = "nullPriceListCode";
 
         private readonly RequestDelegate _next;
-        private readonly ISiteBuilderApiContext _apiContext;
-        private readonly IRequestUrlFinderOuter _requestHelper;
-        private readonly IAuthenticationHelper _authHelper;
-        private readonly IMozuSession _session;
 
-        public SessionMiddleware(RequestDelegate next, ISiteBuilderApiContext apiContext, IRequestUrlFinderOuter requestHelper, IAuthenticationHelper authHelper, IMozuSession session)
+        public SessionMiddleware(RequestDelegate next)
         {
             _next = next;
-            _apiContext = apiContext;
-            _requestHelper = requestHelper;
-            _authHelper = authHelper;
-            _session = session;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ISiteBuilderApiContext apiContext, IRequestUrlFinderOuter requestHelper, IAuthenticationHelper authHelper, IMozuSession session)
         {
-            if (!TryGetPriceListOverride(_apiContext, context, out var priceListOverride) && !RequiresUpdatedSession(_apiContext, _requestHelper, _authHelper))
+            if (!TryGetPriceListOverride(apiContext, context, out var priceListOverride) && !RequiresUpdatedSession(apiContext, requestHelper, authHelper))
             {
                 await _next.Invoke(context);
                 return;
             }
 
-            var logger = LoggingService.LoggerFor<SessionHandler>();
+            var logger = LoggingService.LoggerFor<SessionMiddleware>();
             if (!Equals(priceListOverride, NULL_PRICE_LIST_CODE))
             {
-                SetOveridePriceList(_apiContext, _authHelper, _session, priceListOverride, logger);
+                SetOveridePriceList(apiContext, authHelper, session, priceListOverride, logger);
             }
             else
             {
-                await InitSession(_apiContext, _authHelper, _session, context.RequestServices.Resolve<IPriceListResolutionHandler>(), logger).ConfigureAwait(false);
+                await InitSession(apiContext, authHelper, session, context.RequestServices.Resolve<IPriceListResolutionHandler>(), logger).ConfigureAwait(false);
             }
 
             await _next.Invoke(context);

@@ -1,70 +1,31 @@
-﻿using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteSettings.General.Contracts.General.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Hosting;
-using System.Web.Http.Routing;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.Core.Extensions;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using System.Threading;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Mozu.Core.Configuration;
+using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Middleware;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Web.Http.Hosting;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-
     public interface IRouteConfig
     {
-        HttpRouteCollection DefaultRoutes { get; }
+        IList<IRouter> DefaultRoutes { get; }
 
-        void RouteIncomingDefaultRouteRequest(HttpContext context);
+        void RouteIncomingDefaultRouteRequest(RouteContext context);
 
-        void RouteIncomingSystemRouteRequest(HttpContext context);
+        //void RouteIncomingSystemRouteRequest(RouteContext context);
     }
-
-    public class NonSystemRoute : IHttpRoute
-    {
-        public IDictionary<string, object> Constraints
-        {
-            get; set;
-        }
-
-        public IDictionary<string, object> DataTokens
-        {
-            get; set;
-        }
-
-        public IDictionary<string, object> Defaults
-        {
-            get; set;
-        }
-
-        public HttpMessageHandler Handler => null;
-
-        public string RouteTemplate => "{*url}";
-
-        public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
-        {
-            return new HttpRouteData(this);
-        }
-
-        public IHttpVirtualPathData GetVirtualPath(HttpRequestMessage request, IDictionary<string, object> values)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 
     public class CustomRouteHandler : ICustomRouteHandler
     {
@@ -73,8 +34,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         private readonly IRouteConfig _routeconfig;
         private readonly Lazy<ICustomRouteCollectionRepository> _customRouteRepository;
         private object _httpRouteCollection;
-        Lazy<bool> _forceSSL;
-        Uri _originalUri;
+        private readonly Lazy<bool> _forceSSL;
+        private readonly Uri _originalUri;
 
         public CustomRouteHandler(HttpContext context, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext, IRouteConfig routeconfig, IRequestUrlFinderOuter requestUrlHelper)
         {
@@ -90,15 +51,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             _httpRouteCollection = null;
         }
-        private HttpRouteCollection RouteCollection
+        private IList<IRouter> RouteCollection
         {
             get
             {
                 if (_httpRouteCollection == null)
                 {
-                    _httpRouteCollection = _customRouteRepository.Value.GetHttpRouteCollection() ?? new object();
+                    _httpRouteCollection = _customRouteRepository.Value.GetRouteCollection() ?? new object();
                 }
-                return _httpRouteCollection as HttpRouteCollection;
+                return _httpRouteCollection as IList<IRouter>;
             }
         }
 
@@ -109,36 +70,33 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         //    return routeCollection == null;
         //}
 
-        public bool RouteIncomingRequest()
+        public bool RouteIncomingRequest(RouteContext routeContext)
         {
             var path = _originalUri.AbsolutePath;
-            if ( path.Contains( "=") || path.Contains("?"))
+            if (path.Contains( "=") || path.Contains("?"))
             {
                 return false;
             }
 
-            var routeCollection =  GetRouteCollection();
+            if (!RouteCollection.TryMatchRoute(_context, out var routeData)) return false;
 
-            var rerouteData = routeCollection?.GetRouteData(_context.GetRequestMessage(_originalUri));
-            if (rerouteData == null) return false;
-
-            if (rerouteData.Route is CustomRoute cr)
+            if (routeData.Routers[0] is CustomRoute cr)
             {
-                cr.RewriteRouteData(_context.GetRequestMessage(_originalUri), rerouteData.Values);
+                cr.RewriteRouteData(_context, routeData.Values);
             }
 
-            //_requestMessage.SetRouteData(rerouteData);
+            routeContext.RouteData = routeData;
             return true;
         }
 
-        HttpRouteCollection GetRouteCollection()
+        IList<IRouter> GetRouteCollection()
         {
-            _httpRouteCollection ??= _customRouteRepository.Value.GetHttpRouteCollection();
-            return _customRouteRepository.Value.GetHttpRouteCollection();
+            _httpRouteCollection ??= _customRouteRepository.Value.GetRouteCollection();
+            return _httpRouteCollection as IList<IRouter>;
         }
 
-        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<HttpRouteCollection, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<System.Web.Http.HttpRouteCollection, List<CustomRoute>>>();
-        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection , IRouteConfig routeConfig)
+        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<IList<IRouter>, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<IList<IRouter>, List<CustomRoute>>>();
+        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, IList<IRouter> routeCollection , IRouteConfig routeConfig)
         {
             var res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             if (!Equals(res.Item1, routeCollection))
@@ -148,7 +106,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             return res.Item2;
         }
-        Tuple<HttpRouteCollection, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, HttpRouteCollection routeCollection, IRouteConfig routeConfig)
+        Tuple<IList<IRouter>, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, IList<IRouter> routeCollection, IRouteConfig routeConfig)
         {
             var routes = new List<CustomRoute>();
             var defaultRoutes = routeConfig.DefaultRoutes
@@ -164,7 +122,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 );
             }
             routes.AddRange(defaultRoutes);
-            return new Tuple<HttpRouteCollection, List<CustomRoute>>(routeCollection, routes);
+            return new Tuple<IList<IRouter>, List<CustomRoute>>(routeCollection, routes);
         }
 
         public IActionResult RedirectWithContext(HttpRequest request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
@@ -174,14 +132,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 return null;
             }
 
-            if (request.HttpContext.Items.TryGetValue(SeoDelegatingHandler.IsSeoRewrite , out var tmp) && tmp is bool b && b)
+            if (request.HttpContext.Items.TryGetValue(UrlRewritingMiddleware.IsSeoRewrite , out var tmp) && tmp is bool b && b)
             {
                 return null;
             }
 
             var currentRouteData  = request.HttpContext.GetRouteData();
-            var routeCollection =  GetRouteCollection();
-            var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
+            var routes = GetCanonicalRouteList(internalRoute, RouteCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
      
@@ -192,17 +149,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .ChainSet(additionalValues)
                 .ChainSet("httproute", true);
 
-            var newReq = new HttpRequestMessage();
-            foreach ( var (key, value) in _requestMessage.Properties)
-            {
-                newReq.Properties[key]= value;
-            }
-
+            //var newReq = new HttpRequestMessage();
+            //foreach ( var (key, value) in _context.Items)
+            //{
+            //    newReq.Properties[key]= value;
+            //}
             
             foreach (var route in routes)
             {
-                
-                var vpath = route.GetVirtualPath(newReq, finalRouteValues);
+                var vpc = new VirtualPathContext(_context, currentRouteData.Values, new RouteValueDictionary(finalRouteValues));
+                var vpath = route.GetVirtualPath(vpc);
                 if (vpath != null)
                 {
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
@@ -214,23 +170,22 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         StringComparison.OrdinalIgnoreCase)  &&
                         !string.Equals(
                         uri.GetComponents(UriComponents.Path, UriFormat.Unescaped),
-                        _requestMessage.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped),
+                        _context.GetRequestUri().GetComponents(UriComponents.Path, UriFormat.Unescaped),
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!IsValidForExistingContext(request , uri, routeCollection, _routeconfig.DefaultRoutes))
+                        if (!IsValidForExistingContext(request , uri, RouteCollection, _routeconfig.DefaultRoutes))
                         {
                             return null;
                         }
 
-                        var preStrippedRequest = request.HttpContext.Items.ContainsKey(SeoDelegatingHandler.MzPreCleanedUri) ?
-                        (Uri)request.HttpContext.Items[SeoDelegatingHandler.MzPreCleanedUri] :
+                        var preStrippedRequest = request.HttpContext.Items.ContainsKey(UrlRewritingMiddleware.MzPreCleanedUri) ?
+                        (Uri)request.HttpContext.Items[UrlRewritingMiddleware.MzPreCleanedUri] :
                         new Uri(request.GetDisplayUrl());
 
                         uri = new Uri(uri.GetLeftPart(UriPartial.Path) + preStrippedRequest.Query);
-                        var redirect = request.CreateResponse(HttpStatusCode.MovedPermanently);
-                        redirect.Headers.Location = new Uri(uri.PathAndQuery, UriKind.Relative);
-                        redirect.Headers.TryAddWithoutValidation(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
-                        return redirect;
+                        request.HttpContext.Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
+
+                        return new RedirectResult(new Uri(uri.PathAndQuery, UriKind.Relative).ToString(), true);
                     }
 
                     if (!request.Headers.TryGetValue(Constants.HEADER_ALTERNATIVE_VIEW, out var values) ||
@@ -241,7 +196,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     return null;
                 }
                 //if current route didnt match??? load bearing code do not remove
-                if (route == currentRouteData.Route)
+                if (currentRouteData.Routers.Last() == route)
                 {
                     return null;
                 }
@@ -249,21 +204,21 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
         }
 
-        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, HttpRouteCollection siteCollection, HttpRouteCollection defaultCollection)
+        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, IList<IRouter> siteCollection, IList<IRouter> defaultCollection)
         {
-            var testHttmMessage = new HttpRequestMessage(new HttpMethod(currentRequest.Method), candidateUri);
-            testHttmMessage.Properties[HttpPropertyKeys.DependencyScope] = currentRequest.HttpContext.Items[HttpPropertyKeys.DependencyScope];
-            var reverseResolvedRoute = siteCollection?.GetRouteData(testHttmMessage)?.Route as CustomRoute ?? defaultCollection.GetRouteData(testHttmMessage)?.Route as CustomRoute;
-            var resolvedRoute = currentRequest.HttpContext.GetRouteData().Routers.Last() as CustomRoute;
+            CustomRoute reverseResolvedRoute = null;
+
+            if(siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) || 
+               defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
+            {
+                reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
+            }
+
             if (reverseResolvedRoute == null)
             {
                 return false;
             }
-            if (resolvedRoute != null && resolvedRoute.InternalRoute != reverseResolvedRoute.InternalRoute)
-            {
-                return false;
-            }
-            return true;
+            return !(currentRequest.HttpContext.GetRouteData().Routers.Last() is CustomRoute resolvedRoute) || resolvedRoute.InternalRoute == reverseResolvedRoute.InternalRoute;
         }
 
         static int? GetPortForScheme(int incomingPort, CustomRoute.Scheme desiredScheme)
@@ -275,7 +230,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public string GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext, string hostName = null)
         {
-            var routeCollection =  GetRouteCollection();
+            var routeCollection =  RouteCollection;
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
@@ -283,17 +238,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var  routingValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
             if (useContext)
             {
-                routingValues.ChainSet(_requestMessage.GetRouteData().Values, true);
+                routingValues.ChainSet(_context.GetRouteData().Values, true);
             }
             if ( viewDataAdditionFunc != null)
             {
                 routingValues.ChainSet(viewDataAdditionFunc(), true);
             }
-        
-            var newReq = PrepareNewHttpRequest(_requestMessage);
+
+            var vpc = new VirtualPathContext(_context, null, new RouteValueDictionary(routingValues));
             foreach (var route in routes)
             {
-                var vpath = route.GetVirtualPath(newReq, routingValues);
+                var vpath = route.GetVirtualPath(vpc);
                 if (vpath != null)
                 {
                     return CreateOutboundUri(route, vpath, hostName , hostName != null, _forceSSL);
@@ -309,39 +264,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        static HttpRequestMessage PrepareNewHttpRequest(HttpRequestMessage parent)
-        {
-            var newReq = new HttpRequestMessage();
-            newReq.Properties[HttpPropertyKeys.DependencyScope] = parent.Properties[HttpPropertyKeys.DependencyScope];
-            return newReq;
-        }
+        //static HttpRequestMessage PrepareNewHttpRequest(HttpRequestMessage parent)
+        //{
+        //    var newReq = new HttpRequestMessage();
+        //    newReq.Properties[HttpPropertyKeys.DependencyScope] = parent.Properties[HttpPropertyKeys.DependencyScope];
+        //    return newReq;
+        //}
         
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string host, bool fullyQualifyUris, Lazy<bool> forceSsl)
+        static string CreateOutboundUri(CustomRoute route, VirtualPathData vpath, string host, bool fullyQualifyUris, Lazy<bool> forceSsl)
         {
            var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
            // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
            // var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
-            var builder = new UriBuilder("http://localhost");
-            builder.Path = path;
-            if ( fullyQualifyUris)
-            {
-                builder.Host = host;
-                builder.Scheme = route.UrlScheme.HasValue ? route.UrlScheme.ToString() : (forceSsl.Value ? "https" : "http");
-                if (string.Equals( builder.Scheme , CustomRoute.Scheme.Https.ToString(), StringComparison.OrdinalIgnoreCase))
-                {
-                    builder.Port = 443;
-                }
-                return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
-            }
-            return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+           var builder = new UriBuilder("http://localhost") {Path = path};
+           if (!fullyQualifyUris) return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+
+           builder.Host = host;
+           builder.Scheme = route.UrlScheme.HasValue ? route.UrlScheme.ToString() : (forceSsl.Value ? "https" : "http");
+           if (string.Equals(builder.Scheme , CustomRoute.Scheme.Https.ToString(), StringComparison.OrdinalIgnoreCase))
+           {
+               builder.Port = 443;
+           }
+           return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
         }
 
-        public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
+        public RouteData GetRouteData()
         {
             var routeCollection = GetRouteCollection();
             if (routeCollection == null) return null;
 
-            return  routeCollection.GetRouteData(_requestMessage);
+            return routeCollection.TryMatchRoute(_context, out var routeData) ? routeData : null;
         }
     }
 }

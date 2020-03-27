@@ -11,7 +11,6 @@ using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
 {

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using FSharpx.Collections;
+using Microsoft.AspNetCore.Http;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using Mozu.Core;
@@ -233,23 +234,22 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             private string[] TryRender(ITemplateManager manager, Walker walker, string key, ISettings settings)
             {
-                var req = walker.context.Resolve<HttpRequestMessage>();
+                var context = walker.context.Resolve<HttpContext>();
                 object callCount = 0;
-                if (req != null)
+                if (context != null)
                 {
-                    if (!req.Properties.TryGetValue(partial_output_cache_stack_limit, out callCount))
+                    if (!context.Items.TryGetValue(partial_output_cache_stack_limit, out callCount))
                     {
                         callCount = 0;
                     }
 
                     callCount = 1 + (int) callCount;
-                    req.Properties[partial_output_cache_stack_limit] = callCount;
+                    context.Items[partial_output_cache_stack_limit] = callCount;
                 }
 
                 if ((int) callCount > 1)
                 {
-                    int maxStackCount;
-                    if (!int.TryParse(settings.AppSettings(partial_output_cache_stack_limit), out maxStackCount))
+                    if (!int.TryParse(settings.AppSettings(partial_output_cache_stack_limit), out var maxStackCount))
                     {
                         maxStackCount = 100;
                     }
@@ -264,11 +264,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 var renderer = new TemplateRenderer(manager, innerWalker);
                 var output = Render(renderer);
 
-                if (req != null)
-                {
-                    callCount = (int) callCount - 1;
-                    req.Properties[partial_output_cache_stack_limit] = callCount;
-                }
+                if (context == null) return output;
+                
+                callCount = (int) callCount - 1;
+                context.Items[partial_output_cache_stack_limit] = callCount;
+
                 return output;
             }
 

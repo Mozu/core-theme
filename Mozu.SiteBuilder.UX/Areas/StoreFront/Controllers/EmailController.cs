@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
@@ -40,8 +41,6 @@ using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
-using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
-using ViewResult = Mozu.SiteBuilder.Mvc.ActionResults.ViewResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -172,20 +171,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CmsContext.Page.DocumentTypeFQN = "emailTemplateContent@mozu";
             PageContext.PageType = "email";
 
-            if (res.IsSuccessStatusCode)
+            if (res is OkObjectResult objRes)
             {
-                var vr = ((ObjectContent)res.Content).Value as ViewResult;
-                if (vr == null)
+                if (!(objRes.Value is ViewResult vr))
                 {
                     return Conflict("could not fetch template content page.");
                 }
 
                 vr.ViewName = emailTemplate.Template;
                 var doc = (DC.Document)vr.Model;
-                if (doc != null)
-                {
-                    doc.Set("page_type_definition", id);
-                }
+                doc?.Set("page_type_definition", id);
 
                 ViewData["content"] = vr.Model;
             }
@@ -220,12 +215,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
             var v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
-            if (this.PageContext != null)
+            if (PageContext != null)
             {
-                this.PageContext.PageType = "email";
+                PageContext.PageType = "email";
             }
             object cmdContent = null;
-            var vr = ((ObjectContent)v.Content).Value as ViewResult;
+            var vr = (v as OkObjectResult)?.Value as ViewResult;
             if (vr != null)
             {
                 ViewData["content"] = vr.Model;
@@ -297,7 +292,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            var vdd = new ViewDataDictionary
+            var vdd = new ViewDataDictionary(null)
             {
                 ["model"] = model,
                 ["content"] = cmdContent,
@@ -308,7 +303,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
 
-            var context = new HyprViewContext(TestingController.CreateProxyHttpRequest(Request.HttpContext, null), vdd);
+            var context = new HyprViewContext(Request.HttpContext, vdd);
             return await Render(view, context);
         }
 

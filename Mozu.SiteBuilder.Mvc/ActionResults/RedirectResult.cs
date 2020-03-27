@@ -9,7 +9,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
     //DEPRECATED
-    public class RedirectResult : ActionResult
+    public class RedirectResult : IActionResult
     {
         public RedirectResult(string url)
             : this(url, false)
@@ -30,14 +30,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public TimeSpan? CacheDuration { get; private set; }
 
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
+        public Task ExecuteResultAsync(ActionContext context)
         {
-            var repsonse = requestMessage.HttpContext().Response;
+            var repsonse = context.HttpContext.Response;
             if (CacheDuration.HasValue)
             {
                 repsonse.Headers["cache-control"] = "public,max-age=" + CacheDuration.Value.TotalSeconds;
             }
             repsonse.Redirect(Url, Permanent);
+            return Task.CompletedTask;
         }
     }
 }

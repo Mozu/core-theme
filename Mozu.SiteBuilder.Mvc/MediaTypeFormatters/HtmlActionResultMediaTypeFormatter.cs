@@ -5,12 +5,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+using MongoDB.Driver.Core.WireProtocol.Messages;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -19,9 +26,9 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
-    public class HtmlActionResultMediaTypeFormatter : MediaTypeFormatter
+    public class HtmlActionResultMediaTypeFormatter : OutputFormatter
     {
-       
+        private readonly ILogger _logger = LoggingService.LoggerFor<HtmlActionResultMediaTypeFormatter>();
 
         public HtmlActionResultMediaTypeFormatter()
         {
@@ -29,166 +36,116 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
         }
-        private IServiceProvider LifetimeScope { get; set; }
-        private ILogger _logger;
-        private string _correlationId;
 
-        private static readonly JsonMediaTypeFormatter _jmtf = new JsonMediaTypeFormatter();
-    
+        public HttpContext HttpContext { get; set; }
 
-        public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
-        {
-            var apiContext = request.Resolve<ISiteBuilderApiContext>();
-            if (apiContext.SiteId == null && type.IsAssignableTo<IHyprViewResult>())
-            {
-                return _jmtf;
-            }
-            if (this.CanWriteType(type))
-            {
-                var formatter = (HtmlActionResultMediaTypeFormatter)this.MemberwiseClone();
-                formatter.RequestMessage = request;
-                formatter.LifetimeScope = (IServiceProvider)request.GetDependencyScope().GetService(typeof(IServiceProvider));
-                formatter.MediaType = mediaType;
-
-                var exceptionLogWrapper = formatter.LifetimeScope.Resolve<ExceptionContextLogWrapper>();
-                formatter._logger = exceptionLogWrapper.GetLogger();
-                formatter._correlationId = exceptionLogWrapper.GetCorrelationId();
-
-                return formatter;
-            }
-            return this;
-
-        }
-
-        private Exception CreateandLogFormattingException(Exception ex, System.Net.Http.HttpContent content)
+        private Exception CreateandLogFormattingException(Exception ex, OutputFormatterWriteContext context)
         {
             _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
 
-
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            object controller;
-            this.RequestMessage.GetRouteData().Values.TryGetValue("controller", out controller);
-
-
+            var statusCode = HttpStatusCode.InternalServerError;
+            context.HttpContext.GetRouteData().Values.TryGetValue("controller", out var controller);
+            var headers = context.HttpContext.Request.GetTypedHeaders();
 
             if (string.Equals((string)controller,"resource",StringComparison.OrdinalIgnoreCase)||
-                (content != null
-             && content.Headers.ContentType != null
-             && !string.IsNullOrEmpty(content.Headers.ContentType.MediaType)
-             && !string.Equals(content.Headers.ContentType.MediaType, "text/html")))
+                context.Object != null && 
+                headers.ContentType != null && 
+                headers.ContentType.MediaType.HasValue && 
+                !string.IsNullOrEmpty(headers.ContentType.MediaType.Value) && 
+                !string.Equals(headers.ContentType.MediaType.Value, "text/html"))
             {
                 //pushes thru the rp.
                 statusCode = HttpStatusCode.UnsupportedMediaType;
             }
-
 
             if (ex is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
             {
                 ex = aggregateException.InnerExceptions.First();
             }
 
-            var errorResp = this.RequestMessage.CreateErrorResponse(statusCode, ex);
+            var errorResp = new ActionFilters.HttpResponseException
+            {
+                Value = ex,
+                Status = (int)statusCode
+            };
 
-            //((HttpError) ((ObjectContent) errorResp.Content).Value)["_ex"] = ex;
-            return new HttpResponseException(errorResp);
+            return errorResp;
         }
 
-        void InitAdditioanViewContext (HyprViewContext context)
+        private static void InitAdditioanViewContext (HyprViewContext context)
         {
-            var apiContext = RequestMessage.Resolve<ISiteBuilderApiContext>();
+            var apiContext = context.HttpContext.RequestServices.Resolve<ISiteBuilderApiContext>();
 
             context.ViewData["priceListCode"] = apiContext.PriceListCode;
         }
 
-        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
+        protected override bool CanWriteType(Type type)
         {
-            var vrb = value as ViewResultBase;
+            return typeof(ActionResult).IsAssignableFrom(type);
+        }
 
-            if (vrb != null && vrb is IHyprViewResult)
+        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        {
+            if (context.Object is ViewResultBase vrb && vrb is IHyprViewResult)
             {
-                
-                var viewEngine = this.RequestMessage.Resolve<HyprViewEngine>();
+                var viewEngine = context.HttpContext.RequestServices.Resolve<HyprViewEngine>();
 
-                IEnumerable<string> values;
-                if ( this.RequestMessage.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
+                if (context.HttpContext.Request.Headers.TryGetValue(Constants.HEADER_ALTERNATIVE_VIEW, out var values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                 {
                     vrb.View = viewEngine.FindPageView(values.First());
                 }
-                
 
                 var view = vrb.View ?? viewEngine.FindPageView(vrb.ViewName);
-                var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
+                var httpContext = context.HttpContext;
+                var hvc = new HyprViewContext(httpContext, vrb.ViewData, null);
                 InitAdditioanViewContext(hvc);
-                var httpContext = this.RequestMessage.HttpContext();
                 //httpContext.Response.Buffer = true;
-                var sw = new StreamWriter(writeStream);
-            
+                var sw = new StreamWriter(httpContext.Response.Body);
+
                 if (view == null)
                 {
-                    throw CreateandLogFormattingException(new FileNotFoundException("cant find view " + vrb.ViewName), content);
+                    throw CreateandLogFormattingException(new FileNotFoundException("cant find view " + vrb.ViewName), context);
                 }
                 return view.AsyncRender(hvc, sw).ContinueWith(_ =>
                 {
                     if (_.IsFaulted)
                     {
-                        throw CreateandLogFormattingException(_.Exception, content);
+                        throw CreateandLogFormattingException(_.Exception, context);
                     }
                     return _.Result;
                 });
             }
-            else
+
+            var actionContext = new ActionContext(context.HttpContext, context.HttpContext.GetRouteData(), new ActionDescriptor());
+
+            if (context.Object is ActionResult && context.Object is IActionResult iAsyncActoin)
             {
-                var action = value as ActionResult;
-                if (value is IActionResultAsync iAsyncActoin)
+                var task = iAsyncActoin.ExecuteResultAsync(actionContext);
+
+                return task.ContinueWith(_ =>
                 {
-                    var task = iAsyncActoin.ExecuteResultAsync(this.RequestMessage);
-
-                    return task.ContinueWith(_ =>
+                    if (_.IsFaulted)
                     {
-                        if (_.IsFaulted)
-                        {
-                            throw CreateandLogFormattingException(_.Exception, content);
-
-                        }
-                        return _;
-                    }, TaskContinuationOptions.ExecuteSynchronously);
-                    //return task;
-                }
-                else
-                {
-                    var tsc = new TaskCompletionSource<bool>();
-                    try
-                    {
-                        action.ExecuteResult(this.RequestMessage);
-                        tsc.SetResult(false);
+                        throw CreateandLogFormattingException(_.Exception, context);
                     }
-                    catch (Exception ex)
-                    {
-
-                        tsc.SetException(CreateandLogFormattingException(ex, content));
-
-                    }
-
-
-                    return tsc.Task;
-                }
+                    return _;
+                }, TaskContinuationOptions.ExecuteSynchronously);
             }
+
+            var tsc = new TaskCompletionSource<bool>();
+
+            try
+            {
+                ((ActionResult)context.Object).ExecuteResult(actionContext);
+                tsc.SetResult(false);
+            }
+            catch (Exception ex)
+            {
+                tsc.SetException(CreateandLogFormattingException(ex, context));
+            }
+
+            return tsc.Task;
         }
-
-        public override bool CanReadType(Type type)
-        {
-            return false;
-        }
-
-        public override bool CanWriteType(Type type)
-        {
-            return typeof(ActionResult).IsAssignableFrom(type);
-
-        }
-
-        public HttpRequestMessage RequestMessage { get; set; }
-
-        public MediaTypeHeaderValue MediaType { get; set; }
     }
     public class HtmlMediaTypeFormattingException : Exception
     {
@@ -196,6 +153,5 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             : base("Bad", inner)
         {
         }
-
     }
 }

@@ -218,21 +218,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (template == null)
                 return NotFound("could not find order template " + templateid);
 
-            if (templateid == "order-details")
+            switch (templateid)
             {
-                var model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                return await RenderWithContext(template, model);
-            }
-            else if (templateid == "packing-slip")
-            {
-                var order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                var model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                ViewData["order"] = order;
-                return await RenderWithContext(template, model);
-            }
-            else
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                case "order-details":
+                {
+                    var model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                    return await RenderWithContext(template, model);
+                }
+                case "packing-slip":
+                {
+                    var order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                    var model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                    ViewData["order"] = order;
+                    return await RenderWithContext(template, model);
+                }
+                default:
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
             }
         }
 
@@ -240,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Takes a template, smooshes it with any page settings stored in CMS
         /// and returns the renderable result.
         /// </summary>
-        private Task<IActionResult> RenderWithContext(PageTypeDefinition template, object model)
+        private async Task<IActionResult> RenderWithContext(PageTypeDefinition template, object model)
         {
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -254,8 +255,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "order";
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
-            return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
-                ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
+            return await Task.WhenAll(ContextInitializationTasks).ContinueWith(_ =>
+            {
+                ViewData["customContent"] = PageContext.CmsContext.Page.Document?.Properties;
                 return Ok(View(template.Template, model));
             });
         }

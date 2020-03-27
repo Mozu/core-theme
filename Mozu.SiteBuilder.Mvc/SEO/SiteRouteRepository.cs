@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
@@ -18,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Context;
+using Route = Mozu.SiteSettings.General.Contracts.General.Routing.Route;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -27,7 +30,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class CustomRouteRepository : ICustomRouteCollectionRepository
     {
-      
+
+        private readonly HttpContext _httpContext;
         readonly ILogger _logger;
         readonly ISiteBuilderApiContext _siteBuilderApiContext;
         readonly ICustomRouteConstraintFactory _customRouteConstraintFactory;
@@ -60,8 +64,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             ILogger logger,
             ISiteBuilderContextProvider contextProvider,
             ICustomRouteConstraintFactory customRouteConstraintFactory,
-            IRouteDataMappingFactory routeDataMappingFactory
-           
+            IRouteDataMappingFactory routeDataMappingFactory,
+            HttpContext httpContext
           )
         {
             _siteBuilderApiContext = siteBuilderApiContext;
@@ -69,37 +73,28 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _contextProvider = contextProvider;
             _customRouteConstraintFactory = customRouteConstraintFactory;
             _routeDataMappingFactory = routeDataMappingFactory;
-       
-            
+            _httpContext = httpContext;
         }
-
 
         public class HttpRouteCollectionContainer
         {
-            public HttpRouteCollection RouteCollection { get; set; }
+            public IList<IRouter> RouteCollection { get; set; }
             public long? LastUpdate { get; set; }
         }
 
-
-        
-
         static System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim> _sempDic = new System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim>();
-
 
         HttpRouteCollectionContainer GetHttpRouteCollectionContainer(bool isCacheCallback)
         {
             var contextData =  _contextProvider.GetContextData();
-
 
             if (contextData.GeneralSettings == null) return null;
 
             var routes = contextData.GeneralSettings.CustomRoutes;
             var lastUpdate = contextData.GeneralSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
             if (routes == null) return null;
-            
-          
 
-            if (contextData.RouteCollection== null)
+            if (contextData.RouteCollection == null)
             {
                 var col = CreateRouteCollectionFromSettings(routes);
                 contextData.RouteCollection = new HttpRouteCollectionContainer()
@@ -110,31 +105,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return contextData.RouteCollection;
         }
-        HttpRouteCollection ICustomRouteCollectionRepository.GetHttpRouteCollection( )
+
+        IList<IRouter> ICustomRouteCollectionRepository.GetRouteCollection( )
         {
             var col = GetHttpRouteCollectionContainer(false);
-            if ( col != null)
-            {
-                return col.RouteCollection;
-            }
-            return null;
+            return col?.RouteCollection;
         }
 
-
-
-
-
-
-
-        HttpRouteCollection CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
+        IList<IRouter> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
-
-            
             if (customSettings == null) return null;
 
             //clone as the object gets mutated
             customSettings = Newtonsoft.Json.Linq.JObject.FromObject(customSettings).ToObject<CustomRouteSettings>();
-          
           
             FixCasing(customSettings);
             var constraints =
@@ -148,33 +131,26 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .Select(kvp => new { kvp.Key, Mapping = _routeDataMappingFactory.BuildMapping(kvp.Key , kvp.Value) })
                 .Where(x => x.Mapping != null)
                 .ToDictionary(x => x.Key, x => x.Mapping, StringComparer.OrdinalIgnoreCase);
-
-
             
             AncestoryTokenExmpander.Process(customSettings.Routes);
             ImplicitConfigurationHandler.Process(constraints, mappings, _customRouteConstraintFactory, _routeDataMappingFactory , customSettings.Routes );
             QueryStringPreProcessor.Process(customSettings.Routes, constraints);
 
-
-
-           constraints.Values.Cast<ICanInit>()
+           constraints.Values
                 .Concat(mappings.Values.Cast<ICanInit>())
                 .Where(x => x != null)
-                .Select(x => x.Initialize()).ToList();
-
-            
+                .Each(x => x.Initialize());
 
             var routes = customSettings.Routes.Select(x => CreateCustomRoute(x, constraints, mappings));
 
-            var routeCollection = new HttpRouteCollection();
+            var routeCollection = new List<IRouter>();
             foreach (var route in routes)
             {
-                if ( routeCollection.ContainsKey( route.RouteTemplate))
+                if (routeCollection.OfType<Route>().Any(r => r.Template == route.RouteTemplate))
                 {
                     throw new ArgumentException("duplicate route [" + route.RouteTemplate + "]");
                 }
-               routeCollection.Add(route.RouteTemplate, route);
-               
+                routeCollection.Add(route);
             }
 
             return routeCollection;
@@ -182,7 +158,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         static Dictionary<string, string> CaseInsensitiveValidatorLookup;
         static Dictionary<string, string> CaseInsensitiveMappingLookup;
-
 
         private void FixCasing(CustomRouteSettings customSettings)
         {
@@ -196,20 +171,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
 
             string tmp;
-            if (customSettings.Mappings != null)
+            customSettings.Mappings?.Each(x =>
             {
-                customSettings.Mappings.Each(x =>
-               {
-                   x.Value.type = CaseInsensitiveMappingLookup.TryGetValue(x.Value.type, out tmp) ? tmp : x.Value.type;
-               });
-            }
-            if (customSettings.Validators != null)
+                var (_, value) = x;
+                value.type = CaseInsensitiveMappingLookup.TryGetValue(value.type, out tmp) ? tmp : value.type;
+            });
+            customSettings.Validators?.Each(x =>
             {
-                customSettings.Validators.Each(x =>
-                {
-                    x.Value.type = CaseInsensitiveValidatorLookup.TryGetValue(x.Value.type, out tmp) ? tmp : x.Value.type;
-                });
-            }
+                var (_, value) = x;
+                value.type = CaseInsensitiveValidatorLookup.TryGetValue(value.type, out tmp) ? tmp : value.type;
+            });
 
         }
 
@@ -218,13 +189,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var knownValidators =
                 routeDef.Validators
                 .Partition(kvp => validators.ContainsKey(kvp.Key ))
-                .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns.Select(x => x.Key)))))
+                .GetOrError(unknowns => new ArgumentException(
+                    $"Some validators are not known: {string.Join(",", unknowns.Select(x => x.Key))}"))
                 .ToDictionary( x => validators[x.Key],  x => x.Value);
 
             var knownMappings =
                 routeDef.Mappings
                 .Partition(kvp => mappings.ContainsKey(kvp.Key))
-                .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns))))
+                .GetOrError(unknowns => new ArgumentException(
+                    $"Some validators are not known: {string.Join(",", unknowns)}"))
                 .ToDictionary(x => mappings[x.Key ], x => x.Value);
 
             knownMappings[RouteDataFixup.DefaultMapping] = new string[0];
@@ -243,55 +216,62 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 qString = routeDef.Template.Substring(qpos + 1);
             }
             var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? (CustomRoute.Scheme?)null : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
-            return new CustomRoute(template, qString, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings, routeDef.FunctionId, scheme);
+
+            var defaultRouter = _httpContext.Items["DefaultRouter"] as IRouter;
+            var constraintResolver = _httpContext.Items["ConstraintResolver"] as IInlineConstraintResolver;
+
+            return new CustomRoute(defaultRouter,
+                null,
+                template, 
+                qString, 
+                routeDef.InternalRoute.ToEnum<FancyRoute>(), 
+                routeDef.Canonical.GetValueOrDefault(false), 
+                new RouteValueDictionary(defaults), 
+                knownValidators, 
+                knownMappings, 
+                //routeDef.FunctionId, 
+                scheme,
+                constraintResolver);
         }
 
-        class QueryStringPreProcessor
+        private static class QueryStringPreProcessor
         {
-
             public static void Process(List<Route> routes, Dictionary<string, ICustomRouteConstraint> constraints)
             {
-
                 foreach (var route in routes)
                 {
-                    if ( route == null || route.Template == null )
+                    if ( route?.Template == null )
                     {
                         continue;
                     }
-                    int qpos = (route.Template ?? "").IndexOf('?');
+                    var qpos = (route.Template ?? "").IndexOf('?');
                     if (qpos == -1)
                     {
                         continue;
                     }
                    
-                   
                     var qString = route.Template.Substring( qpos + 1);
-
-                    //route.Template = route.Template.Substring(0, qpos);
-
                   
-                    var qPairs = qString.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                    var qPairs = qString.Split(new [] { '&' }, StringSplitOptions.RemoveEmptyEntries);
 
                     foreach (var qPair in qPairs)
                     {
-                        var parts = qPair.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = qPair.Split(new [] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                         if (parts.Length != 2)
                         {
                             continue;
                         }
                         var key = parts[0];
                         var value = parts[1];
-                        ICustomRouteConstraint existingValidator;
-                        if (!constraints.TryGetValue(qPair, out existingValidator))
+                        if (!constraints.TryGetValue(qPair, out _))
                         {
-
                             var  qsVal = new QueryStringConstraint.ValidatorSettings
                             {
                                 type = QueryStringConstraint.TypeName ,
                                 QsKey = key,
                                 ValueKey = key,
                                 IsLiteral = false
-                        };
+                            };
                             if (value.StartsWith("{") && value.EndsWith("}"))
                             {
                                 qsVal.ValueKey = value.Substring(1, value.Length - 2);
@@ -304,26 +284,22 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                             }
                             constraints.Add(qPair, new QueryStringConstraint(qsVal));
                         }
-                        route.Validators[qPair] = new string[] { "*" };
-
+                        route.Validators[qPair] = new [] { "*" };
                     }
-
                 }
             }
-
-            
         }
 
-        class AncestoryTokenExmpander
+        private static class AncestoryTokenExmpander
         {
-            static Regex regex = new Regex(@"{(?<name>[^:^{^}]+):ancestors\((?<num>[0-9]+)\)}",
+            static readonly Regex regex = new Regex(@"{(?<name>[^:^{^}]+):ancestors\((?<num>[0-9]+)\)}",
                 RegexOptions.IgnoreCase |
                 RegexOptions.ExplicitCapture |
                 RegexOptions.Singleline |
                 RegexOptions.IgnorePatternWhitespace);
             public static void Process (List<Route> routeDefs)
             {
-                int i = 0;
+                var i = 0;
                 while (i < routeDefs.Count)
                 {
                     var curIndex = i;
@@ -335,55 +311,48 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     {
                         continue;
                     }
-                    if (match.Success)
+
+                    if (!match.Success) continue;
+
+                    routeDefs.Remove(route);
+                    var name = match.Groups["name"].Value;
+
+                    if (!int.TryParse(match.Groups["num"].Value, out var num)|| num > 10)
                     {
-                        routeDefs.Remove(route);
-                        var name = match.Groups["name"].Value;
-                        
-                        int num;
-                        if (!int.TryParse(match.Groups["num"].Value, out num)|| num > 10)
-                        {
-                            continue;
-                        }
-                        string path = null;
-                        CategoryToken token = new CategoryToken(name);
-                        var initDepth = token.Depth;
-                        for( int ancess = initDepth; ancess <= num; ancess++)
-                        {
-                            token.Depth = ancess;
-                            var segment  = string.Format("{{{0}}}", token.Raw);
-                            if (path == null)
-                            {
-                                path = segment;
-                            }
-                            else
-                            {
-                               
-                                path = segment + "/" + path;
-                            }
-
-                            // token.to
-                            var newRoute = new Route()
-                            {
-                                Canonical = route.Canonical,
-                                Defaults = route.Defaults,
-                                InternalRoute = route.InternalRoute,
-                                Mappings = route.Mappings,
-                                Template = route.Template.Replace(match.Value, path),
-                                Validators = route.Validators,
-                                UrlScheme = route.UrlScheme,
-                                FunctionId = route.FunctionId
-                            };
-                            routeDefs.Insert(curIndex, newRoute);
-                        }
-
+                        continue;
                     }
+                    string path = null;
+                    var token = new CategoryToken(name);
+                    var initDepth = token.Depth;
+                    for( var ancess = initDepth; ancess <= num; ancess++)
+                    {
+                        token.Depth = ancess;
+                        var segment  = $"{{{token.Raw}}}";
+                        if (path == null)
+                        {
+                            path = segment;
+                        }
+                        else
+                        {
+                            path = segment + "/" + path;
+                        }
 
-
+                        // token.to
+                        var newRoute = new Route()
+                        {
+                            Canonical = route.Canonical,
+                            Defaults = route.Defaults,
+                            InternalRoute = route.InternalRoute,
+                            Mappings = route.Mappings,
+                            Template = route.Template.Replace(match.Value, path),
+                            Validators = route.Validators,
+                            UrlScheme = route.UrlScheme,
+                            FunctionId = route.FunctionId
+                        };
+                        routeDefs.Insert(curIndex, newRoute);
+                    }
                 }
-                
             }
-
         }
 
 

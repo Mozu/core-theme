@@ -433,7 +433,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 {
 
                     var setting = ThemeSettings[variableNode.Name.Substring(prefix.Length)];
-                    var added = false;
+                    // added is assigned, but never used
+                    //var added = false;
                     if (setting != null)
                     {
                         Parser p = new Parser();
@@ -458,7 +459,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                             }
                         }
 
-                        added = true;
+                        // added is assigned, but never used
+                        //added = true;
                     }
                 }
                 visitDeeper = false;

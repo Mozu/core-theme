@@ -10,7 +10,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
-    public abstract class FileResult : Microsoft.AspNetCore.Mvc.ActionResult 
+    public abstract class FileResult : IActionResult 
     {
         // Fields
         private string _fileDownloadName;
@@ -37,14 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         public string Etag { get; set; }
         public DateTimeOffset? LastModifiedDate { get; set; }
 
-        public override void ExecuteResult(ActionContext context)
-        {
-            var response = context.HttpContext.Response;
-            WriteHeaders(response);
-            WriteFile(response);
-        }
-
-        public override Task ExecuteResultAsync(ActionContext context)
+        public Task ExecuteResultAsync(ActionContext context)
         {
             var response = context.HttpContext.Response;
             WriteHeaders(response);

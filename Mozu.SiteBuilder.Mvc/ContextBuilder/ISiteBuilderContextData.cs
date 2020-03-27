@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         List<RedirectEntry> Redirects { get; set; }
         DateTime? RedirectUpdateDate { get; set; }
         List<Category> RootCategoryTree { get; set; }
-        CustomRouteRepository.RouteCollectionContainer RouteCollection { get; set; }
+        CustomRouteRepository.HttpRouteCollectionContainer RouteCollection { get; set; }
         Dictionary<string, Dictionary<string, object>> RouteMapperData { get; set; }
         Dictionary<string, Dictionary<string, object>> RouteValidatorData { get; set; }
         RuntimeRedirects RuntimeRedirects { get; set; }

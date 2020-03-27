@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         readonly bool ForceSSL;
         readonly ICookieProvider CookieProvider;
 
-        public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpRequestMessage httpRequestMessage)
+        public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpContext context)
         {
             _settings = settings;
             var env = settings.AppSettings("Environment");
@@ -39,15 +39,16 @@ namespace Mozu.SiteBuilder.Mvc.Security
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
             AdminRefreshCookieName = Mozu.Core.TokenCookie.CookieRefreshToken;
 
-            var handledByProxy = IsheaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, httpRequestMessage);
+            var handledByProxy = IsheaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, context);
 
             ForceSSL = settings.CoreSettings.IsSSLValidationEnabled && handledByProxy;
             CookieProvider = provider;
         }
 
-        bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
+        bool IsheaderTrue(string headerName, HttpContext context)
         {
-            if (!requestMessage.Headers.TryGetValues(headerName, out var values)) return false;
+            if (!context.Request.Headers.TryGetValue(headerName, out var values)) return false;
+
             var val = values.FirstOrDefault();
             if (bool.TryParse(val, out var ret))
             {

@@ -94,14 +94,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public SiteContext(HttpContext context,
             ISiteBuilderApiContext siteBuilderApiContext,
             ISiteBuilderContextProvider siteBuilderContextDataProvider , 
-            IMobileDetectionProvider mobileDetectionProvider,
+            //IMobileDetectionProvider mobileDetectionProvider,
             ICookieProvider cookieProvider,
             Lazy<IThemeRepository> themeRepository,
             Lazy<IThemeSettingsRepository> themeSettingsRepository,
             ISettings settings)
         {
             _siteBuilderContextDataProvider = siteBuilderContextDataProvider;
-            _mobileDetectionProvider = mobileDetectionProvider;
+            //_mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _settings = settings;
             _siteBuilderApiContext = siteBuilderApiContext;

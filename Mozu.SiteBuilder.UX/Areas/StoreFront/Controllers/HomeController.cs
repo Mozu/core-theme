@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
         [System.Web.Http.HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //return this.View("404");
         }
         [System.Web.Http.HttpGet]
-        public async Task<IActionResult> SeoProcessor(string url = null)
+        public IActionResult SeoProcessor(string url = null)
         {
             return Ok();
         }

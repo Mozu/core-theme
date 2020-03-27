@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -18,14 +19,14 @@ namespace Mozu.SiteBuilder.Mvc
     {
         private readonly Lazy<bool> _lazy;
 
-        public EditModeFinderOuter(HttpRequestMessage request)
+        public EditModeFinderOuter(HttpContext context)
         {
-            _lazy = new Lazy<bool>(() => IsEditMode(request));
+            _lazy = new Lazy<bool>(() => IsEditMode(context));
         }
 
-        public static bool IsEditMode(HttpRequestMessage msg)
+        public static bool IsEditMode(HttpContext context)
         {
-            return msg.GetQueryNameValuePairs().Any(x => x.Key.EqualsIgnoreCase("IsEditMode") && x.Value.EqualsIgnoreCase("true"));
+            return context.Request.Query.Any(x => x.Key.EqualsIgnoreCase("IsEditMode") && string.Equals(x.Value, "true", StringComparison.OrdinalIgnoreCase));
         }
 
         public bool IsEditMode()

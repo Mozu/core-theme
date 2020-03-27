@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Template;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
@@ -92,5 +96,51 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return chunks;
         }
 
+        public static bool TryMatchRoute(this IList<IRouter> routes, HttpContext context, out RouteData routeData)
+        {
+            var ret = false;
+
+            routeData = null;
+
+            foreach (var r in routes.OfType<Route>())
+            {
+                var template = r.ParsedTemplate;
+
+                var matcher = new TemplateMatcher(template, GetDefaults(template));
+
+                var innerVals = new RouteValueDictionary();
+
+                if (!matcher.TryMatch(context.Request.Path, innerVals)) continue;
+
+                if (!(from key in innerVals.Keys
+                        let constraints = r.Constraints.Where(c =>
+                            c.Key.Equals(key, StringComparison.CurrentCultureIgnoreCase)).Select(c => c.Value)
+                        select constraints.All(c =>
+                            c.Match(context, r, key, context.Request.RouteValues, RouteDirection.IncomingRequest)))
+                    .Any(constraintsPass => constraintsPass)) continue;
+
+                routeData = new RouteData(innerVals);
+                routeData.Routers.Add(r);
+
+                ret = true;
+            }
+
+            return ret;
+        }
+        
+        private static RouteValueDictionary GetDefaults(RouteTemplate parsedTemplate)
+        {
+            var result = new RouteValueDictionary();
+
+            foreach (var parameter in parsedTemplate.Parameters)
+            {
+                if (parameter.DefaultValue != null)
+                {
+                    result.Add(parameter.Name, parameter.DefaultValue);
+                }
+            }
+
+            return result;
+        }
     }
 }

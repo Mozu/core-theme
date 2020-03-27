@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
           [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "sdk")]
-        public ActionResult Sdk(string mode)
+        public IActionResult Sdk(string mode)
         {
             var fileName = mode == "debug" ? "mozu-javascript-sdk.debug.js" : "mozu-javascript-sdk.min.js";
 
@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
           [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "require")]
-        public ActionResult Require(string mode = "min")
+        public IActionResult Require(string mode = "min")
         {
             var fileName = mode == "debug" ? "mozu-require.debug.js" : "mozu-require.min.js";
 
@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
           [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "hyprlive")]
-        public ActionResult HyprLive(string mode = "min")
+        public IActionResult HyprLive(string mode = "min")
         {
             var fileName = mode == "debug" ? "mozu-hyprlive.debug.js" : "mozu-hyprlive.min.js";
 

@@ -16,20 +16,37 @@ using MassTransit;
 namespace Mozu.SiteBuilder.UX.Messaging
 {
     public class SiteBuilderContextInvalidatorConsumer : LoggingConsumer,
-        Consumes<ICategoryEvent>.All,
-        Consumes<IDocumentChanged>.All,
-        Consumes<IGeneralSettingsUpdated>.All,
-        Consumes<ICheckoutSettingsUpdated>.All
+        IConsumer<ICategoryEvent>,
+        IConsumer<IDocumentChanged>,
+        IConsumer<IGeneralSettingsUpdated>,
+        IConsumer<ICheckoutSettingsUpdated>
     {
-        ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
-        ConcurrentDictionary<string, MessagePublishingContext> _messageDebounceCol = new ConcurrentDictionary<string, MessagePublishingContext>();
-        Task _drainTask;
+        private readonly ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
+        private readonly ConcurrentDictionary<string, MessagePublishingContext> _messageDebounceCol = new ConcurrentDictionary<string, MessagePublishingContext>();
+        private readonly HashSet<string> _productGenericTopics = new HashSet<string> {
+            new ProductCreated().Topic,
+            new ProductDeleted().Topic,
+            new ProductDraftPublished().Topic,
+            new ProductUpdated().Topic,
+            new CategoryUpdated().Topic,
+            new CategoryDeleted().Topic,
+            new CategoryCreated().Topic,
+            new DiscountCreated().Topic,
+            new DiscountDeleted().Topic,
+            new DiscountExpired().Topic,
+            new DiscountUpdated().Topic,
+            new ProductInventoryInStock().Topic,
+            new ProductInventoryOutOfStock().Topic,
+            new FacetCreated().Topic,
+            new FacetUpdated().Topic,
+            new FacetDeleted().Topic,
+        };
+        private Task _drainTask;
         //System.Threading.Timer _drainTimer;
 
         public SiteBuilderContextInvalidatorConsumer(ISitebuilderContextCacheRepository sitebuilderContextCacheRepository)
         {
             _sitebuilderContextCacheRepository = sitebuilderContextCacheRepository;
-           
         }
 
         public void Consume(IFacetEvent message)
@@ -48,43 +65,12 @@ namespace Mozu.SiteBuilder.UX.Messaging
         }
 
 
-
-        HashSet<string> _productGenericTopics = new HashSet<string> {
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductDraftPublished().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountExpired().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductInventoryInStock().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductInventoryOutOfStock().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetDeleted().Topic,
-        };
-
         public void Consume(IProductEvent message)
         {
-            if (_productGenericTopics.Contains(message.Topic))
-            {
-                InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-            }
-            else
-            {
-                InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.Pending);
-            }
-
-
-        }
-
-        public void Consume(ICategoryEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
+            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog,
+                _productGenericTopics.Contains(message.Topic) ? 
+                    DataViewModeType.NoneSet : 
+                    DataViewModeType.Pending);
         }
 
         public void Consume(IDiscountEvent message)
@@ -95,13 +81,10 @@ namespace Mozu.SiteBuilder.UX.Messaging
         //TODO: update when we have the new solr enqueue messaging
         public void Consume(ISearchIndexUpdated message)
         {
-
-
             var dvm = (DataViewModeType)message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
 
             //todo update when kevin figures out how to tell us if its a staging or live event.
             InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, dvm);
-
         }
 
         void Drain ()
@@ -130,9 +113,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
             }
         }
 
-
-
-        void InvalidateMessageOnCatalogAndSite<T>(T message, StoreFrontCacheDependencies cacheDepType, Mozu.Core.DataViewModeType dataModeType) where T : IEventMessage
+        void InvalidateMessageOnCatalogAndSite<T>(T message, StoreFrontCacheDependencies cacheDepType, DataViewModeType dataModeType) where T : IEventMessage
         {
             if (message.MessagePublishingContext.CatalogId.HasValue == false)
             {
@@ -153,17 +134,21 @@ namespace Mozu.SiteBuilder.UX.Messaging
                 if (_drainTask== null)
                 {
                     _drainTask =  Task.Run(() => Task.Delay(1000).ContinueWith(_ => Drain()));
-
                 }
             }
-            
-
-            
         }
 
-        public void Consume(IDocumentChanged message)
+        public Task Consume(ConsumeContext<ICategoryEvent> context)
         {
-            var mode =DataViewModeType.NoneSet;
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<IDocumentChanged> context)
+        {
+            var mode = DataViewModeType.NoneSet;
+            var message = context.Message;
 
             //bug in content sends pending for live edits.   uncomment when fixed.
             //if ( message.DataViewMode == DataViewModeType.Pending.ToString())
@@ -172,132 +157,135 @@ namespace Mozu.SiteBuilder.UX.Messaging
             //}
 
             if (
-                 string.IsNullOrEmpty(message.DocumentListName) ||
-                 string.Equals(message.DocumentListName, "pages@mozu", StringComparison.OrdinalIgnoreCase) ||
-                 string.Equals(message.DocumentListName, "siteSettings@mozu", StringComparison.OrdinalIgnoreCase)
-                 )
+                string.IsNullOrEmpty(message.DocumentListName) ||
+                string.Equals(message.DocumentListName, "pages@mozu", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(message.DocumentListName, "siteSettings@mozu", StringComparison.OrdinalIgnoreCase)
+            )
             {
                 InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.None, mode);
             }
-
-            
+            return Task.CompletedTask;
         }
 
-        public void Consume(IGeneralSettingsUpdated message)
+        public Task Consume(ConsumeContext<IGeneralSettingsUpdated> context)
         {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.None, DataViewModeType.NoneSet);
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.None, DataViewModeType.NoneSet);
+            return Task.CompletedTask;
         }
 
-        public void Consume(ICheckoutSettingsUpdated message)
+        public Task Consume(ConsumeContext<ICheckoutSettingsUpdated> context)
         {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.None, DataViewModeType.NoneSet);
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.None, DataViewModeType.NoneSet);
+            return Task.CompletedTask;
         }
     }
 
     //TODO: cache invalidation by tags, so we can only kill subsets of ALL THE THINGS.
-    public class CacheItemsInvalidConsumer : LoggingConsumer, 
-        Consumes<IProductEvent>.All, 
-        Consumes<ICategoryEvent>.All,
-        Consumes<IDiscountEvent>.All,
-        Consumes<ISearchIndexUpdated>.All,
-        Consumes<IFacetEvent>.All,
-        Consumes<ISearchTuningRuleEvent>.All,
-        Consumes<ISearchSettingsEvent>.All
+    public class CacheItemsInvalidConsumer : LoggingConsumer,
+        IConsumer<IProductEvent>,
+        IConsumer<ICategoryEvent>,
+        IConsumer<IDiscountEvent>,
+        IConsumer<ISearchIndexUpdated>,
+        IConsumer<IFacetEvent>,
+        IConsumer<ISearchTuningRuleEvent>,
+        IConsumer<ISearchSettingsEvent>
     {
         private readonly IStorefrontCacheControl _storefrontCacheControl;
+
+        private readonly HashSet<string> _productGenericTopics = new HashSet<string>
+        {
+            new ProductCreated().Topic,
+            new ProductDeleted().Topic,
+            new ProductDraftPublished().Topic,
+            new ProductUpdated().Topic,
+            new CategoryUpdated().Topic,
+            new CategoryDeleted().Topic,
+            new CategoryCreated().Topic,
+            new DiscountCreated().Topic,
+            new DiscountDeleted().Topic,
+            new DiscountExpired().Topic,
+            new DiscountUpdated().Topic,
+            new ProductInventoryInStock().Topic,
+            new ProductInventoryOutOfStock().Topic,
+            new FacetCreated().Topic,
+            new FacetUpdated().Topic,
+            new FacetDeleted().Topic,
+        };
 
         public CacheItemsInvalidConsumer(IStorefrontCacheControl storefrontCacheControl)
         {
             _storefrontCacheControl = storefrontCacheControl;
         }
 
-        public void Consume(IFacetEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-        }
-
-        public void Consume(ISearchSettingsEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-        }
-
-        public void Consume(ISearchTuningRuleEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-        }
-
-       
-
-        HashSet<string> _productGenericTopics = new HashSet<string> {
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductDraftPublished().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.CategoryCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountDeleted().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountExpired().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.DiscountUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductInventoryInStock().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.ProductInventoryOutOfStock().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetCreated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetUpdated().Topic,
-            new Mozu.Core.Messaging.Contracts.Product.Events.FacetDeleted().Topic,
-        };
-        
-        public void Consume(IProductEvent message)
-        {
-            if (_productGenericTopics.Contains(message.Topic))
-            {
-                InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-            }
-            else
-            {
-                InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.Pending);
-            }
-            
-           
-        }
-
-        public void Consume(ICategoryEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-        }
-
-        public void Consume(IDiscountEvent message)
-        {
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, DataViewModeType.NoneSet);
-        }
-
-        //TODO: update when we have the new solr enqueue messaging
-        public void Consume(ISearchIndexUpdated message)
-        {
-
-
-            var dvm =(DataViewModeType) message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
-          
-            //todo update when kevin figures out how to tell us if its a staging or live event.
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, dvm);
-    
-        }
-      
-
-    
-
-         void InvalidateMessageOnCatalogAndSite<T>(T message, StoreFrontCacheDependencies cacheDepType, Mozu.Core.DataViewModeType dataModeType) where T : IEventMessage
+        void InvalidateMessageOnCatalogAndSite<T>(T message, StoreFrontCacheDependencies cacheDepType,
+            DataViewModeType dataModeType) where T : IEventMessage
         {
             //StorefrontCacheTypes cacheType, Mozu.Core.DataViewModeType dataModeType
 
             if (message.MessagePublishingContext.CatalogId.HasValue)
             {
-                _storefrontCacheControl.InvalidateCatalog(message.MessagePublishingContext.TenantId, message.MessagePublishingContext.CatalogId.Value, cacheDepType, dataModeType);
+                _storefrontCacheControl.InvalidateCatalog(message.MessagePublishingContext.TenantId,
+                    message.MessagePublishingContext.CatalogId.Value, cacheDepType, dataModeType);
             }
+
             if (message.MessagePublishingContext.SiteId.HasValue)
             {
-                _storefrontCacheControl.InvalidateSite(message.MessagePublishingContext.SiteId.Value, cacheDepType,dataModeType);
+                _storefrontCacheControl.InvalidateSite(message.MessagePublishingContext.SiteId.Value, cacheDepType,
+                    dataModeType);
             }
+        }
+
+        public Task Consume(ConsumeContext<IProductEvent> context)
+        {
+            var message = context.Message;
+            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog,
+                _productGenericTopics.Contains(message.Topic) ? DataViewModeType.NoneSet : DataViewModeType.Pending);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<ICategoryEvent> context)
+        {
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<IDiscountEvent> context)
+        {
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<ISearchIndexUpdated> context)
+        {
+            var dvm = (DataViewModeType) context.Message.MessagePublishingContext.DataViewMode.GetValueOrDefault(
+                (int) DataViewModeType.NoneSet);
+
+            //todo update when kevin figures out how to tell us if its a staging or live event.
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog, dvm);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<IFacetEvent> context)
+        {
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<ISearchTuningRuleEvent> context)
+        {
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
+        }
+
+        public Task Consume(ConsumeContext<ISearchSettingsEvent> context)
+        {
+            InvalidateMessageOnCatalogAndSite(context.Message, StoreFrontCacheDependencies.Catalog,
+                DataViewModeType.NoneSet);
+            return Task.CompletedTask;
         }
     }
 }

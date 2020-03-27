@@ -11,11 +11,5 @@ using Mozu.SiteBuilder.UX.Controllers;
 namespace Mozu.SiteBuilder.UX.Controllers
 {
     public class ErrorController : BaseApiController 
-    {
-        public object  NotFound()
-        {
-            return new NotFoundResult();
-        }
-
-    }
+    {}
 }

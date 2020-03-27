@@ -39,8 +39,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             }
         }
 
-        
-
         protected override async Task WriteFileAsync(HttpResponse response)
         {
             var outputStream = response.Body;

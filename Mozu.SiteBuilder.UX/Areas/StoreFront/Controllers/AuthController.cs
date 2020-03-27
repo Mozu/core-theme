@@ -1,45 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.ErrorHandler;
+using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionConstraints;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Filters;
-using Mozu.CommerceRuntime.Contracts.Clients;
-using System.Web;
+using Mozu.SiteBuilder.UX.Messaging;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using System.Linq.Expressions;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Mozu.Core.Exceptions;
-using Mozu.Core.Api;
-using Mozu.Core.Api.Client.Caching;
-using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core.Api.ErrorHandler;
-using Mozu.Core.Logging;
-using Mozu.Core.Settings;
-using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
-using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
+using Mozu.SiteBuilder.Mvc.Middleware;
 using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
+using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -196,6 +193,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public IActionResult LogOut(string returnUrl = null, bool saveUserId = false)
         {
             DoLogout(saveUserId);
@@ -210,6 +208,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public ActionResult Login(string returnUrl = null)
         {
             var pc = this.PageContext;
@@ -227,6 +226,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public ActionResult OrderStatus(string returnUrl = null)
         {
             var pc = this.PageContext;
@@ -244,6 +244,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public ActionResult AjaxForgotPassword(string returnUrl = null)
         {
             var pc = this.PageContext;
@@ -286,6 +287,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public async Task<IActionResult> CreateAccount(CustomerAccountAndAuthInfo authInfo)
         {
             var res = await DoCreateAccount(authInfo);
@@ -299,6 +301,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
             if (Request.Method == HttpMethod.Options.Method)
@@ -420,6 +423,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json", false)]
         public async Task<IActionResult> Login(LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
@@ -459,7 +463,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private IActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
-            FourHundredMessageHandler.BypassErrorHandler(Request);
+            FourHundredMiddleware.BypassErrorHandler(HttpContext);
             return Forbid(errorMsg); 
             //Request.CreateResponse(HttpStatusCode.Unauthorized,
             //    View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
@@ -494,6 +498,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxLogin(LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
@@ -544,6 +549,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json")]
         public async Task<IActionResult> AnonymousOrderLogin(OrderDetails details)
         {
             var orderNumber = details?.orderNumber;
@@ -645,6 +651,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost, System.Web.Http.HttpOptions]
         [SslOnlyActionFilter]
+        [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
         {
             if (Request.Method.ToUpper() == "OPTIONS")
@@ -696,15 +703,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View(template, model);
         }
 
-         public class ResetPasswordConfirmDetails
-         {
-             public bool done { get; set; }
-             public string username { get; set; }
-             public string validationToken { get; set; }
-             public string password { get; set; }
-             public string passwordConfirm { get; set; }
-             public object[] messages { get; set; }
-         }
+        public class ResetPasswordConfirmDetails
+        {
+            public bool done { get; set; }
+            public string username { get; set; }
+            public string validationToken { get; set; }
+            public string password { get; set; }
+            public string passwordConfirm { get; set; }
+            public object[] messages { get; set; }
+        }
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
@@ -742,7 +749,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Reset-Password", info);
         }
     }
-
 
     public class AuthModelValidator : ActionFilterAttribute
     {
@@ -815,30 +821,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var name = ((MemberExpression)exp.Body).Member.Name;
                 throw new Mozu.Core.Exceptions.VaeValidationConflictException(name, "invalid input for field " + name);
             }
-        }
-    }
-    public class PantsController : BaseApiController
-    {
-        private readonly IAuthenticationHelper _authenticationHelper;
-        private readonly ICookieProvider _cookieProvider;
-
-        public PantsController(IAuthenticationHelper authenticationHelper,  ICookieProvider cookieProvider)
-        {
-            _authenticationHelper = authenticationHelper;
-            _cookieProvider = cookieProvider;
-        }
-
-        [System.Web.Http.HttpPost]
-        public async Task<IActionResult> Pants(HttpRequestMessage request)
-        {
-            var res = await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, this.SbApiContext, _authenticationHelper, "/", true);
-            if (res.IsSuccessStatusCode) return new OkResult();
-            return new ObjectResult(new
-                {
-                    statusCode = (int)HttpStatusCode.InternalServerError,
-                    message = res.ReasonPhrase
-                })
-                { StatusCode = (int)HttpStatusCode.InternalServerError };
         }
     }
 

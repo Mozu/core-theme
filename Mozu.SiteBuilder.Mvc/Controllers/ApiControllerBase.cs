@@ -26,7 +26,6 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 {
     public class ApiControllerBase : ControllerBase, IHyprController
     {
-
         static T Resolve<T>(Lazy<IServiceProvider> s)
         {
             return s.Value.Resolve<T>();
@@ -36,13 +35,11 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
         public IServiceProvider LifetimeScope
         {
-            get => _lifetimeScope ??= (IServiceProvider) Request.HttpContext.RequestServices.GetService(typeof(IServiceProvider));
+            get => _lifetimeScope ??= (IServiceProvider) HttpContext.RequestServices.GetService(typeof(IServiceProvider));
             set => _lifetimeScope = value;
         }
 
-
         private ISiteBuilderApiContext _siteBuilderApiContext;
-        private HttpContext _httpContextBase;
 
         public ISiteBuilderApiContext SbApiContext
         {
@@ -111,7 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set => _navigationContext = value;
         }
 
-        CmsPageContext  _cmsPageContext ;
+        private CmsPageContext  _cmsPageContext ;
         public CmsPageContext CmsPageContext
         {
             get => _cmsPageContext ??= LifetimeScope.Resolve<CmsPageContext>();
@@ -124,42 +121,6 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         {
             get => _sc ??= LifetimeScope.Resolve<SiteContext>();
             set => _sc = value;
-        }
-
-        public HttpContext HttpContext
-        {
-            get => _httpContextBase ??= LifetimeScope.Resolve<HttpContext>();
-            set => _httpContextBase = value;
-        }
-
-        public HttpRequest HttpRequestBase => HttpContext.Request;
-
-        public HttpResponse Response => HttpContext.Response;
-
-
-        protected internal FileContentResult File(byte[] fileContents, string contentType)
-        {
-            return File(fileContents, contentType, null /* fileDownloadName */);
-        }
-
-        protected internal virtual FileContentResult File(byte[] fileContents, string contentType, string fileDownloadName)
-        {
-            return new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName };
-        }
-
-        protected internal virtual FileStreamResult File(Stream fileStream, string contentType, string fileDownloadName)
-        {
-            return new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName };
-        }
-
-        protected internal FilePathResult File(string fileName, string contentType)
-        {
-            return File(fileName, contentType, null /* fileDownloadName */);
-        }
-
-        protected internal virtual FilePathResult File(string fileName, string contentType, string fileDownloadName)
-        {
-            return new FilePathResult(fileName, contentType) { FileDownloadName = fileDownloadName };
         }
 
         // var cc = new ControllerContext(new HttpContextWrapper(HttpContext.Current), new RouteData(), new FooController());
@@ -232,30 +193,17 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             };
         }
 
-        private ViewDataDictionary _viewDataDictionary;
-        public ViewDataDictionary ViewData
+        private Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary _viewDataDictionary;
+        public Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary ViewData
         {
             get
             {
                 if (_viewDataDictionary != null) return _viewDataDictionary;
-                _viewDataDictionary = new ViewDataDictionary {["ControllerContext"] = ControllerContext};
+                _viewDataDictionary = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(null) { ["ControllerContext"] = ControllerContext};
                 //_viewDataDictionary["ControllerContext"] = this.MvcControlerContext;
                 return _viewDataDictionary;
             }
             set => _viewDataDictionary = value;
-        }
-        public FileStreamResult File(Stream fileStream, string contentType)
-        {
-            return new FileStreamResult(fileStream, contentType);
-        }
-
-        public ContentResult Content(string content, string contentType)
-        {
-            return new ContentResult()
-            {
-                Content = content,
-                ContentType = contentType
-            };
         }
     }
 }

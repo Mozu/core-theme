@@ -32,13 +32,11 @@ namespace Mozu.SiteBuilder.Mvc
 
     public class CookieProvider : ICookieProvider
     {
-        private readonly HttpRequestMessage _request;
         private readonly HttpContext _context;
         //private readonly string _cookieName;
         
-        public CookieProvider( HttpRequestMessage request , HttpContext context ,  ISettings settings   )
+        public CookieProvider(HttpContext context/*, ISettings settings*/)
         {
-            _request = request;
             _context = context;
         }
 
@@ -48,24 +46,27 @@ namespace Mozu.SiteBuilder.Mvc
             // work around casing issues with system.web.cookie.  
             // Still using web to write cookie as it would require a larger refactor to hold on to the cookies durenting the request and set them on say a message handler after the respone was created.
             //also the system.net cookie uses the formcollection encoder which removes + as spaces.   Didnt want to break all the cookies by adding a new format.  So grabbing the raw value and re--un-escapging it for base64
-            var cookie =_request.Headers.GetCookies().SelectMany(x => x.Cookies).FirstOrDefault(x => x.Name == cookieName);
-            if ( cookie?.Values != null )
+            var cookieState = new CookieState(cookieName);
+            
+            var (_, s) = _context.Request.Cookies.FirstOrDefault(x => x.Key == cookieName);
+
+            if (s == null) return cookieState;
+
+            var unescaped = cookieState.Value = s;
+            var parts = unescaped.Split('&');
+            foreach(var part in parts)
             {
-                var unescaped = cookie.Values.ToString();
-                var parts = unescaped.Split('&');
-                foreach( var part in parts)
+                var eqIdx = part.IndexOf('=');
+                if (eqIdx == -1)
                 {
-                    var eqIdx = part.IndexOf('=');
-                    if ( eqIdx ==-1)
-                    {
-                        continue;
-                    }
-                    var name = part.Substring(0, eqIdx);
-                    var value = part.Substring(eqIdx + 1).Replace("%2b", "+").Replace("%2f", "/").Replace("%3d", "=");
-                    cookie[name] = value;
+                    continue;
                 }
+                var name = part.Substring(0, eqIdx);
+                var value = part.Substring(eqIdx + 1).Replace("%2b", "+").Replace("%2f", "/").Replace("%3d", "=");
+                cookieState.Values[name] = value;
             }
-            return cookie;
+
+            return cookieState;
         }
 
         public void SaveResponseCookie(string cookieName, string value, CookieOptions cookie, bool httpConly = true)

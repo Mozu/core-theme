@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<IActionResult> Categories()
+        public IActionResult Categories()
         {
             // var primaryNavTask = _gandalf.GetTreeNavigation();
             //var domainTask = GetSitePrimaryDomain();
@@ -216,7 +216,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.Body);
             writer.WriteStartElement("urlset", NS);
-            var offset = 0;
             var startIndex = page * PageSize;
 
             while (true)

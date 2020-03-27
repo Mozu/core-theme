@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Mozu.Core.Api.Client;
+using Mozu.Core.Settings;
 using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Caching;
-using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Web.Http;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
-using NDjango.Interfaces;
-using NDjango.FiltersCS.Compatibility;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Newtonsoft.Json.Linq;
-using Mozu.Core.Settings;
-using Mozu.Core.Api.Client;
+using Mozu.SiteBuilder.Mvc.Tags;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using NDjango.FiltersCS.Compatibility;
+using NDjango.Interfaces;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Formatting;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -55,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// 
     /// productCodes=alternate to query.  An array of product codes
     /// </summary>
-    
+
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include_products")]
     public class IncludeProductsTag : SimpleTagBaseAsync

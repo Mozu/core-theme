@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.AdminUser.Contracts.Clients;
@@ -18,9 +20,13 @@ using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.ActionConstraints;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
+using Mozu.SiteBuilder.UX.Configuration;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
@@ -65,7 +71,15 @@ namespace Mozu.SiteBuilder.UX
                         .UsingAssembly(Assembly.GetExecutingAssembly());
 
                 })
-                .UseAlternateUrlPrefix("mozu.content.webapi");
+                .UseAlternateUrlPrefix("mozu.content.webapi")
+                .AddMvc(opt =>
+                {
+                    opt.Conventions.Add(new AcceptHeaderConvention());
+                    opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
+                    opt.OutputFormatters.Add(new HtmlErrorMediaTypeHyperFormatter());
+                });
+            services.AddControllers(options =>
+                options.Filters.Add(new HttpResponseExceptionFilter()));
 
         }
 
@@ -77,6 +91,8 @@ namespace Mozu.SiteBuilder.UX
             app.UseRewriter(rewriteOptions);
 
             app.ReigsterMozuMiddleware();
+
+            app.UseMvc(RouteConfig.Register);
         }
     }
 }

@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using System.Globalization;
 using Microsoft.AspNetCore.Http;
+using Mozu.Core.Configuration;
 using Mozu.Core.Money;
 using Mozu.SiteBuilder.Mvc.Tags;
 
@@ -205,7 +206,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 val = new string[] { context.Request.Headers["REMOTE_ADDR"] };
             }
-            IpAddress = val.SelectMany( _ => _.Split(',')).Select(_ => _.Trim()).FirstOrDefault(_ => _.IsIPAddressValid());
+            IpAddress = val.Where(_ => !string.IsNullOrEmpty(_)).SelectMany( _ => _.Split(',')).Select(_ => _.Trim()).FirstOrDefault(_ => _.IsIPAddressValid());
                 
             if (!IpAddress.IsIPAddressValid())
             {
@@ -220,7 +221,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
-        private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
         // private IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContext _context;
@@ -426,7 +426,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //used to serialize out the themid to the page.   Sitecontext is still kinda the canonical loc, but since based on user agent ... needs to be lesser client cached page context 
         public string ThemeId
         {
-            get => _themeId ??= this._requestMessage.Resolve<SiteContext>().ThemeId;
+            get => _themeId ??= this._context.RequestServices.Resolve<SiteContext>().ThemeId;
             set => _themeId = value;
         }
         [JsonPreloadFilter]
@@ -441,7 +441,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string _cdnCacheBustKey;
         public string CdnCacheBustKey
         {
-            get => _cdnCacheBustKey ?? _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey;
+            get => _cdnCacheBustKey ?? _context.RequestServices.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey;
             set => _cdnCacheBustKey = value;
         }
 

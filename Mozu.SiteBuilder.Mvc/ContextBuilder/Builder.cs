@@ -613,7 +613,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         [MongoDB.Bson.Serialization.Attributes.BsonId]
         public string Id
         {
-            get { return $"{TenantId}&{SiteId}&{PriceList}&{LocaleCode}&{CurrencyCode}&v={SitebuilderContextCacheRepository.CacheVersion}"; }
+            get => $"{TenantId}&{SiteId}&{PriceList}&{LocaleCode}&{CurrencyCode}&v={SitebuilderContextCacheRepository.CacheVersion}";
             set {;}
         }
         public int TenantId { get; set; }
@@ -635,17 +635,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         public string  Version
         {
-            get { return SitebuilderContextCacheRepository.CacheVersion; }
+            get => SitebuilderContextCacheRepository.CacheVersion;
             set { }
         }
 
-        public bool CategoriesOnly
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.PriceList);
-            }
-        }
+        public bool CategoriesOnly => !string.IsNullOrEmpty(this.PriceList);
     }
     public interface ISiteBuilderContextDataRepository
     {
@@ -755,7 +749,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         // Mozu.SiteBuilder.Mvc.Contexts.ISiteContext _siteContext;
         public ISiteBuilderContextData GetContextData()
         {
-            if (_ex != null )
+            if (_ex != null)
             {
                 throw _ex;
             }
@@ -764,7 +758,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         public Task<ISiteBuilderContextData> GetContextDataAsync()
         {
-            return _dataTask = _dataTask ?? _repo.GetContextData().ContinueWith(_ =>
+            return _dataTask ??= _repo.GetContextData().ContinueWith(_ =>
             {
                 if (_.IsFaulted)
                 {
@@ -1415,262 +1409,154 @@ namespace Mozu.SiteBuilder.Mvc.Context
         
         public DateTime BuildDate
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).BuildDate;
-            }
+            get => _inner.BuildDate;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).BuildDate = value;
-            }
+            set => _inner.BuildDate = value;
         }
 
         public SiteSettings.Order.Contracts.CheckoutSettings CheckoutSettings
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).CheckoutSettings;
-            }
+            get => _inner.CheckoutSettings;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).CheckoutSettings = value;
-            }
+            set => _inner.CheckoutSettings = value;
         }
 
         public SiteSettings.General.Contracts.GeneralSettings GeneralSettings
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).GeneralSettings;
-            }
+            get => _inner.GeneralSettings;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).GeneralSettings = value;
-            }
+            set => _inner.GeneralSettings = value;
         }
 
         public string Hash
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).Hash;
-            }
+            get => _inner.Hash;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).Hash = value;
-            }
+            set => _inner.Hash = value;
         }
 
         public LocationUsageCollection LocationUsages
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).LocationUsages;
-            }
+            get => _inner.LocationUsages;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).LocationUsages = value;
-            }
+            set => _inner.LocationUsages = value;
         }
 
         public NavigationSet NavigationSet
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).NavigationSet;
-            }
+            get => _inner.NavigationSet;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).NavigationSet = value;
-            }
+            set => _inner.NavigationSet = value;
         }
 
         public DocumentCollection NavWebPages
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).NavWebPages;
-            }
+            get => _inner.NavWebPages;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).NavWebPages = value;
-            }
+            set => _inner.NavWebPages = value;
         }
 
         public List<RedirectEntry> Redirects
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).Redirects;
-            }
+            get => _inner.Redirects;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).Redirects = value;
-            }
+            set => _inner.Redirects = value;
         }
 
         public DateTime? RedirectUpdateDate
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).RedirectUpdateDate;
-            }
+            get => _inner.RedirectUpdateDate;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).RedirectUpdateDate = value;
-            }
+            set => _inner.RedirectUpdateDate = value;
         }
 
       
-        public CustomRouteRepository.RouteCollectionContainer RouteCollection
+        public CustomRouteRepository.HttpRouteCollectionContainer RouteCollection
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).RouteCollection;
-            }
+            get => _inner.RouteCollection;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).RouteCollection = value;
-            }
+            set => _inner.RouteCollection = value;
         }
 
         public Dictionary<string, Dictionary<string, object>> RouteMapperData
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).RouteMapperData;
-            }
+            get => _inner.RouteMapperData;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).RouteMapperData = value;
-            }
+            set => _inner.RouteMapperData = value;
         }
 
         public Dictionary<string, Dictionary<string, object>> RouteValidatorData
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).RouteValidatorData;
-            }
+            get => _inner.RouteValidatorData;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).RouteValidatorData = value;
-            }
+            set => _inner.RouteValidatorData = value;
         }
 
         public RuntimeRedirects RuntimeRedirects
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).RuntimeRedirects;
-            }
+            get => _inner.RuntimeRedirects;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).RuntimeRedirects = value;
-            }
+            set => _inner.RuntimeRedirects = value;
         }
 
         public int? SiteId
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).SiteId;
-            }
+            get => _inner.SiteId;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).SiteId = value;
-            }
+            set => _inner.SiteId = value;
         }
 
         public Tenant.Contracts.Tenant TenantInfo
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).TenantInfo;
-            }
+            get => _inner.TenantInfo;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).TenantInfo = value;
-            }
+            set => _inner.TenantInfo = value;
         }
 
         public Dictionary<string, Tuple<Theme, ThemeRuntimeSettingsCollection>> Themes
         {
-            get
-            {
-                return ((ISiteBuilderContextData)_inner).Themes;
-            }
+            get => _inner.Themes;
 
-            set
-            {
-                ((ISiteBuilderContextData)_inner).Themes = value;
-            }
+            set => _inner.Themes = value;
         }
 
         public string ThemeHash
         {
-            get
-            {
-                return _inner.ThemeHash;
-            }
-            set
-            {
-                _inner.ThemeHash = value;
-            }
+            get => _inner.ThemeHash;
+            set => _inner.ThemeHash = value;
         }
 
         public List<CurrencyExchangeRate> CurrencyExchangeRates
         {
-            get
-            {
-                return _inner.CurrencyExchangeRates;
-            }
-            set
-            {
-                _inner.CurrencyExchangeRates = value;
-            }
+            get => _inner.CurrencyExchangeRates;
+            set => _inner.CurrencyExchangeRates = value;
         }
 
         public UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
         {
-            return ((ISiteBuilderContextData)_inner).GetMappedCheckoutSettings();
+            return _inner.GetMappedCheckoutSettings();
         }
 
         public UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()
         {
-            return ((ISiteBuilderContextData)_inner).GetMappedGeneralSettings();
+            return _inner.GetMappedGeneralSettings();
         }
 
         public List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> GetMappedSiteDomains()
         {
-            return ((ISiteBuilderContextData)_inner).GetMappedSiteDomains();
+            return _inner.GetMappedSiteDomains();
         }
 
         public string GetSiteSubDirectory()
         {
-            return ((ISiteBuilderContextData)_inner).GetSiteSubDirectory();
+            return _inner.GetSiteSubDirectory();
         }
 
       
     }
     
     //navigation
-    public class SiteBuilderContextData : AbstractContextData ,ISiteBuilderContextData
+    public class SiteBuilderContextData : AbstractContextData, ISiteBuilderContextData
     {
         private const string SubDirRewriteAttributeName = "mozu.reverseproxy.subdirectoryrewrites";
         public DocumentCollection NavWebPages { get; set; }
@@ -1695,7 +1581,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         [JsonIgnore]
         public RuntimeRedirects RuntimeRedirects { get;  set; }
         [JsonIgnore]
-        public CustomRouteRepository.RouteCollectionContainer RouteCollection { get; set; }
+        public CustomRouteRepository.HttpRouteCollectionContainer RouteCollection { get; set; }
         [JsonConverter(typeof(NavigationSetJsonConverter))]
         public NavigationSet NavigationSet { get;  set; }
         public Dictionary<string, Dictionary<string, object>> RouteValidatorData { get;  set; }
@@ -1706,22 +1592,22 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public string ThemeHash { get; set; }
         public List<CurrencyExchangeRate> CurrencyExchangeRates { get; set; }
 
-        private Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings _mappedGenSettings;
-        public Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()
+        private UX.Models.Settings.GeneralSettings _mappedGenSettings;
+        public UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()
         {
-            return _mappedGenSettings = _mappedGenSettings ?? Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings>(GeneralSettings);
+            return _mappedGenSettings ??= Mapper.Map<UX.Models.Settings.GeneralSettings>(GeneralSettings);
         }
 
-        private Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings _mappedCheckoutSettings;
-        public Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
+        private UX.Models.Settings.CheckoutSettings _mappedCheckoutSettings;
+        public UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
         {
-            return _mappedCheckoutSettings = _mappedCheckoutSettings ?? Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings>(CheckoutSettings, opt => opt.Items["countryCode"] = this.TenantInfo.Sites.First(x => x.Id == SiteId).CountryCode);
+            return _mappedCheckoutSettings ??= Mapper.Map<UX.Models.Settings.CheckoutSettings>(CheckoutSettings, opt => opt.Items["countryCode"] = this.TenantInfo.Sites.First(x => x.Id == SiteId).CountryCode);
         }
 
-        private List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> _mappedSiteDomains;
+        private List<UX.Models.Settings.SiteDomain> _mappedSiteDomains;
 
         private string _siteSubDirectory = null;
-        public List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> GetMappedSiteDomains()
+        public List<UX.Models.Settings.SiteDomain> GetMappedSiteDomains()
         {
             if (_mappedSiteDomains == null)
             {
@@ -1746,46 +1632,38 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
             var siteDc = this.TenantInfo.Sites?.First(x => x.Id == SiteId);
 
-            var mappedSubDomains = Mapper.Map<List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>>(siteDc.Domains);
+            var mappedSubDomains = Mapper.Map<List<UX.Models.Settings.SiteDomain>>(siteDc.Domains);
             mappedSubDomains.ForEach(_ => _.SiteId = SiteId.GetValueOrDefault(-1));
-
-
 
             //process siteSubDir
             foreach (var site in TenantInfo.Sites ?? Enumerable.Empty<Mozu.Tenant.Contracts.Site>())
             {
                 var attVal = site.Attributes?.Where(x => string.Equals(x.Name, SubDirRewriteAttributeName)).Select(x => x.Value).FirstOrDefault() as string;
-                if (attVal != null)
-                {
-                    var nvc = System.Web.HttpUtility.ParseQueryString(attVal);
-                    foreach (var subdirSlug in nvc.AllKeys)
-                    {
-                        var siteIdString = nvc[subdirSlug];
-                        if (string.Equals(siteIdString, this.SiteId.ToString()))
-                        {
-                            _siteSubDirectory = subdirSlug.StartsWith("/") ? subdirSlug : ("/" + subdirSlug);
+                if (attVal == null) continue;
 
-                            var subDirPrimary = site.Domains.Where(x => x.IsPrimary && !x.IsSystemAssigned && !x.IsInfrastructureRecord)
-                                .Select(y => Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>(y))
-                                .FirstOrDefault();
-                            if (subDirPrimary != null)
-                            {
-                                subDirPrimary.SiteId = site.Id;
-                                mappedSubDomains.Where(x => x.IsSystemAssigned).ToList().ForEach(x => x.IsPrimary = false);
-                                mappedSubDomains.Insert(0, subDirPrimary);
-                            }
+                var nvc = System.Web.HttpUtility.ParseQueryString(attVal);
+                foreach (var subdirSlug in nvc.AllKeys)
+                {
+                    var siteIdString = nvc[subdirSlug];
+                    if (string.Equals(siteIdString, this.SiteId.ToString()))
+                    {
+                        _siteSubDirectory = subdirSlug.StartsWith("/") ? subdirSlug : ("/" + subdirSlug);
+
+                        var subDirPrimary = site.Domains.Where(x => x.IsPrimary && !x.IsSystemAssigned && !x.IsInfrastructureRecord)
+                            .Select(Mapper.Map<UX.Models.Settings.SiteDomain>)
+                            .FirstOrDefault();
+                        if (subDirPrimary != null)
+                        {
+                            subDirPrimary.SiteId = site.Id;
+                            mappedSubDomains.Where(x => x.IsSystemAssigned).ToList().ForEach(x => x.IsPrimary = false);
+                            mappedSubDomains.Insert(0, subDirPrimary);
                         }
                     }
-
                 }
             }
             _mappedSiteDomains = mappedSubDomains;
 
         }
-
-
-      
-
     }
     public abstract class AbstractContextData
     {

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Routing;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using IInlineConstraintResolver = Microsoft.AspNetCore.Routing.IInlineConstraintResolver;
+using Route = Microsoft.AspNetCore.Routing.Route;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
@@ -33,7 +35,26 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     }
     public static class RouteExtensions
     {
-        public static IHttpRoute MapCustomHttpRoute(this HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme? scheme = null)
+        public static IList<IRouter> MapRoute(this IList<IRouter> routes, IRouter handler, string name,
+            string routeTemplate, object defaults, IInlineConstraintResolver resolver)
+        {
+            var defaultsDictionary = new RouteValueDictionary(defaults);
+            var route = new Route(handler, name, routeTemplate, defaultsDictionary, null, null, resolver);
+            routes.Add(route);
+
+            return routes;
+        }
+        public static IList<IRouter> MapRoute(this IList<IRouter> routes, IRouter handler, string name,
+            string routeTemplate, object defaults, IDictionary<string, object> constraints, IInlineConstraintResolver resolver)
+        {
+            var defaultsDictionary = new RouteValueDictionary(defaults);
+            var route = new Route(handler, name, routeTemplate, defaultsDictionary, constraints, null, resolver);
+            routes.Add(route);
+
+            return routes;
+        }
+
+        public static IList<IRouter> MapCustomRoute(this IList<IRouter> routes, IRouter handler, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, IInlineConstraintResolver resolver, CustomRoute.Scheme? scheme = null)
         {
             if (mappings == null)
             {
@@ -42,14 +63,27 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
             mappings.Add(new RouteDataFixup(), new string[0]);
 
-            RouteValueDictionary defaultsDictionary = new RouteValueDictionary(defaults);
+            var defaultsDictionary = new RouteValueDictionary(defaults);
             defaultsDictionary
-               .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
-               .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
+                .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
+                .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
 
-            var route = new CustomRoute(routeTemplate, null, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings, null, scheme);
-            routes.Add(name, route);
-            return route;
+            var route = new CustomRoute(handler, 
+                name, 
+                routeTemplate, 
+                null, 
+                fancyRoute, 
+                isCanonical, 
+                defaultsDictionary, 
+                constraints, 
+                mappings, 
+                //null,
+                scheme, 
+                resolver);
+
+            routes.Add(route);
+
+            return routes;
         }
     }
 }

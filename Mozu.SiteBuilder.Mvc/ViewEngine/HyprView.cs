@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.FSharp.Core;
 using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -106,15 +107,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
 
             requestContext["viewData"] = viewContext.ViewData;
-            requestContext["routeData"] = viewContext.RequestMessage.GetRouteData().Values;
+            requestContext["routeData"] = viewContext.HttpContext.GetRouteData().Values;
         }
 
         public async Task<bool> AsyncRender(HyprViewContext viewContext, TextWriter writer)
         {
             var requestContext = CreateRequestContext(viewContext, _virtualPath);
-            var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
+            var templateManager = viewContext.HttpContext.RequestServices.Resolve<ITemplateManager>();
 
-            var catTreeProvider = viewContext.RequestMessage.Resolve<ICategoryTreeProvider>();
+            var catTreeProvider = viewContext.HttpContext.RequestServices.Resolve<ICategoryTreeProvider>();
             
             try
             {

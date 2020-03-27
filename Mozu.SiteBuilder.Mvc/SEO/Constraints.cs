@@ -11,10 +11,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.MZDB.Contracts;
 using Mozu.ProductRuntime.Contracts;
@@ -35,10 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         readonly IApiContext _context;
         ISiteBuilderContextProvider _contextProvider;
         public const string SearchFacetConstraintType = "searchfacetconstrainttype";
-        public ConstraintFactory(
-            ISiteBuilderContextProvider contextProvider,
-
-            IApiContext context)
+        public ConstraintFactory(ISiteBuilderContextProvider contextProvider, IApiContext context)
         {
             _contextProvider = contextProvider;
             _context = context;
@@ -46,30 +46,22 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         
         public ICustomRouteConstraint BuildConstraint(string key, Validator validator)
         {
-            
-            switch (validator.type.ToLowerInvariant())
+            return validator.type.ToLowerInvariant() switch
             {
-                case Validator.TypeConst.attribute:
-                    return new ProductAttributeRouteConstraint(key, _contextProvider);
-                case SearchFacetConstraintType:
-                    return new ProductAttributeRouteConstraint(key, _contextProvider);
-                case Validator.TypeConst.categoryCode:
-                case Validator.TypeConst.categorySlug:
-                case Validator.TypeConst.categorySlugPath:
-                case Validator.TypeConst.categoryId:
-                case Validator.TypeConst.categoryCodePath:
-                    return new CategoryContraint(validator);
-                case Validator.TypeConst.list:
-                    return new StringListRouteConstraint(validator.values);
-                case Validator.TypeConst.mzdb:
-                    return new MzdbRouteConstraint(key, _contextProvider);
-                case Validator.TypeConst.regex:
-                    return new RegexRouteConstraint(validator.pattern);
-                case QueryStringConstraint.TypeName:
-                    return new QueryStringConstraint(validator);
-
-            }
-            throw new ArgumentException(string.Format("validator type [{0}] not known", validator.type));
+                Validator.TypeConst.attribute => (ICustomRouteConstraint) new ProductAttributeRouteConstraint(key,
+                    _contextProvider),
+                SearchFacetConstraintType => new ProductAttributeRouteConstraint(key, _contextProvider),
+                Validator.TypeConst.categoryCode => new CategoryContraint(validator),
+                Validator.TypeConst.categorySlug => new CategoryContraint(validator),
+                Validator.TypeConst.categorySlugPath => new CategoryContraint(validator),
+                Validator.TypeConst.categoryId => new CategoryContraint(validator),
+                Validator.TypeConst.categoryCodePath => new CategoryContraint(validator),
+                Validator.TypeConst.list => new StringListRouteConstraint(validator.values),
+                Validator.TypeConst.mzdb => new MzdbRouteConstraint(key, _contextProvider),
+                Validator.TypeConst.regex => new RegexRouteConstraint(validator.pattern),
+                QueryStringConstraint.TypeName => new QueryStringConstraint(validator),
+                _ => throw new ArgumentException($"validator type [{validator.type}] not known")
+            };
         }
 
       
@@ -78,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
     public abstract class ConstraintBase : ICustomRouteConstraint
     {
         public abstract bool Initialize();
-        public abstract bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection);
+        public abstract bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection);
 
         public ISiteBuilderContextProvider ContextProvider { get; set; }
         public string Key { get; set; }
@@ -92,13 +84,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return true;
         }
     
-        public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public bool Match(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if ( routeDirection == HttpRouteDirection.UriGeneration)
+            if (routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }
-            return DoMatch(request, route, parameterName, values, routeDirection);
+            return DoMatch(context, route, routeKey, values, routeDirection);
         }
     }
     
@@ -127,8 +119,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return;
             }
-            CategoryIdentifierType type;
-            if ( Enum.TryParse<CategoryIdentifierType>(m.Groups["t"].Value,true,out type))
+
+            if (Enum.TryParse<CategoryIdentifierType>(m.Groups["t"].Value,true,out var type))
             {
                 IdType = type;
             }
@@ -192,7 +184,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         //"grandP"
 
 
-        public string Raw { get { return GetRawValue(); } }
+        public string Raw => GetRawValue();
         public bool IsMatch { get; set; }
         public int Depth { get; set; }
         public string SubCode { get; set; }
@@ -227,41 +219,35 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return true;
        }
 
-       public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values,
-           HttpRouteDirection routeDirection)
+       public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
        {
-            if (routeDirection == HttpRouteDirection.UriGeneration)
+            if (routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }
-            var qs = request.GetQueryNameValuePairs();
-            object tmp;
+            var qs = context.Request.Query;
             string foundVal= qs.Where(x => string.Equals(x.Key, Settings.QsKey, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
             var found = false;
             if (!string.IsNullOrEmpty(foundVal))
             {
                 found = true;
             }
-            else if (values.TryGetValue(Settings.ValueKey, out tmp))
+            else if (values.TryGetValue(Settings.ValueKey, out var tmp))
             {
                 foundVal = Convert.ToString(tmp);
                 found = true;
             }
-            
-
 
             if (!found)
             {
                 return false;
             }
-            if ( Settings.IsLiteral )
+            if (Settings.IsLiteral)
             {
-                if ( string.Equals(foundVal, Settings.Value ))
-                {
-                    values[Settings.ValueKey] = Settings.Value;
-                    return true;
-                }
-                return false;
+                if (!string.Equals(foundVal, Settings.Value)) return false;
+
+                values[Settings.ValueKey] = Settings.Value;
+                return true;
             }
             values[Settings.ValueKey] = foundVal;
             return true;
@@ -282,37 +268,24 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return true;
         }
 
-        
-        //public Validator Settings
-        //{
-        //    get;set;
-        //}
-
-
-
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (routeDirection == HttpRouteDirection.UriGeneration)
+            if (routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }
-            object tmp;
-            if ( !values.TryGetValue(parameterName,out tmp) || tmp == null)
+
+            if (!values.TryGetValue(routeKey, out var tmp) || tmp == null)
             {
                 return false;
             }
 
-            if (routeDirection == HttpRouteDirection.UriGeneration)
-            {
-                return true;
-            }
-
-            var tree = new Lazy<CategoryTree>(()=>request.Resolve<ICategoryTreeProvider>().GetAllCategories());
+            var tree = new Lazy<CategoryTree>(()=> context.RequestServices.Resolve<ICategoryTreeProvider>().GetAllCategories());
             Category cat = null;
 
           
 
-            var token = new CategoryToken(parameterName);
+            var token = new CategoryToken(routeKey);
             if ( !token.IsMatch)
             {
                 return false;
@@ -355,65 +328,50 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             }
 
             return true;
-
         }
+
         Category MatchId(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
-         
-            object tmp;
-            int id;
-            if (!values.TryGetValue(token.Raw , out tmp))
+            if (!values.TryGetValue(token.Raw , out var tmp))
             {
                 return null;
             }
             tmp = Convert.ToString(tmp);
-            if (!int.TryParse((string)tmp, out id))
+            if (!int.TryParse((string)tmp, out var id))
             {
                 return null;
             }
-
            
             return catTree.Value.FindById(id);
-        
         }
+
         Category MatchCode(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
-
-            object tmp;
-
-            if (!values.TryGetValue(token.Raw , out tmp) || string.IsNullOrEmpty(tmp as string))
+            if (!values.TryGetValue(token.Raw , out var tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
-            
-
             
             return catTree.Value.FindByCode(code);
 
         }
+
         Category MatchSlug(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
-
-            object tmp;
-
-            if (!values.TryGetValue(token.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
+            if (!values.TryGetValue(token.Raw, out var tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
-
-
          
             return catTree.Value.FindBySlug(code).FirstOrDefault();
 
         }
+
         Category MatchSlugPath(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
-
-            object tmp;
-
-            if (!values.TryGetValue(token.Raw, out tmp) || tmp == null)
+            if (!values.TryGetValue(token.Raw, out var tmp) || tmp == null)
             {
                 return null;
             }
@@ -422,10 +380,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             var cats = catTree.Value.FindBySlug(slug).ToList();
             if (!cats.Any())
             {
-                return null ;
+                return null;
             }
-
-           
 
             Category matchedCat = null;
             foreach (var cat in cats)
@@ -473,16 +429,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         }
         Category MatchCategoryCodePath(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
-
-            object tmp;
-
-            if (!values.TryGetValue(token.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
+            if (!values.TryGetValue(token.Raw, out var tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
-
-
            
             var cat = catTree.Value.FindByCode(code);
             if (cat == null)
@@ -490,17 +441,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return null;
             }
 
-
-            
-
-            Category matchedCat = null;
-
-            matchedCat = cat;
+            var matchedCat = cat;
             var parentCat = cat.ParentCategory;
             var parentToken = token.GetParent();
             while (true)
             {
-
                 if (!values.TryGetValue(parentToken.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
                 {
                     //parent not in route no need to look up. winner...
@@ -578,17 +523,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         }
 
        
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            
-           
-            object routeValue;
-            if (!values.TryGetValue(parameterName, out routeValue))
+            if (!values.TryGetValue(routeKey, out var routeValue))
             {
                 return false;
             }
 
-            if (routeValue is string && routeDirection == HttpRouteDirection.UriGeneration)
+            if (routeValue is string && routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }
@@ -596,18 +538,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
            
             var curRouteValue = routeValue.ToString();
 
-            if (!Values.ContainsKey(curRouteValue))
-            {
-                return false;
-            }
-           
-
+            return Values.ContainsKey(curRouteValue);
 
 
             //TODO: put the right locale in here?
             //AttributeVocabularyValue attr;
             //values[parameterName] = GetAttributeValue(attr, "en-US");
-            return true;
         }
 
         /// <summary>
@@ -702,8 +638,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         static IEnumerable<string> FlattenFieldValues(JObject o, string field)
         {
-            JToken t;
-            if (!o.TryGetValue(field, out t)) return Enumerable.Empty<string>();
+            if (!o.TryGetValue(field, out var t)) return Enumerable.Empty<string>();
 
             if (t is JArray) return ((JArray)t).Values().Where(x => x is JValue).Select(x => x.Value<string>());
             if (t is JValue) return new[] { ((JValue)t).Value<string>() };
@@ -717,8 +652,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return  InitializeFromContextData();
             }
             throw new NotImplementedException();
-            
-
         }
 
         private static async Task<IEnumerable<T>> Unroll<T>(Func<int, int, Task<PagedCollectionBase<T>>> getter, int totalCount, int pageSize)
@@ -728,11 +661,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return results.SelectMany(x => x.Items);
         }
 
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            
-            object temp;
-            if (!values.TryGetValue(parameterName, out temp))
+            if (!values.TryGetValue(routeKey, out var temp))
             {
                 return false;
             }
@@ -802,7 +733,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         
         }
 
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
            
             if(_pattern == null)
@@ -810,8 +741,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 //no pattern return false;
                 return false;
             }
-            object temp;
-            if (!values.TryGetValue(parameterName, out temp))
+
+            if (!values.TryGetValue(routeKey, out var temp))
             {
                 return false;
             }
@@ -841,10 +772,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return true;
         }
 
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        public override bool DoMatch(HttpContext context, IRouter route, string routeKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            object temp;
-            if (!values.TryGetValue(parameterName, out temp))
+            if (!values.TryGetValue(routeKey, out var temp))
             {
                 return false;
             }

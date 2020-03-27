@@ -1,39 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http;
-using dotless.Core.Input;
+﻿using dotless.Core.Input;
 using MassTransit;
-using Mozu.Content.Contracts.Clients;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mozu.Core;
-using Mozu.Core.Api;
-using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
-using Mozu.Core.Messaging.Publish;
-using Mozu.Core.Settings;
-using Mozu.MZDB.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.Caching;
-using Mozu.SiteBuilder.Mvc.Catalog;
-using Mozu.SiteBuilder.Mvc.Logging;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
-using Mozu.SiteBuilder.Mvc.Mobile;
-using Mozu.SiteBuilder.Mvc.Settings;
-using Mozu.SiteBuilder.Mvc.Users;
-
-using Mozu.SiteBuilder.UX.Messaging;
-using Mozu.SiteSettings.General.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Areas.Misc;
-using Mozu.SiteBuilder.Mvc.Context;
-using Mozu.Core.Messaging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Contracts.Product.Events;
 using Mozu.Core.Messaging.Contracts.Search.Events;
+using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Logging;
+using Mozu.SiteBuilder.Mvc.Settings;
+using Mozu.SiteBuilder.Mvc.Users;
+using Mozu.SiteBuilder.UX.Areas.Misc;
+using Mozu.SiteBuilder.UX.Messaging;
+using System;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -195,20 +178,20 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterType<HttpErrorResponseGenerator>();
             configure.AddScoped<AMDModuleProvider>();
             configure.AddScoped<LessLogger>();
-            configure.AddScoped<ILogger, LessLogger>();
+            //configure.AddScoped<ILogger, LessLogger>();
             configure.AddScoped<LessTransFormer>();
             configure.AddScoped<MyLessFileReader>();
             configure.AddScoped<IFileReader, MyLessFileReader>();
             configure.AddScoped<TemplateInheritanceHandler>();
             configure.AddScoped<ITemplateInheritanceHandler, TemplateInheritanceHandler>();
             configure.AddSingleton<LoggingConsumer, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<IProductEvent>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<ICategoryEvent>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<IDiscountEvent>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<ISearchIndexUpdated>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<IFacetEvent>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<ISearchTuningRuleEvent>.All, CacheItemsInvalidConsumer>();
-            configure.AddSingleton<Consumes<ISearchSettingsEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<IProductEvent>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<ICategoryEvent>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<IDiscountEvent>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<ISearchIndexUpdated>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<IFacetEvent>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<ISearchTuningRuleEvent>, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<IConsumer<ISearchSettingsEvent>, CacheItemsInvalidConsumer>();
             configure.AddSingleton<SiteBuilderContextInvalidatorConsumer>();
             //builder
             //  .Register(c =>

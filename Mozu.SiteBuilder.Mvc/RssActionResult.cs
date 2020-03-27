@@ -5,7 +5,6 @@ using System.Xml;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -13,9 +12,9 @@ namespace Mozu.SiteBuilder.Mvc
     {
         public SyndicationFeed Feed { get; set; }
 
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
+        public override void ExecuteResult(ActionContext context)
         {
-            var httpContext = requestMessage.HttpContext();
+            var httpContext = context.HttpContext;
 
             httpContext.Response.ContentType = "application/rss+xml";
 
@@ -23,11 +22,6 @@ namespace Mozu.SiteBuilder.Mvc
 
             using var writer = XmlWriter.Create(httpContext.Response.Body);
             rssFormatter.WriteTo(writer);
-        }
-
-        public Task ExecuteResultAsync(ActionContext context)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

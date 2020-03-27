@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using System.Web;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -16,19 +6,25 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Configuration;
 using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.Tenant.Contracts;
-using Mozu.Tenant.Contracts.Clients;
-using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
+using Mozu.Tenant.Contracts;
+using Mozu.Tenant.Contracts.Clients;
+using System;
+using System.Collections.Concurrent;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using Mozu.SiteBuilder.Mvc.Middleware;
 using FileStreamResult = Mozu.SiteBuilder.Mvc.ActionResults.FileStreamResult;
-using NotFoundResult = Mozu.SiteBuilder.Mvc.ActionResults.NotFoundResult;
-using RedirectResult = Mozu.SiteBuilder.Mvc.ActionResults.RedirectResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -37,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
     {
         static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
         static readonly ConcurrentDictionary<int, Tenant.Contracts.Tenant> _tenantLookup = new ConcurrentDictionary<int, Tenant.Contracts.Tenant>();
-        static long Quality = 60;
+        //static long Quality = 60;
         IApiContext _appCtx;
         readonly ISettings _settings;
         IDocumentListWebApiClient _docRepo;
@@ -101,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             //todo send out appoligy letter
 
             var shouldRedirectToCdn = ShouldRedirectToCdn();
-            var isRewrite = Request.HttpContext.Items.ContainsKey(SeoDelegatingHandler.IsSeoRewrite) && (bool)Request.HttpContext.Items[SeoDelegatingHandler.IsSeoRewrite];
+            var isRewrite = Request.HttpContext.Items.ContainsKey(UrlRewritingMiddleware.IsSeoRewrite) && (bool)Request.HttpContext.Items[UrlRewritingMiddleware.IsSeoRewrite];
 
            ApiContext context = null;
 
@@ -427,12 +423,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        private class NotModifiedResult : ActionResult
+        private class NotModifiedResult : IActionResult
         {
-            public override void ExecuteResult(HttpRequestMessage requestMessage)
+            public Task ExecuteResultAsync(ActionContext context)
             {
-                var response = requestMessage.HttpContext().Response;
-                response.StatusCode = 304;
+                context.HttpContext.Response.StatusCode = 304;
+                return Task.CompletedTask;
             }
         }
     }

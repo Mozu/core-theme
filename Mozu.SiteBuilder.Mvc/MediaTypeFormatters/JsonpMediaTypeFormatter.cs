@@ -4,78 +4,63 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Net.Http.Headers;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
     
-    public class JsonpMediaTypeFormatter : MediaTypeFormatter
+    public class JsonpOutputFormatter : TextOutputFormatter
     {
         private readonly HttpRequest _request;
-        private readonly MediaTypeFormatter _jsonMediaTypeFormatter;
+        private readonly OutputFormatter _jsonOutputFormatter = new SystemTextJsonOutputFormatter(new JsonSerializerOptions());
         private readonly string _callbackQueryParameter;
         private readonly string _callback;
         static readonly Regex _cleanCallback = new Regex("^[\\w\\.-]+$");
-        public JsonpMediaTypeFormatter(MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter = "callback")
+        public JsonpOutputFormatter(string callbackQueryParameter = "callback")
         {
             //var bing = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
-
-            _jsonMediaTypeFormatter = jsonMediaTypeFormatter ?? throw new ArgumentNullException(nameof(jsonMediaTypeFormatter));
             _callbackQueryParameter = callbackQueryParameter ?? throw new ArgumentNullException(nameof(callbackQueryParameter));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
-            foreach (Encoding encoding in this._jsonMediaTypeFormatter.SupportedEncodings)
-                SupportedEncodings.Add(encoding);
-            MediaTypeMappings.Add(new UriPathExtensionMapping("jsonp", "application/json"));
         }
 
-        private JsonpMediaTypeFormatter(HttpRequest request, string callback, MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter)
-            : this(jsonMediaTypeFormatter, callbackQueryParameter)
+        private JsonpOutputFormatter(HttpRequest request, string callback, string callbackQueryParameter)
+            : this(callbackQueryParameter)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _callback = callback ?? throw new ArgumentNullException(nameof(callback));
         }
 
-        public MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request, MediaTypeHeaderValue mediaType)
+        public OutputFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-            if (IsJsonpRequest(request, _callbackQueryParameter, out var callback))
-                return new JsonpMediaTypeFormatter(request, callback, _jsonMediaTypeFormatter, _callbackQueryParameter);
+            return IsJsonpRequest(request, _callbackQueryParameter, out var callback) ? 
+                new JsonpOutputFormatter(request, callback, _callbackQueryParameter) : 
+                _jsonOutputFormatter;
+        }
+
+        protected override bool CanWriteType(Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
             
-            return _jsonMediaTypeFormatter;
+            return base.CanWriteType(type);
         }
 
-        public override bool CanReadType(Type type)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
-            return false;
-        }
-
-        public override bool CanWriteType(Type type)
-        {
-            if (type == (Type)null)
-                throw new ArgumentNullException(nameof(type));
-            else
-                return this._jsonMediaTypeFormatter.CanWriteType(type);
-        }
-
-        public override async Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
-        {
-            if (type == (Type)null)
-                throw new ArgumentNullException(nameof(type));
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            var encoding = this.SelectCharacterEncoding(content?.Headers);
-            await using var streamWriter = new StreamWriter(stream, encoding, 4096, true);
+            await using var streamWriter = new StreamWriter(context.HttpContext.Response.Body, selectedEncoding, 4096, true);
             streamWriter.Write(this._callback + "(");
             streamWriter.Flush();
-            await this._jsonMediaTypeFormatter.WriteToStreamAsync(type, value, stream, content, transportContext).ConfigureAwait(false);
+            await _jsonOutputFormatter.WriteResponseBodyAsync(context).ConfigureAwait(false);
             streamWriter.Write(");");
             streamWriter.Flush();
         }

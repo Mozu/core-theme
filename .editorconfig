@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# MVC1005: Cannot use UseMvc with Endpoint Routing.
+dotnet_diagnostic.MVC1005.severity = silent

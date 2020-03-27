@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;

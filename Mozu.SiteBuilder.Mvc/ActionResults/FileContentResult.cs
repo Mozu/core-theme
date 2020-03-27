@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         public FileContentResult(byte[] fileContents, string contentType)
             : base(contentType)
         {
-            FileContents = fileContents ?? throw new ArgumentNullException("fileContents");
+            FileContents = fileContents ?? throw new ArgumentNullException(nameof(fileContents));
         }
 
         // Properties
@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         protected override System.Threading.Tasks.Task WriteFileAsync(HttpResponse response)
         {
-            return response.Body.WriteAsync( FileContents, 0, FileContents.Length);
+            return response.Body.WriteAsync(FileContents, 0, FileContents.Length);
         }
     }
 }

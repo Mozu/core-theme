@@ -1,17 +1,11 @@
-﻿using Mozu.Core.Actions;
+﻿using Microsoft.AspNetCore.Mvc;
+using Mozu.Core.Api.Session;
+using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
-using Mozu.SiteBuilder.Mvc.OAF;
-using System.Threading;
-using Mozu.Location.Contracts.Clients;
-using Mozu.Core.Api.Routing;
-using Mozu.Core.Api.Session;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {

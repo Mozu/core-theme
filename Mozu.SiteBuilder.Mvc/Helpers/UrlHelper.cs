@@ -18,7 +18,9 @@ using System.Web.Http.Routing;
 using Mozu.Core.Extensions;
 using Mozu.Core;
 using System.Linq;
+using Microsoft.AspNetCore.Routing;
 using Mozu.Content.Contracts;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -44,21 +46,21 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         private readonly ISiteContext _siteContext;
         private readonly IPageContext _pageContext;
         private readonly ICustomRouteHandler _customRouteHandler;
-        private readonly HttpRequestMessage _httpRequestMessage;
+        private readonly HttpContext _context;
         private readonly Lazy<ICategoryTreeProvider> _categoryTreeProvider;
 
         public UrlHelper(ISiteContext siteContext,
             ISiteBuilderApiContext apiContext,
             IPageContext pageContext,
             ICustomRouteHandler customRouteHandler,
-            HttpRequestMessage httpRequestMessage,
+            HttpContext context,
             Lazy<ICategoryTreeProvider> categoryTreeProvider)
         {
             _apiContext = apiContext;
             _siteContext = siteContext;
             _pageContext = pageContext;
             _customRouteHandler = customRouteHandler;
-            _httpRequestMessage = httpRequestMessage;
+            _context = context;
             _categoryTreeProvider = categoryTreeProvider;
         }
 
@@ -68,21 +70,20 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         //[Microsoft.ClearScript.ScriptMember("getUrl")]
         public string MakeUrl(string type, object obj, DynamicObject config, string hostname = null)
         {
-            UrlType urlType;
-            if (FastEnum<UrlType>.TryParse(type, out urlType))
+            if (!FastEnum<UrlType>.TryParse(type, out var urlType))
+                throw new RenderingError(
+                    $"unknown urltag type: {type}. Tags must be one of [{string.Join(",", Enum.GetNames(typeof(UrlType)).Select(x => x.ToLowerInvariant()))}]",
+                    Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+
+            var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            foreach (var name in config.GetDynamicMemberNames())
             {
-                Dictionary<string, object> dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-                foreach (var name in config.GetDynamicMemberNames())
+                if (config.TryGetMember(MyGetMemberBinder.Get(name), out var configValue))
                 {
-                    object configValue;
-                    if (config.TryGetMember(MyGetMemberBinder.Get(name), out configValue))
-                    {
-                        dic[name] = configValue;
-                    }
+                    dic[name] = configValue;
                 }
-                return MakeUrl(urlType, obj, dic, false, hostname: hostname);
             }
-            throw new RenderingError(string.Format("unknown urltag type: {0}. Tags must be one of [{1}]", type, string.Join(",", Enum.GetNames(typeof(UrlType)).Select(x => x.ToLowerInvariant()))), Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+            return MakeUrl(urlType, obj, dic, false, hostname);
         }
 
         class MyGetMemberBinder : GetMemberBinder
@@ -517,7 +518,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 url = "/c/" + cat.CategoryId;
                 if (includeContxt)
                 {
-                    url += this._httpRequestMessage.RequestUri.Query;
+                    url += _context.GetRequestUri().Query;
                 }
 
             }
@@ -566,7 +567,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string MakeFacetUrl(object obj, string hostname)
         {
-            var routeData = _httpRequestMessage.GetRouteData();
+            var routeData = _context.GetRouteData();
 
             // facets are primarily handled through the searchContext, and so to large extent we'll be returning 
             // searchContext.ToUrl(SearchContextOverrides) in order to properly encode the facets.
@@ -609,19 +610,18 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return MakeUrlForAllOtherFacetTypes(routeData, searchContext, isApplied, facetPairKey, facetPairValue);
         }
 
-        string MakeUrlForAllOtherFacetTypes(IHttpRouteData routeData, SearchContext searchContext, bool isApplied, string facetPairKey, string facetPairValue)
+        string MakeUrlForAllOtherFacetTypes(RouteData routeData, SearchContext searchContext, bool isApplied, string facetPairKey, string facetPairValue)
         {
             string facetUrl = null;
             var existing = searchContext.Facets.GetValues(facetPairKey);
             if (isApplied && existing != null)
             {
                 var routeValueKey = facetPairKey + "-facet";
-                object tmp;
-                if (routeData.Values.TryGetValue(routeValueKey, out tmp) && string.Equals((tmp as string), facetPairValue, StringComparison.OrdinalIgnoreCase))
+                if (routeData.Values.TryGetValue(routeValueKey, out var tmp) && string.Equals((tmp as string), facetPairValue, StringComparison.OrdinalIgnoreCase))
                 {
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
-                    facetUrl = _customRouteHandler.GetCanonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false);
+                    facetUrl = _customRouteHandler.GetCanonicalUrl(routeData.Routers.OfType<CustomRoute>().First().InternalRoute, () => dic, false);
                 }
             }
 

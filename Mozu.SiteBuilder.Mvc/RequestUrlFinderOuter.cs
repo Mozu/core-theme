@@ -1,9 +1,12 @@
-﻿using Mozu.Core.Extensions;
+﻿using Microsoft.AspNetCore.Http;
+using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -21,10 +24,10 @@ namespace Mozu.SiteBuilder.Mvc
 
         private readonly Lazy<bool> _cdnGetter;
         const string AkamiHeader = "Akamai-Origin-Hop";
-        public RequestUrlFinderOuter(HttpRequestMessage request, ISettings settings)
+        public RequestUrlFinderOuter(HttpContext context, ISettings settings)
         {
-            _getter = new Lazy<string>(() => GetRequestUrl(request));
-            _cdnGetter = new Lazy<bool>(() => IsCdnRequest(request, settings, _getter));
+            _getter = new Lazy<string>(() => GetRequestUrl(context));
+            _cdnGetter = new Lazy<bool>(() => IsCdnRequest(context, settings, _getter));
            
         }
 
@@ -36,34 +39,30 @@ namespace Mozu.SiteBuilder.Mvc
         {
             return _cdnGetter.Value;
         }
-        public static  bool IsCdnRequest(HttpRequestMessage request, ISettings settings, Lazy<string> urlGetter)
+        public static  bool IsCdnRequest(HttpContext context, ISettings settings, Lazy<string> urlGetter)
         {
 
             var cdnHost = settings.AppSettings("CdnHost");
             var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var uri = new Uri(urlGetter.Value);
-            var hasAkamiOriginHop = request.Headers.Any(x => string.Equals(x.Key, AkamiHeader, StringComparison.OrdinalIgnoreCase));
+            var hasAkamiOriginHop = context.Request.Headers.Any(x => string.Equals(x.Key, AkamiHeader, StringComparison.OrdinalIgnoreCase));
 
             return hasAkamiOriginHop || cdnHost.EqualsIgnoreCase(uri.Host) || cdnOriginHost.EqualsIgnoreCase(uri.Host);
         }
        
-        public static string GetRequestUrl(HttpRequestMessage request)
+        public static string GetRequestUrl(HttpContext context)
         {
-            IEnumerable<string> values;
-            if (request.Headers.TryGetValues(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            if (!context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out var values))
+                return context.Request.GetDisplayUrl();
+
+            var url = values.FirstOrDefault();
+            //ssl has been terminated before rp.. need to reset
+            if (url != null && context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out _))
             {
-                var url = values.FirstOrDefault();
-                //ssl has been terminated before rp.. need to reset
-                if (request.Headers.TryGetValues(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values))
-                {
-                    url = "https:" + url.Substring(url.IndexOf("//"));
-                }
-                return url;
+                url = "https:" + url.Substring(url.IndexOf("//", StringComparison.Ordinal));
             }
-            else
-            {
-                return request.RequestUri.ToString();
-            }
+            return url;
+
         }
     }
 }

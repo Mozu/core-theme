@@ -9,7 +9,6 @@ using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Logging;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Newtonsoft.Json;
 
@@ -62,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             }
             catch (Exception ex)
             {
-                LoggingService.LoggerFor<PageContextCookieHandler>().Warn(ex.Message);
+                LoggingService.LoggerFor<PageContextCookieMiddleware>().Warn(ex.Message);
             }
             if (!context.HasAdditionalResponseHeaders())
             {

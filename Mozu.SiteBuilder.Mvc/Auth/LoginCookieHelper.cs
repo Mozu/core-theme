@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.Auth
 {
@@ -12,9 +13,9 @@ namespace Mozu.SiteBuilder.Mvc.Auth
     /// </summary>
     public static class LoginCookieHelper
     {
-        public static async Task<HttpResponseMessage> SetAdminUserCookie(HttpRequestMessage request, ICookieProvider cookieProvider, ISiteBuilderApiContext context, IAuthenticationHelper authHelper, string defaultRedirectUrl, bool isForStoreFrontAccess)
+        public static void SetAdminUserCookie(HttpContext httpContext, ICookieProvider cookieProvider, ISiteBuilderApiContext sbContext, IAuthenticationHelper authHelper, string defaultRedirectUrl, bool isForStoreFrontAccess)
         {
-            var form = await request.Content.ReadAsFormDataAsync().ConfigureAwait(false);
+            var form = httpContext.Request.Form;
             string formAccessToken = form["accessToken"];
             string formRedirectUrl = form["redirectUrl"];
 
@@ -22,26 +23,25 @@ namespace Mozu.SiteBuilder.Mvc.Auth
 
             Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, cookieProvider, null);
 
-            context.SetUser(user);
+            sbContext.SetUser(user);
             authHelper.SaveAdminAccessToken(formAccessToken, isForStoreFrontAccess);
 
             formRedirectUrl = WebUtility.UrlDecode(string.IsNullOrEmpty(formRedirectUrl) ? defaultRedirectUrl : formRedirectUrl);
-            return CreateRedirectTo(request, formRedirectUrl);
+            CreateRedirectTo(httpContext, formRedirectUrl);
         }
 
-        private static HttpResponseMessage CreateRedirectTo(HttpRequestMessage request, string formRedirectUrl)
+        private static void CreateRedirectTo(HttpContext context, string formRedirectUrl)
         {
-            var uri = GenerateRedirectUriFromUnknownPath(request, formRedirectUrl);
-            var message = new HttpResponseMessage(HttpStatusCode.Redirect);
-            message.Headers.Location = uri;
-            return message;
+            var uri = GenerateRedirectUriFromUnknownPath(formRedirectUrl);
+            context.Response.StatusCode = StatusCodes.Status302Found;
+            context.Response.GetTypedHeaders().Location = uri;
         }
 
-        private static Uri GenerateRedirectUriFromUnknownPath(HttpRequestMessage request, string formRedirectUrl)
+        private static Uri GenerateRedirectUriFromUnknownPath(string formRedirectUrl)
         {
             var incomingUri = new Uri(formRedirectUrl, UriKind.RelativeOrAbsolute);
            
-            if (!incomingUri.IsAbsoluteUri && formRedirectUrl != null && formRedirectUrl.Length != 0 && formRedirectUrl[0] != '/')
+            if (!incomingUri.IsAbsoluteUri && !string.IsNullOrEmpty(formRedirectUrl) && formRedirectUrl[0] != '/')
             {
                 incomingUri =  new Uri("/"+ formRedirectUrl, UriKind.Relative);
             }

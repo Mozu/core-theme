@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<IActionResult> Index(string templateId)
+        public IActionResult Index(string templateId)
         {
            
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);

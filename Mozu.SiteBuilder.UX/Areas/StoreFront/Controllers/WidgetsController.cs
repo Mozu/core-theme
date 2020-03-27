@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -84,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView(root + template);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(TestingController.CreateProxyHttpRequest(Request.HttpContext, new Uri(string.Empty)), new ViewDataDictionary { Model = wpd });
+                var viewContext = new HyprViewContext(Request.HttpContext, new ViewDataDictionary<WidgetPreviewData<T>>(null, wpd));
                 await view.AsyncRender(viewContext, tw).ConfigureAwait(false);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }

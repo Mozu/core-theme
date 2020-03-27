@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
 {
@@ -33,13 +32,13 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             var uri = context.GetRequestUri();
             if (uri.PathAndQuery.IndexOf("_mz_", StringComparison.OrdinalIgnoreCase) <= -1) return;
 
-            context.Items[SeoDelegatingHandler.MzPreCleanedUri] = uri;
+            context.Items[UrlRewritingMiddleware.MzPreCleanedUri] = uri;
             if (uri.Query.Length <= 1) return;
 
             var ub = new UriBuilder(uri);
             ub.Query = ReMxClean.Replace(ub.Query.Substring(1), string.Empty);
             context.Request.QueryString = new QueryString(ub.Query);
-            context.Request.Query = new QueryCollection(context.Request.Query.Where(kvp => kvp.Key.IndexOf("_mz_") == -1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)); 
+            context.Request.Query = new QueryCollection(context.Request.Query.Where(kvp => kvp.Key.IndexOf("_mz_", StringComparison.Ordinal) == -1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)); 
         }
     }
 }

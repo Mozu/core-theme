@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //    //("documentation/tags", tagInfos);
         //}
 
-        private static Dictionary<string, string> _assumblyTypeSummeries = null;
+        //private static Dictionary<string, string> _assumblyTypeSummeries = null;
         /// <summary>
         /// 
         /// </summary>

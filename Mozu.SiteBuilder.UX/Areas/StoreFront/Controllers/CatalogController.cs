@@ -1,4 +1,29 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Mozu.Core;
+using Mozu.Core.Api.Serialization;
+using Mozu.Core.Expressions;
+using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
+using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -6,39 +31,8 @@ using System.Net;
 using System.Net.Http;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Mozu.Core;
-using Mozu.Core.Api.Serialization;
-using Mozu.Core.Extensions;
-using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.Catalog;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.SiteBuilder.Mvc.Middleware;
 using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient;
-using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
-using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
-using Mozu.SiteBuilder.UX.Filters;
-using Mozu.Core.Actions;
-using Mozu.Core.Expressions;
-using Mozu.Core.Logging;
-using Mozu.SiteBuilder.Mvc.Caching;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Helpers;
-using Mozu.SiteBuilder.Mvc.OAF;
-using Mozu.SiteSettings.General.Contracts.General.Routing;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
-using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -166,8 +160,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
             if (useUrlParams.GetValueOrDefault(false))
             {
-                string itemsPerPageParam = HttpRequestBase.Query["pageSize"];
-                string startIndexParam = HttpRequestBase.Query["startIndex"];
+                string itemsPerPageParam = Request.Query["pageSize"];
+                string startIndexParam = Request.Query["startIndex"];
                 itemsPerPage = string.IsNullOrWhiteSpace(itemsPerPageParam) ? Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]) : Convert.ToInt32(itemsPerPageParam);
                 startIdx = string.IsNullOrWhiteSpace(startIndexParam) ? 0 : Convert.ToInt32(startIndexParam);
             }
@@ -208,7 +202,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
             {
-                string facetValueFilter = HttpRequestBase.Query["facetValueFilter"];
+                string facetValueFilter = Request.Query["facetValueFilter"];
                 var pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                 pc.Init(true, this.PageContext.Search);
@@ -273,7 +267,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
 
-            var pageLimit = DeepPagingLimitingRequestHandler.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
+            var pageLimit = DeepPagingLimitingMiddleware.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
             var defaultPageSize = PageContext.Search.PageSize  ??  SiteContext.ThemeSettings.GetInt("defaultPageSize") ?? 15;
             var currentIdx = PageContext.Search.StartIndex.GetValueOrDefault(0);
 
@@ -404,7 +398,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var feedUrl = new Uri(PageContext.Url);
-            int.TryParse(HttpRequestBase.Query["startIndex"], out startIdx);
+            int.TryParse(Request.Query["startIndex"], out startIdx);
 
             // Get Results and populate feed
             var result = await ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);

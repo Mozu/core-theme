@@ -10,25 +10,21 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
     public class SiteContextInitializationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ISiteBuilderApiContext _apiContext;
-        private readonly ISiteContext _siteContext;
 
-        public SiteContextInitializationMiddleware(RequestDelegate next, ISiteBuilderApiContext apiContext, ISiteContext siteContext)
+        public SiteContextInitializationMiddleware(RequestDelegate next)
         {
             _next = next;
-            _apiContext = apiContext;
-            _siteContext = siteContext;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ISiteBuilderApiContext apiContext, ISiteContext siteContext)
         {
-            if (_apiContext.SiteId.HasValue == false)
+            if (apiContext.SiteId.HasValue == false)
             {
                 await _next.Invoke(context);
                 return;
             }
 
-            await _siteContext.Init();
+            await siteContext.Init();
 
             await _next.Invoke(context);
         }

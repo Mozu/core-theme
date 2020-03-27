@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -20,21 +22,21 @@ namespace Mozu.SiteBuilder.Mvc
     {
         private ICookieProvider _cookies;
         private IEditModeFinderOuter _editmodeGetter;
-        private HttpRequestMessage _request;
+        private HttpContext _httpContext;
 
-        public DataViewModeFinderOuter(IEditModeFinderOuter editModeGetter, HttpRequestMessage request, ICookieProvider cookies)
+        public DataViewModeFinderOuter(IEditModeFinderOuter editModeGetter, HttpContext httpContext, ICookieProvider cookies)
         {
             _editmodeGetter = editModeGetter;
-            _request = request;
+            _httpContext = httpContext;
             _cookies = cookies;
         }
 
         public DataViewModeType GetDataViewMode(LightweightUserClaims userclaims)
         {
-            return GetDataViewMode(_editmodeGetter, _request.Headers, _cookies, userclaims);
+            return GetDataViewMode(_editmodeGetter, _httpContext.Request.Headers, _cookies, userclaims);
         }
 
-        private static DataViewModeType GetDataViewMode(IEditModeFinderOuter editModeGetter, HttpRequestHeaders headers, ICookieProvider cookies, LightweightUserClaims userclaims)
+        private static DataViewModeType GetDataViewMode(IEditModeFinderOuter editModeGetter, IHeaderDictionary headers, ICookieProvider cookies, LightweightUserClaims userclaims)
         {
             var isEditMode = editModeGetter.IsEditMode() ? DataViewModeType.Pending : DataViewModeType.NoneSet;
             var headerMode = GetModeFromHeaders(headers);
@@ -60,10 +62,10 @@ namespace Mozu.SiteBuilder.Mvc
             return cookie["dataview"].ToEnum<DataViewModeType>();
         }
 
-        private static DataViewModeType GetModeFromHeaders(HttpRequestHeaders headers)
+        private static DataViewModeType GetModeFromHeaders(IHeaderDictionary headers)
         {
-            if (!headers.Contains(Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE)) return DataViewModeType.NoneSet;
-            return headers.GetValues(Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE).First().ToEnum<DataViewModeType>();
+            return !headers.Keys.Contains(Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE) ? DataViewModeType.NoneSet : 
+                headers[Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE].First().ToEnum<DataViewModeType>();
         }
     }
 }

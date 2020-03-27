@@ -42,7 +42,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         readonly Lazy<AMDModuleProvider> _moduleProvider;
         readonly ISettings _settings;
         readonly IApiContext _apiContext;
-        static readonly Lazy<JsonpMediaTypeFormatter> _jmtf = new Lazy<JsonpMediaTypeFormatter>(() => new JsonpMediaTypeFormatter(new JsonMediaTypeFormatter()));
         readonly ITemplateInheritanceHandler _templateGetter;
 
         public ResourceController(Lazy<IMozuVirtualPathProvider> pathProvider, 
@@ -214,11 +213,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
             return new JsonResult(ctx);
-        }
-        
-        MediaTypeFormatter GetJsonMediaFormatter(Type t)
-        {
-            return _jmtf.Value.GetPerRequestFormatterInstance(t, Request, new MediaTypeHeaderValue("text/json"));
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
