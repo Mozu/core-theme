@@ -924,7 +924,8 @@
     },
 
     isDisplayPartialPickup: function () {
-        return this.shipmentRecord.shipmentType == "BOPIS" && this.shipmentRecord.shipmentStatus.toLowerCase() != 'fulfilled';
+        return this.shipmentRecord.shipmentType == "BOPIS" && (this.shipmentRecord.shipmentStatus.toLowerCase() != 'fulfilled' && this.shipmentRecord.shipmentStatus.toLowerCase() != 'customer_care'
+            && this.shipmentRecord.shipmentStatus.toLowerCase() != 'backorder');
     },
 
     savePartialPickup: function (lineId, qty, isValid) {

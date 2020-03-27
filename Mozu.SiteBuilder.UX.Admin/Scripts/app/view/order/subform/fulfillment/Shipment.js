@@ -400,15 +400,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
             splitMenus = [
                 actionUpdateBackorderDate,
-                actionCancelShipment,
-                me.shipmentRecord.shipmentType == "BOPIS" ? actionPickup : null
+                actionCancelShipment
             ];
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
             splitMenus = [
                 actionMarkAsShipped,
-                actionCancelShipment,
-                me.shipmentRecord.shipmentType == "BOPIS" ? actionPickup : null
+                actionCancelShipment
             ];
         }
 
