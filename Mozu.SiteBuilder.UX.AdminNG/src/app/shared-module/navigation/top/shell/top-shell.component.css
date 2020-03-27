@@ -53,7 +53,7 @@ a:hover {
     .tab-link {
         min-width: 52px;
         margin-left: 30px;
-        left: 9%;
+        /*left: 9%;*/
         height: 54px;
     }
 }

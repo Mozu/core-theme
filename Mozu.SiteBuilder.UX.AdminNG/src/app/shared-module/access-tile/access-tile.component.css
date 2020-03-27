@@ -36,11 +36,11 @@
 }
 
 @media screen and (max-width: 480px) {
-    .dashboard-icon-align {
+    /*.dashboard-icon-align {
         position: relative;
         left: 36%;
         top: 30px;
-    }
+    }*/
     .tiles-item {
         bottom: 13px;
         font-size: 0.95em;
