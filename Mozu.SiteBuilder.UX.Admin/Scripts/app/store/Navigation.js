@@ -606,7 +606,7 @@ Ext.define('Taco.store.Navigation', {
                 {
                     'id': 'localizationAttr',
                     'label': 'Attributes',
-                    'address': 'Localization',
+                    'address': 'Localization/attributes',
                     'locAtts': ['multiLang']
                 },
                 {
