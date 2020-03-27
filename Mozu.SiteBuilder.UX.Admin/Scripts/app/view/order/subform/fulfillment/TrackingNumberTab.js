@@ -28,13 +28,14 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
                     defaults: {
                         xtype: 'component',
                         data: this.tracking.trackingData[count].trackings[0]
-                    },
+                    }, 
                     items:
                         [                            
                             {
                                 tpl: [
                                     '<tpl for="values.number">',
-                                    'Track: ' + this.tracking.trackingData[count].carrier + ' <a target="_blank" href="' + this.tracking.trackingData[count].trackings[0].url + '" class="title">{.}</a> <br/>',
+                                    this.tracking.trackingData[count].carrier && this.tracking.trackingData[count].carrier.toLowerCase() !== 'other' ?
+                                    'Track: ' + this.tracking.trackingData[count].carrier + ' <a target="_blank" href="' + this.tracking.trackingData[count].trackings[0].url + '" class="title">{.}</a> <br/>' : 'Other' + ' <span class="title">' + this.tracking.trackingData[count].trackings[0].number + '</span> <br/>',
                                     '</tpl>'
                                 ]
                             }
