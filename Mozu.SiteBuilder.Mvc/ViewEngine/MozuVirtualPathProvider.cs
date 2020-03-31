@@ -133,9 +133,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     var exists = theme.FileListing.Exists(this.VirtualPath);
 
-
-
-
                     var fullPath = _mozuVirtualPathProvider.MapLocalPath(this.VirtualPath, theme);
                     var di = new DirectoryInfo(fullPath);
                     if (!di.Exists)
@@ -161,8 +158,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                            new MozuVirtualFileSystemFile(this.VirtualPath + "/" + item.Name, item.FullName);
                         }
                     }
-
-
                 }
             }
         }
@@ -192,8 +187,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                             new MozuVirtualDirectory(this.VirtualPath + "/" + subDir.Name, subDir.FullName,
                                                        this._mozuVirtualPathProvider);
                     }
-
-
                 }
             }
         }
@@ -202,7 +195,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             get
             {
-                HashSet<string> set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
                 foreach (var theme in _mozuVirtualPathProvider.ThemeStack)
                 {
@@ -222,8 +215,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                         yield return
                             new MozuVirtualFileSystemFile(this.VirtualPath + "/" + file.Name, file.FullName);
                     }
-
-
                 }
             }
         }

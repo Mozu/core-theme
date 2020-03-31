@@ -27,6 +27,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.SEO.Constraints;
+using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -68,17 +71,18 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.AddTransient<ICmsServiceWrapper, CmsServiceWrapper>();
             builder.AddTransient<IThemeEntityDefinitionProvider, ThemeEntityDefinitionProvider>();
-            builder.AddScoped<IThemeContentRetriever, ContentRetriever>();
+            builder.AddSingleton<IThemeContentRetriever, ContentRetriever>();
 
             builder.AddScoped<ExceptionContextLogWrapper>();
             builder.AddScoped<ILiveModeOnlyCache, LiveModeOnlyCacheInternal>();
             builder.RegisterAllImplementedInterfaces<DataViewModeFinderOuter>(ServiceLifetime.Scoped);
             builder.RegisterAllImplementedInterfaces<EditModeFinderOuter>(ServiceLifetime.Scoped);
-            // todo:cole implement interfaces explicitly
-            //builder.AddScoped(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
-            builder.AddScoped<SEO.CustomRouteValidator>();
+            builder.AddScoped(typeof(ConstraintFactory), typeof(RouteMappingFactory));
+            builder.AddScoped<ICustomRouteConstraintFactory, ConstraintFactory>();
+            builder.AddScoped<IRouteDataMappingFactory, RouteMappingFactory>();
+            builder.AddScoped<CustomRouteValidator>();
             builder.RegisterAllImplementedInterfaces<SEO.CustomRouteValidator>(ServiceLifetime.Scoped);
-            builder.AddScoped<SEO.CustomRouteRepository>();
+            builder.AddScoped<CustomRouteRepository>();
             builder.RegisterAllImplementedInterfaces<SEO.CustomRouteRepository>(ServiceLifetime.Scoped);
 
             builder.AddSingleton<IStorefrontCacheControl, StorefrontCacheControlImpl>();

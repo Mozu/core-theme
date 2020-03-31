@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         RuntimeRedirects IRedirectRepository.GetRuntimeRedirectEntries(int? siteId)
         {
-            var data =  _sbCp.GetContextData() ?? _sbCp.GetContextDataAsync().Result;
+            var data =  _sbCp.GetContextData();// ?? _sbCp.GetContextDataAsync().Result;
             return data.RuntimeRedirects ??= BuildRuntimeRedirects(data.Redirects);
         }
 

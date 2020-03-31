@@ -20,7 +20,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext, ICloneable
+    public class SiteBuilderApiContext : MozuServiceApiContext, ISiteBuilderApiContext
     {
         private readonly ICookieProvider _cookieProvider;
         private readonly ISettings _settings;
@@ -239,6 +239,52 @@ namespace Mozu.SiteBuilder.Mvc
             headersToRemove.ForEach(kvp => context.Response.Headers.Remove(kvp.Key));
         }
 
+        protected void InitFromHeaders(IHeaderDictionary headers)
+        {
+            if (headers.TryGetValue("x-vol-tenant", out var values))
+                TenantId = ConvertFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-oms-merchant", out values))
+                OmsMerchantId = ConvertNullableFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-oms-catalog", out values))
+                OmsCatalogId = ConvertNullableFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-master-catalog", out values))
+                MasterCatalogId = ConvertNullableFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-instance-id", out values))
+                MozuInstanceId = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-catalog", out values))
+                CatalogId = ConvertNullableFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-site", out values))
+                SiteId = ConvertNullableFrom(values.ToArray());
+            if (headers.TryGetValue("x-vol-locale", out values))
+                LocaleCode = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-currency", out values))
+                CurrencyCode = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-pricelist", out values))
+                PriceListCode = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-price-plan", out values))
+                PricePlanCode = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-purchase-location", out values))
+                PurchaseLocation = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-preview-date", out values))
+                PreviewDate = ConvertDateFrom(values);
+            if (headers.TryGetValue("x-vol-callchain", out values))
+                CallChain = values.FirstOrDefault();
+            if (headers.TryGetValue("x-vol-initiating-app", out values))
+                InitiatingAppId = values.FirstOrDefault();
+            headers.TryGetValue("Authorization", out values);
+            if (headers.TryGetValue("x-vol-user-claims", out values))
+                UserClaims = LightweightUserClaims.Parse(values.FirstOrDefault());
+            if (headers.TryGetValue("x-vol-app-claims", out values))
+                AppClaims = LightweightAppClaims.Parse(values.FirstOrDefault());
+            if (headers.TryGetValue("x-vol-bypass-cache", out values) && bool.TryParse(values.FirstOrDefault(), out var result1))
+                ShouldBypassCache = result1;
+            if (headers.TryGetValue("x-vol-no-cache-update", out values) && bool.TryParse(values.FirstOrDefault(), out var result2))
+                ShouldUpdateCache = !result2;
+            if (!headers.TryGetValue("x-vol-dataview-mode", out values) || !Enum.TryParse<DataViewModeType>(values.FirstOrDefault(), true, out var result3))
+                return;
+            DataViewMode = result3;
+        }
+
         public void Load()
         {
             CleanTokenValueHeaders(_httpContext);
@@ -247,7 +293,7 @@ namespace Mozu.SiteBuilder.Mvc
 
             if (_httpContext.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.TENANT, out _))
             {
-                //InitFromHeaders(_httpContext.Request.Headers);
+                InitFromHeaders(_httpContext.Request.Headers);
             }
             else if (!_httpContext.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out _) && !_settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
             {

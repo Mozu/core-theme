@@ -10,14 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
         public static IApplicationBuilder ReigsterMozuMiddleware(this IApplicationBuilder builder)
         {
             return builder
-                .UseMiddleware<RedisHealthCheckMiddleware>()
-                .UseMiddleware<SessionMiddleware>()
-                .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
-                .UseMiddleware<SiteContextInitializationMiddleware>()
-                .UseMiddleware<FourHundredMiddleware>()
-                .UseMiddleware<DeepPagingLimitingMiddleware>()
-                .UseMiddleware<ResponseHeaderAppenderMiddleware>()
-                .UseMiddleware<PageContextCookieMiddleware>();
+                ;
         }
     }
 }

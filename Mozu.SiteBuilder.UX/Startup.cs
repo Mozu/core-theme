@@ -88,11 +88,16 @@ namespace Mozu.SiteBuilder.UX
         {
             var rewriteOptions = new RewriteOptions().Add(UrlRewritingMiddleware.RewriteIncomingUrl);
 
-            app.UseRewriter(rewriteOptions);
-
-            app.ReigsterMozuMiddleware();
-
-            app.UseMvc(RouteConfig.Register);
+            app.UseMiddleware<RedisHealthCheckMiddleware>()
+                .UseMiddleware<SessionMiddleware>()
+                .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
+                .UseMiddleware<SiteContextInitializationMiddleware>()
+                .UseRewriter(rewriteOptions)
+                .UseMvc(RouteConfig.Register)
+                .UseMiddleware<FourHundredMiddleware>()
+                .UseMiddleware<DeepPagingLimitingMiddleware>()
+                .UseMiddleware<ResponseHeaderAppenderMiddleware>()
+                .UseMiddleware<PageContextCookieMiddleware>();
         }
     }
 }
