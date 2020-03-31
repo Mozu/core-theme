@@ -9,12 +9,12 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     {
         public static IDictionary<string, string> FromLegacyCookieString(this string legacyCookie)
         {
-            return legacyCookie.Split('&').Select(s => s.Split('=')).ToDictionary(kvp => kvp[0], kvp => kvp[1]);
+            return Mozu.Core.CookieUtils.FromLegacyCookieString(legacyCookie);            
         }
 
-        public static string ToLegacyCookieString(this IDictionary<string, string> dict)
+        public static string ToLegacyCookieString(this IDictionary<string, string> dict, bool escapeValues = false)
         {
-            return string.Join("&", dict.Select(kvp => string.Join("=", kvp.Key, kvp.Value)));
+            return Mozu.Core.CookieUtils.ToLegacyCookieString(dict, escapeValues);
         }
     }
 }

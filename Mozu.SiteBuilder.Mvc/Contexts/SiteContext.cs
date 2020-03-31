@@ -94,14 +94,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public SiteContext(HttpContext context,
             ISiteBuilderApiContext siteBuilderApiContext,
             ISiteBuilderContextProvider siteBuilderContextDataProvider , 
-            //IMobileDetectionProvider mobileDetectionProvider,
+            IMobileDetectionProvider mobileDetectionProvider,
             ICookieProvider cookieProvider,
             Lazy<IThemeRepository> themeRepository,
             Lazy<IThemeSettingsRepository> themeSettingsRepository,
             ISettings settings)
         {
             _siteBuilderContextDataProvider = siteBuilderContextDataProvider;
-            //_mobileDetectionProvider = mobileDetectionProvider;
+            _mobileDetectionProvider = mobileDetectionProvider;
             _cookieProvider = cookieProvider;
             _settings = settings;
             _siteBuilderApiContext = siteBuilderApiContext;
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null, bool isAdminMode = false)
         {
-            var cookie = new CookieOptions {Expires = DateTime.MaxValue};
+            var cookie = new CookieOptions {Expires = DateTime.Now.AddYears(10)};
 
             var val = new Dictionary<string, string>
             {

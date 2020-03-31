@@ -43,6 +43,8 @@ namespace Mozu.SiteBuilder.Mvc
 
         public CookieState GetRequestCookie(string cookieName)
         {
+
+           // var cookie = Mozu.Core.CookieUtils.FromLegacyCookieString(Constants.COOKIENAME);
             // work around casing issues with system.web.cookie.  
             // Still using web to write cookie as it would require a larger refactor to hold on to the cookies durenting the request and set them on say a message handler after the respone was created.
             //also the system.net cookie uses the formcollection encoder which removes + as spaces.   Didnt want to break all the cookies by adding a new format.  So grabbing the raw value and re--un-escapging it for base64

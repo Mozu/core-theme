@@ -354,7 +354,10 @@ namespace Mozu.SiteBuilder.Mvc
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
             var cookie = cookieProvider.GetRequestCookie(Constants.COOKIENAME);
-            if (cookie?.Values == null) return;
+            if ((cookie?.Values?.Count).GetValueOrDefault(0)==0)
+            {
+                return;
+            }
 
             if (int.TryParse(cookie["site"], out var tmpInt))
             {

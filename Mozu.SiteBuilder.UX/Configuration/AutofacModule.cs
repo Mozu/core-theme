@@ -12,6 +12,7 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Logging;
+using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.Misc;
@@ -102,8 +103,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings).Assembly);
 
             configure.AddScoped<IThemeSettingsRepository, ThemeSettingsRepository>();
-            // todo:cole revisit for mobile detection
+            // todo:cole revisit for mobile detection No Op wont due 
             //builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
+            configure.AddScoped<IMobileDetectionProvider, NoOpMobileDetectionProvider>();
             configure.AddScoped<IPermissionsRepository, PermissionsRepository>();
             //builder.RegisterClassesMatchingInterfaceName(typeof(IEntityListsWebApiClient).Assembly);
             //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
