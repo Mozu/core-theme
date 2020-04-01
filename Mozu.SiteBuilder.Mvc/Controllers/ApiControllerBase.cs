@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Mozu.Core.Configuration;
 using Mozu.Core.Expressions;
 using ContentResult = Mozu.SiteBuilder.Mvc.ActionResults.ContentResult;
@@ -199,7 +200,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             get
             {
                 if (_viewDataDictionary != null) return _viewDataDictionary;
-                _viewDataDictionary = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(null) { ["ControllerContext"] = ControllerContext};
+                _viewDataDictionary = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { ["ControllerContext"] = ControllerContext};
                 //_viewDataDictionary["ControllerContext"] = this.MvcControlerContext;
                 return _viewDataDictionary;
             }

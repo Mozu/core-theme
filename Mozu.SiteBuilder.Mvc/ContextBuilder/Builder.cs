@@ -346,14 +346,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 .GetAsync<SiteBuilderContextData>(cacheKey)
                 .ContinueWith(x => x.Result?.Item)
                 .ConfigureAwait(false);
-            if ( sbc != null && sbc.RedirectUpdateDate .HasValue && sbc.RuntimeRedirects == null)
+
+            if (sbc?.RedirectUpdateDate != null && sbc.RuntimeRedirects == null)
             {
-                sbc.Redirects = await this.GetRedirectsAsync(sbc, apiContext).ConfigureAwait(false);
+                sbc.Redirects = await GetRedirectsAsync(sbc, apiContext).ConfigureAwait(false);
             }
             
             return sbc;
-
-            
         }
 
         private void RecordVisit (IApiContext apicontext)

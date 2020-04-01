@@ -397,7 +397,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Confirmation(string orderId)
+        public async Task<IActionResult> Confirmation(string orderId)
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var orderTask = _orderWebApiClient.GetOrder(orderId);

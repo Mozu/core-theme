@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.Mvc
             
             var (_, s) = _context.Request.Cookies.FirstOrDefault(x => x.Key == cookieName);
 
-            if (s == null) return cookieState;
+            if (s == null) return null;
 
             var unescaped = cookieState.Value = s;
             var parts = unescaped.Split('&');

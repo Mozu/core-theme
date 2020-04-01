@@ -25,7 +25,6 @@ using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 using NotFoundResult = Microsoft.AspNetCore.Mvc.NotFoundResult;
 using FileResult = Mozu.SiteBuilder.Mvc.ActionResults.FileResult;
 
@@ -115,14 +114,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public IActionResult MozuReceiver(int receiverVersion)
+        public ActionResult MozuReceiver(int receiverVersion)
         {
             return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
 
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public IActionResult MozuReceiver()
+        public ActionResult MozuReceiver()
         {
             return File("/Assets/mozu_receiver.html", "text/html");
         }
@@ -178,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [System.Web.Http.HttpGet]
-        public async Task<IActionResult> HyprContextAction(string dv = null)
+        public async Task<ActionResult> HyprContextAction(string dv = null)
         {
             await SiteContext.Init();
             SbApiContext.SetDataMode(Convert(dv));

@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         protected override bool CanWriteType(Type type)
         {
-            return typeof(ActionResult).IsAssignableFrom(type);
+            return typeof(IActionResult).IsAssignableFrom(type);
         }
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)

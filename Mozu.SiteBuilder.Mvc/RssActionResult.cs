@@ -8,11 +8,11 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public class RssActionResult : ActionResult
+    public class RssActionResult : IActionResult
     {
         public SyndicationFeed Feed { get; set; }
 
-        public override void ExecuteResult(ActionContext context)
+        public Task ExecuteResultAsync(ActionContext context)
         {
             var httpContext = context.HttpContext;
 
@@ -22,6 +22,8 @@ namespace Mozu.SiteBuilder.Mvc
 
             using var writer = XmlWriter.Create(httpContext.Response.Body);
             rssFormatter.WriteTo(writer);
+
+            return Task.CompletedTask;
         }
     }
 }

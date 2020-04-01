@@ -35,8 +35,6 @@ using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Mozu.SiteBuilder.Mvc.Middleware;
-using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
-using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -209,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
-        public ActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -227,7 +225,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
-        public ActionResult OrderStatus(string returnUrl = null)
+        public IActionResult OrderStatus(string returnUrl = null)
         {
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -245,7 +243,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
-        public ActionResult AjaxForgotPassword(string returnUrl = null)
+        public IActionResult AjaxForgotPassword(string returnUrl = null)
         {
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -262,7 +260,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
-        public ActionResult CreateAccount(string returnUrl = null)
+        public IActionResult CreateAccount(string returnUrl = null)
         {
             var pc = this.PageContext;
             pc.CmsContext= new CmsPageContext()
@@ -460,7 +458,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return _siteContext.Labels.TryGetValue(id, out var val) ? val : defaultValue;
         }
 
-        private IActionResult LoginFailed(string email = null, string code = null)
+        private ActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
             FourHundredMiddleware.BypassErrorHandler(HttpContext);

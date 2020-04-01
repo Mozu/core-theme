@@ -101,28 +101,29 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             var ret = false;
 
             routeData = null;
-
             foreach (var r in routes.OfType<Route>())
             {
                 var template = r.ParsedTemplate;
 
                 var matcher = new TemplateMatcher(template, GetDefaults(template));
 
-                var innerVals = new RouteValueDictionary();
+                var innerVals = new RouteValueDictionary(r.Defaults);
 
-                if (!matcher.TryMatch(context.Request.Path, innerVals)) continue;
+                if (!matcher.TryMatch(context.Request.Path.Value.TrimStart('/'), innerVals)) continue;
 
-                if (!(from key in innerVals.Keys
-                        let constraints = r.Constraints.Where(c =>
-                            c.Key.Equals(key, StringComparison.CurrentCultureIgnoreCase)).Select(c => c.Value)
-                        select constraints.All(c =>
-                            c.Match(context, r, key, context.Request.RouteValues, RouteDirection.IncomingRequest)))
-                    .Any(constraintsPass => constraintsPass)) continue;
+                if (r.Constraints.Count > 0 &&
+                    !(from key in innerVals.Keys
+                            let constraints = r.Constraints.Where(c =>
+                                c.Key.Equals(key, StringComparison.CurrentCultureIgnoreCase)).Select(c => c.Value)
+                            select constraints.All(c =>
+                                c.Match(context, r, key, context.Request.RouteValues, RouteDirection.IncomingRequest)))
+                        .Any(constraintsPass => constraintsPass)) continue;
 
                 routeData = new RouteData(innerVals);
                 routeData.Routers.Add(r);
 
                 ret = true;
+                break;
             }
 
             return ret;

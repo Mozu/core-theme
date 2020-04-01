@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -77,7 +78,8 @@ namespace Mozu.SiteBuilder.UX
                     opt.Conventions.Add(new AcceptHeaderConvention());
                     opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
                     opt.OutputFormatters.Add(new HtmlErrorMediaTypeHyperFormatter());
-                });
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddControllers(options =>
                 options.Filters.Add(new HttpResponseExceptionFilter()));
 

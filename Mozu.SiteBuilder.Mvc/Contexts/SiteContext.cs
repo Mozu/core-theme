@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null, bool isAdminMode = false)
         {
-            var cookie = new CookieOptions {Expires = DateTime.Now.AddYears(10)};
+            var cookie = new CookieOptions {Expires = DateTimeOffset.MaxValue};
 
             var val = new Dictionary<string, string>
             {
