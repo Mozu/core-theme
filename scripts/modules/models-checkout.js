@@ -2131,7 +2131,7 @@
                 }
 
                 //save contacts
-                if (!this.isNonMozuCheckout() && isAuthenticated || isSavingNewCustomer && this.hasRequiredBehavior(1014)) {
+                if (!this.isNonMozuCheckout() && (isAuthenticated || isSavingNewCustomer) && this.hasRequiredBehavior(1014)) {
                     if (!isSameBillingShippingAddress && !isSavingCreditCard) {
                         if (requiresFulfillmentInfo) process.push(this.addShippingContact);
                         if (requiresBillingInfo) process.push(this.addBillingContact);
