@@ -130,11 +130,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             template = ProcessSettingsVariables(template, stem);
             var reader = new MyLessFileReader(this, _contentRetriever);
 
-            
-            var parser = new Parser()
-            {
-                Importer = new Importer(reader, true, null, false, false)
-            };
+
+            var parser = new Parser();
+            ((Importer)parser.Importer).FileReader = reader;
 
             Ruleset tree = null;
             try
@@ -157,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
 
 
-            var env = new Env(parser) { Compress = !_debug, Debug = _debug };
+            var env = new Env() { Compress = !_debug, Debug = _debug };
 
 
             var mlp = new ProbeForThemeVariablesPlugin()

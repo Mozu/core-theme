@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- use latest known package of mozu.core.prime -->
-    <PackageReference Include="dotless" Version="1.6.7" />
+    <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
     <PackageReference Include="Mozu.Core.Prime" Version="1.2005.6" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
