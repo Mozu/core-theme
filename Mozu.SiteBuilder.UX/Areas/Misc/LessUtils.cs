@@ -130,8 +130,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             template = ProcessSettingsVariables(template, stem);
             var reader = new MyLessFileReader(this, _contentRetriever);
 
-
-            var parser = new Parser
+            
+            var parser = new Parser()
             {
                 Importer = new Importer(reader, true, null, false, false)
             };
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
 
 
-            var env = new Env { Compress = !_debug, Debug = _debug };
+            var env = new Env(parser) { Compress = !_debug, Debug = _debug };
 
 
             var mlp = new ProbeForThemeVariablesPlugin()
@@ -229,6 +229,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                     par.Location.Source = template;
                     throw;
                 }
+            }
+            if ( template.Contains("none: ;"))
+            {
+                return template.Replace("none: ;", "none ;");
             }
 
             return template;
@@ -305,6 +309,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
         public string GetFileContents(string fileName)
         {
+            //todo:cole ... we probubly want to move this out of dot net or port the version of dotless to core that had all the legacy rules
+            //datetimepicker.less
+            
             var transFormedContent = string.Empty;
             {
                 var stem = fileName;
