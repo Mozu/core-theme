@@ -146,7 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         private static RenderingError MakeRenderingException(string path, Exception ex)
         {
-            return new RenderingError(string.Format("error in template [{0}]", path), new FSharpOption<Exception>(ex));
+            return new RenderingError($"error in template [{path}]", new FSharpOption<Exception>(ex));
         }
     }
 }

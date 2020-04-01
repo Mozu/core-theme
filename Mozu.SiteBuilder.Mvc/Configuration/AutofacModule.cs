@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterAllImplementedInterfaces<CmsPageRuleExpressionValidator>(ServiceLifetime.Scoped);
 
             builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
-            builder.AddSingleton<HtmlActionResultMediaTypeFormatter>();
+            //builder.AddSingleton<HtmlActionResultMediaTypeFormatter>();
             builder.AddHttpClient();
         }
 

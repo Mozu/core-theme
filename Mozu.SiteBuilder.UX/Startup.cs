@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.AdminUser.Contracts.Clients;
@@ -82,6 +83,7 @@ namespace Mozu.SiteBuilder.UX
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddControllers(options =>
                 options.Filters.Add(new HttpResponseExceptionFilter()));
+            services.Configure<IISServerOptions>(opt => { opt.AllowSynchronousIO = true; });
 
         }
 

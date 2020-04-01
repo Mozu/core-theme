@@ -114,14 +114,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public ActionResult MozuReceiver(int receiverVersion)
+        public IActionResult MozuReceiver(int receiverVersion)
         {
             return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
 
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public ActionResult MozuReceiver()
+        public IActionResult MozuReceiver()
         {
             return File("/Assets/mozu_receiver.html", "text/html");
         }

@@ -124,6 +124,31 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set => _sc = value;
         }
 
+        protected internal new FileContentResult File(byte[] fileContents, string contentType)
+        {
+            return File(fileContents, contentType, null /* fileDownloadName */);
+        }
+
+        protected internal new virtual FileContentResult File(byte[] fileContents, string contentType, string fileDownloadName)
+        {
+            return new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName };
+        }
+
+        protected internal new virtual FileStreamResult File(Stream fileStream, string contentType, string fileDownloadName)
+        {
+            return new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName };
+        }
+
+        protected internal new FilePathResult File(string fileName, string contentType)
+        {
+            return File(fileName, contentType, null /* fileDownloadName */);
+        }
+
+        protected internal virtual FilePathResult File(string fileName, string contentType, string fileDownloadName)
+        {
+            return new FilePathResult(fileName, contentType) { FileDownloadName = fileDownloadName };
+        }
+
         // var cc = new ControllerContext(new HttpContextWrapper(HttpContext.Current), new RouteData(), new FooController());
         protected internal ViewResult View(object model)
         {
