@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
                 var innerVals = new RouteValueDictionary(r.Defaults);
 
-                if (!matcher.TryMatch(context.Request.Path.Value.TrimStart('/'), innerVals)) continue;
+                if (!matcher.TryMatch(context.Request.Path.Value, innerVals)) continue;
 
                 if (r.Constraints.Count > 0 &&
                     !(from key in innerVals.Keys

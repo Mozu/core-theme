@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
-        // private IMobileDetectionProvider _mobileDetectionProvider;
+        private IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContext _context;
         private ISiteContext _siteContext;
 
@@ -230,30 +230,30 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
 
         }
-        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null/*, IMobileDetectionProvider mobileDetectionProvider = null*/, ISiteContext siteContext = null)
+        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null , IMobileDetectionProvider mobileDetectionProvider = null , ISiteContext siteContext = null)
         {
             var pc = new PageContext()
             {
                 _apiContext = apiContext,
-                // _mobileDetectionProvider = mobileDetectionProvider,
+                 _mobileDetectionProvider = mobileDetectionProvider,
                 _siteContext = siteContext
             };
             return pc;
         }
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, ISettings settings/*, IMobileDetectionProvider mobileDetectionProvider*/, HttpContext context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContext context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
             , IIpAddressFinderOuter ipAddressFinderOuter,
             ISiteContext siteContext)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
             _settings = settings;
-            // _mobileDetectionProvider = mobileDetectionProvider;
+            _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
             _siteContext = siteContext;
-            //_crawlerInfo = new CrawlerInfo()
-            //{
-            //    IsCrawler = IsCrawler
-            //};
+            _crawlerInfo = new CrawlerInfo()
+            {
+                IsCrawler = IsCrawler
+            };
 
             IsEditMode = _apiContext.IsEditMode;
             HandledByProxy = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, _context);
@@ -474,15 +474,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageTypeId { get; set; }
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
-        [JsonPreloadFilter] public bool IsCrawler => false;//_mobileDetectionProvider.IsCurrentRequestCrawler;
+        [JsonPreloadFilter] public bool IsCrawler => _mobileDetectionProvider.IsCurrentRequestCrawler;
 
-        [JsonPreloadFilter] public bool IsMobile => false;//_mobileDetectionProvider.IsCurrentRequestMobile;
-
-        [JsonPreloadFilter]
-        public bool IsTablet => false;//_mobileDetectionProvider.IsCurrentRequestTablet;
+        [JsonPreloadFilter] public bool IsMobile => _mobileDetectionProvider.IsCurrentRequestMobile;
 
         [JsonPreloadFilter]
-        public bool IsDesktop => false;//(!_mobileDetectionProvider.IsCurrentRequestMobile &&!_mobileDetectionProvider.IsCurrentRequestTablet);
+        public bool IsTablet => _mobileDetectionProvider.IsCurrentRequestTablet;
+
+        [JsonPreloadFilter]
+        public bool IsDesktop => (!_mobileDetectionProvider.IsCurrentRequestMobile &&!_mobileDetectionProvider.IsCurrentRequestTablet);
 
         public CmsPageContext CmsContext { get; set; }
 
@@ -574,7 +574,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         ICrawlerInfo _crawlerInfo;
         [JsonPreloadFilter]
-        public ICrawlerInfo CrawlerInfo => null;//_crawlerInfo;
+        public ICrawlerInfo CrawlerInfo => _crawlerInfo;
 
         Currency _currency;
         public Currency CurrencyInfo

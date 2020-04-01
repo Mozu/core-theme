@@ -48,10 +48,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ((ServiceClientBase)_docRepo).Options.MaxSize = int.MaxValue;
         }
 
-        static ImageCodecInfo GetEncoderInfo(string mimeType)
-        {
-            return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
-        }
+        //static ImageCodecInfo GetEncoderInfo(string mimeType)
+        //{
+        //    return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
+        //}
 
         Site LookupSite(int siteid)
         {

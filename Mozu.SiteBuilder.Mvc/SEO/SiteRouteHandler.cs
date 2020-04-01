@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 var vpath = route.GetVirtualPath(vpc);
                 if (vpath != null)
                 {
-                    var uri = new Uri("http://localhost/" + vpath.VirtualPath);
+                    var uri = new Uri("http://localhost/" + vpath.VirtualPath.TrimStart('/'));
 
                     //only redirect if stem is different
                     if (!string.Equals(
@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         new Uri(request.GetDisplayUrl());
 
                         uri = new Uri(uri.GetLeftPart(UriPartial.Path) + preStrippedRequest.Query);
-                        request.HttpContext.Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
+                        request.HttpContext.Response.Headers[Constants.HEADER_CANONICAL_URL] = uri.PathAndQuery;
 
                         return new RedirectResult(new Uri(uri.PathAndQuery, UriKind.Relative).ToString(), true);
                     }
@@ -192,7 +192,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         values.All(string.IsNullOrWhiteSpace)) return null;
 
                     uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.QueryString);
-                    request.HttpContext.Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
+                    request.HttpContext.Response.Headers[Constants.HEADER_CANONICAL_URL] = uri.PathAndQuery;
                     return null;
                 }
                 //if current route didnt match??? load bearing code do not remove
