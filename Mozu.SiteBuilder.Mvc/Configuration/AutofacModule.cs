@@ -30,6 +30,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -117,7 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterAllImplementedInterfaces<CmsPageRuleExpressionValidator>(ServiceLifetime.Scoped);
 
             builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
-
+            builder.AddSingleton<HtmlActionResultMediaTypeFormatter>();
             builder.AddHttpClient();
         }
 

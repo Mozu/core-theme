@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -14,8 +17,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
     {
     }
 
-    public class ViewResultBase : IActionResult/*, Mozu.Core.Actions.Contracts.Http.IViewResult*/
+    public class ViewResultBase : ObjectResult/*, Mozu.Core.Actions.Contracts.Http.IViewResult*/
     {
+        public ViewResultBase():base(null)
+        {
+            this.Value = this;
+        }
         private ViewDataDictionary _viewDataDictionary;
         [JsonIgnore]
         public ViewDataDictionary ViewData
@@ -23,12 +30,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             get => _viewDataDictionary ??= new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
             set => _viewDataDictionary = value;
         }
-
-        public Task ExecuteResultAsync(ActionContext context)
-        {
-            throw new NotImplementedException();
-        }
-
         public string ViewName { get; set; }
         [JsonIgnore]
         public HyprView View { get; set; }

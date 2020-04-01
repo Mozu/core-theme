@@ -174,12 +174,14 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 {
                     entry.AbsoluteExpiration =
                         DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300));
+                    entry.Size = 1;
                     return new object();
                 });
 
                 var cip = new MemoryCacheEntryOptions
                 {
                     SlidingExpiration = TimeSpan.FromSeconds(Config.SlidingExpirationSeconds.GetValueOrDefault(120)),
+                    Size =1
                 };
 
                 if (UpdateCallback != null)
@@ -256,7 +258,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             foreach (var dep in dependencies)
             {
                 // dependencies have a max expiration
-                cc.Cache.Set(dep, Guid.NewGuid(), new MemoryCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.MaxValue });            
+                cc.Cache.Set(dep, Guid.NewGuid(), new MemoryCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.MaxValue , Size =1});            
             }
 
             //disable update call back for staging.   product updates make this kill the system

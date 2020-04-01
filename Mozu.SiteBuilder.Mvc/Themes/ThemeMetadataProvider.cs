@@ -735,15 +735,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
        string GetFullPath(string settingKey)
        {
            var setting = _settings.AppSettings(settingKey + "_directory");
-           if (setting.IsNullOrEmpty())
-           {
-               return Path.GetFullPath("/themes" + settingKey);
-           }
-           else
-           {
-               return Path.GetFullPath(setting);
-           }
-       }
+            if (setting.IsNullOrEmpty())
+            {
+                return Path.GetFullPath(new DirectoryInfo(System.Environment.CurrentDirectory).Parent.Parent.FullName + "/Mozu." + settingKey);
+            }
+           
+            return Path.GetFullPath(setting);
+        }
 
     }
 }
