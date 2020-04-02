@@ -133,6 +133,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
             var parser = new Parser();
             ((Importer)parser.Importer).FileReader = reader;
+            ((Importer)parser.Importer).IsUrlRewritingDisabled = true;
+
 
             Ruleset tree = null;
             try

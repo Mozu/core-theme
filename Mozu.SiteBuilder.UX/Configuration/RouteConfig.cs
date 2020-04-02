@@ -119,6 +119,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+               "cmsresources",
+               "resources/cms/{*pathinfo}",
+               new { controller = "Resource", action = "CmsResources" },
+               _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "resources",
                 "resources/{*pathinfo}",
                 new { controller = "Resource", action = "Misc" },

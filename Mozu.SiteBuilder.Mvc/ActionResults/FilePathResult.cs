@@ -30,7 +30,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         protected override Task WriteFileAsync(HttpResponse response)
         {
-            return response.SendFileAsync(new PhysicalFileInfo(new FileInfo(FileName)));
+            return response.SendFileAsync(new PhysicalFileInfo(new FileInfo(Fixuup(FileName))));
         }
+        static string Fixuup(string path)
+        {
+            if ( path[0] == '~')
+            {
+                return Path.Join(System.Environment.CurrentDirectory, path.Substring(1));
+            }
+            return path;
+        }
+
     }
 }

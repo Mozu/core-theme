@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
@@ -102,6 +104,13 @@ namespace Mozu.SiteBuilder.UX
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
                 .UseMiddleware<ResponseHeaderAppenderMiddleware>()
                 .UseMiddleware<PageContextCookieMiddleware>();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "resources/cms")),
+                RequestPath = "/resources/cms"
+            });
         }
     }
 }
