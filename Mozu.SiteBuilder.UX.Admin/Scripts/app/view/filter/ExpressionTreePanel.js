@@ -72,7 +72,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 menuDisabled: true,
                 renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
                     if (record.data.type == "container") {
-                        return (record.data.operator == "or") ? "Any of the following" : "All of the following";
+                        return (record.data.logicalOperator == "or") ? "Any of the following" : "All of the following";
                     } else {
                         var operator = Taco.filter.operatorStore.getById(record.get("operator"));
                         var field = Taco.filter.fieldStore.getById(record.get("left"));
@@ -541,7 +541,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var menu = Ext.create('Ext.menu.Menu', {
             listeners: {
                 click: function (menu, item, e, eOpts) {
-                    record.set(me.containerDataOperatorName, item.operator);
+                    record.set(me.containerDataOperatorName, item.logicalOperator);
                     this.fireEvent("dataChanged", this);
                 },
                 beforehide: function () {
