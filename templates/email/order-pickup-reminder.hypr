@@ -6,7 +6,7 @@
         {{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!
     </p>
     <br>
-    <p>{{ labels.orderPickupReminderBlob|string_format(model.orderNumber, model.externalId |safe }}</p>
+    <p>{{ labels.orderPickupReminderBlob|string_format(model.orderNumber, model.order.externalId |safe }}</p>
 
     <table class="mz-ordersummary">
         <thead>
