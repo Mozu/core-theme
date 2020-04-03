@@ -841,13 +841,32 @@
         if (this.shipmentRecord.shipmentType == "BOPIS") {
             for (var i = 0; i < this.shipmentRecord.items.length; i++) {
                 if (this.shipmentRecord.transferShipmentNumbers && this.shipmentRecord.transferShipmentNumbers.length > 0) {
-                    this.shipmentRecord.items[i].quantityAvailToTransfer = this.shipmentRecord.items[i].quantity - this.getActiveQuantityFromTransferShipments(this.shipmentRecord.transferShipmentNumbers, this.shipmentRecord.items[i].productCode);
+                    //Made changes for COM-1555
+                    this.shipmentRecord.items[i].quantityAvailToTransfer =
+                        this.getOriginalOrderedQuantity(this.shipmentRecord.number, this.shipmentRecord.items[i].productCode)
+                        - this.getActiveQuantityFromTransferShipments(this.shipmentRecord.transferShipmentNumbers, this.shipmentRecord.items[i].productCode);
                 }
                 else {
                     this.shipmentRecord.items[i].quantityAvailToTransfer = this.shipmentRecord.items[i].quantity;
                 }
             }
         }
+    },
+
+    getOriginalOrderedQuantity: function (originalShipmentNumber, productCode) {
+        var quantity = 0;
+        for (var shipmentCount = 0; shipmentCount < this.record.get('shipments').length; shipmentCount++) {
+            //this will give quantity from all child shipments and also parent shipment.
+            if (this.record.get('shipments')[shipmentCount].shipmentType == "BOPIS" &&
+                (this.record.get('shipments')[shipmentCount].originalShipmentNumber == originalShipmentNumber ||
+                    this.record.get('shipments')[shipmentCount].number == originalShipmentNumber)) {
+                for (var itemCount = 0; itemCount < this.record.get('shipments')[shipmentCount].items.length; itemCount++) {
+                    if (this.record.get('shipments')[shipmentCount].items[itemCount].productCode == productCode)
+                        quantity += parseInt(this.record.get('shipments')[shipmentCount].items[itemCount].quantity);
+                }
+            }
+        }
+        return quantity;
     },
 
     getActiveQuantityFromTransferShipments: function (transferShipments, productCode) {
