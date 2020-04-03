@@ -4,7 +4,7 @@
     <br>
     <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</p>
     <br>
-    <p>{{ labels.itemCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
+    <p>{{ labels.itemCancelBlob1|string_format(model.orderNumber, model.order.externalId)|safe }}</p>
     
     <table cellpadding="1" width="100%">
         <thead>
