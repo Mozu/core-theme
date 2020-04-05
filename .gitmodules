@@ -1,0 +1,4 @@
+[submodule "Mozu.CoreTheme"]
+	path = Mozu.CoreTheme
+	url = https://github.com/Mozu/core-theme
+	branch = develop

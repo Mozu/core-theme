@@ -142,6 +142,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "testing controller",
+                "testing/{action}",
+                  new { controller = "Testing", action = "echo" },
+              _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "Set Theme Override",
                 "setTheme/{themeType}",
                 new { action = "ForceTheme", controller = "Testing" }, 

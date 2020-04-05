@@ -28,11 +28,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
         readonly bool ForceSSL;
         readonly ICookieProvider CookieProvider;
 
-        public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpContext context)
+        public AuthenticationHelper(ICookieProvider provider, ISettings settings, IHttpContextAccessor contextAccessor)
         {
             _settings = settings;
             var env = settings.AppSettings("Environment");
-
+            var context = contextAccessor.HttpContext;
             AdminAccessTokenCookieName = "sb-admin-at-" + env;
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
             StoreFrontAccessTokenSessionCookieName = StoreFrontAccessTokenCookieName + "-s";

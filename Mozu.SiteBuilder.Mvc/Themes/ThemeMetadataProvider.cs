@@ -67,6 +67,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private readonly JsonSerializer _jsonSerializer;
         private const string METADATA_THEME_FILE_NAME = "theme.json";
         private const string METADATA_ADDON_FILE_NAME = "addon.json";
+        internal const char CanonicalDirectorySeperator = '/';
+        internal const char WindowsDirectorySeperator = '\\';
+        internal static char[] DircetorySeperators = new char[] { CanonicalDirectorySeperator, WindowsDirectorySeperator };
+       
+
         IThemeContentRetriever _contentRetriever;
         /// <summary>
         /// Constructor.
@@ -75,6 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             IMongoDatabaseProviderProvider mongoDataseProviderProvider,
             IThemeContentRetriever contentRetriever)
         {
+           
             _settings = settings;
             _mongoDataseProviderProvider = mongoDataseProviderProvider;
             _jsonSerializer = new JsonSerializer();
@@ -466,12 +472,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private ThemeFileSystemInfo CreateThemeFileSystemInfo( MongoDB.Driver.GridFS.GridFSFileInfo x , string themePath, string themeId)
         {
-            var relPath = x.Filename.Replace('/', '\\');
+            var relPath = x.Filename.SanitizePath();
             var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
 
             return new ThemeFileSystemInfo()
             {
-                Name = relPath.Split('\\').Last(),
+                Name = relPath.Split(CanonicalDirectorySeperator).Last(),
                 ThemeId = themeId,
                 CheckSum = x.MD5,
                 MongoId = x.Id.ToString(),
@@ -487,11 +493,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private ThemeFileSystemInfo CreateThemeFileSystemInfo(Mozu.AppDev.Contracts.AssetFileMetadata x, string themePath, string themeId)
         {
-            var relPath = x.Path.Replace('/', '\\');
+            var relPath = x.Path.SanitizePath();
             var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
             return new ThemeFileSystemInfo()
             {
-                Name = x.Path.Split('/').Last(),
+                Name = x.Path.Split(CanonicalDirectorySeperator).Last(),
                 ThemeId = themeId,
                 CheckSum = x.CheckSum,
                // FullPath = themePath + "//"+ x.Path,
@@ -503,10 +509,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 IsFile = !x.IsFolder 
             };
         }
-
+       
         private ThemeFileSystemInfo CreateThemeFileSystemInfo(FileSystemInfo x, string themePath, string themeId)
         {
-            var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] { '\\' }).ToLowerInvariant();
+            var relPath = x.FullName.Substring(themePath.Length).SanitizePath();
             var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
             return new ThemeFileSystemInfo()
             {
@@ -553,7 +559,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         async Task<GridFSFileInfo> GetGirdFSFileInfo(string themeId, string virtualPath)
         {
-            var fn = virtualPath.Replace('\\', '/').Trim('/');
+            var fn = virtualPath.SanitizePath();
             var appId =ParseId(themeId);
           
             if (appId.Item1 ==0 || appId.Item2 ==0 )
@@ -734,14 +740,21 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
        string GetFullPath(string settingKey)
        {
-           var setting = _settings.AppSettings(settingKey + "_directory");
+            var setting = _settings.AppSettings(settingKey + "_directory");
             if (setting.IsNullOrEmpty())
             {
-                return Path.GetFullPath(new DirectoryInfo(System.Environment.CurrentDirectory).Parent.Parent.FullName + "/Mozu." + settingKey);
+                return Path.Join( new DirectoryInfo(System.Environment.CurrentDirectory).Parent.Parent.FullName , "/Mozu." + settingKey);
             }
            
             return Path.GetFullPath(setting);
         }
 
+    }
+    public static class StringExt
+    {
+        public static string SanitizePath(this string path)
+        {
+            return path?.Trim(ThemeMetadataProvider.DircetorySeperators).Replace(ThemeMetadataProvider.WindowsDirectorySeperator, ThemeMetadataProvider.CanonicalDirectorySeperator);
+        }
     }
 }

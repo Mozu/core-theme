@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public string MapLocalPath(string virtualPath, Theme theme)
         {
             var t = theme;
-            return t.ThemePath + "\\" + virtualPath;
+            return Path.Join(t.ThemePath , virtualPath);
         }
 
         public ICollection<Theme> ThemeStack
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true)
         {
-            virtualPath = virtualPath.ToLowerInvariant().Replace("/", "\\").Trim(new char[] { '\\' });
+            virtualPath = virtualPath.ToLowerInvariant().Replace("\\", "/").Trim(new char[] { '/' });
             if (!withExt)
             {
                 virtualPath = virtualPath.GetFilePathNameWithoutExtension();

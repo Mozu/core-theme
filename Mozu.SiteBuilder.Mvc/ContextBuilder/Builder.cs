@@ -36,6 +36,7 @@ using SBCategory = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 using Mozu.Core.EnsureThat;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.ProductRuntime.Contracts;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -64,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "9";
+        public const string CacheVersion = "10";
         private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -188,12 +189,21 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         private async Task<ISiteBuilderContextData> ProcessCtxWork ( SiteBuilderContextWorkItem work , SiteBuilderApiContext apiContext)
         {
-            using var scope = _globalScope.CreateScope();
-            apiContext.UserClaims = null;
-            scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
-            var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
-            var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
-            return await serviceAggregator.Aggregate(existing).ConfigureAwait(false);
+            using (var scope = _globalScope.CreateScope())
+            {
+                apiContext.UserClaims = null;
+                var httpContext = new DefaultHttpContext();
+                httpContext.Request.Scheme = "http";
+                httpContext.Request.Host = new HostString("localhost");
+                httpContext.Request.PathBase = "";
+                httpContext.Request.Path = "/";
+
+                scope.ServiceProvider.Resolve<IHttpContextAccessor>().HttpContext = httpContext;
+                scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
+                var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
+                var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
+                return await serviceAggregator.Aggregate(existing).ConfigureAwait(false);
+            }
         }
 
         private async Task<List<SBCategory>> ProcessCategoryListWork(SiteBuilderContextWorkItem work, SiteBuilderApiContext apiContext)

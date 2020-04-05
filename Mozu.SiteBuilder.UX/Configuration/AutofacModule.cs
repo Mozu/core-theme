@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.UX.Messaging;
 using System;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -83,6 +84,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         public void Configure(IServiceCollection configure)
         {
+            configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
             configure.AddScoped<IApiContext, SiteBuilderApiContext>();

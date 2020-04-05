@@ -24,6 +24,7 @@ using Mozu.SiteBuilder.UX.Filters;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;
 using NotFoundResult = Microsoft.AspNetCore.Mvc.NotFoundResult;
 using FileResult = Mozu.SiteBuilder.Mvc.ActionResults.FileResult;
@@ -39,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         readonly Lazy<IThemeContentRetriever> _contentRetriever;
         readonly ILogger _logger;
         readonly Lazy<AMDModuleProvider> _moduleProvider;
+        private readonly IContentTypeProvider _fileExtensionContentTypeProvider;
         readonly ISettings _settings;
         readonly IApiContext _apiContext;
         readonly ITemplateInheritanceHandler _templateGetter;
@@ -50,7 +52,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ISettings settings, 
             IApiContext apiContext, 
             ITemplateInheritanceHandler templateGetter,
-            Lazy<AMDModuleProvider> amdModuleProvider)
+            Lazy<AMDModuleProvider> amdModuleProvider,
+            IContentTypeProvider fileExtensionContentTypeProvider)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
@@ -59,6 +62,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _apiContext = apiContext;
             _settings = settings;
             _moduleProvider = amdModuleProvider;
+            _fileExtensionContentTypeProvider = fileExtensionContentTypeProvider;
             _templateGetter = templateGetter;
         }
 
@@ -142,6 +146,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [System.Web.Http.HttpGet]
         public IActionResult StaticContentShare(string relativePath)
         {
+            
             var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
             var pathPrefix = Path.IsPathRooted(sharedFolder) ? "" : @"\\";
             var tenantShareRoot = $"{pathPrefix}{sharedFolder}/t-{_apiContext.TenantId}";
@@ -154,9 +159,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             else
             {
                 var ss = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out var fileType);
+                string mimeType = null;
+                _fileExtensionContentTypeProvider.TryGetContentType(fileName, out mimeType);
+                //var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out var fileType);
 
-                return File(ss, exists ? fileType : "text/html");
+                return File(ss, mimeType ??  "text/html");
             }
         }
 
@@ -294,12 +301,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         string GetMimeType(string path)
         {
-            var ext = Path.GetExtension(path);
-            if (!Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(ext, out var mimeType))
-            {
-                mimeType = "application/unknown";
-            }
-            return mimeType;
+            string mimeType = null;
+            _fileExtensionContentTypeProvider.TryGetContentType(path, out mimeType);
+
+            return mimeType ?? "application/unknown";
         }
 
         public class MozuVirtualFileResult : FileResult

@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 {
                     _httpRouteCollection = _customRouteRepository.Value.GetRouteCollection() ?? new object();
                 }
-                return _httpRouteCollection as IList<IRouter>;
+                return _httpRouteCollection as IList<IRouter> ?? new List<IRouter>();
             }
         }
 
@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         IList<IRouter> GetRouteCollection()
         {
             _httpRouteCollection ??= _customRouteRepository.Value.GetRouteCollection();
-            return _httpRouteCollection as IList<IRouter>;
+            return _httpRouteCollection as IList<IRouter> ?? new List<IRouter>();
         }
 
         System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<IList<IRouter>, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<IList<IRouter>, List<CustomRoute>>>();
