@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
-    <Content Remove="Web.config" />
-    <Content Remove="Web.Release.config" />
+    <Folder Include="wwwroot\Assets\">
+
+    </Folder>
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Areas\Misc\Views\Testing\SiteList.aspx" />
-  </ItemGroup>
+
   <ItemGroup>
     <!-- use latest known package of mozu.core.prime -->
     <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
@@ -28,5 +28,47 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Misc\Views\Testing\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Assets\Fonts\Calibri.eot" />
+    <None Include="wwwroot\Assets\Fonts\Calibri.otf" />
+    <None Include="wwwroot\Assets\Fonts\Calibri.svg" />
+    <None Include="wwwroot\Assets\Fonts\Calibri.ttf" />
+    <None Include="wwwroot\Assets\Fonts\Calibri.woff" />
+    <None Include="wwwroot\Assets\Fonts\Calibri.woff2" />
+    <None Include="wwwroot\Assets\Fonts\fontawesome-webfont.eot" />
+    <None Include="wwwroot\Assets\Fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\Assets\Fonts\fontawesome-webfont.ttf" />
+    <None Include="wwwroot\Assets\Fonts\fontawesome-webfont.woff" />
+    <None Include="wwwroot\Assets\Fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\Assets\Fonts\FontAwesome.otf" />
+    <None Include="wwwroot\Assets\Fonts\glyphicons-halflings-regular.eot" />
+    <None Include="wwwroot\Assets\Fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\Assets\Fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="wwwroot\Assets\Fonts\glyphicons-halflings-regular.woff" />
+    <None Include="wwwroot\Assets\Fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\Assets\Fonts\mozicons-2014.eot" />
+    <None Include="wwwroot\Assets\Fonts\mozicons-2014.svg" />
+    <None Include="wwwroot\Assets\Fonts\mozicons-2014.ttf" />
+    <None Include="wwwroot\Assets\Fonts\mozicons-2014.woff" />
+    <None Include="wwwroot\Assets\Fonts\mozicons.eot" />
+    <None Include="wwwroot\Assets\Fonts\mozicons.svg" />
+    <None Include="wwwroot\Assets\Fonts\mozicons.ttf" />
+    <None Include="wwwroot\Assets\Fonts\mozicons.woff" />
+    <None Include="wwwroot\Assets\Fonts\proximanova-regular.eot" />
+    <None Include="wwwroot\Assets\Fonts\proximanova-regular.svg" />
+    <None Include="wwwroot\Assets\Fonts\proximanova-regular.ttf" />
+    <None Include="wwwroot\Assets\Fonts\proximanova-regular.woff" />
+    <None Include="wwwroot\Assets\Fonts\proximanova-regular.woff2" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.eot" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.otf" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.svg" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.ttf" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.woff" />
+    <None Include="wwwroot\Assets\Fonts\segoe-ui-normal.woff2" />
+    <None Include="wwwroot\Assets\mozu_receiver.html" />
+    <None Include="wwwroot\Assets\mozu_receiver_v2.html" />
+    <None Include="wwwroot\Resources\Cms\backgroundsize.min.htc" />
+    <None Include="wwwroot\Resources\Cms\layout.css" />
   </ItemGroup>
 </Project>

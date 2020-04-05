@@ -260,18 +260,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             return GetFileResult(stem, contentType);
         }
-        [ClientCacheHeaders(ConfigKey = "content")]
-        [System.Web.Http.HttpGet]
-        [NoCdnForce]
-        public IActionResult CmsResources(string pathinfo, string contentType = null)
-        {
-            var stem = "~/resources/cms/" + pathinfo;
-            if (contentType == null)
-            {
-                contentType = GetMimeType(stem);
-            }
-            return File(stem, contentType);
-        }
+      
 
 
         [ClientCacheHeaders(ConfigKey = "content")]

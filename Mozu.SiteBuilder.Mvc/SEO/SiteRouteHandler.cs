@@ -77,8 +77,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 return false;
             }
+            var routeCollection = GetRouteCollection();
+            if (routeCollection == null)
+            {
+                return false;
+            }
 
-            if (!RouteCollection.TryMatchRoute(_context, out var routeData)) return false;
+            if (!routeCollection.TryMatchRoute(_context, out var routeData)) return false;
 
             if (routeData.Routers[0] is CustomRoute cr)
             {
@@ -273,7 +278,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         
         static string CreateOutboundUri(CustomRoute route, VirtualPathData vpath, string host, bool fullyQualifyUris, Lazy<bool> forceSsl)
         {
-           var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+           var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath.TrimStart('/'), UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
            // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
            // var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
            var builder = new UriBuilder("http://localhost") {Path = path};
