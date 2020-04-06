@@ -31,6 +31,7 @@ using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Configuration;
+using Mozu.SiteBuilder.UX.Providers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
@@ -92,7 +93,10 @@ namespace Mozu.SiteBuilder.UX
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new CaseInsensitivePhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
             //app.UseStaticFiles(new StaticFileOptions
             //{
             //    FileProvider = new PhysicalFileProvider(

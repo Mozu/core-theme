@@ -3,27 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="BuiltinScripts\HyprLive\dist\mozu-hyprlive.debug.js" />
-    <None Remove="BuiltinScripts\HyprLive\dist\mozu-hyprlive.min.js" />
-    <None Remove="BuiltinScripts\RequireJS\dist\mozu-require.compiler.js" />
-    <None Remove="BuiltinScripts\RequireJS\dist\mozu-require.debug.js" />
-    <None Remove="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />
-    <None Remove="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
-    <None Remove="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.debug.js" />
-    <Content Include="BuiltinScripts\HyprLive\dist\mozu-hyprlive.min.js" />
-    <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.compiler.js" />
-    <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.debug.js" />
-    <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />
-    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
-    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <Folder Include="wwwroot\Assets\">
+
+    </Folder>
+    <Folder Include="BuiltinScripts">
 
     </Folder>
   </ItemGroup>

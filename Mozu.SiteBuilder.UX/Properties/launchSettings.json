@@ -19,7 +19,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "mozu__appsettings__ReverseProxy": "false",
+        "mozu__appsettings__disableCDN": "true"
       },
       "applicationUrl": "http://localhost:57521/"
     }
