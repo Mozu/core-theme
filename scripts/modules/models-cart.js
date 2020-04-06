@@ -246,8 +246,49 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             });
         },
         toJSON: function(options) {
-            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            var self = this;
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments); 
+            if (j && j.discountThresholdMessages && self.bfCurrencyConverter(j)) {
+                j.discountThresholdMessages = self.bfCurrencyConverter(j);
+            }
             return j;
+        },
+        bfCurrencyConverter: function(model) {
+            try{
+                //Check if BF is enabled
+                var pageContext = require.mozuData('pagecontext');
+                var isBfEnabled = $.cookie('currency_country_code');
+                if(isBfEnabled && isBfEnabled !== "US"){
+                    //Update currency rate for BF.
+                    var currencyRate = pageContext.currencyRateInfo.rate;
+                    var currencySymbol = pageContext.currencyInfo.symbol;
+                    var discountThresholdMessages = model.discountThresholdMessages;
+                    //check if threshold message is available
+                    if(discountThresholdMessages){
+                        for(var p = 0; p < discountThresholdMessages.length; p++){
+                            var self = discountThresholdMessages[p];
+                            if(self.message) {
+                                var msg = self.message.split(" ");
+                                for(var q=0; q< msg.length; q++){
+                                    if(msg[q].indexOf("$") !== -1) {
+                                        var price = msg[q].replace("$", "");
+                                        price = parseInt(price,10) * currencyRate;
+                                        msg[q] = currencySymbol + price.toFixed(2);
+                                    }
+                                }
+                                self.message = msg.join(" ");
+                            }
+                        }
+                    return discountThresholdMessages;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } catch(e) {
+                return false;
+            }
         }
     });
 
