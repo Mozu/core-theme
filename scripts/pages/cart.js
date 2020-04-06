@@ -48,7 +48,6 @@ define(['modules/api',
                 window.onVisaCheckoutReady = initVisaCheckout;
                 require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
             }
-
             me.messageView = new ThresholdMessageView({
               el: $('#mz-discount-threshold-messages'),
               model: this.model
