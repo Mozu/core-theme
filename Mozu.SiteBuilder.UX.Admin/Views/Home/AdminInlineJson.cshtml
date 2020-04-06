@@ -5,7 +5,8 @@
 @using Mozu.SiteBuilder.UX.Admin.Api
 @using Newtonsoft.Json
 @using Mozu.Core.Settings;
-@using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User
+@using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+@using System.Linq;
 <script>
     @{
 
@@ -25,7 +26,7 @@
 
         List<string> roleTags = new List<string>();
 
-        siteRolesJson.ForEach(x => roleTags.AddRange(x.RoleTags));
+        siteRolesJson.Where(x => x.RoleTags != null).ToList().ForEach(x => roleTags.AddRange(x.RoleTags));
 
         object taContext = ViewData["taContext"];
         object siteUsers = ViewData["siteUsers"];
