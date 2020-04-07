@@ -56,7 +56,8 @@
                             return datum.suggestion.productCode;
                         },
                         templates: {
-                            suggestion: self.makeTemplateFn('modules/search/autocomplete-page-result')
+                            suggestion: self.makeTemplateFn('modules/search/autocomplete-page-result'),
+                            empty: self.makeTemplateFn('modules/search/autocomplete-empty')
                         },
                         source: self.AutocompleteManager.datasets.pages.ttAdapter()
                     }
@@ -99,8 +100,10 @@
                 });
             },
 
-            initialize: function() {
+            initialize: function(config) {
                 var self = this;
+                config = config || {};
+                
                 self.AutocompleteManager = {
                     datasets: self.datasets()
                 };
@@ -112,15 +115,17 @@
                 self.setDataSetConfigs();
 
                 if (self.suggestPriorSearchTerms) {
-                    self.AutocompleteManager.datasets.terms = self.datasetsTerms();
-                    self.AutocompleteManager.datasets.terms.initialize();
-                    self.dataSetConfigs.push({
-                        name: 'terms',
-                        displayKey: function (datum) {
-                            return datum.suggestion.term;
-                        },
-                        source: self.AutocompleteManager.datasets.terms.ttAdapter()
-                    });
+                    if(!config.doNotsuggestPriorSearchTerms) {
+                        self.AutocompleteManager.datasets.terms = self.datasetsTerms();
+                        self.AutocompleteManager.datasets.terms.initialize();
+                        self.dataSetConfigs.push({
+                            name: 'terms',
+                            displayKey: function (datum) {
+                                return datum.suggestion.term;
+                            },
+                            source: self.AutocompleteManager.datasets.terms.ttAdapter()
+                        });
+                    }
                 }
 
                 

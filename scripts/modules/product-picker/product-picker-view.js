@@ -21,12 +21,12 @@ define(["modules/jquery-mozu", "modules/backbone-mozu", "modules/product-picker/
 
             var $fields = self.$el.find('[data-mz-role="searchquery"]').each(function (field) {
                 var search = new SearchAutoComplete();
-                search.initialize();
+                search.initialize({doNotsuggestPriorSearchTerms: true});
 
                 var $field = search.AutocompleteManager.$typeaheadField = $(this);
 
                 search.AutocompleteManager.typeaheadInstance = $field.typeahead({
-                    minLength: 0
+                    minLength: 1
                 }, search.dataSetConfigs).data('ttTypeahead');
                 $field.on('typeahead:selected', function (e, data, set) {
                     var product = data.suggestion;
