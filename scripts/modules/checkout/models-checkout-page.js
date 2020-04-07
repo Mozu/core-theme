@@ -854,11 +854,12 @@ var CheckoutPage = Backbone.MozuModel.extend({
                         if(attrVal) {
                             updateAttrs.push({
                                 'fullyQualifiedName': attr.attributeFQN,
-                                'values': [ attrVal ]
+                                'values': [attrVal],
+                                'attributeDefinitionId': attr.id
                             });
                         }
                     });
-
+                    
                     if(updateAttrs.length > 0){
                         process.push(function(){
                             return checkout.apiUpdateAttributes(updateAttrs);
