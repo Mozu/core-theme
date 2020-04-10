@@ -261,7 +261,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [FromUri] FilterCollection extFilter, 
             bool? showAnonymous = null,
             bool? isPOFlagRequired = null,
-            bool? filterByCustomerSet = false)
+            bool? filterByCustomerSet = false,
+            string responseGroups = null)
         {
             int customerId;
             string userId;
@@ -331,7 +332,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 qLimit: qLimit,
                 q: q,
                 filter: filter.ToFilterSafeString(),
-                isAnonymous: isAnonymous ? (bool?) null : false
+                isAnonymous: isAnonymous ? (bool?) null : false,
+                responseGroups: responseGroups
             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
