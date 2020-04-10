@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Configuration;
@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Index()
         {
             PageContext.CmsContext = new CmsPageContext()
@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         
       
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public new IActionResult NotFound()
         {
             return NotFound("Page not found.");
@@ -62,13 +62,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             //return this.View("404");
         }
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult SeoProcessor(string url = null)
         {
             return Ok();
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return File(stream, "text/html");
 
         }
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> RobotsTxt()
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();

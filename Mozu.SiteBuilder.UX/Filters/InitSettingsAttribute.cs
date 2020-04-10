@@ -11,30 +11,21 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Mozu.Core.Configuration;
+
 namespace Mozu.SiteBuilder.UX.Filters
 {
-    public class InitSettingsAttribute: Attribute , System.Web.Http.Filters.IActionFilter
+    public class InitSettingsAttribute: Attribute , IAsyncActionFilter
     {
-        public System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> ExecuteActionFilterAsync(System.Web.Http.Controllers.HttpActionContext actionContext, System.Threading.CancellationToken cancellationToken, Func<System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>> continuation)
+        public Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            var controller = (BaseApiController)context.Controller;
 
-            var controller = (BaseApiController)actionContext.ControllerContext.Controller;
-           
-      
-            
-            if (controller != null && controller.PageContext != null)
-            {
-                var siteContext = actionContext.Request.Resolve<SiteContext>();
-                return siteContext.Init().ContinueWith<Task<HttpResponseMessage>>(x => continuation()).Unwrap();
+            if (controller?.PageContext == null) return next();
 
-            }
-            else
-            {
-                return continuation();
-            }
-
+            var siteContext = context.HttpContext.RequestServices.Resolve<SiteContext>();
+            return siteContext.Init().ContinueWith(x => next()).Unwrap();
         }
-
-        public bool AllowMultiple => false;
     }
 }

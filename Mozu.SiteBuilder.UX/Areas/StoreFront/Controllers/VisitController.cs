@@ -46,8 +46,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _logger = logger;
         }
 
-        [System.Web.Http.HttpGet]
-        public ActionResult TrackingPixel([FromUri(Name="r")]string visitId)
+        [HttpGet]
+        public ActionResult TrackingPixel([FromQuery(Name="r")]string visitId)
         {
             // try to parse the visitor id from the query string.
             var visitIdFromArg = Guid.Empty;

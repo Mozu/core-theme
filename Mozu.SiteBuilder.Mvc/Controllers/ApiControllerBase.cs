@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             return File(fileName, contentType, null /* fileDownloadName */);
         }
 
-        protected internal virtual FilePathResult File(string fileName, string contentType, string fileDownloadName)
+        protected internal new virtual FilePathResult File(string fileName, string contentType, string fileDownloadName)
         {
             return new FilePathResult(fileName, contentType) { FileDownloadName = fileDownloadName };
         }

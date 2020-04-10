@@ -2,23 +2,24 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Visit;
+using ActionFilterAttribute = Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
     public class VisitTrackingFilterAttribute : ActionFilterAttribute
     {
         private ILogger _logger;
-
-        public override bool AllowMultiple => false;
 
         public VisitTrackingFilterAttribute()
         {
@@ -28,50 +29,49 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// <summary>
         /// Before action: get or create a visit object.
         /// </summary>
-        public override void OnActionExecuting(HttpActionContext actionContext)
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var pageContext = actionContext.Request.Resolve<PageContext>();
+            var pageContext = actionContext.HttpContext.RequestServices.Resolve<PageContext>();
             
             // set PageContext.Visit by loading the cookie or creating one
-            pageContext.Visit = LoadVisitFromCookie(actionContext.Request) ?? CreateVisit(actionContext.Request);
+            pageContext.Visit = LoadVisitFromCookie(actionContext.HttpContext) ?? CreateVisit(actionContext.HttpContext);
         }
 
         /// <summary>
         /// After action: manage cookies related to the visit.
         /// </summary>
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
             // on exceptions, Response is null, and this filter has no business to conduct.
-            if (actionExecutedContext.Response == null)
+            if (actionExecutedContext.HttpContext.Response == null)
                 return;
 
-            var requestHeaders = actionExecutedContext.Request.Headers;
-            var responseHeaders = actionExecutedContext.Response.Headers;
-            var pageContext = actionExecutedContext.Request.Resolve<PageContext>();
+            var httpContext = actionExecutedContext.HttpContext;
+            var pageContext = httpContext.RequestServices.Resolve<PageContext>();
 
-            if (!requestHeaders.VisitorCookieExists())
+            if (!httpContext.VisitorCookieExists())
             {
-                responseHeaders.SetVisitorCookie(pageContext.Visit.VisitorId);
+                httpContext.SetVisitorCookie(pageContext.Visit.VisitorId);
             }
-            var sessionCookie = requestHeaders.GetSessionCookie();
+            var sessionCookie = httpContext.GetSessionCookie();
             var sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
             if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != sessionCookieExpectedValue))
             {
-                responseHeaders.SetSessionCookie(sessionCookieExpectedValue);
+                httpContext.SetSessionCookie(sessionCookieExpectedValue);
             }
 
             // always send visit cookie, setting expiration to 30 minutes from now.
-            responseHeaders.SetVisitCookie(pageContext.Visit.VisitId);
+            httpContext.SetVisitCookie(pageContext.Visit.VisitId);
         }
 
 
-        private Visit LoadVisitFromCookie(HttpRequestMessage request)
+        private Visit LoadVisitFromCookie(HttpContext context)
         {
             // check for both an existing visit cookie and a session cookie.
-            var visitCookie = request.Headers.GetVisitCookie();
-            var visitorCookie = request.Headers.GetVisitorCookie();
-            var sessionCookie = request.Headers.GetSessionCookie();
-            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+            var visitCookie = context.GetVisitCookie();
+            var visitorCookie = context.GetVisitorCookie();
+            var sessionCookie = context.GetSessionCookie();
+            var apiContext = context.RequestServices.Resolve<ISiteBuilderApiContext>();
 
             if (visitCookie != null && visitorCookie != null && sessionCookie != null)
             {
@@ -89,10 +89,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             return null;
         }
 
-        private static Visit CreateVisit(HttpRequestMessage request)
+        private static Visit CreateVisit(HttpContext context)
         {
             // try to parse the visitor id from the cookie.
-            var visitorCookie = request.Headers.GetVisitorCookie();
+            var visitorCookie = context.GetVisitorCookie();
             var visitorIdFromCookie = Guid.Empty;
             if (visitorCookie != null)
             {
@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Filters
 
             var visitorId = visitorIdFromCookie.ToUrlSafeString();
 
-            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+            var apiContext = context.RequestServices.Resolve<ISiteBuilderApiContext>();
 
             return new Visit
             {
@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Filters
         }
     }
 
-    internal static class VisitHeadersExtensions
+    internal static class VisitHeadersContextExtensions
     {
         /// <summary>
         /// The visit cookie contains a serialized Visit object about the current visit, and has a 30 minute expiration.
@@ -134,67 +134,72 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// </summary>
         internal const string SESSION_COOKIE_NAME = "_mzvs";
 
-        public static CookieState GetVisitCookie(this HttpRequestHeaders requestHeaders)
+        public static CookieState GetVisitCookie(this HttpContext context)
         {
-            return requestHeaders.GetCookies(VISIT_COOKIE_NAME).Select(cookies => cookies[VISIT_COOKIE_NAME]).FirstOrDefault();
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.GetRequestCookie(VISIT_COOKIE_NAME);
         }
 
-        public static CookieState GetVisitorCookie(this HttpRequestHeaders requestHeaders)
+        public static CookieState GetVisitorCookie(this HttpContext context)
         {
-            return requestHeaders.GetCookies(VISITOR_COOKIE_NAME).Select(cookies => cookies[VISITOR_COOKIE_NAME]).FirstOrDefault();
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.GetRequestCookie(VISITOR_COOKIE_NAME);
         }
 
-        public static CookieState GetSessionCookie(this HttpRequestHeaders requestHeaders)
+        public static CookieState GetSessionCookie(this HttpContext context)
         {
-            return requestHeaders.GetCookies(SESSION_COOKIE_NAME).Select(cookies => cookies[SESSION_COOKIE_NAME]).FirstOrDefault();
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.GetRequestCookie(SESSION_COOKIE_NAME);
         }
 
-        public static void SetVisitCookie(this HttpResponseHeaders responseHeaders, string content)
+        public static void SetVisitCookie(this HttpContext context, string content)
         {
-            responseHeaders.AddCookies(new[] {
-                new CookieHeaderValue(VISIT_COOKIE_NAME, content) {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(30),
-                    Path = "/"
-                }
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            cp.SaveResponseCookie(VISIT_COOKIE_NAME, content, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(30),
+                Path = "/"
             });
         }
 
-        public static void SetVisitorCookie(this HttpResponseHeaders responseHeaders, string content)
+        public static void SetVisitorCookie(this HttpContext context, string content)
         {
-            responseHeaders.AddCookies(new[] {
-                new CookieHeaderValue(VISITOR_COOKIE_NAME, content)
-                {
-                    HttpOnly = true,
-                    Expires = DateTimeOffset.UtcNow.AddYears(1),
-                    Path = "/"
-                }
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            cp.SaveResponseCookie(VISITOR_COOKIE_NAME, content, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+                Path = "/"
             });
         }
 
-        public static void SetSessionCookie(this HttpResponseHeaders responseHeaders, string content)
+        public static void SetSessionCookie(this HttpContext context, string content)
         {
-            responseHeaders.AddCookies(new[] {
-                new CookieHeaderValue(SESSION_COOKIE_NAME, content) {
-                    HttpOnly = true,
-                    Path = "/"
-                }
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            cp.SaveResponseCookie(SESSION_COOKIE_NAME, content, new CookieOptions
+            {
+                HttpOnly = true,
+                Path = "/"
             });
         }
 
-        public static bool VisitCookieExists(this HttpRequestHeaders requestHeaders)
+        public static bool VisitCookieExists(this HttpContext context)
         {
-            return requestHeaders.GetCookies(VISIT_COOKIE_NAME).Count > 0;
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.CookieExists(VISIT_COOKIE_NAME);
         }
 
-        public static bool VisitorCookieExists(this HttpRequestHeaders requestHeaders)
+        public static bool VisitorCookieExists(this HttpContext context)
         {
-            return requestHeaders.GetCookies(VISITOR_COOKIE_NAME).Count > 0;
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.CookieExists(VISITOR_COOKIE_NAME);
         }
 
-        public static bool SessionCookieExists(this HttpRequestHeaders requestHeaders)
+        public static bool SessionCookieExists(this HttpContext context)
         {
-            return requestHeaders.GetCookies(SESSION_COOKIE_NAME).Count > 0;
+            var cp = context.RequestServices.Resolve<ICookieProvider>();
+            return cp.CookieExists(SESSION_COOKIE_NAME);
         }
     }
 }

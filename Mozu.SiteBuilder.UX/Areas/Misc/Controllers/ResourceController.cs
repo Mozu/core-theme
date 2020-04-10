@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Stylesheets(string pathinfo, bool? debug = false, string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Less(string pathinfo= null , bool? debug = false)
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<JObject> LiveTemplates(bool? debug = false)
         {
             var templates = await _templateGetter.GetAndExpandTemplates().ConfigureAwait(false);
@@ -116,14 +116,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return jobj;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
         public IActionResult MozuReceiver(int receiverVersion)
         {
             return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
         public IActionResult MozuReceiver()
         {
@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult CompiledScripts(string pathinfo)
         {
             var resp = Content("compiled/scripts/" + pathinfo, "text/javascript");
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "static")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult StaticContentShare(string relativePath)
         {
             
@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public JArray AjaxNavigation()
         {
             var nav =  _navGandalf.Value.GetTreeNavigation();
@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<ActionResult> HyprContextAction(string dv = null)
         {
             await SiteContext.Init();
@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
         {
             if (string.IsNullOrEmpty(shimRequire) && string.IsNullOrEmpty(shimExport))
@@ -233,7 +233,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Widget(string pathinfo)
         {
             var pos = pathinfo.IndexOf('/');
@@ -248,14 +248,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Templates(string pathinfo)
         {
             return Content("templates/" + pathinfo, "text/javascript");
         }
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [NoCdnForce]
         public IActionResult Misc(string pathinfo, string contentType = null)
         {
@@ -271,7 +271,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult SiteThumbnail()
         {
             if (SiteContext.Theme.Thumbnail == null || string.IsNullOrEmpty(SiteContext.Theme.Thumbnail.Name))
@@ -285,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public new IActionResult Content(string pathinfo, string contentType = null)
         {
             var resolvedContentType = contentType ?? GetMimeType(pathinfo);

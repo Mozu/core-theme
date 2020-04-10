@@ -27,6 +27,14 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
     public class HttpResponseException : Exception
     {
+        public HttpResponseException(int? statusCode = null)
+        {
+            if (statusCode.HasValue)
+            {
+                Status = statusCode.Value;
+            }
+        }
+
         public int Status { get; set; } = 500;
 
         public object Value { get; set; }

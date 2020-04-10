@@ -80,8 +80,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <returns>Returns information about a single product given its product code including its ... to be continued.</returns>
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpHead]
-        [System.Web.Http.HttpGet]
+        [HttpHead]
+        [HttpGet]
         public async Task<IActionResult> ProductDetail(string productCode, string vpc = null)
         {
             var productResponse = await _productClient.GetProduct(productCode, vpc, 
@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Ok(result);
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<UX.Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         {
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
@@ -217,7 +217,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Store()
         {
             var catList = _categoryTreeProvider.GetAllCategories();
@@ -310,8 +310,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpHead]
-        [System.Web.Http.HttpGet]
+        [HttpHead]
+        [HttpGet]
         public async Task<IActionResult> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
         {
 
@@ -382,7 +382,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Ok(result);
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> CategoryFeed(int? categoryId = null)
         {
             var itemsPerPage = 10;
@@ -413,7 +413,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                             : ""),
                         new Uri(feedUrl, "/product/" + item.ProductCode),
                         $"{item.ProductCode}-{item.CreateDate.Ticks}",
-                        item.CreateDate /* TODO: replace with ModifiedDate */
+                        item.UpdateDate /* TODO: replace with ModifiedDate UPDATE:20200410:Cole:Done */
                     );
                     item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
                     return si;

@@ -275,7 +275,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 });
         }
 
-        [Obsolete]
         private async Task EnsureIndexes()
         {
             if (!_ensureIndexes)
@@ -288,7 +287,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 using (var cursor = await colleciton.Indexes.ListAsync().ConfigureAwait(false))
                 {
                     var indexes = await cursor.ToListAsync().ConfigureAwait(false);
-                    // todo:cole - replace obsolete EnsureIndex
                     await EnsureIndex(colleciton, indexes, newWorkIdxName2,
                         builder.Ascending(x => x.Version)
                         .Ascending(x => x.SchedualedBuildTime)
@@ -301,7 +299,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-        [Obsolete]
         private async Task EnsureIndex(IMongoCollection<SiteBuilderContextWorkItem> colleciton,  
             List<MongoDB.Bson.BsonDocument> indexes , 
             string indexName ,
@@ -311,13 +308,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
             {
                 try
                 {
-                    // todo:cole - replace obsolete method
-                    _ = await colleciton.Indexes.CreateOneAsync(keys,
-                        new CreateIndexOptions()
-                        {
-                            Background = true,
-                            Name = indexName,
-                        }).ConfigureAwait(false);
+                    var model = new CreateIndexModel<SiteBuilderContextWorkItem>(keys, new CreateIndexOptions()
+                    {
+                        Background = true,
+                        Name = indexName,
+                    });
+                    _ = await colleciton.Indexes.CreateOneAsync(model).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

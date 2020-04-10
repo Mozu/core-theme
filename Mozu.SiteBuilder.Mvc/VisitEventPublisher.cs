@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using MassTransit;
 using Microsoft.AspNetCore.Http;

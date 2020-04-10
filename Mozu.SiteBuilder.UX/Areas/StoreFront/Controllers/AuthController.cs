@@ -32,8 +32,7 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.SiteBuilder.Mvc.Middleware;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -189,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public IActionResult LogOut(string returnUrl = null, bool saveUserId = false)
@@ -204,7 +203,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return new RedirectResult(returnUrl);
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public IActionResult Login(string returnUrl = null)
@@ -222,7 +221,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Login", new { ReturnUrl = returnUrl });
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public IActionResult OrderStatus(string returnUrl = null)
@@ -240,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Order-Status", new { ReturnUrl = returnUrl });
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public IActionResult AjaxForgotPassword(string returnUrl = null)
@@ -258,7 +257,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Forgot-Password", new { ReturnUrl = returnUrl });
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         public IActionResult CreateAccount(string returnUrl = null)
         {
@@ -283,7 +282,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string token { get;  set; }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public async Task<IActionResult> CreateAccount(CustomerAccountAndAuthInfo authInfo)
@@ -297,7 +296,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Forbid($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
         }
 
-        [System.Web.Http.AcceptVerbs("OPTIONS", "POST")]
+        [AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
@@ -419,7 +418,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
    
     }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
         public async Task<IActionResult> Login(LoginDetails details)
@@ -494,7 +493,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxLogin(LoginDetails details)
@@ -545,7 +544,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string billingPhoneNumber { get; set; }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
         public async Task<IActionResult> AnonymousOrderLogin(OrderDetails details)
@@ -647,7 +646,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             });
         }
 
-        [System.Web.Http.HttpPost, System.Web.Http.HttpOptions]
+        [HttpPost, HttpOptions]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
         public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
@@ -665,7 +664,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return new ObjectResult(err) { StatusCode = (int)HttpStatusCode.InternalServerError };
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [SslOnlyActionFilter]
         public async Task<IActionResult> ResetPassword(string t, string u)
         {
@@ -711,7 +710,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public object[] messages { get; set; }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         [SslOnlyActionFilter]
         public async Task<IActionResult> ResetPassword(ResetPasswordConfirmDetails info)
         {
@@ -750,9 +749,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class AuthModelValidator : ActionFilterAttribute
     {
-        public override void OnActionExecuting(HttpActionContext actionContext)
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            if ( actionContext.Request.Method != HttpMethod.Post)
+            if ( actionContext.HttpContext.Request.Method != HttpMethod.Post.Method)
             {
                 return;
             }

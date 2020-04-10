@@ -31,6 +31,7 @@ using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Configuration;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Providers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
@@ -85,9 +86,14 @@ namespace Mozu.SiteBuilder.UX
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddControllers(options =>
-                options.Filters.Add(new HttpResponseExceptionFilter()));
+                {
+                    options.Filters.Add(typeof(EditModeCacheInvalidatorFilter));
+                    options.Filters.Add(typeof(AnonymousShopperFilterAttribute));
+                    options.Filters.Add(typeof(VisitTrackingFilterAttribute));
+                    options.Filters.Add(typeof(Core.Actions.GlobalActionExtensionFilter));
+                    options.Filters.Add(typeof(HttpResponseExceptionFilter));
+                });
             services.Configure<IISServerOptions>(opt => { opt.AllowSynchronousIO = true; });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

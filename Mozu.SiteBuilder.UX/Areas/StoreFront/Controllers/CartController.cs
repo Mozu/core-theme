@@ -27,7 +27,7 @@ using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json;
 using Mozu.Core.Actions;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.SEO;
 using System.Net;
@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
@@ -179,8 +179,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
-        [System.Web.Http.HttpPost]
-        [System.Web.Http.HttpGet]
+        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
@@ -269,7 +269,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         }
                         error = new Exception(message, error);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         // ignored
                     }

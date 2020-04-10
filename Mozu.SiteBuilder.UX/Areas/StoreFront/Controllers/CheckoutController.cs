@@ -26,7 +26,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.Core.Extensions;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.UX.Models.Customers;
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         };
 
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Index(string id = null, HttpRequestMessage requestMessage = null)
         {
             if (id == null)
@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
         public async Task<IActionResult> Index(string orderId)
         {
@@ -396,7 +396,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
@@ -467,7 +467,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("confirmation", jOrder);
         }
         //Internation Checkout route is being used by the borderfree application
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult InternationalCheckout()
         {
             PageContext.CmsContext = new CmsPageContext()

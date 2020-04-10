@@ -1,38 +1,36 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using System.Collections.Generic;
 using IInlineConstraintResolver = Microsoft.AspNetCore.Routing.IInlineConstraintResolver;
 using Route = Microsoft.AspNetCore.Routing.Route;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
-    public static class HttpRouteValueDictionaryExtensions
-    {
-        public static HttpRouteValueDictionary ToRouteDictionary<TValue>(this IDictionary<string, TValue> dict)
-        {
-            var rvd = new HttpRouteValueDictionary(dict.Count);
-            foreach (var pair in dict) {
-                {
-                    rvd[pair.Key] = pair.Value is long ? (object)System.Convert.ToInt32(pair.Value) : pair.Value;
-                }
-               
-            }
-            return rvd;
-        }
-        //public static HttpRouteValueDictionary ToRouteDictionary<TValue>(this IDictionary<string, TValue> dict)
-        //{
-        //    var rvd = new HttpRouteValueDictionary();
-        //    foreach (var pair in dict)
-        //    {
-        //        rvd[pair.Key] = pair.Value;
-        //    }
-        //    return rvd;
-        //}
-    }
+    //public static class HttpRouteValueDictionaryExtensions
+    //{
+    //    public static HttpRouteValueDictionary ToRouteDictionary<TValue>(this IDictionary<string, TValue> dict)
+    //    {
+    //        var rvd = new HttpRouteValueDictionary(dict.Count);
+    //        foreach (var pair in dict) {
+    //            {
+    //                rvd[pair.Key] = pair.Value is long ? (object)System.Convert.ToInt32(pair.Value) : pair.Value;
+    //            }
+
+    //        }
+    //        return rvd;
+    //    }
+    //    //public static HttpRouteValueDictionary ToRouteDictionary<TValue>(this IDictionary<string, TValue> dict)
+    //    //{
+    //    //    var rvd = new HttpRouteValueDictionary();
+    //    //    foreach (var pair in dict)
+    //    //    {
+    //    //        rvd[pair.Key] = pair.Value;
+    //    //    }
+    //    //    return rvd;
+    //    //}
+    //}
     public static class RouteExtensions
     {
         public static IList<IRouter> MapRoute(this IList<IRouter> routes, IRouter handler, string name,

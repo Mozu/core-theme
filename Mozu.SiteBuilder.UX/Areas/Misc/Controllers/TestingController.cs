@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public Core.Caching.ICacheProvider CacheProvider { get; }
 
-        [System.Web.Http.HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> Redis()
         {
            var cache = CacheProvider.GetCache(SitebuilderContextCacheRepository.CacheName, new ApiContext() { TenantId = 1 });
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [RefreshStoreFrontUserAuthTicketFilter]
-        [System.Web.Http.AcceptVerbs("POST")]
+        [AcceptVerbs("POST")]
         public IActionResult RefreshAPiContextHeaders()
         {
             Response.Headers.Add(Headers.USER_CLAIMS, SbApiContext.UserClaims.ToAccessToken());
@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return Ok();
         }
 
-        [System.Web.Http.AcceptVerbs("GET")]
+        [AcceptVerbs("GET")]
         public IActionResult CoolDownUser()
         {
             SbApiContext.UserClaims.Expiration = DateTime.Now.AddDays(-1);
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private static HttpClient _client;
 
-        [System.Web.Http.AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
+        [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
         public void Api(string url)
         {
             var resource = _config.GetSection("mozu:routes").GetChildren()
@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //    return this.View("WidgetTEsting/test", this.SiteContext );
         //}
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult ForceTheme(string themeType = "", string redir = null)
         {
             var mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return new RedirectResult(redir ?? "/");
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public IActionResult Visit(string id = null)
         {
             if (int.TryParse(id, out var accountId))
@@ -235,7 +235,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return NotFound("page not found");
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public ContentResult Echo()
         {
             var sb = new StringBuilder();
@@ -266,7 +266,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null, string variationId = "")
         {
             var res = await _wsRepo.GetSite(siteId);

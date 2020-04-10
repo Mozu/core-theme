@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
-        [System.Web.Http.HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> Index(
             int? tenant = null,
             int? mastercat = null,

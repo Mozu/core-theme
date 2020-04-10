@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public BuiltinScriptsController()
         {
         }
-          [System.Web.Http.HttpGet]
+        [HttpGet]
         [ClientCacheHeaders(ConfigKey = "sdk")]
         public IActionResult Sdk(string mode)
         {
@@ -21,15 +21,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             return File(Path.Combine(MozuConfigurationManager.Settings.AppSettings("js-sdk-build-dir"),fileName), "text/javascript");
         }
-          [System.Web.Http.HttpGet]
+        [HttpGet]
         [ClientCacheHeaders(ConfigKey = "require")]
         public IActionResult Require(string mode = "min")
         {
             var fileName = mode == "debug" ? "mozu-require.debug.js" : "mozu-require.min.js";
 
             return File(Path.Combine(MozuConfigurationManager.Settings.AppSettings("require-js-build-dir"), fileName), "text/javascript");
-        }
-          [System.Web.Http.HttpGet]
+        } 
+        [HttpGet]
         [ClientCacheHeaders(ConfigKey = "hyprlive")]
         public IActionResult HyprLive(string mode = "min")
         {

@@ -127,8 +127,9 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 {
                     interimCollection = await (await orderAttributeWebApiClient.GetAttributes(startIndex, pageSize).ConfigureAwait(false)).ReadAsAsync();
                 }
-                catch (Exception ex)
+                catch
                 {
+                    // ignored
                 }
 
                 if (interimCollection?.Items == null || interimCollection.Items.Count == 0)

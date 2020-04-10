@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.Mvc
         CookieState GetRequestCookie(string cookieName);
         void SaveResponseCookie(string cookieName, string value, CookieOptions cookie, bool httpConly = true);
         void RemoveCookie(string cookieName);
+        bool CookieExists(string cookieName);
     }
 
     public class CookieProvider : ICookieProvider
@@ -38,6 +39,11 @@ namespace Mozu.SiteBuilder.Mvc
         public CookieProvider(HttpContext context/*, ISettings settings*/)
         {
             _context = context;
+        }
+
+        public bool CookieExists(string cookieName)
+        {
+            return _context.Request.Cookies.Any(x => x.Key == cookieName);
         }
 
 

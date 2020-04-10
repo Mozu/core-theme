@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -18,6 +19,7 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -56,8 +58,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Order summary, a.k.a. "Print Order".
         /// </summary>
-        [System.Web.Http.HttpGet]
-        public async Task<IActionResult> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
+        [HttpGet]
+        public async Task<IActionResult> OrderSummary(string orderId, [FromQuery(Name="t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
@@ -186,14 +188,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Packing Slip.
         /// </summary>
-        [System.Web.Http.HttpGet]
-        public async Task<IActionResult> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        [HttpGet]
+        public async Task<IActionResult> PackingSlip(string orderId, string packageId, [FromQuery(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
             var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
 
             if (order == null || package == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(404);
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
@@ -211,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Preview(string templateid)
         {
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(templateid));
@@ -233,7 +235,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     return await RenderWithContext(template, model);
                 }
                 default:
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                    throw new HttpResponseException(StatusCodes.Status404NotFound);
             }
         }
 
@@ -264,12 +266,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private HttpResponseException TokenExpiredException()
         {
-            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+            return new HttpResponseException(StatusCodes.Status404NotFound)
             {
-                Content = new StringContent(
+                Value = new StringContent(
                     "Aw, poop! Your access to this page has expired. Please re-request this resource from admin.")
             };
-            return new HttpResponseException(resp);
         }
 
         /// <summary>
@@ -294,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // ensure things are on the up and up
             var isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
-            if (!isAuthorized) throw new HttpResponseException(HttpStatusCode.Forbidden);
+            if (!isAuthorized) throw new HttpResponseException(StatusCodes.Status403Forbidden);
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
 

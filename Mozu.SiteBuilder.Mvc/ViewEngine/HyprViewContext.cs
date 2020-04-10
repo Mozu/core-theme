@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
-using System.Web.Http.Controllers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozu.Core.Configuration;
 
@@ -13,19 +13,19 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public static class HttpControllerContextExtensions
     {
-        public static HttpContext HttpContext(this HttpControllerContext context)
+        public static HttpContext HttpContext(this ControllerContext context)
         {
             return context.Resolve<HttpContext>();
         }
 
-        public static T Resolve<T>(this HttpControllerContext context)
+        public static T Resolve<T>(this ControllerContext context)
         {
-            return context.Request.LifetimeScope().Resolve<T>();
+            return context.HttpContext.RequestServices.Resolve<T>();
         }
 
         public static IServiceProvider LifetimeScope(this HttpRequestMessage request)
         {
-            return ((IServiceProvider)request.GetDependencyScope().GetService(typeof(IServiceProvider)));
+            return request.HttpContext().RequestServices;
         }
 
         public static T Resolve<T>(this HttpRequestMessage request)

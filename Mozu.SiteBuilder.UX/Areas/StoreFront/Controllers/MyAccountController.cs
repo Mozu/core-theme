@@ -22,7 +22,7 @@ using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using StorefrontModel = Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         // [SiteBuilderAuthorize()]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             //var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return _customerRepository.GetByUserId(CurrentUser.UserId);
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         // TODO: Do we need this? If so, do we trust the account ID that's passed in?
         public  Task<CustomerAccount> Update(CustomerAccount account)
         {
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> UpdateCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
@@ -250,7 +250,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<Mozu.SiteBuilder.UX.Models.Customers.CustomerAccountContact> AddCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
@@ -260,7 +260,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
           
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<bool> DeleteCustomerContact(CustomerAccountContact incomingContact)
         {
             var account = await _customerRepository.GetByUserId(CurrentUser.UserId);
@@ -271,7 +271,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<string> UpdateEmail(string email)
         {
             var userId = CurrentUser.UserId;
@@ -285,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return account.EmailAddress ;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<bool> ChangePassword(PasswordInfo info)
         {
 

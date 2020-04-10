@@ -13,10 +13,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Filters
@@ -24,25 +26,22 @@ namespace Mozu.SiteBuilder.UX.Filters
 
     public class IgnoreDataViewModeAttribute : Attribute { };
 
-    public class DataViewModeEnforcementAttribute : FilterAttribute, IAuthorizationFilter
+    public class DataViewModeEnforcementAttribute : ActionFilterAttribute, IAsyncAuthorizationFilter
     {
-        public override bool AllowMultiple => false;
-
-        public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            
-            var request = actionContext.Request;
-            var resolver = GetRequestScope(request);
+            var request = context.HttpContext.Request;
+            var resolver = context.HttpContext.RequestServices;
             var apiContext = resolver.Resolve<ISiteBuilderApiContext>();
 
             // if we don't have a siteid, we're not going to have enough to render the view in the first place so exit early
-            if (!apiContext.SiteId.HasValue) return await continuation();
+            if (!apiContext.SiteId.HasValue) return;
 
-            
+
             var authhelper = resolver.Resolve<IAuthenticationHelper>();
 
             // fixup claims to ensure that even anonymous viewers get claims.
-            if (apiContext.UserClaims == null && apiContext.SiteId.HasValue) CreateShopperClaimsForSite(apiContext, authhelper);
+            if (apiContext.UserClaims == null) CreateShopperClaimsForSite(apiContext, authhelper);
 
             var siteContext = resolver.Resolve<ISiteContext>();
             await siteContext.Init();
@@ -50,9 +49,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             var viewMode = apiContext.DataViewMode;
 
             if (!IsLockedDown(viewMode, GetLockDownToggles(siteContext.GeneralSettings))
-                || IsControllerIgnoringDataViewMode(actionContext.ControllerContext))
+                || IsControllerIgnoringDataViewMode(context.ActionDescriptor as ControllerActionDescriptor))
             {
-                return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
+                ShowTheOriginalRequest(apiContext, viewMode);
+                return;
             }
 
             var loginAppHelper = new LoginAppRouteHelper(resolver.Resolve<IMozuSettings>().Domains.GetValue<string>("login", "/login"));
@@ -60,19 +60,24 @@ namespace Mozu.SiteBuilder.UX.Filters
             if (!HasAdminCookie(adminToken))
             {
                 var host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
-                return RedirectTo(CreateLoginLink(loginAppHelper, request.RequestUri, host, apiContext.TenantId ));
+                RedirectTo(CreateLoginLink(loginAppHelper, request.HttpContext.GetRequestUri(), host, apiContext.TenantId));
+                return;
             }
 
             // now that we have an admin, is that admin authed?
-            if (!AdminHasBehavior(viewMode, adminToken)) return RedirectTo(loginAppHelper.Unauthorized());
+            if (!AdminHasBehavior(viewMode, adminToken))
+            {
+                RedirectTo(loginAppHelper.Unauthorized());
+                return;
+            }
 
             // hooray, now we can see the thing!
-            return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
+            ShowTheOriginalRequest(apiContext, viewMode);
         }
 
-        private bool IsControllerIgnoringDataViewMode(HttpControllerContext controllerContext)
+        private bool IsControllerIgnoringDataViewMode(ControllerActionDescriptor descriptor)
         {
-            return controllerContext.ControllerDescriptor.GetCustomAttributes<IgnoreDataViewModeAttribute>().Any();
+            return descriptor != null && descriptor.HasAttribute<IgnoreDataViewModeAttribute>();
         }
 
         private static string GetHostValue(IRequestUrlFinderOuter finder)
@@ -118,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// <param name="viewMode"></param>
         /// <param name="continuation"></param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> ShowTheOriginalRequest(ISiteBuilderApiContext apiContext, DataViewModeType viewMode, Func<Task<HttpResponseMessage>> continuation)
+        private void ShowTheOriginalRequest(ISiteBuilderApiContext apiContext, DataViewModeType viewMode)
         {
             switch (viewMode)
             {
@@ -131,7 +136,6 @@ namespace Mozu.SiteBuilder.UX.Filters
                 case DataViewModeType.NoneSet:
                     throw new ArgumentException("data view mode must be set");
             }
-            return await continuation();
         }
 
         /// <summary>
@@ -178,12 +182,6 @@ namespace Mozu.SiteBuilder.UX.Filters
         {
             inClaims.BehaviorIds = inClaims.BehaviorIds.Concat(perms).ToArray();
             return inClaims;
-        }
-
-        private static IServiceProvider GetRequestScope(HttpRequestMessage request)
-        {
-            var thing = request.GetDependencyScope();
-            return null;
         }
 
         private static HttpResponseMessage RedirectTo(Uri redirectUrl)

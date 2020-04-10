@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _siteContext = siteContext;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var cursor = (await _productSearchWebApiClient
@@ -127,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return ret;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Categories()
         {
             // var primaryNavTask = _gandalf.GetTreeNavigation();
@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> ProductBatch(string page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
@@ -204,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return resp;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Products(int page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();

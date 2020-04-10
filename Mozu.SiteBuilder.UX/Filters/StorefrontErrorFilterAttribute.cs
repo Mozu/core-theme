@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.ExceptionHandling;
 //using Magnum.Extensions;
 using Mozu.Core.Api.ErrorHandler;
 

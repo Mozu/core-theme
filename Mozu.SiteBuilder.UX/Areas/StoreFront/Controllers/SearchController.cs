@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System.Collections.Generic;
@@ -20,8 +20,6 @@ using System;
 using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.Mvc.Helpers;
-using System.Web.Http.ModelBinding;
-using System.Web.Http.Controllers;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -31,6 +29,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Index(
             string query = null, 
             int? categoryId = null, 
@@ -67,8 +67,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
             string w = null,
             string inStockLocation = null,
-            [FromUri]AdvancedSearchParamaters searchParams = null,
-            [FromUri(Name = "debug.explain.structured")]bool  debug_explain_structure = false)
+            [FromQuery]AdvancedSearchParamaters searchParams = null,
+            [FromQuery(Name = "debug.explain.structured")]bool  debug_explain_structure = false)
         {
             var _ = searchParams;
 
@@ -224,26 +224,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         class AdvancdSearchParamterModelBinder : IModelBinder
         {
-            public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+            public Task BindModelAsync(ModelBindingContext bindingContext)
             {
+                var actionContext = bindingContext.ActionContext;
+
                 //null out action arguments so that we can detect if they were modified in arcjs
-              
-                actionContext.ActionArguments["categoryCode"] = null;
-                actionContext.ActionArguments["page"] = null;
-                actionContext.ActionArguments["w"] = null;
+
+                //actionContext.ActionArguments["categoryCode"] = null;
+                //actionContext.ActionArguments["page"] = null;
+                //actionContext.ActionArguments["w"] = null;
                 // commenting out till we can change blue fly actions
                 // actionContext.ActionArguments["query"] = null;
                 //  actionContext.ActionArguments["categoryId"] = null;
 
                 var avp = new AdvancedSearchParamaters();
-             
-                var sc = actionContext.Request.Resolve<ISiteContext>();
-                var pc = actionContext.Request.Resolve<IPageContext>();
+
+                var sc = bindingContext.HttpContext.RequestServices.Resolve<ISiteContext>();
+                var pc = bindingContext.HttpContext.RequestServices.Resolve<IPageContext>();
                 var includeFacets = ((bool?)sc.ThemeSettings["showCategoryFacets"]);
                 var isVolumePricingBandsEnabled = ((bool?)sc.ThemeSettings["listVolumePricing"]);
-                var  pageStr = bindingContext.ValueProvider.GetValue("page");
-                var pageInt = 0;
-                if (! int.TryParse(pageStr?.ToString(), out pageInt))
+                var pageStr = bindingContext.ValueProvider.GetValue("page");
+                if (!int.TryParse(pageStr.FirstValue, out var pageInt))
                 {
                     pageInt = 0;
                 }
@@ -251,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 avp.pageSize = pc.Search.PageSize;
                 avp.startIndex = pc.Search.StartIndex;
 
-                if ( avp.pageSize == null )
+                if (avp.pageSize == null)
                 {
                     avp.pageSize = pc.Search.PageSize = ((int?)sc.ThemeSettings["defaultPageSize"]) ?? 20;
                 }
@@ -265,31 +266,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 var query = (string)null;
                 var res = bindingContext.ValueProvider.GetValue("query");
-                if (res != null)
+                if (res.Length > 0)
                 {
-                    query = res.RawValue?.ToString();
+                    query = res.FirstValue;
                 }
-               
+
                 //need to support for jellybelly
-                if (query == null )
+                if (query == null)
                 {
                     res = bindingContext.ValueProvider.GetValue("w");
-                    query = res?.RawValue?.ToString();
+                    query = res.Length > 0 ? res.FirstValue : null;
                 }
 
                 avp.query = query;
 
                 int? categoryId = null;
                 res = bindingContext.ValueProvider.GetValue("categoryId");
-                if (res != null && int.TryParse(res.RawValue?.ToString(), out var tmpInt))
+                if (res.Length > 0 && int.TryParse(res.FirstValue, out var tmpInt))
                 {
                     categoryId = tmpInt;
                 }
                 res = bindingContext.ValueProvider.GetValue("categoryCode");
-                if ( categoryId == null && res?.RawValue != null)
+                if (categoryId == null && res.Length > 0 && res.FirstValue != null)
                 {
-                    var categoryCode = res.RawValue.ToString();
-                    categoryId = actionContext.Request.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
+                    var categoryCode = res.FirstValue;
+                    categoryId = actionContext.HttpContext.RequestServices.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
                 }
                 if (categoryId == null)
                 {
@@ -299,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                 }
 
-                if ( categoryId != null)
+                if (categoryId != null)
                 {
                     avp.filter = $"categoryId req {categoryId}";
                     avp.searchTuningRuleContext = $"categoryId:{categoryId}";
@@ -308,9 +309,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 pc.Search.CategoryId = categoryId;
                 pc.CategoryId = categoryId;
 
-                avp.responseOptions =  isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
+                avp.responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
                 avp.facetValueFilter = pc.Search.ToFacetValueFilter();
-                if ( includeFacets.GetValueOrDefault(true) )
+                if (includeFacets.GetValueOrDefault(true))
                 {
                     avp.facet = "categoryId";
                     avp.facetHierDepth = "categoryId:2";
@@ -322,11 +323,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 }
                 bindingContext.Model = avp;
-                return true;
+                return Task.CompletedTask;
             }
         }
 
-        [System.Web.Http.ModelBinding.ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
+        [ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
         public class AdvancedSearchParamaters
         {
             public string query { get; set; }

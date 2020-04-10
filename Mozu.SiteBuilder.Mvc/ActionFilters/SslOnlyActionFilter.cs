@@ -47,12 +47,11 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             if (pageContext != null && (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode)) return;
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
-            // todo:cole revisit at some point
-            //var customRoute = actionContext.RouteData.Routers .GetRouteData().Route as CustomRoute;
-            //if (customRoute?.UrlScheme != null)
-            //{
-            //    return;
-            //}
+            var customRoute = actionContext.RouteData.Routers.Last() as CustomRoute;
+            if (customRoute?.UrlScheme != null)
+            {
+                return;
+            }
 
             var sc = actionContext.HttpContext.RequestServices.GetService(typeof(ISiteContext)) as ISiteContext;
 

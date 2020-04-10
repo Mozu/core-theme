@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //
         // GET: /StoreFront/Auth/
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public object Index()
         {
             return new

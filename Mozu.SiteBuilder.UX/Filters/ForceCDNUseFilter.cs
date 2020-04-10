@@ -10,17 +10,20 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Mozu.Core.Configuration;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
     public class NoCookieFilter : ActionFilterAttribute
     {
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
-            actionExecutedContext.Response?.Headers.Remove("Set-Cookie");
+            actionExecutedContext.HttpContext.Response?.Headers.Remove("Set-Cookie");
         }
     }
 
@@ -30,23 +33,22 @@ namespace Mozu.SiteBuilder.UX.Filters
 
     public class ForceCDNUseFilter : ActionFilterAttribute
     {
-        public override bool AllowMultiple => false;
-
-        public override void OnActionExecuting(HttpActionContext actionContext)
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var requestURLGetter = actionContext.Request.Resolve<IRequestUrlFinderOuter> ();
-            var settings = actionContext.Request.Resolve<ISettings>();
+            var services = actionContext.HttpContext.RequestServices;
+            var requestURLGetter = services.Resolve<IRequestUrlFinderOuter> ();
+            var settings = services.Resolve<ISettings>();
             var cdnHost = settings.AppSettings("CdnHost");
             var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
-            var sbapi = actionContext.Request.Resolve<ISiteBuilderApiContext>();
-            var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any() || sbapi.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn);
+            var sbapi = services.Resolve<ISiteBuilderApiContext>();
+            var noForce = (actionContext.ActionDescriptor as ControllerActionDescriptor).HasAttribute<NoCdnForce>() || sbapi.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn);
 
-            var hasAkamiOriginHop = actionContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
-            if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce , requestURLGetter))
+            var hasAkamiOriginHop = actionContext.HttpContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
+            if (ShouldRedirectToCdn(actionContext.HttpContext.GetRequestUri(), cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce , requestURLGetter))
             {
                
-                actionContext.Response = RedirectToCDN(cdnHost, new Uri(requestURLGetter.GetRequestUrl()), sbapi.TenantId, sbapi.SiteId);
+                actionContext.Result = RedirectToCDN(cdnHost, new Uri(requestURLGetter.GetRequestUrl()), sbapi.TenantId, sbapi.SiteId);
                 return;
             }
             base.OnActionExecuting(actionContext);
@@ -60,14 +62,14 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !disableCdn && !isReciever && !requestURLGetter.IsCdnRequest() && !noForce;
         }
 
-        static HttpResponseMessage RedirectToCDN(string cdnHost, Uri originalUrl, int tenantId, int? siteId)
+        static IActionResult RedirectToCDN(string cdnHost, Uri originalUrl, int tenantId, int? siteId)
         {
             var builder = new UriBuilder(originalUrl);
             builder.Path = $"{tenantId}-{siteId}/{builder.Path}";
             builder.Host = cdnHost;
-            var response = new HttpResponseMessage(HttpStatusCode.MovedPermanently);
-            response.Headers.Location = builder.Uri;
-            response.Headers.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(10000), Public = true };
+            var response = new RedirectResult(builder.Uri.ToString());
+            //todo:cole cache-control
+            //response.Headers.CacheControl = new CacheControlHeaderValue { MaxAge = TimeSpan.FromDays(10000), Public = true };
             return response;
         }
 

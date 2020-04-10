@@ -1,20 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Mozu.Core.Configuration;
+using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http.Routing;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Mozu.Core.Configuration;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteSettings.General.Contracts.General.Routing;
-using Mozu.Core.Extensions;
-using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.OAF;
 using IInlineConstraintResolver = Microsoft.AspNetCore.Routing.IInlineConstraintResolver;
 using Route = Microsoft.AspNetCore.Routing.Route;
 
@@ -270,9 +266,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     }
 
     #region Interfaces
-    public interface INotCrappyHttpRouteData : IHttpRouteData
+    public interface INotCrappyHttpRouteData : IRouter
     {
-        new IDictionary<string, object> Values { get; set; }
+        IDictionary<string, object> Values { get; set; }
     }
 
     public interface ICustomRouteConstraintFactory

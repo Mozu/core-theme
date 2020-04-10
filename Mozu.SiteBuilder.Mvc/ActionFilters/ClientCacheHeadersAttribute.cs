@@ -77,7 +77,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var typedHeaders = actionExecutedContext.HttpContext.Response.GetTypedHeaders();
             var cache = typedHeaders.CacheControl ??= new CacheControlHeaderValue();
 
-            //todo:translate request to requestmessage
             var req = actionExecutedContext.HttpContext.Request;
 
             if (ForceRevalidate)

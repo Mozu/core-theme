@@ -10,6 +10,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.Reference.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
@@ -110,7 +111,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var behaviorsTask = GetBehaviors();
 
             if (roleTask == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(404);
 
             var behaviors = behaviorsTask.Result.Where(b => roleBehavior.Children.Contains(b.Id));
             var role = roleTask.Result;

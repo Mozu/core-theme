@@ -12,9 +12,7 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
-using System.Web.Http.Hosting;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {

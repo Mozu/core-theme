@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.FSharp.Core;
 using Mozu.Core.Configuration;
@@ -73,7 +74,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             var viewContext = context.ViewContext();
             var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
             var view = viewEngine.FindModuleView(viewName);
-            var viewData = new ViewDataDictionary<TModel>(null, model);
+            var viewData = new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
 
             var hvc = new HyprViewContext(viewContext.HttpContext, viewData, viewContext);
             if (view == null)

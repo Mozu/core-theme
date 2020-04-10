@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         //
         // GET: /Misc/DeveloperDocumentation/
-        //[System.Web.Http.HttpGet]
+        //[HttpGet]
         //public ActionResult Tags()
         //{
         //    var itemInfos = BuildTagInfos();
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// </summary>
         /// <
         /// <returns></returns>
-        //[System.Web.Http.HttpGet]
+        //[HttpGet]
         //public ActionResult Filters()
         //{
 

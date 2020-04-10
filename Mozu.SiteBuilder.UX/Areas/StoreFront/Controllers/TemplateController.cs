@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _hyprViewEngine = hyprViewEngine;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Index(string templateId)
         {
            

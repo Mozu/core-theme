@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 			return null;
 		}
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
 		public IActionResult RenderScripts()
 		{
             var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // we now know to use requirejs's baseUrl to do this
         // so now these should probably be turned into a single method that selects its view based on whether "debug_all_scripts" or "load_all_scripts" was used
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult DebugScripts()
         {
             var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];

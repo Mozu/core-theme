@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Http.Routing;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {

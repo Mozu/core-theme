@@ -15,8 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="51Degrees.mobi-core" Version="3.2.21.1" />
+    <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.ClearScript" Version="6.0.0" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.1952.0-dotnetcore.136" />
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.1944.0-ddlogs2.9" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />

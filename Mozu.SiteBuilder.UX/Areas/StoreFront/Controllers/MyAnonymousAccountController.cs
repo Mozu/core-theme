@@ -25,7 +25,7 @@ using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //todo:hyper  remiplement auth att.
         // [SiteBuilderAuthorize()]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var userClaims = _apiContext.UserClaims;

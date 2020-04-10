@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 //using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;

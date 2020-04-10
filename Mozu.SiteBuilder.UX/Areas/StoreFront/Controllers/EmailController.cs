@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //
         // GET: /StoreFront/Email/
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Preview(string id)
         {
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
@@ -193,7 +193,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Ok(View(emailTemplate.Template, model));
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Render(EmailNotification notification)
         {
             User user = null;

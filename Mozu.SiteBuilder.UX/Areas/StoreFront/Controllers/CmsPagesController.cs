@@ -16,7 +16,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.Mvc.OAF;
+//using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
@@ -51,8 +51,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _expressionEvaluator = expressionEvaluator;
         }
 
-        [System.Web.Http.HttpHead]
-        [System.Web.Http.HttpGet]
+        [HttpHead]
+        [HttpGet]
         public async Task<IActionResult> ContentIndex(string documentListName, string listView = null)
         {
             var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList,
@@ -103,8 +103,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Ok(view);
         }
 
-        [System.Web.Http.HttpHead]
-        [System.Web.Http.HttpGet]
+        [HttpHead]
+        [HttpGet]
         //[SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
         //    ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,

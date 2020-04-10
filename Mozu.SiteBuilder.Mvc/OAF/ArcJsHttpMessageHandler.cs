@@ -5,59 +5,56 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
-    class ArcJSHttpHandler : HttpMessageHandler
-    {
-        public string FunctionId { get; set; }
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
+    //class ArcJSHttpHandler : HttpMessageHandler
+    //{
+    //    public string FunctionId { get; set; }
+    //    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    //    {
 
-            var runner = request.Resolve<IArcJSHttpHandlerRunner>();
+    //        var runner = request.Resolve<IArcJSHttpHandlerRunner>();
 
-            return runner.SendAsync(request.GetConfiguration(), request.GetRouteData(), request, FunctionId, cancellationToken);
+    //        return runner.SendAsync(request.GetConfiguration(), request.GetRouteData(), request, FunctionId, cancellationToken);
 
-        }
-    }
-    class ArcJSHttpActionDescriptor : HttpActionDescriptor
-    {
-        Collection<HttpParameterDescriptor> col;
-        public override Collection<HttpParameterDescriptor> GetParameters()
-        {
-            if (col == null)
-            {
-                col = new Collection<HttpParameterDescriptor>();
-            }
-            return col;
-        }
+    //    }
+    //}
+    //class ArcJSHttpActionDescriptor : HttpActionDescriptor
+    //{
+    //    Collection<HttpParameterDescriptor> col;
+    //    public override Collection<HttpParameterDescriptor> GetParameters()
+    //    {
+    //        if (col == null)
+    //        {
+    //            col = new Collection<HttpParameterDescriptor>();
+    //        }
+    //        return col;
+    //    }
 
-        public override Task<object> ExecuteAsync(HttpControllerContext controllerContext, IDictionary<string, object> arguments, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-        public string SettableActionName { get; set; }
-        public override string ActionName { get { return SettableActionName; }  }
-        public override Type ReturnType { get { return typeof(object); } }
-    }
+    //    public override Task<object> ExecuteAsync(HttpControllerContext controllerContext, IDictionary<string, object> arguments, CancellationToken cancellationToken)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //    public string SettableActionName { get; set; }
+    //    public override string ActionName { get { return SettableActionName; }  }
+    //    public override Type ReturnType { get { return typeof(object); } }
+    //}
 
 
-    internal interface IArcJSHttpHandlerRunner
-    {
-        Task<HttpResponseMessage> SendAsync(HttpConfiguration configuration, 
-            IHttpRouteData routeData,
-            HttpRequestMessage request, 
-            string functionId , 
-            CancellationToken cancellationToken);
+    //internal interface IArcJSHttpHandlerRunner
+    //{
+    //    Task<HttpResponseMessage> SendAsync(HttpConfiguration configuration, 
+    //        IHttpRouteData routeData,
+    //        HttpRequestMessage request, 
+    //        string functionId , 
+    //        CancellationToken cancellationToken);
 
-        Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, 
-           HttpResponseMessage response,
-           string functionId,
-           CancellationToken cancellationToken);
-    }
+    //    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, 
+    //       HttpResponseMessage response,
+    //       string functionId,
+    //       CancellationToken cancellationToken);
+    //}
 
     // todo:cole add support for server side JS
     //class ArcJSHttpHandlerRunner : FunctionRunner<ApiActionExtensionFilterContext>, IArcJSHttpHandlerRunner , IResourceProvider

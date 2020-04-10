@@ -25,19 +25,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Locations/
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult Index()
         {
             return View("location");
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public IActionResult ProductGet(string productCode)
         {
             return View("product-location");
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<Mozu.Location.Contracts.Location> Set(string code)
         {
             Mozu.Location.Contracts.Location location = null;
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return location;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public IActionResult Product()
         {
             var form = Request.Form;

@@ -9,8 +9,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class AnonymousShopperFilterAttribute : ActionFilterAttribute
     {
-        public bool AllowMultiple => false;
-
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
             var apiContext = actionContext.HttpContext.RequestServices.Resolve<ISiteBuilderApiContext>();
@@ -18,9 +16,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             if (NeedsAnonymousUserClaims(apiContext) && apiContext.SiteId.HasValue)
             {
                 apiContext.SetUser(LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value));
-
                 actionContext.HttpContext.RequestServices.Resolve<IAuthenticationHelper>().SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), null);
             }
+
             base.OnActionExecuting(actionContext);
         }
 

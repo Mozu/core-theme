@@ -4,8 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using System.Web.Http.Hosting;
-using System.Web.Http.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
@@ -215,14 +213,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapRoute(_defaultHandler,
                "StoreFront_checkout",
-               "checkout/{orderId}/{action}",
-               new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional },
+               "checkout/{orderId?}/{action}",
+               new { controller = "Checkout", action = "Index" },
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                "StoreFront_checkoutv2",
-               "checkoutv2/{checkoutId}/{action}",
-               new { controller = "CheckoutV2", action = "Index", checkoutId = RouteParameter.Optional },
+               "checkoutv2/{checkoutId?}/{action}",
+               new { controller = "CheckoutV2", action = "Index" },
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
@@ -330,14 +328,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
           
             routes.MapRoute(_defaultHandler,
                 "DevDocs",
-                "devdocs/{action}/{id}",
-                new { action = "Index", id = RouteParameter.Optional, controller = "DeveloperDocumentation" },
+                "devdocs/{action}/{id?}",
+                new { action = "Index", controller = "DeveloperDocumentation" },
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "StoreFront_Sitemap",
-                "sitemap.xml/{action}/{page}",
-                new { controller = "Sitemap", action = "Index", page = RouteParameter.Optional },
+                "sitemap.xml/{action}/{page?}",
+                new { controller = "Sitemap", action = "Index" },
 				_constraintResolver);
 
             routes.Add(new NonSystemRoute(_defaultHandler, _constraintResolver));
@@ -443,8 +441,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapRoute(_defaultHandler,
                 "Storefront_location",
-                "location/{action}/{id}",
-                new { controller = "Location", action = "Index", id = RouteParameter.Optional },
+                "location/{action}/{id?}",
+                new { controller = "Location", action = "Index" },
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
@@ -516,8 +514,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //removing default... add a matching route above
             routes.MapRoute(_defaultHandler,
                 "StoreFront_default",
-                "{controller}/{action}/{id}",
-                new { action = "Index", id = RouteParameter.Optional },
+                "{controller}/{action}/{id?}",
+                new { action = "Index" },
                 new Dictionary<string, object>{{"controller", @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing"}}, 
                 _constraintResolver);
 

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net.Http;
-using System.Text;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Mozu.Core;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -14,13 +12,12 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
-using System.Web.Http.Routing;
-using Mozu.Core.Extensions;
-using Mozu.Core;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
-using Microsoft.AspNetCore.Routing;
-using Mozu.Content.Contracts;
-using Microsoft.AspNetCore.Http;
+using System.Text;
+using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
 {
@@ -64,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             _categoryTreeProvider = categoryTreeProvider;
         }
 
-        static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
+        private static readonly JsonCleaningCaseInsensitiveMemberResolver Resolver = new JsonCleaningCaseInsensitiveMemberResolver();
 
         //todo:cole add script support
         //[Microsoft.ClearScript.ScriptMember("getUrl")]
@@ -220,7 +217,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return DoMakeDocumentUrl(doc, config, hostName);
             }
 
-            var name = _resolver.ResolveMemberOrDefault<string>(o, "name", null);
+            var name = Resolver.ResolveMemberOrDefault<string>(o, "name", null);
             if (string.IsNullOrEmpty(name))
             {
                 return "#";
@@ -228,9 +225,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             doc = new Content.Contracts.Document()
             {
                 Name = name,
-                ListFQN = _resolver.ResolveMemberOrDefault<string>(o, "ListFQN", null),
-                DocumentTypeFQN = _resolver.ResolveMemberOrDefault<string>(o, "DocumentTypeFQN", null),
-                Properties = _resolver.ResolveMemberOrDefault<JObject>(0, "Properties")
+                ListFQN = Resolver.ResolveMemberOrDefault<string>(o, "ListFQN", null),
+                DocumentTypeFQN = Resolver.ResolveMemberOrDefault<string>(o, "DocumentTypeFQN", null),
+                Properties = Resolver.ResolveMemberOrDefault<JObject>(0, "Properties")
             };
 
             return DoMakeDocumentUrl(doc, config,hostName);
@@ -326,9 +323,9 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
             int defaultPageSize = this._siteContext.ThemeSettings.Get<int>("defaultPageSize", 20);
-            int pageSize = _resolver.ResolveMemberOrDefault<int>(productCollection, "PageSize", defaultPageSize);
+            int pageSize = Resolver.ResolveMemberOrDefault<int>(productCollection, "PageSize", defaultPageSize);
 
-            int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
+            int currentStartIndex = Resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);
 
             var overrides = new SearchContextOverrides();
             if (config.TryGetValue("pageSize", out obj))
@@ -397,7 +394,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
                 if (productCode == null)
                 {
-                    url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
+                    url = Resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
                 return $"{url}{qs}";
             }
@@ -442,7 +439,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
                 if (string.IsNullOrEmpty(productCode))
                 {
-                    url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
+                    url = Resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
             }
             return $"{url}{qsVpc}{qs}";
@@ -468,12 +465,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
-                categoryId = _resolver.ResolveMemberOrDefault(obj, "categoryId", -1);
+                categoryId = Resolver.ResolveMemberOrDefault(obj, "categoryId", -1);
             }
 
             if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
-                var facetValue = _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
+                var facetValue = Resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
                 if (!string.IsNullOrEmpty(facetValue))
                 {
                     includeContxt = true;
@@ -537,7 +534,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             if (url == null)
             {
-                url = _resolver.ResolveMemberOrDefault<string>(obj, "imageUrl");
+                url = Resolver.ResolveMemberOrDefault<string>(obj, "imageUrl");
             }
             //todo cmsid stuff..
 
@@ -580,7 +577,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 return MakeCategoryUrlAndClearFacets( searchContext);
             }
 
-            var facetValue = obj is string ? strObj : _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
+            var facetValue = obj is string ? strObj : Resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
 
             // this means we're dealing with category facet
             if (string.IsNullOrEmpty(facetValue))
@@ -590,7 +587,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
             // this means we have some other facet type
-            var isApplied = !(obj is string) && _resolver.ResolveMemberOrDefault(obj, "isApplied", false);
+            var isApplied = !(obj is string) && Resolver.ResolveMemberOrDefault(obj, "isApplied", false);
             var facetParts = facetValue.Split(':');
             if (facetParts.Length != 2)
             {
@@ -645,11 +642,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         int? GetCategoryIdFromCategoryFacet(object categoryFacet)
         {
             int catId;
-            var childrenFacetValues = _resolver.ResolveMemberOrDefault<object>(categoryFacet, "childrenFacetValues");
+            var childrenFacetValues = Resolver.ResolveMemberOrDefault<object>(categoryFacet, "childrenFacetValues");
             if (childrenFacetValues != null)
             {
                 //must be a top level cat with no immediate child products
-                var tempCat = _resolver.ResolveMemberOrDefault<string>(categoryFacet, "value");
+                var tempCat = Resolver.ResolveMemberOrDefault<string>(categoryFacet, "value");
                 if (int.TryParse(tempCat, out catId))
                 {
                     return catId;
@@ -658,7 +655,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return null;
         }
 
-        int? GetCategoryIdFromRouteData(IHttpRouteData routeData)
+        int? GetCategoryIdFromRouteData(RouteData routeData)
         {
             int catId;
             object tmpObj;

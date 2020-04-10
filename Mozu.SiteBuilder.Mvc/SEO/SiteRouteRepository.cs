@@ -24,7 +24,7 @@ using Route = Mozu.SiteSettings.General.Contracts.General.Routing.Route;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-    public class HttpRouteCollectionWithMappings: HttpRouteCollection {
+    public class HttpRouteCollectionWithMappings : RouteCollection {
         public List<IRouteDataMapping> PreRouteMappings { get; set; }
     }
 
