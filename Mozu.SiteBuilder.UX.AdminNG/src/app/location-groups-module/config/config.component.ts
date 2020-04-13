@@ -9,7 +9,8 @@ import {
     CarrierShippingType,
     ShippingMethodMappings,
     BoxType,
-    PackageSettings
+    PackageSettings,
+    BPMConfigurations
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
@@ -31,6 +32,7 @@ import { TopLocationGroupConfigModel } from '@shared/header/location-groups/head
 export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     public model: LocationGroupConfigModel;
+    public previousBPMShipment: string = '';
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
@@ -47,7 +49,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-
         this.model = new LocationGroupConfigModel();
         this.model.subscriptions = [];
         this.model.sitesLst = [];
@@ -56,7 +57,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.PackageSettingUnitTypes = Constants.PackageSettingUnitTypes;
-
+        this.model.BPMShipmentTypes = Constants.BPMShipmentTypes;
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
             customerFailedToPickupDeadline: ['', []],
@@ -108,8 +109,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             blockPartialCancel: ['', []],
 
             packageSettingsUnitType: ['', []],
-        });
 
+            bpmConfigurations: new FormArray([]),
+            bpmConfigurationShipmentType: ['', []],
+            bpmConfigurationContainerId: ['', []],
+            bpmConfigurationProcessId: ['', []],
+
+            selectedBPMShipment: ['', []],
+            selectedBPMWorkflow: ['', []],
+            selectedBPMProcess: ['', []],
+        });
+        this.model.BPMConfigurations = [];
+        this.previousBPMShipment = '';
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
         this.createService.getLocationGroup(locationGroupCode).subscribe(
             (response) => this.getLocationGroupSuccess(response),
@@ -179,8 +190,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             (this.model.locationGroupConfigForm.controls.fedExShippingTypes as FormArray).push(control);
         });
     }
-
-
+    
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
@@ -321,6 +331,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
             if (response && response[2] && response[2].items) {
                 const lgConfigModel: LocationGroupConfigurationModel = <LocationGroupConfigurationModel>response[2].items;
+                this.model.lgConfigModel = lgConfigModel;
                 this.resetLocationGroupConfigForm();
                 this.updateLocationGroupConfigForm(lgConfigModel);
             }
@@ -428,10 +439,71 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 blockPartialCancel: lgConfigModel.blockPartialCancel === undefined ? false : lgConfigModel.blockPartialCancel,
 
                 //PakageSettings                
-                packageSettingsUnitType: lgConfigModel.packageSettings && lgConfigModel.packageSettings.unitType || ''
+                packageSettingsUnitType: lgConfigModel.packageSettings && lgConfigModel.packageSettings.unitType || '',
             });
+
+            //BPM Configurations
+            this.patchBpmConfigurations(false);
         }
         this._spinner.stop();
+    }
+
+    patchBpmConfigurations(isChange: boolean = true) {
+        var bpmConfig: BPMConfigurations[] = [];
+        var lgConfigModel = this.model.lgConfigModel;
+
+        this.model.BPMConfigurations = lgConfigModel.bpmConfigurations;
+        const lgconfigForm = this.model.locationGroupConfigForm;
+        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
+        if (!shipmentType)
+            shipmentType = '';/* shipmentType = "ShipToHome";*/
+       
+        this.refreshBpmConfigurations(isChange);        
+
+        if (this.model.BPMConfigurations && this.model.BPMConfigurations.length > 0) {
+            bpmConfig = this.model.BPMConfigurations.filter(config => config.shipmentType === shipmentType);
+
+            if (bpmConfig.length <= 0 && this.previousBPMShipment === '') {
+                bpmConfig = this.model.BPMConfigurations.filter(config => config.workflowContainerId !== '' && config.workflowProcessId !== '');
+            }
+        }
+        this.model.locationGroupConfigForm.patchValue({
+            bpmConfigurationShipmentType: bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType,
+            bpmConfigurationContainerId: bpmConfig.length > 0 && bpmConfig[0].workflowContainerId || '',
+            bpmConfigurationProcessId: bpmConfig.length > 0 && bpmConfig[0].workflowProcessId || ''
+        });
+
+        this.previousBPMShipment = bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType;
+    }
+
+    private refreshBpmConfigurations(isChange: boolean = false) {
+        const lgconfigForm = this.model.locationGroupConfigForm;
+        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
+        if (shipmentType) {
+            var activeShipmentType = isChange && this.previousBPMShipment !== '' ? this.previousBPMShipment : shipmentType;
+
+            var containerId = lgconfigForm.get(['bpmConfigurationContainerId']).value;
+            var processId = lgconfigForm.get(['bpmConfigurationProcessId']).value;
+
+            if (this.model.BPMConfigurations.length > 0) {
+                var config = this.model.BPMConfigurations.filter(config => config.shipmentType === activeShipmentType);
+
+                if (config.length > 0) {
+                    config[0].workflowContainerId = containerId;
+                    config[0].workflowProcessId = processId;
+                    return;
+                }
+            }
+
+            if (activeShipmentType !== '') {
+                var bpmConfig: BPMConfigurations = {
+                    shipmentType: activeShipmentType,
+                    workflowContainerId: containerId,
+                    workflowProcessId: processId
+                };
+                this.model.BPMConfigurations.push(bpmConfig)
+            }            
+        }
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingMethodMappings): boolean[] {
@@ -516,6 +588,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
 
+        this.refreshBpmConfigurations();
         lgConfigModel.tenantId = this.model.lgConfigModel.tenantId;
         lgConfigModel.siteId = this.model.lgConfigModel.siteId;
         lgConfigModel.locationGroupId = this.model.lgConfigModel.locationGroupId;
@@ -620,9 +693,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.blockPartialCancel = lgconfigForm.get(['blockPartialCancel']).value;
 
         //Package Settings
-        const packageSettings: PackageSettings = { unitType : "" };
+        const packageSettings: PackageSettings = { unitType: "" };
         packageSettings.unitType = lgconfigForm.get(['packageSettingsUnitType']).value;
         lgConfigModel.packageSettings = packageSettings;
+
+        //BPM Configurations
+        lgConfigModel.bpmConfigurations = this.model.BPMConfigurations;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
@@ -630,6 +706,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
+        
         if (this.validateLocationGroup(lgConfigModel)) {
             this.updateLocationGroupConfig(lgConfigModel);
         }
@@ -788,6 +865,23 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             return false;
 
         }
+
+        if (lgModel.bpmConfigurations.length > 0) {
+            if (lgModel && lgModel.bpmConfigurations.map(config => config.workflowContainerId).includes('')) {
+                this._tostrService.showError(ErrorCode.EmptyWorkflowContainerId);
+                this._spinner.stop();
+                this._progressButtonService.stop();
+                return false;
+            }
+
+            if (lgModel && lgModel.bpmConfigurations.map(config => config.workflowProcessId).includes('')) {
+                this._tostrService.showError(ErrorCode.EmptyWorkflowProcessId);
+                this._spinner.stop();
+                this._progressButtonService.stop();
+                return false;
+            }
+        }        
+
         return true;
     }
 

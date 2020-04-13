@@ -30,6 +30,40 @@
             </div>
 
             <div class="subform">
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.bpmConfigurations' | translate }}</h4>
+                <div class="row nomargin">
+                    <div class="form-row col-md-4 for-no-padding">
+                        <label class="subform-label" for="bpmConfigurationShipmentType">{{'LOCATIONGROUPCONFIG.FormLabels.bpmConfigurationShipmentType' | translate}}</label>
+                        <select id="bpmConfigurationShipmentType" class="form-control" formControlName="bpmConfigurationShipmentType" (change)='patchBpmConfigurations()'>
+                            <option *ngFor="let action of model.BPMShipmentTypes" [ngValue]="action.data">
+                                {{ action.label }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="form-row col-md-3 for-no-padding dropdownSiblingMargin">
+                        <input class="inputText form-control subform-text" id="bpmConfigurationContainerId" name="bpmConfigurationContainerId" formControlName="bpmConfigurationContainerId" required/>
+                        <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('bpmConfigurationContainerId').value === '' || model.locationGroupConfigForm.get('bpmConfigurationContainerId').value === null,
+										'floating-label-not-empty': model.locationGroupConfigForm.get('bpmConfigurationContainerId').value !== ''
+										}">{{'LOCATIONGROUPCONFIG.FormLabels.bpmConfigurationContainerId' | translate }}</span>
+
+                        <hr class="underline-from-left" [ngClass]="{'redunderline-from-left': model.locationGroupConfigForm.get('bpmConfigurationContainerId').touched && model.locationGroupConfigForm.get('bpmConfigurationContainerId').invalid}">
+                        <span class="error" *ngIf="model.locationGroupConfigForm.get('bpmConfigurationContainerId').touched && model.locationGroupConfigForm.get('bpmConfigurationContainerId').invalid">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="form-row col-md-3 for-no-padding dropdownSiblingMargin">
+                        <input class="inputText form-control subform-text" id="bpmConfigurationProcessId" name="bpmConfigurationProcessId" formControlName="bpmConfigurationProcessId" required/>
+                        <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('bpmConfigurationProcessId').value === '' || model.locationGroupConfigForm.get('bpmConfigurationProcessId').value === null,
+										'floating-label-not-empty': model.locationGroupConfigForm.get('bpmConfigurationProcessId').value !== ''
+										}">{{'LOCATIONGROUPCONFIG.FormLabels.bpmConfigurationProcessId' | translate }}</span>
+                        
+                        <hr class="underline-from-left" [ngClass]="{'redunderline-from-left': model.locationGroupConfigForm.get('bpmConfigurationProcessId').touched && model.locationGroupConfigForm.get('bpmConfigurationProcessId').invalid}">
+                        <span class="error" *ngIf="model.locationGroupConfigForm.get('bpmConfigurationProcessId').touched && model.locationGroupConfigForm.get('bpmConfigurationProcessId').invalid">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.bopis' | translate }}</h4>
                 <div class="row nomargin">
                     <div class="form-row col-md-5 for-no-padding">

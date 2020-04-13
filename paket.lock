@@ -186,7 +186,7 @@ NUGET
     Mozu.InstalledApps.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.17)
       Mozu.Tenant.Contracts (>= 1.17)
-    Mozu.Location.Contracts (1.2011.0-ngshotContracts-20)
+    Mozu.Location.Contracts (1.2016.0-ngshotContracts-23)
       Mozu.Core.Prime (>= 1.1613.1)
     Mozu.Log4net.Gelf (1.1842.6)
     Mozu.MZDB.Contracts (1.19.3)

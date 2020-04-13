@@ -183,7 +183,9 @@
             "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
             "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
             "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
-            "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave"
+            "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave",
+            "EmptyWorkflowContainerId": "Please enter workflow container Id",
+            "EmptyWorkflowProcessId": "Please enter workflow process Id"
           },
             "Warning": {},
             "Information": {},
@@ -406,7 +408,10 @@
         "shiptoHome": "ShiptoHome",
         "bopis": "BOPIS",
         "blockPartialCancel": "Do not allow partial rejection from Customer Pickup step",
-        "unitType": "Unit Type"
+        "unitType": "Unit Type",
+        "bpmConfigurationContainerId": "Workflow Container Id*",
+        "bpmConfigurationProcessId": "Workflow Process Id*",
+        "bpmConfigurationShipmentType": "Shipment Type"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",
@@ -418,7 +423,8 @@
         "uspsSettings": "USPS Settings",
         "canadaPostSettings": "Canada Post Settings",
         "otherSettings": "Other Settings",
-        "packageSettings": "Package Settings"
+        "packageSettings": "Package Settings",
+        "bpmConfigurations": "BPM Configurations"
       }
     }
 }
