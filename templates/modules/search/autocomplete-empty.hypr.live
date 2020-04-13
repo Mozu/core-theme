@@ -1,0 +1,11 @@
+{% extends "modules/common/item-listing" %}
+
+{% block module-classes %}mz-itemlisting-autocomplete mz-itemlisting-autocomplete-product{% endblock module-classes %}
+
+{% block item-listing-image %}
+{% endblock %}
+{% block item-name %}
+    <p>No Results Found</p>
+{% endblock item-name %}
+{% block item-details %}
+{% endblock %}
