@@ -33,6 +33,9 @@ export class Constants {
         getCarrierSettings: environment.apiUrl + '/shipping/carrierSettings/read',
         getAllCarrierRatesWithConfiguredInfo: environment.apiUrl + '/shipping/carrierRatesWithConfigured',
         getAllB2BAccounts: environment.apiUrl + '/b2baccount/list',
+        getCarrierAccountsSets: environment.apiUrl + '/carriers/credentialsset/list',
+        getCarrierAccounts: environment.apiUrl + '/carriers/credentials/read',
+        saveCarrierAccount: environment.apiUrl + '/carriers/credentials/save'
     };
 
     static JsonResources = {

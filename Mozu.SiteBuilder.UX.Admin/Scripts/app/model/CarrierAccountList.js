@@ -8,28 +8,4 @@
         { name: "name", type: "string" },
 
     ],
-
-    //proxy: {
-    //    type: 'ajaxproxy',
-
-    //    api: {
-    //        read: '/admin/app/carriers/credentialsset/List',
-    //    },
-
-    //    //mockApi: {
-    //    //    read: '/admin/Scripts/app/mocks/PaymentAndCheckout.json'
-    //    //},
-
-    //    reader: {
-    //        type: 'json',
-    //        root: 'items',
-    //        successProperty: 'success',
-    //        messageProperty: "message"
-    //    },
-
-    //    writer: {
-    //        allowSingle: true,
-    //        type: 'json'
-    //    }
-    //}
 });

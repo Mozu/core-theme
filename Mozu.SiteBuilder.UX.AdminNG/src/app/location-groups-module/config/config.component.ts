@@ -10,10 +10,14 @@ import {
     ShippingMethodMappings,
     BoxType,
     PackageSettings,
-    BPMConfiguration
+    BPMConfiguration,
+    CarrierAccountModel,
+    CarrierAccountSetModel,
+    PagniatedNgSelectPageConfiguration,
+    SelectedCarrierAccountModel
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
+import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions} from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -45,7 +49,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private _progressButtonService: ProgressButtonService,
         private _confirmationDialogService: ConfirmationDialogService,
         private _notificationService: NotificationService
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.model = new LocationGroupConfigModel();
@@ -55,7 +59,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
-        this.model.PackageSettingUnitTypes = Constants.PackageSettingUnitTypes;
+        this.model.packageSettingUnitTypes = Constants.PackageSettingUnitTypes;
+        this.model.uspsCarrierAccountPagination = Constants.UspsCarrierAccountPageConfig;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -311,9 +316,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupCode, siteId);
         const carrierSettings = this.configService.getCarrierSettings(opts);
         const carrierRatesWithConfiguredInfo = this.configService.getAllCarrierRatesWithConfiguredInfo(opts);
+        const uspsCarrierAccountSets = this.configService.getUSPSCarrierAccountSets(this.model.uspsCarrierAccountPagination, Constants.LCCarriers.usps);
+        const carrierAccount = this.configService.getCarrierAccount(locationGroupCode, siteId);
 
         // join this services result.
-        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig]).subscribe(response => {
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount]).subscribe(response => {
             this._loggerService.info('LocationGroupConfigComponent : forkJoin');
 
             if (response && response[0] && response[0].items) {
@@ -329,6 +336,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this.model.lgConfigModel = lgConfigModel;
                 this.resetLocationGroupConfigForm();
                 this.updateLocationGroupConfigForm(lgConfigModel);
+            }
+
+            if (response && response[3] && response[3].items) {
+                this.getAllUSPSCarrierAccount(response[3].items);
+                this.model.uspsCarrierAccountPagination.totalRecordCount = response[3].total;
+            }
+
+            if (response && response[4] && response[4].items) {
+                const carrierAccountConfigModel: CarrierAccountSetModel = <CarrierAccountSetModel>response[4].items
+                this.updateCarrierAccountsConfigForm(carrierAccountConfigModel);
             }
         }, (response) => {
             this.getLocationGroupConfigError(response.error.message);
@@ -455,6 +472,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             bopisContainerId: bopisConfig.length > 0 && bopisConfig[0].workflowContainerId || '',
             bopisProcessId: bopisConfig.length > 0 && bopisConfig[0].workflowProcessId || ''
         });
+    }
+
+    private updateCarrierAccountsConfigForm(carrierAccountModel: any): void {  
+        const uspsCarrierAccount = carrierAccountModel.filter(a => a.carrierId === 'usps')
+        if (uspsCarrierAccount.length > 0) {
+            this.model.selectedUSPSCarrier = {
+                data: uspsCarrierAccount[0].code,
+                label: uspsCarrierAccount[0].name
+            }
+        } else {
+            this.model.selectedUSPSCarrier = Constants.DefaultUSPSAccount;
+        }
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingMethodMappings): boolean[] {
@@ -642,7 +671,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.enablePnpForBOPIS = lgconfigForm.get(['enablePnpForBOPIS']).value;
         lgConfigModel.blockPartialCancel = lgconfigForm.get(['blockPartialCancel']).value;
 
-        //Package Settings
+        // Package Settings
         const packageSettings: PackageSettings = { unitType: "" };
         packageSettings.unitType = lgconfigForm.get(['packageSettingsUnitType']).value;
         lgConfigModel.packageSettings = packageSettings;
@@ -673,12 +702,27 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
+        // USPS Carrier Account
+        const carrierAccountModel= [] as CarrierAccountModel[];
+        if (this.model.uspsCarrierAccount && this.model.uspsCarrierAccount.length != 0)
+            carrierAccountModel.push({
+                locationGroupCode: this.model.lgConfigModel.locationGroupCode,
+                siteId: this.model.lgConfigModel.siteId,
+                carrierId: Constants.LCCarriers.usps,
+                credentialSet: {
+                    code: this.model.uspsCarrierAccount.data,
+                    carrierId: Constants.LCCarriers.usps,
+                    name: this.model.uspsCarrierAccount.label,
+                    values:null
+                }
+            })
+
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
 
         if (this.validateLocationGroup(lgConfigModel)) {
-            this.updateLocationGroupConfig(lgConfigModel);
+            this.updateLocationGroupConfig(lgConfigModel, carrierAccountModel);
         }
     }
 
@@ -731,9 +775,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel) {
+    private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel, carrierAccountModels: CarrierAccountModel[]) {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfig');
-        this.configService.updateLocationGroupConfig(lgcModel).subscribe(response =>
+        let locationForkJoinList = [];
+        const locationGroup = this.configService.updateLocationGroupConfig(lgcModel);
+        locationForkJoinList.push(locationGroup);
+        if (carrierAccountModels && carrierAccountModels.length != 0) {
+            const slectedCarrierAccount = this.configService.SaveCarrierAccount(carrierAccountModels);
+            locationForkJoinList.push(slectedCarrierAccount);
+        }
+        forkJoin(locationForkJoinList).subscribe(response =>
             this.updateLocationGroupConfigSuccess(response),
             (response) => this.updateLocationGroupConfigError(response.error.message));
         let siteIds = [];
@@ -861,5 +912,35 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         topLocationGroupConfigModel.locationGroupCode = locationGroupCode;
         topLocationGroupConfigModel.locationGroupSiteIds = siteIds;
         this._notificationService.notifySetLocationGroupConfigData({ name: NotificationLGActions.locationGroupConfigUpdate, data: topLocationGroupConfigModel });
+    }
+
+    private getAllUSPSCarrierAccount(result: CarrierAccountSetModel[]) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllUSPSCarrierAccount' + JSON.stringify(result));
+        if (result) {
+            const carrierAccountType: CarrierAccountSetModel[] = <CarrierAccountSetModel[]>result;
+            this.model.uspsCarrierAccountList = [] as SelectedCarrierAccountModel[];
+            carrierAccountType.map((value, index) => {
+                const carrierAccountObj = {
+                    data: value.code,
+                    label: value.name
+                };
+                if (value.carrierId.toLowerCase() === Constants.LCCarriers.usps) {
+                    this.model.uspsCarrierAccountList.push(carrierAccountObj);
+                }
+            });
+        }
+    }
+
+    public getUSPSCarrierAccounts(pageDetails: any) {
+        this.configService.getUSPSCarrierAccountSets(pageDetails, Constants.LCCarriers.usps).subscribe(response => {
+            this.model.uspsCarrierAccountPagination.totalRecordCount = 0;
+            this.getAllUSPSCarrierAccount(response.items);
+            this.model.uspsCarrierAccountPagination.totalRecordCount = response.total;
+        })
+    }
+
+    public getSelectedUSPSCarrier(SelectedValues: SelectedCarrierAccountModel) {
+        this.model.uspsCarrierAccount = [];
+        this.model.uspsCarrierAccount = SelectedValues;
     }
 }

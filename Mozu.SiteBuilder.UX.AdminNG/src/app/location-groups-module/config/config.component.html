@@ -21,7 +21,7 @@
                     <div class="form-row col-md-5 for-no-padding">
                         <label class="subform-label" for="packageSettingsUnitType">{{'LOCATIONGROUPCONFIG.FormLabels.unitType' | translate}}</label>
                         <select id="packageSettingsUnitType" class="form-control" formControlName="packageSettingsUnitType">
-                            <option *ngFor="let action of model.PackageSettingUnitTypes" [ngValue]="action.data">
+                            <option *ngFor="let action of model.packageSettingUnitTypes" [ngValue]="action.data">
                                 {{ action.label }}
                             </option>
                         </select>
@@ -388,10 +388,12 @@
             </div>
             <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.uspsSettings' | translate}}</h4>
-                <h5>
-                    {{'LOCATIONGROUPCONFIG.FormLabels.uspsSettingsInfo' | translate}}
-                    <a>{{'LOCATIONGROUPCONFIG.FormLabels.uspsSettingsInfoLink' | translate}}</a>.
-                </h5>
+                <div class="col-md-12 for-no-padding">
+                    <div class="form-row col-md-5 for-no-padding">
+                        <label class="subform-label" for="uspsCarrierAccountTypes">{{'LOCATIONGROUPCONFIG.FormLabels.uspsAccountLabel' | translate}}</label>
+                        <paginated-ngselect [items]="model.uspsCarrierAccountList" [selectedValue]="model.selectedUSPSCarrier" [pageConfig]="model.uspsCarrierAccountPagination" (ngSelectPaginatorSelectionChanged)="getSelectedUSPSCarrier($event)" (ngSelectPaginatorPageIndexChanged)="getUSPSCarrierAccounts($event)">></paginated-ngselect>
+                    </div>
+                </div>
                 <div class="row nomargin">
                     <div class="col-md-6 for-no-padding">
                         <div class="col-md-4 for-no-padding">

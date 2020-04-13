@@ -151,11 +151,6 @@
         var appStateData = {
             domain: 'Carrier'
         };
-        //if (additionalParams && additionalParams.duplicateSource) {
-        //    appStateData.description = additionalParams.duplicateSource.description;
-        //    appStateData.expression = additionalParams.duplicateSource.expression;
-        //}
-
         appState = appState || {};
         delete additionalParams.record;
         appState.record = Ext.create('Taco.model.CarrierAccountModel', appStateData);

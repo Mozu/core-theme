@@ -82,7 +82,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string filter = null;
 
             DC.CarrierCredentialSetCollection carrierConfigurationCollection;
-          //  var returnSettings = new CarrierCredentialSet();
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
                 if (pagingParams.id != "0")
@@ -92,52 +91,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else
                 {
-                    var defaultValue = new CarrierCredentialSet
-                    {
-                        Name = "No Carrier Credentials Selected",
-                        CarrierId = CarrierId,
-                        Code = "0",
-                        Values = null,
-                    };
-                    carrierConfigurationCollection = new DC.CarrierCredentialSetCollection { Items = new List<DC.CarrierCredentialSet> { defaultValue }, TotalCount = 1 };
+                    var defaultCarrierCredentails = getDefaultCarrierCredentails(CarrierId);
+                    carrierConfigurationCollection = new DC.CarrierCredentialSetCollection { Items = new List<DC.CarrierCredentialSet> { defaultCarrierCredentails }, TotalCount = 1 };
                 }
 
             }
             else
 
             {
-                //if (extFilter.Count > 0)
-                //{
-                //    filter = extFilter.ToFilterCarrierString();
-                //}
-                if (CarrierId != null && !string.IsNullOrEmpty(query))
-                {
-                    filter = "carrierid eq " + CarrierId + " AND " + "name cont " + "'" + query + "'";
-                }
-                else
-                {
-                    filter = "carrierid eq " + CarrierId;
-                }
-
+                filter = CarrierCredentialsSetFilterBuilder.ToFilterCarriers(CarrierId, query);
                 var startIndex = pagingParams?.startIndex;
                 var pageSize = pagingParams?.pageSize;
                
                  carrierConfigurationCollection = (await _carrierCredentialSetWebApiClient.GetCarrierCredentialSets(startIndex: startIndex,
                        pageSize: pageSize, filter: filter)).ReadAsSync();
-                var defaultValue = new CarrierCredentialSet
-                {
-                    Name = "No Carrier Credentials Selected",
-                    CarrierId = CarrierId,
-                    Code = "0",
-                    Values = null,
-                };
+                var defaultCarrierCredentails = getDefaultCarrierCredentails(CarrierId);
 
-                carrierConfigurationCollection.Items.Insert(0, defaultValue);
+                carrierConfigurationCollection.Items.Insert(0, defaultCarrierCredentails);
             }
 
            
 
             return List2(carrierConfigurationCollection.Items, carrierConfigurationCollection.TotalCount);
+        }
+
+        private CarrierCredentialSet getDefaultCarrierCredentails(string carrierId)
+        {
+            return new CarrierCredentialSet
+            {
+                Name = "No Carrier Credentials Selected",
+                CarrierId = carrierId,
+                Code = "0",
+                Values = null,
+            };
         }
     }
 

@@ -22,6 +22,8 @@ import { NgbCarouselModule, NgbModule, NgbDateAdapter, NgbDateNativeAdapter } fr
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { PaginatorModule } from 'primeng/paginator';
+ 
 
 import { environment } from '../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -76,6 +78,7 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
 import { AccountInfoService } from './account/information/information.service';
 import { DateCompareDirective} from './directive/datepicker-compare-validator.directive';
 import { DateService } from './datepicker/datepicker.service';
+import { PaginatedNgSelectComponent } from './paginated-ngselect/paginated-ngselect.component';
 
 
 declare var resourcesVersion: any;
@@ -104,6 +107,7 @@ export function createTranslateLoader(http: HttpClient) {
         AutoCompleteModule,
         OverlayPanelModule,
         ScrollPanelModule,
+        PaginatorModule,
         NgbModule,
         TranslateModule.forRoot({
             loader: {
@@ -154,7 +158,8 @@ export function createTranslateLoader(http: HttpClient) {
         AuditLogComponent,
         ToggleGridColumnsComponent,
         ProgressButtonComponent,
-        DatepickerComponent
+        DatepickerComponent,
+        PaginatedNgSelectComponent
     ],
     providers: [
         ConfirmationDialogService,
@@ -232,7 +237,8 @@ export function createTranslateLoader(http: HttpClient) {
         AuditLogComponent,
         ToggleGridColumnsComponent,
         ProgressButtonComponent,
-        DatepickerComponent
+        DatepickerComponent,
+        PaginatedNgSelectComponent
     ]
 })
 

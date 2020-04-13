@@ -9,12 +9,12 @@ using System.Web;
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchCarrierCredentialsSetHelpers
 {
 
-    //public interface ISearchCarrierCredentialsSetFilterBuilder
-    //{
-    //    string ToFilterString(FilterCollection filterCollection);
-    //}
-    public static class SearchCarrierCredentialsSetFilterBuilde
+   
+    public static class CarrierCredentialsSetFilterBuilder
     {
+        private const string CARRIERID = "carrierid";
+        private const string NAME = "name";
+
         public static string ToFilterCarrierString( this FilterCollection filterCollection)
         {
             if (filterCollection == null || filterCollection.Count == 0)
@@ -43,16 +43,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchCarrierCredentialsSetHelpers
         {
             switch (filterItem.property.ToLowerInvariant())
             {
-                case "name":
+                case NAME:
                     {
-                        return "name cont " + "'" + filterItem.value + "'";
-                        //return String.Format("code cont \"{0}\" or name cont \"{0}\"", filterItem.escapedValue);
+                        return string.Format("name cont \"{0}\"", filterItem.value);
+                       
                     }
-                case "carrierid":
+                case CARRIERID:
                     {
-                        return "carrierid cont " + filterItem.value;
-
-                        //String.Format("code cont \"{0}\"", filterItem.escapedValue);
+                        return string.Format("carrierid cont \"{0}\"", filterItem.value);
                     }
                 default:
                     {
@@ -81,6 +79,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SearchCarrierCredentialsSetHelpers
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
+        }
+
+
+        public static string ToFilterCarriers(string CarrierId,string query)
+        {
+            if (CarrierId != null && !string.IsNullOrEmpty(query))
+            {
+                return string.Format("carrierid eq {0} AND name cont \"{1}\"", CarrierId,query);
+
+            }
+            else
+            {
+                return string.Format("carrierid eq {0}", CarrierId);
+            }
+
         }
 
 

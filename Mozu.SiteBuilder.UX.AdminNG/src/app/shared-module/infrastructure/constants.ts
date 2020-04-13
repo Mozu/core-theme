@@ -133,7 +133,9 @@ export class Constants {
         auditLog: '/assets/json/audit-log.json',
         orderSearchResults: environment.appUrl + '/assets/json/orders-searchresult.json',
         customerSearchResults: environment.appUrl + '/assets/json/customers-searchresult.json',
-        productsSearchResults: environment.appUrl + '/assets/json/products-searchresult.json'
+        productsSearchResults: environment.appUrl + '/assets/json/products-searchresult.json',
+        carrierAccountSets: environment.appUrl + '/assets/json/CarrierAccountSet.json',
+        carrierAccount: environment.appUrl + '/assets/json/CarrierAccount.json'
     };
 
     static numberOfRows = 15;
@@ -171,7 +173,22 @@ export class Constants {
     static LCCustomerPickupActions = [{ data: 'CustomerCare', label: 'Customer Care' }, { data: 'Canceled', label: 'Cancel' }];
 
     static PackageSettingUnitTypes = [{ data: 'Imperial', label: 'Imperial' }, { data: 'Metric', label: 'Metric' }];
-        
+
+    static UspsCarrierAccountPageConfig = {
+        startIndex: 0,
+        pageSize: 15,
+        query: "",
+        isMultiSelect: false,
+        placeholder: 'Search',
+        totalRecordCount: 0,
+        id: 'USPSCarrierAccount'
+    }
+
+    static DefaultUSPSAccount = {
+        data: '0',
+        label: 'No Carrier Credentials Selected',
+    }
+
     static LCCustomerPickupReminders = [{ data: 1, label: '1 days' }, { data: 2, label: '2 days' }, { data: 3, label: '3 days' },
     { data: 4, label: '4 days' }, { data: 5, label: '5 days' }];
     static LCDefaultCarrier = [{ data: 'None', label: 'None' }];
