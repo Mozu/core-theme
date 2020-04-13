@@ -3052,5 +3052,31 @@ Ext.define('Taco.model.Order', {
                 scope: this
             }
         })
-    }
+    },
+
+    getSTSSettigs: function () {
+        return Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [
+                {
+                    name: 'isEnabled',
+                    type: 'boolean'
+                },
+                {
+                    name: 'alwaysCreateTransferShipments',
+                    type: 'boolean'
+                }
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/fulfillmentSettings/read',
+                reader: {
+                    type: 'json',
+                    root: function(obj) {
+                        return obj.items.shipToStore;
+                    }
+                }
+            }
+        });
+    },
 });

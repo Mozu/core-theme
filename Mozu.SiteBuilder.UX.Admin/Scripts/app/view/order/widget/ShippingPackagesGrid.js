@@ -482,12 +482,13 @@
                 me.openItemCancellationPopup();
             }
         };
-
+        
         var actionRequestTransfer = {
             text: 'Request Transfer',
             handler: function () {
                 me.openItemRequestTransferPopup();
             },
+            hidden: !(this.record.STSSettings && this.record.STSSettings.isEnabled),
             listeners: {
                 beforerender: function (eOpts, a) {
                     if (parseInt(eOpts.eventData.record.get('quantityAvailToTransfer')) <= 0)
@@ -836,15 +837,15 @@
             });
         }
     },
-
+    
     getQuantityForTransfer: function () {
-        if (this.shipmentRecord.shipmentType == "BOPIS") {
+        if (this.shipmentRecord.shipmentType === "BOPIS") {
             for (var i = 0; i < this.shipmentRecord.items.length; i++) {
                 if (this.shipmentRecord.transferShipmentNumbers && this.shipmentRecord.transferShipmentNumbers.length > 0) {
                     //Made changes for COM-1555
                     this.shipmentRecord.items[i].quantityAvailToTransfer =
-                        this.getOriginalOrderedQuantity(this.shipmentRecord.number, this.shipmentRecord.items[i].productCode)
-                        - this.getActiveQuantityFromTransferShipments(this.shipmentRecord.transferShipmentNumbers, this.shipmentRecord.items[i].productCode);
+                        this.getOriginalOrderedQuantity(this.shipmentRecord.number, this.shipmentRecord.items[i].productCode, this.shipmentRecord.items[i].lineId)
+                    - this.getActiveQuantityFromTransferShipments(this.shipmentRecord.transferShipmentNumbers, this.shipmentRecord.items[i].productCode, this.shipmentRecord.items[i].lineId);
                 }
                 else {
                     this.shipmentRecord.items[i].quantityAvailToTransfer = this.shipmentRecord.items[i].quantity;
@@ -853,31 +854,36 @@
         }
     },
 
-    getOriginalOrderedQuantity: function (originalShipmentNumber, productCode) {
+    getOriginalOrderedQuantity: function (originalShipmentNumber, productCode, lineId) {
         var quantity = 0;
         for (var shipmentCount = 0; shipmentCount < this.record.get('shipments').length; shipmentCount++) {
             //this will give quantity from all child shipments and also parent shipment.
-            if (this.record.get('shipments')[shipmentCount].shipmentType == "BOPIS" &&
-                (this.record.get('shipments')[shipmentCount].originalShipmentNumber == originalShipmentNumber ||
-                    this.record.get('shipments')[shipmentCount].number == originalShipmentNumber)) {
-                for (var itemCount = 0; itemCount < this.record.get('shipments')[shipmentCount].items.length; itemCount++) {
-                    if (this.record.get('shipments')[shipmentCount].items[itemCount].productCode == productCode)
-                        quantity += parseInt(this.record.get('shipments')[shipmentCount].items[itemCount].quantity);
+            var shipment = this.record.get('shipments')[shipmentCount];
+
+            if (shipment.shipmentType === "BOPIS" &&
+                (shipment.originalShipmentNumber === originalShipmentNumber ||
+                shipment.number === originalShipmentNumber)) {
+
+                for (var itemCount = 0; itemCount < shipment.items.length; itemCount++) {
+                    if (shipment.items[itemCount].productCode === productCode && shipment.items[itemCount].lineId === lineId)
+                        quantity += (parseInt(shipment.items[itemCount].quantity) || 0);
                 }
             }
         }
         return quantity;
     },
 
-    getActiveQuantityFromTransferShipments: function (transferShipments, productCode) {
+    getActiveQuantityFromTransferShipments: function (transferShipments, productCode, lineId) {
         var quantity = 0;
         for (var shipmentCount = 0; shipmentCount < this.record.get('shipments').length; shipmentCount++) {
             for (var transferCount = 0; transferCount < transferShipments.length; transferCount++) {
-                if (this.record.get('shipments')[shipmentCount].number == transferShipments[transferCount]) {
-                    if (this.record.get('shipments')[shipmentCount].shipmentStatus.toLowerCase() != 'canceled') {
-                        for (var itemCount = 0; itemCount < this.record.get('shipments')[shipmentCount].items.length; itemCount++) {
-                            if (this.record.get('shipments')[shipmentCount].items[itemCount].productCode == productCode)
-                                quantity += parseInt(this.record.get('shipments')[shipmentCount].items[itemCount].quantity);
+                var shipment = this.record.get('shipments')[shipmentCount];
+
+                if (shipment.number === transferShipments[transferCount]) {
+                    if (shipment.shipmentStatus.toLowerCase() !== 'canceled') {
+                        for (var itemCount = 0; itemCount < shipment.items.length; itemCount++) {
+                            if (shipment.items[itemCount].productCode === productCode && shipment.items[itemCount].lineId === lineId)
+                                quantity += (parseInt(shipment.items[itemCount].quantity) || 0);
                         }
                     }
                 }

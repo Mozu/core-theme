@@ -42,7 +42,27 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
             },
             callback: function (record) {
                 me.record.SiteShipSetting = record;
-                this.buildComponents();
+                me.siteShipSettingLoaded = true;
+                if (me.isRender())
+                    me.buildComponents();
+            }
+        });
+
+        this.record.getSTSSettigs().load({
+            scope: this,
+            failure: function () {
+                // there should be a message here
+            },
+            success: function (record) {
+
+            },
+            callback: function (record) {
+                if (record && record.length>0) {
+                    me.record.STSSettings = record[0].data;                    
+                }
+                me.stsSettingLoaded = true;
+                if (me.isRender())
+                    me.buildComponents();
             }
         });
     },
@@ -149,5 +169,10 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
         me.setLoading(true, this.body);
         this.record.reload();
         me.setLoading(false, this.body);
+    },
+
+    isRender: function () {
+        var me = this;
+        return me.stsSettingLoaded && me.siteShipSettingLoaded;
     }
 });
