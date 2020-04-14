@@ -64,67 +64,51 @@ Ext.define('Taco.view.location.inventory.Index', {
     modelName: 'Taco.model.LocationInventory',
 
     initComponent: function () {
+        var me = this;
         this.store = Ext.create('Taco.store.LocationInventories', {
             autoLoad: false
         });
 
         this.initGridPanelConf();
 
-        this.locationStore = Taco.core.data.StoreManager.getOrCreate({
-            createOnly: true,
-            type: 'Taco.store.Locations',
-            pageSize: 1000,
-            clearSort: false,
-            remoteSort: true,
-            remoteFilter: true,
-            sorters: [{
-                property: 'name',
-                direction: 'ASC'
-            }],
-            filters: [{
-                property: 'supportsInventory',
-                value: true
-            }],
-            autoLoad: true,
-            listeners: {
-                beforeload: function (store) {
-                    var proxy = store.getProxy();
-                    if (proxy.extraParams) {
-                        //reset params at proxy (e.g. advSearch)
-                        proxy.extraParams = {};
-                    }
-                    if (this.extraFilters) {
-                        store.extraFilters.add(this.extraFilters);
-                    }
-                }
-            }
-        });
-
-        this.locationCombo = {
-            xtype: 'combobox',
-            style: {
-                backgroundColor: 'white'
-            },
+        this.locationCombo = Ext.widget({
+            xtype: 'taco-locationpickerfield',
             itemId: 'inventory-dropdown',
-            store: this.locationStore,
-            displayField: 'name',
-            valueField: 'code',
-            labelAlign: 'left',
-            autoSelect: true,
             forceSelection: true,
             labelWidth: 95,
             minWidth: 300,
-            anyMatch: true,
-            editable: true,
-            typeAhead: true,
-            queryMode: 'local',
-            selectOnFocus: true,
-            triggerAction: 'all',
             listeners: {
-                change: this.onIventoryChange,
+                select: function (combo, records, eOpts) {
+                    var selectedRecord = records[0];
+                    if (selectedRecord && selectedRecord.internalId) {
+                        me.onIventoryChange(combo, selectedRecord.internalId);
+                    }
+                },
                 scope: this
+            },
+            listConfig: {
+                cls: "location-picker-menu",
+                maxWidth: "400",
+                minWidth: "300",
+                // Custom rendering template for each item
+                getInnerTpl: function () {
+                    return "<span class='name'>{name}</span>";
+                },
+
+                // this is an override that hides the paging toolbar when the list only contains a single page of results;
+                refresh: function () {
+                    var me = this,
+                        toolbar = me.pagingToolbar;
+
+                    Ext.view.View.prototype.refresh.call(me);
+                    if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
+                        me.el.appendChild(toolbar.el);
+                        if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
+                        else me.el.last().show();
+                    }
+                }
             }
-        };
+        })
 
         this.secondToolbarItems = [
             {
@@ -173,16 +157,6 @@ Ext.define('Taco.view.location.inventory.Index', {
         };
 
         this.callParent(arguments);
-
-        if (this.locationStore.loaded) {
-            this.down('#inventory-dropdown').setValue(this.store.getAt(0));
-        }
-
-        else {
-            this.locationStore.on('load', function () {
-                this.down('#inventory-dropdown').setValue(this.locationStore.getAt(0));
-            }, this, { single: true });
-        }
     },
 
     onIventoryChange: function (cmp, code) {
