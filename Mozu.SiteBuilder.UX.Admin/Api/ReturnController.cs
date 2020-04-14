@@ -115,6 +115,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var customerName = rma.Contact == null ? string.Empty : $"{rma.Contact.FirstName} {rma.Contact.LastName} #{rma.CustomerAccountId}";
             rma.CreatedBy = await GetUserNameById(rma.CreatedBy) ?? customerName;
             rma.UpdatedBy = await GetUserNameById(rma.UpdatedBy) ?? customerName;
+            
+            rma.ReturnRefunds.Each(async (r) => {
+                var userId = r.CreateBy;
+                r.CreateBy = await GetUserNameById(userId);
+            });
 
             if (!rma.ReturnOrderId.IsNullOrEmpty())
             {

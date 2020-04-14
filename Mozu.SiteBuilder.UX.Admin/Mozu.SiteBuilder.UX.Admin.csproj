@@ -208,6 +208,7 @@
     <Compile Include="Api\ModelMapping\FulfillmentMapping.cs" />
     <Compile Include="Api\Models\FulfillmentListView.cs" />
     <Compile Include="Api\Models\Order\ReturnableShipItem.cs" />
+    <Compile Include="Api\Models\Returns\ReturnRefund.cs" />
     <Compile Include="Api\PaymentHelper.cs" />
     <Compile Include="Api\ReturnHelper.cs" />
     <Compile Include="Api\ReturnSettingsController.cs" />

@@ -914,6 +914,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.GatewayAVSResponse, op => op.ResolveUsing(dc => dc.GatewayAVSCodes))
                 .ForMember(x => x.GatewayCVV2Response, op => op.ResolveUsing(dc => dc.GatewayCVV2Codes))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : null))
                 .ForMember(x => x.PaymentId, op => op.ResolveUsing(dc => dc.PaymentId))
                 .ForMember(x => x.IsManual, op => op.ResolveUsing(dc => dc.IsManual))
                 .ForMember(x => x.ReturnId, op => op.ResolveUsing(dc => dc.ReturnId))
