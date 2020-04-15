@@ -10,8 +10,13 @@ using NDjango.Interfaces;
 using NDjango.Misc;
 using NUnit.Framework;
 using System.Net.Http;
-using Autofac;
-using AutofacContrib.NSubstitute;
+//using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Mozu.Core.Test;
+
+//using Autofac;
+//using AutofacContrib.NSubstitute;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -78,7 +83,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
             public Dictionary<string, string> Templates { get; set; }
 
-            public  Action<ContainerBuilder> ContainerModifier  { get; set; }
+            public  Action<IServiceCollection> ContainerModifier  { get; set; }
 
             public static Func<string, Tuple<bool, string>> ContainsLiteral(string expected)
             {
@@ -155,20 +160,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         private static Dictionary<string, object> SetupContext(TestDescriptor desc)
         {
-            var dict = desc.Context == null ? new Dictionary<string, object>() : desc.Context;
+            var dict = desc.Context ?? new Dictionary<string, object>();
 
             dict["true"] = true;
             dict["false"] = false;
             dict["now"] = DateTime.UtcNow;
             //add viewContextNode
             var hyprviewcontext = new HyprViewContext(null, null, null);
-            var modifier = desc.ContainerModifier ?? new Action<ContainerBuilder>(cb => { });
+            var modifier = desc.ContainerModifier ?? (cb => { });
             var autoSub =  new AutoSubstitute(modifier);
             
-            hyprviewcontext.LifetimeScope = autoSub.Container;
+            hyprviewcontext.LifetimeScope = autoSub.ServiceProvider;
             dict.Add("_vc", hyprviewcontext);
             
-            hyprviewcontext.HttpContext = autoSub.Container.IsRegistered<HttpContextBase>() ? autoSub.Resolve<HttpContextBase>() : new HttpContextWrapper(new HttpContext(new HttpRequest("Default", "http://mozilla.com", ""), new HttpResponse(new StreamWriter(new MemoryStream()))));
+            hyprviewcontext.HttpContext = autoSub.Resolve<HttpContext>() ?? new DefaultHttpContext();
             return dict;
         }
     }

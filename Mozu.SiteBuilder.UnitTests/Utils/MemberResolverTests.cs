@@ -14,12 +14,12 @@ namespace Mozu.SiteBuilder.UnitTests.Utils
     [TestFixture]
     public class MemberResolverTests
     {
-        static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
+        private static readonly JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
 
         [TestCaseSource("cases")]
         public void resolve(object input, string member, object expected)
         {
-            _resolver.ResolveMember(input, member).ShouldEqual(expected);
+            _resolver.ResolveMember(input, member).ShouldEqual<object>(expected);
         }
 
         public static IEnumerable<object[]> cases()

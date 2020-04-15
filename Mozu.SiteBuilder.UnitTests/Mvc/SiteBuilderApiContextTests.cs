@@ -15,6 +15,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -109,61 +111,72 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var cookieProvider = Substitute.For<ICookieProvider>();
             var settings = Substitute.For<ISettings>();
             var authenticationHelper = Substitute.For<IAuthenticationHelper>();
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://foo.com/bing");// Substitute.For<HttpRequestMessage>();
+            var env = Substitute.For<IWebHostEnvironment>();
+            var ctx = new DefaultHttpContext();
+            ctx.Request.Method = "GET";
+            ctx.Request.Host = new HostString("foo.com");
+            ctx.Request.Path = "/bing";
 
             var editModeGetter = Substitute.For<IEditModeFinderOuter>();
             var dvmGetter = Substitute.For<IDataViewModeFinderOuter>();
-            httpRequestMessage.Headers.Add("x-vol-tenant", "123");
-            httpRequestMessage.Headers.Add("x-vol-app-claims", "__mzrpt__");
-            httpRequestMessage.Headers.Add("x-vol-user-claims", "__mzrpt__");
+            ctx.Request.Headers.Add("x-vol-tenant", "123");
+            ctx.Request.Headers.Add("x-vol-app-claims", "__mzrpt__");
+            ctx.Request.Headers.Add("x-vol-user-claims", "__mzrpt__");
 
 
-            var ct = new SiteBuilderApiContext(cookieProvider, settings, authenticationHelper, httpRequestMessage, dvmGetter, editModeGetter);
+            var ct = new SiteBuilderApiContext(cookieProvider, settings, authenticationHelper, ctx, dvmGetter, editModeGetter, env);
             Assert.AreEqual(ct.TenantId, 123);
-            
         }
                                
         [Test]
         public void Can_Set_Now_override_In_Staging_Via_QS()
         {
-            ICookieProvider cookieProvider = Substitute.For<ICookieProvider>();
+            var cookieProvider = Substitute.For<ICookieProvider>();
+            var env = Substitute.For<IWebHostEnvironment>();
+            var auth = Substitute.For<IAuthenticationHelper>();
 
-            ISettings settings = Substitute.For<ISettings>();
-            settings.AppSettings(Arg.Is<string>("ReverseProxy")).Returns("true");
-            IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
+            var settings = Substitute.For<ISettings>();
+            settings.AppSettings(Arg.Is("ReverseProxy")).Returns("true");
+
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
             dvm.GetDataViewMode(Arg.Any<Mozu.Core.LightweightUserClaims>()).Returns(Core.DataViewModeType.Pending);
+
             var edit = Substitute.For<IEditModeFinderOuter>();
             edit.IsEditMode().Returns(false);
-            HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
 
-            request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");
-            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request, dvm, edit);
+            var hctx = new DefaultHttpContext();
+            hctx.Request.Host = new HostString("foo.com");
+            hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
+            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, hctx, dvm, edit, env);
             
             var now = ctx.PreviewDate.Value;
+
             Assert.AreEqual(now.Year, 2012);
             Assert.AreEqual(now.Month, 11);
             Assert.AreEqual(now.Day, 10);
-
         }
         [Test]
         public void Can_Set_Now_override_In_Live_Via_QS()
         {
-            ICookieProvider cookieProvider = Substitute.For<ICookieProvider>();
+            var cookieProvider = Substitute.For<ICookieProvider>();
+            var env = Substitute.For<IWebHostEnvironment>();
+            var auth = Substitute.For<IAuthenticationHelper>();
 
-            ISettings settings = Substitute.For<ISettings>();
+            var settings = Substitute.For<ISettings>();
             settings.AppSettings(Arg.Is<string>("ReverseProxy")).Returns("true");
-            IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
-            HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
+
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
             dvm.GetDataViewMode(Arg.Any<Mozu.Core.LightweightUserClaims>()).Returns(Core.DataViewModeType.Live);
+
             var edit = Substitute.For<IEditModeFinderOuter>();
             edit.IsEditMode().Returns(false);
-            request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");
-            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request, dvm, edit);
+
+            var hctx = new DefaultHttpContext();
+            hctx.Request.Host = new HostString("foo.com");
+            hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
+
+            var ctx = new SiteBuilderApiContext(cookieProvider, settings, auth, hctx, dvm, edit, env);
             Assert.IsNull(ctx.PreviewDate);
-
         }
-
     }
 }

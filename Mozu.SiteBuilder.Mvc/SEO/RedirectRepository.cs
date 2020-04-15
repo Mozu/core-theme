@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public Dictionary<string, RedirectEntry> Simple { get; set; }
         public Dictionary<string, List<RuntimeRedirectEntry>> QueryString { get; set; }
    
-        public List<Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>> WildCards { get; internal set; }
+        public List<Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>> WildCards { get; set; }
     }
 
     public class RuntimeRedirectEntry

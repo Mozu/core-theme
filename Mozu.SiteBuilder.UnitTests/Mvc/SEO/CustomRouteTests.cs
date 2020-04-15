@@ -16,24 +16,18 @@ using Should;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.MZDB.Contracts;
 using System.Net.Http;
-using System.Web.Http.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Core.Logging;
 using System.Runtime.Caching;
-using System.Web.Http.Dependencies;
-using System.Web.Http.Hosting;
 using Mozu.Content.Contracts;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
 using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
-using Autofac;
-using Autofac.Integration.WebApi;
-using AutofacContrib.NSubstitute;
 using AutoMapper;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -43,9 +37,19 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute.Core;
 using Mozu.SiteBuilder.Mvc.Caching;
 using System.Linq;
-
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Api.Contracts.Caching;
+using Mozu.Core.Configuration;
+using Mozu.Core.Test;
 using Mozu.SiteBuilder.Mvc.Context;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UnitTests.Utils;
+using Route = Mozu.SiteSettings.General.Contracts.General.Routing.Route;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
@@ -155,6 +159,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             throw new NotImplementedException();
         }
     }
+
     [TestFixture, Category("CustomRoutes")]
     public class CustomRouteTests
     {
@@ -216,14 +221,15 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
         [TestCaseSource("HappyPathMappings")]
         [TestCaseSource("NoOpPathMappings")]
-        public async Task MappersWork(MappersWorkTest test)
+        public Task MappersWork(MappersWorkTest test)
         {
-           
             test.mapping.Initialize();
-            HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo"); ;
-            reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
-            var outputs = test.mapping.Map(reqMessage, test.inputs, "foo");
+            var ctx = new DefaultHttpContext();
+            ctx.Request.Path = "/foo";
+            ctx.Request.Method = "GET";
+            var outputs = test.mapping.Map(ctx, test.inputs, "foo");
             outputs.SequenceEqual(test.expectedOutput).ShouldBeTrue();
+            return Task.CompletedTask;
         }
         public class MappersWorkTest
         {
@@ -233,8 +239,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 _name = name;
                 this.mapping = (IRouteDataMapping)stuff[0];
-                this.inputs =(Dictionary < string, object> )stuff[1];
-                this.expectedOutput = (Dictionary < string, object> )stuff[2];
+                this.inputs =(Dictionary<string, object>)stuff[1];
+                this.expectedOutput = (Dictionary<string, object>)stuff[2];
             }
             public override string ToString()
             {
@@ -333,9 +339,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("ConstraintTests")]
         public async Task ConstraintsWork(ConstraintTest test )
         {
-            var httpRoute = Substitute.For<IHttpRoute>();
+            var httpRoute = Substitute.For<IRouter>();
             test.constraint.Initialize();
-            test.constraint.DoMatch(null, null, test.parameterName, test.inputs, HttpRouteDirection.UriResolution).ShouldEqual(test.routeShouldMatch);
+            test.constraint.DoMatch(null, null, test.parameterName, test.inputs, RouteDirection.UrlGeneration).ShouldEqual(test.routeShouldMatch);
         }
 
         public class ConstraintTest
@@ -346,12 +352,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 _name = "Constraint "+ name;
                 parameterName = parts[0] as string;
                 constraint = parts[1] as ICustomRouteConstraint;
-                inputs = parts[2] as Dictionary<string, object>;
+                inputs = parts[2] as RouteValueDictionary;
                 routeShouldMatch = (bool)parts[3];
             }
             public string parameterName;
             public ICustomRouteConstraint constraint;
-            public Dictionary<string, object> inputs;
+            public RouteValueDictionary inputs;
             public bool routeShouldMatch;
             public override string ToString()
             {
@@ -406,10 +412,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             })));
 
             var contextData = new SiteBuilderContextData();
-            contextData.RouteValidatorData = new Dictionary<string, Dictionary<string, object>>();
-            contextData.RouteValidatorData["test3"] = new Dictionary<string, object> { { "meh", "meh" } };
-            contextData.RouteValidatorData["test4"] = new Dictionary<string, object> { { "bing", "bing" } };
-            contextData.RouteValidatorData["mzdb"] = new Dictionary<string, object> { { "value!", "value!" } };
+            contextData.RouteValidatorData = new Dictionary<string, Dictionary<string, object>>
+            {
+                ["test3"] = new Dictionary<string, object> { { "meh", "meh" } },
+                ["test4"] = new Dictionary<string, object> { { "bing", "bing" } },
+                ["mzdb"] = new Dictionary<string, object> { { "value!", "value!" } }
+            };
             var contextProvider = Substitute.For<ISiteBuilderContextProvider>();
             contextProvider.GetContextData().Returns(contextData);
             var context = Substitute.For<IApiContext>();
@@ -565,9 +573,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             contextProvider.GetContextData().Returns(sbcd);
             var constraintFactory = new ConstraintFactory(contextProvider, apiContext);
             var mappingFactory = new RouteMappingFactory(contextProvider);
-            var repo = new CustomRouteRepository(apiContext,logger,contextProvider,  constraintFactory, mappingFactory);
+            var repo = new CustomRouteRepository(apiContext, logger, contextProvider, constraintFactory, mappingFactory, new DefaultHttpContext());
 
-            var collection =  (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
+            var collection =  ((ICustomRouteCollectionRepository) repo).GetRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
         }
 
@@ -610,7 +618,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             public string Url { get; set; }
 
             public Action<CustomRouteHandler> RouteAction { get; set; }
-            public Action<HttpRequestMessage > ValidateRequest { get; set; }
+            public Action<HttpContext> ValidateRequest { get; set; }
             public Action<CustomRoute> ValidateRoute{ get; set; }
             public Action <CustomRouteHandler , CategoryTree , Mozu.SiteBuilder.Mvc.Helpers.UrlHelper> DoLinkStuff { get; set; }
 
@@ -666,7 +674,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                     var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
                     var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true);
                     Assert.AreEqual(url, "/sale/women/clothing/dresses");
-
                 }
             };
 
@@ -751,52 +758,42 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                x.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
            });
             //Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
-            var subber = new AutofacContrib.NSubstitute.AutoSubstitute();
+            var subber = new AutoSubstitute();
             subber.Provide<IRouteConfig>(new RouteConfig());
             var sbapiContext = subber.ResolveAndSubstituteFor<ISiteBuilderApiContext>();
             var pc = subber.ResolveAndSubstituteFor<IPageContext>();
          
             var logger = subber.ResolveAndSubstituteFor<ILogger>();
-            var cache = new MemoryCache("testcache");
-            subber.Provide<ObjectCache>(cache);
-            subber.SubstituteFor<System.Web.HttpContextBase>();
-            HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/" + test.Url ); ;
-            pc.Url.Returns(reqMessage.RequestUri.ToString());
-
+            var cache = new MemoryCache(new MemoryCacheOptions());
+            subber.Provide(cache);
+            var httpCtx = new DefaultHttpContext();
+            subber.Provide<HttpContext>(httpCtx);
+            httpCtx.Request.Path = test.Url;
+            pc.Url.Returns(httpCtx.GetRequestUri().ToString());
          
-            reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
-            var sc = new SearchContext(reqMessage);
+            //reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
+            var sc = new SearchContext(httpCtx);
             pc.Search = sc;
-            subber.Provide<HttpRequestMessage>(reqMessage);
-            IDependencyScope scope = new AutofacWebApiDependencyScope(subber.Container);
+            //subber.Provide<HttpRequestMessage>(reqMessage);
+            var scope = new LifetimeScopeProxy(subber.Container);
 
-            var lt=scope.GetRequestLifetimeScope();
-            var xx=lt.Resolve<HttpRequestMessage>();
+            var lt=scope;
+            //var xx=lt.Resolve<HttpRequestMessage>();
 
-            reqMessage.Properties[HttpPropertyKeys.DependencyScope] = scope;
-
-
+            httpCtx.Items["MS_DependencyScope"] = scope;
 
             InitServices(subber);
 
             subber.Provide<ICustomRouteConstraintFactory>(subber.Resolve<ConstraintFactory>());
             subber.Provide<IRouteDataMappingFactory>(subber.Resolve<RouteMappingFactory>());
 
-
-
-
-
-
             var custRepo = subber.ResolveAndSubstituteFor<CustomRouteRepository>();
             var lazyRepo = new Lazy<ICustomRouteCollectionRepository>(() => custRepo);
-            subber.Provide<Lazy<ICustomRouteCollectionRepository>>(lazyRepo);
-
-
+            subber.Provide(lazyRepo);
 
             var catTreeProvider = subber.ResolveAndSubstituteFor<RuntimeCategoryTreeProvider>();
             subber.Provide<ICategoryTreeProvider>(catTreeProvider);
             var yyy = lt.Resolve<ICategoryTreeProvider>();
-
 
             var sbContextProvider = lt.Resolve<ISiteBuilderContextProvider>();
             var sbCtxData = sbContextProvider.GetContextDataAsync().Result;
@@ -806,33 +803,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             subber.Provide<ICustomRouteHandler>(customRouteRepo);
             var urlHelper = subber.ResolveAndSubstituteFor<Mozu.SiteBuilder.Mvc.Helpers.UrlHelper>();
 
-
-
-            customRouteRepo.RouteIncomingRequest();
-
-
+            customRouteRepo.RouteIncomingRequest(new RouteContext(httpCtx));
 
             customRouteRepo.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true);
 
-            if (test.ValidateRequest != null)
-            {
-                test.ValidateRequest(reqMessage);
-            }
-            if (test.ValidateRoute != null)
-            {
-                test.ValidateRoute(reqMessage.GetRouteData().Route as CustomRoute);
-            }
+            test.ValidateRequest?.Invoke(httpCtx);
+            test.ValidateRoute?.Invoke(httpCtx.GetRouteData().Routers.OfType<CustomRoute>().FirstOrDefault());
 
-            if (test.DoLinkStuff != null)
-            {
-                test.DoLinkStuff(customRouteRepo, catTree, urlHelper );
-            }
-
-            
-          
-            
-            
-
+            test.DoLinkStuff?.Invoke(customRouteRepo, catTree, urlHelper);
         }
 
         static T GetResource<T>(string name)
@@ -842,7 +820,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var str= ass.GetManifestResourceStream(rname);
             Newtonsoft.Json.JsonSerializer ser = new JsonSerializer();
             return ser.Deserialize<T>(new JsonTextReader(new StreamReader(str)));
-            
         }
 
         void InitServices(AutoSubstitute subber)
@@ -852,21 +829,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             attrClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IAttributeWebApiClient>(attrClient);
 
-
             attrClient.GetAttributeVocabularyValues(Arg.Any<string>()).ReturnsForAnyArgs(x =>
             {
                 var att = (string)x.Args()[0];
                 var res = Task.FromResult(Response(GetResource<List<ProductAdmin.Contracts.AttributeVocabularyValue>>("IAttributeWebApiClient.GetAttributeVocabularyValues." + att)));
                 return res;
             });
-            
 
             var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
             (searchClient as ICloneable).Clone().Returns(searchClient);
             searchClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IProductSearchWebApiClient>(searchClient);
-
-
        
             searchClient.Search().ReturnsForAnyArgs(x =>
             {
@@ -874,8 +847,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 var searchResult = Task.FromResult(Response(GetResource<ProductRuntime.Contracts.ProductSearchResult>("IProductSearchWebApiClient.Search."+ att)));
                 return searchResult;
             });
-
-
 
           //  GetResource<ProductRuntime.Contracts.ProductSearchResult>("IProductSearchWebApiClient.Search." + x.Arg<string>()));
            
@@ -893,12 +864,11 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             catClient.GetCategoryTree().ReturnsForAnyArgs(Task.FromResult(Response(catTree)));
             catClient.Handler.ReturnsForAnyArgs(new TestHandler());
 
+
             var docClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
             (docClient as ICloneable).Clone().Returns(docClient);
             docClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IDocumentListWebApiClient>(docClient);
-           
-            
 
 
             var genSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
@@ -918,7 +888,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             subber.Provide<ISiteBuilderContextDataRepository, SiteBuilderContextDataRepository>();
 
             subber.Provide<ISiteBuilderContextProvider, SiteBuilderContextProvider>();
-
         }
 
         static ServiceClientResponse<T> Response<T>(T obj)
@@ -932,8 +901,5 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 ResponseMessage = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK)
             };
         }
-
     }
 }
-
-

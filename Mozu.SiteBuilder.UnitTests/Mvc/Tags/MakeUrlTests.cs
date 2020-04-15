@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http.Routing;
 using NUnit.Framework;
 using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute;
@@ -30,8 +31,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 
         private static List<TestDescriptor> GetTests()
         {
-            var req = new System.Net.Http.HttpRequestMessage(HttpMethod.Get, "http://localhost/foo");
-            req.SetRouteData(new HttpRouteData(new HttpRoute()));
+            var ctx = new DefaultHttpContext();
+            ctx.Request.Path = "/foo";
+            ctx.Request.Method = "GET";
             var sc = Substitute.For<ISiteContext>();
             sc.ThemeSettings = new SiteBuilder.Mvc.Themes.ThemeRuntimeSettingsCollection(new Dictionary<string, object>(), new byte[0] { }, DateTime.MaxValue);
             sc.CdnPrefix.Returns("//cdn/1-m2");
@@ -42,35 +44,33 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             var customRouteHandler = Substitute.For<ICustomRouteHandler>();
             customRouteHandler.GetCanonicalUrl(NSubstitute.Arg.Any<SiteSettings.General.Contracts.General.Routing.FancyRoute>()  , NSubstitute.Arg.Any<Func<IDictionary<string, object>>>(), NSubstitute.Arg.Any<bool>()).Returns((string)null);
             var catTreeProvider = Substitute.For<ICategoryTreeProvider>();
-            var catTree = new CategoryTree();
-            catTree.AllCategories = new List<Category>() { new Category() { CategoryId = 66, CategoryCode = "steve" } };
+            var catTree = new CategoryTree
+            {
+                AllCategories = new List<Category>() {new Category() {CategoryId = 66, CategoryCode = "steve"}}
+            };
             catTreeProvider.GetAllCategories().Returns(catTree);
             var pc = Substitute.For<IPageContext>();
-            pc.Search = new SearchContext(req)
-            {
-            };
-            pc.Url = req.RequestUri.ToString();
+            pc.Search = new SearchContext(ctx);
+            pc.Url = ctx.GetRequestUri().ToString();
 
             var ac = Substitute.For<ISiteBuilderApiContext>();
             
-            var urlHelper = new UrlHelper(sc, ac, pc, customRouteHandler, req,new Lazy<ICategoryTreeProvider>(()=> catTreeProvider));
-            Action<ContainerBuilder> containerMods = cb =>
-           {
-               cb.Register(c => sc).As<ISiteContext>();
-               cb.Register(c => pc).As<IPageContext>();
-               cb.Register(c => urlHelper).As<UrlHelper>();
+            var urlHelper = new UrlHelper(sc, ac, pc, customRouteHandler, ctx, new Lazy<ICategoryTreeProvider>(()=> catTreeProvider));
 
-           };
-            
+            void ContainerMods(IServiceCollection cb)
+            {
+                cb.AddScoped(c => sc);
+                cb.AddScoped(c => pc);
+                cb.AddScoped(c => urlHelper);
+            }
 
-           
             return new List<TestDescriptor>
             {
                 new TestDescriptor
                 {
                     Name = "cdn",
                     Template = @"{% make_url ""cdn"" ""/foo.png"" %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     ExpectedFunc = TestDescriptor.CompareLiteral("//cdn/1-m2/foo.png?_mzcb=123")
                 },
               
@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "image1",
                     Template = @"{% make_url ""image"" product.mainImage with max=50 as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "product", new Product() {
                        Content = new ProductContent() {
                         ProductImages =new ProductImageCollection { new ProductImage() {  ImageUrl="//cdn/1/foo.jpg"} } } }} },
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "image2",
                     Template = @"{% make_url ""image"" product.mainImage with max=50 as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "product", new Product() {
                        Content = new ProductContent() {
                         ProductImages =new ProductImageCollection { new ProductImage() {  ImageUrl="/foo.jpg"} } } }} },
@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "paging1",
                     Template = @"{% make_url ""paging"" productCol with page=""next"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
                         StartIndex=50,
                         PageSize = 10,
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "paging previous",
                     Template = @"{% make_url ""paging"" productCol with page=""previous"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
                         StartIndex=10,
                         PageSize = 10,
@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "sortby_withParams",
                     Template = @"{% make_url ""sorting"" productCol with sortBy=""price:desc"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                        Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
                         StartIndex=50,
                         PageSize = 10,
@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "sortby_without_Params",
                     Template = @"{% make_url ""sorting"" ""price:desc""  %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                        Context = new Dictionary<string, object>() { { "productCol", new ProductCollection() {
                         StartIndex=50,
                         PageSize = 10,
@@ -151,13 +151,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Name = "categoryFacet clears faceting",
                     Template = @"{% make_url ""facet"" facetValue %}",
                     ContainerModifier = builder => {
-                        containerMods(builder);
-                        builder.Register(
-                            ctx => {
-                              ctx.Resolve<PageContext>().Search = new SearchContext(new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo?startIndex=100"));
-                              return ctx.Resolve<PageContext>();
+                        ContainerMods(builder);
+                        builder.AddScoped(
+                            bctx => {
+                                var hctx = new DefaultHttpContext();
+                                hctx.Request.Path = "/foo";
+                                hctx.Request.QueryString = new QueryString("?startIndex=100");;
+
+                                bctx.Resolve<PageContext>().Search = new SearchContext(hctx);
+                                return bctx.Resolve<PageContext>();
                             }
-                        ).As<IPageContext>();
+                        );
                     },
                        Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
@@ -173,7 +177,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "categoryFacet",
                     Template = @"{% make_url ""facet"" facetValue %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
                         ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
                         Value = "66"
@@ -184,7 +188,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "document",
                     Template = @"{% make_url ""document"" doc %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "doc", new Mozu.Content.Contracts.Document() {Name="steve", ListFQN="food@fart" } } },
                     ExpectedFunc = TestDescriptor.ContainsLiteral("/steve")
                 },
@@ -192,7 +196,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "product",
                     Template = @"{% make_url ""product"" productCode %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd")
                 },
@@ -200,7 +204,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productStringCode",
                     Template = @"{% make_url ""product"" ""abcd"" %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>(),
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd")
                 },
@@ -208,7 +212,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productCodeWithQuerystring",
                     Template = @"{% make_url ""product"" ""abcd"" with test=""true"" %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>(),
                     ExpectedFunc = TestDescriptor.CompareLiteral("/p/abcd?test=true")
                 },
@@ -216,7 +220,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productVariant",
                     Template = @"{% make_url ""product"" productCode with variant=""purple-small"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd?vpc=purple-small")
                 },
@@ -224,7 +228,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productVariantObject",
                     Template = @"{% make_url ""product"" product with variant=""purple-small"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
                     {
                         ProductCode = "abcd"
@@ -235,7 +239,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productVariantObjectWithVpcParam",
                     Template = @"{% make_url ""product"" product with vpc=""purple-small"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
                     {
                         ProductCode = "abcd"
@@ -246,7 +250,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "productVariantObjectWithMultipleParameters",
                     Template = @"{% make_url ""product"" product with variant=""purple-small"" test=""true"" as_paramater %}",
-                    ContainerModifier = containerMods,
+                    ContainerModifier = ContainerMods,
                     Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
                     {
                         ProductCode = "abcd"

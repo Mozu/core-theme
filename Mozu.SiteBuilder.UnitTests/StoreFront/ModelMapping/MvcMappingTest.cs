@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
 {
     public class MvcMappingTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             Mapper.Reset();
@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
                cfg.AddProfile<GeneralSettingsMapping>();
                cfg.AddProfile<NavigationMapping>();
                cfg.AddProfile<ProductMapping>();
-               cfg.AddProfile<Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.CheckoutMapping>();
+               //cfg.AddProfile<Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.CheckoutMapping>();
 
               
 
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
 
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void FixtureTearDown()
         {
             Mapper.Reset();
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
            var tgs = ser.Deserialize<Mozu.SiteSettings.Order.Contracts.TenantGateway[]>(new Newtonsoft.Json.JsonTextReader(new System.IO.StringReader(str)));
 
           
-           var res = AutoMapper.Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.Gateway[]>(tgs);
+           //var res = AutoMapper.Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.Gateway[]>(tgs);
 
            
             //var tg = new Mozu.SiteSettings.Order.Contracts.TenantGateway()

@@ -1,10 +1,9 @@
-﻿using Autofac;
-using AutofacContrib;
-using Mozu.SiteBuilder.Mvc.Contexts;
+﻿using Mozu.SiteBuilder.Mvc.Contexts;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 {
@@ -34,7 +33,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     {
 
                         var pc = Substitute.For<IPageContext>();
-                        cb.Register<IPageContext>((c)=>pc);
+                        cb.AddScoped((c)=>pc);
                         pc.NumberFormat.Returns(
                             new System.Globalization.NumberFormatInfo()
                             {
@@ -63,7 +62,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     {
 
                         var pc = Substitute.For<IPageContext>();
-                        cb.Register<IPageContext>((c)=>pc);
+                        cb.AddScoped((c)=>pc);
                         pc.NumberFormat.Returns(
                             new System.Globalization.NumberFormatInfo()
                             {

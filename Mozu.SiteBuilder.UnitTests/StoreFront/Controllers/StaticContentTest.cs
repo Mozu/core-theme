@@ -12,6 +12,7 @@ using System.Net;
 using System.Collections.Generic;
 using Mozu.Core;
 using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
@@ -24,7 +25,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         string devcenterpath;
         string file;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             devcenterpath = System.IO.Path.GetTempPath();
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Kill()
         {
             System.IO.Directory.Delete(staticContentPath, true);
@@ -58,12 +59,22 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             
             //Act
             InitObjectUnderTest();
-            ObjectUnderTest.Request = HttpRequestMessageHelpers.CreateFromContainer(MockContainer.Container);
+            ObjectUnderTest.ControllerContext = new ControllerContext
+            {
+                HttpContext = HttpContextHelpers.CreateFromContainer(MockContainer.Container)
+            };
 
             //Assert  
             var response = ObjectUnderTest.StaticContentShare(path);
-            response.StatusCode.ShouldEqual(expected);
-            if (expected != HttpStatusCode.NotFound) (response.Content as StreamContent).Dispose();
+            if (expected == HttpStatusCode.NotFound)
+            {
+                Assert.True(response is NotFoundResult);
+            }
+            else
+            {
+                Assert.True(response is FileStreamResult);
+                (response as FileStreamResult).FileStream.Dispose();
+            }
         }
 
         private IEnumerable<object[]> GetCases()

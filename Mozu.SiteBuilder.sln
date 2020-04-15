@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		WE-settings.xml = WE-settings.xml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UnitTests", "Mozu.SiteBuilder.UnitTests\Mozu.SiteBuilder.UnitTests.csproj", "{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI|Any CPU = CI|Any CPU
@@ -90,6 +92,24 @@ Global
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Any CPU.ActiveCfg = Release|Any CPU
 		{FE9DA6F5-3477-48A3-8314-572CE5C308FB}.SI|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.CI|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.CI|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Demo|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Demo|Any CPU.Build.0 = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.perf|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.perf|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Prod|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Prod|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.QA|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.QA|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.SI|Any CPU.ActiveCfg = Release|Any CPU
+		{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}.SI|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

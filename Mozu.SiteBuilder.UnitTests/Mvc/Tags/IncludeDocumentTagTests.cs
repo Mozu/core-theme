@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mozu.Core.Test;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 {
@@ -44,8 +45,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
         [Test]
         public void Inlude_entites_parses_ids()
         {
-            var lts = new AutofacContrib.NSubstitute.AutoSubstitute();
-            IncludeEntitiesTag tag = new IncludeEntitiesTag();
+            var lts = new AutoSubstitute();
+            var tag = new IncludeEntitiesTag();
             var client = Substitute.For<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
             var context = Substitute.For<IContext>();
             var sc = Substitute.For<ISiteContext>();
@@ -55,14 +56,24 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             lts.Provide<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>(client);
             var ret = new Microsoft.FSharp.Core.FSharpOption<object>(hvc);
             context.tryfind("_vc").Returns(ret);
-            hvc.LifetimeScope = lts.Container;
+            hvc.LifetimeScope = lts.ServiceProvider;
             object obj;
 
             // lts.TryResolveService(Arg.Any<Service>(), out obj)
 
-            var args = new ArgumentCollection();
-            args.Add(new TagArgument() { Name = "viewName", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = "foo" });
-            args.Add(new TagArgument() { Name = "ids", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = new string[] { "a", "b", "c" } });
+            var args = new ArgumentCollection
+            {
+                new TagArgument()
+                {
+                    Name = "viewName", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = "foo"
+                },
+                new TagArgument()
+                {
+                    Name = "ids",
+                    ArgumentType = TagArgument.ArgumentTypes.NamedArgument,
+                    Value = new string[] {"a", "b", "c"}
+                }
+            };
             try
             {
                 //id eq "a" or id eq "b" or id eq "c"
@@ -79,9 +90,19 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 
             }
 
-            args = new ArgumentCollection();
-            args.Add(new TagArgument() { Name = "viewName", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = "foo" });
-            args.Add(new TagArgument() { Name = "ids", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = new string[] { "a" } });
+            args = new ArgumentCollection
+            {
+                new TagArgument()
+                {
+                    Name = "viewName", ArgumentType = TagArgument.ArgumentTypes.NamedArgument, Value = "foo"
+                },
+                new TagArgument()
+                {
+                    Name = "ids",
+                    ArgumentType = TagArgument.ArgumentTypes.NamedArgument,
+                    Value = new string[] {"a"}
+                }
+            };
             client.ClearReceivedCalls();
             try
             {

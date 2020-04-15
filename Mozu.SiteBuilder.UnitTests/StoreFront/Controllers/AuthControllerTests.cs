@@ -1,16 +1,12 @@
 ﻿using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using AutofacContrib.NSubstitute;
 using NSubstitute;
-using System.Web;
-using System.Net.Http;
-using Mozu.Core.Api;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Mozu.Core.Api.ErrorHandler;
+using Mozu.Core.Test;
 
 namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 {
@@ -21,19 +17,19 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         [Test]
         public void CannotCreateAccountWithInvalidFistName()
         {
-            var errorGenerator = Substitute.For<IHttpErrorResponseGenerator>();
+            var errorGenerator = Substitute.For<IErrorResultConverterCollection>();
             var autoSubstitute = new AutoSubstitute(cb =>
             {
-                cb.RegisterType<AuthController>().AsSelf();
-                var hcb = Substitute.For<HttpContextBase>();
-                cb.Register(_ => hcb).As<HttpContextBase>();
-                var rm = new HttpRequestMessage();
-                cb.Register(_ => rm).As<HttpRequestMessage>();
-                cb.Register(_ => errorGenerator).As<IHttpErrorResponseGenerator>();
+                cb.AddScoped<AuthController>();
+                var hc = Substitute.For<HttpContext>();
+                cb.AddScoped(_ => hc);
+                //var rm = new HttpRequestMessage();
+                //cb.AddScoped(_ => rm);
+                cb.AddScoped(_ => errorGenerator);
             });
 
             var authController = autoSubstitute.Resolve<AuthController>();
-            authController.Request = new HttpRequestMessage();
+            authController.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
             try
             {
                 var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
@@ -48,27 +44,31 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                     }
                 }).Result;
             }
-            catch { }
-            errorGenerator.Received().GenerateErrorResponse(authController.Request, Arg.Any<Exception>());
-           
+            catch (Exception ex)
+            {
+                errorGenerator.Received().ConvertExceptionToError(ex, false);
+            }
         }
 
         [Test]
         public void CanCreateAccountWithValidFistName()
         {
-            var errorGenerator = Substitute.For<IHttpErrorResponseGenerator>();
+            var errorGenerator = Substitute.For<IErrorResultConverterCollection>();
             var autoSubstitute = new AutoSubstitute(cb =>
             {
-                cb.RegisterType<AuthController>().AsSelf();
-                var hcb = Substitute.For<HttpContextBase>();
-                cb.Register(_ => hcb).As<HttpContextBase>();
-                var rm = new HttpRequestMessage();
-                cb.Register(_ => rm).As<HttpRequestMessage>();
-                cb.Register(_ => errorGenerator).As<IHttpErrorResponseGenerator>();
+                cb.AddScoped<AuthController>();
+                var hcb = Substitute.For<HttpContext>();
+                cb.AddScoped(_ => hcb);
+                //var rm = new HttpRequestMessage();
+                //cb.AddScoped(_ => rm);
+                cb.AddScoped(_ => errorGenerator);
             });
 
             var authController = autoSubstitute.Resolve<AuthController>();
-            authController.Request = new HttpRequestMessage();
+            authController.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
             try
             {
                 var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
@@ -83,9 +83,10 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                     }
                 }).Result;
             }
-            catch { }
-            errorGenerator.DidNotReceive().GenerateErrorResponse(authController.Request, Arg.Any<Exception>());
-
+            catch (Exception ex)
+            {
+                errorGenerator.DidNotReceive().ConvertExceptionToError(ex, false);
+            }
         }
     }
 }

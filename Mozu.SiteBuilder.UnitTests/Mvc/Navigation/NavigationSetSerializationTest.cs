@@ -47,10 +47,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Navigation
         [Test]
         public void Test_Serialize_and_deserialize()
         {
-            string result = JsonConvert.SerializeObject(_testSet, _converter);
-            Assert.IsNotNullOrEmpty(result);
+            var result = JsonConvert.SerializeObject(_testSet, _converter);
+            Assert.True(!string.IsNullOrEmpty(result));
 
-            NavigationSet deserialized = JsonConvert.DeserializeObject<NavigationSet>(result, _converter);
+            var deserialized = JsonConvert.DeserializeObject<NavigationSet>(result, _converter);
             Assert.AreEqual(_testSet[0].Id, deserialized[0].Id);
             Assert.AreEqual(_testSet[0].OriginalId, deserialized[0].OriginalId);
             Assert.AreEqual(_testSet[0].OriginalCollection, deserialized[0].OriginalCollection);

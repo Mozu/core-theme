@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http.Routing;
 using NUnit.Framework;
 using Autofac;
 using Mozu.SiteBuilder.Mvc;
@@ -15,6 +14,8 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NSubstitute;
 using UrlHelper = Mozu.SiteBuilder.Mvc.Helpers.UrlHelper;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
@@ -32,23 +33,19 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 
         private static List<TestDescriptor> GetTests()
         {
-           
-            
-            
-            
-            Action<ContainerBuilder> containerMods = cb =>
+            Action<IServiceCollection> containerMods = cb =>
             {
-                var hcb = Substitute.For<HttpContextBase>();
-                var hrb = Substitute.For<HttpResponseBase>();
-                hcb.Response.Returns(hrb);
-                var headers = new System.Collections.Specialized.NameValueCollection();
-                headers.Add("a", "c");
-                hrb.Headers.Returns(headers);
+                var hcb = Substitute.For<HttpContext>();
+                var resp = Substitute.For<HttpResponse>();
+                hcb.Response.Returns(resp);
+                var headers = new HeaderDictionary
+                {
+                    { "a", "c" }
+                };
+                resp.Headers.Returns(headers);
 
-                cb.Register(c => hcb).As<HttpContextBase>();
+                cb.AddScoped(c => hcb);
             };
-
-
 
             return new List<TestDescriptor>
             {
@@ -60,7 +57,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     ExpectedFunc = TestDescriptor.CompareLiteral(""),
                     AssertFn = (s,d)=>{
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
-                        httpContext.Response.Received().AddHeader("a","b");
+                        httpContext.Response.Received().Headers.Add("a","b");
 
                         Assert.AreEqual(httpContext.Response.Headers["a"] ,null);
                     }
@@ -73,7 +70,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     ExpectedFunc = TestDescriptor.CompareLiteral(""),
                     AssertFn = (s,d)=>{
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
-                        httpContext.Response.Received().AddHeader("a","b");
+                        httpContext.Response.Received().Headers.Add("a","b");
 
                         Assert.AreEqual(httpContext.Response.Headers["a"] ,"c");
                     }
@@ -87,7 +84,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     ExpectedFunc = TestDescriptor.CompareLiteral(""),
                     AssertFn = (s,d)=>{
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
-                        httpContext.Response.Received().AddHeader("a","b");
+                        httpContext.Response.Received().Headers.Add("a","b");
 
                         Assert.AreEqual(httpContext.Response.Headers["a"] ,null);
                     }

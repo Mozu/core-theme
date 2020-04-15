@@ -24,7 +24,7 @@ using Mozu.Core.Configuration;
 namespace Mozu.SiteBuilder.UX.Filters
 {
 
-    public class IgnoreDataViewModeAttribute : Attribute { };
+    public class IgnoreDataViewModeAttribute : Attribute, IFilterMetadata { };
 
     public class DataViewModeEnforcementAttribute : ActionFilterAttribute, IAsyncAuthorizationFilter
     {
@@ -36,7 +36,6 @@ namespace Mozu.SiteBuilder.UX.Filters
 
             // if we don't have a siteid, we're not going to have enough to render the view in the first place so exit early
             if (!apiContext.SiteId.HasValue) return;
-
 
             var authhelper = resolver.Resolve<IAuthenticationHelper>();
 
@@ -60,14 +59,14 @@ namespace Mozu.SiteBuilder.UX.Filters
             if (!HasAdminCookie(adminToken))
             {
                 var host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
-                RedirectTo(CreateLoginLink(loginAppHelper, request.HttpContext.GetRequestUri(), host, apiContext.TenantId));
+                context.Result = RedirectTo(CreateLoginLink(loginAppHelper, request.HttpContext.GetRequestUri(), host, apiContext.TenantId));
                 return;
             }
 
             // now that we have an admin, is that admin authed?
             if (!AdminHasBehavior(viewMode, adminToken))
             {
-                RedirectTo(loginAppHelper.Unauthorized());
+                context.Result = RedirectTo(loginAppHelper.Unauthorized());
                 return;
             }
 
@@ -75,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Filters
             ShowTheOriginalRequest(apiContext, viewMode);
         }
 
-        private bool IsControllerIgnoringDataViewMode(ControllerActionDescriptor descriptor)
+        private static bool IsControllerIgnoringDataViewMode(ControllerActionDescriptor descriptor)
         {
             return descriptor != null && descriptor.HasAttribute<IgnoreDataViewModeAttribute>();
         }
@@ -101,17 +100,16 @@ namespace Mozu.SiteBuilder.UX.Filters
             };
         }
 
-
         private static bool AdminHasBehavior(DataViewModeType viewMode, string adminToken)
         {
             if (!adminToken.IsNullOrEmpty() && LightweightUserClaims.TryParse(adminToken, out var claims))
             {
-                switch (viewMode)
+                return viewMode switch
                 {
-                    case DataViewModeType.Live: return claims.HasBehavior<ViewLiveBehavior>();
-                    case DataViewModeType.Pending: return claims.HasBehavior<PublishPreviewBehavior>();
-                    default: throw new ArgumentException("data view mode must be set");
-                }
+                    DataViewModeType.Live => claims.HasBehavior<ViewLiveBehavior>(),
+                    DataViewModeType.Pending => claims.HasBehavior<PublishPreviewBehavior>(),
+                    _ => throw new ArgumentException("data view mode must be set")
+                };
             }
             return false;
         }
@@ -123,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// <param name="viewMode"></param>
         /// <param name="continuation"></param>
         /// <returns></returns>
-        private void ShowTheOriginalRequest(ISiteBuilderApiContext apiContext, DataViewModeType viewMode)
+        private static void ShowTheOriginalRequest(IApiContext apiContext, DataViewModeType viewMode)
         {
             switch (viewMode)
             {
@@ -146,13 +144,13 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// <returns></returns>
         private static bool IsLockedDown(DataViewModeType dvm, ViewModeToggles toggles)
         {
-            switch (dvm)
+            return dvm switch
             {
-                case DataViewModeType.Pending: return toggles.IsRequiredLoginForStagingEnabled;
-                case DataViewModeType.Live: return toggles.IsRequiredLoginForLiveEnabled;
-                case DataViewModeType.NoneSet: throw new ArgumentException("dvm", "data view mode must be set");
-            }
-            return false;
+                DataViewModeType.Pending => toggles.IsRequiredLoginForStagingEnabled,
+                DataViewModeType.Live => toggles.IsRequiredLoginForLiveEnabled,
+                DataViewModeType.NoneSet => throw new ArgumentException("data view mode must be set", nameof(dvm)),
+                _ => false,
+            };
         }
 
         private static bool HasAdminCookie(string adminToken)
@@ -160,19 +158,19 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !adminToken.IsNullOrEmpty();
         }
 
-        private Uri CreateLoginLink(LoginAppRouteHelper router, Uri requestUri, string postbackHostValue, int tenantId)
+        private static Uri CreateLoginLink(LoginAppRouteHelper router, Uri requestUri, string postbackHostValue, int tenantId)
         {
             var postback = new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString();
             return router.To(UserScopeType.Tenant, tenantId, requestUri.PathAndQuery, postback, false);
         }
 
-        static readonly int[] _publishBehaviorId = new[] { new PublishPreviewBehavior().Id };
+        private static readonly int[] _publishBehaviorId = { new PublishPreviewBehavior().Id };
         private static LightweightUserClaims AddPreviewPermission(LightweightUserClaims inClaims)
         {
             return AddPermission(inClaims, _publishBehaviorId);
         }
 
-        static readonly int[] _liveBehaviorId = new[] { new ViewLiveBehavior().Id };
+        private static readonly int[] _liveBehaviorId = { new ViewLiveBehavior().Id };
         private static LightweightUserClaims AddLivePermission(LightweightUserClaims inClaims)
         {
             return AddPermission(inClaims, _liveBehaviorId);
@@ -184,11 +182,9 @@ namespace Mozu.SiteBuilder.UX.Filters
             return inClaims;
         }
 
-        private static HttpResponseMessage RedirectTo(Uri redirectUrl)
+        private static RedirectResult RedirectTo(Uri redirectUrl)
         {
-            var response = new HttpResponseMessage(HttpStatusCode.Redirect);
-            response.Headers.Location = redirectUrl;
-            return response;
+            return new RedirectResult(redirectUrl.ToString());
         }
     }
 }

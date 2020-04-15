@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using Mozu.SiteBuilder.UX.Admin.Api;
+//todo:cole fix for Admin
+//using Mozu.SiteBuilder.UX.Admin.Api;
 using NSubstitute;
 
 
@@ -11,7 +12,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
     [TestFixture]
     public class LocalizedContentControllerTest
     {
-        [Ignore, TestCase("happy path case")]
+        [Ignore("because"), TestCase("happy path case")]
         public void Given_A_When_B_Then_Should_Do_C(string scenario)
         {
             //arrange
@@ -22,7 +23,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             //Assert.That(actual, Is.EqualTo(), scenario);
         }
 
-        [Ignore, TestCase("negative test")]
+        [Ignore("because"), TestCase("negative test")]
         public void Given_A_When_B_Then_Should_Throw_Exception(string scenario)
         {
             //arrange
