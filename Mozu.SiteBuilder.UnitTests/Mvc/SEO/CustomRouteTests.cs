@@ -227,6 +227,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var ctx = new DefaultHttpContext();
             ctx.Request.Path = "/foo";
             ctx.Request.Method = "GET";
+            ctx.Request.Scheme = "http";
             var outputs = test.mapping.Map(ctx, test.inputs, "foo");
             outputs.SequenceEqual(test.expectedOutput).ShouldBeTrue();
             return Task.CompletedTask;
@@ -341,7 +342,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var httpRoute = Substitute.For<IRouter>();
             test.constraint.Initialize();
-            test.constraint.DoMatch(null, null, test.parameterName, test.inputs, RouteDirection.UrlGeneration).ShouldEqual(test.routeShouldMatch);
+            test.constraint.DoMatch(new DefaultHttpContext(), httpRoute, test.parameterName, test.inputs, RouteDirection.UrlGeneration).ShouldEqual(test.routeShouldMatch);
         }
 
         public class ConstraintTest
@@ -623,12 +624,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             public Action <CustomRouteHandler , CategoryTree , Mozu.SiteBuilder.Mvc.Helpers.UrlHelper> DoLinkStuff { get; set; }
 
         }
-        public IEnumerable<TestCase> GetTests()
+        public static IEnumerable<TestCase> GetTests()
         {
             yield return new TestCase()
             {
                 Name = "prod variant",
-                Url = "pslug/p/pcode?vpc=pvarcode",
+                Url = "/pslug/p/pcode?vpc=pvarcode",
                 ValidateRoute = route =>
                 {
                    // Assert.AreEqual(route.InternalRoute, FancyRoute.ProductDetails );
@@ -658,7 +659,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new TestCase()
             {
                 Name = "sale sub cat",
-                Url = "sale/women",
+                Url = "/sale/women",
                 ValidateRoute = route =>
                 {
                     Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
@@ -680,7 +681,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new TestCase()
             {
                 Name = "sale with filter clear",
-                Url = "sale/women/diesel",
+                Url = "/sale/women/diesel",
                 ValidateRoute = route =>
                 {
                     Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
@@ -703,7 +704,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new TestCase()
             {
                 Name = "search and validate categoryurl",
-                Url = "search?query=food&facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
+                Url = "/search?query=food&facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
                
                 DoLinkStuff = (handler, tree, urlhelper) =>
                 {
@@ -719,7 +720,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new TestCase()
             {
                 Name = "cat with facet",
-                Url = "women?facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
+                Url = "/women?facetValueFilter=tenant~brand%3acitizens-of-humanity%2ctenant~brand%3adl1961-premium-denim",
                 ValidateRoute = route =>
                 {
                     Assert.AreEqual(route.InternalRoute, FancyRoute.Category);
@@ -769,6 +770,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var httpCtx = new DefaultHttpContext();
             subber.Provide<HttpContext>(httpCtx);
             httpCtx.Request.Path = test.Url;
+            httpCtx.Request.Host = new HostString("localhost");
+            httpCtx.Request.Scheme = "http";
+            httpCtx.Request.Method = "GET";
             pc.Url.Returns(httpCtx.GetRequestUri().ToString());
          
             //reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));

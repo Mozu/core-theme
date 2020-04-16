@@ -194,7 +194,13 @@ namespace Mozu.SiteBuilder.Mvc
              
                 }
 
-                UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], new UserScope() { Id = TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
+                UserClaims = LightweightUserClaims.CreateForAdminUser(
+                    Guid.NewGuid().ToString("N"), 
+                    string.Empty, 
+                    string.Empty, 
+                    new int[0], 
+                    new UserScope() { Id = TenantId, Type = UserScopeType.Tenant }, 
+                    DateTime.Today.AddYears(1));
                 UserClaims.IsAnonymous = true;
             }
 

@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             }
         }
 
-        private IEnumerable<object[]> GetCases()
+        private static IEnumerable<object[]> GetCases()
         {
             yield return new object []{"notafile.jpg", HttpStatusCode.NotFound, 12345};
             yield return new object[]{ "../../notafile.jpg", HttpStatusCode.NotFound, 12345};

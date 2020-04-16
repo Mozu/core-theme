@@ -2,6 +2,7 @@
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -10,6 +11,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -217,8 +219,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? (CustomRoute.Scheme?)null : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
 
-            var defaultRouter = _httpContext.Items["DefaultRouter"] as IRouter;
-            var constraintResolver = _httpContext.Items["ConstraintResolver"] as IInlineConstraintResolver;
+            var defaultRouter = _httpContext.Items["DefaultRouter"] as IRouter ?? new RouteHandler(ctx => ctx.Response.WriteAsync("no handler provided"));
+            var constraintResolver = _httpContext.Items["ConstraintResolver"] as IInlineConstraintResolver ?? new DefaultInlineConstraintResolver(new OptionsWrapper<RouteOptions>(new RouteOptions()), _httpContext.RequestServices ?? new ServiceContainer());
 
             return new CustomRoute(defaultRouter,
                 null,

@@ -11,7 +11,8 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     {
         public static Uri GetRequestUri(this HttpContext context)
         {
-            return new Uri(context.Request.GetDisplayUrl());
+            var url = context.Request.GetDisplayUrl();
+            return new Uri(url);
         }
     }
 }

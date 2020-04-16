@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
         private static readonly bool[] Bools = {true, false};
         private static readonly IEnumerable<DataViewModeType> Dvms = Enum.GetValues(typeof(DataViewModeType)).Cast<DataViewModeType>();
 
-        private readonly IEnumerable<object[]> Cases =
+        private static readonly IEnumerable<object[]> Cases =
             from isEditMode in Bools
             from dvm in Dvms
             //from partialCacheEnabled in Bools

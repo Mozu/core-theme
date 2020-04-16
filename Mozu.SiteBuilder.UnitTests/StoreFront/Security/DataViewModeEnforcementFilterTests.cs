@@ -50,6 +50,8 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             MockContainer.WithRegisteredHttpContext(context).WithUrlFinder();
             var uri = new Uri(testcase.Route ?? "http://localhost/admin/test");
             context.Request.Path = uri.AbsolutePath;
+            context.Request.Host = new HostString(uri.Host);
+            context.Request.Scheme = uri.Scheme;
 
             var actionContext = MockActionContext(context);
 
@@ -128,13 +130,13 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             {
                 Name = "Unauth redirect has correct path",
                 SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithSiteId().WithoutIgnoreAttribute(),
-                EvalFunc = resp => IsRedirectTo(resp, "login/unauthorized/index")
+                EvalFunc = resp => IsRedirectTo(resp, "http://mozu.com/login/unauthorized/index")
             };
             yield return new HandlerTest()
             {
                 Name = "Login redirect has correct path",
                 SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId().WithoutIgnoreAttribute(),
-                EvalFunc = resp => IsRedirectTo(resp, "login/to")
+                EvalFunc = resp => IsRedirectTo(resp, "http://mozu.com/login/to")
             };
             yield return new HandlerTest()
             {
@@ -151,7 +153,15 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
 
         private static bool IsRedirectTo(IActionResult result, string route)
         {
-            return IsRedirect(result) && (result as RedirectResult).Url.Trim('/').EqualsIgnoreCase(route);
+            if (!IsRedirect(result)) return false;
+
+            var rr = result as RedirectResult;
+            var url = rr.Url;
+            if (url.IndexOf('?') > -1)
+            {
+                url = url.Substring(0, url.IndexOf('?'));
+            }
+            return IsRedirect(result) && url.Trim('/').EqualsIgnoreCase(route);
         }
 
         //private class EchoHandler : DelegatingHandler

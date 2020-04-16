@@ -33,7 +33,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
         {
             var ctx = new DefaultHttpContext();
             ctx.Request.Path = "/foo";
+            ctx.Request.Host = new HostString("localhost");
             ctx.Request.Method = "GET";
+            ctx.Request.Scheme = "http";
+
             var sc = Substitute.For<ISiteContext>();
             sc.ThemeSettings = new SiteBuilder.Mvc.Themes.ThemeRuntimeSettingsCollection(new Dictionary<string, object>(), new byte[0] { }, DateTime.MaxValue);
             sc.CdnPrefix.Returns("//cdn/1-m2");
@@ -156,7 +159,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                             bctx => {
                                 var hctx = new DefaultHttpContext();
                                 hctx.Request.Path = "/foo";
-                                hctx.Request.QueryString = new QueryString("?startIndex=100");;
+                                hctx.Request.QueryString = new QueryString("?startIndex=100");
+                                hctx.Request.Scheme = "http";
+                                hctx.Request.Method = "GET";
 
                                 bctx.Resolve<PageContext>().Search = new SearchContext(hctx);
                                 return bctx.Resolve<PageContext>();

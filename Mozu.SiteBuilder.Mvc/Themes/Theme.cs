@@ -193,7 +193,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Internal constructor.
         /// This class is intended to be initalized only by ThemeFactory.
         /// </summary>
-        internal Theme() {}
+        public Theme() {}
 
         public Theme Clone()
         {

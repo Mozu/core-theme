@@ -116,6 +116,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ctx.Request.Method = "GET";
             ctx.Request.Host = new HostString("foo.com");
             ctx.Request.Path = "/bing";
+            ctx.Request.Scheme = "http";
 
             var editModeGetter = Substitute.For<IEditModeFinderOuter>();
             var dvmGetter = Substitute.For<IDataViewModeFinderOuter>();

@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             Assert.AreEqual(test.Result.Destination, res.Destination);
         }
 
-        public RuntimeRedirects GetDefaultRedirects()
+        public static RuntimeRedirects GetDefaultRedirects()
         {
             return new RuntimeRedirects()
             {
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 WildCards = new List<Tuple<int, Dictionary<string, List<RuntimeRedirectEntry>>>>()
             };
         }
-        public RuntimeRedirects GetWildCardRedirects()
+        public static RuntimeRedirects GetWildCardRedirects()
         {
 
             //IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
             return RedirectRepository.BuildRuntimeRedirects(rawList);
         }
-        public IEnumerable<TestScenario> GetTests()
+        public static IEnumerable<TestScenario> GetTests()
         {
             yield return
                 new TestScenario()

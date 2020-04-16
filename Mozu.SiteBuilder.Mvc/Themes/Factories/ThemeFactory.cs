@@ -5,7 +5,7 @@ using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 {
-    internal static class ThemeFactory 
+    public static class ThemeFactory 
     {
         private const string DefaultThemeLanguage = "en-US";
 
