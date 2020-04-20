@@ -18,32 +18,32 @@
     <PackageReference Include="51Degrees.mobi-core" Version="3.2.21.1" />
     <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
-    <PackageReference Include="Microsoft.ClearScript" Version="6.0.0" />
-    <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.1952.0-dotnetcore.136" />
-    <PackageReference Include="Mozu.AppDev.Contracts" Version="1.1944.0-ddlogs2.9" />
-    <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
-    <PackageReference Include="Mozu.Core.Actions" Version="1.2005.8" />
+    <PackageReference Include="Microsoft.ClearScript" Version="6.0.1" />
+    <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
+    <PackageReference Include="Mozu.AppDev.Contracts" Version="1.2013.0-bpm.5" />
+    <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
+    <PackageReference Include="Mozu.Core.Actions" Version="1.2014.2" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2005.6" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="5.5.6" />
-    <PackageReference Include="Mozu.Customer.Contracts" Version="1.1929.0-dotnetcore.26" />
+    <PackageReference Include="Mozu.Core.Messaging" Version="1.2012.0-dotnetcore.80" />
+    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2012.0-dotnetcore.80" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2014.2" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.4" />
+    <PackageReference Include="Mozu.Customer.Contracts" Version="1.2012.0-pr-9.6" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
-    <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.1915.0-dotnetcore.4" />
-    <PackageReference Include="Mozu.Location.Contracts" Version="1.2005.0-pr-7.3" />
+    <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />
+    <PackageReference Include="Mozu.Location.Contracts" Version="1.2014.0-dotnetcore.332" />
     <PackageReference Include="Mozu.MZDB.Contracts" Version="1.1928.0-dotnetcore.48" />
-    <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.1930.0-dotnetcorecontracts.10" />
-    <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2006.0-pr-15.7" />
-    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2006.0-pr-15.7" />
-    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2006.0-pr-15.7" />
-    <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.1943.0-dotnetcore.78" />
-    <PackageReference Include="Mozu.Reference.Contracts" Version="1.1941.0-dotnetcore.21" />
-    <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2005.0-plat-153.2" />
-    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.1939.0-dotnetcore.46" />
-    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2004.0-dotnetcore.74" />
-    <PackageReference Include="Mozu.Tenant.Contracts" Version="1.1942.0-dotnetcore.42" />
+    <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
+    <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2010.0-se-480-slicingforstorefrontpages.7" />
+    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2010.0-se-480-slicingforstorefrontpages.7" />
+    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2010.0-se-480-slicingforstorefrontpages.7" />
+    <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2011.0-pr-13.7" />
+    <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
+    <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
+    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2013.2" />
+    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2016.0-pr-23.4" />
+    <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2011.0-dotnetcore.60" />
     <PackageReference Include="NDjangoParser40" Version="1.2008.0-dotnetcore.2" />
     <PackageReference Include="NDjangoParserFilters40" Version="1.2008.0-dotnetcore.2" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />

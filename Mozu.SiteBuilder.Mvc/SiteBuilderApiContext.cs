@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.Mvc
             var headersToRemove = context.Request.Headers.Where(kvp =>
                 context.Request.Headers.GetOrDefault(kvp.Key, new StringValues()).FirstOrDefault() == EmptyHeaderTokenValue).ToList();
 
-            headersToRemove.ForEach(kvp => context.Response.Headers.Remove(kvp.Key));
+            headersToRemove.ForEach(kvp => context.Request.Headers.Remove(kvp.Key));
         }
 
         protected void InitFromHeaders(IHeaderDictionary headers)

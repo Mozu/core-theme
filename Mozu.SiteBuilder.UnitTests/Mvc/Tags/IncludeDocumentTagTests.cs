@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
     [TestFixture]
     public class IncludeDocumentTagTests : TemplateTestBase
     {
-        [Test, TestCaseSource("GetTests")]
+        [Test, TestCaseSource(nameof(GetTests))]
         public void Run(TestDescriptor desc)
         {
             RunTemplate(desc);

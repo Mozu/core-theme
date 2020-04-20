@@ -17,7 +17,6 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         [Test]
         public void CannotCreateAccountWithInvalidFistName()
         {
-            var errorGenerator = Substitute.For<IErrorResultConverterCollection>();
             var autoSubstitute = new AutoSubstitute(cb =>
             {
                 cb.AddScoped<AuthController>();
@@ -25,35 +24,28 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                 cb.AddScoped(_ => hc);
                 //var rm = new HttpRequestMessage();
                 //cb.AddScoped(_ => rm);
-                cb.AddScoped(_ => errorGenerator);
             });
 
             var authController = autoSubstitute.Resolve<AuthController>();
             authController.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
-            try
+            var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
             {
-                var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
+                Account = new Customer.Contracts.CustomerAccount()
                 {
-                    Account = new Customer.Contracts.CustomerAccount()
-                    {
-                        FirstName = "<a>",
-                        LastName = "b",
-                        EmailAddress = "a@b.com",
-                        UserName = "asdf"
+                    FirstName = "<a>",
+                    LastName = "b",
+                    EmailAddress = "a@b.com",
+                    UserName = "asdf"
 
-                    }
-                }).Result;
-            }
-            catch (Exception ex)
-            {
-                errorGenerator.Received().ConvertExceptionToError(ex, false);
-            }
+                }
+            }).Result;
+            
+            Assert.True(res is ForbidResult);
         }
 
         [Test]
         public void CanCreateAccountWithValidFistName()
         {
-            var errorGenerator = Substitute.For<IErrorResultConverterCollection>();
             var autoSubstitute = new AutoSubstitute(cb =>
             {
                 cb.AddScoped<AuthController>();
@@ -61,7 +53,6 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                 cb.AddScoped(_ => hcb);
                 //var rm = new HttpRequestMessage();
                 //cb.AddScoped(_ => rm);
-                cb.AddScoped(_ => errorGenerator);
             });
 
             var authController = autoSubstitute.Resolve<AuthController>();
@@ -69,24 +60,19 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             {
                 HttpContext = new DefaultHttpContext()
             };
-            try
+            var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
             {
-                var res = authController.CreateAccount(new Customer.Contracts.CustomerAccountAndAuthInfo()
+                Account = new Customer.Contracts.CustomerAccount()
                 {
-                    Account = new Customer.Contracts.CustomerAccount()
-                    {
-                        FirstName = "a",
-                        LastName = "b",
-                        EmailAddress = "a@b.com",
-                        UserName = "asdf"
+                    FirstName = "a",
+                    LastName = "b",
+                    EmailAddress = "a@b.com",
+                    UserName = "asdf"
 
-                    }
-                }).Result;
-            }
-            catch (Exception ex)
-            {
-                errorGenerator.DidNotReceive().ConvertExceptionToError(ex, false);
-            }
+                }
+            }).Result;
+
+            Assert.True(res is OkResult);
         }
     }
 }

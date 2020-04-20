@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return response;
         }
 
-        async Task<HttpResponseMessage> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
+        async Task<IActionResult> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
         {
             if (
                 HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
@@ -134,16 +134,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return ret;
             }
-            return (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo))).ResponseMessage;
+
+            var rm = (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo)))
+                .ResponseMessage;
+            if (rm.IsSuccessStatusCode) return Ok();
+            return Forbid($"Create account failed. {rm.ReasonPhrase} | Please try again.");
         }
 
-        bool HasInvalidCharecters(string str, string fieldName, out HttpResponseMessage resp)
+        bool HasInvalidCharecters(string str, string fieldName, out IActionResult resp)
         {
             resp = null;
             str = (str ?? "").Trim();
             if (str == HttpUtility.HtmlEncode(str)) return false;
             var errorObj = _errorGenerator.ConvertExceptionToError(new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"), true);
-            resp = new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter())};
+            resp = new BadRequestObjectResult(new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter()));
             return true;
         }
 
@@ -287,13 +291,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [AcceptHeader("application/json", false)]
         public async Task<IActionResult> CreateAccount(CustomerAccountAndAuthInfo authInfo)
         {
-            var res = await DoCreateAccount(authInfo);
-            if (res.IsSuccessStatusCode)
-            {
-                return Ok();
-            }
-
-            return Forbid($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
+            return await DoCreateAccount(authInfo);
         }
 
         [AcceptVerbs("OPTIONS", "POST")]
@@ -306,14 +304,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Ok();
             }
 
-            var res = await DoCreateAccount(authInfo);
-
-            if (res.IsSuccessStatusCode)
-            {
-                return Ok();
-            }
-
-            return Forbid($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
+            return await DoCreateAccount(authInfo);
         }
 
         Task<CaptchResponse> ValidateToken( string token)

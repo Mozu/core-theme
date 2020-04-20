@@ -372,7 +372,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 "designer",
                 new StringListRouteConstraint(new List<string> {"once", "never", "always" }),
-                new Dictionary<string, object> { { "designer", "once" } },
+                new RouteValueDictionary { { "designer", "once" } },
                 true
             });
 
@@ -380,7 +380,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 "designer",
                 new StringListRouteConstraint(new List<string> {"once", "never", "always" }),
-                new Dictionary<string, object> { { "haha", "once" } },
+                new RouteValueDictionary { { "haha", "once" } },
                 false
             });
 
@@ -428,28 +428,28 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 "param",
                 new ProductAttributeRouteConstraint(context, "butts") { ContextProvider = contextProvider , Key= "test3"},
-                new Dictionary<string, object> { { "param", "meh" } },
+                new RouteValueDictionary { { "param", "meh" } },
                 true
             });
             yield return new ConstraintTest("test4", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test4"},
-                new Dictionary<string, object> { { "param", "bing" } },
+                new RouteValueDictionary { { "param", "bing" } },
                 true
             });
             yield return new ConstraintTest("test5", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test5"},
-                new Dictionary<string, object> { { "param", "sure" } },
+                new RouteValueDictionary { { "param", "sure" } },
                 false
             });
             yield return new ConstraintTest("test6", new object[]
             {
                 "param",
                 new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test6"},
-                new Dictionary<string, object> { },
+                new RouteValueDictionary(),
                 false
             });
 
@@ -461,7 +461,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 "param",
                 new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
-                new Dictionary<string, object> { {"param", "value!" } },
+                new RouteValueDictionary { {"param", "value!" } },
                 true
             });
 
@@ -469,14 +469,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             {
                 "param",
                 new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
-                new Dictionary<string, object> { {"param", "sigh" } },
+                new RouteValueDictionary { {"param", "sigh" } },
                 false
             });
             yield return new ConstraintTest("test9", new object[]
             {
                 "param",
                 new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
-                new Dictionary<string, object> { },
+                new RouteValueDictionary(),
                 false
             });
         }
