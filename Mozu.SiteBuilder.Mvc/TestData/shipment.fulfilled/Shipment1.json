@@ -58,7 +58,6 @@
     },
     "shippingMethodCode": "ups_UPS_GROUND",
     "shippingMethodName": "UPS Ground",
-    "trackingNumbers": [],
     "items": [
         {
             "lineId": 1,
@@ -109,20 +108,33 @@
     "packages": [
         {
             "packageId": "5dea9280676e37000169f455",
-            "trackingNumbers": [
-				"5435987638945"
-			]
-        },
-        {
-            "packageId": "5deaa76f676e3700016a5c10",
-            "trackingNumbers": [
-                "abc"
+            "carrier": "UPS",
+            "shippingMethodName": "UPS Next Day Air",
+            "trackings": [
+              {
+                "number": "1Z7A67E20396403014",
+                "url": "https://www.ups.com/track?loc=en_US&tracknum=1Z7A67E20396403014"
+              }
             ]
         },
         {
-            "packageId": "5e3de5cc2de6390001a157d8",
-            "trackingNumbers": [
-                "35468132"
+            "packageId": "5deaa76f676e3700016a5c10",
+            "carrier": "FEDEX",
+            "shippingMethodName": "FeDex Ground",
+            "trackings": [
+              {
+                "number": "794692737658",
+                "url": "http://www.fedex.com/Tracking?tracknumbers=794692737658"
+              }
+            ]
+        },
+        {
+            "packageId": "5e68ac36697b7300012a3b0a",
+            "carrier": "Other",
+            "trackings": [
+              {
+                "number": "T-AC63245Z"
+              }
             ]
         }
     ],
