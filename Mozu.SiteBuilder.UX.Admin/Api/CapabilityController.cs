@@ -26,6 +26,7 @@ using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 using Mozu.Event.Contracts.Clients;
 using System.IO;
 using Mozu.Core.Extensions;
+using Mozu.Event.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -185,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "subscriptionEvents")]
         public async Task<HttpResponseMessage> SubscriptionEvents([FromUri] string AppId, [FromUri] bool forApplication, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection advancedSearch)
         {
-            var filter = "AppId eq " + AppId;
+            var filter = "AppId eq " + AppId + " AND subscribingtenants.tenantid eq " + _apiContext.TenantId + " AND subscribingtenants.isactive eq " + true;
 
             var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
 
@@ -201,8 +202,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 subscribed = subscriptions.Items.FindAll(item => item.Topics.Count > 0 && item.Topics.First().StartsWith("application"));
             }
 
-
-            var subscription = getTenantSubscription(subscribed).FirstOrDefault() ?? new Event.Contracts.Subscription();
+            var subscription = subscribed.FirstOrDefault();
+            if (subscription == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK, new EventDeliverySummaryCollection());
+            }
 
             var deliveryAttempts = (await _eventSubscriptionWebAppClient.GetDeliveryAttemptSummaries(
                     subscriptionId: subscription.Id,
@@ -218,8 +222,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "subscribingInfo")]
         public async Task<HttpResponseMessage> SubscribingInfo([FromUri] string AppId, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection advancedSearch)
         {
-            var filter = "AppId eq " + AppId;
-            var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
+            var filter = "AppId eq " + AppId + " AND subscribingtenants.tenantid eq " + _apiContext.TenantId;
+            var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(pageSize: 200, startIndex: 0,filter: filter)).ReadAsSync();
 
             var resultCollection = getTenantSubscription(subscriptions.Items);
 
