@@ -20,7 +20,7 @@
                     {% if bundledProduct.stock and bundledProduct.stock.isOnBackOrder and bundledProduct.stock.manageStock and bundledProduct.stock.stockAvailable < item.quantity|multiply(bundledProduct.quantity) %}
                         <br/> <dd>
                       <div class="mz-product-backorder">
-                        <div class="is-warning mz-product-backorder-warning">
+                        <div style="color: #444; padding: 2px 5px; background-color: #ffefcf; border: 1px solid #ffdfc0;font-weight: bold;">
                           {{ labels.qty }} {{ bundledProduct.stock.stockAvailable }} {{ labels.productBackorderAvailable }}
                           {% if bundledProduct.stock.availableDate  %}. {% else %}, {% endif %}
                           <br />{{ labels.qty }} {{ item.quantity|multiply(bundledProduct.quantity)|subtract(bundledProduct.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
@@ -37,7 +37,7 @@
                   {% else %}
                   {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock %}
                   <div class="mz-product-backorder">
-                    <div class="is-warning mz-product-backorder-warning">
+                    <div style="color: #444; padding: 2px 5px; background-color: #ffefcf; border: 1px solid #ffdfc0;font-weight: bold;">
                       {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
                       {% if item.product.stock.availableDate  %}
                       .<br /> {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
