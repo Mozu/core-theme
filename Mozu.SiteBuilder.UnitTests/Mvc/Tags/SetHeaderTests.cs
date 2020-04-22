@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
                         httpContext.Response.Received().Headers.Add("a","b");
 
-                        Assert.AreEqual(httpContext.Response.Headers["a"] ,null);
+                        Assert.AreEqual(httpContext.Response.Headers["a"] ,"b");
                     }
                 },
                  new TestDescriptor
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
                         httpContext.Response.Received().Headers.Add("a","b");
 
-                        Assert.AreEqual(httpContext.Response.Headers["a"] ,null);
+                        Assert.AreEqual(httpContext.Response.Headers["a"] ,"b");
                     }
                 },
 

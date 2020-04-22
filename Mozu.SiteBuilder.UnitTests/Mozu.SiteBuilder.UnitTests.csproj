@@ -9,6 +9,22 @@
     <None Remove="Admin\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~brand.json" />
+    <None Remove="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~colorgroup.json" />
+    <None Remove="Mvc\SEO\JSON\IGeneralSettingsWebApiClient.GetGeneralSettings.json" />
+    <None Remove="Mvc\SEO\JSON\IProductCategoryRuntimeWebApiClient.GetCategoryTree.json" />
+    <None Remove="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~brand.json" />
+    <None Remove="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~colorgroup.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~brand.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IAttributeWebApiClient.GetAttributeVocabularyValues.tenant~colorgroup.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IGeneralSettingsWebApiClient.GetGeneralSettings.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductCategoryRuntimeWebApiClient.GetCategoryTree.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~brand.json" />
+    <EmbeddedResource Include="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~colorgroup.json" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Mozu.Core.Api.Test" Version="1.2014.2" />

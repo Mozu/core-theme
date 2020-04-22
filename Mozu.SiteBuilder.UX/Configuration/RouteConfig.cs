@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,6 +8,7 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -346,6 +348,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
         public static IList<IRouter> GetStandardRoutes()
         {
             var routes = new List<IRouter>();
+
+            _defaultHandler ??= new RouteHandler(_ => throw new NotImplementedException());
+            _constraintResolver ??= new DefaultInlineConstraintResolver(new OptionsWrapper<RouteOptions>(new RouteOptions()), new ServiceContainer());
 
             routes.MapCustomRoute(_defaultHandler,
                 "StoreFront_productDetails_SEO",

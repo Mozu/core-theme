@@ -820,7 +820,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         static T GetResource<T>(string name)
         {
             var ass = typeof(BfCustomRouteTests).Assembly;
-            var rname = ass.GetManifestResourceNames().First(x => x.EndsWith(name+".json", StringComparison.OrdinalIgnoreCase));
+            var names = ass.GetManifestResourceNames();
+            var rname = names.First(x => x.EndsWith(name+".json", StringComparison.OrdinalIgnoreCase));
             var str= ass.GetManifestResourceStream(rname);
             Newtonsoft.Json.JsonSerializer ser = new JsonSerializer();
             return ser.Deserialize<T>(new JsonTextReader(new StreamReader(str)));
