@@ -3,11 +3,11 @@
 
 <div class="order-history-listing-return">
 <div class="mz-orderlisting-heading mz-order-history-return-status"><h3>{{labels.orderCreateReturn}}</h3></div>
-    {% if model.hasFulfilledPackages or model.hasFulfilledPickups %}
+    {% if model.getReturnableItems.length > 0 %}
         {% block order-packages %}
                 <div class="mz-order-returns">
                     {% for item in model.getReturnableItems %}
-                                <div data-mz-order-history-listing-return-item  data-mz-product-code="{{ item.product.variationProductCode|default(item.product.productCode) }}" data-mz-option-attribute-fqn="{{ item.orderItemOptionAttributeFQN}}" data-mz-order-line-id="{{ item.orderLineId }}">
+                                <div data-mz-order-history-listing-return-item  data-mz-product-code="{{ item.product.variationProductCode|default(item.product.productCode) }}" data-mz-option-attribute-fqn="{{ item.orderItemOptionAttributeFQN}}" data-mz-shipment-item-id="{{ item.shipmentItemId }}">
                                 {% include "modules/my-account/order-history-listing-return-item" with model=item %}
                             </div>
                     {% endfor %}

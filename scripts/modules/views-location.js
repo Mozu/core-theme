@@ -87,9 +87,32 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mod
                 }
             });
 
+            LocationInfoView = Backbone.MozuView.extend({
+                templateName: 'modules/location/store-info',
+                initialize: function () {
+                    var self = this;
+
+                    if(self.model.get('code')){
+                        self.populate();
+                    }
+                },
+                populate: function () {
+                    var self = this;
+                    var show = function () {
+                        self.render();
+                        //$('.mz-locationsearch-pleasewait').fadeOut();
+                        //self.$el.noFlickerFadeIn();
+                    };
+                    if (self.model.get('code')) {
+                        this.model.apiGet({ code: self.model.get('code') }).then(show);
+                    }
+                },
+            });
+
         return {
             LocationsView: LocationsView,
-            LocationsSearchView: LocationsSearchView
+            LocationsSearchView: LocationsSearchView,
+            LocationInfoView: LocationInfoView
         };
     }
 );
