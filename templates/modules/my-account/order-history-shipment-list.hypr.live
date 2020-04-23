@@ -1,0 +1,22 @@
+<div class="mz-order-shipments">
+    {% if model.items.length > 0 %}
+        {% for shipment in model.items %}
+            {%if shipment.shipmentStatus != "CANCELED" %}
+
+                {%if shipment.shipmentType == "BOPIS" %}
+                    <div class="mz-shipment" data-mz-order-shipment class="mz-shipment" data-mz-shipment-number="{{ shipment.number }}">
+                        {% include "modules/my-account/order-history-shipment-bopis" with model=shipment order=model %}
+                    </div> 
+                {% else %}
+                    <div class="mz-shipment" data-mz-order-shipment class="mz-shipment" data-mz-shipment-number="{{ shipment.number }}">
+                        {% include "modules/my-account/order-history-shipment" with model=shipment order=model %}
+                    </div> 
+                {% endif %}
+
+            {% endif %}
+            
+        {% endfor %}
+    {% else %}
+        <div class="">{{labels.noShipminetsFound}}</div>
+    {% endif %}
+</div> 

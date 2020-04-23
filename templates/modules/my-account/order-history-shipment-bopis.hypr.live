@@ -1,0 +1,62 @@
+
+<div class="mz-l-shipment">
+    {% block shipment-header %} 
+
+    {% endblock shipment-header %}
+
+    {% block shipment-details %}
+
+    <div class="mz-shipment-items">
+        {% for item in model.items %}
+                <div data-mz-shipment-item class="mz-shipment-item" data-mz-shipment-item-id="{{item.lineId}}">
+                    {% include "modules/my-account/order-history-shipment-item" with model=item shipment=model %}
+                </div>
+        {% endfor %}
+    </div>
+
+    {% endblock shipment-details %}
+
+    {% block shipment-footer%}
+
+    {% endblock shipment-footer %}
+</div>
+
+
+
+{% block shipment-actions %}
+    <div data-mz-shipment-actions class="mz-shipment-actions mz-l-shipment-actions">
+
+        
+        <h3 class="mz-shipment-status-heading">
+
+            {% if model.shipmentStatus === "CUSTOMER_CARE"%}
+                {% if model.shipmentStatusReason %}
+                    {{model.shipmentStatusReason.reasonCode}}
+                {% endif %}
+            {% endif %}
+
+            {% if model.shipmentStatus === "FULFILLED" %}
+                {{labels.readyForPickup}}
+            {% endif %}
+            
+            {% if model.shipmentStatus === "READY" %}
+                {{labels.bopisProcessing }}
+            {% endif %}   
+        </h3>
+
+
+        {% if model.destination.destinationContact %}
+            <div class="mz-shipment-shipto">
+                {% block order-shipped-to %}
+                    <br />
+                    <div id="mz-storeLocation" data-mz-storeLocation="{{ model.fulfillmentLocationCode }}">
+                        <strong>{{ model.fulfillmentLocationCode }}</strong>
+                    </div>
+                        
+                {% endblock order-shipped-to %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock shipment-actions %}
+
