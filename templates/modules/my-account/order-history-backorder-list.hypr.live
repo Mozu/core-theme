@@ -1,0 +1,9 @@
+<div class="mz-order-shipments">
+    {% for shipment in model.items %}
+        {% if shipment.shipmentStatus == "BACKORDER" %}      
+                <div class="mz-shipment" class="mz-shipment">
+                    {% include "modules/my-account/order-history-backorder" with model=shipment order=model %}
+                </div> 
+        {% endif %}
+    {% endfor %}
+</div> 

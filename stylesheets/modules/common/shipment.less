@@ -1,0 +1,72 @@
+.mz-order-shipments {
+    & > div.mz-shipment {
+        margin: @gutter/2 0;
+        padding: @gutter/2 0;
+        border-bottom: 1px solid #999
+    }
+    & > div.mz-shipment:last-child {
+        border-bottom: 0px
+    }
+}
+.mz-shipment {
+    .mz-shipment-status-heading {
+        margin: 0px;
+    }
+    overflow: hidden;
+    .mz-shipment-items {
+        .mz-shipment-item {
+            margin-bottom: 15px;
+        }
+        input {
+            display: inline-block;
+            margin: 25px 10px;
+            float: left;
+        }
+    }
+
+    .mz-shipment-actions {
+        .mz-shipment-shipto{
+            margin-bottom: 15px;
+        }
+        .mz-shipment-action {
+            display: inline-block;
+            width: 100%;
+            button {
+                max-width: 194px;
+                width: 100%;
+            }
+        }
+    }
+
+    .mz-l-formfieldgroup-cell { 
+        vertical-align: top;
+    }
+    
+    .mz-itemlisting{
+        padding-top: 10px;
+        .mz-itemlisting-thumb{
+            margin-top: 0px;
+        }
+    }
+}
+
+.mz-l-shipment {
+    width: 70%;
+    float: left;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+}
+
+.mz-l-shipment-actions {
+    width: 30%;
+    float: right;
+    .mz-shipment-action {
+        display: inline-block;
+        width: 100%;
+    }
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-top:20px;
+    }
+}

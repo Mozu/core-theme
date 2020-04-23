@@ -14,13 +14,19 @@
 		    }
 	}
 	.order-history-listing, .order-history-listing-return, .mz-orderlisting{
-		.mz-orderlisting-header {
-			.mz-orderlisting-heading{
-				display: inline-block;
-				margin: 0px;
-			}
-			.mz-orderlisting-return{
-				float: right;
+		.mz-orderlisting-heading{
+			display: inline-block;
+			margin: 20px 0 0 0;
+			padding: 0px;
+		}
+		.mz-orderlisting-return{
+			float: left;
+			left: 70%;
+			position: absolute;
+			margin-top: 25px;
+			width: 20%;
+			.mz-button{
+				width: 100%;
 			}
 		}
 		.mz-orderlisting-footer {
@@ -31,18 +37,16 @@
 		}
 	}
 
-	.order-history-listing-return{
-		.mz-l-formfieldgroup-cell { 
-			vertical-align: top;
+	.order-history-listing-return {
+		.mz-orderlisting-heading{
+			display: block;
+			padding: @gutter/4;
+			margin: 0 -@gutter/2;
 		}
-		.mz-itemlisting {
-			.mz-itemlisting{
-				padding-top: 10px;
-				.mz-itemlisting-thumb{
-				    margin-top: 0px;
-				}
-			}
-		}
+	}
+
+	.mz-shipment-items{
+		
 	}
 
 	.mz-itemlisting-rmaitem{

@@ -29,7 +29,7 @@ mz-l-formfieldgroup
 
 {% block item-details %}
     <div class="mz-itemlisting-description">
-      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %} - {{ model.shipment.shipmentType }}
     </div>
     {% if model.product.price.price %}
       <div class="mz-itemlisting-price">
