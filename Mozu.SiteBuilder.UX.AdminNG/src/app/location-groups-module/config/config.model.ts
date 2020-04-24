@@ -27,6 +27,10 @@ export class LocationGroupConfigModel {
     selectedUSPSCarrier: SelectedCarrierAccountModel;
     uspsCarrierAccount: any;
     uspsCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
+    canadaPostCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
+    canadaPostCarrierAccountList: SelectedCarrierAccountModel[];
+    canadaPostCarrierAccount: any;
+    selectedCanadaPostCarrier: SelectedCarrierAccountModel;
 }
 
 

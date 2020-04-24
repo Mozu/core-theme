@@ -420,7 +420,8 @@
         "bpmConfigurationProcessId": "Workflow Process Id*",
         "sthShipment": "Ship to Home",
         "bopisShipment": "BOPIS",
-        "uspsAccountLabel": "Select USPS Account"
+        "uspsAccountLabel": "Select USPS Account",
+        "canadaPostAccountLabel": "Select Canada Post Account"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",

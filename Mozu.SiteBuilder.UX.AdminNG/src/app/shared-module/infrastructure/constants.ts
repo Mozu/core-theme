@@ -184,6 +184,16 @@ export class Constants {
         id: 'USPSCarrierAccount'
     }
 
+    static CanadaPostCarrierAccountPageConfig = {
+        startIndex: 0,
+        pageSize: 15,
+        query: "",
+        isMultiSelect: false,
+        placeholder: 'Search',
+        totalRecordCount: 0,
+        id: 'CanadaPostCarrierAccount'
+    }
+
     static DefaultUSPSAccount = {
         data: '0',
         label: 'No Carrier Credentials Selected',
@@ -246,5 +256,10 @@ export class Constants {
     static headerOMSOnlyURL = {
         customerCareUrl: 'https://customer.shopatron.com/customer',
         fulfillerUrl: 'http://www.shopatron.com/fulfiller'
+    }
+
+    static DefaultCanadaPostAccount = {
+        data: '0',
+        label: 'No Carrier Credentials Selected',
     }
 }

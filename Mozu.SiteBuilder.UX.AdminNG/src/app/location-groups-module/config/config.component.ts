@@ -61,6 +61,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.packageSettingUnitTypes = Constants.PackageSettingUnitTypes;
         this.model.uspsCarrierAccountPagination = Constants.UspsCarrierAccountPageConfig;
+        this.model.canadaPostCarrierAccountPagination = Constants.CanadaPostCarrierAccountPageConfig;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -332,11 +333,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupCode, siteId);
         const carrierSettings = this.configService.getCarrierSettings(opts);
         const carrierRatesWithConfiguredInfo = this.configService.getAllCarrierRatesWithConfiguredInfo(opts);
-        const uspsCarrierAccountSets = this.configService.getUSPSCarrierAccountSets(this.model.uspsCarrierAccountPagination, Constants.LCCarriers.usps);
+        const uspsCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.uspsCarrierAccountPagination, Constants.LCCarriers.usps);
         const carrierAccount = this.configService.getCarrierAccount(locationGroupCode, siteId);
-
+        const canadaPostCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.canadaPostCarrierAccountPagination, Constants.LCCarriers.canadapost);
         // join this services result.
-        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount]).subscribe(response => {
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount,canadaPostCarrierAccountSets]).subscribe(response => {
             this._loggerService.info('LocationGroupConfigComponent : forkJoin');
 
             if (response && response[0] && response[0].items) {
@@ -362,6 +363,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             if (response && response[4] && response[4].items) {
                 const carrierAccountConfigModel: CarrierAccountSetModel = <CarrierAccountSetModel>response[4].items
                 this.updateCarrierAccountsConfigForm(carrierAccountConfigModel);
+            }
+
+            if (response && response[5] && response[5].items) {
+                this.getAllCanadaPostCarrierAccount(response[5].items);
+                this.model.canadaPostCarrierAccountPagination.totalRecordCount = response[5].total;
             }
         }, (response) => {
             this.getLocationGroupConfigError(response.error.message);
@@ -514,6 +520,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             }
         } else {
             this.model.selectedUSPSCarrier = Constants.DefaultUSPSAccount;
+        }
+        const canadaPostCarrierAccount = carrierAccountModel.filter(a => a.carrierId === Constants.LCCarriers.canadapost);
+        if (canadaPostCarrierAccount.length > 0) {
+            this.model.selectedCanadaPostCarrier = {
+                data: canadaPostCarrierAccount[0].code,
+                label: canadaPostCarrierAccount[0].name
+            }
+        } else {
+            this.model.selectedCanadaPostCarrier = Constants.DefaultCanadaPostAccount;
         }
     }
 
@@ -781,6 +796,19 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 }
             })
 
+        if (this.model.canadaPostCarrierAccount && this.model.canadaPostCarrierAccount.length != 0)
+            carrierAccountModel.push({
+                locationGroupCode: this.model.lgConfigModel.locationGroupCode,
+                siteId: this.model.lgConfigModel.siteId,
+                carrierId: Constants.LCCarriers.canadapost,
+                credentialSet: {
+                    code: this.model.canadaPostCarrierAccount.data,
+                    carrierId: Constants.LCCarriers.canadapost,
+                    name: this.model.canadaPostCarrierAccount.label,
+                    values: null
+                }
+            })
+
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
@@ -1016,16 +1044,46 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
     }
 
+    private getAllCanadaPostCarrierAccount(result: CarrierAccountSetModel[]) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllCanadaPostCarrierAccount' + JSON.stringify(result));
+        if (result) {
+            const carrierAccountType: CarrierAccountSetModel[] = <CarrierAccountSetModel[]>result;
+            this.model.canadaPostCarrierAccountList = [] as SelectedCarrierAccountModel[];
+            carrierAccountType.map((value, index) => {
+                const carrierAccountObj = {
+                    data: value.code,
+                    label: value.name
+                };
+                if (value.carrierId.toLowerCase() === Constants.LCCarriers.canadapost) {
+                    this.model.canadaPostCarrierAccountList.push(carrierAccountObj);
+                }
+            });
+        }
+    }
+
     public getUSPSCarrierAccounts(pageDetails: any) {
-        this.configService.getUSPSCarrierAccountSets(pageDetails, Constants.LCCarriers.usps).subscribe(response => {
+        this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.usps).subscribe(response => {
             this.model.uspsCarrierAccountPagination.totalRecordCount = 0;
             this.getAllUSPSCarrierAccount(response.items);
             this.model.uspsCarrierAccountPagination.totalRecordCount = response.total;
         })
     }
 
+    public getCanadaPostCarrierAccounts(pageDetails: any) {
+        this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.canadapost).subscribe(response => {
+            this.model.canadaPostCarrierAccountPagination.totalRecordCount = 0;
+            this.getAllCanadaPostCarrierAccount(response.items);
+            this.model.canadaPostCarrierAccountPagination.totalRecordCount = response.total;
+        })
+    }
+
     public getSelectedUSPSCarrier(SelectedValues: SelectedCarrierAccountModel) {
         this.model.uspsCarrierAccount = [];
         this.model.uspsCarrierAccount = SelectedValues;
+    }
+
+    public getSelectedCanadaPostCarrier(SelectedValues: SelectedCarrierAccountModel) {
+        this.model.canadaPostCarrierAccount = [];
+        this.model.canadaPostCarrierAccount = SelectedValues;
     }
 }

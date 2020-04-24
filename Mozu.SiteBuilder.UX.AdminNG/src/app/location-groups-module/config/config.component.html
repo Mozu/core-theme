@@ -228,10 +228,12 @@
             </div>
             <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.canadaPostSettings' | translate}}</h4>
-                <h5>
-                    {{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfo' | translate}}
-                    <a>{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfoLink' | translate}}</a>.
-                </h5>
+                <div class="col-md-12 for-no-padding">
+                    <div class="form-row col-md-5 for-no-padding">
+                        <label class="subform-label" for="canadaPostCarrierAccountTypes">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostAccountLabel' | translate}}</label>
+                        <paginated-ngselect [items]="model.canadaPostCarrierAccountList" [selectedValue]="model.selectedCanadaPostCarrier" [pageConfig]="model.canadaPostCarrierAccountPagination" (ngSelectPaginatorSelectionChanged)="getSelectedCanadaPostCarrier($event)" (ngSelectPaginatorPageIndexChanged)="getCanadaPostCarrierAccounts($event)">></paginated-ngselect>
+                    </div>
+                </div>
                 <div class="row nomargin">
                     <div class="col-md-6 for-no-padding">
                         <div class="col-md-4 for-no-padding">

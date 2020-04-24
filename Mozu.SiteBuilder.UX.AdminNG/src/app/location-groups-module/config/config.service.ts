@@ -51,7 +51,7 @@ export class LocationGroupConfigService {
             return this._http.get(GlobalConstant.webApis.getAllCarrierRatesWithConfiguredInfo, opts);
         }
     }
-    public getUSPSCarrierAccountSets(pageInfo: PagniatedNgSelectPageConfiguration,carrierId:string): Observable<any> {
+    public getCarrierAccountSets(pageInfo: PagniatedNgSelectPageConfiguration,carrierId:string): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: getCarrierAccountSets');
         const params = `?start=${pageInfo.startIndex}&limit=${pageInfo.pageSize}&query=${pageInfo.query}&carrierId=${carrierId}`;
         if (environment.isUseMocks) {
