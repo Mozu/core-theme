@@ -171,8 +171,14 @@ Ext.define('Taco.view.location.inventory.Index', {
             // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
             // adding a filter with the same id will be treated like an update
             this.store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: record.get('code') });
+
+            if (this.store.currentPage) {
+                this.store.currentPage = 1;
+            }
+
             this.store.load({
                 callback: function (records, operation, success) {
+                    params: { start: 0; page:1 };
                     if (!success)
                         Taco.app.fireEvent('setmessage', 'Error occurred while fetching inventory', 'error');
                 }

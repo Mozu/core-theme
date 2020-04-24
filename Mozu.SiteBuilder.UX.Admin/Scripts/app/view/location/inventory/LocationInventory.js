@@ -2,7 +2,7 @@
  * @class Taco.view.location.inventory.Index
  */
 Ext.define('Taco.view.location.inventory.LocationInventory', {
-    extend: 'Taco.core.ux.browser.SearchList',
+    extend: 'Taco.core.ux.browser.SearchListPageless',
   
     requires: [
         'Taco.shared.view.field.ProductPickerField',

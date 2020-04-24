@@ -175,14 +175,18 @@ Ext.define('Taco.view.inventory.Split', {
 	                        return;
 	                    }
 	                    
-	                    productCode = record.get('productCode');
+                        productCode = record.get('productCode');
+
+                        if (locationList.store.currentPage) {
+                            locationList.store.currentPage = 1;
+                        }
 	                    
 	                    locationList.store.extraFilters.add({ id: 'productCode', property: 'productCode', value: productCode });
 	                    locationList.defaultRowEditingData = {
 	                        productCode: productCode
 	                    };
 
-	                    locationList.store.load();
+                        locationList.store.load({ params: { start: 0, page: 1 } });
 
 	                },
 	                scope: this
