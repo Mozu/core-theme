@@ -89,7 +89,7 @@
         </thead>
         <tbody>
           {% for item in model.items %}
-              {% if item.readyForPickupQuantity < item.quantity %}
+              {% if item.readyForPickupQuantity > 0 %}
                   <tr class="mz-ordersummary-line mz-ordersummary-line-item">
                       <td>
                           <img style="height: 100px;" src="{{ item.imageUrl }}">
@@ -122,6 +122,7 @@
         </thead>
         <tbody>
           {% for item in model.items %}         
+            {% if item.quantity > item.readyForPickupQuantity %}
               <tr class="mz-ordersummary-line mz-ordersummary-line-item">
                   <td>
                       <img style="height: 100px;" src="{{ item.imageUrl }}">
@@ -136,6 +137,7 @@
                   <td> {{ item.quantity|subtract(item.readyForPickupQuantity) }} </td>
                   <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.quantity|subtract(item.readyForPickupQuantity)|multiply(item.actualPrice) }} {% endfilter %}</span></td>
               </tr>         
+            {% endif %}
           {% endfor %}
         </tbody>
     </table>
