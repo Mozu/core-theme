@@ -76,6 +76,7 @@ Ext.define('Taco.Application', {
     appFolder: '/admin/Scripts/app',
     autoCreateViewport: false,
     requires: [
+        'Taco.locale.ResourceLocalizer',
         'Taco.core.util.Common',
         'Taco.overrides.panel.Header',
         'Taco.overrides.dom.ElementAddons',

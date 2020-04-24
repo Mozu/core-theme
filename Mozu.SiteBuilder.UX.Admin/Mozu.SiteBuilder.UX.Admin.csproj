@@ -725,6 +725,7 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\data\CategoryReader.js" />
     <Content Include="Scripts\app\data\NavigationTreeNodeReader.js" />
+    <Content Include="Scripts\app\locale\ResourceLocalizer.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\InventoryExportJob.js" />
@@ -6712,6 +6713,7 @@
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.ttf" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff2" />
+    <Content Include="Scripts\app\locale\fr-CA.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
