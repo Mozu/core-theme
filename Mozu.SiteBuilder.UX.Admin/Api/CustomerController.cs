@@ -364,24 +364,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get single customer account with attributes.
         /// </summary>
-        private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId, string userId = null)
+        private async Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId, string userId = null)
         {
-            var customerTask = _customerWebApiClient.GetAccount(accountId, null, userId);
-            var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId, userId: userId);
-
-            return Task.WhenAll(customerTask, attributeTask).ContinueWith(t =>
+            var cres = _customerWebApiClient.GetAccount(accountId, null, userId).GetAwaiter().GetResult();
+            if (cres.ResponseMessage.IsSuccessStatusCode)
             {
-                if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
-                {
-                    var customer = customerTask.Result.ReadAsSync();
-                    var attributes = attributeTask.Result.ReadAsSync();
+                var customer = cres.ReadAsSync();
 
-                    customer.Attributes = attributes.Items;
-                    return customer;
-                }
+                var ares = await _customerWebApiClient.GetAccountAttributes(accountId, userId: userId ?? customer.UserId);
 
-                return null;
-            });
+                var attributes = ares.ReadAsSync();
+
+                customer.Attributes = attributes.Items;
+                return customer;
+            }
+            return null;
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
