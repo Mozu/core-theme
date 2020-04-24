@@ -202,27 +202,34 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     savePartialPickup: function () {
         //Save
         var me = this;
-        me.setLoading(true);
-        this.record.pickupItems({
-            jsonData: me.partialPickupItems,
-            success: function (response) {
-                me.setLoading(false);
-                var json = Ext.decode(response.responseText, true);
+        if (me.partialPickupItems.pickupItemsRequest &&
+            me.partialPickupItems.pickupItemsRequest.items &&
+            me.partialPickupItems.pickupItemsRequest.items.length > 0) {
+            me.setLoading(true);
+            this.record.pickupItems({
+                jsonData: me.partialPickupItems,
+                success: function (response) {
+                    me.setLoading(false);
+                    var json = Ext.decode(response.responseText, true);
 
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', json.response, 'error');
-                    return;
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', json.response, 'error');
+                        return;
+                    }
+                    Taco.app.fireEvent('setmessage', "Item(s) pickup successful", 'success');
+                    me.fireEvent('shipmentRefresh');
+                },
+                failure: function (response) {
+                    me.setLoading(false);
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : 'Error while pickup';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
                 }
-                Taco.app.fireEvent('setmessage', "Item(s) pickup successful", 'success');
-                me.fireEvent('shipmentRefresh');
-            },
-            failure: function (response) {
-                me.setLoading(false);
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error while pickup';
-                Taco.app.fireEvent('setmessage', msg, 'error');
-            }
-        });
+            });
+        }
+        else {
+            Taco.app.fireEvent('setmessage', 'Nothing is available for pickup.', 'error');
+        }
     },
 
     shipmentAutoReassign: function (locationCode) {
