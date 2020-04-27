@@ -74,7 +74,7 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.locationCombo = Ext.widget({
             xtype: 'taco-locationpickerfield',
             itemId: 'inventory-dropdown',
-            forceSelection: true,
+            forceSelection: false,
             labelWidth: 95,
             minWidth: 300,
             listeners: {
