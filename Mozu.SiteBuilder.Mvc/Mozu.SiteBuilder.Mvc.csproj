@@ -407,6 +407,8 @@
     <EmbeddedResource Include="TestData\order.cancel\Order1.json" />
     <EmbeddedResource Include="TestData\shipment.pickupready\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.pickupready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialpickupready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialpickupready\Location1.json" />
     <EmbeddedResource Include="TestData\shipment.pickupreminder\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.fulfilled\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.backordered\Shipment1.json" />
