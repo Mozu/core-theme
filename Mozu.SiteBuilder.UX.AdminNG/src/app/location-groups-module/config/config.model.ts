@@ -18,9 +18,7 @@ export class LocationGroupConfigModel {
     LCUPSCanadaShippingTypes: any[];
     LCFedExShippingType: any[];
     subscriptions: any[];
-    PackageSettingUnitTypes: any[];
-    BPMShipmentTypes: any[];
-    BPMConfigurations: BPMConfigurations[];
+    PackageSettingUnitTypes: any[];    
     lgConfigModel: LocationGroupConfigurationModel;
 }
 
@@ -92,7 +90,7 @@ export interface LocationGroupConfigurationModel {
     enablePnpForBOPIS: boolean;
     blockPartialCancel: boolean;
     packageSettings: PackageSettings;
-    bpmConfigurations: BPMConfigurations[];
+    bpmConfigurations: BPMConfiguration[];
 }
 
 
@@ -132,7 +130,7 @@ export interface PackageSettings {
     unitType: string;
 }
 
-export interface BPMConfigurations {
+export interface BPMConfiguration {
     shipmentType: string;
     workflowContainerId: string;
     workflowProcessId: string;

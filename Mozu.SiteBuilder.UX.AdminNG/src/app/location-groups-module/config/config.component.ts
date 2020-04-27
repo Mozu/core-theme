@@ -10,7 +10,7 @@ import {
     ShippingMethodMappings,
     BoxType,
     PackageSettings,
-    BPMConfigurations
+    BPMConfiguration
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
@@ -32,7 +32,6 @@ import { TopLocationGroupConfigModel } from '@shared/header/location-groups/head
 export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     public model: LocationGroupConfigModel;
-    public previousBPMShipment: string = '';
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
@@ -57,7 +56,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.PackageSettingUnitTypes = Constants.PackageSettingUnitTypes;
-        this.model.BPMShipmentTypes = Constants.BPMShipmentTypes;
+
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
             customerFailedToPickupDeadline: ['', []],
@@ -111,16 +110,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             packageSettingsUnitType: ['', []],
 
             bpmConfigurations: new FormArray([]),
-            bpmConfigurationShipmentType: ['', []],
-            bpmConfigurationContainerId: ['', []],
-            bpmConfigurationProcessId: ['', []],
-
-            selectedBPMShipment: ['', []],
-            selectedBPMWorkflow: ['', []],
-            selectedBPMProcess: ['', []],
+            sthContainerId: ['', []],
+            sthProcessId: ['', []],
+            bopisContainerId: ['', []],
+            bopisProcessId: ['', []]
         });
-        this.model.BPMConfigurations = [];
-        this.previousBPMShipment = '';
+
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
         this.createService.getLocationGroup(locationGroupCode).subscribe(
             (response) => this.getLocationGroupSuccess(response),
@@ -190,7 +185,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             (this.model.locationGroupConfigForm.controls.fedExShippingTypes as FormArray).push(control);
         });
     }
-    
+
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
@@ -443,67 +438,23 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             });
 
             //BPM Configurations
-            this.patchBpmConfigurations(false);
+            this.patchBpmConfigurations();
         }
         this._spinner.stop();
     }
 
-    patchBpmConfigurations(isChange: boolean = true) {
-        var bpmConfig: BPMConfigurations[] = [];
+    patchBpmConfigurations() {
         var lgConfigModel = this.model.lgConfigModel;
 
-        this.model.BPMConfigurations = lgConfigModel.bpmConfigurations;
-        const lgconfigForm = this.model.locationGroupConfigForm;
-        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
-        if (!shipmentType)
-            shipmentType = '';/* shipmentType = "ShipToHome";*/
-       
-        this.refreshBpmConfigurations(isChange);        
+        var sthConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'ShipToHome');
+        var bopisConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'BOPIS');
 
-        if (this.model.BPMConfigurations && this.model.BPMConfigurations.length > 0) {
-            bpmConfig = this.model.BPMConfigurations.filter(config => config.shipmentType === shipmentType);
-
-            if (bpmConfig.length <= 0 && this.previousBPMShipment === '') {
-                bpmConfig = this.model.BPMConfigurations.filter(config => config.workflowContainerId !== '' && config.workflowProcessId !== '');
-            }
-        }
         this.model.locationGroupConfigForm.patchValue({
-            bpmConfigurationShipmentType: bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType,
-            bpmConfigurationContainerId: bpmConfig.length > 0 && bpmConfig[0].workflowContainerId || '',
-            bpmConfigurationProcessId: bpmConfig.length > 0 && bpmConfig[0].workflowProcessId || ''
+            sthContainerId: sthConfig.length > 0 && sthConfig[0].workflowContainerId || '',
+            sthProcessId: sthConfig.length > 0 && sthConfig[0].workflowProcessId || '',
+            bopisContainerId: bopisConfig.length > 0 && bopisConfig[0].workflowContainerId || '',
+            bopisProcessId: bopisConfig.length > 0 && bopisConfig[0].workflowProcessId || ''
         });
-
-        this.previousBPMShipment = bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType;
-    }
-
-    private refreshBpmConfigurations(isChange: boolean = false) {
-        const lgconfigForm = this.model.locationGroupConfigForm;
-        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
-        if (shipmentType) {
-            var activeShipmentType = isChange && this.previousBPMShipment !== '' ? this.previousBPMShipment : shipmentType;
-
-            var containerId = lgconfigForm.get(['bpmConfigurationContainerId']).value;
-            var processId = lgconfigForm.get(['bpmConfigurationProcessId']).value;
-
-            if (this.model.BPMConfigurations.length > 0) {
-                var config = this.model.BPMConfigurations.filter(config => config.shipmentType === activeShipmentType);
-
-                if (config.length > 0) {
-                    config[0].workflowContainerId = containerId;
-                    config[0].workflowProcessId = processId;
-                    return;
-                }
-            }
-
-            if (activeShipmentType !== '') {
-                var bpmConfig: BPMConfigurations = {
-                    shipmentType: activeShipmentType,
-                    workflowContainerId: containerId,
-                    workflowProcessId: processId
-                };
-                this.model.BPMConfigurations.push(bpmConfig)
-            }            
-        }
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingMethodMappings): boolean[] {
@@ -588,7 +539,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
 
-        this.refreshBpmConfigurations();
         lgConfigModel.tenantId = this.model.lgConfigModel.tenantId;
         lgConfigModel.siteId = this.model.lgConfigModel.siteId;
         lgConfigModel.locationGroupId = this.model.lgConfigModel.locationGroupId;
@@ -698,7 +648,27 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.packageSettings = packageSettings;
 
         //BPM Configurations
-        lgConfigModel.bpmConfigurations = this.model.BPMConfigurations;
+        var bpmConfigurations: BPMConfiguration[] = [];
+        var sthContainerId = lgconfigForm.get(['sthContainerId']).value;
+        var sthProcessId = lgconfigForm.get(['sthProcessId']).value;
+        var bopisContainerId = lgconfigForm.get(['bopisContainerId']).value;
+        var bopisProcessId = lgconfigForm.get(['bopisProcessId']).value;
+
+        if (sthContainerId !== '' || sthProcessId !== '') {
+            var sthConfig: BPMConfiguration = {
+                shipmentType: 'ShipToHome', workflowContainerId: sthContainerId, workflowProcessId: sthProcessId
+            };
+            bpmConfigurations.push(sthConfig);
+        }
+
+        if (bopisContainerId !== '' || bopisProcessId !== '') {
+            var bopisConfig: BPMConfiguration = {
+                shipmentType: 'BOPIS', workflowContainerId: bopisContainerId, workflowProcessId: bopisProcessId
+            };
+            bpmConfigurations.push(bopisConfig);
+        }
+
+        lgConfigModel.bpmConfigurations = bpmConfigurations;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
@@ -706,7 +676,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
-        
+
         if (this.validateLocationGroup(lgConfigModel)) {
             this.updateLocationGroupConfig(lgConfigModel);
         }
@@ -880,7 +850,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this._progressButtonService.stop();
                 return false;
             }
-        }        
+        }
 
         return true;
     }

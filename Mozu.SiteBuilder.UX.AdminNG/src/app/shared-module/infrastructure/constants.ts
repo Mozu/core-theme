@@ -171,9 +171,7 @@ export class Constants {
     static LCCustomerPickupActions = [{ data: 'CustomerCare', label: 'Customer Care' }, { data: 'Canceled', label: 'Cancel' }];
 
     static PackageSettingUnitTypes = [{ data: 'Imperial', label: 'Imperial' }, { data: 'Metric', label: 'Metric' }];
-
-    static BPMShipmentTypes = [{ data: 'ShipToHome', label: 'Ship To Home' }, { data: 'BOPIS', label: 'BOPIS' }];
-
+        
     static LCCustomerPickupReminders = [{ data: 1, label: '1 days' }, { data: 2, label: '2 days' }, { data: 3, label: '3 days' },
     { data: 4, label: '4 days' }, { data: 5, label: '5 days' }];
     static LCDefaultCarrier = [{ data: 'None', label: 'None' }];
