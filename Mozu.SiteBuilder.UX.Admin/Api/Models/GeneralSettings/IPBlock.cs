@@ -13,5 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings
         public string RangeEnd { get; set; }
 
         public int? SiteId { get; set; }
+
+        public bool? IsWhiteList { get; set; }
     }
 }
