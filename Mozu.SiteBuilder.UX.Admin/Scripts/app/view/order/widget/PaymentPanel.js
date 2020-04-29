@@ -424,7 +424,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     scale: 'medium',
                     text: 'Capture',
                     width: 70,
-                    hidden: me.isAutoCaptureEnabled,
                     itemId: 'captureButton',
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
@@ -445,7 +444,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     ui: 'action',
                     scale: 'medium',
                     text: 'Capture',
-                    hidden: me.isAutoCaptureEnabled,
                     requiredBehaviors: [{
                         model: 'Taco.model.Order',
                         behavior: 'update'
@@ -471,7 +469,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Capture',
-                hidden: me.isAutoCaptureEnabled,
+                hidden: me.record.get('paymentType')!=='Check' && me.isAutoCaptureEnabled,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
