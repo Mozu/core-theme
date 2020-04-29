@@ -7,6 +7,7 @@ using NDjango.Interfaces;
 using System.Threading.Tasks;
 using System.Net.Http;
 using NDjango.FiltersCS.Compatibility;
+using Microsoft.Extensions.Primitives;
 
 namespace Mozu.SiteBuilder.UX.Hypr
 {
@@ -60,7 +61,16 @@ namespace Mozu.SiteBuilder.UX.Hypr
             {
                 response.Headers.Remove(name);
             }
-            response.Headers.Add(name, value);
+
+            var newValue = (StringValues)value;
+            if (response.Headers.ContainsKey(name))
+            {
+                newValue = StringValues.Concat(response.Headers[name], value);
+                response.Headers.Remove(name);
+               
+            }
+            response.Headers.Add(name, newValue);
+          
             
 
             return Task.FromResult(Enumerable.Empty<WalkResult>());

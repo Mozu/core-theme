@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         var httpContext = (d.Context["_vc"] as HyprViewContext).HttpContext;
                         httpContext.Response.Received().Headers.Add("a","b");
 
-                        Assert.AreEqual(httpContext.Response.Headers["a"] ,"c");
+                        Assert.AreEqual(httpContext.Response.Headers["a"].ToString() ,"c,b");
                     }
                 },
 
