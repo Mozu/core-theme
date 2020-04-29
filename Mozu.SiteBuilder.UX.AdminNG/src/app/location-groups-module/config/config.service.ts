@@ -9,7 +9,7 @@ IRequestOptions
 import { Constants as GlobalConstant } from '@global/infrastructure/constants';
 import { Constants } from '@shared';
 import { environment } from '@env';
-import { LocationGroupConfigurationModel } from './config.model';
+import { LocationGroupConfigurationModel, CarrierAccountModel, PagniatedNgSelectPageConfiguration } from './config.model';
 
 @Injectable()
 export class LocationGroupConfigService {
@@ -51,4 +51,33 @@ export class LocationGroupConfigService {
             return this._http.get(GlobalConstant.webApis.getAllCarrierRatesWithConfiguredInfo, opts);
         }
     }
+    public getCarrierAccountSets(pageInfo: PagniatedNgSelectPageConfiguration,carrierId:string): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: getCarrierAccountSets');
+        const params = `?start=${pageInfo.startIndex}&limit=${pageInfo.pageSize}&query=${pageInfo.query}&carrierId=${carrierId}`;
+        if (environment.isUseMocks) {
+            return this._http.get(Constants.JsonResources.carrierAccountSets);
+        } else {
+            return this._http.get(GlobalConstant.webApis.getCarrierAccountsSets + params)
+        }
+    }
+
+    public getCarrierAccount(locationGroupCode: string, siteId: string): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: getcarrierAccount');
+        if (environment.isUseMocks) {
+            return this._http.get(Constants.JsonResources.carrierAccount);
+        } else {
+            return this._http.get(GlobalConstant.webApis.getCarrierAccounts + '?locationGroupCode=' + locationGroupCode + '&siteId=' + siteId);
+        }
+    }
+
+    public SaveCarrierAccount(carrierAccount: CarrierAccountModel[]): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: SaveCarrierAccount' + JSON.stringify(carrierAccount));
+        if (environment.isUseMocks) {
+            return of(new HttpResponse({ status: 200 }));
+        }
+        else {
+            return this._http.post(GlobalConstant.webApis.saveCarrierAccount, carrierAccount);
+        }
+    }
+
 }

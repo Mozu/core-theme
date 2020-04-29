@@ -163,6 +163,7 @@
     <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.html" />
     <Content Include="src\app\shared-module\datepicker\datepicker.component.css" />
     <Content Include="src\app\shared-module\datepicker\datepicker.component.html" />
+    <Content Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.component.html" />
     <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.css" />
     <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.html" />
     <Content Include="src\app\shared-module\header\header.component.css" />
@@ -372,6 +373,8 @@
     <TypeScriptCompile Include="src\app\shared-module\directive\enable-disable-controls.directive.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\restrict-input.directive.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.model.ts" />
@@ -486,12 +489,14 @@
     <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\navigation.service.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\top\quotes\top-quotes.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\top\Shell\top-shell.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\paginated-ngselect\paginated-ngselect.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\search-bar\search-bar.component.spec.ts" />
     <TypeScriptCompile Include="src\typings.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

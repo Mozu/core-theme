@@ -44,7 +44,8 @@ export enum ErrorCode {
     NonIntCustomerFailedToPickupDeadline = <any>'NonIntCustomerFailedToPickupDeadline',
     NonIntDefaultMaxNumberOfShipmentsInPickWave = <any>'NonIntDefaultMaxNumberOfShipmentsInPickWave',
     EmptyWorkflowContainerId = <any>'EmptyWorkflowContainerId',
-    EmptyWorkflowProcessId = <any>'EmptyWorkflowProcessId'
+    EmptyWorkflowProcessId = <any>'EmptyWorkflowProcessId',
+    EmptyCanadaPostShippingTypes= <any> 'EmptyCanadaPostShippingTypes'
 }
 
 export enum ToastrCode {

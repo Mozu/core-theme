@@ -22,6 +22,7 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         requiresContextOfType: ['s']
     },
 
+    //showbreadCrumbspacer:false,
     breadCrumbConfig: [
         {
             title: 'Methods',
@@ -43,6 +44,12 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
             title: 'Product Rules',
             tabIndex: 3,
             route: 'shipping/productRules'
+        },
+        {
+            title: 'Carrier Accounts',
+            tabIndex: 4,
+            route: 'shipping/CarrierAccounts',
+            //isActive: true
         }
     ],  
 

@@ -17,11 +17,20 @@ export class LocationGroupConfigModel {
     LCUPSInternationalShippingTypes: any[];
     LCUPSCanadaShippingTypes: any[];
     LCFedExShippingType: any[];
+    LCCanadaPostShippingType: any[];
     subscriptions: any[];
-    PackageSettingUnitTypes: any[];
-    BPMShipmentTypes: any[];
-    BPMConfigurations: BPMConfigurations[];
     lgConfigModel: LocationGroupConfigurationModel;
+    packageSettingUnitTypes: any[];
+    carrierAccountModel: CarrierAccountModel;
+    uspsCarrierAccountList: SelectedCarrierAccountModel[];
+    uspsAccountTotalCount: number
+    selectedUSPSCarrier: SelectedCarrierAccountModel;
+    uspsCarrierAccount: any;
+    uspsCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
+    canadaPostCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
+    canadaPostCarrierAccountList: SelectedCarrierAccountModel[];
+    canadaPostCarrierAccount: any;
+    selectedCanadaPostCarrier: SelectedCarrierAccountModel;
 }
 
 
@@ -92,7 +101,7 @@ export interface LocationGroupConfigurationModel {
     enablePnpForBOPIS: boolean;
     blockPartialCancel: boolean;
     packageSettings: PackageSettings;
-    bpmConfigurations: BPMConfigurations[];
+    bpmConfigurations: BPMConfiguration[];
 }
 
 
@@ -132,8 +141,37 @@ export interface PackageSettings {
     unitType: string;
 }
 
-export interface BPMConfigurations {
+export interface BPMConfiguration {
     shipmentType: string;
     workflowContainerId: string;
     workflowProcessId: string;
+}
+
+export interface CarrierAccountModel {
+    carrierId: string,
+    locationGroupCode: string,
+    siteId: number,
+    credentialSet: CarrierAccountSetModel
+}
+
+export interface CarrierAccountSetModel {
+    carrierId: string,
+    code: string,
+    name: string,
+    values: any
+}
+
+export interface PagniatedNgSelectPageConfiguration {
+    startIndex: number;
+    pageSize: number;
+    query: string;
+    isMultiSelect: boolean;
+    placeholder: string;
+    totalRecordCount: number;
+    id: string;
+}
+
+export interface SelectedCarrierAccountModel {
+    label: string;
+    data: string;
 }

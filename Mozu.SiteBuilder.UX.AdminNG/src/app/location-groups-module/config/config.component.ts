@@ -10,10 +10,14 @@ import {
     ShippingMethodMappings,
     BoxType,
     PackageSettings,
-    BPMConfigurations
+    BPMConfiguration,
+    CarrierAccountModel,
+    CarrierAccountSetModel,
+    PagniatedNgSelectPageConfiguration,
+    SelectedCarrierAccountModel
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
+import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions} from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -32,7 +36,6 @@ import { TopLocationGroupConfigModel } from '@shared/header/location-groups/head
 export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     public model: LocationGroupConfigModel;
-    public previousBPMShipment: string = '';
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
@@ -46,7 +49,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private _progressButtonService: ProgressButtonService,
         private _confirmationDialogService: ConfirmationDialogService,
         private _notificationService: NotificationService
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.model = new LocationGroupConfigModel();
@@ -56,8 +59,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
-        this.model.PackageSettingUnitTypes = Constants.PackageSettingUnitTypes;
-        this.model.BPMShipmentTypes = Constants.BPMShipmentTypes;
+        this.model.packageSettingUnitTypes = Constants.PackageSettingUnitTypes;
+        this.model.uspsCarrierAccountPagination = Constants.UspsCarrierAccountPageConfig;
+        this.model.canadaPostCarrierAccountPagination = Constants.CanadaPostCarrierAccountPageConfig;
+
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
             customerFailedToPickupDeadline: ['', []],
@@ -99,7 +104,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedexExpress3Default: ['', []],
             fedExReturnLabelShippingTypes: ['', []],
 
-
+            canadapostShippingTypes: new FormArray([]),
+            canadapostStandardDefault: ['', []],
+            canadapostExpress1DayDefault: ['', []],
+            canadapostExpress2DayDefault: ['', []],
+            canadapostExpress3DayDefault: ['', []],
+            canadapostReturnLabelShippingTypes: ['', []],
+           
             autoPackingListPopup: ['', []],
             blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
@@ -111,16 +122,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             packageSettingsUnitType: ['', []],
 
             bpmConfigurations: new FormArray([]),
-            bpmConfigurationShipmentType: ['', []],
-            bpmConfigurationContainerId: ['', []],
-            bpmConfigurationProcessId: ['', []],
-
-            selectedBPMShipment: ['', []],
-            selectedBPMWorkflow: ['', []],
-            selectedBPMProcess: ['', []],
+            sthContainerId: ['', []],
+            sthProcessId: ['', []],
+            bopisContainerId: ['', []],
+            bopisProcessId: ['', []]
         });
-        this.model.BPMConfigurations = [];
-        this.previousBPMShipment = '';
+
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
         this.createService.getLocationGroup(locationGroupCode).subscribe(
             (response) => this.getLocationGroupSuccess(response),
@@ -190,7 +197,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             (this.model.locationGroupConfigForm.controls.fedExShippingTypes as FormArray).push(control);
         });
     }
-    
+
+    private addCanadaPostShippingTypesCheckboxes() {
+        this.model.LCCanadaPostShippingType.map((o, i) => {
+            const control = new FormControl();
+            (this.model.locationGroupConfigForm.controls.canadapostShippingTypes as FormArray).push(control);
+        });
+    }
+
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
@@ -246,6 +260,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             this.model.LCUPSUSShippingTypes = [];
             this.model.LCUSPSShippingTypes = [];
             this.model.LCFedExShippingType = [];
+            this.model.LCCanadaPostShippingType = [];
 
             carrierShippingType.map((value, index) => {
                 const shippingTypeObj = {
@@ -258,6 +273,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     this.model.LCUPSUSShippingTypes.push(shippingTypeObj);
                 } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.fedex) {
                     this.model.LCFedExShippingType.push(shippingTypeObj);
+                } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.canadapost) {
+                    this.model.LCCanadaPostShippingType.push(shippingTypeObj);
                 }
             });
         }
@@ -316,9 +333,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupCode, siteId);
         const carrierSettings = this.configService.getCarrierSettings(opts);
         const carrierRatesWithConfiguredInfo = this.configService.getAllCarrierRatesWithConfiguredInfo(opts);
-
+        const uspsCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.uspsCarrierAccountPagination, Constants.LCCarriers.usps);
+        const carrierAccount = this.configService.getCarrierAccount(locationGroupCode, siteId);
+        const canadaPostCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.canadaPostCarrierAccountPagination, Constants.LCCarriers.canadapost);
         // join this services result.
-        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig]).subscribe(response => {
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount,canadaPostCarrierAccountSets]).subscribe(response => {
             this._loggerService.info('LocationGroupConfigComponent : forkJoin');
 
             if (response && response[0] && response[0].items) {
@@ -334,6 +353,21 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this.model.lgConfigModel = lgConfigModel;
                 this.resetLocationGroupConfigForm();
                 this.updateLocationGroupConfigForm(lgConfigModel);
+            }
+
+            if (response && response[3] && response[3].items) {
+                this.getAllUSPSCarrierAccount(response[3].items);
+                this.model.uspsCarrierAccountPagination.totalRecordCount = response[3].total;
+            }
+
+            if (response && response[4] && response[4].items) {
+                const carrierAccountConfigModel: CarrierAccountSetModel = <CarrierAccountSetModel>response[4].items
+                this.updateCarrierAccountsConfigForm(carrierAccountConfigModel);
+            }
+
+            if (response && response[5] && response[5].items) {
+                this.getAllCanadaPostCarrierAccount(response[5].items);
+                this.model.canadaPostCarrierAccountPagination.totalRecordCount = response[5].total;
             }
         }, (response) => {
             this.getLocationGroupConfigError(response.error.message);
@@ -353,6 +387,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.locationGroupConfigForm.controls.upsUsShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.uspsShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.fedExShippingTypes = new FormArray([]);
+        this.model.locationGroupConfigForm.controls.canadapostShippingTypes = new FormArray([]);
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
@@ -370,10 +405,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.addUPSUSShippingTypesCheckboxes();
         this.addFedExShippingTypesCheckboxes();
         this.addUSPSShippingTypesCheckboxes();
+        this.addCanadaPostShippingTypesCheckboxes();
 
         let unitedStatesUpsSettings: ShippingMethodMappings;
         let shippingSettingsForFedEx: ShippingMethodMappings;
         let shippingSettingsForUsps: ShippingMethodMappings;
+        let shippingSettingsForCanadaPost: ShippingMethodMappings;
 
         if (lgConfigModel && lgConfigModel.carriers.length > 0) {
             lgConfigModel.carriers.forEach((carrier) => {
@@ -388,6 +425,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
                     case 'fedex':
                         shippingSettingsForFedEx = carrier.shippingMethodMappings;
+                        break;
+
+                    case 'canadapost':
+                        shippingSettingsForCanadaPost = carrier.shippingMethodMappings;
                         break;
                 }
             });
@@ -430,6 +471,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsExpress3DayDefault: shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
                 uspsReturnLabelShippingTypes: shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
 
+                // Canada Post Settings
+                canadapostShippingTypes: this.setSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost),
+                canadapostStandardDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.standardDefault : null,
+                canadapostExpress1DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express1DayDefault : null,
+                canadapostExpress2DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express2DayDefault : null,
+                canadapostExpress3DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express3DayDefault : null,
+                canadapostReturnLabelShippingTypes: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.returnLabelShippingMethod : null,
+
                 autoPackingListPopup: lgConfigModel.autoPackingListPopup === undefined ? false : lgConfigModel.autoPackingListPopup,
                 blockPartialStock: lgConfigModel.blockPartialStock === undefined ? false : lgConfigModel.blockPartialStock,
                 defaultMaxNumberOfShipmentsInPickWave: lgConfigModel.defaultMaxNumberOfShipmentsInPickWave,
@@ -443,67 +492,60 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             });
 
             //BPM Configurations
-            this.patchBpmConfigurations(false);
+            this.patchBpmConfigurations();
         }
         this._spinner.stop();
     }
 
-    patchBpmConfigurations(isChange: boolean = true) {
-        var bpmConfig: BPMConfigurations[] = [];
+    patchBpmConfigurations() {
         var lgConfigModel = this.model.lgConfigModel;
 
-        this.model.BPMConfigurations = lgConfigModel.bpmConfigurations;
-        const lgconfigForm = this.model.locationGroupConfigForm;
-        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
-        if (!shipmentType)
-            shipmentType = '';/* shipmentType = "ShipToHome";*/
-       
-        this.refreshBpmConfigurations(isChange);        
+        var sthConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'ShipToHome');
+        var bopisConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'BOPIS');
 
-        if (this.model.BPMConfigurations && this.model.BPMConfigurations.length > 0) {
-            bpmConfig = this.model.BPMConfigurations.filter(config => config.shipmentType === shipmentType);
-
-            if (bpmConfig.length <= 0 && this.previousBPMShipment === '') {
-                bpmConfig = this.model.BPMConfigurations.filter(config => config.workflowContainerId !== '' && config.workflowProcessId !== '');
-            }
-        }
         this.model.locationGroupConfigForm.patchValue({
-            bpmConfigurationShipmentType: bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType,
-            bpmConfigurationContainerId: bpmConfig.length > 0 && bpmConfig[0].workflowContainerId || '',
-            bpmConfigurationProcessId: bpmConfig.length > 0 && bpmConfig[0].workflowProcessId || ''
+            sthContainerId: sthConfig.length > 0 && sthConfig[0].workflowContainerId || '',
+            sthProcessId: sthConfig.length > 0 && sthConfig[0].workflowProcessId || '',
+            bopisContainerId: bopisConfig.length > 0 && bopisConfig[0].workflowContainerId || '',
+            bopisProcessId: bopisConfig.length > 0 && bopisConfig[0].workflowProcessId || ''
         });
-
-        this.previousBPMShipment = bpmConfig.length > 0 && bpmConfig[0].shipmentType || shipmentType;
     }
 
-    private refreshBpmConfigurations(isChange: boolean = false) {
-        const lgconfigForm = this.model.locationGroupConfigForm;
-        var shipmentType = lgconfigForm.get(['bpmConfigurationShipmentType']).value;
-        if (shipmentType) {
-            var activeShipmentType = isChange && this.previousBPMShipment !== '' ? this.previousBPMShipment : shipmentType;
-
-            var containerId = lgconfigForm.get(['bpmConfigurationContainerId']).value;
-            var processId = lgconfigForm.get(['bpmConfigurationProcessId']).value;
-
-            if (this.model.BPMConfigurations.length > 0) {
-                var config = this.model.BPMConfigurations.filter(config => config.shipmentType === activeShipmentType);
-
-                if (config.length > 0) {
-                    config[0].workflowContainerId = containerId;
-                    config[0].workflowProcessId = processId;
-                    return;
-                }
+    private updateCarrierAccountsConfigForm(carrierAccountModel: any): void {
+        const uspsCarrierAccount = carrierAccountModel.filter(a => a.carrierId === 'usps')
+        if (uspsCarrierAccount.length > 0) {
+            this.model.selectedUSPSCarrier = {
+                data: uspsCarrierAccount[0].code,
+                label: uspsCarrierAccount[0].name
             }
-
-            if (activeShipmentType !== '') {
-                var bpmConfig: BPMConfigurations = {
-                    shipmentType: activeShipmentType,
-                    workflowContainerId: containerId,
-                    workflowProcessId: processId
-                };
-                this.model.BPMConfigurations.push(bpmConfig)
-            }            
+        } else {
+            this.model.selectedUSPSCarrier = Constants.DefaultUSPSAccount;
         }
+        const canadaPostCarrierAccount = carrierAccountModel.filter(a => a.carrierId === Constants.LCCarriers.canadapost);
+        if (canadaPostCarrierAccount.length > 0) {
+            this.model.selectedCanadaPostCarrier = {
+                data: canadaPostCarrierAccount[0].code,
+                label: canadaPostCarrierAccount[0].name
+            }
+        } else {
+            this.model.selectedCanadaPostCarrier = Constants.DefaultCanadaPostAccount;
+        }
+    }
+
+    private setSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost: ShippingMethodMappings): boolean[] {
+        const shippingTypeLst: boolean[] = [];
+        if (shippingSettingsForCanadaPost) {
+            const shippingMethods = shippingSettingsForCanadaPost.shippingMethods;
+            this.model.LCCanadaPostShippingType.map((o, i) => {
+                const isShippingTypeSelected = _.indexOf(shippingMethods, o.data);
+                if (isShippingTypeSelected === -1) {
+                    shippingTypeLst.push(false);
+                } else {
+                    shippingTypeLst.push(true);
+                }
+            });
+        }
+        return shippingTypeLst;
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingMethodMappings): boolean[] {
@@ -588,7 +630,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
 
-        this.refreshBpmConfigurations();
         lgConfigModel.tenantId = this.model.lgConfigModel.tenantId;
         lgConfigModel.siteId = this.model.lgConfigModel.siteId;
         lgConfigModel.locationGroupId = this.model.lgConfigModel.locationGroupId;
@@ -672,7 +713,24 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         lgConfigModel.carriers.push(fedexMethod);
                     }
                     break;
-            }
+
+                case 'canadapost':
+                    if (element.value) {
+                        const canadapostMethod = {} as CarrierModel;
+                        canadapostMethod.carrierType = shippingType.CarrierType;
+                        canadapostMethod.isEnabled = element.value;
+                        canadapostMethod.shippingMethodMappings = {} as ShippingMethodMappings;
+                        canadapostMethod.shippingMethodMappings.shippingMethods = this.getSelectedCanadaPostShippingTypes(lgconfigForm.get(['canadapostShippingTypes']).value);
+                        //canadapostMethod.shippingMethodMappings.enableSmartPost = lgconfigForm.get(['enableSmartPost']).value;
+                        canadapostMethod.shippingMethodMappings.returnLabelShippingMethod = lgconfigForm.get(['canadapostReturnLabelShippingTypes']).value;
+                        canadapostMethod.shippingMethodMappings.standardDefault = lgconfigForm.get(['canadapostStandardDefault']).value == null || '' ? 'canadapost_Expedited_Parcel' : lgconfigForm.get(['canadapostStandardDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express1DayDefault = lgconfigForm.get(['canadapostExpress1DayDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['canadapostExpress2DayDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['canadapostExpress3DayDefault']).value;
+                        lgConfigModel.carriers.push(canadapostMethod);
+                    }
+                    break;        
+               }
         });
 
         lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
@@ -692,23 +750,71 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.enablePnpForBOPIS = lgconfigForm.get(['enablePnpForBOPIS']).value;
         lgConfigModel.blockPartialCancel = lgconfigForm.get(['blockPartialCancel']).value;
 
-        //Package Settings
+        // Package Settings
         const packageSettings: PackageSettings = { unitType: "" };
         packageSettings.unitType = lgconfigForm.get(['packageSettingsUnitType']).value;
         lgConfigModel.packageSettings = packageSettings;
 
         //BPM Configurations
-        lgConfigModel.bpmConfigurations = this.model.BPMConfigurations;
+        var bpmConfigurations: BPMConfiguration[] = [];
+        var sthContainerId = lgconfigForm.get(['sthContainerId']).value;
+        var sthProcessId = lgconfigForm.get(['sthProcessId']).value;
+        var bopisContainerId = lgconfigForm.get(['bopisContainerId']).value;
+        var bopisProcessId = lgconfigForm.get(['bopisProcessId']).value;
+
+        if (sthContainerId !== '' || sthProcessId !== '') {
+            var sthConfig: BPMConfiguration = {
+                shipmentType: 'ShipToHome', workflowContainerId: sthContainerId, workflowProcessId: sthProcessId
+            };
+            bpmConfigurations.push(sthConfig);
+        }
+
+        if (bopisContainerId !== '' || bopisProcessId !== '') {
+            var bopisConfig: BPMConfiguration = {
+                shipmentType: 'BOPIS', workflowContainerId: bopisContainerId, workflowProcessId: bopisProcessId
+            };
+            bpmConfigurations.push(bopisConfig);
+        }
+
+        lgConfigModel.bpmConfigurations = bpmConfigurations;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
+        // USPS Carrier Account
+        const carrierAccountModel= [] as CarrierAccountModel[];
+        if (this.model.uspsCarrierAccount && this.model.uspsCarrierAccount.length != 0)
+            carrierAccountModel.push({
+                locationGroupCode: this.model.lgConfigModel.locationGroupCode,
+                siteId: this.model.lgConfigModel.siteId,
+                carrierId: Constants.LCCarriers.usps,
+                credentialSet: {
+                    code: this.model.uspsCarrierAccount.data,
+                    carrierId: Constants.LCCarriers.usps,
+                    name: this.model.uspsCarrierAccount.label,
+                    values:null
+                }
+            })
+
+        if (this.model.canadaPostCarrierAccount && this.model.canadaPostCarrierAccount.length != 0)
+            carrierAccountModel.push({
+                locationGroupCode: this.model.lgConfigModel.locationGroupCode,
+                siteId: this.model.lgConfigModel.siteId,
+                carrierId: Constants.LCCarriers.canadapost,
+                credentialSet: {
+                    code: this.model.canadaPostCarrierAccount.data,
+                    carrierId: Constants.LCCarriers.canadapost,
+                    name: this.model.canadaPostCarrierAccount.label,
+                    values: null
+                }
+            })
+
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
-        
+
         if (this.validateLocationGroup(lgConfigModel)) {
-            this.updateLocationGroupConfig(lgConfigModel);
+            this.updateLocationGroupConfig(lgConfigModel, carrierAccountModel);
         }
     }
 
@@ -752,6 +858,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         this._progressButtonService.stop();
                     }
                     break;
+                case 'canadapost':
+                    lgconfigForm.controls.canadapostShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyCanadaPostShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;        
                 default:
                     isAtLeastOneTypeSelected = true;
                     break;
@@ -761,9 +879,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel) {
+    private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel, carrierAccountModels: CarrierAccountModel[]) {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfig');
-        this.configService.updateLocationGroupConfig(lgcModel).subscribe(response =>
+        let locationForkJoinList = [];
+        const locationGroup = this.configService.updateLocationGroupConfig(lgcModel);
+        locationForkJoinList.push(locationGroup);
+        if (carrierAccountModels && carrierAccountModels.length != 0) {
+            const slectedCarrierAccount = this.configService.SaveCarrierAccount(carrierAccountModels);
+            locationForkJoinList.push(slectedCarrierAccount);
+        }
+        forkJoin(locationForkJoinList).subscribe(response =>
             this.updateLocationGroupConfigSuccess(response),
             (response) => this.updateLocationGroupConfigError(response.error.message));
         let siteIds = [];
@@ -815,6 +940,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         let shippingTypeLst: string[] = [];
         if (shippingSettingsForFedEx) {
             shippingTypeLst = shippingSettingsForFedEx.map((v, i) => v ? this.model.LCFedExShippingType[i].data : null)
+                .filter(v => v !== null);
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost: boolean[]): string[] {
+        let shippingTypeLst: string[] = [];
+        if (shippingSettingsForCanadaPost) {
+            shippingTypeLst = shippingSettingsForCanadaPost.map((v, i) => v ? this.model.LCCanadaPostShippingType[i].data : null)
                 .filter(v => v !== null);
         }
         return shippingTypeLst;
@@ -880,7 +1014,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this._progressButtonService.stop();
                 return false;
             }
-        }        
+        }
 
         return true;
     }
@@ -891,5 +1025,65 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         topLocationGroupConfigModel.locationGroupCode = locationGroupCode;
         topLocationGroupConfigModel.locationGroupSiteIds = siteIds;
         this._notificationService.notifySetLocationGroupConfigData({ name: NotificationLGActions.locationGroupConfigUpdate, data: topLocationGroupConfigModel });
+    }
+
+    private getAllUSPSCarrierAccount(result: CarrierAccountSetModel[]) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllUSPSCarrierAccount' + JSON.stringify(result));
+        if (result) {
+            const carrierAccountType: CarrierAccountSetModel[] = <CarrierAccountSetModel[]>result;
+            this.model.uspsCarrierAccountList = [] as SelectedCarrierAccountModel[];
+            carrierAccountType.map((value, index) => {
+                const carrierAccountObj = {
+                    data: value.code,
+                    label: value.name
+                };
+                if (value.carrierId.toLowerCase() === Constants.LCCarriers.usps) {
+                    this.model.uspsCarrierAccountList.push(carrierAccountObj);
+                }
+            });
+        }
+    }
+
+    private getAllCanadaPostCarrierAccount(result: CarrierAccountSetModel[]) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllCanadaPostCarrierAccount' + JSON.stringify(result));
+        if (result) {
+            const carrierAccountType: CarrierAccountSetModel[] = <CarrierAccountSetModel[]>result;
+            this.model.canadaPostCarrierAccountList = [] as SelectedCarrierAccountModel[];
+            carrierAccountType.map((value, index) => {
+                const carrierAccountObj = {
+                    data: value.code,
+                    label: value.name
+                };
+                if (value.carrierId.toLowerCase() === Constants.LCCarriers.canadapost) {
+                    this.model.canadaPostCarrierAccountList.push(carrierAccountObj);
+                }
+            });
+        }
+    }
+
+    public getUSPSCarrierAccounts(pageDetails: any) {
+        this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.usps).subscribe(response => {
+            this.model.uspsCarrierAccountPagination.totalRecordCount = 0;
+            this.getAllUSPSCarrierAccount(response.items);
+            this.model.uspsCarrierAccountPagination.totalRecordCount = response.total;
+        })
+    }
+
+    public getCanadaPostCarrierAccounts(pageDetails: any) {
+        this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.canadapost).subscribe(response => {
+            this.model.canadaPostCarrierAccountPagination.totalRecordCount = 0;
+            this.getAllCanadaPostCarrierAccount(response.items);
+            this.model.canadaPostCarrierAccountPagination.totalRecordCount = response.total;
+        })
+    }
+
+    public getSelectedUSPSCarrier(SelectedValues: SelectedCarrierAccountModel) {
+        this.model.uspsCarrierAccount = [];
+        this.model.uspsCarrierAccount = SelectedValues;
+    }
+
+    public getSelectedCanadaPostCarrier(SelectedValues: SelectedCarrierAccountModel) {
+        this.model.canadaPostCarrierAccount = [];
+        this.model.canadaPostCarrierAccount = SelectedValues;
     }
 }

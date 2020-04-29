@@ -243,6 +243,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgressText: "Saving...",
 
         enableSearchBarInHeader: true,
+        showbreadCrumbspacer: true,
         showTitleBorder: true,
 
         // turns off all the default coloration for the content container; ie. makes everything white;
@@ -491,12 +492,14 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             actionBarPadding = '0 0 0 0';
         }
-
-        if (me.breadCrumbConfig) {
+        if (me.breadCrumbConfig)
+        {
+        
             me.titleContainer.flex = 0;
-            conf.items.push('->');
+            if (me.showbreadCrumbspacer) {       
+                conf.items.push('->');
+            }
         }
-
         if (!me.hideSubnavLinks) {
             me.subNavLinkContainer = Ext.create('Taco.view.navigation.SubNavLinkContainer');
             conf.items.push(me.subNavLinkContainer);

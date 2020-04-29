@@ -1,0 +1,19 @@
+﻿  <ng-select
+               [multiple]="pageConfig.isMultiSelect"
+               [items]="items"
+               [id]="pageConfig.id" 
+               [name]="pageConfig.id"
+               [(ngModel)]="model.selectedValue"
+               [placeholder]="pageConfig.placeholder"
+               bindLabel="label"
+               bindValue="data"
+               (search)="onSearch($event)"
+               (change)="selectedValueChanged($event)"
+               >
+       
+        <ng-template ng-footer-tmp>
+            <p-paginator [rows]="pageConfig.pageSize" [totalRecords]="pageConfig.totalRecordCount" (onPageChange)="pageIndexChanged($event)"></p-paginator>
+        </ng-template>
+    </ng-select>
+   
+

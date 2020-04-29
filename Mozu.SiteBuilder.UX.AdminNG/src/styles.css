@@ -1219,11 +1219,11 @@ ngb-datepicker.dropdown-menu {
     border-bottom: 2px solid #2ea195;
 }
 
-.ng-select .ng-select-container .ng-value-container {
+.advanced-filter .ng-select .ng-select-container .ng-value-container {
     padding: 0px;
 }
 
-.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+.advanced-filter .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
     border: none !important;
     box-shadow: none !important;
 }
@@ -1234,7 +1234,6 @@ ngb-datepicker.dropdown-menu {
 
 
 /* --------------Advanced Filter - ng-select CSS - End------------- */
-
 
 /* --------------Common styles------------- */
 

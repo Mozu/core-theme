@@ -411,7 +411,10 @@
         "unitType": "Unit Type",
         "bpmConfigurationContainerId": "Workflow Container Id*",
         "bpmConfigurationProcessId": "Workflow Process Id*",
-        "bpmConfigurationShipmentType": "Shipment Type"
+        "sthShipment": "Ship to Home",
+        "bopisShipment": "BOPIS",
+        "uspsAccountLabel": "Select USPS Account",
+        "canadaPostAccountLabel": "Select Canada Post Account"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",
