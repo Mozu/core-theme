@@ -11,8 +11,7 @@
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Messaging" Version="1.2005.4" />
     <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2005.4" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2014.2" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.4" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2019.0-sb-dnc.1" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.1929.0-dotnetcore.26" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.1915.0-dotnetcore.4" />

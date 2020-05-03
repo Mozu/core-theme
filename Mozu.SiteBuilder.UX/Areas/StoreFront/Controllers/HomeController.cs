@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-//using Mozu.SiteBuilder.Mvc.OAF;
+using Mozu.SiteBuilder.Mvc.OAF;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Configuration;
@@ -23,9 +23,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public HomeController() { }
 
-        //
-        //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-        //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+        
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
         [HttpGet]
         public IActionResult Index()
         {

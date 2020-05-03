@@ -231,7 +231,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 new RouteValueDictionary(defaults), 
                 knownValidators, 
                 knownMappings, 
-                //routeDef.FunctionId, 
+                routeDef.FunctionId, 
                 scheme,
                 constraintResolver);
         }

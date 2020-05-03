@@ -18,17 +18,12 @@
     <PackageReference Include="51Degrees.mobi-core" Version="3.2.21.1" />
     <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
-    <PackageReference Include="Microsoft.ClearScript" Version="6.0.1" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.2013.0-bpm.5" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
-    <PackageReference Include="Mozu.Core.Actions" Version="1.2014.2" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="1.2012.0-dotnetcore.80" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2012.0-dotnetcore.80" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2014.2" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="6.2.4" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2019.0-sb-dnc.1" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2012.0-pr-9.6" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />

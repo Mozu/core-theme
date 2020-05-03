@@ -16,7 +16,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
-//using Mozu.SiteBuilder.Mvc.OAF;
+using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
@@ -28,10 +28,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
-    //[SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
-    //    ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    //[SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
-    //    Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
+    ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
+        Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CmsPagesController : BaseApiController
     {
         private readonly ICustomRouteHandler _customRouteHandler;
@@ -105,10 +105,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpHead]
         [HttpGet]
-        //[SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
-        //    ActionExtensionExecutionTypes.BeforeController)]
-        //[SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
-        //    ActionExtensionExecutionTypes.AfterController)]
+        [SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
+            ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
+            ActionExtensionExecutionTypes.AfterController)]
         public async Task<IActionResult> Page(string documentListName, string documentName, string variationId = "")
         {
             PageContext.CmsContext = new CmsPageContext

@@ -31,6 +31,7 @@ using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
+using Mozu.SiteBuilder.Mvc.OAF;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -127,7 +128,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
         {
             builder.AddSingleton<IThemeMetaDataProvider, ThemeMetadataProvider>();
             builder.AddSingleton<IThemeRepository, ThemeRepository>();
-            builder.AddScoped<HyprViewEngine>();
+            builder.AddScoped<HyprViewEngine>()
+                .AddSingleton<SbApiActionExtensionFilter>();
 
 
 

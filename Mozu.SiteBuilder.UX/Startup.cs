@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -87,10 +88,18 @@ namespace Mozu.SiteBuilder.UX
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddControllers(options =>
                 {
+                    //var rem = options.Filters.Where(x => 
+                    //(x is TypeFilterAttribute && ((TypeFilterAttribute) x).ImplementationType == typeof(Core.Actions.GlobalActionExtensionFilter)) 
+                    //|| x is Core.Actions.GlobalActionExtensionFilter
+                    //).FirstOrDefault();
+                    //if ( rem != null)
+                    //{
+                    //    options.Filters.Remove(rem);
+                    //}
                     options.Filters.Add(typeof(EditModeCacheInvalidatorFilter));
                     options.Filters.Add(typeof(AnonymousShopperFilterAttribute));
                     options.Filters.Add(typeof(VisitTrackingFilterAttribute));
-                    options.Filters.Add(typeof(Core.Actions.GlobalActionExtensionFilter));
+                  //  options.Filters.Add(typeof(Core.Actions.GlobalActionExtensionFilter));
                     options.Filters.Add(typeof(HttpResponseExceptionFilter));
                 });
             services.Configure<IISServerOptions>(opt => { opt.AllowSynchronousIO = true; });

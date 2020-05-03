@@ -50,6 +50,9 @@ using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UnitTests.Utils;
 using Route = Mozu.SiteSettings.General.Contracts.General.Routing.Route;
+using Microsoft.AspNetCore.Routing.Template;
+using Microsoft.AspNetCore.Routing.Patterns;
+using Microsoft.Extensions.Options;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
@@ -746,13 +749,18 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             };
         }
 
+      
+
+
         [Test]
         [TestCaseSource("GetTests")]
         public void Run(TestCase test )
         {
             //  CustomRouteHandler handler = new CustomRouteHandler();
 
-
+            var sp = new ServiceCollection().AddRouting(_=> _.AppendTrailingSlash=false)
+                .BuildServiceProvider();
+            var tbf = sp.GetService<TemplateBinderFactory>();
             Mapper.Reset();
             Mapper.Initialize(x =>
            {
@@ -761,6 +769,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             //Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             var subber = new AutoSubstitute();
             subber.Provide<IRouteConfig>(new RouteConfig());
+            subber.Provide<TemplateBinderFactory> (tbf);
             var sbapiContext = subber.ResolveAndSubstituteFor<ISiteBuilderApiContext>();
             var pc = subber.ResolveAndSubstituteFor<IPageContext>();
          
@@ -773,6 +782,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             httpCtx.Request.Host = new HostString("localhost");
             httpCtx.Request.Scheme = "http";
             httpCtx.Request.Method = "GET";
+            httpCtx.RequestServices = subber.ServiceProvider;
             pc.Url.Returns(httpCtx.GetRequestUri().ToString());
          
             //reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));

@@ -26,8 +26,8 @@
 //{
 //    public class SbActionExtensionFilterAttribute : ActionExtensionFilterAttribute
 //    {
-//        public SbActionExtensionFilterAttribute(string actionId, ActionExtensionExecutionTypes executionType, Type actionFilterType = null, Type resourceProviderType = null):
-//            base(actionId, executionType,typeof(ISbActionExtensionFilter), resourceProviderType)
+//        public SbActionExtensionFilterAttribute(string actionId, ActionExtensionExecutionTypes executionType, Type actionFilterType = null, Type resourceProviderType = null) :
+//            base(actionId, executionType, typeof(ISbActionExtensionFilter), resourceProviderType)
 //        {
 //            this.FunctionActionFilterType = typeof(ISbActionExtensionFilter);
 //        }
@@ -35,9 +35,9 @@
 //        {
 //            this.FunctionActionFilterType = typeof(ISbActionExtensionFilter);
 //        }
-       
+
 //    }
-//    public interface ISbActionExtensionFilter: IActionExtensionFilter
+//    public interface ISbActionExtensionFilter : IActionExtensionFilter
 //    { }
 
 //    public class SbActionExtensionFilter : ApiActionExtensionFilter, ISbActionExtensionFilter
@@ -78,7 +78,7 @@
 //        {
 //            return this.CreateFunctionContextExternal(actionContext);
 //        }
-//        public   ApiActionExtensionFilterContext CreateFunctionContextExternal(HttpActionContext actionContext)
+//        public ApiActionExtensionFilterContext CreateFunctionContextExternal(HttpActionContext actionContext)
 //        {
 //            InitSBActionContext(actionContext);
 //            var ctx = new SbiActionExtensionFilterContext(this.ResourceFactory, actionContext);
@@ -90,19 +90,19 @@
 
 //        public class SbiActionExtensionFilterContext : ApiActionExtensionFilterContext
 //        {
-//            public SbiActionExtensionFilterContext(Func<HttpActionContext, Tuple<object, System.Net.HttpStatusCode>> resourceFactory, HttpActionContext actionContext):
+//            public SbiActionExtensionFilterContext(Func<HttpActionContext, Tuple<object, System.Net.HttpStatusCode>> resourceFactory, HttpActionContext actionContext) :
 //                base(resourceFactory, actionContext)
 //            {
 
 //            }
 
-          
-         
+
+
 //            [JsonIgnore]
 //            public new SbExecs exec => (SbExecs)base.exec;
 //        }
 
-//        public static void InitSBActionContext (HttpActionContext actionContext )
+//        public static void InitSBActionContext(HttpActionContext actionContext)
 //        {
 //            AddToActionContext<SiteContext>(actionContext.Request, "siteContext");
 //            AddToActionContext<PageContext>(actionContext.Request, "pageContext");
@@ -128,11 +128,11 @@
 //            return;
 //        }
 
-//        public static void AddToActionContext<T>(HttpRequestMessage httpRequestMessage, string name , T obj = null) where T : class
+//        public static void AddToActionContext<T>(HttpRequestMessage httpRequestMessage, string name, T obj = null) where T : class
 //        {
 //            obj = obj ?? httpRequestMessage.Resolve<T>();
-            
-            
+
+
 //            IPropertyBag bag = null;
 //            object tmp;
 //            if (httpRequestMessage.Properties.TryGetValue(Mozu.Core.Actions.Contracts.ApiActionExtensionFilterContext.ItemsKey, out tmp))

@@ -4,6 +4,7 @@ using Mozu.Core.Configuration;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System;
 using System.Collections.Generic;
@@ -43,10 +44,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             RouteValueDictionary defaults,
             IDictionary<ICustomRouteConstraint, string[]> constraints,
             IDictionary<IRouteDataMapping, string[]> mappings,
-            //string functionId,
+            string functionId,
             Scheme? scheme,
             IInlineConstraintResolver constraintResolver) :
-            base(defaultHandler,
+            base(internalRoute == FancyRoute.Arcjs ? new ArcJsHttpRouter() { FunctionId = functionId }: defaultHandler,
                 name,
                 template,
                 defaults,
