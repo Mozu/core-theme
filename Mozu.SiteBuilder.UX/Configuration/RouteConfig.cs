@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using IInlineConstraintResolver = Microsoft.AspNetCore.Routing.IInlineConstraintResolver;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -25,10 +26,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
         private static IInlineConstraintResolver _constraintResolver;
 
         //private static IList<IRouter> _systemRoutes;
-        private static IList<IRouter> _standardRoutes;
+        private static RouteCollection _standardRoutes;
 
         //public IList<IRouter> SystemRoutes => _systemRoutes ??= GetSystemRoutes();
-        public IList<IRouter> DefaultRoutes => _standardRoutes ??= GetStandardRoutes();
+        public RouteCollection DefaultRoutes => _standardRoutes ??= GetStandardRoutes();
 
         public static void Register(IRouteBuilder builder)
         {
@@ -345,9 +346,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
             return routes;
         }
       
-        public static IList<IRouter> GetStandardRoutes()
+        public static RouteCollection GetStandardRoutes()
         {
-            var routes = new List<IRouter>();
+            var routes = new RouteCollection();
 
             _defaultHandler ??= new RouteHandler(_ => throw new NotImplementedException());
             _constraintResolver ??= new DefaultInlineConstraintResolver(new OptionsWrapper<RouteOptions>(new RouteOptions()), new ServiceContainer());
@@ -575,7 +576,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
             DoReRoute(context, DefaultRoutes);
         }
 
-        private static void DoReRoute(RouteContext context, IList<IRouter> routeCollection )
+        public Task RouteAsync(RouteContext context)
+        {
+            return DefaultRoutes.RouteAsync(context);
+        }
+
+        private static void DoReRoute(RouteContext context, RouteCollection routeCollection )
         {
             if (!routeCollection.TryMatchRoute(context.HttpContext, out var routeData)) return;
             
@@ -583,7 +589,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             if (routeData.Routers.Last() is CustomRoute cr)
             {
-                cr.RewriteRouteData(context.HttpContext, routeData.Values);
+                cr.RewriteRouteData(context, routeData.Values);
             }
 
             context.RouteData = routeData;

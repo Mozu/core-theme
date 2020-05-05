@@ -24,12 +24,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public interface ICustomRouteCollectionRepository
     {
-        IList<IRouter> GetRouteCollection();
+        RouteCollection GetRouteCollection();
     }
 
     public interface ICustomRouteHandler
     {
-        bool RouteIncomingRequest(RouteContext routeContext);
+        IRouter RouteIncomingRequest(RouteContext routeContext);
 
        // Task<bool> Init();
 
@@ -55,6 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="useExistingQuery"></param>
         /// <returns></returns>
         string GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues , string hostName = null);
+        Task RouteAsync(RouteContext context);
     }
    
     public interface IRedirectRepository

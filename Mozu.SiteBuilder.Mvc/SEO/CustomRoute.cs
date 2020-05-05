@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         string Template { get; set; }
         public FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
+        public string FunctionId { get; }
 
         //todo possible support for qstring in url gen.
         NameValueCollection QueryString { get; set; }
@@ -58,6 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             Template = template;
             InternalRoute = internalRoute;
             IsCanonical = isCanonical;
+            FunctionId = functionId;
             UrlScheme = scheme;
 
             if (!string.IsNullOrWhiteSpace(queryString))
@@ -89,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public override Task RouteAsync(RouteContext context)
         {
-            RewriteRouteData(context.HttpContext, context.RouteData.Values);
+            RewriteRouteData(context, context.RouteData.Values);
 
             return base.RouteAsync(context);
         }
@@ -99,9 +101,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public IDictionary<string, object> RewriteRouteData(HttpContext context, IDictionary<string, object> values)
+        public IDictionary<string, object> RewriteRouteData(RouteContext context, IDictionary<string, object> values)
         {
-            return DoRewriteRouteData(context, values, PostMappings);
+           return DoRewriteRouteData(context.HttpContext, values, PostMappings);
         }
 
         public IDictionary<string, object> RewritePreMappingRouteData(HttpContext context, IDictionary<string, object> values)
@@ -180,14 +182,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             context.HttpContext.Items["DefaultRouter"] = _target;
             context.HttpContext.Items["ConstraintResolver"] = _inlineConstraintResolver;
 
-            var found = routeHandler.RouteIncomingRequest(context);
 
-            if (!found)
+           // var found = routeHandler.RouteIncomingRequest(context);
+
+            await routeHandler.RouteAsync(context);
+
+            if (context.Handler != null)
             {
-                services.Resolve<IRouteConfig>().RouteIncomingDefaultRouteRequest(context);
+                return;
             }
 
-            if (!HandleReroutedRequest(context, services)) await base.RouteAsync(context);
+            await services.Resolve<IRouteConfig>().RouteAsync(context);
+
         }
 
         private static bool HandleReroutedRequest(RouteContext context, IServiceProvider services)

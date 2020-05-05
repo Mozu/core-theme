@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public class HttpRouteCollectionContainer
         {
-            public IList<IRouter> RouteCollection { get; set; }
+            public RouteCollection RouteCollection { get; set; }
             public long? LastUpdate { get; set; }
         }
 
@@ -99,16 +99,21 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if (contextData.RouteCollection == null)
             {
                 var col = CreateRouteCollectionFromSettings(routes);
+                var rc = new RouteCollection();
+                foreach ( var r in col)
+                {
+                    rc.Add(r);
+                }
                 contextData.RouteCollection = new HttpRouteCollectionContainer()
                 {
-                    RouteCollection = col,
+                    RouteCollection = rc,
                     LastUpdate = lastUpdate
                  };
             }
             return contextData.RouteCollection;
         }
 
-        IList<IRouter> ICustomRouteCollectionRepository.GetRouteCollection( )
+        RouteCollection ICustomRouteCollectionRepository.GetRouteCollection( )
         {
             var col = GetHttpRouteCollectionContainer(false);
             return col?.RouteCollection;

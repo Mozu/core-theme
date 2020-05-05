@@ -83,7 +83,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return SbApiContext.DataViewMode;
         }
 
-        [ClientCacheHeaders(ConfigKey = "stylesheets")]
+        [ResponseCache(CacheProfileName = "default")]
+
+        //[ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
         public IActionResult Stylesheets(string pathinfo, bool? debug = false, string dv = null)
         {

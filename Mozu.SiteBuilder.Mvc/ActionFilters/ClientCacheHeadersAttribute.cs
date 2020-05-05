@@ -10,10 +10,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Configuration;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-
+using Microsoft.Extensions.DependencyInjection;
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
+    using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
@@ -24,8 +26,37 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class ClientCacheHeadersAttribute : ActionFilterAttribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class ClientCacheHeadersAttribute : Attribute, IFilterFactory, IOrderedFilter
     {
+        public bool IsReusable
+        {
+            get { return true; }
+        }
+
+        public int Order { get; set; }
+        static ConcurrentDictionary<string, ResponseCacheAttribute> _cache = new ConcurrentDictionary<string, ResponseCacheAttribute>();
+        IFilterMetadata IFilterFactory.CreateInstance(IServiceProvider serviceProvider)
+        {
+            ResponseCacheAttribute att;
+            var settings = serviceProvider.GetService<ISettings>();
+
+            if (!_cache.TryGetValue(ConfigKey, out att))
+            {
+                var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey) ?? settings.AppSettings("clientCacheHeaderLength:default");
+                var duration = int.Parse(val);
+                att = new ResponseCacheAttribute()
+                {
+                    Duration = duration,
+                    Location = ResponseCacheLocation.Any,
+                };
+                _cache[ConfigKey] = att;
+            }
+            return att.CreateInstance(serviceProvider);
+
+        }
+
+
         public  bool AllowCrossOrigin { get; set; }
 
         /// <summary>
@@ -60,79 +91,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             return request.HttpContext.Items.TryGetValue("_mz_is404", out var tmp) && (bool)tmp;
         }
 
-        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
-        {
-            var settings = actionExecutedContext.HttpContext.RequestServices.Resolve<ISettings>();
-
-            if (ConfigKey == null)
-                return;
-
-            var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey) ?? settings.AppSettings("clientCacheHeaderLength:default");
-            if (val == null || val == "0")
-                return;
-            var duration = int.Parse(val);
-
-
-            if (actionExecutedContext.HttpContext.Response?.Headers == null) return;
-            var typedHeaders = actionExecutedContext.HttpContext.Response.GetTypedHeaders();
-            var cache = typedHeaders.CacheControl ??= new CacheControlHeaderValue();
-
-            var req = actionExecutedContext.HttpContext.Request;
-
-            if (ForceRevalidate)
-            {
-                cache.NoStore = true;
-                cache.NoCache = true;
-                cache.MustRevalidate = true;
-            }
-            else if (Is404(req) )
-            {
-                var cacheDuration = TimeSpan.FromSeconds(600);
-
-                cache.MaxAge = cacheDuration;
-                cache.Public = true;
-            }
-            else
-            {
-                var cacheDuration = TimeSpan.FromSeconds(duration);
-
-                cache.MaxAge = cacheDuration;
-                cache.Public = true;
-            }
-
-            if (AllowCrossOrigin)
-            {
-                actionExecutedContext.HttpContext.Response.Headers["Access-Control-Allow-Origin"] = new [] {"*"};
-            }
-
-            //Access-Control-Allow-Origin
-            //cache.
-            //cache.SetCacheability(HttpCacheability.Public);
-            //cache.SetExpires(DateTime.Now.Add(cacheDuration));
-            //cache.SetMaxAge(cacheDuration);
-        }
-        //public  void OnActionExecuted(ActionExecutedContext filterContext)
-        //{
-        //    if ( ConfigKey == null )
-        //        return;
-
-        //    var val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:" + ConfigKey];
-        //    if (val == null)
-        //    {
-        //        val = System.Configuration.ConfigurationManager.AppSettings["clientCacheHeaderLength:default"];
-        //    }
-        //    if (val == null|| val == "0")
-        //        return;
-        //    int duration = int.Parse(val);
-
-           
-        //    HttpCachePolicyBase cache = filterContext.HttpContext.Response.Cache;
-        //    TimeSpan cacheDuration = TimeSpan.FromSeconds(duration);
-
-        //    cache.SetCacheability(HttpCacheability.Public);
-        //    cache.SetExpires(DateTime.Now.Add(cacheDuration));
-        //    cache.SetMaxAge(cacheDuration);
-            
-        //}
+      
     }
 }

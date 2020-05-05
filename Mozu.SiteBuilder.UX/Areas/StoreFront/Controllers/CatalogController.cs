@@ -314,11 +314,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<IActionResult> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
+        public async Task<IActionResult> Category(int? categoryId = null, string categoryCode=null, string categorySlug = null, string variationId = "")
         {
 
             var catTree = ( _categoryTreeProvider.GetAllCategories());
-            var cat = catTree.FindById(categoryId) ?? catTree.FindByCode(categoryCode);
+            var cat = catTree.FindById(categoryId) ?? catTree.FindByCode(categoryCode) ?? catTree.FindBySlug(categorySlug)?.FirstOrDefault();
             if (cat == null)
             {
                 return NotFound("category not found");

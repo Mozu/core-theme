@@ -121,7 +121,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
             //builder.AddSingleton<HtmlActionResultMediaTypeFormatter>();
             builder.AddHttpClient();
-            builder.AddScoped<IApiContextAccessor, SBAPiContextAccessor>();
+           // builder.AddScoped<IApiContextAccessor, SBAPiContextAccessor>();
+
+           
+
+
         }
 
         private static void RegisterThemeInfrastructure(IServiceCollection builder)

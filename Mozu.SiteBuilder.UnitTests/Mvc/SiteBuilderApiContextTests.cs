@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -125,7 +126,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ctx.Request.Headers.Add("x-vol-user-claims", "__mzrpt__");
 
 
-            var ct = new SiteBuilderApiContext(cookieProvider, settings, authenticationHelper, ctx, dvmGetter, editModeGetter, env);
+            var ct = new SiteBuilderApiContextBuilder(ctx, new JwtService(), cookieProvider, settings, authenticationHelper, dvmGetter, editModeGetter).BuildApiContext( new SiteBuilderApiContext(), ctx);
             Assert.AreEqual(ct.TenantId, 123);
         }
                                
@@ -148,7 +149,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var hctx = new DefaultHttpContext();
             hctx.Request.Host = new HostString("foo.com");
             hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
-            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, hctx, dvm, edit, env);
+            var ctx = new SiteBuilderApiContextBuilder(hctx, new JwtService(), cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
             
             var now = ctx.PreviewDate.Value;
 
@@ -176,7 +177,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             hctx.Request.Host = new HostString("foo.com");
             hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
 
-            var ctx = new SiteBuilderApiContext(cookieProvider, settings, auth, hctx, dvm, edit, env);
+            
+            var ctx = new SiteBuilderApiContextBuilder(hctx, new JwtService(), cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
+
             Assert.IsNull(ctx.PreviewDate);
         }
     }

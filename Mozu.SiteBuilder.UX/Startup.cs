@@ -19,6 +19,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Configuration;
+using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
 using Mozu.MZDB.Contracts.Clients;
@@ -73,9 +74,9 @@ namespace Mozu.SiteBuilder.UX
                         .UsingAssembly(typeof(ReferenceDataWebApiClient).Assembly)
                         .UsingAssembly(typeof(IEntityListsWebApiClient).Assembly)
                         .UsingAssembly(typeof(IDocumentListWebApiClient).Assembly)
-                        .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc"))
-                        .UsingAssembly(Assembly.Load("Mozu.Core.Messaging"))
-                        .UsingAssembly(Assembly.GetExecutingAssembly());
+                        .UsingAssembly(typeof(Mozu.Core.Messaging.Configuration.AutofacModule).Assembly)
+                        .UsingAssembly(typeof(Mozu.SiteBuilder.Mvc.Configuration.AutofacModule).Assembly)
+                        .UsingAssembly(typeof(Mozu.SiteBuilder.UX.Configuration.AutofacModule).Assembly);
 
                 })
                 .UseAlternateUrlPrefix("mozu.content.webapi")
@@ -84,8 +85,15 @@ namespace Mozu.SiteBuilder.UX
                     opt.Conventions.Add(new AcceptHeaderConvention());
                     opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
                     opt.OutputFormatters.Add(new HtmlErrorMediaTypeHyperFormatter());
+                    var duration = Configuration.GetValue("mozu:appsettings:clientCacheHeaderLength:default", "1209700");
+                    opt.CacheProfiles.Add("default", new CacheProfile()
+                    {
+                        Duration = int.Parse(duration),
+                        Location = ResponseCacheLocation.Any
+                    });
+                    //
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddControllers(options =>
                 {
                     //var rem = options.Filters.Where(x => 

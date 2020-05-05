@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "10";
+        public const string CacheVersion = "c10";
         private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -174,7 +174,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         private SiteBuilderApiContext ToApiContext(SiteBuilderContextWorkItem work)
         {
-            var newContext = SiteBuilderApiContext.Create();
+            var newContext = new SiteBuilderApiContext();
             newContext.TenantId = work.TenantId;
             newContext.MasterCatalogId = work.MasterCatalogId;
             newContext.CatalogId = work.CatalogId;
@@ -675,6 +675,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             var ctxData = await _sitebuilderContextCacheRepository.GetAsync(_context).ConfigureAwait(false);
           //pants
+
             if ( ctxData != null )
             {
                 if (ctxData != null && ctxData.RedirectUpdateDate.HasValue && ctxData.RuntimeRedirects == null)
@@ -819,7 +820,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly ILogger _logger;
         private readonly ISitebuilderContextCacheRepository _cacheRepo;
         public ContextServiceAggregator(
-            ISiteBuilderApiContext apiContext,
             Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient,
             Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient,
             Mozu.ProductRuntime.Contracts.Clients.IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient,
@@ -832,11 +832,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
             INavigationRepository navigationRepository,
             IThemeRepository themeRepository,
             ISitebuilderContextCacheRepository cacheRepo,
-            ILogger logger
+            ILogger logger,
+            IApiContext apiContext2 ,
+            IApiContextAccessor apiContextAccessor
 
             )
         {
-            _apiContext = apiContext;
+            _apiContext = (ISiteBuilderApiContext)apiContextAccessor.ApiContext;
             int defaultTimeout = 30000;
             _documentListWebApiClient = documentListWebApiClient.WithTimeout(defaultTimeout);
             _entityListsWebApiClient = entityListsWebApiClient.WithTimeout(defaultTimeout);
@@ -863,7 +865,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 RouteMapperData = new Dictionary<string, Dictionary<string, object>>(StringComparer.OrdinalIgnoreCase),
                 BuildDate = DateTime.UtcNow
             };
-
+            
 
             var tasks = new List<System.Threading.Tasks.Task>();
 

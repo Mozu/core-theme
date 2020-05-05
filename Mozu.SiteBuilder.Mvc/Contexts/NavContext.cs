@@ -97,7 +97,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public BreadCrubmsImpl Breadcrumbs
         {
             get {
-
+                if (CurrentNode == null)
+                {
+                    return new BreadCrubmsImpl(new List<BreadCrumb>());
+                }
                 return _breadCrumbs ?? (_breadCrumbs = new BreadCrubmsImpl(GetBreadcrumbs(CurrentNode).Select( x=> 
             new BreadCrumb() {
                 Id = x.Id,
@@ -109,7 +112,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 OriginalId = x.OriginalId,
                 ParentId = x.ParentId ,
                 Url = x.Url })
-            .ToList())); }
+            .ToList())); 
+            }
             set => _breadCrumbs = value;
         }
 

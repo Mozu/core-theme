@@ -13,14 +13,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public interface IRouteConfig
     {
-        IList<IRouter> DefaultRoutes { get; }
+        RouteCollection DefaultRoutes { get; }
 
         void RouteIncomingDefaultRouteRequest(RouteContext context);
+        Task RouteAsync(RouteContext context);
 
         //void RouteIncomingSystemRouteRequest(RouteContext context);
     }
@@ -49,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             _httpRouteCollection = null;
         }
-        private IList<IRouter> RouteCollection
+        private RouteCollection RouteCollection
         {
             get
             {
@@ -57,39 +59,50 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 {
                     _httpRouteCollection = _customRouteRepository.Value.GetRouteCollection() ?? new object();
                 }
-                return _httpRouteCollection as IList<IRouter> ?? new List<IRouter>();
+                return _httpRouteCollection as RouteCollection ?? new RouteCollection();
             }
         }
 
+        public Task RouteAsync(RouteContext context)
+        {
+            var routeCollection = GetRouteCollection();
+            if (routeCollection == null)
+            {
+                return Task.CompletedTask;
+            }
+            return RouteCollection.RouteAsync(context);
+        }
         //public async Task<bool> Init()
         //{
         //    var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
-            
+
         //    return routeCollection == null;
         //}
 
-        public bool RouteIncomingRequest(RouteContext routeContext)
+        public IRouter RouteIncomingRequest(RouteContext routeContext)
         {
             var path = _originalUri.AbsolutePath;
             if (path.Contains( "=") || path.Contains("?"))
             {
-                return false;
+                return null;
             }
             var routeCollection = GetRouteCollection();
             if (routeCollection == null)
             {
-                return false;
+                return null;
             }
 
-            if (!routeCollection.TryMatchRoute(_context, out var routeData)) return false;
+            
+            if (!routeCollection.TryMatchRoute(_context, out var routeData)) return null;
 
             if (routeData.Routers[0] is CustomRoute cr)
             {
-                cr.RewriteRouteData(_context, routeData.Values);
+               
+                cr.RewriteRouteData(routeContext, routeData.Values);
             }
 
             routeContext.RouteData = routeData;
-            return true;
+            return routeData.Routers[0];
         }
 
         IList<IRouter> GetRouteCollection()
@@ -98,8 +111,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return _httpRouteCollection as IList<IRouter> ?? new List<IRouter>();
         }
 
-        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<IList<IRouter>, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<IList<IRouter>, List<CustomRoute>>>();
-        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, IList<IRouter> routeCollection , IRouteConfig routeConfig)
+        System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<RouteCollection, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<RouteCollection, List<CustomRoute>>>();
+        List<CustomRoute> GetCanonicalRouteList(FancyRoute internalRoute, RouteCollection routeCollection , IRouteConfig routeConfig)
         {
             var res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             if (!Equals(res.Item1, routeCollection))
@@ -109,23 +122,32 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             res = _canonicalCache.GetOrAdd(internalRoute, (ir) => DoGetCanonicalRouteList(ir, routeCollection, routeConfig));
             return res.Item2;
         }
-        Tuple<IList<IRouter>, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, IList<IRouter> routeCollection, IRouteConfig routeConfig)
+        Tuple<RouteCollection, List<CustomRoute>> DoGetCanonicalRouteList(FancyRoute internalRoute, RouteCollection routeCollection, IRouteConfig routeConfig)
         {
             var routes = new List<CustomRoute>();
-            var defaultRoutes = routeConfig.DefaultRoutes
-                        .Where(route => route is CustomRoute).Cast<CustomRoute>()
-                        .Where(route => route.IsCanonicalFor(internalRoute)).ToList();
+           
 
             if (routeCollection != null)
             {
-                routes.AddRange(
-                    routeCollection
-                        .Where(route => route is CustomRoute).Cast<CustomRoute>()
-                        .Where(route => route.IsCanonicalFor(internalRoute))
-                );
+                for (int i = 0; i < routeCollection.Count;i++) {
+                    var route = routeCollection[i] as CustomRoute;
+                    if (route?.IsCanonicalFor(internalRoute) == true)
+                    {
+                        routes.Add(route);
+                    }
+                }
             }
-            routes.AddRange(defaultRoutes);
-            return new Tuple<IList<IRouter>, List<CustomRoute>>(routeCollection, routes);
+            for (int i = 0; i < routeConfig.DefaultRoutes.Count; i++)
+            {
+                var route = routeConfig.DefaultRoutes[i] as CustomRoute;
+                if (route?.IsCanonicalFor(internalRoute) == true)
+                {
+                    routes.Add(route);
+                }
+            }
+           
+            
+            return new Tuple<RouteCollection, List<CustomRoute>>(routeCollection, routes);
         }
 
         public IActionResult RedirectWithContext(HttpRequest request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
@@ -207,11 +229,28 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
         }
 
-        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, IList<IRouter> siteCollection, IList<IRouter> defaultCollection)
+        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, RouteCollection siteCollection, RouteCollection defaultCollection)
         {
             CustomRoute reverseResolvedRoute = null;
 
-            if(siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) || 
+            if (siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) ||
+               defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
+            {
+                reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
+            }
+
+            if (reverseResolvedRoute == null)
+            {
+                return false;
+            }
+            return !(currentRequest.HttpContext.GetRouteData().Routers.Last() is CustomRoute resolvedRoute) || resolvedRoute.InternalRoute == reverseResolvedRoute.InternalRoute;
+        }
+
+        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, RouteCollection siteCollection, IList<IRouter> defaultCollection)
+        {
+            CustomRoute reverseResolvedRoute = null;
+            
+            if (siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) || 
                defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
             {
                 reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;

@@ -51,6 +51,24 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
             return routes;
         }
+        public static RouteCollection MapRoute(this RouteCollection routes, IRouter handler, string name,
+            string routeTemplate, object defaults, IInlineConstraintResolver resolver)
+        {
+            var defaultsDictionary = new RouteValueDictionary(defaults);
+            var route = new Route(handler, name, routeTemplate, defaultsDictionary, null, null, resolver);
+            routes.Add(route);
+
+            return routes;
+        }
+        public static RouteCollection MapRoute(this RouteCollection routes, IRouter handler, string name,
+            string routeTemplate, object defaults, IDictionary<string, object> constraints, IInlineConstraintResolver resolver)
+        {
+            var defaultsDictionary = new RouteValueDictionary(defaults);
+            var route = new Route(handler, name, routeTemplate, defaultsDictionary, constraints, null, resolver);
+            routes.Add(route);
+
+            return routes;
+        }
 
         public static IList<IRouter> MapCustomRoute(this IList<IRouter> routes, IRouter handler, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, IInlineConstraintResolver resolver, CustomRoute.Scheme? scheme = null)
         {
@@ -77,6 +95,37 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 mappings, 
                 null,
                 scheme, 
+                resolver);
+
+            routes.Add(route);
+
+            return routes;
+        }
+        public static RouteCollection MapCustomRoute(this RouteCollection routes, IRouter handler, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, IInlineConstraintResolver resolver, CustomRoute.Scheme? scheme = null)
+        {
+            if (mappings == null)
+            {
+                mappings = new Dictionary<IRouteDataMapping, string[]>();
+            }
+
+            mappings.Add(new RouteDataFixup(), new string[0]);
+
+            var defaultsDictionary = new RouteValueDictionary(defaults);
+            defaultsDictionary
+                .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
+                .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
+
+            var route = new CustomRoute(handler,
+                name,
+                routeTemplate,
+                null,
+                fancyRoute,
+                isCanonical,
+                defaultsDictionary,
+                constraints,
+                mappings,
+                null,
+                scheme,
                 resolver);
 
             routes.Add(route);

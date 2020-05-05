@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Configuration;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -34,7 +36,26 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             var handler = context.HttpContext.RequestServices.GetService<IArcJSHttpHandlerRunner>();
             return handler.RouteAsync(context, FunctionId);
         }
+
+       
     }
+    public class ArcJsRouteHandler
+    {
+        private readonly RouteContext _context;
+        private readonly string _functionId;
+
+        public ArcJsRouteHandler  (RouteContext context , string functionId)
+        {
+            _context = context;
+            _functionId = functionId;
+        }
+        public Task Route(HttpContext context)
+        {
+            var handler = context.RequestServices.GetService<IArcJSHttpHandlerRunner>();
+            return handler.RouteAsync(_context, _functionId);
+        }
+    }
+
  
     //class ArcJSHttpHandler : HttpMessageHandler
     //{
@@ -74,8 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
     {
 
         Task RouteAsync(RouteContext context, string functionId);
-
-      
+        
     }
 
 
@@ -85,6 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, ILoggerFactory loggingService, ISecureAppDataHandler secureAppDataHandler, IApiContext apiContext, NodePoolManager nodePoolManager, IMozuSettings mozuSettings, IApiExceptionHandlerService apiExceptionHandlerService) : base(functionProvider, loggingService, secureAppDataHandler, apiContext, nodePoolManager, mozuSettings, apiExceptionHandlerService)
         {
+            _functionProvider = functionProvider;
         }
 
 
@@ -98,6 +119,8 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             }
             var ctx = ApiActionExtensionFilterContextBuilder.Build(context, functionId);
             await this.RunFunctions(ctx, new List<CustomFunctionBase> { fn }, new FunctionCallbackhandler(context,functionId)).ConfigureAwait(false);
+            var res = ctx.ActionContext.Result as ObjectResult;
+            await res.ExecuteResultAsync(ctx.ActionContext);
         }
 
 

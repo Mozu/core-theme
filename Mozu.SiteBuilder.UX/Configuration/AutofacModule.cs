@@ -87,8 +87,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
-            configure.AddScoped<IApiContext, SiteBuilderApiContext>();
-            configure.AddScoped<ISiteBuilderApiContext, SiteBuilderApiContext>();
+            configure.AddScoped<IApiContext>(c=> c.GetService<IApiContextAccessor>().ApiContext);
+            configure.AddScoped<ISiteBuilderApiContext>(c => (ISiteBuilderApiContext)c.GetService<IApiContextAccessor>().ApiContext);
+            configure.AddScoped<IApiContextFactory, SiteBuilderApiContextBuilder>();
+       
+
             //configure.AddScoped<IApiContextBuilder, SbApiContextBuilder>();
             //builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
             //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerRequest();
@@ -163,21 +166,20 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddSingleton<CacheItemsInvalidConsumer>();
             // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
 
-            // Register a MassTransit/Burrows IPublisher for visits.
-            // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            configure.AddMozuBus("SiteBuilderMessageQueue", (cfg, host, settings, provider, mtCfg) =>
+
+
+            configure.AddMozuBus("SiteBuilderMessageQueue", (cfg, host, connectionSettings, provider) =>
             {
-                var format = provider.GetService<ISettings>()
-                    .ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
-                var conString = string.Format(format, Guid.NewGuid().ToString("N"));
-                cfg.ReceiveEndpoint(host, conString, e =>
+                cfg.ReceiveEndpoint(host, connectionSettings.QueueName+"_" + System.Environment.MachineName , ep =>
                 {
-                    // A new consumer is created per message. Let MassTransit resolve the consumer from Autofac
-                    // so it can properly maintain lifetime scope and clean up resources when it's done.
-                    e.Consumer<CacheItemsInvalidConsumer>(provider);
-                    e.Consumer<SiteBuilderContextInvalidatorConsumer>(provider);
+                    ep.AutoDelete = true;
+                    ep.Durable = false;
+                    ep.Consumer<CacheItemsInvalidConsumer>(provider);
+                    ep.Consumer<SiteBuilderContextInvalidatorConsumer>(provider);
                 });
             });
+
+
             //configure.AddScoped<IHttpErrorResponseGenerator, SiteBuilderHttpErrorResponseGenerator>();
             //builder.RegisterType<HttpErrorResponseGenerator>();
             configure.AddScoped<AMDModuleProvider>();

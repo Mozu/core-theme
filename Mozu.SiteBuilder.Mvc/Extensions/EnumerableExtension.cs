@@ -128,7 +128,45 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
             return ret;
         }
-        
+        public static bool TryMatchRoute(this RouteCollection routes, HttpContext context, out RouteData routeData)
+        {
+            var ret = false;
+
+            routeData = null;
+            //foreach (var r in routes.OfType<Route>())
+            for ( var i =0; i < routes.Count;i++)
+            {
+                var r = routes[i] as Route; 
+                if ( r == null)
+                {
+                    continue;
+                }
+                var template = r.ParsedTemplate;
+
+                var matcher = new TemplateMatcher(template, GetDefaults(template));
+
+                var innerVals = new RouteValueDictionary(r.Defaults);
+
+                if (!matcher.TryMatch(context.Request.Path.Value, innerVals)) continue;
+
+                if (r.Constraints.Count > 0 &&
+                    !(from key in innerVals.Keys
+                      let constraints = r.Constraints.Where(c =>
+                          c.Key.Equals(key, StringComparison.CurrentCultureIgnoreCase)).Select(c => c.Value)
+                      select constraints.All(c =>
+                          c.Match(context, r, key, context.Request.RouteValues, RouteDirection.IncomingRequest)))
+                        .Any(constraintsPass => constraintsPass)) continue;
+
+                routeData = new RouteData(innerVals);
+                routeData.Routers.Add(r);
+
+                ret = true;
+                break;
+            }
+
+            return ret;
+        }
+
         private static RouteValueDictionary GetDefaults(RouteTemplate parsedTemplate)
         {
             var result = new RouteValueDictionary();
