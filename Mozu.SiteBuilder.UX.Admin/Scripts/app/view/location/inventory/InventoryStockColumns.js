@@ -22,28 +22,46 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
         };
         return [
             {
-                width: 100,
+                flex: 0.5,
+                text: "SKU",
+                stateId: 'sku',
+                dataIndex: 'sku',
+                sortable: false,
+                hidden: Taco.tenantSettings.catalogDisabled == true ? false : true
+            },
+            {
+                flex: 4,
+                text: "Part Number",
+                stateId: 'mfgPartNumber',
+                dataIndex: 'mfgPartNumber',
+                sortable: false,
+                hidden: Taco.tenantSettings.catalogDisabled == true ? false : true
+            },
+            {
+                flex: Taco.tenantSettings.catalogDisabled == true ? 0.5 : '',
                 text: "Available",
                 stateId: 'stockAvailable',
                 dataIndex: 'stockAvailable',
-                sortable: true
+                sortable: false,
+                hideable: false,
             }, {
-                width: 100,
+                flex: Taco.tenantSettings.catalogDisabled == true ? 0.5 : '',
                 text: 'On Reserve',
                 dataIndex: 'stockReserved',
                 stateId: 'stockReserved',
                 sortable: false,
+                hideable: false,
                 renderer: function(value) {
                     return value || 0;
                 }
             }, {
                 dataIndex: 'stockOnHand',
-                width: 125,
-                minWidth: 125,
+                flex: 0.5,
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
                 text: 'On Hand',
-                sortable: true,
+                sortable: false,
+                hideable: false,
                 editor: {
                     emptyText: "add",
                     msgTarget: "qtip",
@@ -82,12 +100,6 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                         }
                     }
                 }
-            }, {
-                width: 150,
-                text: "On Backorder",
-                stateId: 'stockOnBackOrder',
-                dataIndex: 'stockOnBackOrder',
-                sortable: true
             }
         ];
     },

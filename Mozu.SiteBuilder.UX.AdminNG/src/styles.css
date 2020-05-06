@@ -1,0 +1,1369 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@font-face {
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "proxima-nova";
+    src: url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
+    src: url("./assets/Fonts/proximanova-regular.woff") format("woff"), url("./assets/Fonts/proximanova-regular.woff2") format("woff2"), url("./assets/Fonts/proximanova-regular.ttf") format("truetype"), url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
+    font-style: normal;
+    font-weight: normal
+}
+
+@font-face {
+    font-family: "mozicons";
+    src: url("./assets/fonts/mozicons-2014.eot");
+    /* IE9*/
+    src: url("./assets/fonts/mozicons-2014.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./assets/fonts/mozicons.woff") format("woff"), /* chrome、firefox */
+    url("./assets/fonts/mozicons-2014.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url("./assets/fonts/mozicons.svg#mozicons") format("svg");
+    /* iOS 4.1- */
+}
+
+body {
+    background-color: #eaeaea !important;
+    font-family: "proxima-nova", sans-serif !important;
+    font-size: 13px;
+    height: 100%;
+}
+
+.navbar {
+    max-height: 32px !important;
+    margin-bottom: 0px !important;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    margin-right: 0;
+}
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav li,
+.ui-tabview.ui-tabview-top .ui-tabview-nav li:hover {
+    border: 1px solid transparent !important;
+    background-color: transparent !important;
+}
+
+body .ui-menu .ui-submenu-header {
+    font-size: 11px;
+    color: #a3a3a3 !important;
+    background-color: transparent !important;
+    margin-top: 5% !important;
+    padding: 0em 0.857em !important;
+}
+
+body .ui-menu .ui-menuitem-link {
+    padding: 0em 0.757em !important;
+    /* font-size: 13px; */
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+body .ui-tabview .ui-tabview-panels {
+    padding: 0 !important;
+    margin-top: 3%;
+}
+
+.sidebar .ui-tabview .ui-tabview-panels {
+    margin-top: 1px;
+}
+
+.sidebar .ui-tabview .ui-tabview-panels .ui-tabview-panel {
+    margin-top: 56px;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    color: #000000 !important;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a {
+    color: #000000 !important;
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+h4 {
+    font-size: 12px;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+    padding: 0.81em 1em !important;
+    color: #a5a5a5 !important;
+}
+
+.ui-sidebar-left {
+    width: 320px !important;
+}
+
+ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all.ng-star-inserted {
+    text-align: center;
+    color: #a5a5a5;
+    font-size: 13px;
+    position: relative;
+    bottom: 4px;
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+.ui-sidebar body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body .ui-tabview .ui-tabview-panels {
+    border: 0px solid transparent !important;
+    text-align: left !important;
+}
+
+.ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
+    background-color: #f5f5f5 !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+    padding: .18em !important;
+}
+
+.sidebar .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
+    background-color: #fff !important;
+}
+
+.ui-sidebar .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
+    padding: 0 !important;
+}
+
+.ui-sidebar ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all.ng-star-inserted {
+    bottom: 0;
+    height: 48px;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    border-width: 0 0 2px 0 !important;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li a#ui-tabpanel-1-label,
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li a#ui-tabpanel-0-label {
+    width: 136px !important;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li a#ui-tabpanel-2-label {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar ul[p-tabviewnav=""] li.main-sidebar-tabs {
+    width: 136px;
+}
+
+.ui-menu {
+    width: 100% !important;
+}
+
+.ui-card-shadow.ui-card {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.ui-card-body {
+    padding: 0.78em !important;
+}
+
+.primary-yellow-btn{
+    background-color: #ffce01!important;
+    color: #2b2b2b!important;
+    font-weight: 600 !important;
+    font-size: 15px!important;
+    font-family: Roboto,sans-serif!important;
+    height: 40px !important;
+    border: none !important;
+}
+
+.primary-yellow-btn:hover{
+    opacity: 1 !important;
+    background-color: #ffeb3b!important;
+}
+
+.primary-cancel-btn:hover{
+    background: #633095;
+    text-decoration: underline !important;
+}
+
+.primary-cancel-btn{
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #7c7c7c !important;
+    font-size: 12px !important;
+    line-height: 40px !important;
+    padding: 0 8px !important;
+    color: #fff!important;
+    opacity: 1 !important;
+}
+
+
+
+
+.ui-widget-content {
+    border: 0 !important;
+}
+
+.ui-tabview .ui-tabview-nav li {
+    margin: 0 !important;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav {
+    margin-bottom: 0px !important;
+}
+
+li.ui-state-default.ui-corner-top.ng-star-inserted {
+    border-width: 0 0 2px 0 !important;
+}
+
+li.ui-state-default.ui-corner-top.ng-star-inserted.ui-tabview-selected.ui-state-active {
+    border-bottom: 2px solid rgb(51, 0, 101) !important;
+    border-width: 0 0 2px 0 !important;
+}
+
+.ui-tabview-panels {
+    overflow: hidden;
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 97.5%;
+    /* z-index: 10; */
+}
+
+body .ui-sidebar {
+    padding: 0em 0em !important;
+}
+
+.ui-card-subtitle {
+    padding-left: 0.81em;
+    font-size: 12px;
+    color: #a3a3a3;
+    font-weight: normal !important;
+}
+
+.ui-card-body {
+    background: #fafafa;
+    margin-top: 5.1%;
+    height: 105px;
+}
+
+@media screen and (max-width: 480px) {
+    navigation-left {
+        float: left;
+    }
+    navigation-top {
+        float: left;
+    }
+    .ui-card-body {
+        font-size: 0.88em;
+        padding: 1em !important;
+        height: 90px;
+    }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .ui-card-body {
+        padding: 0.78em 0.2em !important;
+    }
+}
+
+
+/***********Custom Code Collapsible left menu*******************/
+
+body .ui-panelmenu .ui-panelmenu-header>a {
+    padding: 0.5em 0.857em !important;
+    font-size: 13px !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link {
+    padding: 0.1em 2.757em !important;
+    font-size: 13px !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active>a {
+    border: 1px solid #2ea195 !important;
+    background-color: #2ea195 !important;
+    color: #ffffff;
+}
+
+li.ui-state-active:focus {
+    outline-color: transparent !important;
+}
+
+li.ui-state-default:active {
+    outline-color: transparent !important;
+}
+
+
+/* ------------------------------PrimeNG Table CSS--------------------------------*/
+
+
+/* --------------Turbo Table CSS - Start------------- */
+
+p-table table {
+    border-radius: 5px 5px 0px 0px !important;
+    overflow: hidden;
+}
+
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row,
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row:focus {
+    background-color: white !important;
+    color: #3f3f3f !important;
+    outline: 0px !important;
+    border: 0px !important;
+}
+
+p-table .ui-table .ui-table-thead {
+    /* background-color: #f7f7f7  !important;  */
+    background-color: #ffffff !important;
+}
+
+p-table .ui-table .ui-table-thead>tr {
+    border-bottom: 1.5px solid #e9e9e9 !important;
+}
+
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row:hover {
+    background-color: #f7f7f7 !important;
+}
+
+p-table .ui-table .ui-table-thead>tr>th {
+    padding: 8px 2px !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+    font-weight: normal !important;
+    color: #333333 !important;
+    font-size: 12px !important;
+    color: #7c7c7c !important;
+    background-color: transparent !important;
+    border: 0px !important;
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+p-table .ui-table .ui-table-tbody>tr>td {
+    background-color: white !important;
+    font-size: 13px !important;
+    border: 0px !important;
+    border-bottom: 1.5px solid #f2f2f2 !important;
+    padding: 8px 20px !important;
+    color: #3f3f3f !important;
+    font-family: "proxima-nova", sans-serif !important;
+    /* font-weight: 600; */
+    word-break: break-all;
+}
+
+.ui-table-scrollable-body::-webkit-scrollbar-track {
+    border-radius: 10px;
+    /* background-color: #F5F5F5; */
+}
+
+.ui-table-scrollable-body::-webkit-scrollbar {
+    width: 8px;
+    /* background-color: #F5F5F5; */
+}
+
+.ui-table-scrollable-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #9f9b9b;
+}
+
+
+/* --------------Turbo Table Edit Page CSS ---------------- */
+
+.quote-items-grid p-table .ui-table .ui-table-thead>tr>th {
+    background-color: #ffffff !important;
+    color: #7c7c7c !important;
+    padding: 20px 10px !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+}
+
+.quote-items-grid p-table .ui-table .ui-table-tbody>tr>td {
+    vertical-align: top !important;
+    padding: 10px !important;
+}
+
+.quote-items-grid p-table .ui-table .ui-table-tbody>tr>td input {
+    width: 60% !important;
+    outline: none !important;
+    padding: 0px 5px;
+}
+
+
+/* --------------Turbo Table CSS - End------------- */
+
+
+/* --------------Checkbox CSS - Start------------- */
+
+p-table .ui-chkbox .ui-chkbox-box {
+    width: 14px !important;
+    height: 14px !important;
+    margin-top: 0px !important;
+    border: 1px solid #e9e9e9 !important;
+    background-color: #ffffff !important;
+}
+
+p-table .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+    width: 13px !important;
+    height: 13px !important;
+    font-size: 12px !important;
+}
+
+p-table .pi-check:before {
+    content: "\e909";
+    width: 14px !important;
+    height: 14px !important;
+    background-color: #2ea195 !important;
+    text-align: center !important;
+    border-radius: 3px !important;
+}
+
+p-table .ui-chkbox .ui-chkbox-box.ui-state-active {
+    border-color: #2ea195 !important;
+    background-color: #2ea195 !important;
+}
+
+p-table .ui-chkbox.ui-widget {
+    padding-top: 3px !important;
+}
+
+
+/* --------------Checkbox CSS - End------------- */
+
+
+/* --------------Pagination CSS - Start------------- */
+
+.ui-paginator {
+    border-radius: 0px 0px 5px 5px;
+    padding: 8px !important;
+    background-color: white !important;
+    border: 0px !important;
+    border-top: 1px solid #f1f1f1 !important;
+    text-align: left !important;
+}
+
+.ui-paginator .ui-paginator-element {
+    height: 0px !important;
+    padding: 0px !important;
+    min-width: 1.7em !important;
+    min-height: 22px;
+}
+
+.ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
+    background-color: #2ea195 !important;
+    color: #ffffff;
+    border-radius: 2px;
+}
+
+.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    line-height: 1.8em !important;
+    font-size: 13px !important;
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+.ui-paginator .ui-paginator-last,
+.ui-paginator .ui-paginator-first {
+    display: none !important;
+}
+
+.ui-paginator-element.ui-state-disabled {
+    color: #b1b1b1 !important;
+    opacity: 9 !important;
+}
+
+.ui-paginator-icon.pi-caret-left::before {
+    content: "\e900";
+    font-size: 14px;
+    color: #b1b1b1;
+}
+
+.ui-paginator-icon.pi-caret-right::before {
+    content: "\e901";
+    font-size: 14px;
+    color: #b1b1b1;
+}
+
+
+/* --------------Pagination CSS - End------------- */
+
+
+/* --------------Context Menu Ellipsis CSS - Start------------- */
+
+p-table .ui-table .pi-ellipsis-v {
+    font-size: 16px;
+    color: #c9c9c9;
+    font-weight: normal !important;
+}
+
+p-table .ui-table .pi-ellipsis-v:hover {
+    cursor: pointer;
+    color: #666666;
+}
+
+.ng-trigger.ui-widget {
+    font-family: "proxima-nova", sans-serif !important;
+}
+
+.ng-trigger.ui-menu-dynamic {
+    max-width: 139px;
+    background-color: white !important;
+    border: 1px solid #dadada !important;
+    border-radius: 3px !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -o-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -ms-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+}
+
+.ng-trigger.ui-menu-dynamic li.ui-menuitem.ui-widget.ui-corner-all.ng-star-inserted {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    color: #a3a3a3 !important;
+}
+
+.ng-trigger.ui-menu-dynamic li {
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.integrationsBackdropModal.fade {
+    opacity: 1 !important;
+}
+
+.integrationsBackdropModal.show {
+    opacity: .5 !important;
+}
+
+.integrationsModal.show {
+    opacity: 1 !important;
+    overflow-y: hidden !important;
+}
+
+.integrationsModal {
+    z-index: 19021 !important;
+}
+
+.integrationsModal .modal-content {
+    width: 100%;
+    height: 100%;
+    top: -9px;
+}
+
+.integrationsModal .modal-body {
+    height: 90%;
+}
+
+.integrationsModal .modal-header .close {
+    margin-top: -25px;
+}
+
+.integrationsModal .modal-dialog {
+    width: 90% !important;
+    height: 90%;
+    top: 25%;
+}
+
+
+/* .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text{
+    color: #a3a3a3 !important;
+} */
+
+.ng-trigger.ui-menu .ui-menuitem-link:hover,
+.ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text:hover,
+.ng-trigger.ui-widget-content .ui-state-active,
+.ng-trigger.ui-widget-content .ui-state-active {
+    color: #3f3f3f !important;
+    background-color: transparent !important;
+    border: transparent !important;
+}
+
+
+/* --------------Context Menu Ellipsis CSS - End------------- */
+
+
+/* -----------------------PrimeNG Tab CSS - Start---------------------------*/
+
+.quote-tabview .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
+    background: transparent !important;
+    margin-top: 10px;
+}
+
+.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    width: auto !important;
+}
+
+.quote-tabview .ui-tabview-panels {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    width: auto;
+    margin-top: 3% !important;
+    margin-bottom: 2%;
+}
+
+.ui-widget {
+    color: #3f3f3f;
+    font-family: "proxima-nova", sans-serif !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+}
+
+.quote-tabview .ui-table .ui-table-thead {
+    background-color: #ffffff !important;
+}
+
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled) {
+    font-size: 13px !important;
+    color: #3f3f3f !important;
+    /* border-bottom: #f3f3f3 1px solid !important; */
+}
+
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled):hover,
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled):active {
+    /* border-bottom: #3f3f3f 1px solid !important; */
+    outline: 0px !important;
+    color: #2ea195 !important;
+}
+
+
+/* quotes file upload */
+
+.pi-plus:before {
+    content: "\e97b" !important;
+    color: #2ea195;
+    font-size: 18px;
+}
+
+.ui-button-text {
+    visibility: hidden;
+}
+
+.ui-button-text::before {
+    content: "Attach File" !important;
+    color: #2ea195;
+    visibility: visible;
+}
+
+
+/* -----------------------PrimeNG TabView CSS  - End ---------------------------*/
+
+
+/* shipping information css start */
+
+shipping-method .ng-select {
+    width: 275px;
+}
+
+
+/* shipping information css end */
+
+
+/* quotes css start*/
+
+.container-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+quotes-list {
+    height: calc(100vh - 110px);
+    overflow: hidden;
+}
+
+quotes-list .ui-table-wrapper {
+    height: calc(100vh - 170px);
+    overflow: hidden;
+}
+
+quotes-list .ui-table-wrapper tbody {
+    display: block;
+    height: calc(100vh - 200px);
+    overflow: auto;
+    background: #fff;
+}
+
+quotes-list .ui-table-wrapper thead,
+quotes-list .ui-table-wrapper tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+quotes-list .ui-table-wrapper thead {
+    width: calc( 100%)
+}
+
+quotes-list .ui-table-wrapper thead th {
+    width: 11.66%;
+}
+
+quotes-list p-table .ui-table .ui-table-thead {
+    background-color: #f7f7f7 !important;
+}
+
+quotes-list p-table .ui-table .ui-table-thead>tr>th {
+    padding: 8px 20px !important;
+}
+
+
+/* quote edit */
+
+quote .ui-table-responsive .ui-table-thead>tr>th {
+    display: table-cell !important;
+    white-space: nowrap;
+}
+
+quote .ui-table-responsive .ui-table-tbody>tr>td {
+    display: table-cell;
+    float: none;
+    white-space: nowrap
+}
+
+quote .ui-table table {
+    table-layout: auto;
+}
+
+quote .ui-table-wrapper,
+quotes-list .ui-table-wrapper {
+    min-height: .01%;
+    overflow-x: auto;
+}
+
+
+/* quotes summary starts*/
+
+quote-summary .summary-heading p,
+account-information .summary-heading p {
+    font-size: 13px !important;
+}
+
+quote-summary .summary-link,
+account-information .summary-link {
+    border-bottom: #f3f3f3 1px solid;
+}
+
+quote-summary .summary-link:hover,
+account-information .summary-link:hover {
+    border-bottom: #3f3f3f 1px solid;
+}
+
+
+/* quotes summary ends*/
+
+@media screen and (max-width: 767px) {
+    quote .ui-table-wrapper,
+    quotes-list .ui-table-wrapper {
+        width: 100%;
+        margin-bottom: 15px;
+        overflow-y: hidden;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    quote .summary-heading+.section {
+        border-bottom: 1px solid #f5f5f5;
+    }
+    quotes-list .ui-table-wrapper table {
+        table-layout: auto;
+    }
+    quotes-list .ui-table-wrapper thead {
+        width: 100%;
+        table-layout: auto;
+    }
+    quotes-list .ui-table .ui-table-thead>tr>th,
+    quotes-list .ui-table .ui-table-tbody>tr>td,
+    quotes-list .ui-table .ui-table-tfoot>tr>td {
+        white-space: nowrap;
+    }
+    quotes-list .ui-table-wrapper thead,
+    quotes-list .ui-table-wrapper tbody tr {
+        table-layout: auto;
+    }
+    quotes-list .ui-table-wrapper {
+        margin-bottom: 0;
+    }
+    quotes-list .ui-table-wrapper tbody td span,
+    quotes-list .ui-table-wrapper thead th span {
+        width: 100px !important;
+        display: inline-block !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    quotes-list .ui-table-wrapper tbody tr:nth-child(even) td {
+        background: #f5f5f5 !important;
+    }
+    quotes-list tbody>tr>td .ui-column-title {
+        min-width: 50% !important;
+    }
+}
+
+.ui-sidebar-mask {
+    z-index: 9 !important;
+    opacity: .9 !important;
+    background-color: #eaeaea !important;
+}
+
+
+/* html{ overflow: hidden;}
+body{ overflow: hidden;} */
+
+.ui-table-scrollable-header-box {
+    background-color: #fff
+}
+
+.ui-widget-header {
+    background: #ffffff;
+}
+
+.ui-table-scrollable-header-box {
+    background-color: #fff
+}
+
+.ui-widget-header {
+    background: #ffffff;
+}
+
+
+/* .location-group-container .ui-table-wrapper{
+     height: 100%;
+     background: #fff;
+     border-radius: 5px 5px 0 0;
+}
+ .location-group-container p-table .ui-widget,.location-group-container table {
+     height: calc(100% - 35px) !important;
+}
+*/
+
+.location-group-container p-table .ui-table .ui-table-thead>tr>th {
+    padding: 8px 20px !important;
+    width: 31%;
+    font-weight: 600 !important;
+}
+
+.location-group-container p-table .ui-table .ui-table-thead>tr>td {
+    font-weight: normal !important;
+}
+
+.location-group-container p-table .ui-table .ui-table-thead {
+    background: #f7f7f7 !important;
+    border-radius: 5px 5px 0 0;
+}
+
+.location-group-container p-table .ui-table .ui-table-tbody>tr:hover td {
+    cursor: pointer;
+    /* background-color: #eaeaea !important;
+     */
+    background-color: rgb(250, 250, 250) !important;
+    color: #333333 !important;
+}
+
+
+/* .location-group-container p-table tbody.ui-table-tbody{
+     display: table-footer-group;
+}
+ */
+
+locations-list p-table .ui-table .ui-table-thead>tr>td {
+    padding: 8px 0 !important;
+    font-weight: normal !important;
+}
+
+.selected-locations-list p-table .ui-table .ui-table-tbody>tr>td {
+    font-weight: normal !important;
+    border-color: #9f9b9b57 !important;
+}
+
+@media screen and (min-width: 768px) {
+    /* .location-group-container p-table tbody.ui-table-tbody{
+         display: table-footer-group;
+    }
+     */
+}
+
+@media screen and (max-width: 40em) {
+    .location-group-container p-table .ui-table .ui-table-tbody>tr>td {
+        padding: 8px 15px !important;
+        display: table-cell;
+        width: auto !important;
+        float: none !important;
+    }
+    .location-group-container .ui-table-responsive .ui-table-thead>tr>th,
+    .location-group-container .ui-table-responsive .ui-table-tfoot>tr>td {
+        display: table-cell !important;
+    }
+}
+
+
+/* location group css starts*/
+
+location-group-list {
+    height: calc(100vh - 110px);
+    overflow: hidden;
+}
+
+location-group-list .ui-table-wrapper {
+    height: calc(100vh - 170px) !important;
+    overflow: hidden;
+}
+
+location-group-list .ui-table-wrapper tbody {
+    display: block;
+    height: calc(100vh - 200px);
+    overflow: auto;
+    background: #fff;
+}
+
+location-group-list .ui-table-wrapper thead,
+location-group-list .ui-table-wrapper tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+location-group-list .ui-table-wrapper thead {
+    width: calc( 100%)
+}
+
+location-group-list .ui-table-wrapper thead th {
+    width: 11.66%;
+}
+
+
+/* location group css ends*/
+
+
+/* --------------- PrimeNg Overlay Panel CSS Start ------------------ */
+
+.ui-overlaypanel:before {
+    right: 1.1em !important;
+    left: auto !important;
+}
+
+.ui-overlaypanel:after {
+    right: 1.25em !important;
+    left: auto !important;
+}
+
+
+/* --------------- PrimeNg Overlay Panel CSS End ------------------ */
+
+.ui-toast .ui-toast-message.ui-toast-message-error {
+    background-color: #e42d00 !important;
+    display: block;
+    font-size: 1.1em !important;
+    font-family: "proxima-nova", sans-serif !important;
+    line-height: 20px !important;
+    height: auto;
+    color: #ffffff !important;
+    right: 65%!important;
+    margin: 0 auto !important;
+    width: 50vw;
+    text-align: center;
+    bottom: 32px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.ui-toast .ui-toast-message.ui-toast-message-success {
+    background-color: #54A254 !important;
+    display: block;
+    font-size: 1.1em !important;
+    font-family: "proxima-nova", sans-serif !important;
+    line-height: 20px !important;
+    height: auto;
+    color: #ffffff !important;
+    right: 65%!important;
+    margin: 0 auto !important;
+    width: 50vw;
+    text-align: center;
+    bottom: 32px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+
+/* utility classes*/
+
+quote input {
+    font-size: 13px !important;
+}
+
+.border-0 {
+    border: none !important;
+}
+
+.border-right-0 {
+    border-right: 0 !important;
+}
+
+.border-left-0 {
+    border-left: 0 !important;
+}
+
+.rounded-0 {
+    border-radius: 0 !important;
+}
+
+.disabled-bg {
+    background-color: #eee !important;
+    box-shadow: none !important;
+}
+
+.enabled-bg {
+    background-color: #fff !important;
+    box-shadow: none !important;
+}
+
+.padding-none {
+    padding: 0 !important;
+}
+
+
+/* .col-sm-12, .col-xs-12, .col-md-12 {
+    width: 100% !important;
+} */
+
+
+/* utility classes*/
+
+.total-price-select {
+    width: 200px !important;
+    height: 15px !important;
+}
+
+quote .form-group {
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+    quotes .total-price-select {
+        width: 300px;
+        padding: 0;
+        height: auto;
+    }
+}
+
+
+/* quote total section */
+
+quote .form-group:nth-child(odd),
+.odd-form-group {
+    background: #eee;
+}
+
+quote .form-horizontal .form-group {
+    margin: 0;
+    padding: 8px 0;
+}
+
+quote .form-horizontal .input-group {
+    background: #fff;
+}
+
+quote .form-horizontal .input-group .input-group-addon,
+quote .form-horizontal .input-group .form-control {
+    background: transparent;
+}
+
+
+/* --------------Calendar CSS - Start------------- */
+
+ngb-datepicker {
+    z-index: 1000000 !important;
+}
+
+ngb-datepicker.dropdown-menu {
+    padding: 5px 15px !important;
+}
+
+.ngb-dp-header {
+    padding: 10px 0px !important;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+}
+
+.ngb-dp-weekday {
+    line-height: 15px !important;
+    margin: 0;
+    padding: 7px 4px 4px 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #5e6263;
+    background: #f2f2f2;
+    border-color: #e6e6e6;
+    border: 0.5px solid #e6e6e6 !important;
+    font-style: normal !important;
+}
+
+.ngb-dp-weekdays {
+    border-bottom: 0px;
+}
+
+.ngb-dp-day {
+    font-size: 13px !important;
+    margin: 0 !important;
+    border: 0.5px solid #e6e6e6 !important;
+    background: #ffffff !important;
+    border-radius: 0px !important;
+    color: #3f3f3f;
+}
+
+.ngb-dp-day :hover {
+    text-decoration: underline;
+}
+
+.ngb-dp-day div {
+    padding: 5px 4px 3px 4px !important;
+}
+
+.ngb-dp-day div.active {
+    width: inherit;
+    height: inherit;
+    border-radius: 0px;
+    background-color: #3c86d2;
+    color: #fff;
+    font-weight: bold;
+}
+
+.ngb-dp-navigation-select .custom-select {
+    border: 0px;
+    color: #000;
+    font-size: 13px;
+}
+
+.ng-trigger.ui-datepicker {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.ngb-dp-weekday {
+    background: #f2f2f2;
+    border-bottom: 0 !important;
+    color: #5e6263 !important;
+}
+
+.ngb-dp-weekdays {
+    border-width: 0 !important;
+}
+
+.ngb-dp-arrow-btn {
+    background-color: #6f6f6f !important;
+}
+
+.ngb-dp-navigation-chevron {
+    color: #fff;
+}
+
+.ngb-dp-day {
+    border-width: 0 0.5px 0.5px 0 !important;
+}
+
+.ngb-dp-day:first-child {
+    border-left: 1px solid #e6e6e6 !important;
+}
+
+.ngb-dp-navigation-chevron {
+    border-width: .15em .15em 0 0 !important;
+    width: .5em !important;
+    height: .5em !important;
+}
+
+.modal-backdrop.in {
+    opacity: 0 !important;
+}
+
+.bg-primary {
+    color: #fff !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    background-color: #2ea195 !important;
+}
+
+
+/* --------------Calendar CSS - End------------- */
+
+
+/* --------------Advanced Filter - ng-select CSS - Start------------- */
+
+.advanced-filter .ng-select .ng-select-container {
+    border-radius: 0;
+    border: 0;
+}
+
+.advanced-filter .ng-select .ng-select-container:hover {
+    box-shadow: none;
+    outline: none;
+}
+
+.advanced-filter .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+    padding-left: 0px;
+}
+
+.advanced-filter .ng-select .ng-select-container .ng-value-container .ng-input>input {
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.advanced-filter .ng-select .ng-select-container .ng-value-container .ng-input>input:focus {
+    border-bottom: 2px solid #2ea195;
+}
+
+.advanced-filter .ng-select .ng-select-container .ng-value-container {
+    padding: 0px;
+}
+
+.advanced-filter .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.datepicker datepicker.ng-invalid .input-group .datepicker-control {
+    border-bottom: 2px solid #ff0000 !important;
+}
+
+
+/* --------------Advanced Filter - ng-select CSS - End------------- */
+
+/* --------------Common styles------------- */
+
+.offset-padding-right-20 {
+    padding-right: 20px
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.offset-padding-left-40 {
+    padding-left: 40px;
+}
+
+.sidebar .ui-scrollpanel-bar-y {
+    width: 4px !important;
+}
+
+.ui-scrollpanel-content {
+    width: calc(100% + 48px) !important;
+}
+
+.sidebar .ui-scrollpanel {
+    height: calc(100vh - 215px) !important;
+}
+
+.ui-sidebar .ui-tabview .ui-tabview-title {
+    text-transform: uppercase;
+    letter-spacing: 1.25px;
+    font-size: 16px;
+    color: #656868;
+    font-weight: 500;
+}
+
+.ui-sidebar .ui-state-active .ui-tabview-title {
+    color: #330066 !important;
+}
+
+.sidebar .fa-search:before {
+    color: #656868 !important;
+    font-size: 18px !important;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a .ui-tabview-right-icon {
+    color: #656868 !important;
+    font-size: 18px !important;
+    margin-left: 0;
+    font-weight: 500;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a .ui-tabview-right-icon:before {
+    color: #2b2b2b !important;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a .ui-tabview-right-icon {
+    margin-left: 0;
+}
+
+.sidebar .ui-tabview.ui-tabview-top .ui-tabview-nav li a .ui-tabview-right-icon {
+    margin-left: 0;
+}
+
+.sidebar .ui-autocomplete .ui-autocomplete-input,
+.sidebar .ui-inputgroup .ui-inputtext:not(:last-child) {
+    border-right: 1px solid #c5c5c5 !important;
+    border-radius: 3px !important;
+    width: 270px !important;
+}
+
+.sidebar .ui-inputtext:enabled:hover:not(.ui-state-error) {
+    border-color: #c5c5c5 !important;
+}
+
+.sidebar .ui-inputtext:enabled:focus:not(.ui-state-error) {
+    border-color: #007ad9 !important;
+}
+
+.sidebar {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.sidebar .ui-widget,
+.sidebar .ui-sidebar .ui-tabview-title {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.location-save-btn .mozu-c-btn__cross,
+.location-save-btn .mozu-c-btn--primary {
+    line-height: 1.428 !important;
+    padding: 7.5px 12px !important;
+    font-size: 14px !important;
+}
+
+access-tile .ui-card-body {
+    margin-top: 0 !important;
+    padding: 16px 16px 0 16px !important;
+    height: 100% !important;
+}
+
+access-tile .ui-card-shadow.ui-card {
+    margin-bottom: 0 !important;
+}
+
+access-tile .ui-card-shadow {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    height: calc(100% - 20px) !important;
+}
+
+access-tile .ui-card-subtitle,
+access-tile .tiles-item {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+access-tile .ui-card-subtitle {
+    line-height: 1.5;
+    margin-bottom: 5px !important;
+    color: #2b2b2b !important;
+    font-size: 16px;
+    font-weight: 600 !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+access-tile .tiles-item {
+    line-height: 1.7;
+}
+
+access-tile {
+    height: 100% !important;
+}

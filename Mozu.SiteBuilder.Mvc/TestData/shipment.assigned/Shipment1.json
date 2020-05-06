@@ -1,0 +1,180 @@
+{
+	"id": "03fd3d9121f66320803f4ace00000e7a",
+	"externalShipmentId": "NH000089",
+	"number": 245,
+	"orderId": "245",
+	"orderNumber": 245,
+	"currencyCode": "usd",
+  "customerAccountId": 1019,
+	"customerTaxId":,
+	"shipmentType":,
+	"shippingMethodCode": "fedex_FEDEX_2_DAY_AM",
+  "shippingMethodName": "FedEx 2Day® A.M.",
+	"locationCode": "BWH",
+	"origin": 
+		 {
+			"accountId": 1019,
+			"types": [
+			 {
+				"name": "Billing",
+				"isPrimary": true
+			 }
+			],
+			"auditInfo": {
+			 "createDate": "2014-01-07T03:11:08.913",
+			 "createBy": "88318826167a438ab4bf32679971c561"
+			},
+			"id": 1018,
+			"email": "dpuddy14@gmail.com",
+			"firstName": "David",
+			"lastNameOrSurname": "Puddy",
+			"phoneNumbers": {
+			 "home": "617-635-3880"
+			},
+			"address": {
+			 "address1": "43 Hawkins St",
+			 "cityOrTown": "Boston",
+			 "stateOrProvince": "MA",
+			 "postalOrZipCode": "02114",
+			 "countryCode": "US",
+			 "addressType": "None",
+			 "isValidated": false
+			}
+		 },	
+ 	"destination":,
+	"shipmentStatus": "Shipped",
+	"fulfillmentStatus": "Fulfilled",
+	"signatureRequired": false,
+	"trackingNumbers":,
+	"backorderCreatedDate":,
+	"fulfillmentDate": "2014-02-14T15:07:57.270Z",
+	"shipDate": "2014-02-14T15:07:57.270Z",
+	"pickStatus":,
+	"pickType":,
+	"changeMessages":[
+        {
+            "id":"b33228a6a5d14ebebe8ca2d100963a18",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:06:57.572Z"
+        },
+        {
+            "id":"de4c17b41cd94eaa9827a2d100963f81",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:07:02.188Z"
+        },
+        {
+            "id":"73a9e90cf826456fbd3ea2d1009646b6",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:07:08.338Z"
+        },
+        {
+            "id":"329c60034cb54b30a9c8a2d1009672f4",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Coupon Applied: FREESHIP",
+            "verb":"Applied",
+            "message":"Coupon with code:  FREESHIP applied.",
+            "createDate":"2014-02-13T15:07:46.090Z"
+        },
+        {
+            "id":"f8d0e3d6e1d147f89d6ea2e601159a42",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Package Added",
+            "verb":"Added",
+            "message":"Package with ID: 35f25fcb69594ce6a640a2e601159a42 was added.",
+            "createDate":"2014-03-06T22:50:43.203Z"
+        }
+    ],	
+	"packages":[
+        {
+            "id":"35f25fcb69594ce6a640a2e601159a42",
+            "shippingMethodCode":"fedex_FEDEX_2_DAY_AM",
+            "status":"Fulfilled",
+            "items":[
+                {
+                    "productCode":"MS-SKI-BND-005",
+                    "quantity":1
+                }
+            ],
+            "fulfillmentDate":"2014-03-06T22:50:47.306Z",
+            "fulfillmentLocationCode":"BWH",
+            "auditInfo":{
+                "updateDate":"2014-03-06T22:50:47.306Z",
+                "createDate":"2014-03-06T22:50:43.187Z",
+                "updateBy":"942c39acf34d418cbef51e129c7d605f",
+                "createBy":"942c39acf34d418cbef51e129c7d605f"
+            },
+            "availableActions":[
+
+            ]
+        }
+    ],
+	"items":[
+        {
+			"lineId": 1,
+      "originalOrderItemId":"4a4dd93a2f494199a3e9a2d100963a18",
+			"parentId": 2,
+			"productCode":"MS-SKI-BND-005",
+			"variationProductCode":"MS-SKI-BND-005",
+			"optionAttributeFQN": ,
+			"name": "Marker Jester 130 Downhill Ski Bindings",
+			"fulfillmentLocationCode": "BWH",
+			"imageUrl": "//cdn-sb.mozu.com/2295-2527/cms/2527/files/116bedf3-1f32-44d6-85af-ee57c361903b",
+      "isTaxable": true,
+			"quantity": 1,
+			"unitPrice": 50.0,
+			"actualPrice": 50.0,
+			"itemDiscount": 0.0,
+			"lineItemCost": 50.0,
+			"itemTax": 0.0,
+      "shipping": 15.,
+			"shippingDiscount": 0.0,
+			"shippingTax": 0.0,
+			"handling": 0.0,
+			"handlingDiscount": 0.0,
+			"handlingTax": 0.0,
+			"weight": 6.800,
+			"weightUnit": "lbs",
+        }
+    ],
+	"data":,
+	"taxData":,
+	"auditInfo":{
+        "updateDate":"2014-03-06T22:50:47.337Z",
+        "createDate":"2014-02-13T15:06:57.697Z",
+        "updateBy":"942c39acf34d418cbef51e129c7d605f",
+        "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+  },
+	"shipmentAdjustment": 0.0,
+	"lineItemSubtotal": 50.0,
+	"lineItemTaxAdjustment": 0.0,
+	"lineItemTaxTotal": 4.44,
+	"lineItemTotal": 50.0,
+	"shippingAdjustment": 0.0,
+	"shippingSubtotal": 15.0,
+	"shippingTaxAdjustment": 0.0,
+	"shippingTaxTotal": 1.33,
+	"shippingTotal": 16.33,
+	"handlingAdjustment": 0.0,
+	"handlingSubtotal": 4.50,
+	"handlingTaxAdjustment": 0.0,
+	"handlingTaxTotal": 0.40,
+	"handlingTotal": 4.9,
+	"dutyAdjustment":0.0,
+	"dutyTotal":0.0,
+	"total":75.67,
+	"cost":0.0,
+}

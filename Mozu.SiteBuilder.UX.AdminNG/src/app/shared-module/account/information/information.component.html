@@ -1,0 +1,39 @@
+<div class="col-md-6 padding-none right-border">
+  <div class="summary-heading">
+    <p>{{'SHARED.ACCOUNT.Information.heading' | translate }}</p>
+    <p><a href="{{customerAccountURL}}"  class="summary-link" *ngIf="model.users && model.users.length > 0">{{ model.users[0].firstName }} {{ model.users[0].lastName }}</a></p>
+  </div>
+  <div class="section col-sm-12">
+    <spinner></spinner>
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.company' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ model.companyOrOrganization }}</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.companyAdminEmail' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span *ngIf="model.users && model.users.length > 0">{{ model.users[0].emailAddress }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.salesRep' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span *ngIf="model.users && model.users.length > 0">{{ model.users[0].userName }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

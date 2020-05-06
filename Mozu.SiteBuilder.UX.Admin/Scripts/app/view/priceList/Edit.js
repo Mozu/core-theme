@@ -4,6 +4,7 @@
 
 Ext.define('Taco.view.priceList.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
+    cls: 'pricelist-header',
     requires: [
         'Taco.core.ux.action.DeleteMenuItem',
         'Taco.view.priceList.Form'
@@ -72,7 +73,7 @@ Ext.define('Taco.view.priceList.Edit', {
                 menuAlign: 'tr-br?',
                 disabled: disabledOnCreate,
                 menu: {
-                    cls: 'taco-more-action-button-menu',
+                    cls: 'taco-ellipsis-split-button',
                     plain: true,
                     shadow: false,
                     items: menuItems

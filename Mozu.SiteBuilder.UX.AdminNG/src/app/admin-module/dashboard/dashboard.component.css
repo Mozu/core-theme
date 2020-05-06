@@ -1,0 +1,22 @@
+.dashboard {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.dashboardRightShifted {
+    margin-left: 340px;
+    margin-right: 20px;
+}
+
+.dashboard-tile {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.dashboard-tile>div {
+    flex: 0 0 33.333333%;
+}

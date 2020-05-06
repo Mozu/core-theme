@@ -1,0 +1,626 @@
+[{
+        "id": "products",
+        "menuid": "productsmenu",
+        "navParent": "main",
+        "label": "Catalog",
+        "imageURL": "/admin/assets/Images/catlog.png",
+        "icon": "fal fa-book",
+        "toggleIcon": "fa fa-book",
+        "expanded": false,
+        "behaviorIds": 4,
+        "visible": true,
+        "color": "kibo-green",
+        "items": [{
+                "id": "catalogProductsmenu",
+                "label": "Products",
+                "contextType": "m",
+                "address": "products",
+                "behaviorIds": 4,
+                "visible": true
+            },
+            {
+                "id": "categoriesmenu",
+                "label": "Categories",
+                "contextType": "c",
+                "address": "categories",
+                "behaviorIds": 16,
+                "visible": true
+            },
+            {
+                "id": "inventorymenu",
+                "label": "Inventory",
+                "contextType": "m",
+                "address": "inventory",
+                "behaviorIds": 4,
+                "visible": true
+            },
+            {
+                "id": "priceListsmenu",
+                "behaviorIds": 239,
+                "label": "Price Lists",
+                "contextType": "m",
+                "address": "priceLists",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "marketing",
+        "menuid": "marketingmenu",
+        "navParent": "main",
+        "label": "Marketing",
+        "imageURL": "/admin/assets/Images/marketing.png",
+        "icon": "fal fa-megaphone",
+        "toggleIcon": "fa fa-megaphone",
+        "expanded": false,
+        "behaviorIds": 24,
+        "visible": true,
+        "color": "kibo-blue",
+        "items": [{
+                "id": "discounts",
+                "behaviorIds": 24,
+                "label": "Discounts",
+                "contextType": "s",
+                "address": "discounts",
+                "visible": true
+            },
+            {
+                "id": "couponsetmenu",
+                "behaviorIds": 24,
+                "label": "Coupon Sets",
+                "contextType": "c",
+                "address": "CouponSets",
+                "visible": true
+            },
+            {
+                "id": "productRankingmenu",
+                "behaviorIds": 235,
+                "label": "Product Ranking",
+                "contextType": "s",
+                "address": "ProductRankings",
+                "visible": true
+            },
+            {
+                "id": "searchSynonymsmenu",
+                "behaviorIds": 24,
+                "label": "Search Synonyms",
+                "contextType": "s",
+                "address": "synonyms",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "content",
+        "menuid": "contentmenu",
+        "navParent": "main",
+        "label": "Site Builder",
+        "imageURL": "/admin/assets/Images/sitebuilder.png",
+        "icon": "fal fa-paint-roller",
+        "toggleIcon": "fa fa-paint-roller",
+        "expanded": false,
+        "showBreadCrumbs": true,
+        "visible": true,
+        "color": "kibo-orange",
+        "items": [{
+                "id": "webeditmenu",
+                "label": "Editor",
+                "contextType": "s",
+                "address": "website",
+                "visible": true
+            },
+            {
+                "id": "themesmenu",
+                "label": "Themes",
+                "contextType": "s",
+                "address": "themes",
+                "visible": true
+            },
+            {
+                "id": "redirectsmenu",
+                "label": "Redirects",
+                "contextType": "s",
+                "address": "redirects",
+                "visible": true
+            },
+            {
+                "id": "fileManagermenu",
+                "label": "Files",
+                "contextType": "m",
+                "address": "fileManager",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "publishing",
+        "menuid": "publishingmenu",
+        "navParent": "main",
+        "label": "Publishing ",
+        "imageURL": "/admin/assets/Images/publishing.png",
+        "icon": "fal fa-calendar-star",
+        "toggleIcon": "fa fa-calendar-star",
+        "expanded": false,
+        "behaviorIds": 8,
+        "visible": true,
+        "color": "kibo-purple",
+        "items": [{
+                "id": "draftsmenu",
+                "label": "Drafts",
+                "contextType": "m",
+                "address": "publishing/drafts",
+                "visible": true
+            },
+            {
+                "id": "publishSetsmenu",
+                "label": "Publish Sets",
+                "contextType": "m",
+                "address": "publishing/publishsets",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "order",
+        "menuid": "ordermenu",
+        "navParent": "main",
+        "label": "Orders",
+        "imageURL": "/admin/assets/Images/fullfillment.png",
+        "icon": "fal fa-home",
+        "toggleIcon": "fa fa-home",
+        "expanded": false,
+        "behaviorIds": 73,
+        "visible": true,
+        "color": "kibo-green",
+        "items": [{
+                "id": "ordersmenu",
+                "label": "Orders",
+                "contextType": "m",
+                "address": "orders",
+                "behaviorIds": 73,
+                "visible": true
+            },
+            {
+                "id": "returnsmenu",
+                "label": "Returns",
+                "contextType": "m",
+                "address": "returns",
+                "behaviorIds": 73,
+                "visible": true
+            },
+            {
+                "id": "locations-inventorymenu",
+                "label": "Inventory",
+                "contextType": "m",
+                "address": "locationInventory",
+                "visible": true
+            },
+            {
+                "id": "locationsmenu",
+                "label": "Locations",
+                "contextType": "m",
+                "address": "locations",
+                "behaviorIds": 186,
+                "visible": true
+            },
+            {
+                "id": "locations-group",
+                "label": "Location Groups",
+                "contextType": "",
+                "address": "locationGroups",
+                "visible": true,
+                "routerLink": "locationGroups"
+            }
+        ]
+    },
+    {
+        "id": "fulfiller",
+        "menuid": "fulfiller",
+        "navParent": "main",
+        "label": "Fulfiller",
+        "imageURL": "/admin/assets/Images/reporting.png",
+        "behaviorIds": 187,
+        "visible": true,
+        "icon": "fal fa-warehouse-alt",
+        "toggleIcon": "fa fa-warehouse-alt",
+        "expanded": false,
+        "color": "kibo-blue",
+        "url": "/_fulfiller"
+    },
+    {
+        "id": "orderRouting",
+        "menuid": "orderRouting",
+        "navParent": "main",
+        "label": "Order Routing",
+        "imageURL": "/admin/assets/Images/reporting.png",
+        "behaviorIds": 251,
+        "icon": "fal fa-map-signs",
+        "toggleIcon": "fa fa-map-signs",
+        "expanded": false,
+        "visible": true,
+        "color": "kibo-orange",
+        "url": "?service=/_orderRouting/login/cas"
+    },
+    {
+        "id": "customer",
+        "menuid": "customermenu",
+        "navParent": "main",
+        "label": "Customers",
+        "imageURL": "/admin/assets/Images/customers.png",
+        "icon": "fal fa-user-crown",
+        "toggleIcon": "fa fa-user-crown",
+        "expanded": false,
+        "visible": true,
+        "color": "kibo-purple",
+        "items": [{
+                "id": "customersmenu",
+                "label": "Customers",
+                "contextType": "m",
+                "address": "customers",
+                "behaviorIds": 41,
+                "visible": true
+            },
+            {
+                "id": "customerSegmentsmenu",
+                "label": "Customer Segments",
+                "contextType": "m",
+                "address": "customer/segments",
+                "visible": true
+            },
+            {
+                "id": "storecreditmenu",
+                "label": "Store Credit",
+                "contextType": "m",
+                "address": "StoreCredits",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "b2baccount",
+        "menuid": "b2baccountmenu",
+        "navParent": "main",
+        "label": "B2B",
+        "imageURL": "/admin/assets/Images/b2b.png",
+        "icon": "fal fa-building",
+        "toggleIcon": "fa fa-building",
+        "expanded": false,
+        "behaviorIds": 188,
+        "visible": true,
+        "color": "kibo-green",
+        "items": [{
+                "id": "b2b-accountsmenu",
+                "label": "B2B Accounts",
+                "contextType": "m",
+                "address": "b2baccounts",
+                "visible": true
+            },
+            {
+                "id": "quotesmenu",
+                "label": "Quotes",
+                "contextType": "",
+                "address": "quotes",
+                "routerLink": "quotes",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "report",
+        "menuid": "reportmenu",
+        "navParent": "main",
+        "label": "Reports",
+        "imageURL": "/admin/assets/Images/reporting.png",
+        "icon": "fal fa-file-chart-line",
+        "toggleIcon": "fa fa-file-chart-line",
+        "expanded": false,
+        "behaviorIds": 188,
+        "visible": true,
+        "color": "kibo-blue",
+        "contextType": "s",
+        "address": "reports"
+    },
+    {
+        "id": "settings",
+        "menuid": "settingsmenu",
+        "navParent": "sys",
+        "label": "Settings",
+        "icon": "fal fa-cog",
+        "toggleIcon": "fa fa-cog",
+        "expanded": false,
+        "color": "kibo-green",
+        "visible": true,
+      "items": [
+        {
+          "id": "generalsettingsmenu",
+          "label": "General",
+          "contextType": "s",
+          "address": "generalsettings",
+          "visible": true
+        },
+        {
+          "id": "paymentgatewaysmenu",
+          "label": "Payment Gateways",
+          "contextType": "s",
+          "address": "settings/paymentGateways",
+          "visible": true
+        },
+        {
+          "id": "paymenttypesmenu",
+          "label": "Payment Types",
+          "contextType": "c",
+          "address": "settings/paymentTypes",
+          "visible": true
+        },
+        {
+          "id": "inventoryexportjob",
+          "label": "Inventory Settings",
+          "contextType": "s",
+          "address": "settings/inventoryExportJob",
+          "visible": true
+        },
+        {
+          "id": "discountsettingsmenu",
+          "label": "Discount Settings",
+          "contextType": "s",
+          "address": "settings/discounts",
+          "visible": true
+        },
+        {
+          "id": "taxmenu",
+          "label": "Tax",
+          "contextType": "s",
+          "address": "settings/tax",
+          "visible": true
+        },
+        {
+          "id": "shippingMainmenu",
+          "label": "Shipping",
+          "contextType": "s",
+          "address": "shipping",
+          "visible": true
+        },
+        {
+          "id": "publishingmenu",
+          "label": "Publishing",
+          "contextType": "s",
+          "address": "settings/publishing",
+          "visible": true
+        }
+      ]
+    },
+    {
+        "id": "schema",
+        "menuid": "schemamenu",
+        "navParent": "sys",
+        "label": "Schema",
+        "imageURL": "/admin/assets/Images/schema.png",
+        "icon": "fal fa-project-diagram",
+        "toggleIcon": "fa fa-project-diagram",
+        "expanded": false,
+        "color": "kibo-blue",
+        "behaviorIds": 4,
+        "visible": true,
+        "items": [{
+                "id": "productTypesmenu",
+                "label": "Product Types",
+                "contextType": "s",
+                "address": "producttypes",
+                "visible": true
+            },
+            {
+                "id": "productAttributesmenu",
+                "label": "Product Attributes",
+                "contextType": "s",
+                "address": "attributes",
+                "visible": true
+            },
+            {
+                "id": "orderAttributesmenu",
+                "label": "Order Attributes",
+                "contextType": "s",
+                "address": "orderattributes",
+                "visible": true
+            },
+            {
+                "id": "customerAttributesmenu",
+                "label": "Customer Attributes",
+                "contextType": "s",
+                "address": "CustomerAttributes",
+                "visible": true
+            },
+            {
+                "id": "b2bAttributesmenu",
+                "label": "B2B Attributes",
+                "contextType": "s",
+                "address": "b2battributes",
+                "visible": true
+            },
+            {
+                "id": "locationTypesmenu",
+                "label": "Location Types",
+                "contextType": "s",
+                "address": "locationTypes",
+                "visible": true
+            },
+            {
+                "id": "locationAttributesmenu",
+                "label": "Location Attributes",
+                "contextType": "s",
+                "address": "locationattributes",
+                "visible": true
+            },
+            {
+                "id": "customSchemamenu",
+                "label": "Custom Schema",
+                "contextType": "s",
+                "address": "customSchema",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "customization",
+        "menuid": "customizationmenu",
+        "navParent": "sys",
+        "label": "Customization",
+        "imageURL": "/admin/assets/Images/customization.png",
+        "icon": "fal fa-tools",
+        "toggleIcon": "fa fa-tools",
+        "expanded": false,
+        "color": "kibo-orange",
+        "behaviorIds": 4,
+        "visible": true,
+        "items": [{
+                "id": "applications-managemenu",
+                "label": "Applications",
+                "contextType": "s",
+                "address": "capability",
+                "visible": true
+            },
+            {
+                "id": "actionmanagementmenu",
+                "label": "Arc.js",
+                "contextType": "s",
+                "address": "actionmanagement",
+                "visible": true
+            },
+            {
+                "id": "customroutesmenu",
+                "label": "Custom Routes",
+                "contextType": "s",
+                "address": "customroutes",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "structure",
+        "menuid": "structuremenu",
+        "navParent": "sys",
+        "label": "Structure",
+        "imageURL": "/admin/assets/Images/structure.png",
+        "icon": "fal fa-sitemap",
+        "toggleIcon": "fa fa-sitemap",
+        "expanded": false,
+        "color": "kibo-purple",
+        "behaviorIds": 4,
+        "visible": true,
+        "items": [{
+                "id": "siteprovisioningmenu",
+                "label": "Sites",
+                "contextType": "s",
+                "address": "provisioning/sites",
+                "visible": true
+            },
+            {
+                "id": "catalogprovisioningmenu",
+                "label": "Catalogs",
+                "contextType": "s",
+                "address": "provisioning/catalogs",
+                "visible": true
+            },
+            {
+                "id": "channelsmenu",
+                "label": "Channels",
+                "contextType": "s",
+                "address": "channels",
+                "visible": true
+            },
+            {
+                "id": "customersetsmenu",
+                "label": "Customer Sets",
+                "contextType": "s",
+                "address": "customersets",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "permissions",
+        "menuid": "permissionsmenu",
+        "navParent": "sys",
+        "label": "Permissions",
+        "visible": true,
+        "imageURL": "/admin/assets/Images/permissions.png",
+        "icon": "fal fa-unlock",
+        "toggleIcon": "fa fa-unlock",
+        "expanded": false,
+        "color": "kibo-green",
+        "items": [{
+                "id": "usersmenu",
+                "label": "Users",
+                "contextType": "s",
+                "address": "account/users",
+                "visible": true
+            },
+            {
+                "id": "rolesmenu",
+                "label": "Roles",
+                "contextType": "s",
+                "address": "roles",
+                "visible": true
+            },
+            {
+                "id": "ipblockingmenu",
+                "label": "IP Restrictions",
+                "contextType": "s",
+                "address": "ipblocking",
+                "visible": true
+            }
+        ]
+    },
+    {
+        "id": "localization",
+        "menuid": "localizationmenu",
+        "navParent": "sys",
+        "locAtts": ["multiLang", "multCurrency"],
+        "label": "Localization",
+        "imageURL": "/admin/assets/Images/schema.png",
+        "icon": "fal fa-home",
+        "toggleIcon": "fa fa-home",
+        "expanded": false,
+        "visible": true,
+        "items": [{
+                "id": "localizationAttrmenu",
+                "label": "Attributes",
+                "contextType": "m",
+                "address": "Localization",
+                "locAtts": ["multiLang"],
+                "visible": true
+            },
+            {
+                "id": "localizationAttrValmenu",
+                "label": "Attribute Values",
+                "contextType": "m",
+                "address": "Localization/attributeValues",
+                "locAtts": ["multiLang"],
+                "visible": true
+            },
+            {
+                "id": "localizationPropmenu",
+                "label": "Product Properties",
+                "contextType": "m",
+                "address": "Localization/productProperties",
+                "locAtts": ["multiLang"],
+                "visible": true
+            },
+            {
+                "id": "localizationExtramenu",
+                "label": "Product Extras",
+                "contextType": "m",
+                "address": "Localization/productExtras",
+                "locAtts": ["multCurrency"],
+                "visible": true
+            },
+            {
+                "id": "localizationVarmenu",
+                "label": "Product Variants",
+                "contextType": "m",
+                "address": "Localization/productVariants",
+                "locAtts": ["multCurrency"],
+                "visible": true
+            }
+        ]
+    }
+]

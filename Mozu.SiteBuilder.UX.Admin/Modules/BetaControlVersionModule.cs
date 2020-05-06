@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Modules
             var bcv = context.Request.QueryString["bcv"];
             if (!string.IsNullOrEmpty(bcv))
             {
-                var tasc = new TenantAdminSettingsContext(null, null, context);
+                var tasc = new TenantAdminSettingsContext(null, null, context, null, null);
                 
                 if (bcv != tasc.BetaControlVersion)
                 {

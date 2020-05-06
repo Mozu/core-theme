@@ -92,11 +92,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     }
                 case "paymentstatus":
                 {
-                    if (filter.value.ToString().ToLower() == "unpaid,pending")
+                    switch (filter.value.ToString().ToLower())
                     {
-                        return "(paymentstatus.in  eq \"Unpaid,Pending\")";
+                        case "unpaid,pending,errored":
+                            return "(paymentstatus.in  eq \"Unpaid,Pending,Errored,PendingAndErrored\")";
+                        case "pending":
+                            return "(paymentstatus.in  eq \"Pending,PendingAndErrored\")";
+                        case "errored":
+                            return "(paymentstatus.in  eq \"Errored,PendingAndErrored\")";
+                        case "unpaid,pending":
+                            return "(paymentstatus.in  eq \"Unpaid,Pending,PendingAndErrored\")";
+                        default:
+                            return "paymentstatus eq " + filter.value;
                     }
-                    return "paymentstatus eq " + filter.value;;
                 }
                 case "fulfillmentstatus":
                 {

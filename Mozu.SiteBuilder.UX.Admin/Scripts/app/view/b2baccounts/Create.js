@@ -16,5 +16,7 @@ Ext.define('Taco.view.b2baccounts.Create', {
     contextConfig: {
         supportedLevels: ['c'],
         requiresContextOfType: ['c']
-    }
+    },
+
+    cls: 'b2b-page'
 });

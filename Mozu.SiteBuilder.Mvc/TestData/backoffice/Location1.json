@@ -1,0 +1,88 @@
+{
+  "code": "Austin_Both",
+  "locationTypes": [
+    {
+      "code": "storelocationtype1",
+      "name": "Store Location Type1",
+      "auditInfo": {
+        "updateDate": "2016-05-04T20:07:18.859Z",
+        "createDate": "2016-05-04T20:07:18.859Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    }
+  ],
+  "name": "Austin Store",
+  "description": "",
+  "address": {
+    "address1": "1817 W Braker Ln",
+    "address2": "#200",
+    "address3": "",
+    "address4": "",
+    "cityOrTown": "Austin",
+    "stateOrProvince": "TX",
+    "postalOrZipCode": "78758",
+    "countryCode": "US",
+    "isValidated": false
+  },
+  "geo": {
+    "lat": 30.390701,
+    "lng": -97.706862
+  },
+  "phone": "",
+  "fax": "",
+  "supportsInventory": true,
+  "fulfillmentTypes": [
+    {
+      "code": "SP",
+      "name": "In Store Pickup"
+    }
+  ],
+  "regularHours": {
+    "sunday": {
+      "label": "9AM-4PM"
+    },
+    "monday": {
+      "label": "9AM-6PM"
+    },
+    "tuesday": {
+      "label": "9AM-6PM"
+    },
+    "wednesday": {
+      "label": "9AM-6PM"
+    },
+    "thursday": {
+      "label": "9AM-6PM"
+    },
+    "friday": {
+      "label": "9AM-6PM"
+    },
+    "saturday": {
+      "label": "9AM-9PM"
+    }
+  },
+  "shippingOriginContact": {
+    "firstName": "John",
+    "middleNameOrInitial": "",
+    "lastNameOrSurname": "Doe",
+    "companyOrOrganization": "Kibo Commerce",
+    "phoneNumber": "555-555-1212",
+    "email": "jdoe@kibocommerce.com"
+  },
+  "note": "",
+  "tags": [],
+  "attributes": [],
+  "auditInfo": {
+    "updateDate": "2019-09-03T16:58:16.279Z",
+    "createDate": "2016-05-04T20:27:23.589Z",
+    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+  },
+  "allowFulfillmentWithNoStock": false,
+  "isDisabled": false,
+  "express": false,
+  "transferEnabled": false,
+  "includeInInventoryAggregrate": true,
+  "includeInLocationExport": false,
+  "warehouseEnabled": false
+}

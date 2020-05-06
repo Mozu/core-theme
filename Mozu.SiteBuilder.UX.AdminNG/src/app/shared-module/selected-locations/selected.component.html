@@ -1,0 +1,46 @@
+<h5>{{'LOCATIONGROUP.FormLabels.selectedLocations' | translate}}({{selectedLocations ? selectedLocations.length : 0}})</h5>
+<div class="selected-locations-list">
+    <p-table [columns]="model.cols" [value]="virtualLocations" [scrollable]="true" 
+        [rows]="20" scrollHeight="300px" 
+        [totalRecords]="model.totalRecords" 
+        [virtualRowHeight]="28"
+        (onRowUnselect)="rowUnselected($event)"
+        (onHeaderCheckboxToggle)="tableHeaderCheckboxToggle($event)"
+        [(selection)]="selectedLocations">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <!-- <th class="forwidth">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr style="height:34px" [pSelectableRow]="rowData">
+                <td class="forwidth1">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody" let-columns="columns">
+            <tr class="forheight">
+                <td *ngFor="let col of columns">
+                    <div class="loading-text"></div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="columns.length">
+                    {{'LOCATIONGROUP.GridMessages.emptyMessage' | translate }}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

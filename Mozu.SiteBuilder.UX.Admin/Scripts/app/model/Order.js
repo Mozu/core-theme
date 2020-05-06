@@ -3,15 +3,16 @@
  */
 Ext.define('Taco.model.Order', {
     requires: [
-    'Taco.model.OrderItem',
-    'Taco.model.Return',
-    'Taco.model.ShippingMethod',
-    'Taco.model.InternalNote',
-    'Taco.model.OrderPayment',
-    'Taco.model.OrderRefund',
-    'Taco.store.ShippingMethods',
-    'Ext.data.association.HasOne',
-    'Ext.ux.IFrame'
+        'Taco.model.OrderItem',
+        'Taco.model.Return',
+        'Taco.model.ShippingMethod',
+        'Taco.model.InternalNote',
+        'Taco.model.OrderPayment',
+        'Taco.model.OrderRefund',
+        'Taco.model.Shipment',
+        'Taco.store.ShippingMethods',
+        'Ext.data.association.HasOne',
+        'Ext.ux.IFrame'
     ],
 
     statics: {
@@ -44,6 +45,7 @@ Ext.define('Taco.model.Order', {
         manualAdjustment: 246,
         createCustomer: 44
     },
+
     fields: [{
         name: 'id',
         type: 'string',
@@ -117,10 +119,10 @@ Ext.define('Taco.model.Order', {
         type: 'string'
     },
 
-        {
-            name: 'channelCode',
-            type: 'string'
-        },
+    {
+        name: 'channelCode',
+        type: 'string'
+    },
     {
         name: 'siteId',
         type: 'int',
@@ -141,182 +143,182 @@ Ext.define('Taco.model.Order', {
         }
     },
 
-        {
-            name: 'authorizationInfo',
-            type: 'auto'
-        }, {
-            name: 'orderSummary',
-            type: 'auto'
-        }, {
-            name: 'orderNumber',
-            type: 'int',
-            useNull: true
-        }, {
-            name: 'orderType',
-            type: 'auto'
-        }, {
-            name: 'createDate',
-            type: 'date',
-            useNull: true,
-            dateFormat: 'c'
-        }, {
-            name: 'createBy',
-            type: 'auto',
-            useNull: true
-        },
-        {
-            name: "createByName",
-            type: "string",
-            useNull: true,
-            persist: false,
-            convert: function(v, record) {
-                return record.getCreatorUserName(v, record);
-            }
-        }, {
-            name: 'updateDate',
-            type: 'date',
-            useNull: true,
-            dateFormat: 'c'
-        }, {
-            name: 'updateBy',
-            type: 'auto',
-            useNull: true
-        }, {
-            name: 'submittedDate',
-            type: 'date',
-            useNull: true,
-            dateFormat: 'c'
-        }, {
-            name: 'customerId',
-            type: 'int',
-            useNull: true
-        }, {
-            name: 'userId',
-            type: 'string',
-            useNull: true,
-            persist: false
-        },
-        {
-            name: 'email',
-            type: 'string',
-            useNull: true,
-            persist: false
-        }, {
-            name: 'billingContact',
-            type: 'auto',
-            defaultValue: {}
-        }, {
-            name: 'fulfillmentContact',
-            type: 'auto',
-            defaultValue: {}
-        }, {
-            name: 'ipAddress',
-            type: 'string',
-            useNull: true
-        }, {
-            name: 'attributes',
-            type: 'auto',
-            defaultValue: []
-        }, {
-            name: 'items',
-            type: 'auto',
-            useNull: true
-        }, {
-            name: 'priceListCode',
-            type: 'string',
-            useNull: true
-        }, {
-            name: 'orderDiscounts',
-            type: 'auto',
-            defaultValue: []
-        }, {
-            name: 'activeDiscountDescription',
-            type: 'string',
-            useNull: true
-        }, {
-            name: 'activeShippingDiscount',
-            type: 'auto',
-            useNull: true
-        }, {
-            name: 'shippingDiscounts',
-            type: 'auto',
-            defaultValue: []
-        }, {
-            name: 'shippingSubtotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'shippingTotal',
-            type: 'float',
-            useNull: true
-        },
+    {
+        name: 'authorizationInfo',
+        type: 'auto'
+    }, {
+        name: 'orderSummary',
+        type: 'auto'
+    }, {
+        name: 'orderNumber',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'orderType',
+        type: 'auto'
+    }, {
+        name: 'createDate',
+        type: 'date',
+        useNull: true,
+        dateFormat: 'c'
+    }, {
+        name: 'createBy',
+        type: 'auto',
+        useNull: true
+    },
+    {
+        name: "createByName",
+        type: "string",
+        useNull: true,
+        persist: false,
+        convert: function (v, record) {
+            return record.getCreatorUserName(v, record);
+        }
+    }, {
+        name: 'updateDate',
+        type: 'date',
+        useNull: true,
+        dateFormat: 'c'
+    }, {
+        name: 'updateBy',
+        type: 'auto',
+        useNull: true
+    }, {
+        name: 'submittedDate',
+        type: 'date',
+        useNull: true,
+        dateFormat: 'c'
+    }, {
+        name: 'customerId',
+        type: 'int',
+        useNull: true
+    }, {
+        name: 'userId',
+        type: 'string',
+        useNull: true,
+        persist: false
+    }, {
+        name: 'billingContact',
+        type: 'auto',
+        defaultValue: {}
+    }, {
+        name: 'fulfillmentContact',
+        type: 'auto',
+        defaultValue: {}
+    }, {
+        name: 'ipAddress',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'attributes',
+        type: 'auto',
+        defaultValue: []
+    }, {
+        name: 'items',
+        type: 'auto',
+        useNull: true
+    },
+    {
+        name: 'shipments',
+        type: 'auto',
+        defaultValue: []
+    },
+    {
+        name: 'priceListCode',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'orderDiscounts',
+        type: 'auto',
+        defaultValue: []
+    }, {
+        name: 'activeDiscountDescription',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'activeShippingDiscount',
+        type: 'auto',
+        useNull: true
+    }, {
+        name: 'shippingDiscounts',
+        type: 'auto',
+        defaultValue: []
+    }, {
+        name: 'shippingSubtotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'shippingTotal',
+        type: 'float',
+        useNull: true
+    },
     /* sum cost of all products (no discounts applied) */
-        {
-            name: 'subtotal',
-            type: 'float',
-            useNull: true
-        },
+    {
+        name: 'subtotal',
+        type: 'float',
+        useNull: true
+    },
     /* sum cost of all products with line-item discounts applied */
-        {
-            name: 'discountedSubtotal',
-            type: 'float'
-        },
+    {
+        name: 'discountedSubtotal',
+        type: 'float'
+    },
     /* sum of all discounts */
-        {
-            name: 'discountTotal',
-            type: 'float',
-            useNull: true
-        },
+    {
+        name: 'discountTotal',
+        type: 'float',
+        useNull: true
+    },
     /* subtotal of order with discounts applied */
-        {
-            name: 'discountedTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'taxTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'taxDutyTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'feeTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'handlingTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'lineItemSubtotalWithOrderAdjustments',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'dutyTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'itemTaxTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'handlingTaxTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'shippingTaxTotal',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'handlingFee',
-            type: 'float',
-            useNull: true
-        }, {
-            name: 'handlingDiscounts',
-            type: '[]',
-            defaultValue: []
-        },
+    {
+        name: 'discountedTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'taxTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'taxDutyTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'feeTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'handlingTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'lineItemSubtotalWithOrderAdjustments',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'dutyTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'itemTaxTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'handlingTaxTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'shippingTaxTotal',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'handlingFee',
+        type: 'float',
+        useNull: true
+    }, {
+        name: 'handlingDiscounts',
+        type: '[]',
+        defaultValue: []
+    },
 
     {
         name: 'orderAdjustment',
@@ -334,508 +336,513 @@ Ext.define('Taco.model.Order', {
 
 
     // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
-        {
-            name: 'orderAdjustmentIsNegative',
-            type: 'boolean',
-            persist: false,
-            convert: function (value, record) {
-                // if set explicitly use the value
-                if (Ext.isBoolean(value)) {
-                    return value;
-                }
-
-                // get the value from the field;
-                var adj = record.get('orderAdjustment');
-                if (adj && adj.amount && adj.amount > 0) {
-                    return false;
-                }
-                return true;
-            }
-        },
-
-        {
-            name: 'shippingAdjustment',
-            type: 'object',
-            defaultValue: {
-                amount: 0,
-                description: '',
-                internalComment: ''
-            }
-        },
-
-    // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
-        {
-            name: 'shippingAdjustmentIsNegative',
-            type: 'boolean',
-            persist: false,
-            convert: function (value, record) {
-                // if set explicitly use the value
-                if (Ext.isBoolean(value)) {
-                    return value;
-                }
-                var adj = record.get('shippingAdjustment');
-                if (adj && adj.amount && adj.amount > 0) {
-                    return false;
-                }
-                return true;
-            }
-        },
-
-        {
-            name: 'handlingAdjustment',
-            type: 'object',
-            defaultValue: {
-                amount: 0,
-                description: '',
-                internalComment: ''
-            }
-        },
-
-        {
-            name: 'handlingAdjustmentIsNegative',
-            type: 'boolean',
-            persist: false,
-            convert: function (value, record) {
-                // if set explicitly use the value
-                if (Ext.isBoolean(value)) {
-                    return value;
-                }
-                var adj = record.get('handlingAdjustment');
-                if (adj && adj.amount && adj.amount > 0) {
-                    return false;
-                }
-                return true;
-            }
-        },
-
-    // deprecated?
-        {
-            name: 'adjustmentDescription',
-            type: 'string',
-            useNull: true
-        },
-
-        {
-            name: 'adjustmentTotal',
-            type: 'float',
-            useNull: true
-        },
-
-        {
-            name: 'shippingAndHandlingTotal',
-            type: 'float',
-            useNull: true
-        },
-
-        {
-            name: 'total',
-            type: 'float',
-            useNull: true
-        },
-        {
-            name: 'amountRefunded',
-            type: 'float',
-            useNull: true
-        },
-        {
-            name: 'returnStatus',
-            type: 'string',
-            useNull: true,
-            defaultValue: null,
-            convert: function (value, record) {
-                if (value === "Closed") {
-                    return "Order Partially Returned";
-                }
-                if (value === "ReturnedInFull") {
-                    return "Order Fully Returned";
-                }
-                if (value === "InProgress") {
-                    return "In Progress";
-                }
+    {
+        name: 'orderAdjustmentIsNegative',
+        type: 'boolean',
+        persist: false,
+        convert: function (value, record) {
+            // if set explicitly use the value
+            if (Ext.isBoolean(value)) {
                 return value;
             }
-        }, {
-            name: 'customerNote',
-            type: 'string',
-            useNull: true
-        }, {
-            name: 'giftMessage',
-            type: 'string',
-            useNull: true
-        }, {
-            name: 'internalNotes',
-            type: 'auto',
-            defaultValue: [],
-            useNull: true
-        }, {
-            name: 'itemsOrdered',
-            type: 'int',
-            useNull: false
-        }, {
-            name: 'totalDigitalItems',
-            type: 'int',
-            useNull: false,
-            convert: function (v, record) {
-                return (record.get('itemsNotDigitallyFulfilled') || 0) + (record.get('itemsDigitallyFulfilled') || 0);
+
+            // get the value from the field;
+            var adj = record.get('orderAdjustment');
+            if (adj && adj.amount && adj.amount > 0) {
+                return false;
             }
-        },
-        {
-            name: 'itemsNotDigitallyFulfilled',
-            type: 'int',
-            useNull: false
-        },
-        {
-            name: 'itemsDigitallyFulfilled',
-            type: 'int',
-            useNull: false
-        },
+            return true;
+        }
+    },
+
+    {
+        name: 'shippingAdjustment',
+        type: 'object',
+        defaultValue: {
+            amount: 0,
+            description: '',
+            internalComment: ''
+        }
+    },
+
+    // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
+    {
+        name: 'shippingAdjustmentIsNegative',
+        type: 'boolean',
+        persist: false,
+        convert: function (value, record) {
+            // if set explicitly use the value
+            if (Ext.isBoolean(value)) {
+                return value;
+            }
+            var adj = record.get('shippingAdjustment');
+            if (adj && adj.amount && adj.amount > 0) {
+                return false;
+            }
+            return true;
+        }
+    },
+
+    {
+        name: 'handlingAdjustment',
+        type: 'object',
+        defaultValue: {
+            amount: 0,
+            description: '',
+            internalComment: ''
+        }
+    },
+
+    {
+        name: 'handlingAdjustmentIsNegative',
+        type: 'boolean',
+        persist: false,
+        convert: function (value, record) {
+            // if set explicitly use the value
+            if (Ext.isBoolean(value)) {
+                return value;
+            }
+            var adj = record.get('handlingAdjustment');
+            if (adj && adj.amount && adj.amount > 0) {
+                return false;
+            }
+            return true;
+        }
+    },
+
+    // deprecated?
+    {
+        name: 'adjustmentDescription',
+        type: 'string',
+        useNull: true
+    },
+
+    {
+        name: 'adjustmentTotal',
+        type: 'float',
+        useNull: true
+    },
+
+    {
+        name: 'shippingAndHandlingTotal',
+        type: 'float',
+        useNull: true
+    },
+
+    {
+        name: 'total',
+        type: 'float',
+        useNull: true
+    },
+    {
+        name: 'amountRefunded',
+        type: 'float',
+        useNull: true
+    },
+    {
+        name: 'returnStatus',
+        type: 'string',
+        useNull: true,
+        defaultValue: null,
+        convert: function (value, record) {
+            if (value === "Closed") {
+                return "Order Partially Returned";
+            }
+            if (value === "ReturnedInFull") {
+                return "Order Fully Returned";
+            }
+            if (value === "InProgress") {
+                return "In Progress";
+            }
+            return value;
+        }
+    }, {
+        name: 'customerNote',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'giftMessage',
+        type: 'string',
+        useNull: true
+    }, {
+        name: 'internalNotes',
+        type: 'auto',
+        defaultValue: [],
+        useNull: true
+    }, {
+        name: 'itemsOrdered',
+        type: 'int',
+        useNull: false
+    }, {
+        name: 'totalDigitalItems',
+        type: 'int',
+        useNull: false,
+        convert: function (v, record) {
+            return (record.get('itemsNotDigitallyFulfilled') || 0) + (record.get('itemsDigitallyFulfilled') || 0);
+        }
+    },
+    {
+        name: 'itemsNotDigitallyFulfilled',
+        type: 'int',
+        useNull: false
+    },
+    {
+        name: 'itemsDigitallyFulfilled',
+        type: 'int',
+        useNull: false
+    },
 
 
     // the total number of items that will be fulfilled via direct ship
-        {
-            name: 'totalDirectShipItems',
-            type: 'int',
-            useNull: false,
-            convert: function (v, record) {
-                var itemsNotShipped = record.get('itemsNotShipped') || 0;
-                var itemsShipped = record.get('itemsShipped') || 0;
-                return itemsNotShipped + itemsShipped;
-            }
-        },
-        {
-            name: 'itemsNotShipped',
-            type: 'int',
-            useNull: false
-        },
-        {
-            name: 'itemsShipped',
-            type: 'int',
-            useNull: false
-        },
+    {
+        name: 'totalDirectShipItems',
+        type: 'int',
+        useNull: false,
+        convert: function (v, record) {
+            var itemsNotShipped = record.get('itemsNotShipped') || 0;
+            var itemsShipped = record.get('itemsShipped') || 0;
+            return itemsNotShipped + itemsShipped;
+        }
+    },
+    {
+        name: 'itemsNotShipped',
+        type: 'int',
+        useNull: false
+    },
+    {
+        name: 'itemsShipped',
+        type: 'int',
+        useNull: false
+    },
     // workflow 
-        {
-            name: 'orderStatus',
-            type: 'string',
-            useNull: true
-        },
-        {
-            name: 'fulfillmentStatus',
-            type: 'string',
-            useNull: true
-        },
-        {
-            name: 'paymentStatus',
-            type: 'string',
-            defaultValue: 'Card Authorized',
-            useNull: true
-        },
-        {
-            name: 'availableActions',
-            type: 'auto',
-            defaultValue: []
-        },
-        {
-            name: 'availableBulkActions',
-            type: 'auto',
-            defaultValue: []
-        },
-        {
-            name: 'lastValidationDate',
-            type: 'date',
-            useNull: true,
-            dateFormat: 'c'
-        },
-        {
-            name: 'expirationDate',
-            type: 'date',
-            useNull: true,
-            dateFormat: 'c'
-        },
+    {
+        name: 'orderStatus',
+        type: 'string',
+        useNull: true
+    },
+    {
+        name: 'fulfillmentStatus',
+        type: 'string',
+        useNull: true
+    },
+    {
+        name: 'paymentStatus',
+        type: 'string',
+        defaultValue: 'Card Authorized',
+        useNull: true
+    },
+    {
+        name: 'availableActions',
+        type: 'auto',
+        defaultValue: []
+    },
+    {
+        name: 'availableBulkActions',
+        type: 'auto',
+        defaultValue: []
+    },
+    {
+        name: 'lastValidationDate',
+        type: 'date',
+        useNull: true,
+        dateFormat: 'c'
+    },
+    {
+        name: 'expirationDate',
+        type: 'date',
+        useNull: true,
+        dateFormat: 'c'
+    },
 
-        {
-            name: 'payments',
-            type: 'auto',
-            useNull: true,
-            defaultValue: []
-        },
-        {
-            name: 'refunds',
-            type: 'auto',
-            useNull: true,
-            defaultValue: []
-        },
-        {
-            name: 'unpackagedItems',
-            type: 'array',
-            defaultValue: []
-        },
+    {
+        name: 'payments',
+        type: 'auto',
+        useNull: true,
+        defaultValue: []
+    },
+    {
+        name: 'refunds',
+        type: 'auto',
+        useNull: true,
+        defaultValue: []
+    },
+    {
+        name: 'unpackagedItems',
+        type: 'array',
+        defaultValue: []
+    },
 
-        {
-            name: 'packages',
-            type: 'array',
-            convert: function (v) {
-                if (!Ext.isArray(v)) {
-                    v = [];
-                }
-                Ext.Array.forEach(v, function (pkg) {
-                    if (pkg.changeMessages) {
-                        Ext.Array.forEach(pkg.changeMessages, function (chgMsg) {
-                            var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
-                                return sur.id === chgMsg.userId;
-                            });
-                            if (user) {
-                                chgMsg.userName = user.firstName + ' ' + user.lastName;
-                            }
-                        });
-                    }
-                });
-                return v;
+    {
+        name: 'packages',
+        type: 'array',
+        convert: function (v) {
+            if (!Ext.isArray(v)) {
+                v = [];
             }
-        },
+            Ext.Array.forEach(v, function (pkg) {
+                if (pkg.changeMessages) {
+                    Ext.Array.forEach(pkg.changeMessages, function (chgMsg) {
+                        var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
+                            return sur.id === chgMsg.userId;
+                        });
+                        if (user) {
+                            chgMsg.userName = user.firstName + ' ' + user.lastName;
+                        }
+                    });
+                }
+            });
+            return v;
+        }
+    },
 
-        {
-            name: 'digitalPackages',
-            type: 'array',
-            defaultValue: []
-        },
+    {
+        name: 'digitalPackages',
+        type: 'array',
+        defaultValue: []
+    },
 
-        {
-            name: 'undeliveredDigitalItems',
-            type: 'array',
-            defaultValue: []
-        },
+    {
+        name: 'undeliveredDigitalItems',
+        type: 'array',
+        defaultValue: []
+    },
 
 
     // array of items that are pending in the pickup Instore pickup section and have not been added to a pickup yet;
-        {
-            name: 'unpickedupItems',
-            type: 'array',
-            defaultValue: []
-        },
+    {
+        name: 'unpickedupItems',
+        type: 'array',
+        defaultValue: []
+    },
 
     // like a package but for people that can't wait a few days for direct ship. 
-        {
-            name: 'pickups',
-            type: 'array',
-            convert: function (v) {
-                if (!Ext.isArray(v)) {
-                    v = [];
-                }
-                Ext.Array.forEach(v, function (pik) {
-                    if (pik.changeMessages) {
-                        Ext.Array.forEach(pik.changeMessages, function (chgMsg) {
-                            var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
-                                return sur.id === chgMsg.userId;
-                            });
-                            if (user) {
-                                chgMsg.userName = user.firstName + ' ' + user.lastName;
-                            }
-                        });
-                    }
-                });
-                return v;
+    {
+        name: 'pickups',
+        type: 'array',
+        convert: function (v) {
+            if (!Ext.isArray(v)) {
+                v = [];
             }
+            Ext.Array.forEach(v, function (pik) {
+                if (pik.changeMessages) {
+                    Ext.Array.forEach(pik.changeMessages, function (chgMsg) {
+                        var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
+                            return sur.id === chgMsg.userId;
+                        });
+                        if (user) {
+                            chgMsg.userName = user.firstName + ' ' + user.lastName;
+                        }
+                    });
+                }
+            });
+            return v;
+        }
 
-        },
+    },
 
     // helper field. ui iterates on unshipped packages in multiple places
-        {
-            name: 'unShippedPackages',
-            type: 'array',
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get('packages');
-                var retVal = [];
+    {
+        name: 'unShippedPackages',
+        type: 'array',
+        persist: false,
+        convert: function (v, record) {
+            var packages = record.get('packages');
+            var retVal = [];
 
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status === 'NotFulfilled') {
-                        retVal.push(packages[i]);
-                    }
+            for (var i = 0; i < packages.length; i++) {
+                if (packages[i].status === 'NotFulfilled') {
+                    retVal.push(packages[i]);
                 }
-                return retVal;
             }
-        },
+            return retVal;
+        }
+    },
     // helper field. ui iterates on shipped packages in multiple places
-        {
-            name: 'shippedPackages',
-            type: 'array',
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get('packages');
-                var retVal = [];
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status === 'Fulfilled') {
-                        retVal.push(packages[i]);
-                    }
+    {
+        name: 'shippedPackages',
+        type: 'array',
+        persist: false,
+        convert: function (v, record) {
+            var packages = record.get('packages');
+            var retVal = [];
+            for (var i = 0; i < packages.length; i++) {
+                if (packages[i].status === 'Fulfilled') {
+                    retVal.push(packages[i]);
                 }
-                return retVal;
             }
-        },
+            return retVal;
+        }
+    },
 
 
     // NEW FIELD
 
     // the total number of items that will be fulfilled via in store pickup
-        {
-            name: 'totalPickupItems',
-            type: 'int',
-            useNull: false,
-            convert: function (v, record) {
-                var itemsNotPickedup = record.get('itemsNotPickedup') || 0;
-                var itemsPickedup = record.get('itemsPickedup') || 0;
-                return itemsNotPickedup + itemsPickedup;
-            }
-        },
+    {
+        name: 'totalPickupItems',
+        type: 'int',
+        useNull: false,
+        convert: function (v, record) {
+            var itemsNotPickedup = record.get('itemsNotPickedup') || 0;
+            var itemsPickedup = record.get('itemsPickedup') || 0;
+            return itemsNotPickedup + itemsPickedup;
+        }
+    },
 
     // NEW FIELD
-        {
-            name: 'itemsNotPickedup',
-            defaultValue: 0,
-            type: 'int',
-            useNull: false
-        },
+    {
+        name: 'itemsNotPickedup',
+        defaultValue: 0,
+        type: 'int',
+        useNull: false
+    },
 
     // NEW FIELD
-        {
-            name: 'itemsPickedup',
-            defaultValue: 0,
-            type: 'int',
-            useNull: false
-        },
+    {
+        name: 'itemsPickedup',
+        defaultValue: 0,
+        type: 'int',
+        useNull: false
+    },
 
     // NEW FIELD
-        {
-            name: 'instorePackages',
-            type: 'array',
-            persist: false,
-            convert: function (v, record) {
+    {
+        name: 'instorePackages',
+        type: 'array',
+        persist: false,
+        convert: function (v, record) {
 
 
-                var packages = record.get('pickups');
-                var retVal = [];
+            var packages = record.get('pickups');
+            var retVal = [];
 
-                if (!packages) return retVal;
+            if (!packages) return retVal;
 
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status === 'Fulfilled') {
-                        retVal.push(packages[i]);
-                    }
+            for (var i = 0; i < packages.length; i++) {
+                if (packages[i].status === 'Fulfilled') {
+                    retVal.push(packages[i]);
                 }
-                return retVal;
             }
-        },
+            return retVal;
+        }
+    },
 
     // helper field. ui iterates on unshipped packages in multiple places
-        {
-            name: 'pendingPickups',
-            type: 'array',
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get('pickups');
-                var retVal = [];
+    {
+        name: 'pendingPickups',
+        type: 'array',
+        persist: false,
+        convert: function (v, record) {
+            var packages = record.get('pickups');
+            var retVal = [];
 
-                if (!packages) return retVal;
+            if (!packages) return retVal;
 
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status === 'NotFulfilled') {
-                        retVal.push(packages[i]);
-                    }
+            for (var i = 0; i < packages.length; i++) {
+                if (packages[i].status === 'NotFulfilled') {
+                    retVal.push(packages[i]);
                 }
-                return retVal;
             }
-        },
+            return retVal;
+        }
+    },
 
 
     // helper field. ui iterates on shipped packages in multiple places
-        {
-            name: 'pickedupPackages',
-            type: 'array',
-            persist: false,
-            convert: function (v, record) {
-                var packages = record.get('pickups');
-                var retVal = [];
+    {
+        name: 'pickedupPackages',
+        type: 'array',
+        persist: false,
+        convert: function (v, record) {
+            var packages = record.get('pickups');
+            var retVal = [];
 
-                if (!packages) return retVal;
+            if (!packages) return retVal;
 
-                for (var i = 0; i < packages.length; i++) {
-                    if (packages[i].status === 'Fulfilled') {
-                        retVal.push(packages[i]);
-                    }
+            for (var i = 0; i < packages.length; i++) {
+                if (packages[i].status === 'Fulfilled') {
+                    retVal.push(packages[i]);
                 }
-                return retVal;
             }
-        },
-
-        {
-            name: 'shippingMethodName',
-            type: 'string',
-            persist: false
-        },
-        {
-            name: 'shippingMethodCode',
-            type: 'string',
-            persist: false
-        },
-        {
-            name: 'customer',
-            type: 'auto',
-            persist: false
-        },
-        {
-            name: 'validationResults',
-            type: 'any',
-            persist: false
-        },
-        {
-            name: 'fraudScore',
-            type: 'int',
-            persist: false,
-            useNull: true
-        },
-        {
-            name: 'handlingAmount',
-            type: 'float',
-            persist: false,
-            useNull: true
-        },
-        {
-            name: 'discountedTotalWithAdjustment',
-            type: 'float',
-            persist: false,
-            useNull: true
-        },
-        {
-            name: 'couponCodes',
-            type: 'auto',
-            persist: false,
-            defaultValue: [],
-            useNull: true
-        },
-        {
-            name: 'invalidCoupons',
-            type: 'auto',
-            persist: false,
-            defaultValue: [],
-            useNull: true
-        },
-        {
-            name: 'lineItemHandlingFees',
-            type: 'auto',
-            persist: false,
-            useNull: true
-        },
-        {
-            name: 'lineItemShippingDiscounts',
-            type: 'auto',
-            persist: false,
-            useNull: true
-        },
-        {
-            name: 'shippingAmountBeforeDiscountsAndAdjustments',
-            type: 'float',
-            persist: false,
-            useNull: true
+            return retVal;
         }
+    },
+
+    {
+        name: 'shippingMethodName',
+        type: 'string',
+        persist: false
+    },
+    {
+        name: 'shippingMethodCode',
+        type: 'string',
+        persist: false
+    },
+    {
+        name: 'customer',
+        type: 'auto',
+        persist: false
+    },
+    {
+        name: 'validationResults',
+        type: 'any',
+        persist: false
+    },
+    {
+        name: 'fraudScore',
+        type: 'int',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'handlingAmount',
+        type: 'float',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'discountedTotalWithAdjustment',
+        type: 'float',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'couponCodes',
+        type: 'auto',
+        persist: false,
+        defaultValue: [],
+        useNull: true
+    },
+    {
+        name: 'invalidCoupons',
+        type: 'auto',
+        persist: false,
+        defaultValue: [],
+        useNull: true
+    },
+    {
+        name: 'lineItemHandlingFees',
+        type: 'auto',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'lineItemShippingDiscounts',
+        type: 'auto',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'shippingAmountBeforeDiscountsAndAdjustments',
+        type: 'float',
+        persist: false,
+        useNull: true
+    },
+    {
+        name: 'isUnified',
+        type: 'boolean',
+        defaultValue: false
+    }
     ],
 
     // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.
@@ -849,12 +856,12 @@ Ext.define('Taco.model.Order', {
      * Checks to see if this order only has pickup items.
      * @returns {Boolean} True if the order only contains pickup items, otherwise False. 
      */
-    isPickupOnlyOrder: function() {
+    isPickupOnlyOrder: function () {
         var items = this.get("items");
         if (items && items.length) {
-            var allPickups = Ext.Array.every(items, function(item) {
-                    return item.fulfillmentMethod === "Pickup";
-                });
+            var allPickups = Ext.Array.every(items, function (item) {
+                return item.fulfillmentMethod === "Pickup";
+            });
 
             if (allPickups) return true;
         }
@@ -880,7 +887,6 @@ Ext.define('Taco.model.Order', {
         loadConfig = Ext.applyIf({
             bypassCache: true,
             success: function (record) {
-
 
                 if (record.getId() === me.getId()) {
                     me.beginEdit();
@@ -916,9 +922,8 @@ Ext.define('Taco.model.Order', {
         if (Taco.app.context.findSite(this.get('siteId'))) {
             return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
         }
-
         else {
-            return value;
+            return Taco.app.context.getCurrent().formatCurrency(value);
         }
     },
     getCurrencyCode: function () {
@@ -1039,18 +1044,27 @@ Ext.define('Taco.model.Order', {
         return this.get('total') - this.get('authorizationInfo').amountCollected;
     },
 
+
+
     associations: [
-    // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
-    // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
-    // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
-    // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
+        // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
+        // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
+        // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
+        // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
 
         {
             type: 'hasMany',
             model: 'Taco.model.OrderItem',
             name: 'items',
             reader: 'json'
-        }, {
+        },
+        //{
+        //    type: 'hasMany',
+        //    model: 'Taco.model.Shipment',
+        //    name: 'shipments',
+        //    reader: 'json'
+        //},
+        {
             type: 'hasOne',
             model: 'Taco.model.Contact',
             name: 'billingContact',
@@ -1098,7 +1112,7 @@ Ext.define('Taco.model.Order', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            // read: '/admin/Scripts/app/mocks/orders.json',
+            //read: '/admin/Scripts/app/mocks/orders.json',
             read: '/admin/app/order/list',
             create: '/admin/app/order/create',
             update: '/admin/app/order/edit',
@@ -1106,6 +1120,7 @@ Ext.define('Taco.model.Order', {
         },
         reader: {
             type: 'json',
+
             getResponseData: function (response) {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);
@@ -1291,23 +1306,6 @@ Ext.define('Taco.model.Order', {
 
 
         config.errorMsg = config.errorMsg || 'Error updating order billing and shipping address';
-        this.addErrorHandling(config);
-
-        Ext.Ajax.request(config);
-    },
-
-
-    updateEmailAddress: function (config, newEmail) {
-        Ext.apply(config, {
-            url: '/admin/app/order/updateemailaddress',
-            params: {
-                'newEmail': newEmail
-            },
-            method: 'POST'
-        });
-
-
-        config.errorMsg = config.errorMsg || 'Error updating email address';
         this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
@@ -1552,7 +1550,7 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-    createGiftCard : function (config) {
+    createGiftCard: function (config) {
 
         Ext.applyIf(config, {
             url: Taco.paymentApiBaseUrl,
@@ -2679,18 +2677,10 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+
     reOrder: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/copy',
-            method: 'POST'
-        });
-
-        Ext.Ajax.request(config);
-    },
-
-    cancelOrder: function (config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/cancel',
             method: 'POST'
         });
 
@@ -2748,7 +2738,8 @@ Ext.define('Taco.model.Order', {
     //            type:"shipment",
     //            packageId: 'asdf' 
     //        }
-    //    }
+    //    }    
+
     resendEmail: function (config) {
         var me = this,
             config = config || {},
@@ -2757,7 +2748,7 @@ Ext.define('Taco.model.Order', {
                 '<p>Successfully resent e-mail</p>'
             ]),
             confirmData = config.confirmData || me.data,
-            confirmSuccess = (config.confirmSuccess==false) ? false :  true,
+            confirmSuccess = (config.confirmSuccess == false) ? false : true,
             msg;
 
         switch (config.type) {
@@ -2771,7 +2762,7 @@ Ext.define('Taco.model.Order', {
                 url = '/admin/app/order/resendconfirmationemail';
                 break;
         }
-            
+
         Ext.apply(config, {
             method: 'POST',
             orderId: config.orderId || me.getId(),
@@ -2779,7 +2770,7 @@ Ext.define('Taco.model.Order', {
         });
 
         if (confirmSuccess) {
-            Ext.apply(config, {                   
+            Ext.apply(config, {
                 success: function () {
                     msg = confirmTpl.apply(confirmData);
                     Taco.MessageBox.show({
@@ -2793,7 +2784,299 @@ Ext.define('Taco.model.Order', {
 
         // add in boilerplate error handling code;
         config.errorMsg = config.errorMsg || 'Error resending email';
-        this.addErrorHandling(config);            
+        this.addErrorHandling(config);
         Ext.Ajax.request(config);
-    }
+    },
+
+    getCancellationReasons: function (category) {
+        this.cancellationReasons = Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields: [
+                {
+                    name: 'reasonCode',
+                    type: 'string'
+                },
+                {
+                    name: 'name',
+                    type: 'string'
+                },
+                {
+                    name: 'needsMoreInfo',
+                    type: 'boolean'
+                }
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/order/cancel/reasons?category=' + (category ? category : ""),
+                reader: {
+                    type: 'json',
+                    root: 'items'
+                }
+            }
+        });
+        return this.cancellationReasons;
+    },
+
+    cancelOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelOrderItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel/items',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    getCancelItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel/cancelitem',
+            method: 'GET'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/cancel',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelShipmentItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/items/cancel',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    rejectShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/reject',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    reassignShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/reassign',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    backorderedShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/backordered',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    backorderItemsUpdate: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/backorderItemsUpdate',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    reassignShipmentItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/items/reassign',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    filterShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipments/filter',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    fulfillShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/fulfill',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    receiveTransfer: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/receivetransfer',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    pickupItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/pickupItems',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelItemQuantity: function (config) {
+        var me = this;
+
+        Ext.apply(config, {
+            url: '/admin/app/order/items/cancelquantity',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: 'POST'
+        });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error cancelling quantity';
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
+
+    getCandidateSuggestions: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/candidates',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    getInventory: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/inventory',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    updateShipmentAdjustments: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/updateShipmentAdjustments',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    updateShipmentItem: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/updateShipmentItem',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    moveItemToBackOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/shipment/moveItemToBackOrder',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    transferShipmentItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/transferredItems',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    getLocationsByFilter: function (filters) {
+        if (filters) {
+            var me = this;
+
+            return Ext.create('Taco.store.Locations', {
+                filters: filters
+            });
+        }
+    },
+
+    getLocations: function () {
+        var me = this;
+        return Taco.core.data.StoreManager.getOrCreate({
+            createOnly: true,
+            type: 'Taco.store.Locations',
+            // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+            clearSort: false,
+            remoteSort: true,
+            remoteFilter: false,
+            sorters: [{
+                property: 'name',
+                direction: 'ASC'
+            }],
+            autoLoad: true,
+            listeners: {
+                beforeload: function (store, operation) {
+                    var proxy = store.getProxy();
+                    if (proxy.extraParams) {
+                        //reset params at proxy (e.g. advSearch)
+                        proxy.extraParams = {};
+                    }
+                    if (this.extraFilters) {
+                        store.extraFilters.add(this.extraFilters);
+                    }
+                },
+                scope: this
+            }
+        })
+    },
+
+    getSTSSettigs: function () {
+        return Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [
+                {
+                    name: 'isEnabled',
+                    type: 'boolean'
+                },
+                {
+                    name: 'alwaysCreateTransferShipments',
+                    type: 'boolean'
+                }
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/fulfillmentSettings/read',
+                reader: {
+                    type: 'json',
+                    root: function(obj) {
+                        return obj.items.shipToStore;
+                    }
+                }
+            }
+        });
+    },
 });

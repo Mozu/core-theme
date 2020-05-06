@@ -28,6 +28,10 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Controllers;
+using Kibo.Fulfillment.Contracts.Model;
+using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -44,6 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
+        private readonly IOrderRoutingProxyWebApiClient _orderRoutingProxyClient;
+        private readonly IInventoryProxyWebApiClient _inventoryProxyClient;
+        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private readonly string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
@@ -67,7 +75,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICartWebApiClient cartWebApiClient,
             ICustomerSetWebApiClient customerSetWebApiClient,
             IReturnWebApiClient returnWebApiClient,
-            IIpAddressFinderOuter ipAddressFinderOuter
+            IIpAddressFinderOuter ipAddressFinderOuter,
+            IOrderRoutingProxyWebApiClient orderRoutingProxyClient,
+            IInventoryProxyWebApiClient inventoryProxyClient,
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient,            
+            ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
         )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -81,18 +93,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSetWebApiClient = customerSetWebApiClient;
             _returnWebApiClient = returnWebApiClient;
             _ipAddress = ipAddressFinderOuter.IpAddress;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _orderRoutingProxyClient = orderRoutingProxyClient;
+            _inventoryProxyClient = inventoryProxyClient;
+            _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Order>>> List([FromUri] PagingParamaters pagingParams,
             [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
         {
+            SbApiContext.SetDataMode(DataViewModeType.Live);
             var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
 
             // get single order
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
-                return await GetSingleOrder(orderWebApiClient, pagingParams.id, draft);
+                return await GetSingleOrder(orderWebApiClient, pagingParams.id, draft, extFilter);
             }
 
             // get list of orders
@@ -101,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var sort = pagingParams?.sort?.ToSortString();
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
-            var qLimit = q == null ? (int?) null : 26;
+            var qLimit = q == null ? (int?)null : 26;
             var responseGroups = "header,payment,packageheaders,availableactions";
 
             var dcOrders = (await orderWebApiClient.GetOrders(
@@ -113,7 +130,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 qLimit: qLimit,
                 responseGroups: responseGroups)).ReadAsSync();
 
-            return List2(Mapper.Map<List<Order>>(dcOrders.Items), dcOrders.TotalCount);
+            var mappedOrders = Mapper.Map<List<Order>>(dcOrders.Items);
+
+            
+            if (extFilter.OrderPaymentsByCapture)
+            {
+                var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
+                var orders = (await orderHelper.OrderPaymentsByCapture(mappedOrders));
+                return List2<Order>(orders);
+            }
+
+            
+            return List2(mappedOrders, dcOrders.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "addShoppersCartItems")]
@@ -159,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 Items = order.Items.Select(x => new CommerceRuntime.Contracts.Orders.OrderItem
                 {
-                    Product = new Product { ProductCode = x.Product.ProductCode, VariationProductCode = x.Product.VariationProductCode, BundledProducts = x.Product.BundledProducts, Options = x.Product.Options},
+                    Product = new Product { ProductCode = x.Product.ProductCode, VariationProductCode = x.Product.VariationProductCode, BundledProducts = x.Product.BundledProducts, Options = x.Product.Options },
                     Quantity = x.Quantity,
                     Data = x.Data,
                     FulfillmentLocationCode = x.FulfillmentLocationCode,
@@ -178,14 +206,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 CurrencyCode = order.CurrencyCode
             };
 
-            
+
 
             orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = order.SiteId);
 
- 
+
             var createdOrder = (await orderWebApiClient.CreateOrder(newOrder)).ReadAsAsync().Result;
             (_apiContext as ApiContext).SiteId = order.SiteId;
-            var returnOrder = (await SetCustomer(createdOrder,new SetCustomerAccountIdArgs { CustomerAccountId = createdOrder.CustomerAccountId.Value, OrderId = createdOrder.Id, UserId = createdOrder.UserId}));
+            var returnOrder = (await SetCustomer(createdOrder, new SetCustomerAccountIdArgs { CustomerAccountId = createdOrder.CustomerAccountId.Value, OrderId = createdOrder.Id, UserId = createdOrder.UserId }));
             return List2<Order>(returnOrder);
         }
 
@@ -207,11 +235,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft)
+        private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft, FilterCollection callExtFilter)
         {
             var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var pagedShipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED")).ReadAsSync();
+            if (pagedShipments != null)
+            {
+                var shipments = pagedShipments.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<ResourceOfShipment>();
+                order.Shipments = Mapper.Map<List<DCs.Shipment>>(shipments).OrderByDescending(x => x.Number).ToList();
+            }
 
             var single = order.Map<Order>();
             if (single.CustomerId.HasValue)
@@ -230,10 +265,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (custTask.Success)
                     single.Customer = custTask.Items.FirstOrDefault();
 
+                if (callExtFilter.OrderPaymentsByCapture)
+                {
+                    var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
+                    var orders = (await orderHelper.OrderPaymentsByCapture(new List<Order>() { single }));
+                    return List2<Order>(orders);
+                }
             }
 
             return List2<Order>(single);
         }
+
+
+       
 
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()
@@ -258,14 +302,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Order>> AcceptOrder(OrderIdArgs args)
         {
             var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "AcceptOrder" })).ReadAsSync();
-
-            return Single2(dc.Map<Order>());
-        }
-
-        [HttpPostRoute(UriTemplate = "cancel")]
-        public async Task<Response<Order>> CancelOrder(OrderIdArgs args)
-        {
-            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
 
             return Single2(dc.Map<Order>());
         }

@@ -10,6 +10,8 @@ using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
 using System.Linq;
+using AutoMapper;
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/rolebehaviors", SuppressDescriptorGeneration = true)]
@@ -133,11 +135,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "")]
-        public async Task<Response<List<Role>>> GetAll()
+        public async Task<Response<List<Role>>> GetAll([FromUri] PagingParamaters pagingParams)
         {
-            var roles = await _permissionsRepository.GetRoles();
-
-            return roles.IsNullOrEmpty() ? EmptyList2<Role>() : List2(roles);
+            var roles = await _permissionsRepository.GetRoles(pagingParams?.startIndex, pagingParams?.pageSize);
+            var pagedRoles = (Mapper.Map<List<Role>>(roles.Items));
+            return pagedRoles.IsNullOrEmpty() ? EmptyList2<Role>() : List2(pagedRoles, roles.TotalCount);
         }
 
 		[HttpGetRoute(UriTemplate = "role/{id}")]

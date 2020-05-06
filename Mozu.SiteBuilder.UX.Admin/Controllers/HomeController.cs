@@ -37,7 +37,9 @@ using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -59,6 +61,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
+        private readonly string _adminNGBuildDirectory = "adminng";
+        private readonly string _quotes = "quotes";
+        private readonly string _locationGroups = "locationGroup";
+        private readonly string _fulfiller = "fulfiller";
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)
         {
@@ -93,8 +99,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             try
             {
-                ActionResult res = await GetIndex();
-                return Request.CreateResponse(HttpStatusCode.OK, res);
+                var routeURLData = Convert.ToString(this.ControllerContext.RouteData.Values["url"]);
+                var locationandQuotesFilter = !string.IsNullOrEmpty(routeURLData)?(routeURLData.Contains(_quotes) || routeURLData.Contains(_locationGroups) || routeURLData.Contains(_fulfiller)) :false;
+                if (string.IsNullOrEmpty(routeURLData) || locationandQuotesFilter)
+                {
+                    ActionResult res = await GetIndexNG();
+                   return Request.CreateResponse(HttpStatusCode.OK, res);
+                }
+                else
+                {
+                    ActionResult res = await GetIndex();
+                    return Request.CreateResponse(HttpStatusCode.OK, res);
+                }
             }
             catch (Exception ex)
             {
@@ -163,6 +179,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             //.Where(ri => ri != null && ri.ISOCurrencySymbol == ISOCurrencySymbol)
             //.Select(ri => ri.CurrencySymbol)
             //.FirstOrDefault();
+        }
+
+        private async Task<ActionResult> GetIndexNG()
+        {
+            GetMinifiedAssetsGuid();
+            return RazorView("IndexNG");
+        }
+
+        private void GetMinifiedAssetsGuid()
+        {
+            //DirectoryInfo adminNGDirectory = new DirectoryInfo(HttpContext.Server.MapPath(@"~\" + this._adminNGBuildDirectory));
+            var files = Directory.EnumerateFiles(HttpContext.Server.MapPath(@"~\" + this._adminNGBuildDirectory),"*.*")
+                        .Where(eachFile => eachFile.EndsWith(".js") || eachFile.EndsWith(".css")).ToList();
+
+            files.ForEach(eachFile =>
+            {
+                string fileName = eachFile.Substring(eachFile.LastIndexOf("\\") + 1);
+                ViewData["runtimejs"] = fileName.Contains("runtime") ? fileName : ViewData["runtimejs"];
+                ViewData["polyfillsjs"] = fileName.Contains("polyfills") ? fileName : ViewData["polyfillsjs"];
+                ViewData["scriptsjs"] = fileName.Contains("scripts") ? fileName : ViewData["scriptsjs"];
+                ViewData["mainjs"] = fileName.Contains("main") ? fileName : ViewData["mainjs"];
+                ViewData["stylescss"] = fileName.Contains("styles") ? fileName : ViewData["stylescss"];
+            });
+
         }
 
         private async Task<ActionResult> GetIndex()
@@ -244,26 +284,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntityContainers("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
-           
-            
+
+
 
 
             var user = new User
-                       {
-                           BehaviorIds = _apiContext.UserClaims.BehaviorIds,
-                           EmailAddress = userDC.EmailAddress,
-                           FirstName = userDC.FirstName,
-                           LastName = userDC.LastName,
-                           Id = _apiContext.UserClaims.UserId
-                       };
+            {
+                BehaviorIds = _apiContext.UserClaims.BehaviorIds,
+                EmailAddress = userDC.EmailAddress,
+                FirstName = userDC.FirstName,
+                LastName = userDC.LastName,
+                Id = _apiContext.UserClaims.UserId,
+                IsFulfillerUser = _apiContext.IsFulfillerUserWithOrderAccess()
+            };
 
 
             var taContext = Mapper.Map<TaContext>(tenant);
             var logzuUriBuilder = new UriBuilder(_settings.ZuKeeperPath);
             logzuUriBuilder.Path = "mozu.logzu";
             taContext.LogzuUrl = logzuUriBuilder.ToString();
-            taContext.HasUnifiedAdmin = HasUnifiedAdmin(tenant);
-
+            taContext.HasLegacyAdmin = HasLegacyAdmin(tenant);
+            taContext.LoginURI = _settings.LoginPath + "/cas/login/";
             Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();
@@ -350,7 +391,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
             if (string.Equals(ConfigurationManager.AppSettings["use_compiled_taco"], "true", StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
             {
-                
                 return RazorView("Index_Compiled");
             }
             
@@ -358,12 +398,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
         }
 
-        private bool HasUnifiedAdmin(Tenant.Contracts.Tenant tenant)
+        // There is a copy of this method in UserController. Keep both methods in sync.
+        private bool HasLegacyAdmin(Tenant.Contracts.Tenant tenant)
         {
             var isUnifiedValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("IsUnified"))?.Value.ToString();
-            var kubeInstanceIdValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("mozu.reverseproxy.kube_instance_id"))?.Value.ToString();
+            var legacyInstanceIdValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("mozu.reverseproxy.legacy_instance_id"))?.Value.ToString();
 
-            return isUnifiedValue.EqualsIgnoreCase("true") && !string.IsNullOrEmpty(kubeInstanceIdValue);
+            return isUnifiedValue.EqualsIgnoreCase("true") && !string.IsNullOrEmpty(legacyInstanceIdValue);
         }
 
         private string GetCdn()

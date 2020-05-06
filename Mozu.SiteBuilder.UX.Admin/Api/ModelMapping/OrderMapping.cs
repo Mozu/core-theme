@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcOrderReturnableItem_to_OrderReturnableItem();
             Map_BundledProduct_to_OrderItem();
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
+            //Map_DcProductStock_to_OrderItemStock();
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
             Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment();
@@ -205,23 +206,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out OrderSummary and AuthorizationInfo object
                     int unshippedItemCount = 0, shippedItemCount = 0, unpickedupItemCount = 0, pickedupItemCount = 0;
 
-                    var totalAmount = dc.Total.GetValueOrDefault(0);
+                    var hasShipments = dc.Shipments != null && dc.Shipments.Any();
+
+                    var totalAmount = hasShipments ? dc.Shipments.Where(_=>_.ShipmentType != "Transfer").Sum(x=>x.Total) : dc.Total.GetValueOrDefault(0);
                     var amountCollected = dc.TotalCollected;
                     var balance = totalAmount - amountCollected;
 
                     Func<OrderItem, int> getItemCount = i => (i.ProductUsage != "Bundle" ? 1 : 0) + (i.BundledProducts?.Sum(bp => bp.Quantity) ?? 0);
                     var totalItemCount = order.Items.Sum(i => getItemCount(i) * i.Quantity);
 
-                    if (order.Packages != null)
-                    {
-                        shippedItemCount = order.Packages.Where(i => i.Status == "Fulfilled").Sum(i => i.Items.Sum(package => package.Quantity));
-                        unshippedItemCount = order.Packages.Where(i => i.Status != "Fulfilled").Sum(i => i.Items.Sum(package => package.Quantity));
-                    }
 
-                    if (order.Pickups != null)
+                    if (hasShipments)
                     {
-                        pickedupItemCount = order.Pickups.Where(i => i.Status == "Fulfilled").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
-                        unpickedupItemCount = order.Pickups.Where(i => i.Status != "Fulfilled").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
+                        totalItemCount = order.Shipments.Where(i => i.ShipmentStatus != "CANCELED" && i.ShipmentStatus != "REASSIGNED" && i.ShipmentType != "Transfer").Sum(i => i.Items.Sum(item => item.Quantity));
+                        shippedItemCount = order.Shipments.Where(i => i.ShipmentType == "STH" && i.ShipmentStatus == "FULFILLED" && i.ShipmentStatus != "CANCELED").Sum(i => i.Items.Sum(item => item.Quantity));
+                        unshippedItemCount = order.Shipments.Where(i =>i.ShipmentType == "STH" && i.ShipmentStatus != "FULFILLED" && i.ShipmentStatus != "CANCELED" ).Sum(i => i.Items.Sum(item => item.Quantity));
+                        pickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS" && i.ShipmentStatus == "FULFILLED" && i.ShipmentStatus != "CANCELED" && i.ShipmentType != "Transfer").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
+                        unpickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS"  && i.ShipmentStatus != "FULFILLED" && i.ShipmentStatus != "CANCELED" && i.ShipmentType != "Transfer").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
                     }
 
                     var digitallyFulfilledItemCount = order.DigitalPackages?.Sum(p => p.Items.Sum(i => i.Quantity)) ?? 0;
@@ -577,7 +578,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
                 .ForMember(x => x.GoodsType, op => op.ResolveUsing(dc => dc.GoodsType))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-
+                .ForMember(x => x.Stock, op => op.ResolveUsing(dc => dc.Stock))
                 .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
                 .ForMember(x => x.ProductReservationId, op => op.ResolveUsing(dc => dc.ProductReservationId))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Measurements?.Weight?.Value))
@@ -610,6 +611,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             CreateMap<OrdersDC.OrderItem, OrderItem>()
                 .ForMember(x => x.ProductUsage, opt => opt.ResolveUsing(dc => dc.Product?.ProductUsage))
                 .ForMember(x => x.BundledProducts, op => op.ResolveUsing(dc => dc.Product?.BundledProducts))
+                .ForMember(x => x.Stock, op => op.ResolveUsing(dc => dc.Product?.Stock))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product != null
                     ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode)
@@ -688,6 +690,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SalePrice, op => op.Ignore())
                 .ForMember(x => x.ActiveDiscounts, op => op.Ignore())
                 .ForMember(x => x.Discounts, op => op.Ignore())
+                .ForMember(x => x.Stock, op => op.Ignore())
                 .ForMember(x => x.ActiveShippingDiscount, op => op.Ignore())
                 .ForMember(x => x.ShippingDiscounts, op => op.Ignore())
                 .ForMember(x => x.Subtotal, op => op.Ignore())
@@ -745,6 +748,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
         }
+
+        //private void Map_DcProductStock_to_OrderItemStock()
+        //{
+        //    CreateMap<ProductsDC.basProductStock, OrderItemStock>();
+        //}
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()
         {
@@ -906,6 +914,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.GatewayAVSResponse, op => op.ResolveUsing(dc => dc.GatewayAVSCodes))
                 .ForMember(x => x.GatewayCVV2Response, op => op.ResolveUsing(dc => dc.GatewayCVV2Codes))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : null))
                 .ForMember(x => x.PaymentId, op => op.ResolveUsing(dc => dc.PaymentId))
                 .ForMember(x => x.IsManual, op => op.ResolveUsing(dc => dc.IsManual))
                 .ForMember(x => x.ReturnId, op => op.ResolveUsing(dc => dc.ReturnId))
@@ -939,7 +948,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                 .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => dc.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.ResolveUsing(dc => dc.ShippingMethodName))
-                .ForMember(x => x.TrackingNumber, op => op.ResolveUsing(dc => dc.TrackingNumber))
+                //.ForMember(x => x.TrackingNumber, op => op.ResolveUsing(dc => dc.TrackingNumber))
                 .ForMember(x => x.PackagingType, op => op.ResolveUsing(dc => string.IsNullOrEmpty(dc.PackagingType) ? "CUSTOM" : dc.PackagingType))
                 .ForMember(x => x.Height, op => op.ResolveUsing(dc => dc.Measurements?.Height))
                 .ForMember(x => x.Length, op => op.ResolveUsing(dc => dc.Measurements?.Length))
@@ -1071,7 +1080,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingMethodCode, op => op.ResolveUsing(x => x.ShippingMethodCode))
                 .ForMember(dc => dc.ShippingMethodName, op => op.ResolveUsing(x => x.ShippingMethodName))
                 .ForMember(dc => dc.Status, op => op.ResolveUsing(x => x.Status))
-                .ForMember(dc => dc.TrackingNumber, op => op.ResolveUsing(x => x.TrackingNumber))
+                //.ForMember(dc => dc.TrackingNumber, op => op.ResolveUsing(x => x.TrackingNumber))
                 .ForMember(dc => dc.Measurements, op => op.ResolveUsing(x => new CommerceDC.PackageMeasurements
                 {
                     Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },
@@ -1135,7 +1144,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           ProductCode = x.ProductCode,
                           Name = x.ProductName,
                           FulfillmentStatus = x.FulfillmentStatus,
-                          Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options)
+                          Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options),
                           // other stuff (price/measurements) are not important to make service calls.
                       };
                   }))

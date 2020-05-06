@@ -1,0 +1,44 @@
+{
+	"pickWaveId": "613135",
+	"tenantId": 2285,
+	"siteId": 4427,
+	"pickWaveNumber": 613135,
+	"parentPickWaveNumber": 2,
+	"recoveryPickWaveNumber": 3,
+	"userId": "hewwo",
+	"shipmentNumbers": [],
+	"fulfillmentLocationCode": "BWH",
+	"pickWaveStatus": "",
+	"pickType": "",
+	"maxShipments": "",
+	"shipmentType": "",
+	"contents": [
+		{
+			"contentId": "contentId1",
+			"orderNumber": 245,
+			"shipmentNumber": 245,
+			"itemLineId": 342,
+			"inventoryId": 338,
+			"quantity": 2,
+			"actualQuantity": 2,
+			"status": "IN_PROGRESS",
+			"binId": 500,
+			"binName": "Test Bin",
+			"optionAttributeFQN": "",
+			"productCode": "MS-SKI-BND-005",
+			"variationProductCode": "MS-SKI-BND-005",
+			"partNumber": "part-test",
+			"upc": "upc-test",
+			"sku": "sku-test",
+			"imageUrl":"//cdn-sb.mozu.com/2295-2527/cms/2527/files/116bedf3-1f32-44d6-85af-ee57c361903b",
+			"name": "Marker Jester 130 Downhill Ski Bindings",
+			"auditInfo ": {}
+		}
+	],
+	"auditInfo ": {
+        "updateDate": "2020-01-17T15:42:32.374Z",
+        "createDate": "2020-01-17T15:42:32.374Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+		"createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+	}
+}

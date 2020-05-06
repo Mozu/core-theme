@@ -384,7 +384,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
 
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
-            editMode: true,
+            editMode: this.isOrderEditable(),
             flex: 1,
             actionColumnWidth: me.actionColumnWidth,
             record: me.record,
@@ -497,9 +497,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     checkAddItemToolbar: function (isSave) {
         var me = this,
             msg;
-
         // if user has valid add item data prompt them to add the item;
-        if (me.detailGrid.addProductToolbar.isValid() && !me.detailGrid.addInProgress) {
+        if (me.detailGrid.addProductToolbar && me.detailGrid.addProductToolbar.isValid() && !me.detailGrid.addInProgress) {
             msg = (isSave) ? 'Do you want to add the configured order item before saving this order?' : 'Do you want to add the configured item before closing the order editor?'
 
             Ext.MessageBox.show({
@@ -587,6 +586,14 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         }
 
         
+    },
+
+    isOrderEditable: function () {        
+        var orderStatus = this.record.get('orderStatus');
+        if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
+            return true;
+        else
+            return false;
     },
 
     constrainResizer: function () {

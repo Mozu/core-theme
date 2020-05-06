@@ -253,13 +253,18 @@ Ext.define('Taco.view.role.EditModal', {
             roleBehaviors.push(item);
         }, this);
 
+        var roleData = {
+            id: this.record.get('id'),
+            name: name,
+            isEditable: true,
+            owners: this.record.get('owners'),
+            resources: this.record.get('resources'),
+            tags: this.record.get('tags')
+        };
+
         Ext.Ajax.request({
             url: '/admin/app/roles/update',
-            jsonData: {
-                id: this.record.get('id'),
-                name: name,
-                isEditable: true
-            },
+            jsonData: roleData ,
             success: function (response) {
                 var res = Ext.JSON.decode(response.responseText);
                 if (res.success) {

@@ -753,25 +753,27 @@ Ext.define('Taco.view.order.Header', {
     },
 
     changeAddress: function (focusAfterCloseCmp) {
-        var me = this;
-        var customerRecord = this.record.getCustomer();
-        customerRecord.phantom = false;
-        Ext.create('Taco.view.customers.modal.Contacts', {
-            record: customerRecord,
-            order: this.record,
-            listeners: {
-                scope: me,
-                afterclose: function () {
-                    if (focusAfterCloseCmp) {
-                        focusAfterCloseCmp.focus();
+        if (this.record.get('isUnified')) {
+            var me = this;
+            var customerRecord = this.record.getCustomer();
+            customerRecord.phantom = false;
+            Ext.create('Taco.view.customers.modal.Contacts', {
+                record: customerRecord,
+                order: this.record,
+                listeners: {
+                    scope: me,
+                    afterclose: function () {
+                        if (focusAfterCloseCmp) {
+                            focusAfterCloseCmp.focus();
+                        }
+                    },
+                    aftersaveclose: function () {
+                        me.fireEvent('addresschanged', me, me.record);
+                        me.updateHeader();
                     }
-                },
-                aftersaveclose: function () {
-                    me.fireEvent('addresschanged', me, me.record);
-                    me.updateHeader();
                 }
-            }
-        });
+            });
+        }
     },
 
     changeEmailAddress: function (focusAfterCloseCmp) {

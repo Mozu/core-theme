@@ -1,0 +1,42 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Kibo Admin</title>
+    <base href="/admin/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="adminng/favicon.ico">
+
+    <script type="text/javascript">
+        window.resourcesVersion = '20181227';
+    </script>
+    <meta name="theme-color" content="#1976d2">
+    <link rel="manifest" href="adminng/manifest.json">
+    <link rel="json" type="json" href="adminng/assets/i18n/en.json">
+    <link rel="stylesheet" href="adminng/@ViewData["stylescss"]">
+
+</head>
+<body>
+    <unified-admin-app>
+        <div id="appInitloadingWidget" style="opacity: 0.8;filter:alpha(opacity=80);position:fixed;top:0;width:100%;height:100%;z-index:10000;">
+            <img alt="Loading" src="adminng/assets/Images/spinner1.gif" style="padding-left:50%;padding-top:25%" />
+        </div>
+    </unified-admin-app>
+    <noscript>
+        <h3 style="color: #673ab7; font-family: Helvetica; margin: 2rem;">
+            Sorry, but app is not available without javascript
+        </h3>
+    </noscript>
+
+    <script type="text/javascript" src="adminng/ngsw-worker.js"></script>
+    <script type="text/javascript" src="adminng/safety-worker.js"></script>
+    <script type="text/javascript" src="adminng/worker-basic.min.js"></script>
+
+    <script type="text/javascript" src="adminng/@ViewData["runtimejs"]"></script>
+    <script type="text/javascript" src="adminng/@ViewData["polyfillsjs"]"></script>
+    <script type="text/javascript" src="adminng/@ViewData["scriptsjs"]"></script>
+    <script type="text/javascript" src="adminng/@ViewData["mainjs"]"></script>
+
+</body>
+</html>

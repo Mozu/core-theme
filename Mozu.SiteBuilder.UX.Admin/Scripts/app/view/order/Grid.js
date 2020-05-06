@@ -13,12 +13,12 @@ Ext.define('Taco.view.order.Grid', {
     ],
 
     launchEditorOnClick: true,
-    
+
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Order',
 
     enableNavHeader: true,
-    
+
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
@@ -32,35 +32,35 @@ Ext.define('Taco.view.order.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
     enableBulkActions: true,
-    createButtonText: "Create New Order",
+    createButtonText: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.create_new_order,
 
     showActionsColumn: true,
 
     hideSearchToolbar: false,
-    
-    title: "Orders",
+
+    title: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.orders,
 
     autoScroll: true,
 
     itemId: 'taco-order-grid',
 
-    advancedSearchConfig : {
+    advancedSearchConfig: {
         advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
-        
+
         quickFilterData: [
-            [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentStatus: 'Unpaid,Pending', orderStatus: 'Open' }, 'Unpaid Orders'],
-            [{ paymentStatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', orderType: 'Online' }, 'Pending Online Orders'], 
-            [{ orderStatus: 'Pending', orderType: 'Offline' }, 'Pending Offline Orders'], 
-            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
-            [{ returnStatus: 'InProgress' }, 'Returns in Progress'],
-            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
-            [{ orderStatus: 'Errored' }, 'Errored Orders'],
-            [{}, 'All Orders']
+            [{ orderStatus: 'Open' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.open_orders],
+            [{ paymentStatus: 'Unpaid,Pending', orderStatus: 'Open' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.unpaid_orders],
+            [{ paymentStatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.paid],
+            [{ orderStatus: 'Pending', orderType: 'Online' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.pending_online_orders],
+            [{ orderStatus: 'Pending', orderType: 'Offline' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.pending_offline_orders],
+            [{ fulfillmentStatus: 'Fulfilled' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.fulfilled_orders],
+            [{ returnStatus: 'InProgress' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.returns_in_progress],
+            [{ orderStatus: 'Cancelled' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.cancelled_orders],
+            [{ orderStatus: 'Errored' }, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.errored_orders],
+            [{}, Localizer.langResources.ORDERS.Orders.AdvancedFilter.QuickFilterData.all_orders]
         ],
 
-        emptySearchText: 'Search'
+        emptySearchText: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.search
     },
 
     onCreate: Ext.emptyFn,
@@ -68,46 +68,46 @@ Ext.define('Taco.view.order.Grid', {
     stateful: true,
     stateId: 'statefulOrderGrid',
     orderUpdateBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateItem'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updatePrice'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateDiscount'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateAttribute'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'manualAdjustment'
-                            }
+        model: 'Taco.model.Order',
+        behavior: 'update'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateItem'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updatePrice'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateDiscount'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateAttribute'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'manualAdjustment'
+    }
 
-                            ],
+    ],
 
     statics: {
         bulkActionResponses: {
-            'AcceptOrder': '{0} of {1} orders were accepted successfully.',
-            'CancelOrder': '{0} of {1} orders were cancelled successfully.',
-            'CapturePayment': '{0} of {1} payments were captured successfully.',
-            'Ship': '{0} of {1} orders were shipped successfully.'
+            'AcceptOrder': '{0} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.of + ' {1} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.accept_message,
+            'CancelOrder': '{0} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.of + ' {1} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.cancel_message,
+            'CapturePayment': '{0} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.of + ' {1} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.capture_message,
+            'Ship': '{0} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.of + ' {1} ' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.ship_message
         }
     },
-        
+
     initComponent: function () {
         var me = this;
-        
         // need to override the createButtonCfg;
         me.createButtonCfg = me.getCreateButtonConfig();
+
 
         this.columns = this.getColumnConfig();
 
@@ -122,15 +122,15 @@ Ext.define('Taco.view.order.Grid', {
 
         this.bulkActionConfig = {
             onMenuShow: this.getBulkActions,
-            onMenuHide: function() {
-                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function(id) { 
+            onMenuHide: function () {
+                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function (id) {
                     this.down(id).disable();
                 }, this);
             },
             actions: [
                 {
                     itemId: 'AcceptOrder',
-                    text: 'Accept',
+                    text: Localizer.langResources.ORDERS.Orders.OrderDetails.BulkActionButton.accept,
                     disabled: true,
                     scope: this,
                     requiredBehaviors: this.orderUpdateBehaviors,
@@ -140,17 +140,17 @@ Ext.define('Taco.view.order.Grid', {
                 },
                 {
                     itemId: 'CancelOrder',
-                    text: 'Cancel',
+                    text: Localizer.langResources.ORDERS.Orders.OrderDetails.BulkActionButton.cancel,
                     disabled: true,
                     scope: this,
                     requiredBehaviors: this.orderUpdateBehaviors,
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
-                }, 
+                },
                 {
                     itemId: 'CapturePayment',
-                    text: 'Capture',
+                    text: Localizer.langResources.ORDERS.Orders.OrderDetails.BulkActionButton.capture,
                     disabled: true,
                     scope: this,
                     requiredBehaviors: [{
@@ -164,10 +164,10 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('CapturePayment');
                     }
-                }, 
+                },
                 {
                     itemId: 'Ship',
-                    text: 'Ship',
+                    text: Localizer.langResources.ORDERS.Orders.OrderDetails.BulkActionButton.ship,
                     disabled: true,
                     scope: this,
                     requiredBehaviors: [{
@@ -185,12 +185,23 @@ Ext.define('Taco.view.order.Grid', {
 
             ]
         };
-        
+
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+
+            var dataViewModeHeader = {
+                'x-vol-dataview-mode': 'Live'
+            };
+
+            if (options && options.headers) {
+                Ext.apply(options.headers, dataViewModeHeader);
+            }
+        }, me, { destroyable: true });
+
         me.callParent(arguments);
 
     },
 
-    onMenuHide: function() { 
+    onMenuHide: function () {
         alert('ho');
     },
 
@@ -199,11 +210,11 @@ Ext.define('Taco.view.order.Grid', {
         var selection = selmodel.getSelection();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
-        Ext.Array.each(allAvailableBulkActions, function(itemId) {
+        Ext.Array.each(allAvailableBulkActions, function (itemId) {
             me.down('#' + itemId).enable();
         }, me);
     },
-    
+
     doBulkAction: function (action) {
         var selection = this.getSelectionModel().getSelection();
         var context = Taco.app.context.getCurrent();
@@ -233,7 +244,7 @@ Ext.define('Taco.view.order.Grid', {
         Ext.Ajax.request(config);
     },
 
-    getMasterCatalogId: function(ctx, siteId) {
+    getMasterCatalogId: function (ctx, siteId) {
         var masterCatalog = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
             return Ext.Array.some(mc.sites, function (site) {
                 return site.id === siteId;
@@ -298,15 +309,26 @@ Ext.define('Taco.view.order.Grid', {
             {
                 stateId: 'orderNumber',
                 dataIndex: 'orderNumber',
-                text: 'Order Number',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.order_number,
                 flex: 1,
                 minWidth: 100,
                 width: 100
             },
             {
+                stateId: 'externalId',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.external_order_id,
+                dataIndex: 'externalId',
+                itemId: 'externalId',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: true,
+                hidden: true
+            },
+            {
                 stateId: 'parentCheckoutNumber',
                 dataIndex: 'parentCheckoutNumber',
-                text: 'Order Reference Number',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.order_reference_number,
                 flex: 1,
                 minWidth: 100,
                 width: 100,
@@ -315,7 +337,7 @@ Ext.define('Taco.view.order.Grid', {
             {
                 stateId: 'submittedDate',
                 dataIndex: 'submittedDate',
-                text: 'Submitted Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.submitted_date,
                 flex: 1,
                 minWidth: 180,
                 xtype: 'datecolumn',
@@ -323,7 +345,7 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'createDate',
                 dataIndex: 'createDate',
-                text: 'Create Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.create_date,
                 flex: 1,
                 minWidth: 180,
                 xtype: 'datecolumn',
@@ -332,7 +354,7 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'firstName',
                 dataIndex: 'billingContact',
-                text: 'First Name',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.first_name,
                 flex: 1,
                 width: 120,
                 sortable: false,
@@ -355,7 +377,7 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'lastName',
                 dataIndex: 'billingContact',
-                text: 'Last Name',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.last_name,
                 flex: 1,
                 minWidth: 120,
                 width: 120,
@@ -379,7 +401,7 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'orderTotal',
                 dataIndex: 'total',
-                text: 'Order Total',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.order_total,
                 renderer: function (value, metaData, record) {
                     return record.formatCurrency(value);
                 },
@@ -389,7 +411,7 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'orderStatus',
                 dataIndex: 'orderStatus',
-                text: 'Order Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.order_status,
                 flex: 1,
                 minWidth: 100,
                 width: 100,
@@ -407,14 +429,14 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'paymentStatus',
                 dataIndex: 'paymentStatus',
-                text: 'Payment Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.payment_status,
                 flex: 1,
                 minWidth: 100,
                 width: 100
             }, {
                 stateId: 'fulfillmentStatus',
                 dataIndex: 'fulfillmentStatus',
-                text: 'Fulfillment Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.fullfillment_status,
                 flex: 1,
                 minWidth: 100,
                 width: 100,
@@ -422,14 +444,14 @@ Ext.define('Taco.view.order.Grid', {
             }, {
                 stateId: 'returnStatus',
                 dataIndex: 'returnStatus',
-                text: 'Return Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.return_status,
                 flex: 1,
                 minWidth: 100,
                 width: 100,
                 sortable: false
             }, {
                 stateId: 'orderType',
-                text: 'Order Type',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.order_type,
                 dataIndex: "orderType",
                 flex: 1,
                 minWidth: 100,
@@ -437,7 +459,7 @@ Ext.define('Taco.view.order.Grid', {
                 sortable: true
             }, {
                 stateId: 'channelName',
-                text: 'Channel',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.channel,
                 flex: 1,
                 minWidth: 100,
                 width: 100,
@@ -447,7 +469,7 @@ Ext.define('Taco.view.order.Grid', {
                 }
             }, {
                 stateId: 'siteName',
-                text: 'SiteName',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.sitename,
                 dataIndex: "siteName",
                 flex: 1,
                 minWidth: 100,
@@ -456,7 +478,7 @@ Ext.define('Taco.view.order.Grid', {
                 sortable: false
             }, {
                 stateId: 'customerEmail',
-                text: 'Customer Email',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.customer_email,
                 dataIndex: 'billingContact',
                 flex: 1,
                 minWidth: 160,
@@ -468,7 +490,7 @@ Ext.define('Taco.view.order.Grid', {
                 }
             }, {
                 stateId: 'customerState',
-                text: 'Customer State',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.customer_state,
                 dataIndex: 'billingContact',
                 flex: 1,
                 minWidth: 100,
@@ -490,7 +512,7 @@ Ext.define('Taco.view.order.Grid', {
                 }
             }, {
                 stateId: 'paymentType',
-                text: 'Payment Type',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.payment_type,
                 dataIndex: 'payments',
                 flex: 1,
                 minWidth: 120,
@@ -501,11 +523,11 @@ Ext.define('Taco.view.order.Grid', {
                     if (Ext.isArray(value)) {
                         return Ext.Array.unique(value.map(function (val) { if (val.paymentType === "token") return val.tokenType; else return val.paymentType; }));
                     } else
-                       return null;
+                        return null;
                 }
             }, {
                 stateId: 'amountReceived',
-                text: 'Amount Received',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.amout_received,
                 dataIndex: 'authorizationInfo',
                 flex: 1,
                 minWidth: 120,
@@ -517,21 +539,21 @@ Ext.define('Taco.view.order.Grid', {
                 }
             }, {
                 stateId: 'remainingAmount',
-                text: 'Remaining Amount',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.remaining_amout,
                 dataIndex: 'authorizationInfo',
                 flex: 1,
                 minWidth: 120,
                 width: 120,
                 sortable: false,
                 hidden: true,
-                
+
                 renderer: function (value, metaData, record) {
                     var amount = record.get('total') - value.amountCollected;
                     return record.formatCurrency(amount);
                 }
             }, {
                 stateId: 'ipAddress',
-                text: 'IP Address',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.ip_address,
                 dataIndex: 'ipAddress',
                 flex: 1,
                 minWidth: 120,
@@ -540,7 +562,7 @@ Ext.define('Taco.view.order.Grid', {
                 hidden: true
             }, {
                 stateId: 'fraudScore',
-                text: 'Fraud Score',
+                text: Localizer.langResources.ORDERS.Orders.OrderDetails.GridHeader.fraud_score,
                 dataIndex: 'fraudScore',
                 itemId: 'fraudScore',
                 flex: 1,
@@ -559,7 +581,7 @@ Ext.define('Taco.view.order.Grid', {
                     xtype: 'taco.menucolumn',
                     menuItems: [
                         {
-                            text: 'Edit',
+                            text: Localizer.langResources.ORDERS.Orders.OrderDetails.ActionsColumn.edit,
                             requiredBehaviors: me.orderUpdateBehaviors,
                             menuColumnHandler: function (item, eventData) {
                                 var page = eventData.grid.getParentPage(),
@@ -569,7 +591,7 @@ Ext.define('Taco.view.order.Grid', {
                                 Taco.core.StateManager.attemptNavigate('/admin/orders/edit/' + record.getId());
                             }
                         }, {
-                            text: 'Capture Payment',
+                            text: Localizer.langResources.ORDERS.Orders.OrderDetails.ActionsColumn.capture_payment,
                             itemId: 'capturePaymentAction',
                             requiredBehaviors: [{
                                 model: 'Taco.model.Order',
@@ -614,7 +636,7 @@ Ext.define('Taco.view.order.Grid', {
                                 this.disable();
                             }
                         }, {
-                            text: 'Cancel Order',
+                            text: Localizer.langResources.ORDERS.Orders.OrderDetails.ActionsColumn.cancel_order,
                             requiredBehaviors: me.orderUpdateBehaviors,
                             itemId: "cancelAction",
                             menuColumnHandler: function (item, eventData) {
@@ -625,12 +647,12 @@ Ext.define('Taco.view.order.Grid', {
                                     row = Ext.get(grid.getView().getNode(record));
 
                                 Ext.MessageBox.show({
-                                    title: 'Cancel Order',
+                                    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.cancel_order,
                                     // pushes the buttons to the right to be consistant with our dialog ux.
                                     rightJustifyButtons: true,
                                     // reverses the order of the buttons
                                     reverseOrder: true,
-                                    msg: 'Are you sure you want to cancel this order?',
+                                    msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_cancel_order,
                                     closable: false,
                                     buttons: Ext.Msg.YESNO,
                                     fn: function (rec) {
@@ -645,14 +667,14 @@ Ext.define('Taco.view.order.Grid', {
                                                     grid.setLoading(false);
                                                     var json = Ext.decode(response.responseText, true);
                                                     if (!json || !json.success) {
-                                                        Taco.app.fireEvent('setmessage', "Error canceling order", 'error');
+                                                        Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_canceling_order, 'error');
                                                         return;
                                                     }
                                                     record.reload();
                                                 },
                                                 failure: function (response) {
                                                     var json = Ext.decode(response.responseText, true),
-                                                        msg = (json && json.message) ? json.message : "Error canceling order";
+                                                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_canceling_order;
                                                     Taco.app.fireEvent('setmessage', msg, 'error');
                                                     grid.setLoading(false);
                                                 }
@@ -697,7 +719,7 @@ Ext.define('Taco.view.order.Grid', {
     // if multi site, need to make the create button trigger a menu that lists out all of the possible sites;
     getCreateButtonConfig: function () {
         var me = this;
-        
+
         // get site list
         var ctx = Taco.app.context,
             item,
@@ -731,7 +753,7 @@ Ext.define('Taco.view.order.Grid', {
         }
 
 
-        var createButtonConfig=  {
+        var createButtonConfig = {
             xtype: 'button',
             text: me.createButtonText,
             requiredBehaviors: {
@@ -741,7 +763,7 @@ Ext.define('Taco.view.order.Grid', {
             margin: "0 0 0 10",
             ui: 'action-primary',
             scale: 'medium',
-            hidden: !me.createButtonVisible || me.hasUnifiedAdmin(),
+            hidden: !me.createButtonVisible,
             itemId: 'createActionButton',
             handler: me.createActionHandler,
             scope: me
@@ -757,7 +779,7 @@ Ext.define('Taco.view.order.Grid', {
                     showSeparator: false,
                     listeners: {
                         click: {
-                            fn: function (menu, menuItem, e) {                                
+                            fn: function (menu, menuItem, e) {
                                 if (!menuItem) {
                                     return
                                 }
@@ -786,14 +808,9 @@ Ext.define('Taco.view.order.Grid', {
         return createButtonConfig
     },
 
-    hasUnifiedAdmin: function () {
-        var taContext = Taco.app.context;
-        return taContext.getHasUnifiedAdmin();
-    },
-
     doCreate: function () {
         var me = this;
-        
+
         var ctx = Taco.app.context.getCurrentContext(),
             record;
 
@@ -803,9 +820,9 @@ Ext.define('Taco.view.order.Grid', {
         }
 
         Taco.app.setLoading();
-        
 
-        
+
+
 
         record = Ext.create('Taco.model.Order');
 
@@ -813,7 +830,7 @@ Ext.define('Taco.view.order.Grid', {
             callback: function (records, operation, success) {
 
                 if (!success) {
-                    Taco.app.fireEvent('setmessage', "Error creating order", 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_creating_order, 'error');
                     Taco.app.setLoading(false);
                     return;
                 }
@@ -831,5 +848,12 @@ Ext.define('Taco.view.order.Grid', {
             scope: this
         });
 
+    },
+
+    onDestroy: function (destroy) {
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
+        this.callParent(arguments);
     }
 });

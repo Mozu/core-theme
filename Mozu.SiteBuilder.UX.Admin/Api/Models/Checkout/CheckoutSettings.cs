@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         public string GiftCardProcessingType { get; set; }
 
         public List<DC.ThirdPartyPaymentSetting> ThirdPartyPaymentSettings { get; set; }
+
     }
 
     public class CardGateway

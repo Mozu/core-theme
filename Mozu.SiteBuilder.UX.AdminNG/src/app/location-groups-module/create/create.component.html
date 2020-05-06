@@ -1,0 +1,63 @@
+<div class="clearfix"></div>
+<spinner></spinner>
+<div>
+	<div class="scroll-container" id="scroll-container" (scroll)="scrollHandler($event)">
+		<div>
+			<div class="row subnav animated fadeInDown" #stickyMenu [class.sticky]="model.isSticky">
+				<ul>
+					<li><a (click)="scrollToTop(form1)">{{'LOCATIONGROUP.Tabs.locationGroup' | translate }}</a></li>
+					<li><a (click)="scrollToLocationGrid(form2)">{{'LOCATIONGROUP.Tabs.addLocations' | translate }}</a></li>
+				</ul>
+			</div>
+		</div>
+		<form [formGroup]="model.locationGroupForm">
+			<div class="main-container" id="main-container">
+				<div #form1 id="form1" class="row subform scroll-page">
+					<h4>{{'LOCATIONGROUP.FormLabels.locationGroup' | translate }}</h4>
+
+                    <div class="col-md-12 ">
+                        <div class="form-row col-md-6">
+                            <input type="text" required class=" inputText form-control subform-text" id="locationGroupName"
+                                   name="locationGroupName" formControlName="locationGroupName" />
+                            <span class="floating-label" [ngClass]="{'redfont':(!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched)}">{{'LOCATIONGROUP.FormLabels.name' | translate }}*</span>
+                            <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched)}">
+                            <span class="error" *ngIf="!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
+                        </div>
+                        <div class="form-row col-md-6">
+                            <input type="text" required class=" inputText form-control subform-text" id="locationGroupCode" [readonly]="model.formMode !== 'New'"
+                                   name="locationGroupCode" formControlName="locationGroupCode" />
+                            <span class="floating-label" [ngClass]="{'redfont':(!model.locationGroupForm.get('locationGroupCode').valid && model.locationGroupForm.get('locationGroupCode').touched)}">{{'LOCATIONGROUP.FormLabels.locationGroupCode' | translate }}*</span>
+                            <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!model.locationGroupForm.get('locationGroupCode').valid && model.locationGroupForm.get('locationGroupCode').touched)}">
+                            <span class="error" *ngIf="!model.locationGroupForm.get('locationGroupCode').valid && model.locationGroupForm.get('locationGroupCode').touched">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-row">
+                            <h5>{{'LOCATIONGROUP.FormLabels.sites' | translate }}</h5>
+                            <div class="form-row scroll-y">
+                                <label formArrayName="locationSites" class="checkbox-inline col-md-4"
+                                       *ngFor="let site of model.locationGroupForm.get('locationSites')['controls']; let eachSiteIndex = index">
+                                    <input type="checkbox" [formControlName]="eachSiteIndex" [formControl]="site" class="custom-control-input">
+                                    {{model.sitesLst[eachSiteIndex].name}}
+                                    <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+				<div #form2 id="form2" class="row subform scroll-page">
+					<h4>{{'LOCATIONGROUP.FormLabels.addLocations' | translate }}</h4>
+					<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
+					</physical-locations>
+					<locations-list class="col-md-4" [physicalLocation]="model.selectedPhysicalLocation"
+						[selectedLocationsLst]="model.selectedLocations" (locationSelected)="locationSelected($event)"
+						(locationUnselected)="locationUnselected($event)" (locationsChanged)="locationsChanged($event)">
+					</locations-list>
+					<selected-locations-list class="col-md-4" [selectedLocationsLst]="model.selectedLocations" 
+					(locationUnselected)="locationUnselected($event)"
+					(locationsChanged)="locationsChanged($event)">
+					</selected-locations-list>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

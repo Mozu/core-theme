@@ -66,6 +66,8 @@ Ext.define("Taco.view.website.misc.VariationGrid", {
 
   initComponent: function () {
     var me = this;
+    //We reset the store here because of the grid caching.
+    me.store = Taco.core.data.StoreManager.getOrCreate("Taco.store.EntityVariations");
     var tbconfig = {
       style: "padding-left:0px",
       items: [

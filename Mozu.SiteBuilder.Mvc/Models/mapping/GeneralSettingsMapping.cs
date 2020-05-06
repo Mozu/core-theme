@@ -1,17 +1,14 @@
+using AutoMapper;
+using Mozu.SiteBuilder.UX.Models.Settings;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Text.RegularExpressions;
-using AutoMapper;
-using Mozu.SiteBuilder.UX.Models.Settings;
-using Mozu.SiteSettings.General.Contracts.General;
-using Mozu.Tenant.Contracts;
-using Newtonsoft.Json;
-//using Stact.Routing.Nodes;
-using GDC = Mozu.SiteSettings.General.Contracts;
 using DC = Mozu.SiteSettings.Order.Contracts;
-using TimeZone = Mozu.Reference.Contracts.TimeZone;
+using GDC = Mozu.SiteSettings.General.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 {
@@ -20,13 +17,16 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         public GeneralSettingsMapping()
         {
             //  CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
-            CreateMap<Domain, SiteDomain>();
+            CreateMap<Mozu.Tenant.Contracts.Domain, SiteDomain>();
 
-            CreateMap<DC.ThirdPartyCredentialField, UX.Models.Settings.ThirdPartyCredentialField>();
+            CreateMap<DC.ThirdPartyCredentialField, UX.Models.Settings.ThirdPartyCredentialField>()
+                ;
 
-            CreateMap<DC.LocalizedContent, UX.Models.Settings.LocalizedContent>();
+            CreateMap<DC.LocalizedContent, UX.Models.Settings.LocalizedContent>()
+                ;
 
-            CreateMap<DC.VocabularyValue, UX.Models.Settings.VocabularyValue>();
+            CreateMap<DC.VocabularyValue, UX.Models.Settings.VocabularyValue>()
+                ;
 
             CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
                 .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
@@ -65,13 +65,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                 .ForMember(x => x.CustomerCheckoutType, opt => opt.MapFrom(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
-                .ForMember(x => x.IsPayPalEnabled, opt => opt.MapFrom(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
-                .ForMember(x => x.ExternalPaymentWorkflowSettings, opt =>
-                    opt.MapFrom(x => 
-                        x == null || x.PaymentSettings == null || x.PaymentSettings.ExternalPaymentWorkflowDefinitions == null ?
-                            new List<ExternalPaymentWorkflowSettings>() :
-                            Mapper.Map<List<ExternalPaymentWorkflowSettings>>(x.PaymentSettings.ExternalPaymentWorkflowDefinitions)))
-                .ForMember(x => x.VisaCheckout, opt => opt.MapFrom<GetVisaCheckoutSettings>())
+                .ForMember(x => x.IsPayPalEnabled, opt => opt.MapFrom(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => string.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
+                .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.MapFrom<GetExternalPaymentWorkflowSettings>())
+               .ForMember(x => x.VisaCheckout, opt => opt.MapFrom<GetVisaCheckoutSettings>())
                 .ForMember(x => x.PayByMail, opt => opt.MapFrom(x => x.PaymentSettings.PayByMail))
                 .ForMember(x => x.PurchaseOrder, opt => opt.MapFrom(x => x.PaymentSettings.PurchaseOrder))
                 .ForMember(x => x.PaymentProcessingFlowType, opt => opt.MapFrom(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
@@ -81,7 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.SupportedGiftCards, opt => opt.MapFrom<SupportedGiftCardsResolver>())
                 ;
 
-            CreateMap<TimeZone, UX.Models.Settings.TimeZone>()
+            CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
             CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
@@ -98,14 +94,14 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.CustomCdnHostName, op => op.MapFrom(x => x.CustomCdnHostName))
 
                 //  .ForMember(m => m.CdnCacheBustKey, op => op.MapFrom(x => x.CustomCdnHostName))
-
+                //  .ForMember(m => m.CheckoutSetting, op => op.MapFrom(x => x.CheckoutSetting))
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.MapFrom(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.IsMultishipEnabled, op => op.MapFrom(x => x.IsMultishipEnabled))
                 .ForMember(m => m.SupressedEmailTransactions, op => op.MapFrom(x => x.SupressedEmailTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
                 .ForMember(m => m.TemplateSiteId, op => op.MapFrom(dc => dc.TemplateSiteId))
-                .ForMember(m => m.BccEmailAddress, op => op.MapFrom(dc => dc.BccEmailAddress))
-                .ForMember(m => m.DesktopTheme, opt => opt.MapFrom(x => !string.IsNullOrEmpty(x.Theme) ?
+                 .ForMember(m => m.BccEmailAddress, op => op.MapFrom(dc => dc.BccEmailAddress))
+                 .ForMember(m => m.DesktopTheme, opt => opt.MapFrom(x => !string.IsNullOrEmpty(x.Theme) ?
                     Deserialize(x.Theme) :
                     new ThemeSelection()
                 ))
@@ -117,33 +113,32 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                     Deserialize(x.TabletTheme) :
                     null
                 ))
-                .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom(x => x.ViewAuthorizations.RequireAuthForLive))
-                .ForMember(m => m.EnforceSitewideSSL, opt => opt.MapFrom(x => x.ViewAuthorizations.EnforceSitewideSSL))
-                .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom(x => x.ViewAuthorizations.RequireAuthForPending));
+                .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForLive))
+                .ForMember(m => m.EnforceSitewideSSL, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.EnforceSitewideSSL))
+                .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending));
+            CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
+                .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
+                .ForMember(x => x.EnforceSitewideSSL, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.EnforceSitewideSSL))
+                .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
 
-            CreateMap<ViewAuthorizations, GeneralSettings>()
-                .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom(y => y.RequireAuthForLive))
-                .ForMember(x => x.EnforceSitewideSSL, opt => opt.MapFrom(y => y.EnforceSitewideSSL))
-                .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom(y => y.RequireAuthForPending));
+            CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.MapFrom((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
+                 .ForMember((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL, op => op.MapFrom((ViewModeToggles vm) => vm.EnforceSitewideSSL))
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.MapFrom((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
 
-            CreateMap<ViewModeToggles, ViewAuthorizations>()
-                .ForMember(va => va.RequireAuthForLive, op => op.MapFrom(vm => vm.IsRequiredLoginForLiveEnabled))
-                 .ForMember(va => va.EnforceSitewideSSL, op => op.MapFrom(vm => vm.EnforceSitewideSSL))
-                .ForMember(va => va.RequireAuthForPending, op => op.MapFrom(vm => vm.IsRequiredLoginForStagingEnabled));
+            CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.MapFrom((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
+                .ForMember((ViewModeToggles vm) => vm.EnforceSitewideSSL, op => op.MapFrom((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL))
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.MapFrom((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
-            CreateMap<ViewAuthorizations, ViewModeToggles>()
-                .ForMember(vm => vm.IsRequiredLoginForLiveEnabled, op => op.MapFrom(va => va.RequireAuthForLive))
-                .ForMember(vm => vm.EnforceSitewideSSL, op => op.MapFrom(va => va.EnforceSitewideSSL))
-                .ForMember(vm => vm.IsRequiredLoginForStagingEnabled, op => op.MapFrom(va => va.RequireAuthForPending));
-
-            CreateMap<GeneralSettings, ViewAuthorizations>()
-                .ForMember(x => x.RequireAuthForLive, opt => opt.MapFrom(gs => gs.IsRequiredLoginForLiveEnabled))
-                .ForMember(x => x.EnforceSitewideSSL, opt => opt.MapFrom(gs => gs.EnforceSitewideSSL))
-                .ForMember(x => x.RequireAuthForPending, opt => opt.MapFrom(gs => gs.IsRequiredLoginForStagingEnabled));
+            CreateMap<GeneralSettings, GDC.General.ViewAuthorizations>()
+                .ForMember(x => x.RequireAuthForLive, opt => opt.MapFrom((GeneralSettings gs) => gs.IsRequiredLoginForLiveEnabled))
+                .ForMember(x => x.EnforceSitewideSSL, opt => opt.MapFrom((GeneralSettings gs) => gs.EnforceSitewideSSL))
+                .ForMember(x => x.RequireAuthForPending, opt => opt.MapFrom((GeneralSettings gs) => gs.IsRequiredLoginForStagingEnabled));
 
             //   .ForMember(x => x.IPBlocks, o => o.MapFrom(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
             CreateMap<GeneralSettings, GDC.GeneralSettings>()
-                .ForMember(m => m.CacheSettings, op => op.MapFrom(x => new GDC.CacheSettings { CdnCacheBustKey = x.CdnCacheBustKey }))
+                .ForMember(m => m.CacheSettings, op => op.MapFrom(x => new GDC.CacheSettings() { CdnCacheBustKey = x.CdnCacheBustKey }))
                 //ignores
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
                 .ForMember(dc => dc.CustomCdnHostName, op => op.MapFrom(x => x.CustomCdnHostName))
@@ -157,12 +152,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.MobileTheme, op => op.MapFrom(x => (x.MobileTheme == null || string.IsNullOrEmpty(x.MobileTheme.Id)) ? null : Serialize(x.MobileTheme)))
                 .ForMember(dc => dc.TabletTheme, op => op.MapFrom(x => (x.TabletTheme == null || string.IsNullOrEmpty(x.TabletTheme.Id)) ? null : Serialize(x.TabletTheme)))
                 .ForMember(dc => dc.TemplateSiteId, op => op.MapFrom(x => x.TemplateSiteId))
-                .ForMember(dc => dc.ViewAuthorizations, opt => opt.MapFrom(x => Mapper.Map<ViewAuthorizations>(x)));
+                .ForMember(dc => dc.ViewAuthorizations, opt => opt.MapFrom((GeneralSettings x) => Mapper.Map<GDC.General.ViewAuthorizations>(x)));
 
-            CreateMap<GDC.EmailTransactionSettings, EmailTransactionSettings>();
-            CreateMap<EmailTransactionSettings, GDC.EmailTransactionSettings>();
+            CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
+            CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
         }
-        static readonly Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+        static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
         public static ThemeSelection Deserialize(string val)
         {
             if (string.IsNullOrEmpty(val))
@@ -186,7 +181,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
                 }
             }
-            return new ThemeSelection { Id = val };
+            return new ThemeSelection() { Id = val };
         }
 
         static string Serialize(ThemeSelection val)
@@ -201,27 +196,51 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             return Convert.ToBase64String(ms.ToArray());
         }
 
-        private class GetVisaCheckoutSettings : IValueResolver<DC.CheckoutSettings, CheckoutSettings, VisaCheckoutSettings>
+        private class GetExternalPaymentWorkflowSettings : IValueResolver<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings , List<ExternalPaymentWorkflowSettings>>
         {
-            public VisaCheckoutSettings Resolve(DC.CheckoutSettings source, CheckoutSettings destination, VisaCheckoutSettings destMember, ResolutionContext context)
+
+            public List<ExternalPaymentWorkflowSettings> Resolve(DC.CheckoutSettings source, UX.Models.Settings.CheckoutSettings destination, List<ExternalPaymentWorkflowSettings> destMember, ResolutionContext context)
             {
-                var ret = new VisaCheckoutSettings();
-                var externalPayment = source.PaymentSettings.ExternalPaymentWorkflowDefinitions?.Find(
-                    expwd =>
-                        string.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.VISA_CHECKOUT,
-                            System.StringComparison.OrdinalIgnoreCase));
-                if (externalPayment == null) return ret;
-                ret.IsEnabled = externalPayment.IsEnabled;
-                if (externalPayment.Credentials == null) return ret;
-                ret.ClientId = externalPayment.Credentials.Any(data => data.APIName == "CLIENTID")
-                    ? externalPayment.Credentials.Find(data => data.APIName == "CLIENTID").Value
-                    : string.Empty;
+                if (source == null || source.PaymentSettings == null || source.PaymentSettings.ExternalPaymentWorkflowDefinitions == null)
+                {
+                    return new List<ExternalPaymentWorkflowSettings>();
+                }
 
-                ret.ApiKey = externalPayment.Credentials.Any(data => data.APIName == "APIKEY")
-                    ? externalPayment.Credentials.Find(data => data.APIName == "APIKEY").Value
-                    : string.Empty;
+                return
+                    Mapper.Map<List<ExternalPaymentWorkflowSettings>>(source.PaymentSettings.ExternalPaymentWorkflowDefinitions);
 
-                return ret;
+            }
+        }
+
+        private class GetVisaCheckoutSettings : IValueResolver<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings, VisaCheckoutSettings>
+        {
+            public VisaCheckoutSettings Resolve(DC.CheckoutSettings source, UX.Models.Settings.CheckoutSettings destination, VisaCheckoutSettings destMember, ResolutionContext context)
+            {
+                var settings = new VisaCheckoutSettings();
+                if (source.PaymentSettings.ExternalPaymentWorkflowDefinitions != null)
+                {
+                    DC.ExternalPaymentWorkflowDefinition externalPayment = source.PaymentSettings
+                        .ExternalPaymentWorkflowDefinitions.Find(
+                            expwd =>
+                                string.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.VISA_CHECKOUT,
+                                    System.StringComparison.OrdinalIgnoreCase));
+                    if (externalPayment != null)
+                    {
+                        settings.IsEnabled = externalPayment.IsEnabled;
+                        if (externalPayment.Credentials != null)
+                        {
+                            settings.ClientId = externalPayment.Credentials.Any(data => data.APIName == "CLIENTID")
+                                ? externalPayment.Credentials.Find(data => data.APIName == "CLIENTID").Value
+                                : string.Empty;
+
+                            settings.ApiKey = externalPayment.Credentials.Any(data => data.APIName == "APIKEY")
+                                ? externalPayment.Credentials.Find(data => data.APIName == "APIKEY").Value
+                                : string.Empty;
+
+                        }
+                    }
+                }
+                return settings;
             }
         }
 
@@ -231,11 +250,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null &&(g.SiteGatewaySupportedCards != null && g.SiteGatewaySupportedCards.Any(x=>x.PaymentType.Equals("gc",StringComparison.OrdinalIgnoreCase)))
+                                                           where g.GatewayAccount != null && (g.SiteGatewaySupportedCards != null && g.SiteGatewaySupportedCards.Any(x => x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)))
                                                            select g;
 
-                
-                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x=> x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x=>x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x => x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x => x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
                 return cards;
             }

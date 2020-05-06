@@ -1,3 +1,5 @@
+﻿using Mozu.CommerceRuntime.Contracts.Checkouts;
+using Mozu.CommerceRuntime.Contracts.Clients;
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.CommerceRuntime.Contracts.Returns;
+using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
@@ -22,28 +26,49 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Core.Configuration;
 using Mozu.Core.Expressions;
-using Mozu.SiteBuilder.Mvc.Helpers;
-using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
-using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Newtonsoft.Json.Linq;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    public class ReturnEmail : Return
+    {
+        public bool IsMock { get; set; }
+        public Order Order { get; set; }
+    }
+
+    public class CheckoutEmail : Checkout
+    {
+        public List<Order> Orders { get; set; }
+        public List<Location.Contracts.Location> Locations { get; set; }
+    }
+
+    public class ShipmentEmail : Shipment
+    {
+        public Order Order { get; set; }
+        public Location.Contracts.Location StoreLocation { get; set; }
+    }
+    
+    public class OrderEmail : Order {
+        public List<Location.Contracts.Location> Locations { get; set; }
+    }
+
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -54,68 +79,142 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
-        private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
+        private IOrderWebApiClient _orderWebApiClient;
 
         static EmailController()
         {
             g_emailTypeInfos = new List<EmailTypeInfo>
-            {
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (ReturnEmail),
-                    Topic = Topics.ReturnCreated
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (ReturnEmail),
-                    Topic = Topics.ReturnAuthorized
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (ReturnEmail),
-                    Topic = Topics.ReturnRejected
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (ReturnEmail),
-                    Topic = Topics.ReturnClosed
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (ReturnEmail),
-                    Topic = Topics.ReturnChanged
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (Order),
-                    Topic = Topics.RefundCreated
-                },
-                new EmailTypeInfo
-                {
-                   ModelType = typeof (CheckoutEmail),
-                   Topic = Topics.CheckoutEmailTopic
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (Order),
-                    Topic = Topics.OrderEmailTopic
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (Order),
-                    Topic = Topics.OrderShippedTopic
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
-                    Topic = Topics.InStockNotification
-                },
-                new EmailTypeInfo
-                {
-                    ModelType = typeof (GiftCardEmailOrderCredit),
-                    Topic = Topics.GiftCardCreated
-                }
-           };
+                                   {
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnEmail),
+                                               Topic = Topics.ReturnCreated
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnEmail),
+                                               Topic = Topics.ReturnAuthorized
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnEmail),
+                                               Topic = Topics.ReturnRejected
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnEmail),
+                                               Topic = Topics.ReturnClosed
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnEmail),
+                                               Topic = Topics.ReturnChanged
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Order),
+                                               Topic = Topics.RefundCreated
+                                           },
+                                       new EmailTypeInfo
+                                       {
+                                           ModelType = typeof (CheckoutEmail),
+                                           Topic = Topics.CheckoutEmailTopic
+                                       },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (OrderEmail),
+                                               Topic = Topics.OrderEmailTopic
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Order),
+                                               Topic = Topics.OrderShippedTopic
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
+                                               Topic = Topics.InStockNotification
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (GiftCardEmailOrderCredit),
+                                               Topic = Topics.GiftCardCreated
+                                           },
+
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Order),
+                                               Topic = Topics.OrderCancellation
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.Backorder
+                                           },
+                                       //new EmailTypeInfo
+                                       //    {
+                                       //        ModelType = typeof (ShipmentEmail),
+                                       //        Topic = Topics.BackorderUpdate
+                                       //    },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentConfirmation
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.OrderPickupReady
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.OrderPickupReminder
+                                           },
+                                       /*new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Shipment),
+                                               Topic = Topics.ShipmentItemBackordered
+                                           },*/
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentBackorderDateChanged
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentShipped
+                                           },
+                                         new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentItemCanceled
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentAssigned
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.PartialPickupReady
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentCreatedByFulfiller 
+                                           }
+
+
+                };
         }
 
         public EmailController(
@@ -126,6 +225,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
+            IReturnSettingsWebApiClient returnSettingsWebApiClient,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
             Lazy<IExpressionEvaluator> pageRuleEvaluator
@@ -138,6 +238,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
+            _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -153,16 +254,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var model = TestDataBroker.GetFileContents(id).FirstOrDefault() ?? new object();
-            var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, id, StringComparison.OrdinalIgnoreCase));
-            if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof(Order))
+            if (model != null)
             {
-                var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
-                model = await Convert(str, emailTypeInfo);
-            }
+                var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, id, StringComparison.OrdinalIgnoreCase));
+                if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof(Order))
+                {
+                    var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
+                    model = await Convert(str, emailTypeInfo);
+                }
 
-            else
-            {
-                model = MergeEmailParams(queryStringParams, model);
+                else
+                {
+                    model = MergeEmailParams(queryStringParams, model);
+                }
             }
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
@@ -180,13 +284,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 vr.ViewName = emailTemplate.Template;
                 var doc = (DC.Document)vr.Model;
-                doc?.Set("page_type_definition", id);
+                if (doc != null)
+                {
+                    doc.Set("page_type_definition", id);
+                }
 
                 ViewData["content"] = vr.Model;
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
+            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
 
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
@@ -241,7 +348,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, model, cmdContent, user, site);
-            if (renderedTemplate.IsNullOrEmpty()) return null;
+            if (renderedTemplate.IsNullOrEmpty())
+            {
+                return null;
+            }
 
             var subjectFromVrModel = (string)((Mozu.Content.Contracts.Document)vr?.Model)?.Properties["subject"];
 
@@ -297,20 +407,33 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ["model"] = model,
                 ["content"] = cmdContent,
                 ["User"] = user,
-                ["rmaLocation"] = await GetDirectShipLocationOrDefault(),
+                ["rmaLocation"] = await GetDefaultReturnLocation(),
                 ["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(),
+
                 ["storefrontOrderAttributes"] = await GetShopperOrderAttributes()
             };
-
 
             var context = new HyprViewContext(Request.HttpContext, vdd);
             return await Render(view, context);
         }
 
-        private async Task<Mozu.Location.Contracts.Location> GetDirectShipLocationOrDefault()
+        //private async Task<Location.Contracts.Location> GetDirectShipLocationOrDefault()
+        //{
+        //    var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
+        //    return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
+        //}
+
+        private async Task<Location.Contracts.Location> GetDefaultReturnLocation()
         {
-            var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
-            return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
+            var returnSettings = await _returnSettingsWebApiClient.GetReturnSettings();
+            var locationCode = returnSettings.ResponseMessage.IsSuccessStatusCode ? (returnSettings.ReadAsSync())?.DefaultShippingLocation : null;
+            if (!string.IsNullOrEmpty(locationCode))
+            {
+                var shippingLocation = await _locationAdminWebApi.GetLocation(locationCode);
+                return shippingLocation.ResponseMessage.IsSuccessStatusCode ? shippingLocation.ReadAsSync() : null;
+            }
+
+            return null;
         }
 
         private static async Task<string> Render(HyprView view, HyprViewContext context)
@@ -361,49 +484,78 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         };
                     }
                 }
-
-
             }
 
-            if (obj is ReturnEmail)
+            if (obj is ReturnEmail returnEmail)
             {
-                var returnEmail = (ReturnEmail)obj;
-
-                if (returnEmail.isMock)
+                if (returnEmail.IsMock)
                 {
-                    returnEmail.order = TestDataBroker.GetFileContents<Order>("order.changed").First();
+                    returnEmail.Order = TestDataBroker.GetFileContents<Order>("order.changed").First();
                 }
                 else
                 {
-                    returnEmail.order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
+                    returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
                 }
 
             }
 
-            if (!(obj is CheckoutEmail checkoutEmail)) return obj;
+            if (obj is CheckoutEmail checkoutEmail)
+            {
+                var checkoutOrderSearch = (await _orderWebApiClient.GetOrders(filter: $"parentCheckoutId eq {checkoutEmail.Id}")).ReadAsSync();
+                checkoutEmail.Orders = checkoutOrderSearch.Items;
 
-            var checkoutOrderSearch = (await _orderWebApiClient.GetOrders(filter: $"parentCheckoutId eq {checkoutEmail.Id}")).ReadAsSync();
-            checkoutEmail.Orders = checkoutOrderSearch.Items;
+                var locations = checkoutEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
+                if (locations.SafeAny())
+                {
+                    var filter = locations.Aggregate((x, y) => x + " or " + y);
+                    checkoutEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                }
+            }
 
-            var locations = checkoutEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
-            var enumLocations = locations as string[] ?? locations.ToArray();
-            if (!enumLocations.SafeAny()) return obj;
+            if (obj is ShipmentEmail shipmentEmail)
+            {
+                //get order by shipment orderId
+                var shipmentOrder = (await _orderWebApiClient.GetOrder(shipmentEmail.OrderId)).ReadAsSync();
+                shipmentEmail.Order = shipmentOrder;
+                if (shipmentOrder.Shipments.SafeAny())
+                {
+                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == shipmentEmail.Number).ToList();
+                }
 
-            var filter = enumLocations.Aggregate((x, y) => x + " or " + y);
-            checkoutEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                var locationCode = shipmentEmail.FulfillmentLocationCode;
+                if (!locationCode.IsNullOrEmpty()) {
+                    var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                    shipmentEmail.StoreLocation = location;
+                }
+            }
+               
+            if (obj is OrderEmail orderEmail)
+            {
+                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
+                if (locations.SafeAny())
+                {
+                    var filter = locations.Aggregate((x, y) => x + " or " + y);
+                    orderEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                }
+            }
+            
             return obj;
         }
 
         private JObject MergeEmailParams(IQueryCollection query, object model)
         {
             var add = query.TryGetValue("queryParams", out var vals);
-                // .FirstOrDefault<string,StringValues>(pair => pair.Key.EqualsIgnoreCase(), new KeyValuePair<string, string>("", ""));
+            // .FirstOrDefault<string,StringValues>(pair => pair.Key.EqualsIgnoreCase(), new KeyValuePair<string, string>("", ""));
 
             var emailParams = JsonConvert.DeserializeObject<JObject>(add ? vals.ToString() : "", CaseInsensitiveJsonSerializerSettings.Default);
 
             var returnObj = model is JObject jObject ? jObject : JObject.FromObject(model);
             returnObj.Merge(emailParams);
             return returnObj;
+        }
+        public class MyPackageItem : PackageItem
+        {
+            public object Product { get; set; }
         }
 
         private static string GetCmsPage(VM.PageTypeDefinition def)
@@ -426,27 +578,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string RefundCreated = "refund.created";
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
+            public const string OrderCancellation = "order.cancelled";
+            public const string Backorder = "shipment.backordered";
+            //public const string BackorderUpdate = "shipment.backorderdatechanged";
+            public const string ShipmentConfirmation = "shipment.fulfilled";
+            public const string OrderPickupReady = "shipment.pickupready";
+            public const string OrderPickupReminder = "shipment.pickupreminder";
+            //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
+            public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
+			public const string ShipmentItemCanceled = "shipment.itemscanceled";
+            public const string ShipmentAssigned = "shipment.assigned"; 
+            public const string TransferShipmentCreatedByFulfiller = "shipment.transfercreatedbyfulfiller";
+            public const string TransferShipmentCreated = "shipment.transfercreated";
+            public const string TransferShipmentShipped = "shipment.transfershipped";
+            public const string PartialPickupReady = "shipment.partialpickupready";
         }
 
-        public class ReturnEmail : Mozu.CommerceRuntime.Contracts.Returns.Return
-        {
-            public bool isMock { get; set; }
-            public Mozu.CommerceRuntime.Contracts.Orders.Order order { get; set; }
-        }
-
-        public class CheckoutEmail : Mozu.CommerceRuntime.Contracts.Checkouts.Checkout
-        {
-            public List<Order> Orders { get; set; }
-            public List<Location.Contracts.Location> Locations { get; set; }
-        }
-
-        public class MyPackageItem : PackageItem
-        {
-            public object Product { get; set; }
-        }
     }
 
-
+   
     public class EmailResponse
     {
         public string Subject { get; set; }

@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
 using Mozu.Content.Contracts;
 using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Extensions;
 using Mozu.Core.Expressions;
+using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
@@ -82,8 +83,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         public async Task InitCmsPageContext(IPageContext pageContext,
             ISiteContext siteContext,
             ISiteBuilderApiContext sbApiContext,
-            IExpressionEvaluator expressionEvaluator = null,
-            ExpressionEvaluatorVisitor<CmsPageRuleContext> pageRuleVisitor = null)
+            Lazy<IExpressionEvaluator> expressionEvaluator = null,
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor = null,
+            ILogger<CmsHelper> logger = null)
         {
             PageContext pageCxt = (PageContext)pageContext;
             var cmsPageContext = pageCxt.CmsContext;
@@ -99,6 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 pageCxt.IsEditMode)) tasks.Add(templateTask);
 
             await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
+
             if (pageTask != null && pageTask.Result.ResponseMessage.IsSuccessStatusCode)
                 cmsPageContext.Page = UpdateDocumentRequestFromTask(cmsPageContext.Page, pageTask);
             if (templateTask != null && templateTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -140,66 +143,63 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
             
-            // todo:cole revisit after getting initial build and qa'ed 95%
-            //if (pageRuleVisitor != null && expressionEvaluator != null && String.IsNullOrEmpty(pageCxt.VariationId) && !pageCxt.IsEditMode && sbApiContext.DataViewMode != Core.DataViewModeType.Pending)
-            //{
-            //    try
-            //    {
-            //        await expressionEvaluator.EvaluatePageRules(pageCxt, pageRuleVisitor);
-            //    }
-            //    catch
-            //    {
 
-            //    }
-
-            //}
+            if (pageRuleVisitor != null && expressionEvaluator != null && String.IsNullOrEmpty(pageCxt.VariationId) && !pageCxt.IsEditMode && sbApiContext.DataViewMode != Core.DataViewModeType.Pending)
+            {
+                try
+                {
+                    await expressionEvaluator.Value.EvaluatePageRules(pageCxt, pageRuleVisitor.Value);
+                }
+                catch(Exception e)
+                {
+                    logger?.LogWarning(e, e.Message);
+                }
+            }
 
 
             if (sbApiContext.DataViewMode == Core.DataViewModeType.Pending && cmsPageContext.Page.Document != null)
             {
+                var currentVariationId = "";
 
-                //var currentVariationID = cmsPageContext.Page.Document.Properties.Value<string>("variationId");
-                var currentVariationID = "";
-
-                if (!String.IsNullOrEmpty(pageCxt.VariationId))
+                if (!string.IsNullOrEmpty(pageCxt.VariationId))
                 {
-                    currentVariationID = pageCxt.VariationId;
+                    currentVariationId = pageCxt.VariationId;
                 }
 
                
                 var variations = cmsPageContext.Page.Document.Properties.GetOrDefault("variations", new JArray()).ToJArray();
                 var foundVariationIdx = -1;
-                if (variations.Count() > 0)
+                if (variations.Any())
                 {
-                    int count = 0;
-                    JArray variationArray = new JArray();
+                    var count = 0;
+                    var variationArray = new JArray();
                     foreach (var variation in variations)
                     {
-                        JObject j = new JObject();
-                        j["id"] = variation.Value<string>("id");
-                        j["name"] = variation.Value<string>("name");
+                        var j = new JObject
+                        {
+                            ["id"] = variation.Value<string>("id"), 
+                            ["name"] = variation.Value<string>("name")
+                        };
                         variationArray.Add(j);
 
-                        if (variation.Value<string>("id") == currentVariationID)
+                        if (variation.Value<string>("id") == currentVariationId)
                         {
                             foundVariationIdx = count;
                         }
                         count++;
                     }
-
                     pageCxt.Variations = variationArray;
 
-                    if (foundVariationIdx > -1 && !String.IsNullOrEmpty(currentVariationID) && currentVariationID != "base")
+                    if (foundVariationIdx > -1 && 
+                        !string.IsNullOrEmpty(currentVariationId) && 
+                        currentVariationId != "base")
                     {
                         var foundVariation = variations[foundVariationIdx].ToJObject();
                         foundVariation.TryGetValue("properties", StringComparison.OrdinalIgnoreCase, out var retValue);
                         pageCxt.CmsContext.Page.Document.Properties = retValue.ToJObject();
-                        
                     }
                 }
             }
-
-
 
             cmsPageContext.RuntimeData = new List<Chorizo.ZoneRuntimeData>();
             cmsPageContext.CalienteRuntimeData = new List<Caliente.ZoneRuntimeData>();

@@ -279,6 +279,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dcCat.Content.CategoryImages = existingCategory.Content.CategoryImages;
                 }
 
+                if (cat.CategoryType == "DynamicPreComputed" && cat.DynamicExpression.Tree.Nodes.Length == 0 && existingCategory != null)
+                {
+                    dcCat.DynamicExpression = existingCategory.DynamicExpression;
+                }
+
                 var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
                 returnList.Add(Mapper.Map<Category>(taskResult.Result));
                 return List2(returnList);

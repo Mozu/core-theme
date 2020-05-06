@@ -125,6 +125,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// </summary>
         public int QuantityRestockable { get; set; }
 
+        public int QuantityRestocked { get; set; }
+
+        public int QtyRestockable { get { return QuantityRestocked; } }
+        
+
         /// <summary>
         /// If a refund is issued for the return, how much of the refund amount is for this particular item.
         /// </summary>
@@ -189,5 +194,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// The quantity that is returnable now.
         /// </summary>
         public int? QuantityReturnable { get; set; }
+        public int? ShipmentItemId { get; set; }
+
+        public int? ShipmentNumber { get; set; }
+
+        public string OriginalShipmentId { get; set; }
     }
 }

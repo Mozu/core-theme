@@ -113,5 +113,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ReturnId { get; set; }
 
         public string RefundId { get; set; }
+
+        public string CreateBy { get; set; } 
     }
 }

@@ -160,11 +160,19 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                         var searchCodes = me.store.data.items.map( function (record) {
                             return record.get('code');
                         });
-
+                        var searchCodeString = "'";
+                        searchCodes.forEach(function (searchCode, index) {
+                            searchCodeString += searchCode;
+                            searchCodeString += "'";
+                            if (index + 1 < searchCodes.length) {
+                                searchCodeString+= ",'";
+                            }
+                        });
+                        var filterString = 'filter=[{"property":"code","comparison":"in","value":"[' + searchCodeString + ']"}]';
                         Ext.Ajax.request({
                             method: 'GET',
                             url: window.location.protocol+'//'+window.location.hostname+'/admin/app/customer/segments/list',
-                            params: 'filter=[{"property":"code","comparison":"in","value":"['+searchCodes.join(',')+']"}]',
+                            params: filterString,
                             success: function (response) {
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success || !json.items) return;

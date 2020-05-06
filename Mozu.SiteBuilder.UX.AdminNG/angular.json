@@ -1,0 +1,337 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "ng-pwa": {
+            "root": "",
+            "sourceRoot": "src",
+            "projectType": "application",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist",
+                        "index": "src/index.html",
+                        "main": "src/main.ts",
+                        "tsConfig": "src/tsconfig.app.json",
+                        "polyfills": "src/polyfills.ts",
+                        "assets": [
+                            "src/assets",
+                            "src/favicon.ico",
+                            "src/manifest.json",
+                            "src/web.config"
+                        ],
+                        "styles": [
+                            "src/styles.css",
+                            "src/assets/styles/jquery-ui.min.css",
+                            "src/assets/styles/bootstrap.min.css",
+                            "src/assets/styles/spinner.component.css",
+                            "src/assets/styles/public.component.css",
+                            "node_modules/primeng/resources/themes/nova-light/theme.css",
+                            "node_modules/primeng/resources/primeng.min.css",
+                            "node_modules/primeicons/primeicons.css",
+                            "node_modules/@fortawesome/fontawesome-pro/css/all.css"
+                        ],
+                        "scripts": [
+                            "src/assets/references/jquery-2.2.0.min.js",
+                            "src/assets/references/bootstrap.min.js",
+                            "src/assets/references/Intl.min.js",
+                            "src/assets/references/en.js"
+                        ]
+                    },
+                    "configurations": {
+                        "CI": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.CI.ts"
+                                }
+                            ]
+                        },
+                        "Debug": {
+                            "optimization": false,
+                            "outputHashing": "none",
+                            "sourceMap": true,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": false,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": false,
+                            "serviceWorker": false,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Debug.ts"
+                                }
+                            ]
+                        },
+                        "Demo": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Demo.ts"
+                                }
+                            ]
+                        },
+                        "Dev": {
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": false,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Dev.ts"
+                                }
+                            ]
+                        },
+                        "perf": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.perf.ts"
+                                }
+                            ]
+                        },
+                        "Prod": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Prod.ts"
+                                }
+                            ]
+                        },
+                        "QA": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.QA.ts"
+                                }
+                            ]
+                        },
+                        "Release": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Release.ts"
+                                }
+                            ]
+                        },
+                        "SI": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "serviceWorker": true,
+                            "ngswConfigPath": "src/ngsw-config.json",
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.SI.ts"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "ng-pwa:build"
+                    },
+                    "configurations": {
+                        "CI": {
+                            "browserTarget": "ng-pwa:build:CI"
+                        },
+                        "Debug": {
+                            "browserTarget": "ng-pwa:build:Debug"
+                        },
+                        "Demo": {
+                            "browserTarget": "ng-pwa:build:Demo"
+                        },
+                        "Dev": {
+                            "browserTarget": "ng-pwa:build:Dev"
+                        },
+                        "perf": {
+                            "browserTarget": "ng-pwa:build:perf"
+                        },
+                        "Prod": {
+                            "browserTarget": "ng-pwa:build:Prod"
+                        },
+                        "QA": {
+                            "browserTarget": "ng-pwa:build:QA"
+                        },
+                        "Release": {
+                            "browserTarget": "ng-pwa:build:Release"
+                        },
+                        "SI": {
+                            "browserTarget": "ng-pwa:build:SI"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "ng-pwa:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "src/test.ts",
+                        "karmaConfig": "./karma.conf.js",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.spec.json",
+                        "scripts": [
+                            "src/assets/references/jquery-2.2.0.min.js",
+                            "src/assets/references/bootstrap.min.js",
+                            "src/assets/references/Intl.min.js",
+                            "src/assets/references/en.js"
+                        ],
+                        "styles": [
+                            "src/styles.css",
+                            "src/assets/styles/jquery-ui.min.css",
+                            "src/assets/styles/bootstrap.min.css",
+                            "src/assets/styles/spinner.component.css",
+                            "src/assets/styles/public.component.css",
+                            "node_modules/@fortawesome/fontawesome-pro/css/all.css"
+                        ],
+                        "assets": [
+                            "src/assets",
+                            "src/favicon.ico",
+                            "src/manifest.json",
+                            "src/web.config"
+                        ]
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "src/tsconfig.app.json",
+                            "src/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        },
+        "ng-pwa-e2e": {
+            "root": "e2e",
+            "sourceRoot": "e2e",
+            "projectType": "application",
+            "architect": {
+                "e2e": {
+                    "builder": "@angular-devkit/build-angular:protractor",
+                    "options": {
+                        "protractorConfig": "./protractor.conf.js",
+                        "devServerTarget": "ng-pwa:serve"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "e2e/tsconfig.e2e.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "defaultProject": "ng-pwa",
+    "schematics": {
+        "@schematics/angular:component": {
+            "prefix": "app",
+            "styleext": "css"
+        },
+        "@schematics/angular:directive": {
+            "prefix": "app"
+        }
+    }
+}

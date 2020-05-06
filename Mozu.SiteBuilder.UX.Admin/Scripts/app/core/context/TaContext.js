@@ -10,7 +10,8 @@ Ext.define('Taco.core.context.TaContext', {
     contextType: 't',
     name: 'All',
     masterCatalogs: null,
-
+    loginURI: '',
+    orderRoutingURIPrefix: '',
     currentCtx: null,
     constructor: function (config) {
         var me = this;
@@ -25,6 +26,7 @@ Ext.define('Taco.core.context.TaContext', {
 
         me.callParent([config]);
 
+        Taco.core.StateManager.on('beforenavigate', me.onBeforeNavigate, this);
         Taco.core.StateManager.on('navigate', me.onNavigate, this);
         me.init(config);
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
@@ -121,6 +123,12 @@ Ext.define('Taco.core.context.TaContext', {
             Ext.apply(headers, options.operation.headers);
         }
     },
+    onBeforeNavigate: function (state) {
+        var controller = state.metaData.controller;
+        var action = state.metaData.action;
+        if (controller === 'dashboard' && action === 'index')
+            window.location.href = "/admin";
+    },
     onNavigate: function (state) {
         var ulrToken = state.metaData.ctx,
             recordId = this.getStore().find('urlToken', ulrToken, 0, false, true, true),
@@ -129,7 +137,6 @@ Ext.define('Taco.core.context.TaContext', {
             this.setCurrentContext(record.raw, false);
         }
     },
-
     setCurrentContext: function (cfg, navigate, replaceHistory) {
         var me = this,
             smState = Taco.core.StateManager.getCurrentState(),
@@ -277,7 +284,8 @@ Ext.define('Taco.core.context.TaContext', {
         me.urlToken = me.contextType + '-' + data.id;
         me.currentCtx = me;
         me.currencyLookup = {};
-
+        me.loginURI = data.loginURI;
+        me.orderRoutingURIPrefix = me.loginURI + data.id;
         Ext.each(data.masterCatalogs, function (sc, idx) {
             me.masterCatalogs[idx] = Ext.create('Taco.core.context.MasterCatalog', sc);
 
@@ -291,6 +299,9 @@ Ext.define('Taco.core.context.TaContext', {
         this.setCookie();
     },
 
+    getOrderRoutingURI : function() {
+        return this.orderRoutingURIPrefix;
+    },
     setCurrentSite: function (id) {
         var me = this,
             newSite = me.findSite(id);
@@ -327,7 +338,9 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return cc.getSite();
     },
-
+    getReportURL: function () {
+        return 's-' + this.getSiteId() + "/reports";
+    },
     getMasterCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc == this) {
@@ -427,7 +440,7 @@ Ext.define('Taco.core.context.TaContext', {
         });
     },
     
-    getHasUnifiedAdmin: function () {
-        return this.hasUnifiedAdmin;
+    getHasLegacyAdmin: function () {
+        return this.hasLegacyAdmin;
     }
 });

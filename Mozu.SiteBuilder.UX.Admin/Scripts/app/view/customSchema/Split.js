@@ -17,6 +17,8 @@ Ext.define('Taco.view.customSchema.Split', {
         'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],
 
+
+
     mixins: {
         splitEditor: 'Taco.core.ux.mixins.SplitEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader'
@@ -33,6 +35,8 @@ Ext.define('Taco.view.customSchema.Split', {
         disableAdvancedSearch: true,
         emptySearchText: 'Search'
     },
+
+    cls:'schema-header',
 
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']
@@ -68,7 +72,10 @@ Ext.define('Taco.view.customSchema.Split', {
         this.additionalActions = this.getAdditionalActions();
 
         this.moreButtonCfg = {
-            menu: this.getMenuItems(),
+            menu: {
+                cls: 'taco-ellipsis-split-button', 
+                items: this.getMenuItems()
+            },
             disabled: true
         };
 
@@ -96,16 +103,19 @@ Ext.define('Taco.view.customSchema.Split', {
             handler: function() {
                 // do nothing;
             },
-            menu: [
-                {
-                    text: 'Create Default',
-                    handler: this.onCreate.bind(this)
-                },
-                {
-                    text: 'Create Raw',
-                    handler: this.onCreate.bind(this, {editMode: 'raw'})
-                }
-            ]
+            menu: {
+                cls: 'taco-header-split-button',
+                items: [
+                    {
+                        text: 'Create Default',
+                        handler: this.onCreate.bind(this)
+                    },
+                    {
+                        text: 'Create Raw',
+                        handler: this.onCreate.bind(this, { editMode: 'raw' })
+                    }
+                ]
+            }
         }
     },
 

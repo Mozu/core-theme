@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     await new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext,
                             controller.SiteContext,
                             controller.SbApiContext,
-                            controller.ExpressionEvaluaton,
+                            controller.ExpressionEvaluator,
                             controller.PageRuleVisitor)
                         .ContinueWith(y => rc.Result);
                 }

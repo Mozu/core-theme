@@ -3,6 +3,7 @@
 <head>
     <title>MOZU-ADMIN</title>
     <link rel="stylesheet" type="text/css" href="/Admin/Scripts/build/resources/Taco-all.css?ver=1.7.1.29" />
+    <link rel="stylesheet" type="text/css" href="/Admin/Scripts/build/resources/fonts/fontawesome/css/all.css" />
     <script>
         window.Taco = {
             "adminRelPath": "/Admin/",
@@ -239,9 +240,9 @@
         Ext.ns('Taco');
         Taco.baseCSSPrefix = 'taco-';
 
-        (function() {
+        (function () {
             var oldClassPathMappings = Ext.Loader.addClassPathMappings;
-            Ext.Loader.addClassPathMappings = function(classPaths) {
+            Ext.Loader.addClassPathMappings = function (classPaths) {
                 for (var cls in classPaths) classPaths[cls] = "/admin/Scripts/" + classPaths[cls];
                 oldClassPathMappings.call(Ext.Loader, classPaths);
                 // only do this once

@@ -71,6 +71,11 @@ Ext.define('Taco.model.BundledProduct', {
             name: "fulfillmentTypesSupported",
             type: "auto",
             defaultValue: ['DirectShip']
+        },
+        {
+            name: "stock",
+            type: "auto",
+            defaultValue: []
         }
     ],
     idProperty: 'productCode',

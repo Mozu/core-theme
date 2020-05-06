@@ -80,8 +80,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return;
             }
 
+            char[] quoteChars = {'"', '\''};
             //if someone has long codes or too many this may fail because its too large for a GET.
-            string filter = $"code in[{rightSideValues.Join(",")}]";
+            //if the values start with a quote then assume its a quoted value otherwise wrap values in quotes
+            //and comma separate them
+            var quotedValues = 
+                rightSideValues.Select(v=> quoteChars.Contains(v[0]) ? v : $"\"{v}\"").Join(",");
+     
+            string filter = $"code in[{quotedValues}]";
             do
             {
                 var segmentsResult = await _customerSegmentWebApi.GetSegments(pageSize: 200, filter: filter);

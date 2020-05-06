@@ -1,0 +1,555 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug;Prod;CI;Demo;QA;Dev;perf;SI;Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0EC8109F-E99D-480F-8D42-CF51A75DD315}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mozu.SiteBuilder.UX.AdminNG</RootNamespace>
+    <AssemblyName>Mozu.SiteBuilder.UX.AdminNG</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <RootDir>$(ProjectDir)..\</RootDir>
+    <MozuSiteBuilderRazorAppDistAssetsDir>$(RootDir)\Mozu.SiteBuilder.UX\Assets</MozuSiteBuilderRazorAppDistAssetsDir>
+    <MozuAdminRazorAppDir>$(RootDir)\Mozu.SiteBuilder.UX.Admin</MozuAdminRazorAppDir>
+    <MozuAdminDevDistAssetsFolder>$(MozuAdminRazorAppDir)\assets</MozuAdminDevDistAssetsFolder>
+    <MozuAdminDevDistFolder>$(MozuAdminRazorAppDir)\adminng</MozuAdminDevDistFolder>
+    <TypeScriptToolsVersion>3.3</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Prod|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CI|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Demo|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'QA|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Dev|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'perf|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SI|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="karma.conf.js" />
+    <Content Include="protractor.conf.js" />
+    <Content Include="src\app\admin-module\dashboard\dashboard.component.css" />
+    <Content Include="src\app\admin-module\dashboard\dashboard.component.html" />
+    <Content Include="src\app\app.component.css" />
+    <Content Include="src\app\app.component.html" />
+    <Content Include="src\app\location-groups-module\config\config.component.css" />
+    <Content Include="src\app\location-groups-module\config\config.component.html" />
+    <Content Include="src\app\location-groups-module\create\create.component.css" />
+    <Content Include="src\app\location-groups-module\create\create.component.html" />
+    <Content Include="src\app\location-groups-module\list\list.component.css" />
+    <Content Include="src\app\location-groups-module\list\list.component.html" />
+    <Content Include="src\app\quotes-module\list\list.component.css" />
+    <Content Include="src\app\quotes-module\list\list.component.html" />
+    <Content Include="src\app\quotes-module\quote\items\items.component.css" />
+    <Content Include="src\app\quotes-module\quote\items\items.component.html" />
+    <Content Include="src\app\quotes-module\quote\quote.component.css" />
+    <Content Include="src\app\quotes-module\quote\quote.component.html" />
+    <Content Include="src\app\quotes-module\quote\summary\summary.component.css" />
+    <Content Include="src\app\quotes-module\quote\summary\summary.component.html" />
+    <Content Include="src\app\shared-module\access-tile\access-tile.component.css" />
+    <Content Include="src\app\shared-module\access-tile\access-tile.component.html" />
+    <Content Include="src\app\shared-module\account\information\information.component.css" />
+    <Content Include="src\app\shared-module\account\information\information.component.html" />
+    <Content Include="src\app\shared-module\advanced-search\advanced-search.component.css" />
+    <Content Include="src\app\shared-module\advanced-search\advanced-search.component.html" />
+    <Content Include="src\app\shared-module\audit-log\audit-log.component.css" />
+    <Content Include="src\app\shared-module\audit-log\audit-log.component.html" />
+    <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.css" />
+    <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.html" />
+    <Content Include="src\app\shared-module\datepicker\datepicker.component.css" />
+    <Content Include="src\app\shared-module\datepicker\datepicker.component.html" />
+    <Content Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.component.html" />
+    <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.css" />
+    <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.html" />
+    <Content Include="src\app\shared-module\header\header.component.css" />
+    <Content Include="src\app\shared-module\header\header.component.html" />
+    <Content Include="src\app\shared-module\home\home.component.css" />
+    <Content Include="src\app\shared-module\home\home.component.html" />
+    <Content Include="src\app\shared-module\locations\list.component.css" />
+    <Content Include="src\app\shared-module\locations\list.component.html" />
+    <Content Include="src\app\shared-module\navigation\left\left.component.css" />
+    <Content Include="src\app\shared-module\navigation\left\left.component.html" />
+    <Content Include="src\app\shared-module\navigation\left\search\search.component.css" />
+    <Content Include="src\app\shared-module\navigation\left\search\search.component.html" />
+    <Content Include="src\app\shared-module\navigation\left\user\action.component.css" />
+    <Content Include="src\app\shared-module\navigation\left\user\action.component.html" />
+    <Content Include="src\app\shared-module\navigation\navigation.component.css" />
+    <Content Include="src\app\shared-module\navigation\navigation.component.html" />
+    <Content Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.css" />
+    <Content Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.html" />
+    <Content Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.css" />
+    <Content Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.html" />
+    <Content Include="src\app\shared-module\navigation\top\shell\top-shell.component.css" />
+    <Content Include="src\app\shared-module\navigation\top\shell\top-shell.component.html" />
+    <Content Include="src\app\shared-module\physical\locations.component.css" />
+    <Content Include="src\app\shared-module\physical\locations.component.html" />
+    <Content Include="src\app\shared-module\progress-button\progress-button.component.css" />
+    <Content Include="src\app\shared-module\progress-button\progress-button.component.html" />
+    <Content Include="src\app\shared-module\search-bar\search-bar.component.css" />
+    <Content Include="src\app\shared-module\search-bar\search-bar.component.html" />
+    <Content Include="src\app\shared-module\selected-locations\selected.component.css" />
+    <Content Include="src\app\shared-module\selected-locations\selected.component.html" />
+    <Content Include="src\app\shared-module\shipping\address\address.component.css" />
+    <Content Include="src\app\shared-module\shipping\address\address.component.html" />
+    <Content Include="src\app\shared-module\shipping\method\method.component.css" />
+    <Content Include="src\app\shared-module\shipping\method\method.component.html" />
+    <Content Include="src\app\shared-module\spinner\spinner.component.html" />
+    <Content Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.css" />
+    <Content Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.html" />
+    <Content Include="src\assets\Fonts\Calibri.svg" />
+    <Content Include="src\assets\Fonts\fontawesome-webfont.svg" />
+    <Content Include="src\assets\Fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="src\assets\Fonts\proximanova-regular.svg" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.svg" />
+    <Content Include="src\assets\icons\icon-192x192.png" />
+    <Content Include="src\assets\icons\icon-512x512.png" />
+    <Content Include="src\assets\Images\arrow_tooltip.png" />
+    <Content Include="src\assets\Images\b2b.png" />
+    <Content Include="src\assets\Images\catlog.png" />
+    <Content Include="src\assets\Images\cross.png" />
+    <Content Include="src\assets\Images\customers.png" />
+    <Content Include="src\assets\Images\customization.png" />
+    <Content Include="src\assets\Images\downArrow.png" />
+    <Content Include="src\assets\Images\downArrowWhite.png" />
+    <Content Include="src\assets\Images\fullfillment.png" />
+    <Content Include="src\assets\Images\kibo-icon.png" />
+    <Content Include="src\assets\Images\kibo-logo-sidebar.png" />
+    <Content Include="src\assets\Images\loading-blue-bak.gif" />
+    <Content Include="src\assets\Images\marketing.png" />
+    <Content Include="src\assets\Images\new-window.png" />
+    <Content Include="src\assets\Images\permissions.png" />
+    <Content Include="src\assets\Images\publishing.png" />
+    <Content Include="src\assets\Images\reporting.png" />
+    <Content Include="src\assets\Images\schema.png" />
+    <Content Include="src\assets\Images\settings.png" />
+    <Content Include="src\assets\Images\sitebuilder.png" />
+    <Content Include="src\assets\Images\structure.png" />
+    <Content Include="src\assets\Images\upArrow.png" />
+    <Content Include="src\assets\References\bootstrap.min.js" />
+    <Content Include="src\assets\References\en.js" />
+    <Content Include="src\assets\References\Intl.min.js" />
+    <Content Include="src\assets\References\jquery-2.2.0.min.js" />
+    <Content Include="src\assets\References\jquery.signalR-2.2.1.min.js" />
+    <Content Include="src\assets\Styles\bootstrap.min.css" />
+    <Content Include="src\assets\Styles\jquery-ui.min.css" />
+    <Content Include="src\assets\Styles\public.component.css" />
+    <Content Include="src\assets\Styles\spinner.component.css" />
+    <Content Include="src\core-module\errorHandling\global-error-dialog.component.html" />
+    <Content Include="src\favicon.ico" />
+    <Content Include="src\index.html" />
+    <Content Include="src\styles.css" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="e2e\tsconfig.e2e.json" />
+    <Content Include="angular.json" />
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
+    <Content Include="fontawesome.npmrc" />
+    <None Include="packages.config" />
+    <Content Include="src\assets\Fonts\Calibri.eot" />
+    <Content Include="src\assets\Fonts\Calibri.otf" />
+    <Content Include="src\assets\Fonts\Calibri.ttf" />
+    <Content Include="src\assets\Fonts\Calibri.woff" />
+    <Content Include="src\assets\Fonts\Calibri.woff2" />
+    <Content Include="src\assets\Fonts\fontawesome-webfont.eot" />
+    <Content Include="src\assets\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="src\assets\Fonts\fontawesome-webfont.woff" />
+    <Content Include="src\assets\Fonts\fontawesome-webfont.woff2" />
+    <Content Include="src\assets\Fonts\FontAwesome.otf" />
+    <Content Include="src\assets\Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="src\assets\Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="src\assets\Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="src\assets\Fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="src\assets\Fonts\proximanova-regular.eot" />
+    <Content Include="src\assets\Fonts\proximanova-regular.ttf" />
+    <Content Include="src\assets\Fonts\proximanova-regular.woff" />
+    <Content Include="src\assets\Fonts\proximanova-regular.woff2" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.eot" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.otf" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.ttf" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.woff" />
+    <Content Include="src\assets\Fonts\segoe-ui-normal.woff2" />
+    <Content Include="src\assets\i18n\en.json" />
+    <Content Include="src\assets\i18n\fr.json" />
+    <Content Include="src\assets\json\dashboard-categories.json" />
+    <Content Include="src\assets\json\dashboard-menu.json" />
+    <Content Include="src\assets\json\leftNavigation-items.json" />
+    <Content Include="src\assets\json\quote-list.json" />
+    <Content Include="src\assets\json\user-data.json" />
+    <Content Include="src\assets\json\user-redirection.json" />
+    <Content Include="src\manifest.json" />
+    <Content Include="src\ngsw-config.json" />
+    <Content Include="src\tsconfig.app.json" />
+    <Content Include="src\tsconfig.spec.json" />
+    <Content Include="src\web.config" />
+    <Content Include="README.md" />
+    <Content Include="tsconfig.json" />
+    <Content Include="tslint.json" />
+    <Content Include="src\assets\json\account-information.json" />
+    <Content Include="src\assets\json\secureForm.json" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="e2e\app.e2e-spec.ts" />
+    <TypeScriptCompile Include="e2e\app.po.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\admin.module.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\dashboard\dashboard.component.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\dashboard\dashboard.model.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\dashboard\dashboard.service.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\dashboard\index.ts" />
+    <TypeScriptCompile Include="src\app\admin-module\index.ts" />
+    <TypeScriptCompile Include="src\app\app.component.ts" />
+    <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\app.routing.ts" />
+    <TypeScriptCompile Include="src\app\global-module\global.module.ts" />
+    <TypeScriptCompile Include="src\app\global-module\index.ts" />
+    <TypeScriptCompile Include="src\app\global-module\infrastructure\constants.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\auth-guard.service.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\index.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\notifications.service.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\QuoteLocationGroupRouteGuardService.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\shared-data.service.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\shared-data.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.component.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.model.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.service.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\create\create.component.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\create\create.service.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\create\index.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\create\location.group.model.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\index.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\list\list.component.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\list\list.model.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\list\list.service.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\location.groups.module.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\index.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\list\index.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\list\list.component.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\list\list.model.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\list\list.service.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote-filter.model.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quotes.module.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\index.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\items\items.component.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\items\items.service.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\quote.component.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\quote.model.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\quote.service.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote\summary\summary.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\access-tile\access-tile.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\access-tile\access-tile.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\access-tile\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\advanced-search.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\advanced-search.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\datepicker\datepicker.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\datepicker\datepicker.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\directive\datepicker-compare-validator.directive.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\directive\enable-disable-controls.directive.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\directive\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\directive\restrict-input.directive.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\paginated-ngselect\paginated-ngselect.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\header\header.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\header\header.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\header\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\home\home.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\infrastructure\configuration-settings.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\infrastructure\constants.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\infrastructure\cookieData.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\infrastructure\enums.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\infrastructure\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\locations\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\locations\list.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\locations\list.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\locations\list.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\left.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\left.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\shell\top-shell.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\shell\top-shell.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\physical\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\physical\locations.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\physical\locations.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\physical\locations.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\pipes\datex.pipe.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\pipes\ellipsis.pipe.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\pipes\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\pipes\safeHtml.pipe.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\pipes\split.pipe.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\progress-button\progress-button.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\progress-button\progress-button.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\rxjs-extensions.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\search-bar\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\search-bar\search-bar.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\selected-locations\selected.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\selected-locations\selected.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shared.module.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\address\address.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\spinner\spinner.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.ts" />
+    <TypeScriptCompile Include="src\core-module\core.module.ts" />
+    <TypeScriptCompile Include="src\core-module\errorHandling\global-error-dialog.component.ts" />
+    <TypeScriptCompile Include="src\core-module\errorHandling\global-error-handler.component.ts" />
+    <TypeScriptCompile Include="src\core-module\errorHandling\global-error-logging.service.ts" />
+    <TypeScriptCompile Include="src\core-module\errorHandling\index.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\api-token.model.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\auth.service.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\custom-browser-xhr.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\http-client.service.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\http-error.model.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\http-response.model.ts" />
+    <TypeScriptCompile Include="src\core-module\extensions\index.ts" />
+    <TypeScriptCompile Include="src\core-module\index.ts" />
+    <TypeScriptCompile Include="src\core-module\infrastructure\configuration-settings.ts" />
+    <TypeScriptCompile Include="src\core-module\infrastructure\constants.ts" />
+    <TypeScriptCompile Include="src\core-module\infrastructure\index.ts" />
+    <TypeScriptCompile Include="src\core-module\infrastructure\utility.service.ts" />
+    <TypeScriptCompile Include="src\core-module\infrastructure\validation.service.ts" />
+    <TypeScriptCompile Include="src\core-module\page-not-found\page-not-found.component.ts" />
+    <TypeScriptCompile Include="src\core-module\services\cookie.service.ts" />
+    <TypeScriptCompile Include="src\core-module\services\index.ts" />
+    <TypeScriptCompile Include="src\core-module\services\logger.service.ts" />
+    <TypeScriptCompile Include="src\core-module\services\toastr.service.ts" />
+    <TypeScriptCompile Include="src\core-module\spinner\spinner.service.ts" />
+    <TypeScriptCompile Include="src\core-module\typings.d.ts" />
+    <TypeScriptCompile Include="src\environments\environment.CI.ts" />
+    <TypeScriptCompile Include="src\environments\environment.Debug.ts" />
+    <TypeScriptCompile Include="src\environments\environment.Demo.ts" />
+    <TypeScriptCompile Include="src\environments\environment.Dev.ts" />
+    <TypeScriptCompile Include="src\environments\environment.perf.ts" />
+    <TypeScriptCompile Include="src\environments\environment.Prod.ts" />
+    <TypeScriptCompile Include="src\environments\environment.QA.ts" />
+    <TypeScriptCompile Include="src\environments\environment.Release.ts" />
+    <TypeScriptCompile Include="src\environments\environment.SI.ts" />
+    <TypeScriptCompile Include="src\environments\environment.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
+    <TypeScriptCompile Include="src\polyfills.ts" />
+    <TypeScriptCompile Include="src\test.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\admin-module\dashboard\dashboard.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\admin-module\dashboard\dashboard.service.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\list\list.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\list\list.service.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\items\items.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\items\items.service.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\quote.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\quote.service.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\summary\summary.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\access-tile\access-tile.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\header\header.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\home\home.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\left\left.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\navigation.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\navigation.service.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\top\quotes\top-quotes.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\top\Shell\top-shell.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\paginated-ngselect\paginated-ngselect.component.spec.ts" />
+    <TypeScriptCompile Include="src\test\spec\app\shared-module\search-bar\search-bar.component.spec.ts" />
+    <TypeScriptCompile Include="src\typings.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51356</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51325/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="BeforeBuild">
+    <Message Importance="high" Text="*** START $(Configuration) build process" />
+    <Message Importance="high" Text="*** START node module install process" />
+    <Exec Command="npm config set &quot;@fortawesome:registry&quot; https://npm.fontawesome.com/" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm config set &quot;//npm.fontawesome.com/:_authToken&quot; 74AB3AFD-9000-49B0-A6AB-0B676CC1C51B" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm --prefer-offline true install" WorkingDirectory="$(ProjectDir)" />
+    <Message Importance="high" Text="*** END node module install process" />
+    <Message Importance="high" Text="*** START ng build process" />
+    <Exec Command="npm run ng build -- --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />
+    <Message Importance="high" Text="*** END ng build process" />
+    <ItemGroup>
+      <AllAdminNGDistFolderFiles Include="$(ProjectDir)dist\*.*;$(ProjectDir)dist\**\*.*;" />
+      <AllAssetFiles Include="$(ProjectDir)\src\assets\*.*;$(ProjectDir)src\assets\**\*.*;">
+      </AllAssetFiles>
+    </ItemGroup>
+    <RemoveDir Directories="$(MozuAdminDevDistFolder)" />
+    <RemoveDir Directories="$(MozuAdminDevDistAssetsFolder)" />
+    <Message Importance="high" Text="*** START copying Asset files to admin razor host and site builder project " />
+    <Copy SourceFiles="@(AllAssetFiles)" DestinationFiles="@(AllAssetFiles->'$(MozuAdminDevDistAssetsFolder)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(AllAssetFiles)" DestinationFiles="@(AllAssetFiles->'$(MozuSiteBuilderRazorAppDistAssetsDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Message Importance="high" Text="*** End copying Asset files to razor host project" />
+    <Message Importance="high" Text="*** START copying dist files to razor host project" />
+    <Copy SourceFiles="@(AllAdminNGDistFolderFiles)" DestinationFiles="@(AllAdminNGDistFolderFiles->'$(MozuAdminDevDistFolder)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Message Importance="high" Text="*** END copying dist files to razor host project" />
+    <Message Importance="high" Text="*** END $(Configuration) build process" />
+  </Target>
+  <!--<Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

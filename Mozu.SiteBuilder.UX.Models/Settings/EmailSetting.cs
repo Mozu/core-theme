@@ -46,11 +46,10 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
             NullValueHandling = NullValueHandling.Include
             )]
         public bool? OnlyOnApiRequest { get; set; }
-
-
     }
     public enum EmailTypes
     {
+
         BackInStock,
         OrderChanged,
         OrderShipped,
@@ -68,10 +67,17 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         StoreCreditUpdated,
         GiftCardCreated,
         Backorder,
+        //BackorderUpdate,
         ShipmentConfirmation,
         OrderPickupReady,
         OrderPickupReminder,
         ShipmentBackorderDateChanged,
-        OrderCancellation
+        OrderCancellation,
+        ShipmentItemCanceled,
+        ShipmentAssigned,
+        TransferShipmentCreated,
+        TransferShipmentShipped,
+        PartialPickupReady,
+        TransferShipmentCreatedByFulfiller
     };
 }

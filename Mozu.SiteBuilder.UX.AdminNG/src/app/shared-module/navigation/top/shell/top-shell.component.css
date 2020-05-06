@@ -1,0 +1,79 @@
+.tab-link {
+    height: 62px;
+    /* padding: 0 24px; */
+    cursor: pointer;
+    box-sizing: border-box;
+    opacity: .6;
+    min-width: 160px;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    vertical-align: top;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    color: #333333;
+    font-size: 13px;
+}
+
+a:hover {
+    color: #000000;
+}
+
+.ink-bar {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    transition: .5s cubic-bezier(.35, 0, .25, 1);
+    background-color: #2ea195;
+    visibility: visible;
+    width: 160px;
+}
+
+.navbar {
+    margin-bottom: 0px !important;
+}
+
+.active {
+    border-bottom: 2px solid rgb(51, 0, 101);
+    color: #333333;
+    opacity: 1;
+}
+
+.nav-flex-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+@media screen and (max-width: 480px) {
+    .tab-link {
+        min-width: 52px;
+        margin-left: 30px;
+        /*left: 9%;*/
+        height: 54px;
+    }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 400px) {
+    .tab-link {
+        left: 0%;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    .tab-link {
+        min-width: 88px;
+        margin-left: 2px;
+        left: 5%;
+    }
+}
+
+@media screen and (min-width: 980px) and (max-width: 1024px) {
+    .tab-link {
+        min-width: 128px;
+    }
+}

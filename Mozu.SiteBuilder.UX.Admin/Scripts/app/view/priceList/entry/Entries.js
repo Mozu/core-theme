@@ -5,6 +5,7 @@
 Ext.define('Taco.view.priceList.entry.Entries', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-priceList-entries',
+    cls: 'pricelist-entries-header',
     requires: [
         'Taco.core.util.Validation',
         'Taco.view.priceList.widget.EntriesGrid',

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.Core.Money;
-using Mozu.Tenant.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin
 {
@@ -26,8 +25,14 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "logzuUrl")]
         public string LogzuUrl { get; set; }
 
-        [DataMember(Name = "hasUnifiedAdmin")]
-        public bool? HasUnifiedAdmin { get; set; }
+        [DataMember(Name = "omsEnabled")]
+        public bool? OmsEnabled { get; set; }
+
+        [DataMember(Name = "hasLegacyAdmin")]
+        public bool? HasLegacyAdmin { get; set; }
+
+        [DataMember(Name = "loginURI")]
+        public string LoginURI { get; set; }
     }
 
     [DataContract]
@@ -120,5 +125,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
+
+        [DataMember(Name = "omsOnly")]
+        public bool OmsOnly { get; set; }
+
     }
 }

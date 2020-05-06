@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string OriginalOrderId { get; set; }
 
         public string OriginalOrderNumber { get; set; }
-
+        public bool IsUnified { get; set; }
         public string ReturnOrderId { get; set; }
 
         public List<Order.Order> ReturnOrders { get; set; }
@@ -74,7 +74,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string UpdatedBy { get; set; }
 
         public string CreatedBy { get; set; }
-        
+
+        public List<ReturnRefund> ReturnRefunds { get; set; }  
+
         #region money
         /// <summary>
         /// If this Return was refunded, how much was credited to the shopper? This amount
@@ -107,6 +109,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public decimal? ProductTotal { get; set; }
 
         public string CurrencyCode { get; set; }
+
+        public Decimal? DefaultProcessingFee { get; set; }
         #endregion
 
 
@@ -127,5 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         public int TotalItemsToRefund { get; set; }
         #endregion
+     
+        public bool ActionRequired { get; set; }
     }
 }

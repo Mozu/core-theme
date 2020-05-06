@@ -118,7 +118,8 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         { name: "Paid", id: "Paid" },
                         { name: "Unpaid", id: "Unpaid" },
                         { name: "Pending", id: "Pending" },
-                        { name: "Unpaid,Pending", id: "Unpaid,Pending" }
+                        { name: "Errored", id: "Errored" },
+                        { name: "Unpaid or Pending or Errored", id: "Unpaid,Pending,Errored" }
                     ]
                 })
             },
@@ -137,6 +138,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     data: [
                         { name: "Not Fulfilled", id: "NotFulfilled" },
                         { name: "Partially Fulfilled", id: "PartiallyFulfilled" },
+                        { name: "Customer Care", id: "CustomerCare" },
                         { name: "Fulfilled", id: "Fulfilled" }
                     ]
                 })

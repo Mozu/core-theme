@@ -33,6 +33,26 @@ Ext.define('Taco.view.role.Index', {
 
     initComponent: function () {
         var me = this;
+        me.canCreateRole = false;
+        me.canUpdateRole = false;
+        me.canDeleteRole = false;
+
+        Taco.user.behaviors.forEach(function (behavior) {
+            if (behavior == 29) {
+                me.canCreateRole = true;
+            };
+
+            if (behavior == 30) {
+                me.canUpdateRole = true;
+            };
+
+            if (behavior == 31) {
+                me.canDeleteRole = true;
+            };
+        });
+        me.createButtonCfg = {
+            disabled: !me.canCreateRole
+        };
 
         me.header = {
             title: 'Roles',
@@ -144,6 +164,7 @@ Ext.define('Taco.view.role.Index', {
             actions = [
                 {
                     text: 'Edit',
+                    disabled: !me.canUpdateRole,
                     handler: function (item, event) {
                         var rec = grid.getSelectionModel().getSelection()[0];
                         me.launchEditor(rec, 'edit');
@@ -152,6 +173,7 @@ Ext.define('Taco.view.role.Index', {
                 },
                 {
                     text: 'Duplicate',
+                    disabled: !me.canUpdateRole,
                     handler: function (item, event) {
                         var rec = grid.getSelectionModel().getSelection()[0];
                         me.launchEditor(rec, 'dup');
@@ -160,6 +182,7 @@ Ext.define('Taco.view.role.Index', {
                 },
                 {
                     text: 'Delete',
+                    disabled: !me.canDeleteRole,
                     handler: function (item, event) {
                         var rec = grid.getSelectionModel().getSelection()[0];
                         me.deleteRecord(rec, event);

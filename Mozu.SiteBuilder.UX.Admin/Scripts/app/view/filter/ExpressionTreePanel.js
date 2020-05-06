@@ -541,7 +541,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var menu = Ext.create('Ext.menu.Menu', {
             listeners: {
                 click: function (menu, item, e, eOpts) {
-                    record.set(me.containerDataOperatorName, item.operator);
+                    record.set(me.containerDataOperatorName, item.logicalOperator);
                     this.fireEvent("dataChanged", this);
                 },
                 beforehide: function () {

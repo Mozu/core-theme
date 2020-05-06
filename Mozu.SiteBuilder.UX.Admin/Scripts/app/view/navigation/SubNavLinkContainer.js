@@ -347,7 +347,7 @@ Ext.define('Taco.view.navigation.SubNavLinkContainer', {
 
         var menu = Ext.create('Ext.menu.Menu', {
             items: this.buildNode(config, config.title),
-            cls: 'taco-menu-item'
+            cls: 'taco-menu-item taco-header-split-button'
         });
 
         return menu;

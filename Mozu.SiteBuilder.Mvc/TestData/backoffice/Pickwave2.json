@@ -1,0 +1,92 @@
+{
+    "pickWaveId": "5e21d5e8b60cd40001caea05",
+    "tenantId": 17215,
+    "pickWaveNumber": 120,
+    "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "userDisplayName": "Kibo admin",
+    "shipmentNumbers": [
+        13997,
+        13998
+    ],
+    "fulfillmentLocationCode": "warehouselocation1",
+    "pickWaveStatus": "IN_PROGRESS",
+    "pickType": "NORMAL",
+    "maxShipments": 2,
+    "shipmentType": "STH",
+    "contents": [
+        {
+            "contentId": "5e21d5e8b60cd40001cae9f7",
+            "orderNumber": 2661,
+            "shipmentNumber": 13997,
+            "itemLineId": 1,
+            "quantity": 1,
+            "status": "IN_PROGRESS",
+            "binName": "Default",
+            "productCode": "CHICKENJEANS",
+            "variationProductCode": "CHICKENJEANS-1",
+            "partNumber": "CHICKENJEANS",
+            "upc": "CHICKENJEANS-1",
+            "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/ab64b421-2498-4c20-8b01-aadb06e44e3d",
+            "name": "DENIM CHICKEN",
+            "auditInfo": {
+                "createDate": "2020-01-17T15:42:32.352Z"
+            }
+        },
+        {
+            "contentId": "5e21d5e8b60cd40001cae9f8",
+            "orderNumber": 2661,
+            "shipmentNumber": 13997,
+            "itemLineId": 2,
+            "quantity": 1,
+            "status": "IN_PROGRESS",
+            "binName": "Default",
+            "productCode": "sp_04",
+            "partNumber": "sp_04",
+			"upc": "sp_04",
+			"imageUrl": "//cdn-sb.mozu.com/2295-2527/cms/2527/files/116bedf3-1f32-44d6-85af-ee57c361903b",
+            "name": "Standard Product - 4",
+            "auditInfo": {
+                "createDate": "2020-01-17T15:42:32.352Z"
+            }
+        },
+        {
+            "contentId": "5e21d5e8b60cd40001cae9f9",
+            "orderNumber": 2662,
+            "shipmentNumber": 13998,
+            "itemLineId": 1,
+            "quantity": 1,
+            "status": "IN_PROGRESS",
+            "binName": "Default",
+            "productCode": "CHICKENJEANS",
+            "variationProductCode": "CHICKENJEANS-1",
+            "partNumber": "CHICKENJEANS",
+            "upc": "CHICKENJEANS-1",
+            "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/ab64b421-2498-4c20-8b01-aadb06e44e3d",
+            "name": "DENIM CHICKEN",
+            "auditInfo": {
+                "createDate": "2020-01-17T15:42:32.352Z"
+            }
+        }
+    ],
+    "auditInfo": {
+        "updateDate": "2020-01-17T15:42:32.374Z",
+        "createDate": "2020-01-17T15:42:32.374Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    "_links": {
+        "self": {
+            "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/pickwaves/120"
+        },
+        "shipments": {
+            "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/pickwaves/120/shipments"
+        },
+        "open_waves": {
+            "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/pickwaves/open/warehouselocation1?shipmentType=STH&userId=355060a60a5e48eeb7f2fb8d92af2ba5&userDisplayName=Kibo%20admin"
+        },
+        "close": {
+            "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/pickwaves/120/closed",
+            "method": "PUT"
+        }
+    }
+}

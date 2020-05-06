@@ -28,12 +28,20 @@ Ext.define('Taco.view.dashboard.Index', {
                         '<li class="taco-dashboard-item">',
                             '<div class="taco-dashboard-item-box">',
                                 '<div class="taco-image-holder">',
+                                '<tpl if="values.address == \'/admin?quotes\' || values.address == \'/admin?locationGroups\' || values.id == \'fulfiller\' || values.id == \'orderRouting\'">',    
+                                    '<a href="{[values.address]}" class="taco-dashboard-icon taco-icon-{[values.id]}"></a>',
+                                    '<tpl else>',
                                     '<a data-url="{[values.address]}" class="taco-dashboard-icon taco-icon-{[values.id]}"></a>',
+                                    '</tpl>',
                                 '</div>',
                                 '<div class="taco-content-holder">',
                                     '<div class= "taco-dashboard-item-header">{[values.label]}:</div>',
                                     '<div class= "taco-dashboard-item-item"><tpl for="subNav">',
-                                        '<div><a data-url="{[values.address]}">{[values.label]}</a></div>',
+                                    '<tpl if="values.address == \'/admin?quotes\' || values.address == \'/admin?locationGroups\' || values.label == \'Fulfiller\' || values.label == \'Order Routing\'">',    
+                                    '<div><a href="{[values.address]}">{[values.label]}</a></div>',
+                                    '<tpl else>',
+                                     '<div><a data-url="{[values.address]}">{[values.label]}</a></div>',
+                                    '</tpl>',
                                     '</tpl></div>',
                                 '</div>',
                             '</div>',
@@ -165,15 +173,18 @@ Ext.define('Taco.view.dashboard.Index', {
             pushData.icon = el.get('icon');
             pushData.address = el.get('address');
 
-            Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
+            //Added check when there are no submenu items for example home,help on hamburgur menu.
+            if (el.data.items.length > 0) {
+                Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
 
-                var subNavData = {};
-                subNavData.label = subEl.get('label');
-                subNavData.address = subEl.get('address');
-                if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
-                    subNav.push(subNavData);
-                }
-            }, this);
+                    var subNavData = {};
+                    subNavData.label = subEl.get('label');
+                    subNavData.address = subEl.get('address');
+                    if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
+                        subNav.push(subNavData);
+                    }
+                }, this);
+            }
 
             pushData.subNav = subNav;
 

@@ -5,7 +5,8 @@
 @using Mozu.SiteBuilder.UX.Admin.Api
 @using Newtonsoft.Json
 @using Mozu.Core.Settings;
-@using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User
+@using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+@using System.Linq;
 <script>
     @{
 
@@ -22,6 +23,10 @@
         int[] behaviors = user.BehaviorIds;
         var siteRoles = (List<UserRole>) ViewData["siteRoles"];
         List<UserRole> siteRolesJson = siteRoles;
+
+        List<string> roleTags = new List<string>();
+
+        siteRolesJson.Where(x => x.RoleTags != null).ToList().ForEach(x => roleTags.AddRange(x.RoleTags));
 
         object taContext = ViewData["taContext"];
         object siteUsers = ViewData["siteUsers"];
@@ -46,7 +51,9 @@
                 id = user.Id, behaviors, taContext,
                 email = user.EmailAddress,
                 sites = siteRolesJson,
-                name = (user.FirstName + " " + user.LastName).Trim()
+                name = (user.FirstName + " " + user.LastName).Trim(),
+                roleTags = roleTags,
+                isFulfillerUser = user.IsFulfillerUser
             },
             apiVersion = ver.FileVersion,
             localizationValues = locValues, paymentApiBaseUrl,

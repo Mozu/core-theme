@@ -77,8 +77,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
         [JsonProperty(PropertyName = "type")]
         public string RateType { get; set; }
 
-       
-
+       /// <summary>
+       /// valid values are
+       /// Standard, One_Day, Two_Day, Three_Day
+       /// </summary>
+        public string DeliveryDuration { get; set; }
         
 
     }

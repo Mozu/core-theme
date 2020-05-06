@@ -1,0 +1,11 @@
+<div class="input-group">
+    <input class="form-control datepicker-control" placeholder="yyyy-mm-dd" [name]="name" [ngModel]="model | dateTypecast" (ngModelChange)="onModelChange($event)" ngbDatepicker #dp="ngbDatepicker" [footerTemplate]="footerTemplate" container="body">
+    <div class="input-group-addon" (click)="dp.toggle()">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+    </div>
+</div>
+<ng-template #footerTemplate>
+    <div class="datepicker-footer">
+        <a (click)="onModelChange(today)" title="{{today}}">{{'SHARED.FILTER.today' | translate}}</a>
+    </div>
+</ng-template>

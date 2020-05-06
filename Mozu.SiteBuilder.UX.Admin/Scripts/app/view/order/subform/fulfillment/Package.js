@@ -52,7 +52,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
                 scope: this,
                 margin: '0 0 0 10'
             },
-            items: Ext.Array.push([{
+            items: Ext.Array.push([
+            {
                 xtype: 'button',
                 text: '',
                 cls: 'package-details',

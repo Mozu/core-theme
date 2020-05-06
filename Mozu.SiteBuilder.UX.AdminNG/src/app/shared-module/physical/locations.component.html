@@ -1,0 +1,21 @@
+<h5 class="physicalloc">{{'LOCATIONGROUP.FormLabels.physicalLocation' | translate }}</h5>
+<p-treeTable #tt id="physicallocationdiv" [value]="model.physicalLocations" [columns]="model.cols" 
+    selectionMode="single" 
+    [(selection)]="model.selectedPhysicalLocNode" 
+    dataKey="name" 
+    [scrollable]="true" scrollHeight="360px"
+    (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)">
+    <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+        <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
+            <td *ngFor="let col of columns; let i = index">
+                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>        
+            <td [attr.colspan]="model.cols.length">{{'LOCATIONGROUP.GridMessages.emptyMessage' | translate}}</td>
+        </tr>
+    </ng-template>
+</p-treeTable>

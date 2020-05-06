@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using GDC = Mozu.SiteSettings.General.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -13,14 +13,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
 
 
-            CreateMap<Mozu.SiteSettings.General.Contracts.EmailTypeSetting, EmailTypeSettingVM>()
+            CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
                 .ForMember(x => x.Enabled, OP => OP.Ignore())
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
-            CreateMap<EmailTypeSettingVM, Mozu.SiteSettings.General.Contracts.EmailTypeSetting>();
-           
+            CreateMap<EmailTypeSettingVM, GDC.EmailTypeSetting>();
 
 
-            CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
+
+            CreateMap<Reference.Contracts.TimeZone, TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
             CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
@@ -30,11 +30,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
-            CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
-            CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>();
+            CreateMap<GDC.IPBlock, Models.GeneralSettings.IPBlock>();
+            CreateMap<Models.GeneralSettings.IPBlock, GDC.IPBlock>();
 
-            CreateMap<Mozu.SiteSettings.General.Contracts.IPBlockSettings, Mozu.SiteBuilder.UX.Models.Settings.IpBlockingSettings>()
-                .ForMember(x => x.DownloadDate, OP => OP.ResolveUsing((Mozu.SiteSettings.General.Contracts.IPBlockSettings y) => y.AuditInfo != null ? y.AuditInfo.UpdateDate : null))
+            CreateMap<GDC.IPBlockSettings, IpBlockingSettings>()
+                .ForMember(x => x.DownloadDate, OP => OP.ResolveUsing((GDC.IPBlockSettings y) => y.AuditInfo != null ? y.AuditInfo.UpdateDate : null))
                   .ForMember(x => x.IpAddress, OP => OP.Ignore());
 
 
@@ -67,11 +67,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //                    Id = x.Theme
             //                };
             //            }
-                        
+
             //        }
             //         return new ThemeSelection()
             //                   {
-                                   
+
             //                   };;
             //    }))
             //    .ForMember(m => m.MobileTheme, opt => opt.ResolveUsing(x =>
@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //        }
             //        return new ThemeSelection();
             //    }));
-           
+
             // //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
             //CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
             //    //ignores

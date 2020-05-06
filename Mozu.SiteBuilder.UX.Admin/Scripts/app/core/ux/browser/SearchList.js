@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.ux.browser.SearchList', {
     extend: 'Taco.core.ux.grid.Panel',
-    requires: ['Taco.core.ux.grid.plugins.AutoSelect'],
+    requires: ['Taco.core.ux.grid.plugins.AutoSelect', 'Taco.core.ux.mixins.PageablePageless'],
     mixins: {
         launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader',

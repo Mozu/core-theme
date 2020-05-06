@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using Mozu.Core.Exceptions;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using System.Web.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Extensions;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.ProductAdmin.Contracts;
 using DCloc = Mozu.Location.Contracts;
-using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient, 
+        public LocationInventoryController(ILocationInventoryWebApiClient locationInventoryClient, IProductWebApiClient productInventoryClient,
             ILocationAdminWebApiClient locationWebApiClient, ILocationSettingsWebApiClient locationSettingsWebApiClient, IProductAvailableInventoryHelper productAvailableInventoryHelper)
         {
             _locationInventoryClient = locationInventoryClient;
@@ -49,9 +49,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Monkey patch LocationName into LocationInventory (the by-product lookup needs it).
         /// </summary>
-       
 
-		[HttpGetRoute(UriTemplate = "list")]
+
+        [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             DC.LocationInventoryCollection inventories = null;
@@ -90,8 +90,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (inventories.TotalCount == 0)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.OK,
-                        List2<DC.LocationInventory>(inventories.Items, (int) inventories.TotalCount));
+                    return Request.CreateResponse(HttpStatusCode.OK,
+                        List2<DC.LocationInventory>(inventories.Items, inventories.TotalCount));
                 }
                 // now do a lookup of the location names for all the location codes.
                 var locationCodes = inventories.Items.Select(i => i.LocationCode).Distinct();
@@ -99,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 locationFilter += " and (isDisabled eq true or isDisabled ne true)";
                 var locations =
                     (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
-                inventories.Items =          
+                inventories.Items =
                     (from i in inventories.Items
                      join loc in locations on i.LocationCode.ToLowerInvariant() equals loc.Code.ToLowerInvariant()
                      select new Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.SuperchargedLocationInventory(i, loc.Name)
@@ -107,10 +107,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                return this.Request.CreateResponse(HttpStatusCode.NotImplemented, FailureList2<DC.LocationInventory>("You must specify a locationcode or productcode filter."));
+                return Request.CreateResponse(HttpStatusCode.NotImplemented, FailureList2<DC.LocationInventory>("You must specify a locationcode or productcode filter."));
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, (int)inventories.TotalCount));
+            return Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, inventories.TotalCount));
         }
 
         private static string GetStatusFilterFunction(FilterCollection extFilter)
@@ -142,24 +142,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // handle 404 by returning an empty list
             if (inventoryResp.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>());
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>());
+            }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
+            return Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
         }
 
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<HttpResponseMessage> Create(List<DC.LocationInventory> locationInventories)
         {
             var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
-            locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup => {
-                tasks.Add( _locationInventoryClient.AddLocationInventory( locationCodeGroup.ToList(), locationCodeGroup.Key ) );
+            locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup =>
+            {
+                tasks.Add(_locationInventoryClient.AddLocationInventory(locationCodeGroup.ToList(), locationCodeGroup.Key));
             });
 
             await Task.WhenAll(tasks);
 
             var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
+            return Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -169,31 +172,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             locationInventories.GroupBy(li => li.LocationCode).Each(locationCodeGroup =>
             {
-                var adjustments = 
+                var adjustments =
                     (from li in locationCodeGroup
-                     select new DC.LocationInventoryAdjustment { 
-                         LocationCode = li.LocationCode, 
-                         ProductCode = li.ProductCode, 
-                         Type = !string.IsNullOrEmpty(li.AdjustmentType) 
+                     select new DC.LocationInventoryAdjustment
+                     {
+                         LocationCode = li.LocationCode,
+                         ProductCode = li.ProductCode,
+                         Type = !string.IsNullOrEmpty(li.AdjustmentType)
                             ? li.AdjustmentType
                             : DC.LocationInventoryAdjustment.TypeConst.Absolute,
-                         Value = li.StockOnHand.GetValueOrDefault(0) 
+                         Value = li.StockOnHand.GetValueOrDefault(0)
                      }).ToList();
-                tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
+                tasks.Add(_locationInventoryClient.UpdateLocationInventory(adjustments, locationCodeGroup.Key));
             });
 
             await Task.WhenAll(tasks);
 
             var returnedInventories = tasks.SelectMany(t => t.Result.ReadAsSync()).ToList();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
+            return Request.CreateResponse(HttpStatusCode.OK, List2(returnedInventories));
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<DC.LocationInventory>>> Delete(List<DC.LocationInventory> locationInventories)
         {
-            var tasks = locationInventories.Select(li => _locationInventoryClient.DeleteLocationInventory(li.LocationCode, li.ProductCode) );
-        
+            var tasks = locationInventories.Select(li => _locationInventoryClient.DeleteLocationInventory(li.LocationCode, li.ProductCode));
+
             await Task.WhenAll(tasks);
 
             return SuccessWithTotal2<List<DC.LocationInventory>>(locationInventories.Count);
@@ -207,13 +211,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [FromUri]FilterCollection extFilter, string productCode = null, string variationProductCode = null)
         {
             productCode = productCode ?? extFilter.PopValue<string>("productcode");
-            if (String.IsNullOrEmpty(productCode)) {
-                throw new HttpResponseException( this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Missing product code."));
+            if (String.IsNullOrEmpty(productCode))
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Missing product code."));
             }
 
             var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
             if (product == null)
+            {
                 throw new VaeItemNotFoundException(string.Format("Could not find product code {0}", productCode));
+            }
 
             if (product.FulfillmentTypesSupported.Contains("Digital"))
             {
@@ -221,7 +228,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             DC.ProductVariation variation = null;
-            if (!String.IsNullOrEmpty(variationProductCode)) {
+            if (!String.IsNullOrEmpty(variationProductCode))
+            {
                 // we can't look up a variation by its variation product code. we need the variation KEY. Which is used by nobody else ever.
                 // so fuck it, let's just get all the variations and filter for the one we want.
                 var allTheVariations = (await _productClient.GetProductVariations(productCode)).ReadAsSync().Items;
@@ -233,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 variation.FulfillmentTypesSupported = product.FulfillmentTypesSupported;
             }
 
-            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(false) && 
+            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(false) &&
                 //todo:not this.
                 product.ProductUsage != "Bundle"
                 ? await GetManagedInventory(pagingParams, extFilter, product, variation)
@@ -246,7 +254,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 result.Where(lwi => lwi.Fulfillment.Code != "DS" || lwi.LocationCode == siteShippingLocationCode)
                     .ToList();
             return List2(result);
-            
+
         }
 
         private Response<List<LocationWithInventory>> CreateVirtualDigitalLocationWithInventory(DC.Product product)
@@ -262,8 +270,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         LocationTypes = new List<DCloc.LocationType>{ new DCloc.LocationType{Code = "DS", Name = "Digital"}},
                         FulfillmentTypes =
                             new List<DCloc.FulfillmentType> {FulfillmentTypeConstants.DigitalFulfillmentType}
-                            
-                                
+
+
                     },
                     ProductCode = product.ProductCode,
                     ProductName = product.Content.ProductName,
@@ -276,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<LocationWithInventory>> GetManagedInventory(PagingParamaters pagingParams, FilterCollection extFilter, DC.Product product, DC.ProductVariation variation)
         {
             string prodOrVariantCode = variation != null ? variation.VariationProductCode : product.ProductCode;
-            
+
             var filterString = extFilter.ToFilterString();
             var inventories =
                 (await
@@ -291,13 +299,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(locationLookupTasks);
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-            return  _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product, variation);
+            return _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product, variation);
         }
-        
+
         private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product, DC.ProductVariation variation)
         {
-            var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
-            return _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product, variation);
+            //filter fulfilment location for bundle products
+            List<DC.LocationInventory> locationInventories = new List<DC.LocationInventory>();
+            foreach (var bundledProduct in product.BundledProducts)
+            {
+                var inventory = (await _productClient.GetLocationInventories(productCode: bundledProduct.ProductCode)).ReadAsSync();
+                locationInventories.AddRange(inventory.Items.Where(x => x.StockAvailable >= bundledProduct.Quantity));
+            }
+
+            var fulfilmentLocations = locationInventories.GroupBy(x => x.LocationCode).
+                Where(y => y.Count() == product.BundledProducts.Count).
+                Select(z => z.Key).ToList();
+
+            var locationInventory = new List<LocationWithInventory>();
+            foreach (var fulfilmentLocation in fulfilmentLocations)
+            {
+                var location = (await _locationWebApiClient.GetLocation(fulfilmentLocation)).ReadAsSync();
+                locationInventory.AddRange(_productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(location, product, variation));
+            }
+
+            return locationInventory;
         }
 
         private async Task<string> GetDefaultDirectShipLocation()

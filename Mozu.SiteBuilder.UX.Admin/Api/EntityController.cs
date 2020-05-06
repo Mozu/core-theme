@@ -278,6 +278,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 variations.Add(cmsDoc.ToJObject());
                             }
                             parentDoc.Properties.Property("variations").Value = variations;
+                        } 
+                        else
+                        {
+                            variations.Add(cmsDoc.ToJObject());
+                            parentDoc.Properties.Property("variations").Value = variations;
                         }
                     }
                     else

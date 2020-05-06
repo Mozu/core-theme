@@ -20,5 +20,7 @@
     <file src="Scripts\app\locale\**" target="Scripts\app\locale" />
     <file src="Tests\**" target="Tests" />
     <file src="Views\**" target="Views" />
+    <file src="adminng\**" target="adminng" />
+    <file src="assets\**" target="assets" />
   </files>
 </package>

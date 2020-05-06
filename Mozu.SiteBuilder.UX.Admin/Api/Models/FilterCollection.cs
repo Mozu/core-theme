@@ -42,6 +42,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         {
             return this.id + ";" + this.NumericId + ":" + pageIndex + ";" + startIndex + ";" + pageSize + ";" + productCode + ";" + (sort == null ? "" : string.Join(",",sort.Select(x => x.direction + x.property)) );
         }
+        public string shipmentType { get; set; }
+        public string locationGroupCode { get; set; } 
+        public string pickupCode { get; set; }
+
     }
 
     public class FilterCollection : List<FilterCollectionItem>
@@ -61,6 +65,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public string ShowProductUsages { get; set; }
 
         public bool ShowVariations { get; set; }
+
+        public bool OrderPaymentsByCapture { get; set; }
+
 
         /// <summary>
         /// Specifies whether to only show the "live" version of items, i.e. the published version as opposed to new/draft.
@@ -277,5 +284,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
             get;
             set;
         }
+
+
     }
 }

@@ -98,7 +98,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             itemId: 'textFilter',
             margin: '0 0 20 0',
             msgTarget: 'qtip',
-            cls: 'taco-quickfilter',
+            cls: 'taco-quickfilter placeholderSearch',
             flex: 1,
             width: 400,
             emptyText: this.emptySearchText,
@@ -518,7 +518,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
-        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter);
+        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter, this.defaultFieldName);
     },
 
     isFieldSupported: function (key) {

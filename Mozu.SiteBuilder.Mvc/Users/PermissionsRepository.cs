@@ -11,6 +11,7 @@ using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
@@ -21,10 +22,10 @@ namespace Mozu.SiteBuilder.Mvc.Users
         private readonly IReferenceDataWebApiClient _referenceWebApiClient;
         private readonly IApiContext _apiContext;
         private readonly ISettings _settings;
-   
 
 
-        public PermissionsRepository(IMultiScopeRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient, IApiContext apiContext, ISettings settings )
+
+        public PermissionsRepository(IMultiScopeRoleWebApiClient rolesWebApiClient, IReferenceDataWebApiClient referenceWebApiClient, IApiContext apiContext, ISettings settings)
         {
             _rolesWebApiClient = rolesWebApiClient;
             _referenceWebApiClient = referenceWebApiClient;
@@ -32,16 +33,16 @@ namespace Mozu.SiteBuilder.Mvc.Users
             _settings = settings;
         }
 
-        public Task<List<Role>> GetRoles()
+        public Task<Core.Api.Contracts.RoleCollection> GetRoles(int? startIndex, int? pageSize)
         {
-            var response = _rolesWebApiClient.GetRoles(scopeType: UserScopeType.Tenant.ToString( ), scopeId: _apiContext.TenantId).Result;
+            var response = _rolesWebApiClient.GetRoles(startIndex, pageSize,UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
-                return InTask(new List<Role>(0));
+                return InTask(new Core.Api.Contracts.RoleCollection());
 
             var roles = response.ReadAsAsync().Result;
 
-            return InTask(Mapper.Map<List<Role>>(roles.Items));
+            return InTask(roles);
         }
 
         public Task<Role> GetRole(int? id)
@@ -174,8 +175,8 @@ namespace Mozu.SiteBuilder.Mvc.Users
         {
             var categories = GetCategories();
             var behaviors = GetBehaviors();
-         
-        
+
+
 
 
 
@@ -184,7 +185,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
             //{
             //    validCats = filterStr.Split(',').Select(x => int.Parse(x)).ToArray();
             //}
-            return InTask(new BehaviorTree(categories, behaviors ));
+            return InTask(new BehaviorTree(categories, behaviors));
         }
 
         private static Task<T> InTask<T>(T thing)

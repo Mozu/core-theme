@@ -5,6 +5,8 @@
         'Taco.view.settings.discounts.Index',
         'Taco.view.settings.paymentGateways.Index',
         'Taco.view.settings.paymentGateways.Edit',
+        'Taco.view.settings.inventoryExportJob.Index',
+        'Taco.view.settings.inventoryExportJob.Edit',
         'Taco.view.settings.tax.Edit',
         'Taco.view.settings.shipping.Edit',
         'Taco.model.SiteShippingSettings',
@@ -14,6 +16,7 @@
     models: [
         'Taco.model.CheckoutSettings',
         'Taco.model.PaymentGateway',
+        'Taco.model.InventoryExportJob',
     ],
 
     discounts: function () {
@@ -47,6 +50,13 @@
         if (!this.requiresSiteContext()) {
 
             this.createContentView('Taco.view.settings.paymentGateways.Index');
+        }
+    },
+
+    inventoryExportJob: function () { 
+        if (!this.requiresSiteContext()) {
+
+            this.createContentView('Taco.view.settings.inventoryExportJob.Index');
         }
     },
 

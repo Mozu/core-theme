@@ -64,14 +64,15 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
 
         this.items = [{
             xtype: 'button',
-            text: 'Switch to Unified',
-            cls: 'switch-button-secondary',
-            tooltip: 'Click here to switch to Unified Admin',
+            text: 'Switch to Classic',
+            cls: 'switch-button-primary',
+            tooltip: 'Click here to switch to Classic Admin',
             hidden: !this.showSwitchAdminButton(),
             pressed: true,
             listeners: {
                 'click': function (button, pressed) {
-                    Ext.util.Cookies.set('isUnified', true);
+                    Ext.util.Cookies.set('isUnified', false);
+                    Ext.util.Cookies.set('isUnifiedState', true);
                     window.location.reload(true);
                 }
             }
@@ -212,6 +213,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     
     showSwitchAdminButton: function () {
         var taContext = Taco.app.context;
-        return taContext.getHasUnifiedAdmin();
+        return taContext.getHasLegacyAdmin();
     }
 });

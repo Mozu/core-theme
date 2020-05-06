@@ -3,35 +3,15 @@
         border: none;
         background-color: $white-color;
     }
+
     .tenant-name {
         top: 10px !important;
         margin-right: 10px;
         z-index: 1
     }
 
-    .x-btn .x-btn-inner-center {
-        color: white;
-        font-size: 12px;
-    }
 
 
-    .switch-button-primary {
-        background-color: #bb6e9c;
-        background-image: none;
-
-        &:hover {
-            text-decoration: none !important;
-        }
-    }
-
-    .switch-button-secondary {
-        background-color: #2ea195;
-        background-image: none;
-
-        &:hover {
-            text-decoration: none !important;
-        }
-    }
     .help-button {
         padding: 10px 11px 8px;
         top: -2px !important; //override EXT JS positioning
@@ -76,5 +56,120 @@
                 top: 0px;
             }
         }
+    }
+}
+
+.taco-primary-menu-heading.color-kibo-purple:hover, li.color-kibo-purple:hover {
+    &.main-menu-switchToClassic:hover {
+        background-color: transparent !important;
+        span {
+            text-decoration:none;
+        }
+    }
+    
+    background-color: $color-kibo-purple-light ;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.taco-primary-menu-heading.color-kibo-green:hover, li.color-kibo-green:hover {
+    background-color: $color-kibo-green-light !important;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.taco-primary-menu-heading.color-kibo-blue:hover, li.color-kibo-blue:hover {
+    background-color: $color-kibo-blue-light !important;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.taco-primary-menu-heading.color-kibo-orange:hover, li.color-kibo-orange:hover {
+    background-color: $color-kibo-orange-light !important;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+li.color-kibo-purple.active {
+    &:hover {
+        background-color: $color-kibo-purple-light !important;
+    }
+
+    background-color: transparent !important;
+    border-color: $color-kibo-purple !important;
+
+    a {
+        font-weight: bold;
+        //text-decoration: underline;
+    }
+}
+
+li.color-kibo-green.active {
+    &:hover {
+        background-color: $color-kibo-green-light !important;
+    }
+
+    background-color: transparent !important;
+    border-color: $color-kibo-green !important;
+
+    a {
+        font-weight: bold;
+        //text-decoration: underline;
+    }
+}
+
+li.color-kibo-blue.active {
+    &:hover {
+        background-color: $color-kibo-blue-light !important;
+    }
+
+    background-color: transparent !important;
+    border-color: $color-kibo-blue !important;
+
+    a {
+        font-weight: bold;
+        //text-decoration: underline;
+    }
+}
+
+li.color-kibo-orange.active {
+    &:hover {
+        background-color: $color-kibo-orange-light !important;
+    }
+
+    border-color: $color-kibo-orange !important;
+    //background-color: $color-kibo-orange-light !important;
+    background-color: transparent !important;
+
+    a {
+        font-weight: bold;
+        //text-decoration: underline;
+    }
+}
+
+li[class ^= 'color-kibo'] {
+    &:hover {
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    &.active {
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    a {
+        font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
+        font-size: 16px;
     }
 }

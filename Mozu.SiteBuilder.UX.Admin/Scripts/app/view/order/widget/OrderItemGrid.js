@@ -283,6 +283,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<span class="product-link-disabled">{productName}</span>',
                         '</tpl>',
 
+                        '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock && stock.stockAvailable < quantity">',  
+                        '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">Qty {[values.quantity - values.stock.stockAvailable]} on backorder.</span>',
+                        '<tpl if="stock.availableDate">',
+                        '<span class="product-link-disabled"> Available on {stock.availableDate:date("m/d/Y")}</span>',
+                        '</tpl>',                        
+                        '</em></tpl>',
+
                         '<div class="product-options">',
                             '<tpl for="options">',
                                 '<div class="option">{[this.getAttributeName(values)]}: {[this.getAttributeValue(values)]}</div>',
@@ -403,17 +410,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         
                     }
                 },
-                {
-                    dataIndex: 'fulfillmentStatus',
-                    text: 'Status',
-                    draggable: false,
-                    resizable: true,
-                    width: 120,
-                    sortable: false,
-                    menuDisabled: true,
-                    hidden: false,
-                    align: 'left'
-                },
+                //{
+                //    dataIndex: 'fulfillmentStatus',
+                //    text: 'Status',
+                //    draggable: false,
+                //    resizable: true,
+                //    width: 120,
+                //    sortable: false,
+                //    menuDisabled: true,
+                //    hidden: false,
+                //    align: 'left'
+                //},
                 {
                     text: 'Fulfillment',
                     editorId: 'fulfillmentColumn',

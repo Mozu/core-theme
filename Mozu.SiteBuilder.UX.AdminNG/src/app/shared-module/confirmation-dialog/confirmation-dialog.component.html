@@ -1,0 +1,31 @@
+<!-- The Modal -->
+<div class="modal" *ngIf="displayModal"> 
+  <div class="modal-dialog modal-sm" >
+    <div class="modal-content">
+
+<!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ dialogTitle }}
+        </h4>
+      </div>
+
+<!-- Modal body -->
+      <div class="modal-body">
+        <div>  
+          {{ message }} 
+          <span *ngIf="itemName"><b>{{itemName}}</b>?</span>
+        </div> <br>
+        <div>{{ secondaryMessage }}</div>
+      </div>
+
+<!-- Modal footer -->
+      <div class="modal-footer">
+        <div>
+          <button class="btn btn-default" *ngIf="isShowSecondaryButton == true" (click)="cancel()">{{ secondaryButtonText }}</button>
+          <button  (click)="confirm()" [ngClass]="(primaryButtonText === deleteLabel) ? 'btn delete-btn' : 'btn btn-success'">{{ primaryButtonText }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

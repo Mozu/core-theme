@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2019-08-05
+ * Mozu JavaScript SDK - v0.3.0 - 2019-12-10
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -4231,6 +4231,11 @@ module.exports=
       "verb": "GET",
       "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
       "returnType": "string"
+    },
+    "get-fulfillment-return-label": {
+      "verb": "GET",
+      "template": "{+returnService}{returnId}/shipping/label",
+      "returnType": "string"
     }
   },
   "rmas": {
@@ -5667,6 +5672,13 @@ module.exports = (function () {
         },
         getReturnLabel: function (data) {
             return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64Png': true }).then(function (label) {
+                return label;
+            }, function (reason) {
+                errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
+            });
+        },
+        getFulfillmentReturnLabel: function (data) {
+            return this.api.action('rma', 'getFulfillmentReturnLabel', { 'returnId': data.returnId}).then(function (label) {
                 return label;
             }, function (reason) {
                 errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);

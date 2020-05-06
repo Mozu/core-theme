@@ -1,0 +1,183 @@
+<div class="col-md-12 quote-container">
+  <div class="info-section">
+    <div class="row">
+      <div class="sub-container">
+        <quote-summary [Quote]=model></quote-summary>
+      </div>
+      <div class="sub-container">
+        <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 quote-container top-margin">
+  <div class="info-section">
+    <div class="row">
+      <div class="sub-container">
+        <spinner></spinner>
+        <quote-items [QuoteId]=quoteId [Quote]=model.items (onQuoteSubtotalChanged)="applyQuoteSubtotal($event)">
+        </quote-items>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sub-container">
+        <div class="col-sm-12">
+          <p class="quote-heading">{{'SHARED.SHIPPING.Address.shippingInformation' | translate }} </p>
+        </div>
+        <div class="col-sm-12">
+          <div class="col-sm-6">
+            <shipping-address [Destinations]="model.destinations ? model.destinations[0].destinationContact: []">
+            </shipping-address>
+          </div>
+          <div class="col-sm-6">
+            <h5>{{'SHARED.SHIPPING.Method.shippingMethodAndPrice' | translate }} </h5>
+            <shipping-method [QuoteId]=quoteId [ShippingMethodCode]=model.shippingMethodCode
+              (onShippingMethodChanged)="applyShippingRates($event)" (clear)=applyShippingRates($event)>
+            </shipping-method>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sub-container">
+        <div class="col-sm-12">
+          <p class="quote-heading">{{'QUOTES.Quote.Negotiation.heading' | translate }} </p>
+        </div>
+        <div class="col-sm-12">
+          <div class="col-sm-6 padding-none">
+            <quote-negotiation [QuoteId]=quoteId></quote-negotiation>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <p>{{'QUOTES.Quote.Negotiation.Total.heading' | translate }}</p>
+
+            <div class="info-section top-margin">
+              <div class="quotes-detail-wrapper">
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.totalCost' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.itemTotal : 0) | currency }}</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <select id="subtotalList" (change)="onChange($event.target.value)"
+                        class="form-control border-0 enabled-bg total-price-select padding-none">
+                        <option *ngFor="let c of subtotalList" [value]="c.data">{{c.label}}</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span> {{(model.subtotalOptionValue ? model.subtotalOptionValue : 0) | currency}}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-md-4 col-xs-12">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.negotiatedPrice' | translate }}</span>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                      <label>
+                        <input type="radio" name="negotiatedPriceDiscount" value="percentageDiscount"
+                          id="rbPercentageDiscount" [checked]="isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.percentageDiscount' | translate }}
+                      </label>
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-right">
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)}">
+                        <input type="text" class="form-control border-right-0 rounded-0" id="txtPercentageDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)"
+                          (change)="onPercentageDiscountChange($event)" restrict_input="decimalPrecisionFour">
+                        <div class="input-group-addon rounded-0">%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group odd-form-group">
+                    <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
+                      <label>
+                        <input type="radio" name="negotiatedPriceDiscount" id="rbAmountDiscount" value="amountDiscount"
+                          [checked]="isNegotiatedPriceDiscountEnable('negotiatedPriceDiscount.amountDiscount')"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.amountDiscount' | translate }}
+                      </label>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('amountDiscount')}">
+                        <div class="input-group-addon rounded-0">$</div>
+                        <input type="text" class="form-control border-left-0 rounded-0" id="txtAmountDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('negotiatedPriceDiscount.amountDiscount')"
+                          (change)="onAmountDiscountChange($event)" restrict_input="decimalPrecisionFour">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
+                      <label>
+                        <input type="radio" name="negotiatedPriceDiscount" value="proposedPrice" id="rbProposedPrice"
+                          [checked]="isNegotiatedPriceDiscountEnable('proposedPrice')"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.proposedPrice' | translate }}
+                      </label>
+                    </div>
+                    <div class=" col-md-4">
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('proposedPrice')}">
+                        <div class="input-group-addon rounded-0">$</div>
+                        <input type="text" class="form-control border-left-0 rounded-0" id="txtProposedPrice"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('proposedPrice')"
+                          (change)="onPromposedPriceChange($event)" restrict_input="decimalPrecisionFour">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.quoteSubtotalExclTax' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.subTotal : 0) | currency }}</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.shippingAndHandeling' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.shippingTotal : 0) | currency}}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.estimatedTax' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.itemTaxTotal : 0) | currency }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span><b>{{'QUOTES.Quote.Negotiation.Total.quoteGrandTotalExclTax' | translate }}</b></span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span><b>$2700.00</b></span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
         private const string STOCK_ON_HAND = "stockonhand";
         private const string STOCK_AVAILABLE = "stockavailable";
         private const string STOCK_ON_BACKORDER = "stockonbackorder";
+        private const string SKU = "sku";
+        private const string PARTNUMBER = "mfgPartNumber";
 
         private const string CREATE_DATE_PROPERTY = "createdate"; 
         private const string CREATED_BY_PROPERTY = "createby";
@@ -39,11 +41,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "productname":
-                    return string.Format("({1} sw {0})", filter.value, PRODUCT_NAME);
+                    return string.Format("({1} eq {0})", filter.value, PRODUCT_NAME);
                 case "productcode":
-                    return string.Format("({1} {2} {0})", filter.value, PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
+                    return string.Format("({1} eq {0})", filter.value, PRODUCT_CODE);
                 case "productcodefilter":
-                    return $"({PRODUCT_CODE} sw \"{filter.value}\" or {BASE_PRODUCT_CODE} eq \"{filter.value}\")";
+                    return $"({PRODUCT_CODE} eq \"{filter.value}\")";
                 case "productstatus":
                     if (filter.value == null)
                         return string.Empty;
@@ -93,7 +95,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                 case "updateby":
                 case "lastmodifiedby":
                     return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
-
+                case "sku":
+                    return $"({SKU} eq \"{filter.value}\")";
+                case "mfgpartnumber":
+                    return $"({PARTNUMBER} eq \"{filter.value}\")";
                 default:
                     throw new NotImplementedException("unable to filter on property " + filter.property);
             }

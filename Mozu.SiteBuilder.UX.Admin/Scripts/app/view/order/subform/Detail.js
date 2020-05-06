@@ -266,10 +266,17 @@ Ext.define('Taco.view.order.subform.Detail', {
         Ext.apply(this, {
             items: [
                 {
+                    padding: '0 40 0 0',
+                    height: 20,
+                    cls: '',
+                    html: '<div class="order-detail-pill"> <span class="x-column-content-pill x-column-content-pill-true order-detail-pill-size">This is an old order. To Perform Operations please switch to classic admin.</span></div>',
+                    hidden: this.record.get('isUnified')
+                },
+                {
                     xtype: "panel",
                     ui: "subform-section",
                     headerToolbar: true,
-                    tools: me.getButtonActions(),
+                    tools: this.record.get('isUnified') ? me.getButtonActions() : null,
                     title: "Items Ordered",
                     items: [
                         me.detailGrid,
@@ -538,18 +545,19 @@ Ext.define('Taco.view.order.subform.Detail', {
                 text: 'Cancel Order',
                 xtype: "button",
                 ui: "action",
-                itemId:"cancelOrderButton",
+                itemId: "cancelOrderButton",
                 scale: "medium",
                 margin: {
-                    right:2
+                    right: 2
                 },
                 requiredBehaviors: me.orderUpdateBehaviors,
                 handler: function () {
                     this.detailGrid.cancelOrder();
                 },
                 scope: me,
-                disabled: !canCancel
-            },{
+                disabled: this.record.get('orderStatus') == 'PendingReview' ? false : true 
+            },
+            {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',

@@ -1,0 +1,89 @@
+.loading-text {
+    display: block;
+    background-color: #f1f1f1;
+    min-height: 19px;
+    animation: pulse 1s infinite ease-in-out;
+    text-indent: -99999px;
+    overflow: hidden;
+}
+
+.pi-info-circle {
+    cursor: pointer;
+}
+
+.pi-info-circle+.tooltip {
+    /* position: absolute;
+    line-height: 18px;
+    height: 25px;
+    transform: none !important;
+    top: -3px !important; */
+    opacity: 1 !important;
+}
+
+.tooltip-inner {
+    text-align: left;
+}
+
+.myposi {
+    position: relative;
+}
+
+.table-column-filter {
+    width: 100%;
+}
+
+.filtericon {
+    position: absolute;
+    top: 17px;
+    color: #333;
+}
+
+.filtericon+input {
+    /* border-left:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    border-right:1px solid transparent; */
+    border-top: 1px solid transparent;
+    padding: 7px 17px;
+    font-size: 13px;
+}
+
+.filtericon+input:focus {
+    outline: none;
+}
+
+p-table .ui-table .ui-table-thead>tr {
+    border-top-color: transparent !important;
+    border-right-color: transparent !important;
+    border-left-color: transparent !important;
+    border-top: 1px solid transparent;
+    padding: 7px 17px;
+    font-size: 13px;
+}
+
+.locations-list-container p-table .ui-table .ui-table-tbody>tr>td {
+    padding: 8px 2px !important;
+    font-weight: normal !important;
+    border-color: #9f9b9b57 !important;
+}
+
+.locations-list-container p-table .ui-table .ui-table-tbody>tr:not(.ui-state-highlight):not(.ui-contextmenu-selected):hover {
+    cursor: pointer;
+    background-color: #eaeaea;
+    color: #333333;
+}
+
+.forwidth {
+    width: 1.5em;
+}
+
+.forwidth1 {
+    width: 2em;
+}
+
+.forwidth2 {
+    width: 20px;
+}
+
+.forheight {
+    height: 34px;
+}

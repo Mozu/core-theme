@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Mozu.Content.Contracts;
 using Mozu.Core.Actions;
 using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -22,22 +14,26 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
     [SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
-    ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+        ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
     [SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
         Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CmsPagesController : BaseApiController
     {
         private readonly ICustomRouteHandler _customRouteHandler;
         private readonly Lazy<UrlHelper> _urlhelper;
-        private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
-        private readonly Lazy<IExpressionEvaluator> _expressionEvaluator;
 
         public CmsPagesController(
             ICustomRouteHandler customRouteHandler, 
@@ -47,8 +43,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             _customRouteHandler = customRouteHandler;
             _urlhelper = urlhelper;
-            _pageRuleVisitor = pageRuleVisitor;
-            _expressionEvaluator = expressionEvaluator;
+            PageRuleVisitor = pageRuleVisitor;
+            ExpressionEvaluator = expressionEvaluator;
         }
 
         [HttpHead]
@@ -64,7 +60,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x =>
                 x.ListFQN == documentListName &&
                 string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
-
             var template = pageType != null ? pageType.Template : "document-list";
 
             PageContext.CmsContext = new CmsPageContext
@@ -83,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
 
-            await Task.WhenAll(ContextInitializationTasks);
+            await ContextInitializationTasks;
             if (PageContext.CmsContext.Page.Document != null)
             {
                 PageTypeDefinition pageDefinition = null;
@@ -98,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.ListName = documentListName;
             PageContext.ListViewName = listView;
 
-            await Task.WhenAll(ContextInitializationTasks);
+            await ContextInitializationTasks;
             var view = View(template, new {listFQN = documentListName});
             return Ok(view);
         }
@@ -121,12 +116,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-            if (!string.IsNullOrEmpty(variationId))
+            if (!String.IsNullOrEmpty(variationId))
             {
                 PageContext.VariationId = variationId;
             }
 
-            await Task.WhenAll(ContextInitializationTasks);
+            await ContextInitializationTasks;
 
             if (PageContext.CmsContext.Page.Document == null)
                 return NotFound("page not found");
@@ -135,9 +130,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 () => ToRouteDictionary(PageContext.CmsContext.Page.Document));
             
             if (redirect != null) return redirect;
-            
+
             if (Request.Method == HttpMethod.Head.Method) return Ok();
-            
+
             var vm = PageContext.CmsContext.Page.Document;
         
             NavigationContext.SetContext(vm);
@@ -154,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (PageContext.CmsContext.Page.Document.Get("hidden", false))
                     return NotFound(" not found");
                 if (PageContext.CmsContext.Page.Document.TryGet("redirect_url", out string redir) &&
-                    !string.IsNullOrEmpty(redir)) return new RedirectResult(redir);
+                   !string.IsNullOrEmpty(redir)) return new RedirectResult(redir);
             }
 
             PageTypeDefinition pageDefinition = null;

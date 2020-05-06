@@ -11,5 +11,6 @@ Ext.define('Taco.view.b2baccounts.Index', {
     },
     initComponent: function () {
         this.callParent(arguments);
-    }
+    },
+    cls:'b2b-page'
 });

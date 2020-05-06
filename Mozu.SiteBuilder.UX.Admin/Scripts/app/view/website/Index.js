@@ -116,6 +116,8 @@ Ext.define('Taco.view.website.Index', {
 
         this.entitypeTypeHandler = {};
 
+        
+
         this.resolutionOverride = 0;
 
         /**
@@ -124,6 +126,7 @@ Ext.define('Taco.view.website.Index', {
          */
         this.publishButton = {
             xtype: 'publishbutton',
+            cls: 'website-publish-btn',
             itemId: 'publishActionButton',
             beforeItemId: 'saveActionButton',
             buttonGroup: 'isPublishable',
@@ -219,7 +222,7 @@ Ext.define('Taco.view.website.Index', {
             menu: {
                 plain: true,
                 shadow: false,
-                cls: 'taco-more-action-button-menu',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
                         text: 'Preview Theme',
@@ -244,7 +247,10 @@ Ext.define('Taco.view.website.Index', {
          * Variation Store
          * Store used to handle state of variations
          *  - Each time a New Page/Category is selected this store is wiped and new variations are added.
+         *  - We must manually invalidated the store cache. If not multiple stores will be created for the type.
          */
+
+        Taco.core.data.StoreManager.invalidateCachedStores(['Taco.store.EntityVariations'])
         this.variationStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityVariations');
 
         /**
@@ -797,6 +803,7 @@ Ext.define('Taco.view.website.Index', {
         });
 
         this.iframe = this.down('#iframe');
+
         this.pageSettings = this.down('#pageSettings');
         this.pageRules = this.down('#pageRules');
         this.tree = this.down('taco-website-tree');
@@ -804,8 +811,6 @@ Ext.define('Taco.view.website.Index', {
         this.sideBar = this.down('#sideBar');
         this.container = this.down('.taco-website-holder');
         this.titleDraftContainer = this.navHeader.down('#titleDraftContainer');
-        // TODO: remove when dev complete
-        window.webSiteIndex = this;
 
         this.mon(this.controller, 'pageload', this.onPageLoad, this);
         this.mon(this.controller, 'widgetdrop', this.onWidgetDrop, this);
@@ -1157,6 +1162,7 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             previewThemesMenu = this.getHeader().down('#previewThemesMenu'),
             menu = {
+                cls: 'taco-ellipsis-split-button',
                 items: []
             },
             hash = this.themeStore.tree.nodeHash;

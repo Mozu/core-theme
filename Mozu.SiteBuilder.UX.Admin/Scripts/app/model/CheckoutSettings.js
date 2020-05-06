@@ -31,35 +31,9 @@ Ext.define('Taco.model.CheckoutSettings', {
         },
         { name: "purchaseOrder", type: "any", defaultValue: {} },
 
-        { name: "thirdPartyPaymentSettings", type: "any", defaultValue: [] }
-        /*
-        {
-            name: "supportedCards",
-            type: "auto",
-            convert: function (v, record) {
-                v = record.raw.gateway.supportedCards;
-                if (v && !Ext.isArray(v)) {
-                    return [v];
-                }
-                return v;
-            }
-        },
-        { name: "gatewayDefinitionId", type: "string" },
-        { name: "credentialsSet", type: "boolean" },
-        
-        { name: "paypalExpress", type: "boolean" },
-        { name: "credentials", type: "any" ,defaultValue: {} },
-        
-        */
+        { name: "thirdPartyPaymentSettings", type: "any", defaultValue: [] },
+        { name: "jobSettings", type: "auto" }
     ],
-
-    //set: function (fieldName, newValue) {
-    //    if (fieldName == "supportedCards" && newValue && !Ext.isArray(newValue)) {
-    //        newValue = [newValue];
-    //    }
-    //    this.callParent(fieldName, newValue);
-    //},
-
     proxy: {
         type: 'ajaxproxy',
 

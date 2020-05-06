@@ -182,6 +182,11 @@ Ext.define('Taco.model.Return', {
         {
             name: 'notes',
             persist: false
+        },
+        {
+            name: 'isUnified',
+            "type": "boolean",
+            defaultValue: null
         }
     ],
 

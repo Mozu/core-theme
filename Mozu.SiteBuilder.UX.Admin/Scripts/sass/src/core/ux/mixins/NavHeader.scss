@@ -3,7 +3,7 @@
     background-color: $light-bg-gray;
     padding: 0px;
 
-    .#{$vprefix}content-navcontainer-body {                
+    .#{$vprefix}content-navcontainer-body {
         background-color: $base-color;
 
         &.x-panel-body {
@@ -12,9 +12,8 @@
     }
 
     .#{$prefix}grid-body {
-        background-color:#fff;
+        background-color: #fff;
     }
-
 }
 
 .#{$vprefix}content-navcontainer-padding {
@@ -28,14 +27,15 @@
 
 .#{$vprefix}navheader {
     box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
-    .#{$vprefix}navheader-toolbar{
+
+    .#{$vprefix}navheader-toolbar {
         box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 3px 0px;
-        border-bottom: 1px solid $color-standard-border !important;
+        //border-bottom: 1px solid $color-standard-border !important;
         background-color: $color-neutral-white;
         line-height: 23px;
 
         .#{$prefix}toolbar-default {
-            background-color: $color-neutral-white;
+            //background-color: $color-neutral-white;
         }
 
         .#{$vprefix}subnav-breadcrumb {
@@ -53,6 +53,10 @@
                     &:hover {
                         color: $nav-element-active;
                         text-decoration: none;
+
+                        .shipping-links & {
+                            color: #fff;
+                        }
                     }
                 }
 
@@ -63,10 +67,19 @@
                     a {
                         color: $nav-element-active;
                     }
+
+                    .shipping-links & {
+                        color: #fff;
+                        background-color: transparent;
+                    }
                 }
 
                 &.active {
                     border-bottom: 2px solid $valid-green;
+
+                    .shipping-links & {
+                        border-bottom: 2px solid #ffce01;
+                    }
                 }
             }
         }
@@ -94,24 +107,24 @@
                 white-space: nowrap;
 
                 .title {
-                     display: inline-block;
-                     padding: 20px;
-                     position: relative;
-                     height: 100%;
-                     overflow:hidden;
-                     text-overflow: ellipsis;
+                    display: inline-block;
+                    padding: 20px;
+                    position: relative;
+                    height: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
-                     &:first-child {
-                        border-right: 1px solid $nav-element-active-border;
-                     }
+                    &:first-child {
+                        //border-right: 1px solid $nav-element-active-border;
+                    }
 
-                     &:nth-child(2) {
+                    &:nth-child(2) {
                         padding: 20px 5px 20px 20px;
-                     }
+                    }
 
-                     a {
-                        color: $nav-element-active;
-                     }
+                    a {
+                        color: $color-framework-gray-lighter;
+                    }
                 }
 
                 .#{$vprefix}light-tag {
@@ -133,9 +146,8 @@
                 .#{$prefix}column-content-pill {
                     top: -25px;
                 }
-
             }
-            
+
             .#{$vprefix}content-header-title-root {
                 color: $color-framework-blue-dark;
             }
@@ -180,8 +192,8 @@
                 border: none;
 
                 &:hover {
-                    opacity: 1;
-                    background-color: transparent;
+                    //opacity: 1;
+                    //background-color: #633095 !important;
                 }
 
                 &.#{$prefix}menu-active {
@@ -193,6 +205,7 @@
 
                 .#{$prefix}btn-arrow-right {
                     @include icon-font($glyph-more-vert, 20px, $glyph-icon-color);
+
                     &::after {
                         line-height: 40px;
                         text-align: center;
@@ -202,6 +215,7 @@
 
                 .#{$prefix}btn-wrap {
                     padding: 0;
+
                     .#{$prefix}btn-inner {
                         padding: 0;
                     }
@@ -218,34 +232,33 @@
 
         .#{$vprefix}website-header-icon {
 
-                &.page-icon {
-                   @include icon-font($glyph-category, 20px);
-                    top: -1.5px;
-                }
+            &.page-icon {
+                @include icon-font($glyph-category, 20px);
+                top: -1.5px;
+            }
 
-                &.template-icon {
-                    @include icon-font($glyph-template, 20px);
-                }
+            &.template-icon {
+                @include icon-font($glyph-template, 20px);
+            }
 
-                &.category-icon {
-                    @include icon-font($glyph-tree-category, 20px);
-                }
+            &.category-icon {
+                @include icon-font($glyph-tree-category, 20px);
+            }
 
-                &.folder-icon {
-                    @include icon-font($glyph-folder, 19px);
-                }
+            &.folder-icon {
+                @include icon-font($glyph-folder, 19px);
+            }
 
-                &.link-icon {
-                    @include icon-font($glyph-link, 20px);
-                }
+            &.link-icon {
+                @include icon-font($glyph-link, 20px);
+            }
 
-                &::after {
-                    color: $color-neutral-40;
-                    left: auto;
-                    right: 0px;
-                    top: auto !important;
-                }
-
+            &::after {
+                color: $color-neutral-40;
+                left: auto;
+                right: 0px;
+                top: auto !important;
+            }
         }
     }
 }
@@ -255,9 +268,9 @@
     @include border-radius-xbrowser(2em);
     height: 18px;
     background-color: $publish-icon-dark-bg;
-    color:white;
-    text-align:center;
-    font-size:14px;
+    color: white;
+    text-align: center;
+    font-size: 14px;
     min-width: 56px;
 
     div {
@@ -271,7 +284,7 @@
 
     a {
         display: none;
-        
+
         .#{$prefix}btn-inner {
             &.#{$prefix}btn-inner-center {
                 height: 13px;
@@ -286,18 +299,227 @@
 
 .#{$vprefix}content-navcontainer-white {
     .#{$vprefix}navheader {
-        .#{$vprefix}navheader-toolbar{
+        .#{$vprefix}navheader-toolbar {
             border-bottom: 0px !important;
             background-color: #fff;
         }
+
         .#{$prefix}toolbar-default {
             background-color: #fff;
         }
     }
-    
+
     background-color: #fff;
+
     .#{$vprefix}content-navcontainer-body {
         background-color: #fff;
         border-bottom: 0px !important;
     }
 }
+
+.x-toolbar-default {
+    &.navheader-action-toolbar {
+        background: transparent !important;
+        border-color: transparent !important;
+    }
+}
+
+.x-form-text {
+    .reports-header & {
+        background-color: transparent;
+        color: #fff;
+
+        &.x-field-form-focus {
+            box-shadow: none;
+            border-color: #ffce01;
+        }
+    }
+}
+
+.x-form-trigger-wrap-focus label {
+    color: #fff;
+
+    .reports-header & {
+        color: #fff !important;
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar {
+    .schema-header &, .product-header &, &.website-publish-btn, .category-header &, .pricelist-header &, .inventory-header &, .themes-header & {
+        .taco-more-action-button {
+            &:hover {
+                opacity: 1;
+                background-color: #633095 !important;
+
+                .x-btn-arrow-right::after {
+                    color: #fff;
+                }
+            }
+        }
+
+        .taco-more-action-button.x-btn-disabled {
+            &:hover {
+                background-color: rgba(43,43,43,0.8) !important;
+                color: #e5e6e7 !important;
+                border-bottom: 1px solid rgba(43,43,43,0.8) !important;
+
+                .x-btn-arrow-right::after {
+                    color: #e5e6e7 !important;
+                }
+            }
+        }
+
+        .taco-more-action-button.x-btn-action-toolbar-medium-menu-active {
+            &:hover {
+                background: #fff !important;
+
+                .x-btn-arrow-right::after {
+                    color: #633095 !important;
+                }
+            }
+        }
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar {
+    .website-publish-btn {
+        ~ .taco-more-action-button {
+            &:hover {
+                opacity: 1;
+                background-color: #633095 !important;
+
+                .x-btn-arrow-right::after {
+                    color: #fff;
+                }
+            }
+        }
+
+        ~ .taco-more-action-button.x-btn-action-toolbar-medium-menu-active {
+            &:hover {
+                background: #fff !important;
+
+                .x-btn-arrow-right::after {
+                    color: #633095 !important;
+                }
+            }
+        }
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar .x-btn-disabled.x-btn-action-primary-toolbar-medium {
+
+    .schema-header &, .product-header &, &.website-publish-btn, .category-header &, .pricelist-header &, .productranking-header &, .inventory-header & {
+        height: 41px !important;
+        border-bottom: none !important;
+
+        &:hover {
+            .x-btn-split-right {
+                background-color: transparent !important;
+            }
+
+            .x-btn-split-right::after {
+                background-color: transparent !important;
+                color: #e5e6e7 !Important;
+            }
+
+            .x-btn-inner,
+            .x-btn-inner-center {
+                color: #e5e6e7 !Important;
+            }
+
+            .taco-check-save {
+                &:after {
+                    background-color: transparent !important;
+                    color: #fff;
+                }
+            }
+
+            .taco-animated-circle {
+                background-color: rgba(43, 43, 43, 0.8) !important;
+            }
+        }
+
+        .x-btn-action-toolbar-medium-disabled.taco-more-action-button {
+            &:hover {
+                background-color: rgba(43,43,43,0.8) !important;
+                color: #e5e6e7 !important;
+                border-bottom: 1px solid rgba(43,43,43,0.8) !important;
+
+                .x-btn-inner-center {
+                    color: #e5e6e7 !important;
+                    font-weight: normal !important;
+                }
+
+                .taco-check-save {
+                    background-color: rgba(43, 43, 43, 0.8) !important;
+
+                    &:after {
+                        color: #fff;
+                        background-color: transparent !important;
+                    }
+                }
+            }
+        }
+
+        .taco-check-save.taco-button-overlay {
+            background-color: rgba(43, 43, 43, 0.8) !important;
+
+            &:hover {
+                background-color: rgba(43, 43, 43, 0.8) !important;
+            }
+        }
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar .x-btn.x-btn-action-primary-toolbar-medium {
+    .productattributeheader &,
+    .producttypeheader & {
+        .x-btn-split-right::after {
+            right: -17px;
+        }
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar .x-btn-disabled.x-btn-action-primary-toolbar-medium-disabled {
+    .productattributeheader &,
+    .producttypeheader & {
+        &:hover {
+            cursor: initial;
+
+            .x-btn-split-right {
+                background-color: rgba(43, 43, 43, 0.8) !important;
+            }
+
+            .x-btn-split-right::after {
+                background-color: rgba(43, 43, 43, 0.8) !important;
+                color: #e5e6e7 !Important;
+            }
+
+            .x-btn-inner,
+            .x-btn-inner-center {
+                color: #e5e6e7 !Important;
+            }
+        }
+    }
+}
+
+/*.website-publish-btn & {
+    height: 41px !important;
+
+    &:hover {
+        .x-btn-split-right {
+            background-color: transparent !important;
+        }
+
+        .x-btn-split-right::after {
+            background-color: transparent !important;
+            color: #e5e6e7 !Important;
+        }
+
+        .x-btn-inner {
+            color: #e5e6e7 !Important;
+        }
+    }
+}*/
+
+

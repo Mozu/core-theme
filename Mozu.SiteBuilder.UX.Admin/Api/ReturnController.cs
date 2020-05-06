@@ -1,32 +1,40 @@
-﻿using System.Collections.Concurrent;
+﻿using AutoMapper;
+using Mozu.AdminUser.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core;
+using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Api.Routing;
+using Mozu.Core.ErrorHandling;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Extensions;
+using Mozu.Customer.Contracts.Clients;
+using Mozu.Location.Contracts;
+using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
-using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Core.Api.Routing;
-using Mozu.Customer.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers;
+using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
+using CARSModel = Mozu.CARS.Contracts.Model;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCr = Mozu.CommerceRuntime.Contracts.Returns;
-using ReturnActions = Mozu.CommerceRuntime.Contracts.Returns.ReturnAction.ReturnActionNameConst;
+using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
 using PaymentActions = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 using PaymentTypes = Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst;
-using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
-using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
-using Mozu.AdminUser.Contracts.Clients;
-using Mozu.CommerceRuntime.Contracts.Orders;
-using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core.ErrorHandling;
-using Mozu.Core.Exceptions;
-using Mozu.Core.Extensions;
-using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
+using ReturnActions = Mozu.CommerceRuntime.Contracts.Returns.ReturnAction.ReturnActionNameConst;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -42,19 +50,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ConcurrentDictionary<string, string> channelCache = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, string> userCache = new ConcurrentDictionary<string, string>();
+        private readonly ICARSProxyWebApiClient _CARSProxyClient;
+        private readonly ILocationAdminWebApiClient _locationWebApiClient;
+        private readonly ILocationGroupConfigurationWebApiClient _locationGroupWebApiClient;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient,
             ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
-            IChannelWebApiClient channelWebApiClient)
+            IChannelWebApiClient channelWebApiClient,
+            ICARSProxyWebApiClient CARSProxyClient,
+            ILocationAdminWebApiClient locationWebApiClient,
+            ILocationGroupConfigurationWebApiClient locationGroupWebApiClient,
+            IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
             _customerWebApiClient = customerWebApiClient;
             _usersWebApiClient = userWebApiClient;
             _channelWebApiClient = channelWebApiClient;
+            _CARSProxyClient = CARSProxyClient;
+            _locationWebApiClient = locationWebApiClient;
+            _locationGroupWebApiClient = locationGroupWebApiClient;
+            _returnSettingsWebApiClient = returnSettingsWebApiClient;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
         }
 
         /// <summary>
@@ -65,6 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<Return>> MultiMapFromContract(List<DCr.Return> dcRmas)
         {
             var rmas = Mapper.Map<List<Return>>(dcRmas);
+
             foreach (var rma in rmas)
             {
                 rma.ChannelName = await GetChannelName(rma.ChannelCode);
@@ -91,6 +115,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var customerName = rma.Contact == null ? string.Empty : $"{rma.Contact.FirstName} {rma.Contact.LastName} #{rma.CustomerAccountId}";
             rma.CreatedBy = await GetUserNameById(rma.CreatedBy) ?? customerName;
             rma.UpdatedBy = await GetUserNameById(rma.UpdatedBy) ?? customerName;
+            
+            rma.ReturnRefunds.Each(async (r) => {
+                var userId = r.CreateBy;
+                r.CreateBy = await GetUserNameById(userId);
+            });
 
             if (!rma.ReturnOrderId.IsNullOrEmpty())
             {
@@ -111,6 +140,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 customerNote.UpdateBy = await GetUserNameById(customerNote.UpdateBy) ?? customerName;
             }
 
+            var returnSettingsWebApiClient = _returnSettingsWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = rma.SiteId);
+
+            var currentReturnSettings = (await returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
+            rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
+
+
             return rma;
         }
 
@@ -121,7 +156,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <returns>The corresponding channel name, or the code if not found</returns>
         private async Task<string> GetChannelName(string channelCode)
         {
-            if (channelCode.IsNullOrEmpty()) return string.Empty;
+            if (channelCode.IsNullOrEmpty())
+            {
+                return string.Empty;
+            }
 
             if (!channelCache.ContainsKey(channelCode))
             {
@@ -132,7 +170,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 catch (MozuApplicationException appException)
                 {
-                    if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) throw;
+                    if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode))
+                    {
+                        throw;
+                    }
 
                     // If the channel can't be found, fallback to the channel code.
                     channelCache[channelCode] = channelCode;
@@ -143,12 +184,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<Contact> GetCustomerContact(int? customerAccountId)
         {
-            if (customerAccountId == null) return null;
+            if (customerAccountId == null)
+            {
+                return null;
+            }
 
             try
             {
                 var account = (await _customerWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
-                if (account == null) return null;
+                if (account == null)
+                {
+                    return null;
+                }
 
                 return new Contact
                 {
@@ -159,7 +206,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch (MozuApplicationException appException)
             {
-                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
+                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode))
+                {
+                    return null;
+                }
 
                 throw;
             }
@@ -196,12 +246,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams,
-            [FromUri] FilterCollection extFilter, 
+            [FromUri] FilterCollection extFilter,
             [FromUri] bool draft = false)
         {
+            SbApiContext.SetDataMode(DataViewModeType.Live);
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
-                return await GetSingleReturn(pagingParams.id);
+                bool orderPayments = false;
+                if (extFilter.Count > 0)
+                {
+                    orderPayments = extFilter.OrderPaymentsByCapture;
+                }
+                else
+                {
+                    var queryStrings = Request.GetQueryNameValuePairs();
+                    var orderPaymentsByCapture = queryStrings.Where(x => x.Key.Equals("orderPaymentsByCapture", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    orderPayments = Convert.ToBoolean(orderPaymentsByCapture.Value);
+                }
+
+                return await GetSingleReturn(pagingParams.id, orderPayments);
             }
 
             var startIndex = pagingParams?.startIndex;
@@ -218,16 +281,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returns = await MultiMapFromContract(dcReturns.Items);
 
+            if (extFilter.OrderPaymentsByCapture)
+            {
+                var returnHelper = new ReturnHelper(_checkoutSettingsWebApiClient);
+                var rmas = (await returnHelper.OrderPaymentsByCapture(returns));
+                return List2<Return>(rmas);
+            }
+
             return List2(returns, dcReturns.TotalCount);
         }
 
-        private async Task<Response<List<Return>>> GetSingleReturn(string returnId)
+        private async Task<Response<List<Return>>> GetSingleReturn(string returnId, bool orderPayments = false)
         {
             var dcReturn = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
 
-            if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (dcReturn == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var sbReturn = await SingleMapFromContract(dcReturn);
+
+            if (orderPayments)
+            {
+                var returnHelper = new ReturnHelper(_checkoutSettingsWebApiClient);
+                var rmas = (await returnHelper.OrderPaymentsByCapture(new List<Return>() { sbReturn }));
+                return List2<Return>(rmas);
+            }
 
             return List2(sbReturn);
         }
@@ -410,6 +490,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var refund in args.Refunds)
             {
+                if (refund.Amount <= 0)
+                {
+                    throw new VaeValidationConflictException(nameof(refund.Amount), $"Refund amount of {refund.Amount} is invalid. Amount must be greater than 0.");
+                }
+
                 var dcPaymentAction = new DCp.PaymentAction
                 {
                     ActionName = PaymentActions.CREDIT_PAYMENT,
@@ -541,12 +626,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var httpContent = serviceResponse.ResponseMessage.Content;
 
             var contentStream = await httpContent.ReadAsStreamAsync();
-            var myResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            myResponse.Content = new StreamContent(contentStream);
+            var myResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(contentStream)
+            };
             myResponse.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
             myResponse.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
             myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
             return myResponse;
+        }
+
+        [HttpGetRoute(UriTemplate = "shipping/label")]
+        public async Task<HttpResponseMessage> GetReturnLabel([FromUri]string returnId, [FromUri] int? siteId)
+        {
+            var returnLabel = (await _returnWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = siteId).GetReturnLabel(returnId)).ReadAsSync();
+
+            if (returnLabel == null)
+            {
+                throw new VaeValidationConflictException($"Label for {returnId} not found.");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, returnLabel);
+        }
+
+        [HttpPostRoute(UriTemplate = "restock")]
+        public async Task<Response<Return>> RestockReturnItems(RestockArgs restockArgs)
+        {
+            var ret = (await _returnWebApiClient.RestockReturnItems(restockArgs.returnId, restockArgs.restockableReturnItems)).ReadAsAsync().Result;
+            return Single2(await SingleMapFromContract(ret));
+        }
+
+        public class RestockArgs
+        {
+            public List<DCr.RestockableReturnItem> restockableReturnItems { get; set; }
+
+            public string returnId { get; set; }
         }
     }
 }

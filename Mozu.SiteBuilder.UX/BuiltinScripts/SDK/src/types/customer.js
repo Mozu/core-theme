@@ -62,6 +62,13 @@ module.exports = (function () {
             }, function (reason) {
                 errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
             });
+        },
+        getFulfillmentReturnLabel: function (data) {
+            return this.api.action('rma', 'getFulfillmentReturnLabel', { 'returnId': data.returnId}).then(function (label) {
+                return label;
+            }, function (reason) {
+                errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
+            });
         }
     }
 }());

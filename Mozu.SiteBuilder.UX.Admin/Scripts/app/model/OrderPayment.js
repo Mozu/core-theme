@@ -259,6 +259,14 @@ Ext.define('Taco.model.OrderPayment', {
         Ext.Ajax.request(config);
     },
 
+    getPaymentSettings: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/checkoutsettings/paymentSettings',
+            method: "GET"
+        });
+        Ext.Ajax.request(config);
+    },
+
     findSubPayment: function(order) {
         if (!order) return false;
         var orderId = order.get('id');

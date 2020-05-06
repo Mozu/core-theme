@@ -28,9 +28,10 @@
 
 Ext.define('Taco.core.ux.mixins.Pageable', {
     requires: ['Taco.core.util.ExceptionWhiner',
-        'Taco.core.ux.grid.LinkPaging'],
+        'Taco.core.ux.grid.LinkPaging',
+        'Taco.core.ux.grid.PagelessPaging'],
 
-    autoHidePagingToolbar: false, 
+    autoHidePagingToolbar: false,
 
     constructor: function () {
         this.createGridPager();
@@ -51,6 +52,7 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
             grid: me,
             inputItemWidth: 45
         })
+        
 
         this.gridPagerContainer = Ext.create('Ext.toolbar.Toolbar', {
             dock: 'bottom',

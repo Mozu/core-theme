@@ -1,0 +1,16 @@
+﻿
+.spinnerImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate();
+    z-index: 99999;
+}
+
+@media screen and (max-width: 480px) {
+    .spinnerImage {
+        display: flex;
+        justify-content: center;
+    }
+    
+}

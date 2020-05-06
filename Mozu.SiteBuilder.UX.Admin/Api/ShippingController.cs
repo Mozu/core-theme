@@ -55,8 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             FeatureDic[DC.Constants.FedEx.CarrierId] = "fedexrates";
             FeatureDic[DC.Constants.Ups.CarrierId] = "upsrates";
             FeatureDic[DC.Constants.Usps.CarrierId] = "uspsrates";
-
-
+            FeatureDic[DC.Constants.CanadaPost.CarrierId] = "canadapostrates";
 
         }
 
@@ -68,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             list2.Add("fedexrates");
             list2.Add("upsrates");
             list2.Add("uspsrates");
+            list2.Add("canadapostrates");
             return list2;
         }
 
@@ -602,21 +602,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
             var settings = Mapper.Map<List<CarrierConfiguration>>(res.Items );
-            if (!settings.Any(x => x.id == DC.Constants.FedEx.CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.FedEx.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.FedEx.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Ups.CarrierId  ))
+            if (!settings.Any(x => x.id == DC.Constants.Ups.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.Ups.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Usps .CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.Usps.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.Usps.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Custom .CarrierId))
+            if (!settings.Any(x => x.id == DC.Constants.CanadaPost.CarrierId))
             {
-                settings.Add(new CarrierConfiguration() { id = DC.Constants.Custom.CarrierId , IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.CanadaPost.CarrierId , IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == DC.Constants.Custom.CarrierId))
+            {
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Custom.CarrierId, IsConfigured = false });
             }
             return List2<CarrierConfiguration>(settings);
         }
@@ -629,9 +633,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = new List<CarrierConfiguration>();
 
-           // var activeProviders = (await _siteShippingSettingsClient.GetActiveRateProviders()).ReadAsSync();
-
-
             foreach (var setting in settings)
             {
                
@@ -642,21 +643,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 
                 var dcConfig = Mapper.Map<DC.CarrierConfiguration>(setting);
-                if (dcConfig.Settings == null || dcConfig.Settings.Count == 0 || dcConfig.Settings.All(x => x == null || string.IsNullOrEmpty(x.Value )))
-                {
-                    continue;
-                }
                 var featureId = FeatureDic[dcConfig.Id];
-                //if (!activeProviders.Any(x => x.Name == featureId))
-                //{
-                //    activeProviders.Add(new Core.Api.Contracts.Feature()
-                //                            {
-                //                                Name = featureId
-                //                            });
-
-                //    activeProviders = (await _siteShippingSettingsClient.UpdateActiveRateProviders( activeProviders)).ReadAsSync();
-
-                //}
 
                 if (setting.PreviousValue != null)
                 {
@@ -671,7 +658,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return List2(ret);
           
-        }
+        }        
 
         /// <summary>
         /// converts drop down value of shippingRate percentage to value type of percent & applies to of shipping.

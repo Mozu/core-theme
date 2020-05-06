@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MassTransit.Internals.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Mozu.Core;
@@ -273,6 +274,41 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return sb.Insert(0, this._siteContext.CdnPrefix).ToString();
             }
+            // //COM-1037 Update to add isUnified into the URL if it is present in the URL or cookies
+            // string isUnifiedInUrl;
+            // if ( !this._context.GetRequestUri().TryGetValueFromQueryString("isUnified",out isUnifiedInUrl))
+            // {
+            //     isUnifiedInUrl = "";
+            // }
+            //// string isUnifiedInUrl = _httpRequestMessage.RequestUri.ParseQueryString()["isUnified"] ?? "";
+
+            // if (!isUnifiedInUrl.IsNullOrEmpty())
+            // {
+            //     //May be move this code over to a helper method to avoid duplication 
+
+            // }
+            // else
+            // {
+            //     this._context.Request.Cookies.TryGetValue("isUnified")
+            //     CookieHeaderValue cookie = _httpRequestMessage.Headers.GetCookies("isUnified").FirstOrDefault();
+            //     string cookieValue = cookie?["isUnified"].Value ?? "";
+            //     if (!cookieValue.IsNullOrEmpty())
+            //     {
+            //         if (sb.ToString().Contains("?"))
+            //             sb.Append("&");
+            //         else
+            //             sb.Append("?");
+            //         sb.Append("isUnified=" + cookieValue);
+            //     }
+
+            // }
+
+
+            if (sb.ToString().Contains("?"))
+                sb.Append("&");
+            else
+                sb.Append("?");
+            sb.Append("isUnified=true");
 
             return sb.ToString();
 

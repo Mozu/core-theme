@@ -10,6 +10,7 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         'Taco.view.settings.shipping.widget.OrderHandlingFeeRulesForm'
 
     ],
+    cls: 'shipping-links',
     formCls: 'Taco.core.ux.form.Form',
     //editorName: 'Taco.view.discount.Edit',
 
@@ -21,6 +22,7 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         requiresContextOfType: ['s']
     },
 
+    //showbreadCrumbspacer:false,
     breadCrumbConfig: [
         {
             title: 'Methods',
@@ -42,6 +44,12 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
             title: 'Product Rules',
             tabIndex: 3,
             route: 'shipping/productRules'
+        },
+        {
+            title: 'Carrier Accounts',
+            tabIndex: 4,
+            route: 'shipping/CarrierAccounts',
+            //isActive: true
         }
     ],  
 

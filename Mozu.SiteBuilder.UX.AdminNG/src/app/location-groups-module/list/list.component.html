@@ -1,0 +1,37 @@
+<div class="col-md-12 location-group-container">
+    <div class="inner">
+        <spinner></spinner>
+        <p-table [value]="model.items" [responsive]="true" [paginator]="true" 
+            [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" 
+            selectionMode="single" 
+            [loading]="model.isLoading" class="table-striped">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>{{'LOCATIONGROUP.GridHeader.ID' | translate }}</th>
+                    <th>{{'LOCATIONGROUP.GridHeader.Name' | translate }}</th>
+                    <th class="forwidth">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-locationGroupModel>
+                <tr [pSelectableRow]="locationGroupModel">
+                    <td>
+                        <span>{{locationGroupModel.locationGroupId}}</span>
+                    </td>
+                    <td><span>{{locationGroupModel.name}}</span></td>
+                    <td class="forwidth">
+                        <div>
+                            <i class="pi pi-ellipsis-v" (click)="locationGridContextMenu.toggle($event)"></i>
+                            <p-menu #locationGridContextMenu [model]="model.locationGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr class="text-center">        
+                    <td [attr.colspan]="3">{{'LOCATIONGROUP.GridMessages.emptyMessage1' | translate}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

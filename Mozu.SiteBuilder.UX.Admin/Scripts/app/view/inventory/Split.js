@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.inventory.Split', {
     extend: 'Taco.core.ux.content.SplitContainer',
+    cls: 'inventory-header',
     alias: [
         'widget.inventory-split',
         'widget.inventory.split'
@@ -13,13 +14,14 @@ Ext.define('Taco.view.inventory.Split', {
         'Taco.core.ux.mixins.SplitEditor',
         'Taco.view.location.inventory.LocationInventory',
         'Taco.core.ux.grid.Panel',
-        'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
+        'Taco.core.ux.grid.MenuColumn',
+        'Taco.core.ux.mixins.PageablePageless'
     ],
 
     mixins: {
         splitEditor: 'Taco.core.ux.mixins.SplitEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader',
-        pageable: 'Taco.core.ux.mixins.Pageable'
+        pageable: 'Taco.core.ux.mixins.PageablePageless'
     },
 
     stateId: 'taco-custom-schema',
@@ -59,25 +61,28 @@ Ext.define('Taco.view.inventory.Split', {
 
         this.moreButtonCfg = {
             itemId: 'moreButton',
-            menu: [
-                {
-                    cls: 'call-to-action override',
-                    text: 'Adjustment Mode',
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Add',
-                    itemId: 'adjustmentModeAdd',
-                    group: 'adjustmentMode',
-                    checked: true
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Set',
-                    itemId: 'adjustmentModeSet',
-                    group: 'adjustmentMode'
-                }
-            ]
+            menu: {
+                cls: 'taco-ellipsis-split-button',
+                items: [
+                    {
+                        //cls: 'call-to-action override',
+                        text: 'Adjustment Mode',
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Add',
+                        itemId: 'adjustmentModeAdd',
+                        group: 'adjustmentMode',
+                        checked: true
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Set',
+                        itemId: 'adjustmentModeSet',
+                        group: 'adjustmentMode'
+                    }
+                ]
+            }
         };
 
         this.mixins.navHeader.init.apply(this);
@@ -120,7 +125,7 @@ Ext.define('Taco.view.inventory.Split', {
     		autoLoad: true
     	});
 
-    	this.productInventoryGrid = Ext.create('Taco.core.ux.browser.SearchList', {
+    	this.productInventoryGrid = Ext.create('Taco.core.ux.browser.SearchListPageless', {
     		store: this.store,
             enablePaging: true,
             modelName: 'Taco.order.Model',
@@ -170,14 +175,18 @@ Ext.define('Taco.view.inventory.Split', {
 	                        return;
 	                    }
 	                    
-	                    productCode = record.get('productCode');
+                        productCode = record.get('productCode');
+
+                        if (locationList.store.currentPage) {
+                            locationList.store.currentPage = 1;
+                        }
 	                    
 	                    locationList.store.extraFilters.add({ id: 'productCode', property: 'productCode', value: productCode });
 	                    locationList.defaultRowEditingData = {
 	                        productCode: productCode
 	                    };
 
-	                    locationList.store.load();
+                        locationList.store.load({ params: { start: 0, page: 1 } });
 
 	                },
 	                scope: this

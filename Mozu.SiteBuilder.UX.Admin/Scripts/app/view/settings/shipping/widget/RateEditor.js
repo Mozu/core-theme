@@ -6,7 +6,7 @@
 Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
-    
+
     ],
 
     closeAction: 'destroy',
@@ -14,24 +14,34 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
     scale: 'large',
     createTitle: 'Create Custom Rate',
     editTitle: 'Edit Custom Rate',
-    
+
     modelName: 'Taco.model.CustomShippingRate',
-    
-    initComponent: function() {
+
+    initComponent: function () {
         var me = this;
-        
+
         this.isCreate = false;
         if (!me.record) {
             me.record = Ext.create(me.modelName, {
-                                
+
             });
 
             this.isCreate = true;
         }
-        
+
         me.title = (this.isCreate) ? this.createTitle : this.editTitle;
         me.amountField = null;
-        
+        this.store = Ext.create('Ext.data.Store', {
+            fields: ['deliveryCode', 'name'],
+            data: [
+                { "deliveryCode": "STANDARD", "name": "Standard" },
+                { "deliveryCode": "1_DAY", "name": "1 day" },
+                { "deliveryCode": "2_DAY", "name": "2 day" },
+                { "deliveryCode": "3_DAY", "name": "3 day" }
+
+            ]
+        });
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
             layout: {
@@ -53,6 +63,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                     fieldLabel: "Custom Rate Type",
                     flex: 1,
                     name: "typeGroup",
+                    allowBlank: false,
                     layout: {
                         layout: "hbox"
                     },
@@ -72,8 +83,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
                 width: 160
-            },{
-            xtype: 'textfield',
+            }, {
+                xtype: 'textfield',
                 name: 'id',
                 fieldLabel: 'Custom Code',
                 allowBlank: this.isCreate,
@@ -85,11 +96,25 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
 
                     return !Ext.Array.contains(ids, value) || ((me.record === store.getById(value)) || 'Custom Code must be unique or empty');
                 }
+            }, {
+                xtype: 'combobox',
+                width: 160,
+                name: 'deliveryDuration',
+                itemId: 'deliveryDuration',
+                valueField: 'deliveryCode',
+                displayField: 'name',
+                fieldLabel: 'Delivery Duration',
+                queryMode: 'local',
+                margin: '0px 5px 0px 5px',
+                allowBlank: false,
+                editable: false,
+                forceSelection: true,
+                store: this.store
             }]
         });
 
         this.items = [this.form];
-        
+
         this.form.getForm().setValues(me.record.getData());
 
         this.callParent(arguments);
@@ -108,7 +133,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         });
     },
 
-    loadForm: function() {
+    loadForm: function () {
         var me = this,
             form = me.getForm(),
             value = me.record.get("type"),
@@ -119,7 +144,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         fieldGroup.setValue({
             "type": value
         });
-        
+
         this.callParent(arguments);
     },
 
@@ -130,7 +155,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         me.record.set(data);
         me.saveSuccess(data);
     }
-    
+
     //onDestroy: function () {
     //    this.form.destroy();
     //    this.form = null;

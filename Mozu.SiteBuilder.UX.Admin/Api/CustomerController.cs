@@ -264,7 +264,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [FromUri] FilterCollection extFilter, 
             bool? showAnonymous = null,
             bool? isPOFlagRequired = null,
-            bool? filterByCustomerSet = false)
+            bool? filterByCustomerSet = false,
+            string responseGroups = null)
         {
             int customerId;
             string userId;
@@ -334,7 +335,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 qLimit: qLimit,
                 q: q,
                 filter: filter.ToFilterSafeString(),
-                isAnonymous: isAnonymous ? (bool?) null : false
+                isAnonymous: isAnonymous ? (bool?) null : false,
+                responseGroups: responseGroups
             )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
@@ -365,24 +367,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get single customer account with attributes.
         /// </summary>
-        private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId, string userId = null)
+        private async Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId, string userId = null)
         {
-            var customerTask = _customerWebApiClient.GetAccount(accountId, null, userId);
-            var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId, userId: userId);
-
-            return Task.WhenAll(customerTask, attributeTask).ContinueWith(t =>
+            var cres = _customerWebApiClient.GetAccount(accountId, null, userId).GetAwaiter().GetResult();
+            if (cres.ResponseMessage.IsSuccessStatusCode)
             {
-                if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
-                {
-                    var customer = customerTask.Result.ReadAsSync();
-                    var attributes = attributeTask.Result.ReadAsSync();
+                var customer = cres.ReadAsSync();
 
-                    customer.Attributes = attributes.Items;
-                    return customer;
-                }
+                var ares = await _customerWebApiClient.GetAccountAttributes(accountId, userId: userId ?? customer.UserId);
 
-                return null;
-            });
+                var attributes = ares.ReadAsSync();
+
+                customer.Attributes = attributes.Items;
+                return customer;
+            }
+            return null;
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -680,7 +679,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
 
                 contactManagementTasks.AddRange(contactsToUpdate.Select(con =>
-                    _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
+                    _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id, dcExistingCustomer.UserId)));
                 contactManagementTasks.AddRange(contactsToAdd.Select(con =>
                     _customerWebApiClient.AddAccountContact(con, con.AccountId)));
                 contactDeleteTasks.AddRange(contactsToDel.Select(con =>

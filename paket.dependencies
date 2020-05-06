@@ -14,7 +14,7 @@ nuget Microsoft.AspNet.WebApi.Core 5.2.3
 nuget Microsoft.AspNet.WebApi.Tracing
 nuget Microsoft.AspNet.WebPages 3.2.2
 nuget Microsoft.AspNet.Mvc 5.2.2
-nuget Mozu.Core.Prime = 1.1902.6
+nuget Mozu.Core.Prime 1.1903.6
 nuget Mozu.ScheduledEvent.Contracts 1.19.2
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3
@@ -28,10 +28,10 @@ nuget Microsoft.Owin 3.0.0
 nuget Microsoft.Owin.SelfHost 2.1.0
 nuget Microsoft.Owin.StaticFiles 2.1.0
 nuget morelinq 1.0.16006
-nuget Mozu.AdminUser.Contracts < 1.20
+nuget Mozu.AdminUser.Contracts 1.1937.0-ingshotContracts-7
 nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
-nuget Mozu.CommerceRuntime.Contracts 1.1903.2
+nuget Mozu.CommerceRuntime.Contracts 1.2013.0-v1458-contracts-136
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
@@ -40,20 +40,21 @@ nuget Mozu.Customer.Contracts 1.1909.2
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
-nuget Mozu.Location.Contracts >= 1.1806.1
+nuget Mozu.Location.Contracts 1.2016.0-ngshotContracts-23
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
-nuget Mozu.ProductAdmin.Contracts 1.1916.0-develop-6
+nuget Mozu.ProductAdmin.Contracts 1.2006.0-ingshotContracts-9
 nuget Mozu.ProductRuntime.Contracts 1.1916.0-develop-6
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
-nuget Mozu.ShippingAdmin.Contracts >= 1.1643
+nuget Mozu.ShippingAdmin.Contracts  1.2016.0-gshot-contracts-15
 nuget Mozu.PricingRuntime.Contracts >= 1.1916.0-develop-6
-nuget Mozu.SiteSettings.General.Contracts 1.1942.0-gshot-contracts-43
-nuget Mozu.SiteSettings.Order.Contracts 1.1840.3
+nuget Mozu.SiteSettings.General.Contracts 1.2012.0-gshot-contracts-77
+nuget Mozu.SiteSettings.Order.Contracts 1.2012.0-gshot-contracts-77
+nuget Mozu.SiteSettings.Ship.Contracts 1.1936.0-gshot-contracts-40
 nuget protobuf-net 2.0.0.668
 nuget FAKE
-nuget mozu.tenant.contracts > 1.1703
+nuget mozu.tenant.contracts 1.1929.0-dotnetframework-1
 nuget Mozu.Log4net.Gelf >= 1.1842.6
 nuget MongoDB.Driver.GridFS  2.4.4
 
@@ -65,3 +66,5 @@ nuget Mozu.Event.Contracts
 
 #Manually adding this so that Burrows works; Once Burrows is removed we can take this out.
 nuget Newtonsoft.Json 9.0.1
+
+nuget RestSharp 106.6.9

@@ -1,0 +1,16 @@
+<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="5">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>{{'SHARED.AUDITLOG.GridHeader.date' | translate }}</th>
+          <th>{{'SHARED.AUDITLOG.GridHeader.event' | translate }}</th>
+          <th>{{'SHARED.AUDITLOG.GridHeader.user' | translate }}</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-quoteModel>
+      <tr>
+          <td><span>{{quoteModel.createDate | date : "MMM dd yyyy h:mm a"}}</span></td>
+          <td><span>{{quoteModel.message}}</span></td>
+          <td><span>{{quoteModel.userFirstName}} {{quoteModel.userLastName}}</span></td>
+      </tr>
+  </ng-template>
+</p-table>

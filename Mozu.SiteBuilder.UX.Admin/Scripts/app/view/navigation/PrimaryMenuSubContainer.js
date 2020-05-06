@@ -6,6 +6,8 @@ Ext.define('Taco.view.navigation.PrimaryMenuSubContainer', {
     extend: 'Ext.container.Container',
     requires: ['Taco.view.navigation.PrimaryMenuNavGroup'],
     //cls: 'taco-primary-menu-ct',
+
+    cls: 'primary-nav-group',
     store: null,
     layout: 'vbox',
     width: '100%',

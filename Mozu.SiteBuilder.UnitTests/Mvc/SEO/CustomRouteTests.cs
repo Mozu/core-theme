@@ -345,7 +345,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var httpRoute = Substitute.For<IRouter>();
             test.constraint.Initialize();
-            test.constraint.DoMatch(new DefaultHttpContext(), httpRoute, test.parameterName, test.inputs, RouteDirection.UrlGeneration).ShouldEqual(test.routeShouldMatch);
+            test.constraint.DoMatch(new DefaultHttpContext(), httpRoute, test.parameterName, test.inputs, RouteDirection.IncomingRequest).ShouldEqual(test.routeShouldMatch);
         }
 
         public class ConstraintTest

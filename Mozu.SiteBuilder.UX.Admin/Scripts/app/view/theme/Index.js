@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.view.theme.Index', {
     extend: 'Taco.core.ux.browser.SearchListTree',
+    cls: 'themes-header',
     requires: [
         'Taco.store.ThemeListingsTree',
         'Taco.core.ux.content.SiteViewDropdown'
@@ -117,20 +118,23 @@ Ext.define('Taco.view.theme.Index', {
         ];
 
         this.moreButtonCfg = {
-        	menu: [
-        		{
-        			text: 'Expand All',
-        			handler: function() {
-        				me.expandAll();
-        			}
-        		},
-        		{
-        			text: 'Collapse All',
-        			handler: function() {
-        				me.collapseAll();
-        			}
-        		}
-        	]
+            menu: {
+                cls: 'taco-ellipsis-split-button',
+                items: [
+                    {
+                        text: 'Expand All',
+                        handler: function () {
+                            me.expandAll();
+                        }
+                    },
+                    {
+                        text: 'Collapse All',
+                        handler: function () {
+                            me.collapseAll();
+                        }
+                    }
+                ]
+            }
         };
 
         this.listeners = {

@@ -1,43 +1,54 @@
 ﻿{
   "items": [
-  
-  {
-    "productName": "Beer Glass",
-    "productCode": "xx001",
-    "optionValues": null,
-	"locationCode":"12345",
-	"stockReserved": 1,
-	"stockAvailable": 9,
-    "stockOnHand": 10,
-    "inventoryHandling": 0
-  }, {
-    "productName": "Champagne Flute",
-    "productCode": "xx002",
-    "optionValues": null,
-	"locationCode":"12345",
-    "stockReserved": 1,
-	"stockAvailable": 99,
-    "stockOnHand": 100,
-    "inventoryHandling": 0
-  }, {
-    "productName": "Coffee Mug",
-    "productCode": "xx003-a",
-    "optionValues": "Black, Tall",
-	"locationCode":"12345",
-    "stockReserved": 2,
-	"stockAvailable": 48,
-    "stockOnHand": 50,
-    "inventoryHandling": 1
-  }, {
-    "productName": "Coffee Mug",
-    "productCode": "xx003-b",
-    "optionValues": "Blue, Tall",
-	"locationCode":"12345",
-    "stockReserved": 1,
-	"stockAvailable": 9,
-    "stockOnHand": 10,
-    "inventoryHandling": 2
-  }],
+
+    {
+      "productName": "Beer Glass",
+      "productCode": "xx001",
+      "optionValues": null,
+      "locationCode": "12345",
+      "stockReserved": 1,
+      "stockAvailable": 9,
+      "stockOnHand": 10,
+      "inventoryHandling": 0,
+      "sku": "sku1",
+      "partNumber": "part123"
+    },
+    {
+      "productName": "Champagne Flute",
+      "productCode": "xx002",
+      "optionValues": null,
+      "locationCode": "12345",
+      "stockReserved": 1,
+      "stockAvailable": 99,
+      "stockOnHand": 100,
+      "inventoryHandling": 0,
+      "sku": "sku1",
+      "partNumber": "part123"
+    },
+    {
+      "productName": "Coffee Mug",
+      "productCode": "xx003-a",
+      "optionValues": "Black, Tall",
+      "locationCode": "12345",
+      "stockReserved": 2,
+      "stockAvailable": 48,
+      "stockOnHand": 50,
+      "inventoryHandling": 1,
+      "sku": "sku1",
+      "partNumber": "part123"
+    },
+    {
+      "productName": "Coffee Mug",
+      "productCode": "xx003-b",
+      "optionValues": "Blue, Tall",
+      "locationCode": "12345",
+      "stockReserved": 1,
+      "stockAvailable": 9,
+      "stockOnHand": 10,
+      "inventoryHandling": 2,
+      "sku": "sku1",
+      "partNumber": "part123"
+    }],
   "message": "Some message",
   "success": true,
   "total": 4

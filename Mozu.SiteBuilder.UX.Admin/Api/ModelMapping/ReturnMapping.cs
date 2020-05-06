@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
+using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using static Mozu.CommerceRuntime.Contracts.Payments.PaymentInteraction;
 
@@ -85,7 +86,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CustomerNotes, op => op.ResolveUsing(dc => dc.Items.SelectMany(x => x.Notes).Where(x => x != null).ToList()))
             .ForMember(x => x.ReturnOrders, op => op.Ignore())
             .ForMember(x => x.ChannelName, op => op.Ignore())
+            .ForMember(X => X.DefaultProcessingFee, op => op.Ignore())
             .AfterMap(SetRefundAmountForReturnOnPayment)
+            .AfterMap(InterpolatePaymentInteractionsIntoRefunds)
             ;
         }
 
@@ -241,6 +244,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Notes, op => op.Ignore())
                 .ForMember(dc => dc.TotalWithoutWeightedShippingAndHandling, op => op.Ignore())
                 .ForMember(dc => dc.TotalWithWeightedShippingAndHandling, op => op.Ignore());
+        }
+
+        private void InterpolatePaymentInteractionsIntoRefunds(ReturnsDC.Return dcReturn, Return sbReturn)
+        {
+            sbReturn.ReturnRefunds = new List<ReturnRefund>();
+            foreach (var payment in dcReturn.Payments)
+            {
+                foreach(var interaction in payment.Interactions)
+                {
+                    if (!string.IsNullOrEmpty(interaction.ReturnId) && interaction.ReturnId.Equals(dcReturn.Id) && interaction.Status.EqualsIgnoreCase("credited"))
+                    {
+                        var refund = new ReturnRefund
+                        {
+                            RefundAmount = interaction.Amount,
+                            CardNumber = payment.BillingInfo?.Card?.CardNumberPartOrMask,
+                            CreateDate = interaction.AuditInfo?.CreateDate,
+                            CreateBy = interaction.AuditInfo?.CreateBy,
+                            Id = interaction.Id,
+                            PaymentType = payment.PaymentType,
+                            NameOnCard = payment.BillingInfo?.Card?.NameOnCard,
+                            CardType = payment.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD ? payment.BillingInfo?.Card?.PaymentOrCardType : null,
+                            ReturnId = interaction.ReturnId,
+                            RefundId = interaction.RefundId,
+                            TokenType = payment.BillingInfo?.Token?.Type
+                        };
+
+                        sbReturn.ReturnRefunds.Add(refund);
+                    }
+                }
+            }
         }
     }
 }

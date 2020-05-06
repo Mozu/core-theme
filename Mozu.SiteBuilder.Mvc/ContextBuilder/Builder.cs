@@ -870,7 +870,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var tasks = new List<System.Threading.Tasks.Task>();
 
             tasks.Add(_tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId)
-                .ContinueWith(GenericServiceContinuationAllow404)
+                .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.TenantInfo = x.Result ?? existing?.TenantInfo, TaskContinuationOptions.OnlyOnRanToCompletion)
             );
             tasks.Add(_currencyRuntimeWebApiClient.GetCurrencyExchangeRates()
@@ -883,7 +883,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             );
 
             tasks.Add(_productCategoryRuntimeWebApiClient.GetCategoryTree()
-                .ContinueWith(GenericServiceContinuationAllow404)
+                .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => x.Result?.Items)
                 //  .ContinueWith(MapperContinuation<List<Mozu.ProductRuntime.Contracts.Category>, List<SBCategory>>)
                 .ContinueWith(ProcessCategories)
@@ -891,12 +891,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
             );
 
             tasks.Add(_generalSettingsWebApiClient.GetGeneralSettings()
-                .ContinueWith(GenericServiceContinuationAllow404)
+                .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.GeneralSettings = x.Result ?? existing?.GeneralSettings, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
             tasks.Add(_checkoutSettingsWebApiClient.GetCheckoutSettings()
-                .ContinueWith(GenericServiceContinuationAllow404)
+                .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.CheckoutSettings = x.Result ?? existing?.CheckoutSettings, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
@@ -989,7 +989,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
        public  async Task<List<SBCategory>> BuildCategoryTree()
         {
             return await _productCategoryRuntimeWebApiClient.GetCategoryTree()
-                 .ContinueWith(GenericServiceContinuationAllow404)
+                 .ContinueWith(GenericServiceContinuation)
                  .ContinueWith(x => x.Result?.Items)
                  .ContinueWith(ProcessCategories);
         }

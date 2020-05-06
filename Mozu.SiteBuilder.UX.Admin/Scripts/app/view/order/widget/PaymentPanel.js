@@ -26,12 +26,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
         var me = this;
-
+        me.setIsAutoCaptureEnabled();
+        me.getavailableActionsLength();
         me.initStatusRow();
         me.initPaymentDetails();
         me.initDisplayAmount();
         me.initTransactionList();
-
+    
         me.items = [
             me.statusRow,
             {
@@ -51,6 +52,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         this.callParent(arguments);
     },
+
+    setIsAutoCaptureEnabled: function() {
+        this.isAutoCaptureEnabled = false 
+        
+        if (this.order.PaymentSettings.get('jobSettings').autoCaptureJob) {
+          return this.isAutoCaptureEnabled = this.order.PaymentSettings.get('jobSettings').autoCaptureJob.isEnabled || false;  
+        }
+    },
+
+    getavailableActionsLength: function () {
+        var me = this;
+            data = me.record.data;
+        if (this.isAutoCaptureEnabled) {
+            return ((data && data.availableActions).length == 0) ? true : false
+          }
+      },
 
     getAvailableActions: function() {
         var me = this,
@@ -73,7 +90,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 text: 'Decline Payment',
                 itemId: 'ManualDeclinePayment',
                 //TODO: when service supports the data from the manual decline modal, comment out the below line
-                handler: me.manualDeclinePayment
+                handler: me.manualDeclinePayment,
+                hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Credit Payment',
@@ -107,11 +125,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             },
             {
                 text: 'Capture Payment (Manual)',
-                itemId: 'ManualCapturePayment'
+                itemId: 'ManualCapturePayment',
+                hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Credit Payment (Manual)',
-                itemId: 'ManualCreditPayment'
+                itemId: 'ManualCreditPayment',
+               // hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Void Payment',
@@ -215,14 +235,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     initStatusRow: function () {
         var me = this,
             // capture amount is the outstanding balance on the order
-            captureAmount = me.order.getCaptureAmountHint(),
+            captureAmount = me.order.data.authorizationInfo.totalAmount - me.order.data.authorizationInfo.amountCollected,
             // auth ready is when you have an authorized card with id
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
             canCapture = authReady && captureAmount && captureAmount > 0,
             // order is awaiting approval
             pendingReview = me.order.get('orderStatus') === 'PendingReview';
-
+            
+      
         var paymentStatus = this.getPaymentData().status;
         var packageStatus;
 
@@ -448,6 +469,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Capture',
+                hidden: me.record.get('paymentType')!=='Check' && me.isAutoCaptureEnabled,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
@@ -516,6 +538,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     glyph: 'XE90B@mozicons',
                     itemId: 'moreActionsButton',
                     menu: me.getAvailableActions(),
+                    hidden: me.getavailableActionsLength(),
                     width: 18,
                     height: 24,
                     margin: '0 0 0 10'
@@ -998,6 +1021,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         this.callParent(arguments);
     }
+
+    
 
     //creditPayment: function(config) {
     //    // check to make sure the record is appropriate. needs to have an amountCollected greater than zero

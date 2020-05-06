@@ -78,7 +78,6 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         }
     },
     getAdditionalData: function (data, rowIndex, record, orig) {
-
         var discounts = record.get("discounts"),
             orderItemId = record.get("id"),
             discountedTotal = record.get('discountedTotal'),
@@ -86,6 +85,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             bundledProducts = record.get("bundledProducts"),
             rowBodyCls = ( (discounts && discounts.length) || (shippingDiscounts && shippingDiscounts.length)) ? "hasDiscount" : "noDiscount",
             rowBodyData = {
+                qty: record.get('quantity'),
                 orderItemId: orderItemId,
                 handlingAmount: record.get("handlingAmount"),
                 discounts: record.get("discounts"),
@@ -95,7 +95,6 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             },
             headerCt = this.view.headerCt,
             colspan = headerCt.getColumnCount();
-
 
         var rowBodyTemplate = new Ext.XTemplate(this.getRowBody());
         var rowBodyTxt = rowBodyTemplate.apply(rowBodyData);
@@ -120,7 +119,6 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     ],
 
     getRowBody: function (values) {
-
         return [
             '<tpl for="discounts">',
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls} ',
@@ -137,14 +135,14 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                         '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">Discount: {description} - <span class="additional-fee">{[Taco.app.context.getCurrent().formatCurrency(values.total)]}</span></div>',
                     '</td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
-                    '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                    //'<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                     '<td role="gridcell"  class="' + this.rowBodyTdCls + '">',
                         '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                     '</td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                         '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
                     '</td>',
-                    '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                    //'<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                     '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
                         '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',
                         '<div unselectable="on" class="order-action-icon discount-',
@@ -167,7 +165,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                     '<td role="gridcell"  class="' + this.rowBodyTdCls + '"></td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
-                    '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                    //'<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{[Taco.app.context.getCurrent().formatCurrency(values.discountedTotal)]}</div>',
                     '</td>',
@@ -225,14 +223,25 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                         '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{productCode}</div>',
                     '</td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                        '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{name}</div>',
+                        '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{name}<br/>',
+
+                    '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock && stock.stockAvailable< (parent.qty * quantity)">',
+                    '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">Qty {stock.stockAvailable} available</span>',
+                    '<tpl if="stock.availableDate">',
+                    '.<br/><span class="product-link-disabled">{[ parent.qty * values.quantity - values.stock.stockAvailable]} on backorder, available on {stock.availableDate:date("m/d/Y")}</span>',
+                    '<tpl else>',
+                    ',<br/><span class="product-link-disabled">{[ parent.qty * values.quantity - values.stock.stockAvailable]} on backorder</span>',
+                    '</tpl>',
+
+                    '</em>',
+                    '</tpl>',
+                    '</div>',
                     '</td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                         '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{fulfillmentStatus}</div>',
                     '</td>',
                     '<td role="gridcell" class="' + this.rowBodyTdCls + '" colspan="6"></td>',
                 '</tr>',
-            '</tpl>'
-        ].join('');
+            '</tpl>'].join('');
     }
 });

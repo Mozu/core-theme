@@ -1,0 +1,240 @@
+.subform-label {
+    color: #7c7c7c;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.subform-label:focus {
+    color: #2ea195;
+}
+
+.form-control:focus+.subform-label {
+    color: #ff0000;
+}
+
+.subform-text {
+    text-overflow: ellipsis;
+    border: 0;
+    border-bottom: 1px solid #dcdcdc;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+
+.subform-text:focus+.floating-label {
+    top: -5px;
+    left: 2px;
+    font-size: 11px;
+    opacity: 1;
+    color: #2ea195;
+    transition-duration: .2s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.27, .44, .62, .81);
+}
+
+.floating-label-not-empty {
+    position: absolute;
+    pointer-events: none;
+    left: 2px;
+    top: -5px;
+    color: #2ea195;
+    display: block;
+    transition-duration: .2s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.72, .45, .72, .92);
+    order: 0;
+	opacity: 1;
+    font-size: 11px;
+}
+
+input.inputText:required:not(:focus):valid+.floating-label {
+    top: -5px;
+    color: #2ea195;
+    left: 2px;
+    font-size: 11px;
+    opacity: 1;
+} 
+
+.redunderline-from-left {
+    border-color: #ff0000 !important;
+    width: 100% !important;
+    display: block;
+}
+
+.redfont {
+    color: #ff0000 !important;
+}
+
+
+span.error {
+    color: #ff0000;
+    font-size: 10px;
+}
+
+.inputText {
+    font-size: 14px;
+}
+
+.floating-label {
+    position: absolute;
+    pointer-events: none;
+    left: 2px;
+    top: 8px;
+    color: #7c7c7c;
+    display: block;
+    transition-duration: .2s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.72, .45, .72, .92);
+    order: 0;
+    font-size: 15px;
+}
+
+.subform {
+    padding: 0 19px 19px 19px;
+    background-color: white;
+    margin: 0px 0px 20px 0px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+}
+
+.subnav+.subform {
+    border-radius: 0px 0px 4px;
+}
+
+@keyframes borderanimation {
+    0% {
+        border: 2px solid #2ea195;
+        -webkit-box-shadow: 0px 0px 21px 8px rgba(0, 0, 0, 0.28);
+        -moz-box-shadow: 0px 0px 21px 8px rgba(0, 0, 0, 0.28);
+        box-shadow: 0px 0px 21px 8px rgba(0, 0, 0, 0.28);
+    }
+    100% {
+        border: 2px solid transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+}
+
+
+
+.underline-from-left {
+    margin-top: -2px;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 2px 0 0;
+    height: 0;
+    margin: -1px 0 0 0;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.54, .19, .85, .51);
+    width: .1%;
+}
+
+.subform-text:focus~.underline-from-left {
+    border-color: #2ea195;
+    transition-duration: .3s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.16, .76, .27, .95);
+    width: 100%;
+}
+
+.subform-text:not(:focus):valid~.underline-from-left {
+    border-color: #2ea195;
+    transition-duration: .3s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.16, .76, .27, .95);
+    width: 0%;
+}
+
+
+.for-no-padding {
+    padding: 5px 0;
+}
+
+.location-config-container {
+    margin: 20px 0 10px;
+    padding: 0px 20px;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+}
+
+.location-config-right-container {
+    height: calc(100vh - 140px);
+    overflow: hidden;
+    overflow-y: auto;
+    margin-bottom: 0px;
+}
+
+.location-config-left-container {
+    margin-bottom: 0px;
+}
+
+
+.nopadding {
+     padding: 0; 
+}
+
+.nobottommargin {
+    margin-bottom: 0px;
+}
+
+.nomargin {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.for-top-margin{
+    margin-top: 15px; 
+}
+
+.sbbtn {
+    background: #2ea195
+}
+
+.sbbtn:visited {
+    border-color: #2ea195;
+    border-color: #299086;
+}
+
+.sbbtn:focus,
+.sbbtn:active {
+    background-color: #299086;
+    opacity: 1;
+    border-color: #299086;
+    outline: none !important;
+}
+
+.sbbtn:hover {
+    border-color: #2ea195;
+    opacity: .8;
+}
+
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex; 
+    height: 100%;
+}
+
+.boxItemInputUnit {
+    margin-top: 12px;
+}
+
+.boxItemMargin {
+    margin-left: 35px;
+}
+
+.checkforpicknpack label {
+    padding-right: 5px;
+}
+
+.checkforpicknpack .subform-label {
+    padding-left: 18px;
+}
+
+.dropdownSiblingMargin {
+    margin-top: 25px;
+}

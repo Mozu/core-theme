@@ -243,6 +243,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgressText: "Saving...",
 
         enableSearchBarInHeader: true,
+        showbreadCrumbspacer: true,
         showTitleBorder: true,
 
         // turns off all the default coloration for the content container; ie. makes everything white;
@@ -385,7 +386,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     type: 'hbox',
                     align: 'strecth'
                 },
-                height: 60,
+                height: 64,
                 cls: 'taco-content-header-title-container',
                 items: []
             };
@@ -464,6 +465,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 searchType: 'navigation',
                 width: '100%',
                 flex: 1,
+                defaultFieldName: me.advancedSearchConfig.defaultFieldName || 'keyword',
                 enableQuickFilters : this.enableQuickFilters,
                 quickFilterData: [me.advancedSearchConfig.quickFilterData],
                 advancedForm: me.advancedSearchConfig.form,
@@ -490,12 +492,14 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             actionBarPadding = '0 0 0 0';
         }
-
-        if (me.breadCrumbConfig) {
+        if (me.breadCrumbConfig)
+        {
+        
             me.titleContainer.flex = 0;
-            conf.items.push('->');
+            if (me.showbreadCrumbspacer) {       
+                conf.items.push('->');
+            }
         }
-
         if (!me.hideSubnavLinks) {
             me.subNavLinkContainer = Ext.create('Taco.view.navigation.SubNavLinkContainer');
             conf.items.push(me.subNavLinkContainer);
@@ -548,12 +552,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 if (me.saveAndCreateButtonEnabled) {
                     saveButtonCfg.xtype = 'splitbutton';
-                    saveButtonCfg.menu = [{
-                        text: "Save and Create New",
-                        handler: me.saveAndCreate,
-                        scope: me,
-                        hidden: !(me.allowUpdate() || me.allowCreate())
-                    }];
+                    saveButtonCfg.menu = {
+                        cls: 'taco-header-split-button',
+                        items: [{
+                            text: "Save and Create New",
+                            handler: me.saveAndCreate,
+                            scope: me,
+                            hidden: !(me.allowUpdate() || me.allowCreate())
+                        }]
+                    };
                 }
 
                 if (saveButtonCfg.xtype === 'splitbutton') {

@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         public Task ContextInitializationTasks =>
             _contextInitTasks ??= Task.WhenAll(
                 new CmsHelper(CmsService).InitCmsPageContext(PageContext, SiteContext, SbApiContext,
-                    ExpressionEvaluaton, PageRuleVisitor),
+                    ExpressionEvaluator, PageRuleVisitor),
                 SiteContext.Init());
 
         public void ResetContextInitilaztionTasks()
@@ -78,20 +78,24 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
         //private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
 
-        private ExpressionEvaluatorVisitor<CmsPageRuleContext> _pageRuleVisitor;
-        public ExpressionEvaluatorVisitor<CmsPageRuleContext> PageRuleVisitor
+        private
+             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
+        public Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> PageRuleVisitor
         {
-            get => _pageRuleVisitor ??= LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>().Value;
+            get =>
+                _pageRuleVisitor;
+            //?? (_pageRuleVisitor = LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>());
+
             set => _pageRuleVisitor = value;
         }
 
-        private IExpressionEvaluator _expressionEvaluator;
-        public IExpressionEvaluator ExpressionEvaluaton
+        private Lazy<IExpressionEvaluator> _expressionEvaluator;
+        public Lazy<IExpressionEvaluator> ExpressionEvaluator
         {
-            get
-            {
-                return _expressionEvaluator ??= LifetimeScope.Resolve<IExpressionEvaluator>();
-            }
+            get =>
+                _expressionEvaluator;
+            //?? (_expressionEvaluator = LifetimeScope.Resolve<Lazy<IExpressionEvaluator>>());
+
             set => _expressionEvaluator = value;
         }
 

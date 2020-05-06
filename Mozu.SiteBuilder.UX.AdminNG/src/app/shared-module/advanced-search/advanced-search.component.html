@@ -1,0 +1,99 @@
+<div class="searchBar" [ngClass]="isEditMode? 'col-md-8 col-sm-8' : 'col-md-10 col-sm-10' " id="searchBar">
+    <div class="input-group">
+        <div class="input-group-btn">
+            <button class="btn btn-default search-btn" type="button">
+                    <i [ngClass]="model.isIconToggled ? 'pi-times' : 'pi-search'" class="pi"
+                        (click)="model.isIconToggled ? resetSerach(searchBar): ''"></i>
+                </button>
+        </div>
+        <input type="text" [(ngModel)]="model.searchField" class="form-control" #searchBar placeholder="{{'SHARED.FILTER.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
+    </div>
+</div>
+
+<div class="col-md-1 col-md-1">
+    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="true" (click)="setAdvancedFilterValue(searchBar.value)"></span>
+    <div class="modal advanced-filter" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="form" #advancedSearchForm="ngForm">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="gridSystemModalLabel">{{'SHARED.FILTER.advancedFilter' | translate}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ng-container *ngTemplateOutlet="commonFilterTemplate"></ng-container>
+                        <ng-container [ngSwitch]="navigationContainerType">
+                            <ng-container [ngSwitchCase]="navigationType.quotes" *ngTemplateOutlet="quoteFilterTemplate">
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="modal-footer">
+                        <span type="button" class="btn cancelbtn" data-dismiss="modal">{{'SHARED.FILTER.cancelBtn' | translate}}</span>
+                        <button type="button" id="btnFilter" class="sbbtn btn btn-success" [disabled]="advancedSearchForm.form.invalid" (click)="search(searchBar.value)">{{'SHARED.FILTER.filterBtn' | translate}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Common Filter Template Start -->
+<ng-template #commonFilterTemplate>
+    <div class="form-group">
+        <label for="keyword">{{'SHARED.FILTER.keywordSearch' | translate}}</label>
+        <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='filterModel.keyword' (ngModelChange)="modelChanged()">
+    </div>
+</ng-template>
+<!-- Common Filter Template End -->
+
+<!-- Quote Filter Templates Starts -->
+<ng-template #quoteFilterTemplate>
+    <div class="form-group">
+        <label for="quoteName">{{'SHARED.FILTER.QuotesFields.quoteName' | translate}}</label>
+        <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='filterModel.name' (ngModelChange)="modelChanged()">
+    </div>
+    <div class="form-group">
+        <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
+        <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='filterModel.quoteId' (ngModelChange)="modelChanged()">
+    </div>
+    <div class="form-group">
+        <label for="accountName">{{'SHARED.FILTER.QuotesFields.accountName' | translate}}</label>
+        <ng-select [items]="b2bAccounts" bindLabel="companyOrOrganization" bindValue="id" (open)="populateB2BAccounts()" name="accountName" id="accountName" [(ngModel)]='filterModel.accountId' (ngModelChange)="modelChanged()"></ng-select>
+    </div>
+    <div class="form-group">
+        <label for="accountUserName">{{'SHARED.FILTER.QuotesFields.accountUserName' | translate}}</label>
+        <input type="text" class="form-control" id="accountUserName" name="accountUserName" [(ngModel)]='filterModel.accountUserLastName' (ngModelChange)="modelChanged()">
+    </div>
+    <div class="form-group">
+        <label for="expirationDate">{{'SHARED.FILTER.QuotesFields.expirationDate' | translate}}</label>
+        <div class="section-data">
+            <datepicker id="expirationFrom" name="expirationFrom" [(ngModel)]="filterModel.expirationFrom" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.expirationTo}}" [isToDate]="false" #expirationFromControl="ngModel"></datepicker>
+            <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
+            <datepicker id="expirationTo" name="expirationTo" [(ngModel)]="filterModel.expirationTo" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.expirationFrom}}" [isToDate]="true" #expirationToControl="ngModel"></datepicker>
+        </div>
+        <div class="error" *ngIf="expirationToControl.errors?.isValidDate || expirationFromControl.errors?.isValidDate">
+            {{expirationToControl.errors?.isValidDate ? expirationToControl.errors?.msg : expirationFromControl.errors?.msg}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="projectName">{{'SHARED.FILTER.QuotesFields.projectName' | translate}}</label>
+        <input type="text" class="form-control" id="projectName" name="projectName" [(ngModel)]='filterModel.projectName' (ngModelChange)="modelChanged()">
+    </div>
+    <div class="form-group">
+        <label for="Status">{{'SHARED.FILTER.QuotesFields.status' | translate}}</label>
+        <ng-select [items]="quoteStatus" id="status" name="status" [(ngModel)]='filterModel.status' (ngModelChange)="modelChanged()"></ng-select>
+    </div>
+    <div class="form-group">
+        <label for="createDate">{{'SHARED.FILTER.QuotesFields.createDate' | translate}}</label>
+        <div class="section-data">
+            <datepicker id="createFrom" name="createFrom" [(ngModel)]="filterModel.createFrom" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.createTo}}" [isToDate]="false" #createFromControl="ngModel"></datepicker>
+            <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
+            <datepicker id="createTo" name="createTo" [(ngModel)]="filterModel.createTo" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.createFrom}}" [isToDate]="true" #createToControl="ngModel"></datepicker>
+        </div>
+        <div class="error" *ngIf="createToControl.errors?.isValidDate || createFromControl.errors?.isValidDate">
+            {{createToControl.errors?.isValidDate ? createToControl.errors?.msg : createFromControl.errors?.msg}}
+        </div>
+    </div>
+</ng-template>
+<!-- Quote Filter Templates Ends -->

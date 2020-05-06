@@ -3,18 +3,18 @@ using System.Linq;
 using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public class CmsPageRelationalExpressionEvaluator : RelationalExpressionEvaluator<CmsPageRuleContext>
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<CmsPageRelationalExpressionEvaluator> _logger;
 
         /// <inheritdoc />
-        public CmsPageRelationalExpressionEvaluator(IExpressionContextMetadataProvider<CmsPageRuleContext> binaryExpressionContextMetadataProvider, ILogger<RelationalExpressionEvaluator<CmsPageRuleContext>> logger) : 
+        public CmsPageRelationalExpressionEvaluator(IExpressionContextMetadataProvider<CmsPageRuleContext> binaryExpressionContextMetadataProvider, ILogger<CmsPageRelationalExpressionEvaluator> logger) : 
             base(binaryExpressionContextMetadataProvider, logger)
         {
             _logger = logger;

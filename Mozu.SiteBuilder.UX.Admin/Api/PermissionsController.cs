@@ -4,7 +4,9 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Users;
@@ -31,8 +33,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpGetRoute(UriTemplate = "roles")]
         public async Task<Response<List<Role>>> Roles([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var roles = await _permissionsRepository.GetRoles();
-            return List2(roles);
+            var roles = await _permissionsRepository.GetRoles(pagingParams?.startIndex, pagingParams?.pageSize);
+            var pagedRoles= (Mapper.Map<List<Role>>(roles.Items));
+            return pagedRoles.IsNullOrEmpty() ? EmptyList2<Role>() : List2(pagedRoles, roles.TotalCount);
         }
 
 		/*[HttpPostRoute(UriTemplate = "role/create")]

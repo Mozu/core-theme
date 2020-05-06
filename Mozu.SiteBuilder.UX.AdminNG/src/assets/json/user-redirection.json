@@ -1,0 +1,4 @@
+[{
+    "label": "Log Out",
+    "url": "/admin/auth/logout"
+}]

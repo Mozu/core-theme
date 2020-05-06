@@ -1,0 +1,11 @@
+﻿<div [ngClass]="navigationContainerCSSClass" >
+    <navigation-left [naviContainerType]=navigationContainerType></navigation-left>
+       <div [ngSwitch]="navigationContainerType">
+        <navigation-top-quote  *ngSwitchCase="navigationType.quotes"></navigation-top-quote>
+        <navigation-top-shell *ngSwitchCase="navigationType.dashboard"></navigation-top-shell>
+        <!-- <navigation-locationTabs-LocationGroup *ngIf="showLocationEditTabs"></navigation-locationTabs-LocationGroup> -->
+    </div>
+</div>
+
+
+

@@ -67,6 +67,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
         {
             var statements = extFilter.Where(x => x.property != "all" && !string.IsNullOrEmpty((x.value ?? "").ToString()) ).Select(GetFilter).ToList();
             var allFilter = extFilter.FirstOrDefault(x => x.property == "all" && !string.IsNullOrEmpty( (x.value ?? "").ToString() ));
+            
+            //added new if to handle 'OR' condition in location filters. previously we are adding 'and' to all the filters.
+            if (extFilter.Where(x => x.property == "any").FirstOrDefault() != null)
+                return string.Join(" or ", statements);
+
             if (allFilter == null) 
                 return string.Join(" and ", statements);
             
@@ -102,6 +107,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
                     return string.Format("({1} eq {0})", filter.value, ZIPCODE);
                 case "code":
                     return string.Format("({1} eq '{0}')", filter.value, CODE);
+                case "codene":
+                    return string.Format("({1} ne '{0}')", filter.value, CODE);
                 case "locationtype":
                     return string.Format("({1} eq '{0}')", filter.value, LOCATIONTYPECODE);
                 case "supportsinventory":

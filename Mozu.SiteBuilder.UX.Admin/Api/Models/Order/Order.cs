@@ -7,6 +7,7 @@ using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCpay = Mozu.CommerceRuntime.Contracts.Payments;
 using DCcredit = Mozu.Customer.Contracts.Credit;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -145,6 +146,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<OrderRefund> Refunds { get; set; }
 
         public List<OrderPackage> Packages { get; set; }
+
+        public List<Shipment> Shipments { get; set; }
 
         public List<OrderDigitalPackage> DigitalPackages { get; set; }
 
@@ -408,6 +411,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                 return result;
             }
         }
+
+        /// <summary>
+        /// Was this order created by the Unified platform.
+        /// </summary>
+        /// <remarks>
+        /// If true, this order was created by the Unified (.NET Core) platform.
+        /// If false, this order was created by the legacy (.NET Framework) platform.
+        /// This is a read-only field and any set value will be ignored.
+        /// </remarks>
+        public bool IsUnified { get; set; }
     }
 
     public class LineIdFee

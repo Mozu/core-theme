@@ -349,6 +349,7 @@ Ext.define("Taco.view.category.Form", {
         this.items.push(
             Ext.create('Taco.view.productRanking.Grid', {
                 id: 'product-rankings-grid',
+                cls: 'product-ranking-rules-category-page',
                 title: "Product Ranking Rules",
                 hideSubnavLinks: true,
                 margin: '50 0 0 0',
@@ -373,7 +374,8 @@ Ext.define("Taco.view.category.Form", {
 
         this.items.push(
             Ext.create('Taco.view.sortDefinition.Grid', {
-                id:'sort-definitions-grid',
+                id: 'sort-definitions-grid',
+                cls: 'sort-definitions-grid-category-page',
                 title: 'Sort Definitions',
                 hideSubnavLinks: true,
                 margin: '50 0 0 0',

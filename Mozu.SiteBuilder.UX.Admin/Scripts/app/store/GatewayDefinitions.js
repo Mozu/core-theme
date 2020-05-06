@@ -11,3 +11,4 @@ Ext.define('Taco.store.GatewayDefinitions', {
     autoLoad: true
 }
 });
+

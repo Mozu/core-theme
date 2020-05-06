@@ -14,7 +14,7 @@ Ext.define('Taco.controller.Localization', {
         'Taco.store.LocalizedProductExtras', 'Taco.store.LocalizedProductVariants'],
     listView: null,
 
-    index: function () {
+    attributes: function () {
         this.createContentView('Taco.view.settings.localization.Attributes');
     },
 

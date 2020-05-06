@@ -114,20 +114,22 @@ Ext.define('Taco.core.AppState', {
         'deactivate'
         );
         this.uri = this.self.fixupUrl(this.uri);
-        this.metaData = Ext.apply(this.self.parseMetaData(this.uri), this.metaData || {});
         
-        this.complexMetaData =  this.metaData.complexMetaData || {};
-        this.complexMetaData.record = this.complexMetaData.record || this.metaData.record;
-       
-        delete this.metaData.complexMetaData;
-        delete this.metaData.record;
+            this.metaData = Ext.apply(this.self.parseMetaData(this.uri), this.metaData || {});
 
-        Ext.applyIf(this.complexMetaData, this.metaData);
-        if (!this.complexMetaData.record) {
-            delete this.complexMetaData.record;
-        }
-        // set a sequential-ish state ID.
-        this.metaData._stateid = Number((new Date().getTime().toString()) + Math.round(Math.random() * 100000));
+            this.complexMetaData = this.metaData.complexMetaData || {};
+            this.complexMetaData.record = this.complexMetaData.record || this.metaData.record;
+
+            delete this.metaData.complexMetaData;
+            delete this.metaData.record;
+
+            Ext.applyIf(this.complexMetaData, this.metaData);
+            if (!this.complexMetaData.record) {
+                delete this.complexMetaData.record;
+            }
+            // set a sequential-ish state ID.
+            this.metaData._stateid = Number((new Date().getTime().toString()) + Math.round(Math.random() * 100000));
+        
 
     }
 });

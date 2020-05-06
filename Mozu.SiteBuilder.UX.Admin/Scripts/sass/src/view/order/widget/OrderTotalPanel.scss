@@ -112,6 +112,23 @@
         }
     }
 
+    .adjustment-tr {
+        td{
+            padding-bottom: 10px;
+        }
+
+        .adjustmentTotal {
+            text-align: right;
+            color: $label-color;
+        }
+
+        .x-btn-arrow-right::after {
+            margin-top: 10px;
+        }
+    }
+
+    
+
     
 
 
@@ -129,6 +146,12 @@
             .price-detail {
                 padding-left: 0px;
                 text-align: right;
+                //padding-right: 130px;
+            }
+
+            .price-detail-shipment {
+                padding-left: 0px;
+                text-align: left;
                 //padding-right: 130px;
             }
 

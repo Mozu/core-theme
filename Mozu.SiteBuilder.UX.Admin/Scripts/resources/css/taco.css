@@ -10435,12 +10435,12 @@ svg, vml {
 }
 /* line 11, ../scss/taco/_navmenu.scss */
 .taco-viewport-nav .taco-primary-menu-trigger {
-  border-right: 1px solid #bfbfbf;
+  //border-right: 1px solid #bfbfbf;
   display: block;
   overflow: hidden;
-  -webkit-box-shadow: 1px 0px white;
-  -moz-box-shadow: 1px 0px white;
-  box-shadow: 1px 0px white;
+  //-webkit-box-shadow: 1px 0px white;
+  //-moz-box-shadow: 1px 0px white;
+  //box-shadow: 1px 0px white;
   background-position: 0 -3587px;
   -webkit-transition: background-color 0.4s ease-in-out;
   -moz-transition: background-color 0.4s ease-in-out;

@@ -4,6 +4,7 @@
 
 Ext.define('Taco.view.productRanking.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
+    cls:'productranking-header',
     requires: [
         'Taco.core.ux.action.DeleteMenuItem',
         'Taco.view.productRanking.Form'
@@ -91,7 +92,7 @@ Ext.define('Taco.view.productRanking.Edit', {
                 menuAlign: 'tr-br?',
                 disabled: disabledOnCreate,
                 menu: {
-                    cls: 'taco-more-action-button-menu',
+                    cls: 'taco-ellipsis-split-button',
                     plain: true,
                     shadow: false,
                     items: menuItems

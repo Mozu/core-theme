@@ -31,15 +31,18 @@ Ext.define('Taco.view.publishing.Drafts', {
         var me = this;
 
         this.moreButtonCfg = {
-            menu: [
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Show Assigned Drafts',
-                    checked: true,
-                    handler: this.updateStores.bind(this),
+            menu: {
+                cls: 'taco-ellipsis-split-button',
+                items: [
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Show Assigned Drafts',
+                        checked: true,
+                        handler: this.updateStores.bind(this),
 
-                }
-            ]
+                    }
+                ]
+            }
         };
 
         this.panel = Ext.create('Ext.panel.Panel', {

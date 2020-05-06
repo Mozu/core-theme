@@ -1,0 +1,12 @@
+<div class="col-md-12 sidebar quote-location-sub-header">
+    <div class="row">
+        <div class="heading col-md-1 col-sm-1">
+            <h4><a [routerLink]="[uiRoutes]">{{'SHARED.HEADER.pageTitle.quotes' | translate }}</a></h4>
+        </div>
+        <div class="col-md-2 col-sm-2 quote-details" *ngIf="model.isEditMode">
+            <span class="quote-number">#{{ model.quoteNumber }}</span>
+            <span class="content-pill">{{ model.quoteStatus }}</span>
+        </div>
+        <advanced-search [navigationContainerType]=navigationType.quotes [isEditMode]=model.isEditMode></advanced-search>
+    </div>
+</div>

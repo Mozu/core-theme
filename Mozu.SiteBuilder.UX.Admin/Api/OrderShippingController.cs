@@ -1,15 +1,19 @@
-﻿using System;
+﻿using AutoMapper;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
+using Mozu.Core.Api.Routing;
+using Mozu.Inventory.Contracts.Model;
+using Mozu.OrderRouting.Contracts.Model;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
-using Mozu.Core.Api.Routing;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using DCm = Kibo.Fulfillment.Contracts.Model;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -354,5 +358,139 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return _orderWebApiClient.DeletePackage(orderId, package.Id);
             }
         }
+
+
+        ///SHIPMENT ASSIGN
+        ///GET LOCATIONS 
+        ///SHIPMENT ASSIGN
+        ///GET LOCATIONS 
+        [HttpPostRoute(UriTemplate = "shipping/candidates")]
+        public async Task<Response<CandidateSuggestionsResponse>> GetCandidates(CandidateSuggestionsRequest request)
+        {
+            var serviceResponse = (await _orderRoutingProxyClient.SuggestCandidates(request)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+
+        [HttpPostRoute(UriTemplate = "shipping/inventory")]
+        public async Task<Response<List<InventoryResponse>>> GetInventory(InventoryRequest body)
+        {
+            var serviceResponse = (await _inventoryProxyClient.PostQueryInventory(body)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+        public class CancelShipmentArgs
+        {
+            public DCm.CancelShipment CancelShipment { get; set; }
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipment/cancel")]
+        public async Task<Response<DCm.ResourceOfShipment>> CancelShipment(CancelShipmentArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.CancelShipment(args.ShipmentNumber, args.CancelShipment)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+        public class RejectShipmentArgs
+        {
+            public DCm.RejectShipment RejectShipment { get; set; }
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipment/reject")]
+        public async Task<Response<DCm.ResourceOfShipment>> RejectShipment(RejectShipmentArgs args)
+        {            
+            var serviceResponse = (await _fulfillmentProxyClient.RejectShipment(args.ShipmentNumber, args.RejectShipment)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+
+        public class FuflfillShipmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipment/fulfill")]
+        public async Task<Response<DCm.ResourceOfShipment>> FuflfillShipment(FuflfillShipmentArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.FulfillShipment(args.ShipmentNumber)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+        [HttpPutRoute(UriTemplate = "shipment/receivetransfer")]
+        public async Task<Response<DCm.ResourceOfShipment>> ReceiveTransfer(FuflfillShipmentArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.ReceiveTransfer(args.ShipmentNumber)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+        public class BackorderShipmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+
+            public DCm.BackorderShipmentRequest BackorderShipmentBody { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipment/backordered")]
+        public async Task<Response<DCm.ResourceOfShipment>> BackorderShipment(BackorderShipmentArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.BackorderShipment(args.ShipmentNumber, args.BackorderShipmentBody)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+        public class ReassignShipmenttArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public DCm.ReassignShipment ReassignShipment { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/reassign")]
+        public async Task<Response<DCm.ResourceOfShipment>> ReassignShipment(ReassignShipmenttArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.ReassignShipment(args.ShipmentNumber, args.ReassignShipment)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
+
+        public class ShipmentAdjustmentArgs
+        {
+            public string OrderId { get; set; }
+            public int? ShipmentNumber { get; set; }
+            public DCs.ShipmentAdjustment ShipmentAdjustment { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipment/updateShipmentAdjustments")]
+        public async Task<Response<DCs.Shipment>> UpdateShipmentAdjustments(ShipmentAdjustmentArgs args)
+        {
+            var shipment = (await _orderWebApiClient.UpdateShipmentAdjustments(args.OrderId, args.ShipmentNumber, args.ShipmentAdjustment)).ReadAsSync();
+            return Single2(shipment);
+        }
+
+        public class ShipmentItemAdjustmentArgs
+        {
+            public string OrderId { get; set; }
+            public int? ShipmentNumber { get; set; }
+            public string ItemId { get; set; }
+            public DCs.ShipmentItemAdjustment ShipmentItemAdjustment { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/UpdateShipmentItem")]
+        public async Task<Response<DCs.Shipment>> UpdateShipmentItem(ShipmentItemAdjustmentArgs args)
+        {
+            var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.OrderId,args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
+            return Single2(shipment);
+        }
+
+        public class ShipmentFilterArgs
+        {
+            public string Filter { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipments/filter")]
+        public async Task<Response<List<Shipment>>> GetShipments(ShipmentFilterArgs args)
+        {
+            var pagedShipments = (await _fulfillmentProxyClient.GetShipments(args.Filter)).ReadAsSync();
+            var shipmentContracts = pagedShipments?.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<DCm.ResourceOfShipment>();
+
+            var shipments = Mapper.Map<List<Shipment>>(shipmentContracts);
+            return List2(shipments);
+        }
+
     }
 }

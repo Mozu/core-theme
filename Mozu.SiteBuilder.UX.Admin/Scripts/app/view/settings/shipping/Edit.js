@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.shipping.Edit', {
     requires: [
         'Taco.view.settings.shipping.Form'
     ],
+    cls: 'shipping-links',
     enableSearchBarInHeader: false,
     formCls: 'Taco.view.settings.shipping.Form',
     contextConfig: {
@@ -36,6 +37,12 @@ Ext.define('Taco.view.settings.shipping.Edit', {
             title: 'Product Rules',
             tabIndex: 3,
             route: 'shipping/productRules'
+        },
+        {
+            title: 'Carrier Accounts',
+            tabIndex: 4,
+            route: 'shipping/CarrierAccounts',
+            //isActive: true
         }
     ],  
 

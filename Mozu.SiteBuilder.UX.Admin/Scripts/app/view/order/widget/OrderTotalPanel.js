@@ -96,14 +96,17 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     },
 
     initSummaryToggleButtons: function () {
-
         var me = this;
+
+        if (Taco.app.context.getSite().omsOnly) {
+            me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
+            return;
+        }
 
         me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
         me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
         me.initToggleButton(".tax-summary", me.toggleTaxDetails);
         me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
-
     },
 
     initUI: function () {
@@ -131,7 +134,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             this.leftPanel,
             {
                 xtype: "container",
-                flex: .5,
+                flex: 1,
                 items: [
                     this.masterTable
                 ]
@@ -278,7 +281,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     behavior: 'fulfill'
                 }],
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
-                disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
+                disabled: !this.isOrderEditable() || (!this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length),
                 text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
@@ -331,6 +334,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         return (!this.record.isPickupOnlyOrder() && Ext.Object.isEmpty(this.record.data.fulfillmentContact))
             ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>"
             : "Shipping Method";
+    },
+
+    isOrderEditable: function () {
+        var orderStatus = this.record.get('orderStatus');
+        if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
+            return true;
+        else
+            return false;
     },
 
     // update the shipping method label based on the presence of a shipping Address Contact
@@ -511,7 +522,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}" colspan=><div class="{tdInnerCls}">Order Shipping Fee<tpl if="values.shippingMethodName">: {shippingMethodName}</tpl></div></td>',
-        '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAmountBeforeDiscountsAndAdjustments)]}</div></td>',
+        '<td class="{tdCls}"><tpl if="!isOmsOnly"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAmountBeforeDiscountsAndAdjustments)]}</div></tpl></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -521,7 +532,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tr class="shipping-handling-item lineitemdiscount">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Line {lineId} Shipping Discount: {name}</div></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.fee)]})</div></td>',
+        '<td class="{parent.tdCls}"><tpl if="!isOmsOnly"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.fee)]})</div></tpl></td>',
         '<td class="{parent.tdCls}"></td>',
         '<td class="{parent.tdCls}"></td>',
         '</tr>',
@@ -533,7 +544,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount: {description}</div></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
+        '<td class="{parent.tdCls}"><tpl if="!isOmsOnly"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></tpl></td>',
         '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
         '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
         'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
@@ -566,10 +577,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             tdCls = "taco-grid-cell ",
             tdInnerCls = "taco-grid-cell-inner ",
             priceCls = "price-detail "
-        isEditable = this.isEditable,
+            isEditable = this.isEditable,
             isEditableCls = (isEditable) ? "taco-editable " : "",
             // need to fake an editable field in the template dom. if editable needs to be an anchor tag to allow for tabbing and div when uneditable
-            fakeInputDom = (isEditable) ? "a " : "div";
+            fakeInputDom = (isEditable) ? "a " : "div",
+            isOmsOnly = Taco.app.context.getSite().omsOnly;
 
         return [
 

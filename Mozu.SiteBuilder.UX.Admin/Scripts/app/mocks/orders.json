@@ -1,283 +1,483 @@
-﻿[{
-    "createBy": "54a1303527c04bb5a40db9f7cfb2677e",
-    "createDate": "\/Date(1348072873598)\/",
-	"ipAddress": "192.168.1.1",
+﻿[
+  {
+    "id": "0e4912cc429fe432cc17b88e0000432a",
+    "subtotal": 15,
     "discountTotal": 0,
-    "fulfillmentStatus": "Not shipped",
-    "CurrencyCode": "usd",
-    "id": "76f4d583b26f40beaeb17e2bb6a63060",
-    "items": [{
-        "createDate": "\/Date(1347995574405)\/",
-        "discountTotal": 0,
-        "id": "d9848577cb3d4c04a5138065bc07ab01",
-        "originalCartItemId": "772e75ebac1641abb3f50e30333799b0",
-        "product": {
-            "categories": [{
-                "id": 7,
-                "parent": {
-                    "id": 5
-                }
-            }, {
-                "id": 19
-            }],
-            "description": "I am the product description",
-            "imageAlternateText": "purple satchel.png",
-            "imagePath": "\/admin\/img\/files\/4fe88e8777b3c70f80536459",
-            "measurements": {},
-            "name": "Purple Classic Cambridge Satchel",
-            "options": [],
-            "price": {
-                "price": 110.0000
-            },
-            "productCode": "HB006",
-            "stock": {}
+    "discountedTotal": 15,
+    "itemTaxTotal": 1.24,
+    "shippingTaxTotal": 0,
+    "shippingTotal": 9.9,
+    "feeTotal": 0,
+    "total": 26.14,
+    "shippingDiscounts": [],
+    "shippingAmountBeforeDiscountsAndAdjustments": 9.9,
+    "tenantId": 17194,
+    "orderType": "Offline",
+    "siteId": 21127,
+    "invalidCoupons": [],
+    "couponCodes": [],
+    "orderNumber": 117,
+    "returnStatus": "None",
+    "createDate": "2019-08-05T22:59:28.623Z",
+    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "updateDate": "2019-08-05T23:47:54.567Z",
+    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "submittedDate": "2019-08-05T23:00:37.365Z",
+    "customerId": 1001,
+    "billingContact": {
+      "id": 0,
+      "email": "sam.billing@email.com",
+      "firstName": "Sam",
+      "middleName": "",
+      "lastName": "Billing",
+      "address1": "1845 Kramer Ln",
+      "address2": "",
+      "address3": "",
+      "address4": "",
+      "cityOrTown": "Austin",
+      "countryCode": "US",
+      "postalOrZipCode": "78758",
+      "stateOrProvince": "TX",
+      "addressIsValidated": false,
+      "addressType": "Residential",
+      "homePhone": "1234567486",
+      "mobilePhone": "",
+      "workPhone": ""
+    },
+    "fulfillmentContact": {
+      "id": 1019,
+      "email": "sam.billing@email.com",
+      "firstName": "Sam",
+      "middleName": "",
+      "lastName": "Billing",
+      "companyOrOrganization": "",
+      "address1": "1845 Kramer Ln",
+      "address2": "",
+      "address3": "",
+      "address4": "",
+      "cityOrTown": "Austin",
+      "countryCode": "US",
+      "postalOrZipCode": "78758",
+      "stateOrProvince": "TX",
+      "addressIsValidated": false,
+      "addressType": "Residential",
+      "homePhone": "1234567486",
+      "mobilePhone": "",
+      "workPhone": ""
+    },
+    "ipAddress": "127.0.0.1",
+    "attributes": [],
+    "items": [
+      {
+        "bundledProducts": [],
+        "productUsage": "Configurable",
+        "id": "6fa3a9fd0cb24d5287c1aaa00128ab49",
+        "lineId": 1,
+        "productCode": "MS-BTL-002-2",
+        "options": [
+          {
+            "name": "Color",
+            "value": "Blue",
+            "shopperEnteredValue": "Blue",
+            "attributeFQN": "Tenant~color",
+            "stringValue": "Blue"
+          }
+        ],
+        "productName": "SoftBottle Water Bottle",
+        "unitPrice": 15,
+        "listPrice": 15,
+        "unitWeight": 0.5,
+        "quantity": 1,
+        "activeDiscounts": [],
+        "discounts": [],
+        "shippingDiscounts": [],
+        "subtotal": 15,
+        "displaySubtotal": 15,
+        "total": 26.14,
+        "fulfillmentLocationCode": "AUS",
+        "fulfillmentMethod": "Ship",
+        "fulfillmentStatus": "PendingFulfillment",
+        "isPackagedStandAlone": false,
+        "weightedOrderAdjustment": 0,
+        "weightedOrderDiscount": 0,
+        "adjustedLineItemSubtotal": 15,
+        "totalWithoutWeightedShippingAndHandling": 16.24,
+        "weightedOrderTax": 0,
+        "weightedOrderShipping": 0,
+        "weightedOrderShippingDiscount": 0,
+        "weightedOrderShippingManualAdjustment": 0,
+        "weightedOrderShippingTax": 0,
+        "weightedOrderHandlingFee": 0,
+        "weightedOrderHandlingFeeTax": 0,
+        "weightedOrderHandlingFeeDiscount": 0,
+        "shippingTaxTotal": 0,
+        "shippingTotal": 9.9,
+        "weightedOrderDuty": 0,
+        "totalWithWeightedShippingAndHandling": 26.14,
+        "itemTaxTotal": 1.24,
+        "discountedTotal": 15,
+        "shippingAmountBeforeDiscountsAndAdjustments": 9.9,
+        "weightedOrderHandlingAdjustment": 0,
+        "basePrice": 15,
+        "manualPriceAdjustment": 0,
+        "adjustmentTotal": 0,
+        "shippingAndHandlingTotal": 9.9,
+        "shippingTotalWithDiscounts": 9.9,
+        "handlingTotalWithDiscounts": 0,
+        "taxAndDutyTotal": 1.24,
+        "stock": {
+          "manageStock": true,
+          "isOnBackOrder": false,
+          "availableDate": "0001-01-01T00:00:00.000Z"
         },
-        "quantity": 2,
-        "subTotal": 220.0000,
-        "total": 220.0000,
-        "updateDate": "\/Date(1348064588675)\/"
-    }],
-    "lastValidationDate": "\/Date(1348076220122)\/",
-    "notes": [{
-        "id": "note1",
-        "text": "This is note 1. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note2",
-        "text": "This is note 2. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note3",
-        "text": "This is note 3. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note4",
-        "text": "This is note 4. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }],
-    "orderStatus": "New",
-    "originalCartId": "423938918dee4a4fbf8846f9cf9d9520",
-    "payment": {
-        "card": {
-            "paymentServiceCardId": "blah",
-            "paymentOrCardType": "Visa",
-            "cardNumberPartOrMask": "xxxx-xxxx-xxxx-8888",
-            "isUsedRecurring": false,
-            "isSameBillingShippingAddress": true,
-            "isCardInfoSaved": true,
-            "billingAddress": {
-                "id": 12345,
-                "firstName": "Joe",
-                "middleName": "F",
-                "lastName": "Blow",
-                "email": "joe@blow.com",
-                "companyOrOrganization": "Joe Inc.",
-                "phoneNumbers": {
-                    "home": "512-777-9090",
-                    "work": "",
-                    "mobile": ""
-                },
-                "address": {
-                    "addressId": 4455,
-                    "address1": "123 Elm Drive",
-                    "address2": "",
-                    "address3": "",
-                    "cityOrTown": "Austin",
-                    "stateOrProvince": "TX",
-                    "postalOrZipCode": "78750",
-                    "countryCode": "US"
-                },
-                "isPrimary": true
-            }
-        }
-    },
-    "paymentStatus": "Pending",
-    "paymentTransactions": [],
-    "shipment": {
-        "shippingAddress": {
-            "id": 12345,
-            "firstName": "Joe",
-            "middleName": "F",
-            "lastName": "Blow",
-            "email": "joe@blow.com",
-            "companyOrOrganization": "Joe Inc.",
-            "phoneNumbers": {
-                "home": "512-777-9090",
-                "work": "",
-                "mobile": ""
+        "parentProductCode": "MS-BTL-002"
+      }
+    ],
+    "activeOrderDiscounts": [],
+    "orderDiscounts": [],
+    "shippingMethodCode": "ups_UPS_GROUND",
+    "shippingMethodName": "UPS Ground",
+    "internalNotes": [],
+    "orderStatus": "Processing",
+    "fulfillmentStatus": "NotFulfilled",
+    "paymentStatus": "Unpaid",
+    "payments": [
+      {
+        "id": "9e0184e83e1e4b3d9364aaa00134e3aa",
+        "orderId": "0e4912cc429fe432cc17b88e0000432a",
+        "status": "Credited",
+        "amountRequested": 26.14,
+        "amountCollected": 26.14,
+        "amountAuthorized": 0,
+        "amountCredited": 26.14,
+        "amountRefunded": 0,
+        "amountRefundedOnReturn": 0,
+        "amountTotalCreditAndRefund": 0,
+        "interactions": [
+          {
+            "id": "f5b05ec72b0c48ae824caaa00135c506",
+            "paymentId": "9e0184e83e1e4b3d9364aaa00134e3aa",
+            "interactionType": "Credit",
+            "target": {
+              "targetType": "Order",
+              "targetId": "0e4912cc429fe432cc17b88e0000432a",
+              "targetNumber": 117
             },
-            "address": {
-                "addressId": 4455,
-                "address1": "123 Elm Drive",
-                "address2": "",
-                "address3": "",
-                "cityOrTown": "Austin",
-                "stateOrProvince": "TX",
-                "postalOrZipCode": "78750",
-                "countryCode": "US"
+            "status": "Credited",
+            "amount": 26.14,
+            "isManual": false,
+            "createDate": "2019-08-05T23:47:50.201Z",
+            "canEdit": false,
+            "canDelete": false,
+            "gatewayTransactionId": "",
+            "gatewayInteractionId": 20432,
+            "gatewayInteractionIdReference": 20431,
+            "gatewayResponseCode": "CREDITED",
+            "gatewayResponseText": "Credited via NoOP"
+          },
+          {
+            "id": "a9b74c08e61b4675a885aaa0013596df",
+            "paymentId": "9e0184e83e1e4b3d9364aaa00134e3aa",
+            "interactionType": "Capture",
+            "target": {
+              "targetType": "Order",
+              "targetId": "0e4912cc429fe432cc17b88e0000432a",
+              "targetNumber": 117
             },
-            "isPrimary": true
-        }
-    },
-    "shippingTotal": 0,
-    "shopperNotes": "Please send these items super fast!",
-    "subTotal": 220.0000,
-    "taxTotal": 0,
-    "total": 220.0000,
-    "updateBy": "00000000000000000000000000000000",
-    "updateDate": "\/Date(1348076220122)\/",
-    "userId": "54a1303527c04bb5a40db9f7cfb2677e"
-}, {
-    "createBy": "54a1303527c04bb5a40db9f7cfb2677e",
-    "createDate": "\/Date(1348072873598)\/",
-	"ipAddress": "192.168.1.2",
-    "discountTotal": 0,
-    "fulfillmentStatus": "Not shipped",
-    "CurrencyCode": "usd",
-    "id": "76f4d583b26f40beaeb17e2bb6a63060",
-    "items": [{
-        "createDate": "\/Date(1347995574405)\/",
-        "discountTotal": 0,
-        "id": "d9848577cb3d4c04a5138065bc07ab01",
-        "originalCartItemId": "772e75ebac1641abb3f50e30333799b0",
-        "product": {
-            "categories": [{
-                "id": 7,
-                "parent": {
-                    "id": 5
-                }
-            }, {
-                "id": 19
-            }],
-            "description": "I am the other product description",
-            "imageAlternateText": "purple satchel.png",
-            "imagePath": "\/admin\/img\/files\/4fe88e8777b3c70f80536459",
-            "measurements": {},
-            "name": "Orange New Skool Man Satchel",
-            "options": [],
-            "price": {
-                "price": 210.0000
+            "status": "Captured",
+            "amount": 26.14,
+            "isManual": false,
+            "createDate": "2019-08-05T23:47:10.818Z",
+            "canEdit": false,
+            "canDelete": false,
+            "gatewayTransactionId": "",
+            "gatewayInteractionId": 20431,
+            "gatewayResponseCode": "CAPTURED",
+            "gatewayResponseText": "Captured via NoOP",
+            "gatewayAVSResponse": "",
+            "gatewayCVV2Response": ""
+          },
+          {
+            "id": "4e29ae6cc70a446aab37aaa00134e68a",
+            "paymentId": "9e0184e83e1e4b3d9364aaa00134e3aa",
+            "gatewayTransactionId": "",
+            "gatewayInteractionId": 20430,
+            "interactionType": "Authorization",
+            "target": {
+              "targetType": "Order",
+              "targetId": "0e4912cc429fe432cc17b88e0000432a",
+              "targetNumber": 117
             },
-            "productCode": "HB006",
-            "stock": {}
+            "status": "Authorized",
+            "gatewayResponseCode": "AUTHORIZED",
+            "gatewayResponseText": "Authorized via NoOP",
+            "gatewayAVSResponse": "",
+            "gatewayCVV2Response": "",
+            "amount": 26.14,
+            "isManual": false,
+            "createDate": "2019-08-05T23:44:40.347Z",
+            "canEdit": false,
+            "canDelete": false
+          }
+        ],
+        "subpayments": [],
+        "paymentType": "CreditCard",
+        "paymentWorkflow": "Mozu",
+        "billingContact": {
+          "id": 0,
+          "firstName": "Sam",
+          "lastName": "Billing",
+          "addressIsValidated": false,
+          "addressType": "Residential",
+          "email": "sam.billing@email.com",
+          "middleName": "",
+          "address1": "1845 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "countryCode": "US",
+          "postalOrZipCode": "78758",
+          "stateOrProvince": "TX",
+          "homePhone": "1234567486",
+          "mobilePhone": "",
+          "workPhone": ""
         },
-        "quantity": 2,
-        "subTotal": 220.0000,
-        "total": 220.0000,
-        "updateDate": "\/Date(1348064588675)\/"
-    }],
-    "lastValidationDate": "\/Date(1348076220122)\/",
-    "notes": [{
-        "id": "note1",
-        "text": "This is note 1. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note2",
-        "text": "This is note 2. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note3",
-        "text": "This is note 3. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }, {
-        "id": "note4",
-        "text": "This is note 4. Blah blah blah.",
-        "createDate": "\/Date(1348076220122)\/",
-        "createBy": "Jason",
-        "updateDate": "\/Date(1348076220122)\/",
-        "updateBy": "Jason"
-    }],
-    "orderStatus": "New",
-    "originalCartId": "423938918dee4a4fbf8846f9cf9d9520",
-    "payment": {
-        "card": {
-            "paymentServiceCardId": "blah",
-            "paymentOrCardType": "Visa",
-            "cardNumberPartOrMask": "xxxx-xxxx-xxxx-8888",
-            "isUsedRecurring": false,
-            "isSameBillingShippingAddress": true,
-            "isCardInfoSaved": true,
-            "billingAddress": {
-                "id": 12345,
-                "firstName": "Joe",
-                "middleName": "F",
-                "lastName": "Blow",
-                "email": "joe@blow.com",
-                "companyOrOrganization": "Joe Inc.",
-                "phoneNumbers": {
-                    "home": "512-777-9090",
-                    "work": "",
-                    "mobile": ""
-                },
-                "address": {
-                    "addressId": 4455,
-                    "address1": "123 Elm Drive",
-                    "address2": "",
-                    "address3": "",
-                    "cityOrTown": "Austin",
-                    "stateOrProvince": "TX",
-                    "postalOrZipCode": "78750",
-                    "countryCode": "US"
-                },
-                "isPrimary": true
-            }
-        }
+        "availableActions": [
+          "CreditPayment",
+          "ManualCreditPayment"
+        ],
+        "isManual": false,
+        "createDate": "2019-08-05T23:44:37.895Z",
+        "createBy": "Kibo admin",
+        "paymentServiceTransactionId": "ce8698ec342347d487ddbcd3c52272b5",
+        "cardType": "VISA",
+        "cardNumber": "************1111",
+        "nameOnCard": "Sam",
+        "expireMonth": 12,
+        "expireYear": 2021,
+        "paymentServiceCardId": "6ed4f553f07c496c83103979cf5c85d6"
+      }
+    ],
+    "refunds": [],
+    "packages": [],
+    "shipments": [
+      {
+        "number": 1065,
+        "orderId": "0e4912cc429fe432cc17b88e0000432a",
+        "orderNumber": 117,
+        "currencyCode": "USD",
+        "shipmentType": "STH",
+        "shippingMethodCode": "ups_UPS_GROUND",
+        "shipmentStatus": "READY",
+        "changeMessages": [
+          {
+            "id": "5d491757768d0700019d0d31",
+            "userId": "12345",
+            "subject": "shipmentStatus",
+            "message": "'shipmentStatus' changed from 'CUSTOMER_CARE' to 'FULFILLED'",
+            "oldValue": "CUSTOMER_CARE",
+            "newValue": "FULFILLED",
+            "amount": 0
+          }
+        ],
+        "packages": [],
+        "items": [
+          {
+            "lineId": "1",
+            "productCode": "MS-BTL-002",
+            "isTaxable": false,
+            "quantity": 1,
+            "unitPrice": 15,
+            "actualPrice": 0,
+            "itemDiscount": 0,
+            "lineItemCost": 0,
+            "itemTax": 0,
+            "shipping": 0,
+            "shippingDiscount": 0,
+            "shippingTax": 0,
+            "handling": 0,
+            "handlingDiscount": 0,
+            "handlingTax": 0,
+            "duty": 0,
+            "weight": 0,
+            "variationProductCode": "MS-BTL-002-2",
+            "name": "SoftBottle Water Bottle"
+          },
+          {
+            "lineId": "1",
+            "productCode": "MS-BTL-002",
+            "isTaxable": false,
+            "quantity": 1,
+            "unitPrice": 15,
+            "actualPrice": 0,
+            "itemDiscount": 0,
+            "lineItemCost": 0,
+            "itemTax": 0,
+            "shipping": 0,
+            "shippingDiscount": 0,
+            "shippingTax": 0,
+            "handling": 0,
+            "handlingDiscount": 0,
+            "handlingTax": 0,
+            "duty": 0,
+            "weight": 0,
+            "variationProductCode": "MS-BTL-002-2",
+            "name": "SoftBottle Water Bottle"
+          }
+        ],
+        "canceledItems": [],
+        "auditInfo": {
+          "updateDate": "2019-08-06T05:59:53.454Z",
+          "createDate": "2019-08-05T23:00:41.309Z"
+        },
+        "shipmentAdjustment": 0,
+        "lineItemSubtotal": 0,
+        "lineItemTaxAdjustment": 0,
+        "lineItemTaxTotal": 0,
+        "lineItemTotal": 0,
+        "shippingAdjustment": 0,
+        "shippingSubtotal": 0,
+        "shippingTaxAdjustment": 0,
+        "shippingTaxTotal": 0,
+        "shippingTotal": 0,
+        "handlingAdjustment": 0,
+        "handlingSubtotal": 0,
+        "handlingTaxAdjustment": 0,
+        "handlingTaxTotal": 0,
+        "handlingTotal": 0,
+        "dutyAdjustment": 0,
+        "dutyTotal": 0,
+        "total": 0,
+        "cost": 0,
+        "id": "5d48b519768d0700019cf7c7"
+      }
+    ],
+    "digitalPackages": [],
+    "pickups": [],
+    "unpackagedItems": [
+      {
+        "fulfillmentMethod": "Ship",
+        "fulfillmentLocationCode": "AUS",
+        "isPackagedStandAlone": false,
+        "productCode": "MS-BTL-002-2",
+        "productName": "SoftBottle Water Bottle",
+        "quantity": 1,
+        "weight": 0.5,
+        "unitPrice": 0,
+        "total": 0,
+        "lineId": 1,
+        "fulfillmentStatus": "PendingFulfillment"
+      }
+    ],
+    "unpickedupItems": [],
+    "undeliveredDigitalItems": [],
+    "availableActions": [
+      "ValidateOrder",
+      "CancelOrder"
+    ],
+    "availableBulkActions": [
+      "CancelOrder"
+    ],
+    "authorizationInfo": {
+      "totalAmount": 26.14,
+      "amountCollected": 0
     },
-    "paymentStatus": "Pending",
-    "paymentTransactions": [],
-    "shipment": {
-        "shippingAddress": {
-            "id": 12345,
-            "firstName": "Joe",
-            "middleName": "F",
-            "lastName": "Blow",
-            "email": "joe@blow.com",
-            "companyOrOrganization": "Joe Inc.",
-            "phoneNumbers": {
-                "home": "512-777-9090",
-                "work": "",
-                "mobile": ""
-            },
-            "address": {
-                "addressId": 4455,
-                "address1": "123 Elm Drive",
-                "address2": "",
-                "address3": "",
-                "cityOrTown": "Austin",
-                "stateOrProvince": "TX",
-                "postalOrZipCode": "78750",
-                "countryCode": "US"
-            },
-            "isPrimary": true
-        }
+    "orderSummary": {
+      "totalAmount": 26.14,
+      "amountCollected": 0,
+      "balance": 26.14,
+      "totalItemCount": 1,
+      "fulfilledItemCount": 0,
+      "shippedItemCount": 0,
+      "unshippedItemCount": 0,
+      "pickedupItemCount": 0,
+      "unpickedupItemCount": 0,
+      "unfulfilledItemCount": 1
     },
-    "shippingTotal": 0,
-    "shopperNotes": "Jason forgets to fill out the JSON sometimes",
-    "subTotal": 220.0000,
-    "taxTotal": 0,
-    "total": 220.0000,
-    "updateBy": "00000000000000000000000000000000",
-    "updateDate": "\/Date(1348076220122)\/",
-    "userId": "54a1303527c04bb5a40db9f7cfb2677e"
-}]
+    "itemsOrdered": 1,
+    "itemsNotShipped": 1,
+    "itemsShipped": 0,
+    "itemsPackaged": 0,
+    "itemsNotPickedup": 0,
+    "itemsInPickups": 0,
+    "itemsPickedup": 0,
+    "itemsNotDigitallyFulfilled": 0,
+    "itemsDigitallyFulfilled": 0,
+    "isDraft": false,
+    "hasDraft": false,
+    "validationResults": [],
+    "discountedSubtotal": 15,
+    "shippingSubtotal": 9.9,
+    "handlingTotal": 0,
+    "taxTotal": 1.24,
+    "taxDutyTotal": 1.24,
+    "dutyTotal": 0,
+    "amountRefunded": 0,
+    "customer": {
+      "isPoEnabled": false,
+      "id": 1001,
+      "isAnonymous": true,
+      "customerSet": "default",
+      "segments": [],
+      "firstName": "Wade",
+      "lastName": "Wilson",
+      "emailAddress": "wwilson@deadpool.net",
+      "contacts": [
+        {
+          "accountId": 1001,
+          "isShipping": true,
+          "isPrimaryShipping": true,
+          "isBilling": true,
+          "isPrimaryBilling": true,
+          "id": 1019,
+          "email": "sam.billing@email.com",
+          "firstName": "Sam",
+          "middleName": "",
+          "lastName": "Billing",
+          "companyOrOrganization": "",
+          "address1": "1845 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "countryCode": "US",
+          "postalOrZipCode": "78758",
+          "stateOrProvince": "TX",
+          "addressIsValidated": false,
+          "addressType": "Residential",
+          "homePhone": "1234567486",
+          "mobilePhone": "",
+          "workPhone": ""
+        }
+      ],
+      "companyOrOrganization": "",
+      "acceptsMarketing": false,
+      "externalId": "",
+      "attributes": [],
+      "notes": [],
+      "taxExempt": false,
+      "taxId": "",
+      "visitCount": 0,
+      "totalSpent": 0,
+      "orderCount": 0,
+      "wishlistCount": 0,
+      "createDate": "2019-07-06T20:15:27.811Z",
+      "paymentCards": [],
+      "segmentIds": [],
+      "isLocked": false,
+      "isDisabled": false,
+      "customerSinceDate": "2019-07-06T20:15:27.000Z",
+      "accountType": "B2C"
+    },
+    "handlingAmount": 0,
+    "handlingTaxTotal": 0,
+    "lineItemSubtotalWithOrderAdjustments": 15,
+    "handlingDiscounts": [],
+    "adjustmentTotal": 0,
+    "discountedTotalWithAdjustment": 15,
+    "shippingAndHandlingTotal": 9.9,
+    "lineItemHandlingFees": [],
+    "lineItemShippingDiscounts": []
+  }
+]

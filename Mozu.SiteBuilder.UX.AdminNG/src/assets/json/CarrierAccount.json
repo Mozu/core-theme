@@ -1,0 +1,23 @@
+{
+   "success":true,
+   "total":1,
+   "items":[
+      {
+         "carrierId":"usps",
+         "code":"83c541355529494a96a8ab840066db70",
+         "name":"tesrt567",
+         "values":[
+            {
+               "key":"esaypostapikey",
+               "value":"dfhfdhdfh"
+            }
+         ],
+         "auditInfo":{
+            "updateDate":"2020-03-20T08:03:20.080Z",
+            "createDate":"2020-03-20T06:14:29.492Z",
+            "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
+         }
+      }
+   ]
+}

@@ -79,5 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         public UserSystemData SystemData { get; set; }
 
         public string AccessLevel { get; set; }
+
+        public bool IsFulfillerUser { get; set; }
     }
 }

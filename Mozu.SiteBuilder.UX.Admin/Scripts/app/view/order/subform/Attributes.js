@@ -20,24 +20,24 @@ Ext.define('Taco.view.order.subform.Attributes', {
 
     initComponent: function () {
         var me = this;
-
-        this.tools = [{
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Edit',
-            requiredBehaviors: [{
-                               model: 'Taco.model.Order',
-                               behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateAttribute'
-                            }],
-            scope: this,
-            handler: this.openAttributesDialog
-        }];
-
+        if (this.record.get('isUnified')) {
+            this.tools = [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Edit',
+                requiredBehaviors: [{
+                    model: 'Taco.model.Order',
+                    behavior: 'update'
+                },
+                {
+                    model: 'Taco.model.Order',
+                    behavior: 'updateAttribute'
+                }],
+                scope: this,
+                handler: this.openAttributesDialog
+            }];
+        }        
 
         this.orderAttributesGrid = Ext.create('Taco.view.order.widget.AttributeGrid', {
             minHeight: 100,

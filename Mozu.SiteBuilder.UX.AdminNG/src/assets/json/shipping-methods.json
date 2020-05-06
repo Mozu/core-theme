@@ -1,0 +1,211 @@
+[
+   {
+      "shippingMethodCode":"fedex_FEDEX_2_DAY",
+      "shippingMethodName":"FedEx 2Day®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":23.79
+   },
+   {
+      "shippingMethodCode":"fedex_FEDEX_2_DAY_AM",
+      "shippingMethodName":"FedEx 2Day® A.M.",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":27.79
+   },
+   {
+      "shippingMethodCode":"fedex_FEDEX_EXPRESS_SAVER",
+      "shippingMethodName":"FedEx Express Saver®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":19.45
+   },
+   {
+      "shippingMethodCode":"fedex_FEDEX_GROUND",
+      "shippingMethodName":"FedEx Ground®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":10.02
+   },
+   {
+      "shippingMethodCode":"fedex_FIRST_OVERNIGHT",
+      "shippingMethodName":"FedEx First Overnight®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":98.24
+   },
+   {
+      "shippingMethodCode":"ups_UPS_GROUND",
+      "shippingMethodName":"UPS Ground",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":11.04
+   },
+   {
+      "shippingMethodCode":"ups_UPS_NEXT_DAY_AIR",
+      "shippingMethodName":"UPS Next Day Air®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":68.04
+   },
+   {
+      "shippingMethodCode":"ups_UPS_NEXT_DAY_AIR_SAVER",
+      "shippingMethodName":"UPS Next Day Air Saver®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":60.83
+   },
+   {
+      "shippingMethodCode":"ups_UPS_SECOND_DAY_AIR",
+      "shippingMethodName":"UPS Second Day Air®",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":24.27
+   },
+   {
+      "shippingMethodCode":"usps_Express",
+      "shippingMethodName":"Express Mail",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":36.60
+   },
+   {
+      "shippingMethodCode":"usps_Library",
+      "shippingMethodName":"Library Mail",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":2.61
+   },
+   {
+      "shippingMethodCode":"usps_Media",
+      "shippingMethodName":"Media Mail",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":2.75
+   },
+   {
+      "shippingMethodCode":"usps_Priority",
+      "shippingMethodName":"Priority Mail",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":8.00
+   },
+   {
+      "shippingMethodCode":"usps_Standard Post",
+      "shippingMethodName":"Standard Mail",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":7.95
+   },
+   {
+      "shippingMethodCode":"2_per_item",
+      "shippingMethodName":"$2 per item",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":2.00
+   },
+   {
+      "shippingMethodCode":"5_percent_order",
+      "shippingMethodName":"5% of order",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":9.00
+   },
+   {
+      "shippingMethodCode":"bf70a6b385884b3fa831a655010c0c29",
+      "shippingMethodName":"Flat Rate",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":15.00
+   },
+   {
+      "shippingMethodCode":"canadapost_Expedited_Parcel",
+      "shippingMethodName":"Expedited Parcel",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":7.95
+   },
+   {
+      "shippingMethodCode":"canadapost_Xpress_Post",
+      "shippingMethodName":"Express Post",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":7.95
+   }
+]
