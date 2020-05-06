@@ -1,6 +1,6 @@
 ﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}{% if themeSettings.allowFilterByLocationInventory %} mz-searchbox-my-store{% endif %}" action="{% make_url "search" %}">
-    <span class="mz-searchbox-field">
-        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
+    <span class="mz-searchbox-field" id="mz-searchbox-field">
+        <input id="mz-searchbox-input" placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
     </span>
 	<select class="mz-searchbox-categories" name="categoryId"

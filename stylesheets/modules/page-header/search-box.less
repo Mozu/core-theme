@@ -1,26 +1,27 @@
 ﻿.mz-searchbox {
 
-    @expandedSearchWidth: 320px;
-
     .mz-searchbox-field {
         display: inline-block;
         position: relative;
         border: 1px solid @inputBorder;
         background: white;
         height: 28px;
+        float: right;
     }
 
-    &.mz-searchbox-expands .mz-searchbox-input {
+    &.mz-searchbox-expands {
         .transition(~"width 0.5s ease");
         &:focus {
-            width: @expandedSearchWidth;
+            .mz-searchbox-input {
+                width: 578px;
+            }
         }
     }
 
     .mz-searchbox-input {
         display: block;
         box-sizing: border-box;
-        width: 120px;
+        width: 220px;
         height: 100%;
         margin: 0;
         padding-right: 40px;
@@ -59,7 +60,7 @@
         box-sizing: border-box;
         border: 1px solid @inputBorder;
         border-width: 1px;
-        width: @expandedSearchWidth + 1;
+        width: 579;
         background: white;
     }
 

@@ -496,6 +496,12 @@
     }
   ],
   "settings": {
+    "visualSearchEnabled": true,
+    "visualSearchAppid":"",
+    "visualSearchApiKey":"",
+    "visualSearchCatalogId":"",
+    "visualSearchScheme":"",
+    "visualSearchBaseURL": "https://searchapi-cqa.certonakube.kibo-dev.com",
     "enableRecaptcha": false,
     "recaptchaSiteKey": null,
     "__recaptchaSecrete": null,

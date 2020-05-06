@@ -6,7 +6,10 @@
         {% include "modules/page-header/utility-nav" %}
     {% endblock utility-nav %}
     {% block search-box %}
-        {% include "modules/page-header/search-box" %}
+        {% if themeSettings.visualSearchEnabled %}
+            {% include "modules/page-header/visual-search" %}
+        {% else %}
+            {% include "modules/page-header/search-box" %}
+        {% endif %}
     {% endblock search-box %}
-    
 </header>

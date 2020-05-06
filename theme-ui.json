@@ -371,6 +371,48 @@
                     "fieldLabel": "Password for BorderFree"
                 }
             ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Visual Search",
+            "collapsed": false,
+            "items": [
+                {
+                    "margin": "10 0 25 0",
+                    "xtype": "component",
+                    "html": "Full documentation for Certona Visual Search V2 can be found here <a href='https://certona.atlassian.net/wiki/spaces/IK/pages/953090073/Visual+Search+2.0+Implementation' target='_blank'>https://certona.atlassian.net/wiki/spaces/IK/pages/953090073/Visual+Search+2.0+Implementation</a>"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "visualSearchEnabled",
+                    "fieldLabel": "Visual Search Enabled"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "visualSearchBaseURL",
+                    "fieldLabel": "Visual Search Base URL"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "visualSearchAppid",
+                    "fieldLabel": "Application Id"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "visualSearchApiKey",
+                    "fieldLabel": "Api Key"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "visualSearchCatalogId",
+                    "fieldLabel": "Catalog Id"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "visualSearchScheme",
+                    "fieldLabel": "Scheme"
+                }
+            ]
         }
     ]
 }

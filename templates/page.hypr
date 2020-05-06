@@ -71,13 +71,22 @@
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         {% endif %}
 
+
         {% block stylesheets %}
-        <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
+            <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
+            {% if themeSettings.visualSearchEnabled %}
+                <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/visual-search.css" %}" title="default" />
+            {% endif %}
         {% endblock stylesheets %}
 
         {% block head-tag-scripts %}
-        <script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
+            <script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
         {% include "modules/web-fonts-loader" %}
+
+        {% if themeSettings.visualSearchEnabled %}
+            {% require_script "modules/visual-search" %}
+        {% endif %}
+        
         {% endblock head-tag-scripts %}
         {% cms_resources %}
 
@@ -138,7 +147,7 @@
         </div>
 
         {% block trailing-scripts %}
-        {% include "modules/trailing-scripts" %}
+            {% include "modules/trailing-scripts" %}
         {% endblock trailing-scripts %}
 
         {% visitor_tracking_pixel %}
