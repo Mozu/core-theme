@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
         private readonly ISiteContext _siteContext;
 
-        public SitemapController(INavigationGandalf gandalf, 
+        public SitemapController(INavigationGandalf gandalf,
             IProductRuntimeWebApiClient productRuntimeWebApiClient,
             IProductSearchWebApiClient productSearchWebApiClient,
             UrlHelper urlHelper,
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             writer.WriteEndElement();
             writer.Flush();
-            return resp;
+            return new NoOpResult();
         }
 
 
@@ -161,7 +161,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             writer.WriteEndElement();
             writer.Flush();
-            return resp;
+            return new NoOpResult();
+        }
+
+        public class NoOpResult : IActionResult
+        {
+            Task IActionResult.ExecuteResultAsync(ActionContext context)
+            {
+                return Task.CompletedTask;
+            }
         }
 
 
@@ -201,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             writer.WriteEndElement();
             writer.Flush();
-            return resp;
+            return new NoOpResult();
         }
 
         [HttpGet]
@@ -240,7 +248,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             writer.WriteEndElement();
             writer.Flush();
-            return resp;
+            return new NoOpResult();
 
         }
 

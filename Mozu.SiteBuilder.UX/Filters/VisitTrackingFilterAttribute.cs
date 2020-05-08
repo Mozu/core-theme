@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -21,9 +22,9 @@ namespace Mozu.SiteBuilder.UX.Filters
     {
         private ILogger _logger;
 
-        public VisitTrackingFilterAttribute()
+        public VisitTrackingFilterAttribute(ILogger<VisitTrackingFilterAttribute> logger)
         {
-            _logger = LoggingService.LoggerFor<VisitTrackingFilterAttribute>();
+            _logger = logger;
         }
 
         /// <summary>
@@ -31,39 +32,32 @@ namespace Mozu.SiteBuilder.UX.Filters
         /// </summary>
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var pageContext = actionContext.HttpContext.RequestServices.Resolve<PageContext>();
+            var httpContext = actionContext.HttpContext;
+            var pageContext = httpContext.RequestServices.Resolve<PageContext>();
             
             // set PageContext.Visit by loading the cookie or creating one
             pageContext.Visit = LoadVisitFromCookie(actionContext.HttpContext) ?? CreateVisit(actionContext.HttpContext);
+            httpContext.Response.OnStarting(() =>
+            {
+                if (!httpContext.VisitorCookieExists())
+                {
+                    httpContext.SetVisitorCookie(pageContext.Visit.VisitorId);
+                }
+                var sessionCookie = httpContext.GetSessionCookie();
+                var sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
+                if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != sessionCookieExpectedValue))
+                {
+                    httpContext.SetSessionCookie(sessionCookieExpectedValue);
+                }
+
+                // always send visit cookie, setting expiration to 30 minutes from now.
+                httpContext.SetVisitCookie(pageContext.Visit.VisitId);
+
+                return Task.CompletedTask;
+            });
         }
 
-        /// <summary>
-        /// After action: manage cookies related to the visit.
-        /// </summary>
-        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
-        {
-            // on exceptions, Response is null, and this filter has no business to conduct.
-            if (actionExecutedContext.HttpContext.Response == null)
-                return;
-
-            var httpContext = actionExecutedContext.HttpContext;
-            var pageContext = httpContext.RequestServices.Resolve<PageContext>();
-
-            if (!httpContext.VisitorCookieExists())
-            {
-                httpContext.SetVisitorCookie(pageContext.Visit.VisitorId);
-            }
-            var sessionCookie = httpContext.GetSessionCookie();
-            var sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
-            if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != sessionCookieExpectedValue))
-            {
-                httpContext.SetSessionCookie(sessionCookieExpectedValue);
-            }
-
-            // always send visit cookie, setting expiration to 30 minutes from now.
-            httpContext.SetVisitCookie(pageContext.Visit.VisitId);
-        }
-
+      
 
         private Visit LoadVisitFromCookie(HttpContext context)
         {

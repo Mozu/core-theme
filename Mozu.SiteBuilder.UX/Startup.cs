@@ -85,6 +85,7 @@ namespace Mozu.SiteBuilder.UX
                     opt.Conventions.Add(new AcceptHeaderConvention());
                     opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
                     opt.OutputFormatters.Add(new HtmlErrorMediaTypeHyperFormatter());
+                    opt.OutputFormatters.Insert(0, new JsonpOutputFormatter(opt));
                     var duration = Configuration.GetValue("mozu:appsettings:clientCacheHeaderLength:default", "1209700");
                     opt.CacheProfiles.Add("default", new CacheProfile()
                     {

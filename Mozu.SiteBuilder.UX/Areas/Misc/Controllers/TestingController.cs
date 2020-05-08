@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (mode == ThemeMode.Auto)
             {
                 _cookies.RemoveCookie(FORCE_THEME_COOKIE_NAME);
-                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, null, new CookieOptions { Expires = DateTime.Now.AddDays(-1D) });
+                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, "", new CookieOptions { Expires = DateTime.Now.AddDays(-1D) });
             }
             else
             {

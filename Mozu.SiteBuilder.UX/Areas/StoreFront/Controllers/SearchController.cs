@@ -322,12 +322,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
 
                 }
-                bindingContext.Model = avp;
+                
+                bindingContext.Result = ModelBindingResult.Success(avp);
                 return Task.CompletedTask;
             }
         }
 
-        [ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
+        [ModelBinder(BinderType=typeof(AdvancdSearchParamterModelBinder))]
         public class AdvancedSearchParamaters
         {
             public string query { get; set; }

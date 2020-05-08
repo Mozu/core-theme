@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
           
 
 
-            return new JsonResult(ctx);
+            return new ObjectResult(ctx);
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]

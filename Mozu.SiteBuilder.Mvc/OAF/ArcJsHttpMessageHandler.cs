@@ -312,10 +312,16 @@ namespace Mozu.SiteBuilder.Mvc.OAF
         public static void InitSBActionContext(ApiActionExtensionFilterContext actionContext)
         {
             var services = actionContext.ActionContext.HttpContext.RequestServices;
+            actionContext.GlobalContext = actionContext.GlobalContext ?? new Dictionary<string, GlobalContextItem>();
             actionContext.Items = actionContext.Items ?? new Dictionary<string, object>();
-            actionContext.Items["siteContext"] = services.GetService<ISiteContext>();
-            actionContext.Items["pageContext"] = services.GetService<IPageContext>();
-            actionContext.Items["navigation"] = services.GetService<NavigationContext>();
+            var sc = services.GetService<ISiteContext>();
+            var pc = services.GetService<IPageContext>();
+            var nc = services.GetService<NavigationContext>();
+
+            actionContext.Items["pageContext"] = pc;
+
+            actionContext.GlobalContext["siteContext"] = new GlobalContextItem() { Value = sc, Hash = sc.HashString };         
+            actionContext.GlobalContext["navigation"] = new GlobalContextItem() { Value = nc, Hash = sc.HashString };
             //AddToActionContext<UrlHelper>(actionContext.Request, "urlHelper");
             //var routeData = new Microsoft.ClearScript.PropertyBag();
             //foreach (var kvp in actionContext.Request.GetRouteData().Values)

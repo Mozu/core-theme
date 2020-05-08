@@ -138,7 +138,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var rm = (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo)))
                 .ResponseMessage;
             if (rm.IsSuccessStatusCode) return Ok();
-            return Forbid($"Create account failed. {rm.ReasonPhrase} | Please try again.");
+            return StatusCode(401, new { message = $"Create account failed. {rm.ReasonPhrase} | Please try again." });
+           // return Forbid($"Create account failed. {rm.ReasonPhrase} | Please try again.");
         }
 
         bool HasInvalidCharecters(string str, string fieldName, out IActionResult resp)
@@ -199,11 +200,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             DoLogout(saveUserId);
             //var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-           
+
             ////redir.Headers.AddCookies(
             ////    HttpContext.Response.Cookies.AllKeys.Select(x=> HttpContext.Response.Cookies[x]).Select(x=> new CookieHeaderValue(x.Name, x.Value ){Expires =x.Expires,Secure=x.Secure }));
-            
-            //redir.Headers.Location = MakeRedirectUri(returnUrl);
+
+            returnUrl = MakeRedirectUri(returnUrl).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
             return new RedirectResult(returnUrl);
         }
 
@@ -289,7 +290,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
-        public async Task<IActionResult> CreateAccount(CustomerAccountAndAuthInfo authInfo)
+        public async Task<IActionResult> CreateAccount([FromBody]CustomerAccountAndAuthInfo authInfo)
         {
             return await DoCreateAccount(authInfo);
         }
@@ -297,7 +298,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
-        public async Task<IActionResult> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
+        public async Task<IActionResult> AjaxCreateAccount([FromBody]CustomerAccountAndAuthInfo authInfo)
          {
             if (Request.Method == HttpMethod.Options.Method)
             {
@@ -412,7 +413,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json", false)]
-        public async Task<IActionResult> Login(LoginDetails details)
+        public async Task<IActionResult> Login([FromBody]LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
             {
@@ -452,7 +453,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var errorMsg = GetLoginFailureMessage(email, code);
             FourHundredMiddleware.BypassErrorHandler(HttpContext);
-            return Forbid(errorMsg); 
+            return StatusCode(401, new { message = errorMsg }); 
             //Request.CreateResponse(HttpStatusCode.Unauthorized,
             //    View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
         }
@@ -487,7 +488,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
-        public async Task<IActionResult> AjaxLogin(LoginDetails details)
+        public async Task<IActionResult> AjaxLogin([FromBody]LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
             {
@@ -524,7 +525,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ActionResult AjaxLoginFailure(string email=null, string errorCode = null)
         {
             var errorMsg = GetLoginFailureMessage(email, errorCode);
-            return new ForbidResult(errorMsg);
+            
+            return  StatusCode((int)HttpStatusCode.Unauthorized, new { message = errorMsg });
         }
 
         public class OrderDetails
@@ -538,7 +540,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
-        public async Task<IActionResult> AnonymousOrderLogin(OrderDetails details)
+        public async Task<IActionResult> AnonymousOrderLogin([FromBody]OrderDetails details)
         {
             var orderNumber = details?.orderNumber;
             var email = details?.email;
@@ -640,7 +642,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost, HttpOptions]
         [SslOnlyActionFilter]
         [AcceptHeader("application/json")]
-        public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
+        public async Task<IActionResult> AjaxResetPassword([FromBody]ResetPasswordInfo info)
         {
             if (Request.Method.ToUpper() == "OPTIONS")
                 return new OkResult();
@@ -703,7 +705,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpPost]
         [SslOnlyActionFilter]
-        public async Task<IActionResult> ResetPassword(ResetPasswordConfirmDetails info)
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordConfirmDetails info)
         {
             if (PageContext?.User != null && this.PageContext.User.IsAuthenticated)
             {

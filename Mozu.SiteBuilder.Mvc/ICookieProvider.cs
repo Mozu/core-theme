@@ -13,6 +13,7 @@ using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc
 {
+    using Mozu.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,6 +28,8 @@ namespace Mozu.SiteBuilder.Mvc
     {
         CookieState GetRequestCookie(string cookieName);
         void SaveResponseCookie(string cookieName, string value, CookieOptions cookie, bool httpConly = true);
+        void SaveResponseCookie(string cookieName, IDictionary<string, string> value, CookieOptions cookie, bool httpConly = true);
+        
         void RemoveCookie(string cookieName);
         bool CookieExists(string cookieName);
     }
@@ -91,6 +94,17 @@ namespace Mozu.SiteBuilder.Mvc
         public void RemoveCookie(string cookieName)
         {
             _context.Response.Cookies.Delete(cookieName);
+        }
+
+        public void SaveResponseCookie(string cookieName, IDictionary<string, string> value, CookieOptions cookie, bool httpConly = true)
+        {
+            cookie.HttpOnly = httpConly;
+            if (_context.Request.Cookies.ContainsKey(cookieName))
+            {
+                _context.Response.Cookies.Delete(cookieName);
+            }
+            CookieUtils.AppendMultiValueCookie(_context.Response, cookieName, value.Where( x=> x.Value != null ).ToDictionary(x=> x.Key , x=> x.Value), cookie);
+           
         }
     }
 }

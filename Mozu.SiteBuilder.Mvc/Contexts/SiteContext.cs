@@ -333,7 +333,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 val["dataview"] = DataViewModeType.Pending.ToString();
             }
-            cookieProvider.SaveResponseCookie(COOKIENAME, val.ToLegacyCookieString(), cookie);
+            cookieProvider.SaveResponseCookie(COOKIENAME, val, cookie);
         }
 
         static byte[] _assbmlyHash;

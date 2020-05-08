@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 HttpOnly = true
             };
 
-            CookieProvider.SaveResponseCookie(AdminAccessTokenCookieName, $"{AccessToken}={accessToken}", cookie);
+            CookieProvider.SaveResponseCookie(AdminAccessTokenCookieName, new Dictionary<string, string> { { AccessToken, accessToken } }, cookie);
         }
 
         string IAuthenticationHelper.GetAdminAccessToken()
@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 Secure = ForceSSL,
                 HttpOnly = true
             };
-            CookieProvider.SaveResponseCookie(StoreFrontRefershCookieName, token, cookie);
+            CookieProvider.SaveResponseCookie(StoreFrontRefershCookieName, token??string.Empty, cookie);
         }
 
         string IAuthenticationHelper.GetStoreFrontRefreshToken()
@@ -134,8 +134,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 {CookieDate, DateTime.UtcNow.ToString("o")}
             };
 
-            CookieProvider.SaveResponseCookie(StoreFrontAccessTokenSessionCookieName, svals.ToLegacyCookieString(), scookie);
-            CookieProvider.SaveResponseCookie(StoreFrontAccessTokenCookieName, pvals.ToLegacyCookieString(), pcookie);
+           
+            CookieProvider.SaveResponseCookie(StoreFrontAccessTokenSessionCookieName, svals, scookie);
+            CookieProvider.SaveResponseCookie(StoreFrontAccessTokenCookieName, pvals,  pcookie);
         }
         void IAuthenticationHelper.ClearSessionToken()
         {
