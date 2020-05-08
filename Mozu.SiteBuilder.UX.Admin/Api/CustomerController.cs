@@ -374,14 +374,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var customer = cres.ReadAsSync();
 
-                var ares = await _customerWebApiClient.GetAccountAttributes(accountId, userId: userId ?? customer.UserId);
+                var attributes = await GetAllAccountAttributes(accountId, userId: userId ?? customer.UserId);
 
-                var attributes = ares.ReadAsSync();
-
-                customer.Attributes = attributes.Items;
+                customer.Attributes = attributes;
                 return customer;
             }
             return null;
+        }
+
+        private async Task<List<DC.CustomerAttribute>> GetAllAccountAttributes(int accountId, string userId = null)
+        {
+            List<DC.CustomerAttribute> attributes = new List<DC.CustomerAttribute>();
+            int startIndex = 0;
+            while (true)
+            {
+                var attrs = (await _customerWebApiClient.GetAccountAttributes(accountId, startIndex, 200, userId: userId)).ReadAsSync();
+                attributes.AddRange(attrs.Items);
+                startIndex = attrs.PageSize + attrs.StartIndex;
+                if (attrs.TotalCount <= startIndex)
+                {
+                    break;
+                }
+            }
+
+            return attributes;
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
