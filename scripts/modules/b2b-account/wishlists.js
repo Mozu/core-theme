@@ -367,17 +367,22 @@ define([
                 }
                 this.stopListening();
                 this.model.isLoading(true);
+
                 this.listenTo(product, "configurationComplete", function () {
-                    self.model.addWishlistItem(product.toJSON(), product.get('quantity')).then(function () {
-                        self.model.unset('selectedProduct');
-                        window.productModalView.handleDialogCancel();
-                        $('.mz-b2b-wishlists .mz-searchbox-input.tt-input').val('');
-                        $('.mz-b2b-wishlists #pickerItemQuantity').val(1);
-                        self.model.isLoading(false);
-                    }, function (error) {
-                        window.productModalView.model.messages.reset({ message: error.message });
-                        self.model.isLoading(false);
+                    self.listenTo(product, 'optionsUpdated', function() {
+                        self.model.isLoading(true);
+                        self.model.addWishlistItem(product.toJSON(), product.get('quantity')).then(function () {
+                            self.model.unset('selectedProduct');
+                            window.productModalView.handleDialogCancel();
+                            $('.mz-b2b-wishlists .mz-searchbox-input.tt-input').val('');
+                            $('.mz-b2b-wishlists #pickerItemQuantity').val(1);
+                            self.model.isLoading(false);
+                        }, function (error) {
+                            window.productModalView.model.messages.reset({ message: error.message });
+                            self.model.isLoading(false);
+                        });
                     });
+                    product.updateConfiguration();
                 });
 
                 window.productModalView.loadAddProductView(product);

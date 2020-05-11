@@ -354,6 +354,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this.updateConfiguration();
         },
         updateQuantity: function (newQty) {
+            var me = this;
             if (this.get('quantity') === newQty) return;
             this.set('quantity', newQty);
             if (!this._hasVolumePricing) return;
@@ -361,7 +362,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return this.showBelowQuantityWarning();
             }
             this.isLoading(true);
-            this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true });
+            this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true }).then(function () {
+                me.trigger('optionsUpdated');
+             });
         },
         showBelowQuantityWarning: function () {
             this.validation.quantity.min = this._minQty;
@@ -374,8 +377,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this._minQty = data.volumePriceBands[0].minQty;
             this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
             if (this.get('quantity') < this._minQty) {
-                this.updateQuantity(this._minQty);
+                return this.updateQuantity(this._minQty);
             }
+            this.trigger('optionsUpdated');
         },
         updateConfiguration: function() {
             var me = this,
@@ -385,11 +389,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
                     .then(function (apiModel) {
                         if (me._hasVolumePricing) {
-                            me.handleMixedVolumePricingTransitions(apiModel.data);
+                            return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
                         me.trigger('optionsUpdated');
                      });
             } else {
+                me.trigger('optionsUpdated');
                 this.isLoading(false);
             }
         },
