@@ -145,6 +145,27 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 xtype: 'combobox',
+                name: 'shipmentstatuses',
+                fieldLabel: 'Shipment Status',
+                valueField: 'id',
+                displayField: 'name',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['id', "name"],
+                    data: [
+                        { name: "Ready", id: "READY" },
+                        { name: "Backorder", id: "BACKORDER" },
+                        { name: "Fulfilled", id: "FULFILLED" },
+                        { name: "Customer Care", id: "CUSTOMER_CARE" },
+                        { name: "Cancelled", id: "CANCELED" }
+                    ]
+                })
+            },
+            {
+                xtype: 'combobox',
                 name: 'returnStatus',
                 fieldLabel: 'Return Status',
                 valueField: 'id',
@@ -325,7 +346,8 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 name: 'attributeName',
                 fieldLabel: 'Attribute Name'
-            }];
+            }
+            ];
         this.callParent(arguments);
     },
 
