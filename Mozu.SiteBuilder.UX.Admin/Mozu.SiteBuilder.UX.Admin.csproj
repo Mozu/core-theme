@@ -987,7 +987,17 @@
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\EditOrderEmail.js" />
-    <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
+    <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ItemsReassign.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ItemUnitTax.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\RequestItemTransfer.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\UpdateBackorderDate.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentItemCancellation.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemQtyChange.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentReassign.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentCancellation.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\OrderCancellation.js" />
+	<Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\TransfersTab.js" />
