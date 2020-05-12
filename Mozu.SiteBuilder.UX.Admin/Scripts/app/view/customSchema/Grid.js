@@ -346,7 +346,9 @@ Ext.define('Taco.view.customSchema.Grid', {
                     hideOnClick: false,
                     menuColumnHandler: function (item, eventData) {
                         if (split) {
-                            split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
+                            split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData, {
+                                editMode: "raw"
+                            });
                         }
 
                         else if (eventData.grid.siteBuilderList) {
