@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Mozu.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -109,6 +110,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         [Test]
         public void SiteBuilderApiContext_Can_Init_With_Token_Placeholders()
         {
+            
+            Mozu.Core.Logging.LoggingService.LoggerFactory = new LoggerFactory();
             var cookieProvider = Substitute.For<ICookieProvider>();
             var settings = Substitute.For<ISettings>();
             var authenticationHelper = Substitute.For<IAuthenticationHelper>();

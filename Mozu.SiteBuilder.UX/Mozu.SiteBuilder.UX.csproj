@@ -19,7 +19,7 @@
     <PackageReference Include="51Degrees.mobi-core" Version="3.2.21.1" />
     <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2020.0-sb-dnc.8" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2020.0-sb-dnc.9" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
