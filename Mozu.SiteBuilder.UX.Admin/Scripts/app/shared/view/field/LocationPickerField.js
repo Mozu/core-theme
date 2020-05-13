@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.shared.view.field.LocationPickerField
  */
 Ext.define('Taco.shared.view.field.LocationPickerField', {
@@ -24,6 +24,7 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     selectOnFocus: false,
     matchFieldWidth : false,
     extraFilters: null,
+    value: 0,
     // note: cant set flex in the base class as it messes up the width when used in as an editor by rowEditor. flex must be set by the instance if needed;
     //flex: 1,
     listConfig: {
@@ -47,7 +48,35 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
             }
         }
     },
-    
+    formatQuery: function (queryEvent, e) {
+
+        // need to format the search text from the combobox into a filter structure the service wants;
+        // always force the query to match what's in the field.
+
+        // delete the last query to force a new request; 
+        delete this.lastQuery;
+
+        var queryText = queryEvent.query || "";
+
+        // the formated query f's the min char check.... 
+        if (queryText !== "" && queryText.length < this.minChars) {
+            return false;
+        }
+
+        var filters = this.defaultFilters || [];
+        if (queryText !== "") {
+            filters = filters.concat([{ property: 'all', value: queryText }]);
+        }
+        if (filters.length) {
+            queryEvent.forceAll = false;
+            queryEvent.query = Ext.encode(filters);
+        } else {
+            // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
+            queryEvent.forceAll = true;
+        }
+        return true;
+    },
+    queryParam: "filter",
     pageSize: 10,
     
     enableKeyboardPaging:true,
@@ -99,7 +128,7 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                 single: true
             });
         }
-
+        me.mon(me, 'beforequery', this.formatQuery, this);
         me.callParent(arguments);
     },
 

@@ -1,335 +1,503 @@
 {
-    "shipmentNumber": 13464,
-    "orderId": "0eeaf03e7e1da8000187e1430000433f",
-    "orderNumber": 2166,
-    "orderSubmitDate": "2019-12-06T17:40:15.009Z",
-    "userId": "",
-    "customerAccountId": 1079,
-    "tenantId": 17215,
-    "siteId": 21153,
-    "shipmentType": "STH",
-    "shipmentStatus": "READY",
-    "fulfillmentLocationCode": "Austin_Both",
-    "shipmentAdjustment": 0.0,
-    "lineItemSubtotal": 5.99,
-    "lineItemTaxAdjustment": 0.0,
-    "lineItemTaxTotal": 0.0,
-    "lineItemTotal": 5.99,
-    "shippingAdjustment": 0.0,
-    "shippingSubtotal": 11.41,
-    "shippingTaxAdjustment": 0.0,
-    "shippingTaxTotal": 0.0,
-    "shippingTotal": 11.41,
-    "handlingAdjustment": 0.0,
-    "handlingSubtotal": 6.14,
-    "handlingTaxAdjustment": 0.0,
-    "handlingTaxTotal": 0.0,
-    "handlingTotal": 6.14,
-    "dutyAdjustment": 0.0,
-    "dutyTotal": 0.0,
-    "total": 23.54,
-    "currencyCode": "USD",
-    "destination": {
-        "destinationContact": {
-            "id": 1114,
-            "address": {
-                "address1": "2121 Avenue of the Stars",
-                "address2": "",
-                "address3": "",
-                "address4": "",
-                "addressType": "Residential",
-                "cityOrTown": "Los Angeles",
-                "countryCode": "US",
-                "isValidated": false,
-                "postalOrZipCode": "90067",
-                "stateOrProvince": "CA"
-            },
-            "companyOrOrganization": "",
-            "email": "hans.gruber@nakatomicorp.com",
-            "firstName": "Hans",
-            "lastNameOrSurname": "Gruber",
-            "middleNameOrInitial": "",
-            "phoneNumbers": {
-                "home": "5555555555",
-                "mobile": "",
-                "work": ""
-            }
-        }
-    },
-    "shippingMethodCode": "ups_UPS_GROUND",
-    "shippingMethodName": "UPS Ground",
-    "items": [
-        {
-            "lineId": 1,
-            "originalOrderItemId": "2f62ee07dfd445ecb85dab1b0123151c",
-            "productCode": "N0T0uCh",
-            "quantity": 1,
-            "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/ab6992da-3b6a-4aea-ac9b-8fc34450654e",
-            "name": "PickwaveTestProduct",
-            "partNumber": "N0T0uCh",
-            "upc": "N0T0uCh",
-            "unitPrice": 5.99,
-            "isTaxable": true,
-            "actualPrice": 5.99,
-            "itemDiscount": 0.0,
-            "lineItemCost": 5.99,
-            "itemTax": 0.0,
-            "shipping": 11.41,
-            "shippingDiscount": 0.0,
-            "shippingTax": 0.0,
-            "handling": 6.14,
-            "handlingDiscount": 0.0,
-            "handlingTax": 0.0,
-            "duty": 0.0,
-            "weightedShipmentAdjustment": 0.0,
-            "weightedLineItemTaxAdjustment": 0.0,
-            "weightedShippingAdjustment": 0.0,
-            "weightedShippingTaxAdjustment": 0.0,
-            "weightedHandlingAdjustment": 0.0,
-            "weightedHandlingTaxAdjustment": 0.0,
-            "weightedDutyAdjustment": 0.0,
-            "taxableShipping": 11.41,
-            "taxableLineItemCost": 5.99,
-            "taxableHandling": 6.14,
-            "weight": 1.0,
-            "weightUnit": "lbs",
-            "auditInfo": {
-                "updateDate": "2020-02-07T22:33:48.134Z",
-                "createDate": "2019-12-06T17:40:16.237Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            },
-            "options": []
-        }
-    ],
-    "canceledItems": [],
-    "reassignedItems": [],
-    "rejectedItems": [],
-    "packages": [
-        {
-            "packageId": "5dea9280676e37000169f455",
-            "carrier": "UPS",
-            "shippingMethodName": "UPS Next Day Air",
-            "trackings": [
-              {
-                "number": "1Z7A67E20396403014",
-                "url": "https://www.ups.com/track?loc=en_US&tracknum=1Z7A67E20396403014"
-              }
-            ]
-        },
-        {
-            "packageId": "5deaa76f676e3700016a5c10",
-            "carrier": "FEDEX",
-            "shippingMethodName": "FeDex Ground",
-            "trackings": [
-              {
-                "number": "794692737658",
-                "url": "http://www.fedex.com/Tracking?tracknumbers=794692737658"
-              }
-            ]
-        },
-        {
-            "packageId": "5e68ac36697b7300012a3b0a",
-            "carrier": "Other",
-            "trackings": [
-              {
-                "number": "T-AC63245Z"
-              }
-            ]
-        }
-    ],
-    "workflowState": {
-        "shipmentState": "PRINTED_PACKING_SLIP",
-        "taskList": [
-            {
-                "attributes": {},
-                "name": "Accept Shipment",
-                "subject": "",
-                "inputs": [
-                    {
-                        "name": "shipmentAccepted",
-                        "type": "BOOLEAN"
-                    }
-                ],
-                "active": false,
-                "completed": true,
-                "completedDate": "2019-12-06T18:30:05.965Z"
-            },
-            {
-                "attributes": {},
-                "name": "Validate Items In Stock",
-                "subject": "",
-                "inputs": [
-                    {
-                        "name": "stockLevel",
-                        "type": "STRING"
-                    }
-                ],
-                "active": false,
-                "completed": true,
-                "completedDate": "2019-12-06T18:30:05.965Z"
-            },
-            {
-                "attributes": {},
-                "name": "Print Packing Slip",
-                "subject": "",
-                "inputs": [
-                    {
-                        "name": "back",
-                        "type": "BOOLEAN"
-                    }
-                ],
-                "active": false,
-                "completed": true,
-                "completedDate": "2019-12-06T18:30:05.965Z"
-            },
-            {
-                "attributes": {},
-                "taskId": "23936",
-                "name": "Prepare for Shipment",
-                "subject": "",
-                "description": "Ship items to customer",
-                "skippable": false,
-                "inputs": [
-                    {
-                        "name": "back",
-                        "required": false,
-                        "label": "Back",
-                        "type": "BOOLEAN"
-                    },
-                    {
-                        "name": "canceled",
-                        "required": false,
-                        "label": "Canceled",
-                        "type": "BOOLEAN"
-                    }
-                ],
-                "active": true,
-                "completed": false,
-                "_links": {
-                    "execute": {
-                        "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/13464/tasks/23936/completed",
-                        "method": "PUT"
-                    },
-                    "revert": {
-                        "href": "https://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/13464/tasks/23936/reverted",
-                        "method": "PUT"
-                    }
-                }
-            }
-        ],
-        "processInstanceId": "19780",
-        "auditInfo": {
-            "updateDate": "2020-02-07T22:33:48.132Z",
-            "createDate": "2019-12-06T17:40:16.254Z",
-            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-            "createBy": ""
-        }
-    },
-    "changeMessages": [
-        {
-            "changeMessageId": "5dea9e1f676e3700016a378c",
-            "createdDate": "2019-12-06T18:29:51.506Z",
-            "correlationId": "9fc4943839a44940a4170b937d5c8a0a",
-            "message": "'workflowState.shipmentState' value changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
-            "oldValue": "PRE_ACCEPT_SHIPMENT",
-            "newValue": "ACCEPTED_SHIPMENT",
-            "subject": "shipmentState",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e1f676e3700016a378d",
-            "createdDate": "2019-12-06T18:29:51.506Z",
-            "correlationId": "9fc4943839a44940a4170b937d5c8a0a",
-            "message": "'lastModifiedDate' value changed from '2019-12-06T17:40:16.618Z' to '2019-12-06T18:29:51.490263Z'",
-            "oldValue": "2019-12-06T17:40:16.618Z",
-            "newValue": "2019-12-06T18:29:51.490263Z",
-            "subject": "lastModifiedDate",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e1f676e3700016a3793",
-            "createdDate": "2019-12-06T18:29:51.542Z",
-            "correlationId": "9fc4943839a44940a4170b937d5c8a0a",
-            "message": "'acceptedDate' value changed from '' to '2019-12-06T18:29:51.540419Z'",
-            "oldValue": "null",
-            "newValue": "2019-12-06T18:29:51.540419Z",
-            "subject": "acceptedDate",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e1f676e3700016a3794",
-            "createdDate": "2019-12-06T18:29:51.542Z",
-            "correlationId": "9fc4943839a44940a4170b937d5c8a0a",
-            "message": "'lastModifiedDate' value changed from '2019-12-06T18:29:51.506Z' to '2019-12-06T18:29:51.506916Z'",
-            "oldValue": "2019-12-06T18:29:51.506Z",
-            "newValue": "2019-12-06T18:29:51.506916Z",
-            "subject": "lastModifiedDate",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e25676e3700016a37a3",
-            "createdDate": "2019-12-06T18:29:57.759Z",
-            "correlationId": "aad2b6713e224e96b6a0ee79b6f6cb34",
-            "message": "'workflowState.shipmentState' value changed from 'ACCEPTED_SHIPMENT' to 'INVENTORY_AVAILABLE'",
-            "oldValue": "ACCEPTED_SHIPMENT",
-            "newValue": "INVENTORY_AVAILABLE",
-            "subject": "shipmentState",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e25676e3700016a37a4",
-            "createdDate": "2019-12-06T18:29:57.759Z",
-            "correlationId": "aad2b6713e224e96b6a0ee79b6f6cb34",
-            "message": "'lastModifiedDate' value changed from '2019-12-06T18:29:51.543Z' to '2019-12-06T18:29:57.723294Z'",
-            "oldValue": "2019-12-06T18:29:51.543Z",
-            "newValue": "2019-12-06T18:29:57.723294Z",
-            "subject": "lastModifiedDate",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e2e676e3700016a37c9",
-            "createdDate": "2019-12-06T18:30:06.055Z",
-            "correlationId": "51f8c2646cbb44d49434d7184df8186d",
-            "message": "'lastModifiedDate' value changed from '2019-12-06T18:29:57.773Z' to '2019-12-06T18:30:06.018309Z'",
-            "oldValue": "2019-12-06T18:29:57.773Z",
-            "newValue": "2019-12-06T18:30:06.018309Z",
-            "subject": "lastModifiedDate",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5dea9e2e676e3700016a37ca",
-            "createdDate": "2019-12-06T18:30:06.055Z",
-            "correlationId": "51f8c2646cbb44d49434d7184df8186d",
-            "message": "'workflowState.shipmentState' value changed from 'INVENTORY_AVAILABLE' to 'PRINTED_PACKING_SLIP'",
-            "oldValue": "INVENTORY_AVAILABLE",
-            "newValue": "PRINTED_PACKING_SLIP",
-            "subject": "shipmentState",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5deaa76f676e3700016a5c1c",
-            "createdDate": "2019-12-06T19:09:35.985Z",
-            "correlationId": "490679e0cae74d9d9a021f243e2722fd",
-            "message": "'packages' collection changes :\n  1. 'Package/5deaa76f676e3700016a5c10' added",
-            "subject": "packages",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        },
-        {
-            "changeMessageId": "5e3de5cc2de6390001a157e6",
-            "createdDate": "2020-02-07T22:33:48.129Z",
-            "correlationId": "ef8ebad47a394af38b8c8739dab5bfcd",
-            "message": "'packages' collection changes :\n  2. 'Package/5e3de5cc2de6390001a157d8' added",
-            "subject": "packages",
-            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-        }
-    ],
-    "email": "hans.gruber@nakatomicorp.com",
-    "acceptedDate": "2019-12-06T18:29:51.540Z",
-    "auditInfo": {
-        "updateDate": "2020-02-07T22:33:48.132Z",
-        "createDate": "2019-12-06T17:40:16.254Z",
-        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "createBy": ""
+  "shipmentNumber": 249,
+  "orderId": "0f72b9c917bec20001bf07a900004956",
+  "orderNumber": 125,
+  "orderSubmitDate": "2020-03-18T17:35:39.427Z",
+  "userId": "",
+  "customerAccountId": 1000,
+  "tenantId": 18774,
+  "siteId": 22701,
+  "fulfillmentDate": "2020-05-07T15:08:12.796005Z",
+  "shipmentType": "STH",
+  "shipmentStatus": "FULFILLED",
+  "fulfillmentStatus": "Fulfilled",
+  "fulfillmentLocationCode": "BGG",
+  "shipmentAdjustment": 0.0,
+  "lineItemSubtotal": 39.99,
+  "lineItemTaxAdjustment": 0.0,
+  "lineItemTaxTotal": 0.0,
+  "lineItemTotal": 39.99,
+  "shippingAdjustment": 0.0,
+  "shippingSubtotal": 15.0,
+  "shippingTaxAdjustment": 0.0,
+  "shippingTaxTotal": 0.0,
+  "shippingTotal": 15.0,
+  "handlingAdjustment": 0.0,
+  "handlingSubtotal": 0.0,
+  "handlingTaxAdjustment": 0.0,
+  "handlingTaxTotal": 0.0,
+  "handlingTotal": 0.0,
+  "dutyAdjustment": 0.0,
+  "dutyTotal": 0.0,
+  "total": 54.99,
+  "currencyCode": "USD",
+  "destination": {
+    "destinationContact": {
+      "id": 1000,
+      "address": {
+        "address1": "4861 Sunny Day Drive",
+        "address2": "",
+        "address3": "",
+        "address4": "",
+        "addressType": "Residential",
+        "cityOrTown": "Irvine",
+        "countryCode": "US",
+        "isValidated": false,
+        "postalOrZipCode": "92664",
+        "stateOrProvince": "CA"
+      },
+      "companyOrOrganization": "",
+      "email": "marcus.fenix@cog.com",
+      "firstName": "Marcus",
+      "lastNameOrSurname": "Fenix",
+      "middleNameOrInitial": "",
+      "phoneNumbers": {
+        "home": "949-307-5762",
+        "mobile": "",
+        "work": ""
+      }
     }
+  },
+  "shippingMethodCode": "bf2b53a10a124e488e7aab3b011b1ce2",
+  "shippingMethodName": "Flat Rate",
+  "items": [
+    {
+      "lineId": 1,
+      "originalOrderItemId": "9e8ff8bfacf44358b02bab820121ded2",
+      "productCode": "DBBA02",
+      "quantity": 1,
+      "imageUrl": "//d2c85bfn0987wo.cloudfront.net/18774-22701/cms/22701/files/01e52b74-72d1-4f4d-b23d-87269400aacb",
+      "name": "Dragon Bone Battle Axe",
+      "partNumber": "DBBA02",
+      "upc": "DBBA02",
+      "allowsBackOrder": true,
+      "unitPrice": 39.99,
+      "isTaxable": true,
+      "actualPrice": 39.99,
+      "itemDiscount": 0.0,
+      "lineItemCost": 39.99,
+      "itemTax": 0.0,
+      "shipping": 15.0,
+      "shippingDiscount": 0.0,
+      "shippingTax": 0.0,
+      "handling": 0.0,
+      "handlingDiscount": 0.0,
+      "handlingTax": 0.0,
+      "duty": 0.0,
+      "weightedShipmentAdjustment": 0.0,
+      "weightedLineItemTaxAdjustment": 0.0,
+      "weightedShippingAdjustment": 0.0,
+      "weightedShippingTaxAdjustment": 0.0,
+      "weightedHandlingAdjustment": 0.0,
+      "weightedHandlingTaxAdjustment": 0.0,
+      "weightedDutyAdjustment": 0.0,
+      "taxableShipping": 15.0,
+      "taxableLineItemCost": 39.99,
+      "taxableHandling": 0.0,
+      "weight": 1.0,
+      "weightUnit": "lbs",
+      "auditInfo": {
+        "updateDate": "2020-05-07T15:08:12.985691Z",
+        "createDate": "2020-03-18T17:35:40.471Z",
+        "updateBy": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      },
+      "options": []
+    }
+  ],
+  "canceledItems": [],
+  "reassignedItems": [],
+  "rejectedItems": [],
+  "packages": [
+    {
+      "attributes": {
+        "carrierTypeOther": null,
+        "trackingURL": "testtrackingurl2",
+        "returnTrackingNumber": null,
+        "deliveryType": "UPS_GROUND_TEST",
+        "carrierType": "UPS",
+        "transitTime": "3-5 Days",
+        "trackingNumber": "1z234rttfrhgyrhfjhfkgh"
+      },
+      "packageId": "5e725bec9053580001e9b571",
+      "shippingMethodCode": "UPS_GROUND_TEST",
+      "trackingNumbers": [
+        "1z234rttfrhgyrhfjhfkgh",
+        "94368346893453539"
+      ],
+      "trackings": [
+        {
+          "number": "1z234rttfrhgyrhfjhfkgh",
+          "url": "https://www.ups.com/track?loc=en_US&tracknum=1z234rttfrhgyrhfjhfkgh"
+        },
+        {
+          "number": "94368346893453539",
+          "url": "https://www.ups.com/track?loc=en_US&tracknum=94368346893453539"
+        }
+      ]
+    },
+    {
+      "packageId": "5e95a13750096b00017e8ccb",
+      "measurements": {
+        "height": {
+          "unit": "inches",
+          "value": 4.0
+        },
+        "length": {
+          "unit": "inches",
+          "value": 12.0
+        },
+        "width": {
+          "unit": "inches",
+          "value": 4.0
+        },
+        "weight": {
+          "unit": "pounds",
+          "value": 2.0
+        }
+      },
+      "carrier": "UPS",
+      "packagingType": "UPS_CUSTOMER_SUPPLIED_PACKAGE",
+      "shippingMethodCode": "UPS_GROUND",
+      "shippingMethodName": "UPS GROUND",
+      "trackingNumbers": [
+        "1Z7A67E20396580805"
+      ],
+      "trackings": [
+        {
+          "number": "1Z7A67E20396580805",
+          "url": "https://www.ups.com/track?loc=en_US&tracknum=1Z7A67E20396580805"
+        }
+      ]
+    },
+    {
+      "packageId": "5ea930cac6a6ed0001bb965a",
+      "trackingNumbers": [
+        "6567687"
+      ],
+      "trackings": [
+        {
+          "number": "6567687"
+        }
+      ]
+    }
+  ],
+  "workflowState": {
+    "shipmentState": "COMPLETED",
+    "taskList": [
+      {
+        "name": "Accept Shipment",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "shipmentAccepted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": false,
+        "completed": true,
+        "completedDate": "2020-05-07T15:08:14.427Z",
+        "_links": {}
+      },
+      {
+        "name": "Validate Items In Stock",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "stockLevel",
+            "type": "STRING"
+          }
+        ],
+        "active": false,
+        "completed": true,
+        "completedDate": "2020-05-07T15:08:14.427Z",
+        "_links": {}
+      },
+      {
+        "name": "Print Packing Slip",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "back",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": false,
+        "completed": true,
+        "completedDate": "2020-05-07T15:08:14.427Z",
+        "_links": {}
+      },
+      {
+        "name": "Prepare for Shipment",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "canceled",
+            "type": "BOOLEAN"
+          },
+          {
+            "name": "back",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": false,
+        "completed": true,
+        "completedDate": "2020-05-07T15:08:14.427Z",
+        "_links": {}
+      }
+    ],
+    "processInstanceId": "826",
+    "auditInfo": {
+      "updateDate": "2020-05-07T15:08:14.837818Z",
+      "createDate": "2020-03-18T17:35:40.528Z",
+      "updateBy": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "createBy": ""
+    }
+  },
+  "changeMessages": [
+    {
+      "changeMessageId": "5e725c009053580001e9b64c",
+      "createdDate": "2020-03-18T17:36:00.970Z",
+      "correlationId": "a5652649ada64a6293c1d5613f4a7a47",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:35:41.079Z' to '2020-03-18T17:36:00.966259Z'",
+      "oldValue": "2020-03-18T17:35:41.079Z",
+      "newValue": "2020-03-18T17:36:00.966259Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c009053580001e9b64d",
+      "createdDate": "2020-03-18T17:36:00.970Z",
+      "correlationId": "a5652649ada64a6293c1d5613f4a7a47",
+      "message": "'workflowState.shipmentState' value changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+      "oldValue": "PRE_ACCEPT_SHIPMENT",
+      "newValue": "ACCEPTED_SHIPMENT",
+      "subject": "shipmentState",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c009053580001e9b653",
+      "createdDate": "2020-03-18T17:36:00.976Z",
+      "correlationId": "a5652649ada64a6293c1d5613f4a7a47",
+      "message": "'acceptedDate' value changed from '' to '2020-03-18T17:36:00.974202Z'",
+      "oldValue": "null",
+      "newValue": "2020-03-18T17:36:00.974202Z",
+      "subject": "acceptedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c009053580001e9b654",
+      "createdDate": "2020-03-18T17:36:00.976Z",
+      "correlationId": "a5652649ada64a6293c1d5613f4a7a47",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:36:00.971Z' to '2020-03-18T17:36:00.971523Z'",
+      "oldValue": "2020-03-18T17:36:00.971Z",
+      "newValue": "2020-03-18T17:36:00.971523Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c0a9053580001e9b663",
+      "createdDate": "2020-03-18T17:36:10.772Z",
+      "correlationId": "73a9a85ad47b4f749b41b16ada530fe4",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:36:00.976Z' to '2020-03-18T17:36:10.768336Z'",
+      "oldValue": "2020-03-18T17:36:00.976Z",
+      "newValue": "2020-03-18T17:36:10.768336Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c0a9053580001e9b664",
+      "createdDate": "2020-03-18T17:36:10.773Z",
+      "correlationId": "73a9a85ad47b4f749b41b16ada530fe4",
+      "message": "'workflowState.shipmentState' value changed from 'ACCEPTED_SHIPMENT' to 'INVENTORY_AVAILABLE'",
+      "oldValue": "ACCEPTED_SHIPMENT",
+      "newValue": "INVENTORY_AVAILABLE",
+      "subject": "shipmentState",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c179053580001e9b689",
+      "createdDate": "2020-03-18T17:36:23.256Z",
+      "correlationId": "73e0023089b74ad0a1a6f5b1bbd90ec1",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:36:10.773Z' to '2020-03-18T17:36:23.252003Z'",
+      "oldValue": "2020-03-18T17:36:10.773Z",
+      "newValue": "2020-03-18T17:36:23.252003Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725c179053580001e9b68a",
+      "createdDate": "2020-03-18T17:36:23.256Z",
+      "correlationId": "73e0023089b74ad0a1a6f5b1bbd90ec1",
+      "message": "'workflowState.shipmentState' value changed from 'INVENTORY_AVAILABLE' to 'PRINTED_PACKING_SLIP'",
+      "oldValue": "INVENTORY_AVAILABLE",
+      "newValue": "PRINTED_PACKING_SLIP",
+      "subject": "shipmentState",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725ccf9053580001e9b6a1",
+      "createdDate": "2020-03-18T17:39:27.966Z",
+      "correlationId": "7c75011693594d64aae5f4a23c2b0b89",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:36:23.257Z' to '2020-03-18T17:39:27.962065Z'",
+      "oldValue": "2020-03-18T17:36:23.257Z",
+      "newValue": "2020-03-18T17:39:27.962065Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725cd69053580001e9b6ba",
+      "createdDate": "2020-03-18T17:39:34.734Z",
+      "correlationId": "814d8392dab34a6dbd45df21fa201261",
+      "message": "'lastModifiedDate' value changed from '2020-03-18T17:39:27.967Z' to '2020-03-18T17:39:34.730850Z'",
+      "oldValue": "2020-03-18T17:39:27.967Z",
+      "newValue": "2020-03-18T17:39:34.730850Z",
+      "subject": "lastModifiedDate",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5e725ced9053580001e9b6e3",
+      "createdDate": "2020-03-18T17:39:57.402Z",
+      "message": "'shippingMethodCode' value changed from '' to 'UPS_GROUND_TEST'",
+      "oldValue": "null",
+      "newValue": "UPS_GROUND_TEST",
+      "subject": "shippingMethodCode",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "5e725ced9053580001e9b6e4",
+      "createdDate": "2020-03-18T17:39:57.402Z",
+      "message": "'trackingNumbers' collection changes : 1. '94368346893453539' added 0. '1z234rttfrhgyrhfjhfkgh' added",
+      "subject": "trackingNumbers",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "5e725ced9053580001e9b6e5",
+      "createdDate": "2020-03-18T17:39:57.402Z",
+      "message": "'attributes' map changes : 'carrierTypeOther' -> '' added 'trackingURL' -> 'testtrackingurl2' added 'returnTrackingNumber' -> '' added 'deliveryType' -> 'UPS_GROUND_TEST' added 'carrierType' -> 'UPS' added 'transitTime' -> '3-5 Days' added 'trackingNumber' -> '1z234rttfrhgyrhfjhfkgh' added",
+      "subject": "attributes",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "5e95a13850096b00017e8cdc",
+      "createdDate": "2020-04-14T11:40:40.037Z",
+      "correlationId": "cfac49148dd4481f807f2918e26a7f90",
+      "message": "'packages' collection changes : 1. 'Package/5e95a13750096b00017e8ccb' added",
+      "subject": "packages",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5ea92f9fc6a6ed0001bb961c",
+      "createdDate": "2020-04-29T07:41:19.617Z",
+      "correlationId": "8a78d985fe974bfb9822c8419bbd211e",
+      "message": "'packages' collection changes : 2. 'Package/5ea92f9fc6a6ed0001bb9609' added",
+      "subject": "packages",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5ea930cac6a6ed0001bb966f",
+      "createdDate": "2020-04-29T07:46:18.913Z",
+      "correlationId": "74b29c9a03e443479726613dbd21b122",
+      "message": "'packages' collection changes : 3. 'Package/5ea930cac6a6ed0001bb965a' added",
+      "subject": "packages",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5ea93104c6a6ed0001bb969c",
+      "createdDate": "2020-04-29T07:47:16.768Z",
+      "correlationId": "06a17c738ae244b3ba64d16aa6e9cd71",
+      "message": "'packages' collection changes : 2. 'Package/5ea92f9fc6a6ed0001bb9609' removed",
+      "subject": "packages",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "userDisplayName": "Kibo admin"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d055",
+      "createdDate": "2020-05-07T15:08:12.146812Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'lastModifiedDate' value changed from '2020-04-29T07:47:16.769Z' to '2020-05-07T15:08:07.410891Z'",
+      "oldValue": "2020-04-29T07:47:16.769Z",
+      "newValue": "2020-05-07T15:08:07.410891Z",
+      "subject": "lastModifiedDate",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d056",
+      "createdDate": "2020-05-07T15:08:12.147039Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'workflowState.shipmentState' value changed from 'PRINTED_PACKING_SLIP' to 'COMPLETED'",
+      "oldValue": "PRINTED_PACKING_SLIP",
+      "newValue": "COMPLETED",
+      "subject": "shipmentState",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d06f",
+      "createdDate": "2020-05-07T15:08:12.966812Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'fulfillmentDate' value changed from '' to '2020-05-07T15:08:12.796005Z'",
+      "oldValue": "null",
+      "newValue": "2020-05-07T15:08:12.796005Z",
+      "subject": "fulfillmentDate",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d070",
+      "createdDate": "2020-05-07T15:08:12.966866Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'shipmentStatus' value changed from 'READY' to 'FULFILLED'",
+      "oldValue": "READY",
+      "newValue": "FULFILLED",
+      "subject": "shipmentStatus",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d071",
+      "createdDate": "2020-05-07T15:08:12.966880Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'fulfillmentStatus' value changed from '' to 'Fulfilled'",
+      "oldValue": "null",
+      "newValue": "Fulfilled",
+      "subject": "fulfillmentStatus",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    },
+    {
+      "changeMessageId": "5eb4245cb87c4f000108d072",
+      "createdDate": "2020-05-07T15:08:12.966889Z",
+      "correlationId": "0352f76c7d7e49ec8ed403b0710e543b",
+      "message": "'lastModifiedDate' value changed from '2020-05-07T15:08:12.148Z' to '2020-05-07T15:08:12.148160Z'",
+      "oldValue": "2020-05-07T15:08:12.148Z",
+      "newValue": "2020-05-07T15:08:12.148160Z",
+      "subject": "lastModifiedDate",
+      "userId": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+      "userDisplayName": "Fulfillment Dev"
+    }
+  ],
+  "email": "marcus.fenix@cog.com",
+  "acceptedDate": "2020-03-18T17:36:00.974Z",
+  "isExpress": false,
+  "auditInfo": {
+    "updateDate": "2020-05-07T15:08:12.984673Z",
+    "createDate": "2020-03-18T17:35:40.528Z",
+    "updateBy": "2a6fa09d1b0a47cfaf68da0eb72f8add",
+    "createBy": ""
+  }
 }

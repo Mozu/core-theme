@@ -38,12 +38,18 @@ Ext.define('Taco.view.order.modal.EditOrderEmail', {
     doSave: function () {
         var me = this,
             data = this.form.getValues();
-      
+
+        var email = data.email;
+        if (email && !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
+            Taco.app.fireEvent('setmessage', 'Validation error. Email is not formatted correctly', 'error');
+            return;
+        }
+
 
         me.setLoading({
             msg: "Saving"
         }, me.body);
-
+        
         this.record.updateEmailAddress({
             jsonData: this.record.getData(),
             success: function (response) {

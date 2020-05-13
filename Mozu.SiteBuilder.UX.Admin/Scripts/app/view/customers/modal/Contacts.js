@@ -55,7 +55,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         this.allowInvalidAddresses = false;
         this.isAddressValidationEnabled = false;
         Taco.model.GeneralSettings.load('', {
-            success: function (record) {                
+            success: function (record) {
                 me.allowInvalidAddresses = record.data.allowInvalidAddresses;
                 me.isAddressValidationEnabled = record.data.isAddressValidationEnabled;
             },
