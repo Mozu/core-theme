@@ -116,10 +116,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
     public interface IPageContext
     {
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         NameValueCollection Query { get; }
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         IRequestCookieCollection Cookies { get; }
         string ThemeId { get; }
         bool IsDebugMode { get; }
+
         SortingParameters Sorting { get; set; }
         string CdnCacheBustKey { get; }
         PagingParameters Pagination { get; set; }
@@ -415,10 +422,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         [System.Runtime.Serialization.IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public NameValueCollection Query => HttpUtility.ParseQueryString(_context.Request.QueryString.Value);
 
         [System.Runtime.Serialization.IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IRequestCookieCollection Cookies => _context.Request.Cookies;
 
         private string _themeId;
@@ -463,6 +472,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return val == "1";
         }
 
+        [System.Text.Json.Serialization.JsonIgnore]
         [System.Runtime.Serialization.IgnoreDataMember]
         public bool HandledByProxy { get; set; }
 

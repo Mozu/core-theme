@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using IRedirectHandler = Mozu.SiteBuilder.Mvc.SEO.IRedirectHandler;
 using RedirectHandler = Mozu.SiteBuilder.Mvc.SEO.RedirectHandler;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
 {
@@ -41,6 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
 
             var siteContext = services.Resolve<ISiteContext>();
             var pageContext = services.Resolve<PageContext>();
+            var navContext = services.Resolve<NavigationContext>(); 
             Uri requestUri;
 
             if (context.HttpContext.Items.TryGetValue(OriginalUri, out var temp))
@@ -51,6 +53,15 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             {
                 requestUri = context.HttpContext.GetRequestUri();
             }
+
+
+            if (RewriteHomePage(requestUri, apiContext ,navContext, out string homepage))
+            {
+                RewriteCurrentRequest(context.HttpContext, homepage);
+                return;
+            }
+            
+            
             // try redirects
             var redirect = Redirecter.GetRedirectForRequestUri(services.Resolve<IRedirectRepository>(), requestUri);
             if (redirect == null) return;
@@ -80,6 +91,23 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             }
         }
 
+
+        static bool RewriteHomePage(Uri uri , ISiteBuilderApiContext apiContext , NavigationContext navContext  , out string rewrite)
+        {
+            rewrite = null;
+            if (uri.GetComponents(UriComponents.Path, UriFormat.Unescaped) != "") return false;
+            
+            if (!apiContext.SiteId.HasValue) return false;
+           
+            var tree = navContext.Tree;
+            if (tree == null) return false;
+            var homeLink = tree.FirstOrDefault(x => x.IsHomePage);
+            if (homeLink == null || homeLink.Url.Length <= 1) return false;
+            rewrite =homeLink.Url;
+            return true;
+
+        }
+        
         private static void RedirectTo(string location, bool isTemporary, bool enforceSsl, bool isSecureRequest, string secureHost, RewriteContext context)
         {
             var resp = context.HttpContext.Response;

@@ -20,6 +20,8 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Text.Json;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -308,7 +310,95 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             }
         }
 
+        class MyStream : Stream
+        {
+            public Stream InnerStream;
 
+            public override bool CanRead =>  false;
+
+            public override bool CanSeek => false;
+
+            public override bool CanWrite => true;
+
+            public override long Length => throw new NotImplementedException();
+
+            public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            public override void Flush()
+            {
+                InnerStream.Flush();
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void SetLength(long value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                var txt = System.Text.Encoding.UTF8.GetString(buffer, offset, count);
+                System.Diagnostics.Debug.WriteLine(txt);
+                InnerStream.Write(buffer, offset, count);
+            }
+        }
+        public class MyJsonConverter : System.Text.Json.Serialization.JsonConverter<object>
+        {
+            public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+            {
+                try
+                {
+                    System.Text.Json.JsonSerializer.Serialize(writer, value);
+                }
+                catch (Exception e)
+                {
+                    int f = 0;
+                }
+                
+            }
+        }
+        public class JObjectTypeConverter : System.Text.Json.Serialization.JsonConverter<Newtonsoft.Json.Linq.JObject>
+        {
+            public override Newtonsoft.Json.Linq.JObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                var temp = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+                return Newtonsoft.Json.Linq.JObject.Parse(temp.GetRawText());
+            }
+
+            public override void Write(Utf8JsonWriter writer, Newtonsoft.Json.Linq.JObject value, JsonSerializerOptions options)
+            {
+                var temp = JsonSerializer.Deserialize<JsonElement>(value.ToString());
+                JsonSerializer.Serialize<JsonElement>(writer, temp, options);
+            }
+        }
+        public class JArrayTypeConverter : System.Text.Json.Serialization.JsonConverter<Newtonsoft.Json.Linq.JArray>
+        {
+            public override Newtonsoft.Json.Linq.JArray Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                var temp = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+                return Newtonsoft.Json.Linq.JArray.Parse(temp.GetRawText());
+            }
+
+            public override void Write(Utf8JsonWriter writer, Newtonsoft.Json.Linq.JArray value, JsonSerializerOptions options)
+            {
+                var temp = JsonSerializer.Deserialize<JsonElement>(value.ToString());
+                JsonSerializer.Serialize<JsonElement>(writer, temp, options);
+            }
+        }
         public static void InitSBActionContext(ApiActionExtensionFilterContext actionContext)
         {
             var services = actionContext.ActionContext.HttpContext.RequestServices;
@@ -319,6 +409,18 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             var nc = services.GetService<NavigationContext>();
 
             actionContext.Items["pageContext"] = pc;
+
+            //var ms = new MemoryStream();
+            //var my = new MyStream() { InnerStream = ms };
+            //var writer = new System.Text.Json.Utf8JsonWriter(my, new System.Text.Json.JsonWriterOptions() { });
+            //var opts = new System.Text.Json.JsonSerializerOptions()
+            //{
+            //    MaxDepth = 10000
+            //};
+            //opts.Converters.Add(new JObjectTypeConverter());
+            //opts.Converters.Add(new JArrayTypeConverter());
+            //opts.Converters.Add(new MyJsonConverter());
+            //System.Text.Json.JsonSerializer.Serialize(writer, sc, sc.GetType(), opts);
 
             actionContext.GlobalContext["siteContext"] = new GlobalContextItem() { Value = sc, Hash = sc.HashString };         
             actionContext.GlobalContext["navigation"] = new GlobalContextItem() { Value = nc, Hash = sc.HashString };

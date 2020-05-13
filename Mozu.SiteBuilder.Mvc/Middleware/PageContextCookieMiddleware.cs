@@ -35,54 +35,52 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public Task Invoke(HttpContext context)
         {
-            await _next.Invoke(context);
-
-            var apiContext = context.RequestServices.Resolve<ISiteBuilderApiContext>();
-            if (apiContext.SiteId == null)
+            context.Response.OnStarting(() =>
             {
-                return;
-            }
-            var pageContext = context.RequestServices.Resolve<IPageContext>();
-            if (pageContext == null)
-            {
-                return;
-            }
-            try
-            {
-                var ms = new MemoryStream();
-                using (var writer = new JsonTextWriter(new StreamWriter(ms)))
+                var apiContext = context.RequestServices.Resolve<ISiteBuilderApiContext>();
+                if (apiContext.SiteId == null)
                 {
-                    lazySer.Value.Serialize(writer, pageContext);
+                    return Task.CompletedTask;
                 }
 
-                context.Response.Cookies.Append("_mzPc", Convert.ToBase64String(ms.ToArray()));
-            }
-            catch (Exception ex)
-            {
-                LoggingService.LoggerFor<PageContextCookieMiddleware>().Warn(ex.Message);
-            }
-            if (!context.HasAdditionalResponseHeaders())
-            {
-                return;
-            }
-            //ILogger logger = null;
-            var additionalHeaders = context.GetAdditionalResponseHeaders();
-            additionalHeaders.ForEach(nvHeader =>
-                context.Response.Headers.Add(nvHeader.Name.Value, nvHeader.Value.Value));
-            //foreach (var nvHeader in additionalHeaders)
-            //{
-            //    if (!resp.Headers.TryAddWithoutValidation(nvHeader.Name, nvHeader.Value))
-            //    {
-            //        if (logger == null)
-            //        {
-            //            var exceptionLogWrapper = request.Resolve<ExceptionContextLogWrapper>();
-            //            logger = exceptionLogWrapper.GetLogger();
-            //        }
-            //        logger.Warn($"unable to write header {nvHeader.Name} {nvHeader.Value}");
-            //    }
-            //}
+                var pageContext = context.RequestServices.Resolve<IPageContext>();
+                if (pageContext == null)
+                {
+                    return Task.CompletedTask;
+                }
+
+                try
+                {
+                    var ms = new MemoryStream();
+                    using (var writer = new JsonTextWriter(new StreamWriter(ms)))
+                    {
+                        lazySer.Value.Serialize(writer, pageContext);
+                    }
+
+                    context.Response.Cookies.Append("_mzPc", Convert.ToBase64String(ms.ToArray()));
+                }
+                catch (Exception ex)
+                {
+                    LoggingService.LoggerFor<PageContextCookieMiddleware>().Warn(ex.Message);
+                }
+
+                if (!context.HasAdditionalResponseHeaders())
+                {
+                    return Task.CompletedTask;
+                }
+
+                //ILogger logger = null;
+                var additionalHeaders = context.GetAdditionalResponseHeaders();
+                additionalHeaders.ForEach(nvHeader =>
+                    context.Response.Headers.Add(nvHeader.Name.Value, nvHeader.Value.Value));
+
+                return Task.CompletedTask;
+            });
+            return _next(context);
         }
+
+
     }
 }

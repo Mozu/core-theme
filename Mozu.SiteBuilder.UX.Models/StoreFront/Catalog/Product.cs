@@ -697,7 +697,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         public string ETag { get; set; }
 
         List<Category> _rootCategories;
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<Category> RootCategories
         {
             get
@@ -722,7 +723,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         
         public List<Category> Top => RootCategories;
 
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<Category> AllCategories
         {
             get { return _allCategories; }

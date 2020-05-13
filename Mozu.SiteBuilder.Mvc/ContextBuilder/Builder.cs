@@ -42,14 +42,14 @@ namespace Mozu.SiteBuilder.Mvc.Context
 {
     public interface ISitebuilderContextCacheRepository
     {
-        Task<List<RedirectEntry>> GetRedirectsAsync(ISiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext);
-        Task PutAsync(List<RedirectEntry> redirects, ISiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext);
-        Task<ISiteBuilderContextData> GetAsync(ISiteBuilderApiContext apiContext );
-        Task PutAsync(ISiteBuilderContextData item, ISiteBuilderApiContext apiContext);
+        Task<List<RedirectEntry>> GetRedirectsAsync(ISiteBuilderContextData ctxData, IApiContext apiContext);
+        Task PutAsync(List<RedirectEntry> redirects, ISiteBuilderContextData ctxData, IApiContext apiContext);
+        Task<ISiteBuilderContextData> GetAsync(IApiContext apiContext );
+        Task PutAsync(ISiteBuilderContextData item, IApiContext apiContext);
        // Task Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dataViewMode);
         Task Invalidate(int tenantId, int value1, int value2, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewModeType);
-        Task<List<SBCategory>> GetCategoryAsync(ISiteBuilderApiContext _context);
-        Task PutCategoryAsync(List<SBCategory> catTree, ISiteBuilderApiContext _context);
+        Task<List<SBCategory>> GetCategoryAsync(IApiContext _context);
+        Task PutCategoryAsync(List<SBCategory> catTree, IApiContext _context);
     }
     public class SitebuilderContextCacheRepository : ISitebuilderContextCacheRepository
     {
@@ -322,7 +322,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-        private string GetContextCacheKey(ISiteBuilderApiContext apiContext)
+        private string GetContextCacheKey(IApiContext apiContext)
         {
             var dvm = apiContext.DataViewMode == DataViewModeType.Pending ? 
                 DataViewModeType.Pending : 
@@ -330,7 +330,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return $"t={apiContext.TenantId}&s={apiContext.SiteId}&l={apiContext.LocaleCode}&c={apiContext.CurrencyCode}&dvm={dvm}&v={CacheVersion}";
         }
 
-        private string GetPlCategoryListCacheKey(ISiteBuilderApiContext apiContext)
+        private string GetPlCategoryListCacheKey(IApiContext apiContext)
         {
             var dvm = apiContext.DataViewMode == DataViewModeType.Pending ?
                 DataViewModeType.Pending :
@@ -344,7 +344,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             return _mdbProvider.MongoDataBase.GetCollection<SiteBuilderContextWorkItem>("SiteBuilderContextWorkItems");
         }
-        async Task<ISiteBuilderContextData> ISitebuilderContextCacheRepository.GetAsync(ISiteBuilderApiContext apiContext)
+        async Task<ISiteBuilderContextData> ISitebuilderContextCacheRepository.GetAsync(IApiContext apiContext)
         {
             RecordVisit(apiContext);
             var cacheKey = this.GetContextCacheKey(apiContext);
@@ -406,7 +406,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             
         }
 
-        async Task ISitebuilderContextCacheRepository.PutAsync(ISiteBuilderContextData item, ISiteBuilderApiContext apiContext)
+        async Task ISitebuilderContextCacheRepository.PutAsync(ISiteBuilderContextData item, IApiContext apiContext)
         {
             var cacheKey = GetContextCacheKey(apiContext);
             var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
@@ -444,7 +444,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return ret;
         }
 
-        private async Task UpsertWorkQueue (ISiteBuilderApiContext apiContext, bool includePriceList)
+        private async Task UpsertWorkQueue (IApiContext apiContext, bool includePriceList)
         {
             
             if (apiContext.DataViewMode  == DataViewModeType.Pending )
@@ -477,11 +477,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
-        private string GetRedirectsCacheKey(ISiteBuilderApiContext apiContext )
+        private string GetRedirectsCacheKey(IApiContext apiContext )
         {
             return apiContext.TenantId + "|" + apiContext.SiteId + (apiContext.DataViewMode == DataViewModeType.Pending ? "p" : "l");
         }
-        public  Task<List<RedirectEntry>> GetRedirectsAsync(ISiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
+        public  Task<List<RedirectEntry>> GetRedirectsAsync(ISiteBuilderContextData ctxData, IApiContext apiContext)
         {
             var cacheKey = GetRedirectsCacheKey(apiContext);
             return _cacheProvider.GetCache(RedirectCacheName, apiContext)
@@ -495,7 +495,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 
         }
 
-        public Task PutAsync(List<RedirectEntry> redirects, ISiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
+        public Task PutAsync(List<RedirectEntry> redirects, ISiteBuilderContextData ctxData, IApiContext apiContext)
         {
             var cacheKey = GetRedirectsCacheKey(apiContext);
             var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
@@ -517,7 +517,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         
 
-        async Task<List<SBCategory>> ISitebuilderContextCacheRepository.GetCategoryAsync(ISiteBuilderApiContext apiContext)
+        async Task<List<SBCategory>> ISitebuilderContextCacheRepository.GetCategoryAsync(IApiContext apiContext)
         {
             var cacheKey = this.GetPlCategoryListCacheKey(apiContext) ;
             return await _cacheProvider.GetCache(CacheName, apiContext)
@@ -526,7 +526,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 .ConfigureAwait(false);
            
         }
-        async Task ISitebuilderContextCacheRepository.PutCategoryAsync(List<SBCategory> catTree, ISiteBuilderApiContext apiContext)
+        async Task ISitebuilderContextCacheRepository.PutCategoryAsync(List<SBCategory> catTree, IApiContext apiContext)
         {
             var cacheKey = GetPlCategoryListCacheKey(apiContext);
             var existing = await ((ISitebuilderContextCacheRepository)this).GetCategoryAsync(apiContext).ConfigureAwait(false);
@@ -655,13 +655,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public class SiteBuilderContextDataRepository : ISiteBuilderContextDataRepository
     {
-        private readonly ISiteBuilderApiContext _context;
+        private readonly IApiContext _context;
         private readonly ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
         private readonly Lazy<IContextServiceAggregator> _contextServiceAggregator;
 
         public SiteBuilderContextDataRepository(
             ISitebuilderContextCacheRepository sitebuilderContextCacheRepository,
-            ISiteBuilderApiContext context,
+            IApiContext context,
             Lazy<IContextServiceAggregator> contextServiceAggregator)
         {
             _sitebuilderContextCacheRepository = sitebuilderContextCacheRepository;
@@ -816,7 +816,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly IThemeRepository _themeRepository;
         private readonly INavigationRepository _navigationRepository;
-        private readonly ISiteBuilderApiContext _apiContext;
+        private readonly IApiContext _apiContext;
         private readonly ILogger _logger;
         private readonly ISitebuilderContextCacheRepository _cacheRepo;
         public ContextServiceAggregator(
@@ -838,7 +838,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             )
         {
-            _apiContext = (ISiteBuilderApiContext)apiContextAccessor.ApiContext;
+            _apiContext = apiContextAccessor.ApiContext;
             int defaultTimeout = 30000;
             _documentListWebApiClient = documentListWebApiClient.WithTimeout(defaultTimeout);
             _entityListsWebApiClient = entityListsWebApiClient.WithTimeout(defaultTimeout);
@@ -1577,17 +1577,20 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         
         public DateTime? RedirectUpdateDate { get; set; }
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<RedirectEntry> Redirects { get; set; }
         public int? SiteId { get; set; }
         public LocationUsageCollection LocationUsages { get;  set; }
         public Dictionary<string, Tuple<Theme, ThemeRuntimeSettingsCollection>> Themes { get; set; }
 
 
-       
-        [JsonIgnore]
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public RuntimeRedirects RuntimeRedirects { get;  set; }
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public CustomRouteRepository.HttpRouteCollectionContainer RouteCollection { get; set; }
         [JsonConverter(typeof(NavigationSetJsonConverter))]
         public NavigationSet NavigationSet { get;  set; }

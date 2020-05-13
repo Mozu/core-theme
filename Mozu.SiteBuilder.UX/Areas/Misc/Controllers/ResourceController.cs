@@ -120,17 +120,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public IActionResult MozuReceiver(int receiverVersion)
+        public IActionResult MozuReceiver(int receiverVersion=0)
         {
-            return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
+            if (receiverVersion == 0)
+            {
+                return File("wwwroot/Assets/mozu_receiver.html", "text/html");
+            }
+            return File("wwwroot/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
 
-        [HttpGet]
-        [ClientCacheHeaders(ConfigKey = "receiver")]
-        public IActionResult MozuReceiver()
-        {
-            return File("/Assets/mozu_receiver.html", "text/html");
-        }
+       
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [HttpGet]

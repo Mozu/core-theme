@@ -28,7 +28,8 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public int? AccountId { get; set; }
 
         [IgnoreDataMember()]
-        [JsonIgnore()]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<string> Segments { get; set; }
 
         [DataMember(Name = "behaviors")]

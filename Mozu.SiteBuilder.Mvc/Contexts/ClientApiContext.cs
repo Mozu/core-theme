@@ -10,6 +10,7 @@ using static Mozu.SiteBuilder.Mvc.Tags.PreloadJsonTag;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using RestSharp.Validation;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -321,11 +322,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 {
                     throw new EntryPointNotFoundException("missing appsetting for " + si.Id);
                 }
-
+               
                 var idx = si.InternalUrl.IndexOf("webapi/", StringComparison.OrdinalIgnoreCase);
                 if (idx > 0)
                 {
-                    si.VirturalPath = "/api" + si.InternalUrl.Substring(idx + 6);
+                    var localPath = new Uri( si.InternalUrl).PathAndQuery;
+                    idx = localPath.IndexOf('/', 1);
+                    si.VirturalPath = "/api" + localPath.Substring(idx);
                 }
             }
             return sis;

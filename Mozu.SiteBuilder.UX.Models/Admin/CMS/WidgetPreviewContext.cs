@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
             public List<ZoneRowRuntimeData> Rows { get; set; }
             public DocumentRequest Source { get; set; }
             [Newtonsoft.Json.JsonIgnore]
+            [System.Text.Json.Serialization.JsonIgnore]
             public ZoneScope Scope { get; set; }
             public string Build { get; set; }
         }
@@ -146,6 +147,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
             }
             public DocumentRequest Source { get; set; }
             [Newtonsoft.Json.JsonIgnore]
+            [System.Text.Json.Serialization.JsonIgnore]
             public ZoneScope Scope { get; set; }
             public string Build { get; set; }
         }

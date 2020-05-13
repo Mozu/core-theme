@@ -9,15 +9,15 @@
     <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2002.0-pr-35.7" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="1.2005.4" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2005.4" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2020.0-sb-dnc.9" />
+    <PackageReference Include="Mozu.Core.Messaging" Version="1.2018.0-dotnetcore.82" />
+    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2018.0-dotnetcore.82" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.0-sb-dnc.30" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.1929.0-dotnetcore.26" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.1915.0-dotnetcore.4" />
     <PackageReference Include="Mozu.Location.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.MZDB.Contracts" Version="1.1928.0-dotnetcore.48" />
-    <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.1930.0-dotnetcorecontracts.10" />
+    <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
     <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2006.0-pr-15.7" />
     <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2006.0-pr-15.7" />
     <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2006.0-pr-15.7" />

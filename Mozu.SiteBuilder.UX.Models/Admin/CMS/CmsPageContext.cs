@@ -70,10 +70,14 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         //public List<WidgetRuntimeData> RuntimeData { get; set; }
 
         [IgnoreDataMember()]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public List<Chorizo.ZoneRuntimeData> RuntimeData { get; set; }
 
 
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public List<Caliente.ZoneRuntimeData> CalienteRuntimeData { get; set; }
 
         public static class LayoutTypeConstants
@@ -83,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         }
 
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool Initialized { get; set; }
 
        

@@ -17,17 +17,36 @@ using MongoDB.Driver.GridFS;
 using MongoDB.Bson;
 using System.Threading;
 using System.Diagnostics;
+using System.Text.Json;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
+   
     /// <summary>
     /// Internal class implementing an IThemeInfo.
     /// </summary>
     [DataContract]
+    //[System.Text.Json.Serialization.JsonConverter( typeof (Theme.ThemeJsonConverter))]
     //[JsonConverter(typeof(Theme.ThemeJsonConverter))]
     public  class Theme
     {
+        //public class ThemeJsonConverter : System.Text.Json.Serialization.JsonConverter<Theme>
+        //{
+        //    public override Theme Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        //    {
+        //        throw new NotImplementedException();
+        //    }
 
+        //    public override void Write(Utf8JsonWriter writer, Theme value, JsonSerializerOptions options)
+        //    {
+        //        writer.WriteStartObject();
+        //        writer.write
+        //        throw new NotImplementedException();
+        //    }
+        //}
+
+    
 
         [OnSerializing]
         private void SetValuesOnSerializing(StreamingContext context)
@@ -64,7 +83,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
 
         [IgnoreDataMember]
-        [Newtonsoft.Json.JsonIgnore()]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool IsCoreTheme {
             get {
                 return this.Id != null && Regex.IsMatch(this.Id, "^core[\\d]+$", RegexOptions.IgnoreCase);
@@ -116,12 +136,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
       //  [DataMember(Name = "parent")]
         [IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Theme Parent { get; set; }
 
         /// <summary>
         /// Contains the thumbnail for this theme or null.
         /// </summary>
         [IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Thumbnail Thumbnail { get; set; }
 
         
@@ -131,6 +153,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         [Obsolete]
         [IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
         public ICollection<Theme> Stack
         {
             get
@@ -153,10 +176,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return _themeStack;
             }
         }
-
+      //  [System.Text.Json.Serialization.JsonConverter(typeof(CaseInsenstiveStringDictionaryConverter<object>))]
         public Dictionary<string,object> Settings { get; set; }
 
         [DataMember]
+      //  [System.Text.Json.Serialization.JsonConverter(typeof(CaseInsenstiveStringDictionaryConverter<ThemeLabelCollection>))]
         public Dictionary<string, ThemeLabelCollection> MergedLabels { get; set; }
 
         [DataMember(Name="pageTypes")]
@@ -200,6 +224,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return (Theme)this.MemberwiseClone();
         }
         [IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string ThemePath { get; set; }
 
         internal ThemeMetaData Source { get; set; }
@@ -211,7 +236,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public bool? AllowProduction { get; set; }
         public string Hash { get;  set; }
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         internal bool PathsAreFixed { get;  set; }
 
         public static implicit operator Dictionary<object, object>(Theme v)
@@ -227,7 +253,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string Name { get; set; }
         public bool IsFile { get; set; }
         string _filePath;
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string FullPath
         {
             get
@@ -244,7 +271,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return RootPath + "//" + VirtualPath;
         }
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }

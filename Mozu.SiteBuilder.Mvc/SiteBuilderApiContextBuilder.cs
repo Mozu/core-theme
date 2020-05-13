@@ -56,6 +56,7 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 sbApiContext = new SiteBuilderApiContext();
             }
+            CleanTokenValueHeaders();
             base.BuildApiContext(sbApiContext, httpContext);
             sbApiContext.IsEditMode = _editModeGetter.IsEditMode();
             Load(sbApiContext);
@@ -75,14 +76,20 @@ namespace Mozu.SiteBuilder.Mvc
             }
             return sbApiContext;
         }
+
+        const string EmptyHeaderTokenValue = "__mzrpt__";
+        //remove the empty token from the headers... sometimes sent from the UI.  for backwards compatibility with older theme script.
+        void CleanTokenValueHeaders()
+        {
+            var headersToRemove = _context.Request.Headers.Where(kvp => kvp.Value.FirstOrDefault() == EmptyHeaderTokenValue).ToList();
+            headersToRemove.ForEach(kvp => _context.Request.Headers.Remove(kvp.Key));
+        }
+
         public void Load(SiteBuilderApiContext apiCtx)
         {
-           
-            if (_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.TENANT, out _))
-            {
-                return;
-            }
-            else if (!_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out _) && !_settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
+           if ( !_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.TENANT, out _)&&
+                    !_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out _) 
+                    && !_settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
             {
 
                 //todo:hyper check rp flag.
@@ -124,6 +131,7 @@ namespace Mozu.SiteBuilder.Mvc
         }
         public void LoadUser(SiteBuilderApiContext apiCtx)
         {
+            
             if (_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.USER_CLAIMS, out _))
             {
                 return;

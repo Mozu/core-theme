@@ -34,6 +34,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.SiteBuilder.Mvc.Middleware;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -90,13 +91,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [SslOnlyActionFilter]
-        async Task<ServiceClientResponse<CustomerAuthTicket>> LoginAndTrack(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
+        async Task<(int Satus, object body)> LoginAndTrack(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
         {
             var response = await loginFunc();
+            object body = null;
             if (response.ResponseMessage.IsSuccessStatusCode)
             {
                 var authTicket = response.ReadAsSync();
+
                 var cust = authTicket.CustomerAccount;
+                body = cust;
                 var profile = new UserProfile()
                 {
                     EmailAddress = cust.EmailAddress,
@@ -119,12 +123,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     _visitPublisher.PublishVisit(_pageContext.Visit);
                 }
             }
+            else
+            {
+                body = response.ResponseMessage;
+                try
+                {
+                    var strCnt = await response.ResponseMessage.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(strCnt))
+                    {
+                        body = JObject.Parse(strCnt);
+                    }
 
-            return response;
+                }
+                catch
+                {
+                }
+            }
+            return  ((int)response.ResponseMessage.StatusCode, body);
         }
 
         async Task<IActionResult> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
         {
+            
             if (
                 HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
                 HasInvalidCharecters(accountInfo.Account?.LastName, "lastName", out ret) ||
@@ -135,11 +155,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return ret;
             }
 
-            var rm = (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo)))
-                .ResponseMessage;
-            if (rm.IsSuccessStatusCode) return Ok();
-            return StatusCode(401, new { message = $"Create account failed. {rm.ReasonPhrase} | Please try again." });
-           // return Forbid($"Create account failed. {rm.ReasonPhrase} | Please try again.");
+            var (status,body) = (await LoginAndTrack(() => _customerAccountWebApiClient.CloneWithoutUserClaims().AddAccountAndLogin(accountInfo)));
+            return StatusCode(status, body);
+
+
         }
 
         bool HasInvalidCharecters(string str, string fieldName, out IActionResult resp)
@@ -152,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return true;
         }
 
-        protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password,string token)
+        protected async Task<(int status, object body)> DoLogin(string email, string password,string token)
         {
             //add token header for arcjs integration.
             var extraHeader = new System.Collections.Specialized.NameValueCollection {["racaptchaToken"] = token};
@@ -292,7 +311,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [AcceptHeader("application/json", false)]
         public async Task<IActionResult> CreateAccount([FromBody]CustomerAccountAndAuthInfo authInfo)
         {
-            return await DoCreateAccount(authInfo);
+            var res =  await DoCreateAccount(authInfo);
+            if (!(res is OkResult))
+            {
+                return  StatusCode(401, new { message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)) }); 
+            }
+
+            return res;
         }
 
         [AcceptVerbs("OPTIONS", "POST")]
@@ -315,7 +340,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!captchaEnabled || secret == null)
             {
                 return Task.FromResult(new CaptchResponse { NoOp = true });
-            }
+            } 
             return _captchaClient.Value.Validate(token, secret, _apiContext.RequestCancellationToken);
         }
 
@@ -396,6 +421,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public DateTime challenge_ts { get; set; }
             public string hostname { get; set; }
             [Newtonsoft.Json.JsonProperty("error-codes")]
+            [System.Text.Json.Serialization.JsonPropertyName("error-codes")]
             public List<string> errorCodes { get; set; }
             public string GetErrorCode()
             {
@@ -435,7 +461,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var res = await DoLogin(email, password, token);
 
-            if (!res.ResponseMessage.IsSuccessStatusCode) return LoginFailed(email);
+            if (res.status >300) return LoginFailed(email);
 
             if (string.IsNullOrEmpty(returnUrl))
             {
@@ -509,14 +535,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var res = await DoLogin(email, password,token);
 
-            if (res.ResponseMessage.IsSuccessStatusCode)
+            if (res.status < 300)
             {
                 return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(email)}.");
             }
             var errorCode = default(string);
-            if ( res.ReadException() is ApiWebClientException ex)
+            if ( res.body is JObject )
             {
-                errorCode = ex.ErrorCode;
+                try
+                {
+                    var ex = ((JObject) res.body).ToObject<ApiWebClientException>();
+                    errorCode = ex.ErrorCode;
+                }
+                catch
+                {
+                }
+
             }
             
             return AjaxLoginFailure(email, errorCode);

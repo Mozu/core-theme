@@ -27,6 +27,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     public interface IRuntimeNavigationNode : INavigationNode
     {
         bool IsHomePage { get; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         IRuntimeNavigationNode Parent { get; set; }
         ICollection<IRuntimeNavigationNode> Items { get;} 
     }

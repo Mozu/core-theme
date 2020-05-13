@@ -29,14 +29,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             this.Value = this;
         }
         private ViewDataDictionary _viewDataDictionary;
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public ViewDataDictionary ViewData
         {
             get => _viewDataDictionary ??= new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
             set => _viewDataDictionary = value;
         }
         public string ViewName { get; set; }
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public HyprView View { get; set; }
 
         IDictionary<string, object> IViewResult.ViewData

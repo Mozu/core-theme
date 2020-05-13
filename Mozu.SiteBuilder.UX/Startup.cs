@@ -54,6 +54,7 @@ namespace Mozu.SiteBuilder.UX
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddTransient<IStartupFilter,SbStartupFilter>()
                 .AddMozuMvc()
                 .AddMozuMapping()
                 .AddSwaggerGenForMozu("Kibo Content Service")
@@ -112,23 +113,25 @@ namespace Mozu.SiteBuilder.UX
                     options.Filters.Add(typeof(HttpResponseExceptionFilter));
                 });
             services.Configure<IISServerOptions>(opt => { opt.AllowSynchronousIO = true; });
+
+            services.AddHttpClient("apilocaltest", c =>
+            {
+                c.MaxResponseContentBufferSize = int.MaxValue;
+                c.Timeout = new TimeSpan(0, 1, 3, 0);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new CaseInsensitivePhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+                FileProvider =
+                    new CaseInsensitivePhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot"))
             });
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(
-            //       Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/resources/cms")),
-            //    RequestPath = "/resources/cms"
-            //});
             var rewriteOptions = new RewriteOptions().Add(UrlRewritingMiddleware.RewriteIncomingUrl);
-
             app.UseMiddleware<RedisHealthCheckMiddleware>()
                 .UseMiddleware<SessionMiddleware>()
                 .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
@@ -137,10 +140,24 @@ namespace Mozu.SiteBuilder.UX
                 .UseMvc(RouteConfig.Register)
                 .UseMiddleware<FourHundredMiddleware>()
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
-                .UseMiddleware<ResponseHeaderAppenderMiddleware>()
-                .UseMiddleware<PageContextCookieMiddleware>();
+               
+                ;
+            //  .UseMiddleware<PageContextCookieMiddleware>();
 
-           
+        }
+        public class SbStartupFilter : IStartupFilter
+        {
+            public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+            {
+                return (app) =>
+                {
+                    app
+                        .UseMiddleware<CaseCookieCleaner>()
+                        .UseMiddleware<ResponseHeaderAppenderMiddleware>()
+                        .UseMiddleware<PageContextCookieMiddleware>();
+                    next(app);
+                };
+            }
         }
     }
 }

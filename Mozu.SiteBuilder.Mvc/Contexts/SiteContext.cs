@@ -432,7 +432,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public Currency CurrencyInfo { get; set; }
 
-        [Newtonsoft.Json.JsonIgnore()]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public NumberFormatInfo NumberFormat { get; set; }
 
         public string SiteSubdirectory

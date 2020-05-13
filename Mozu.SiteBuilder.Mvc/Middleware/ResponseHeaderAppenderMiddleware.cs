@@ -22,26 +22,25 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public  Task Invoke(HttpContext context)
         {
-            await _next.Invoke(context);
-
-            if (context.HasAdditionalResponseHeaders())
+            context.Response.OnStarting(() =>
             {
-                //ILogger logger = null;
-                var additionalHeaders = context.GetAdditionalResponseHeaders();
-                additionalHeaders.ForEach(nvHeader =>
-                    context.Response.Headers.Add(nvHeader.Name.Value, nvHeader.Value.Value));
-                //foreach (var nvHeader in additionalHeaders.Where(nvHeader => !context.Response.Headers.Add(nvHeader.Name, nvHeader.Value)))
-                //{
-                //    if (logger == null)
-                //    {
-                //        var exceptionLogWrapper = context.RequestServices.Resolve<ExceptionContextLogWrapper>();
-                //        logger = exceptionLogWrapper.GetLogger();
-                //    }
-                //    logger.Warn($"unable to write header {nvHeader.Name} {nvHeader.Value}");
-                //}
-            }
+                
+                if (context.HasAdditionalResponseHeaders())
+                {
+                    //ILogger logger = null;
+                    var additionalHeaders = context.GetAdditionalResponseHeaders();
+                    additionalHeaders.ForEach(nvHeader =>
+                        context.Response.Headers.Add(nvHeader.Name.Value, nvHeader.Value.Value));
+                 
+                }
+                return Task.CompletedTask;
+                
+            });
+            return  _next.Invoke(context);
+
+            
         }
     }
 

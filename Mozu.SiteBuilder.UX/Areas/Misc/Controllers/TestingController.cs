@@ -30,6 +30,7 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Headers = Mozu.Core.Api.Contracts.Constants.Headers;
 using Mozu.SiteBuilder.Mvc.Context;
 
+
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class HealthController: ApiControllerBase
@@ -115,11 +116,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public void Api(string url)
         {
             var resource = _config.GetSection("mozu:routes").GetChildren()
-                .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).FirstOrDefault(x => url.IndexOf(x, StringComparison.OrdinalIgnoreCase) == 0);
+                .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).Where(x =>
+                {
+                    var u = new Uri(x);
+                    var idx = u.LocalPath.IndexOf('/', 2);
+                    var test = u.LocalPath.Substring(idx + 1).TrimEnd('/').TrimStart('/');
+                    return url.StartsWith(test, StringComparison.OrdinalIgnoreCase);
 
-            _client ??= _clientFactory.CreateClient();
-            _client.MaxResponseContentBufferSize = int.MaxValue;
-            _client.Timeout = new TimeSpan(0, 1, 3, 0);
+                }).Select(_ =>
+                {
+                    var uri = new Uri(_);
+                    return uri.GetLeftPart(UriPartial.Authority) + '/' +
+                           uri.LocalPath.Split('/')[1];
+                }).FirstOrDefault();
+                
+        
+
+            _client ??= _clientFactory.CreateClient("apilocaltest");
+        
 
             var reqUri = Request.HttpContext.GetRequestUri();
 

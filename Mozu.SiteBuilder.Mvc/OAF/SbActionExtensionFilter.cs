@@ -98,7 +98,8 @@
 
 
 
-//            [JsonIgnore]
+//            [Newtonsoft.Json.JsonIgnore]
+//            [System.Text.Json.Serialization.JsonIgnore]
 //            public new SbExecs exec => (SbExecs)base.exec;
 //        }
 
