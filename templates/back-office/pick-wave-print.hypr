@@ -1,17 +1,21 @@
 ﻿{% extends "back-office/base" %}
 {% block body-content %}
     {% if printPickwave %}
-        <div>{% include "back-office/pick-list" %}</div>
+        <div>{% include "back-office/pick-list-content" shipments=shipments %}</div>
         <br>
     {% endif %}
     {% for shipment in shipments %}
         {% with orders|findwhere('orderNumber', shipment.orderNumber) as order %}
             {% if printPackingSlips %}
-                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment order=order %}</div>
+                <div style="page-break-before: always;">
+                    {% include "back-office/packing-slip-content" with model=shipment order=order %}
+                </div>
                 <br>
             {% endif %}
             {% if printPickSheets %}
-                <div style="page-break-before: always;">{% include "back-office/order-pick-sheet-content" with model=shipment pickwave=model %}</div>
+                <div style="page-break-before: always;">
+                    {% include "back-office/order-pick-sheet-content" with model=shipment pickwave=model order=order %}
+                </div>
                 <br>
             {% endif %}
         {% endwith %}
