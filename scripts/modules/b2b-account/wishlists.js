@@ -409,9 +409,6 @@ define([
             var productPickerView = new ProductPicker({
                 el: self.$el.find('[mz-wishlist-product-picker]'),
                 model: self.model
-                // el: self.$el.find("[mz-modal-product-dialog]"),
-                // model: new ProductModels.Product({}),
-                // messagesEl: self.$el.find("[mz-modal-product-dialog]").find('[data-mz-message-bar]')
             });
 
             productPickerView.render();
