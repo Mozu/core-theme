@@ -146,13 +146,14 @@ define([
                 self.isLoading(false);
                 if (error.items) {
                     var errorMessage = "";
-                    _.each(error.items, function(error){
+                    _.each(error.items, function(error, idx, items){
                         var errorProp = _.find(error.additionalErrorData, function(errorData){
                             return errorData.name === "Property";
                         });
-                        errorMessage += (errorProp.value + ': ' + error.message);
+                        errorMessage += (errorProp.value + ': ' + error.message + (idx === items.length -1 ?  '' : '\r\n'));
                     });
-                    self.messages.reset({ messageType: 'BulkAddToCartErrors', message: errorMessage });
+                    MessageHandler.saveMessage('BulkAddToCartErrors', 'Error', errorMessage);
+                    MessageHandler.showMessage('BulkAddToCartErrors');
                 }
             });
         }
@@ -408,6 +409,9 @@ define([
             var productPickerView = new ProductPicker({
                 el: self.$el.find('[mz-wishlist-product-picker]'),
                 model: self.model
+                // el: self.$el.find("[mz-modal-product-dialog]"),
+                // model: new ProductModels.Product({}),
+                // messagesEl: self.$el.find("[mz-modal-product-dialog]").find('[data-mz-message-bar]')
             });
 
             productPickerView.render();
