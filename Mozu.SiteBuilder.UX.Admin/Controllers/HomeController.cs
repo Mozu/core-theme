@@ -295,7 +295,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 FirstName = userDC.FirstName,
                 LastName = userDC.LastName,
                 Id = _apiContext.UserClaims.UserId,
-                IsFulfillerUser = _apiContext.IsFulfillerUserWithOrderAccess()
+                IsFulfillerUser = _apiContext.IsFulfillerUserWithOrderAccess(),
+                Locations = _apiContext.GetUserLocations()
             };
 
 

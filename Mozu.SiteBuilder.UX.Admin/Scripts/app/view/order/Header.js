@@ -596,6 +596,7 @@ Ext.define('Taco.view.order.Header', {
             filterByCustomerSet: true,
             width: 300,
             emptyText: 'Customer Search',
+            disabled: Taco.user.isFulfillerUser,
             listeners: {
                 select: function (combo, records) {
                     // need to check to see if the custtomer has an email address for the default shipping address.

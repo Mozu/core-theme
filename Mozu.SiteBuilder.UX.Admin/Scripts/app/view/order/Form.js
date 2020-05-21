@@ -264,7 +264,7 @@ Ext.define('Taco.view.order.Form', {
         //If this is legacy order then dont show the shipments,payment and returns tab
         if (this.record.get('isUnified')) {
             //Todo:here we have to switch new or old tabs based on tenant configs
-            if (!isFulfillerUser && this.isEdit()) {
+            if (this.isEdit()) {
                 items.push(Ext.create('Taco.view.order.subform.FulfillmentNew', subformCfg));
             }
         }

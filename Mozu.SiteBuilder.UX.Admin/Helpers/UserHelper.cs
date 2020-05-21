@@ -20,5 +20,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers
             var IsFulfillerUser = _apiContext?.UserClaims?.Bag?.Any(x => x.Key.Equals("FulfillerOnly", StringComparison.OrdinalIgnoreCase) && x.Value.Equals("1")) ?? false;
             return IsFulfillerUser;
         }
+
+        public static List<string> GetUserLocations(this IApiContext _apiContext)
+        {
+            var locations = _apiContext?.UserClaims?.Bag?.Where(x => x.Key.StartsWith("loc|")).Select(y => y.Key.Split('|')[1]).ToList() ?? new List<string>();
+            return locations;
+        }
     }
 }
