@@ -239,7 +239,7 @@
             pageSize: 5,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType + '&pickupCode=' + (me.shipmentRecord.location ? me.shipmentRecord.location.code : ''),
+                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType,
                 reader: {
                     type: 'json',
                     root: 'items',
