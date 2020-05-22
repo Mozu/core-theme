@@ -17,7 +17,7 @@ define(['modules/jquery-mozu', 'configs/visual-search'], function ($, visualSear
                 window.CertonaVisualSearch.automatedTestVisualSearch(visualSearchConfig);
             }
         } catch (ignore) {
-            console.log('Fail on VS Init');
+            window.console.error('Fail on VS Init');
         }
     };
 

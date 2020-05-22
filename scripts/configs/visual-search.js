@@ -116,7 +116,8 @@ var baseConfig = {
             }
         },
         templates: {
-            suggestion: '<a class="tt-suggestion-wrapper tt-suggestion-wrapper-custom" href="/p/[[itemId]]/[[detailUrl]]" data-itemid="[[itemId]]" onmouseover="CertonaVisualSearch.suggestionHover(this)"><div class="tt-suggestion-text tt-suggestion-text-custom">[[name]]</div></a>'
+            suggestion: '<a class="tt-suggestion-wrapper tt-suggestion-wrapper-custom" href="/p/[[itemId]]/[[detailUrl]]" data-itemid="[[itemId]]" onmouseover="CertonaVisualSearch.suggestionHover(this)"><div class="tt-suggestion-text tt-suggestion-text-custom">[[name]]</div></a>',
+            recImage: '<div class="tt-recommendation-image-wrapper tt-recommendation-image-wrapper-custom"><img class="tt-recommendation-image tt-recommendation-image-custom" src="[[imageUrl]]?max=120" alt="[[name]]"></div>',
         }
     };
 

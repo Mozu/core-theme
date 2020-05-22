@@ -501,7 +501,7 @@
     "visualSearchApiKey":"",
     "visualSearchCatalogId":"",
     "visualSearchScheme":"",
-    "visualSearchBaseURL": "https://searchapi-cqa.certonakube.kibo-dev.com",
+    "visualSearchBaseURL": "//search.sandbox.kibocommerce.com",
     "enableRecaptcha": false,
     "recaptchaSiteKey": null,
     "__recaptchaSecrete": null,
