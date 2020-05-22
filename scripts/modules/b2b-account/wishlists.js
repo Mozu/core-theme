@@ -404,6 +404,11 @@ define([
                 self.model.saveWishlist();
             });
 
+            $("#wishlistName").keyup(function () {
+                $(".mz-itemlisting-action").prop('disabled', true); 
+                $(".mz-itemlisting-action").attr('href', '').css({ 'cursor': 'pointer', 'pointer-events': 'none' });
+            });
+
             var wishlistListView = new WishlistListView({
                 el: self.$el.find('.mz-b2b-wishlist-list'),
                 model: self.model
