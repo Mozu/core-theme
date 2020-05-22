@@ -262,4 +262,10 @@ export class Constants {
         data: '0',
         label: 'No Carrier Credentials Selected',
     }
+
+    static ShipmentType = {
+        sth: 'ShipToHome',
+        bopis: 'BOPIS',
+        transfer: 'Transfer'
+    };
 }

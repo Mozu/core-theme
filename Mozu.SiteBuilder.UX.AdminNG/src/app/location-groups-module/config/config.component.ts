@@ -8,16 +8,15 @@ import {
     CarrierSettingsModel,
     CarrierShippingType,
     ShippingMethodMappings,
-    BoxType,
     PackageSettings,
     BPMConfiguration,
     CarrierAccountModel,
     CarrierAccountSetModel,
-    PagniatedNgSelectPageConfiguration,
-    SelectedCarrierAccountModel
+    SelectedCarrierAccountModel,
+    WorkflowProcessModel
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions} from '@shared';
+import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -49,7 +48,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private _progressButtonService: ProgressButtonService,
         private _confirmationDialogService: ConfirmationDialogService,
         private _notificationService: NotificationService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.model = new LocationGroupConfigModel();
@@ -62,6 +61,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.packageSettingUnitTypes = Constants.PackageSettingUnitTypes;
         this.model.uspsCarrierAccountPagination = Constants.UspsCarrierAccountPageConfig;
         this.model.canadaPostCarrierAccountPagination = Constants.CanadaPostCarrierAccountPageConfig;
+        this.model.workflowProcessList = [];
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -110,7 +110,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             canadapostExpress2DayDefault: ['', []],
             canadapostExpress3DayDefault: ['', []],
             canadapostReturnLabelShippingTypes: ['', []],
-           
+
             autoPackingListPopup: ['', []],
             blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
@@ -122,16 +122,20 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             packageSettingsUnitType: ['', []],
 
             bpmConfigurations: new FormArray([]),
-            sthContainerId: ['', []],
-            sthProcessId: ['', []],
-            bopisContainerId: ['', []],
-            bopisProcessId: ['', []]
+            sthWorkflowProcess: ['', []],
+            bopisWorkflowProcess: ['', []],
+            transferWorkflowProcess: ['', []]
         });
 
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
         this.createService.getLocationGroup(locationGroupCode).subscribe(
             (response) => this.getLocationGroupSuccess(response),
             (response) => this.getLocationGroupError(response.error.message)
+        );
+
+        this.configService.getWorkflowProcesses().subscribe(
+            (response) => this.getWorkflowProcessesResponse(response),
+            (response) => this.getWorkflowProcessesError(response.error.message)
         );
 
         this.model.subscriptions.push(
@@ -172,9 +176,24 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
     }
 
+    private getWorkflowProcessesResponse(result: { items: WorkflowProcessModel[]; }) {
+        this._loggerService.info('LocationGroupConfigComponent : getWorkflowProcessesResponse' + JSON.stringify(result));
+        if (result && result.items) {
+            const workflowProcesses: WorkflowProcessModel[] = <WorkflowProcessModel[]>result.items;
+            if (workflowProcesses.length > 0) {
+                this.model.workflowProcessList = workflowProcesses;
+            }
+        }
+    }
+
     private getLocationGroupError(errmsg: string) {
         this._loggerService.info('LocationGroupConfigComponent : getLocationGroupError');
         throw new HttpError(ErrorCode.GetLocationGroupDetailFailed, ErroNotificationType.Toaster);
+    }
+
+    private getWorkflowProcessesError(errmsg: string) {
+        this._loggerService.info('LocationGroupConfigComponent : getWorkflowProcessesError');
+        throw new HttpError(ErrorCode.GetWorkFlowProcessFailed, ErroNotificationType.Toaster);
     }
 
     private addCarriersCheckboxes() {
@@ -216,6 +235,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     markLocationGroupConfigFormDirty() {
         this.model.locationGroupConfigForm.markAsDirty();
+    }
+
+    getBPMName(containerName: string, processId: string) {
+        return `${containerName} -> ${processId}`;
     }
 
     siteListChanged() {
@@ -337,7 +360,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const carrierAccount = this.configService.getCarrierAccount(locationGroupCode, siteId);
         const canadaPostCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.canadaPostCarrierAccountPagination, Constants.LCCarriers.canadapost);
         // join this services result.
-        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount,canadaPostCarrierAccountSets]).subscribe(response => {
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount, canadaPostCarrierAccountSets]).subscribe(response => {
             this._loggerService.info('LocationGroupConfigComponent : forkJoin');
 
             if (response && response[0] && response[0].items) {
@@ -500,14 +523,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     patchBpmConfigurations() {
         var lgConfigModel = this.model.lgConfigModel;
 
-        var sthConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'ShipToHome');
-        var bopisConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === 'BOPIS');
+        var sthConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === Constants.ShipmentType.sth);
+        var bopisConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === Constants.ShipmentType.bopis);
+        var transferConfig = lgConfigModel.bpmConfigurations.filter(config => config.shipmentType === Constants.ShipmentType.transfer);
 
         this.model.locationGroupConfigForm.patchValue({
-            sthContainerId: sthConfig.length > 0 && sthConfig[0].workflowContainerId || '',
-            sthProcessId: sthConfig.length > 0 && sthConfig[0].workflowProcessId || '',
-            bopisContainerId: bopisConfig.length > 0 && bopisConfig[0].workflowContainerId || '',
-            bopisProcessId: bopisConfig.length > 0 && bopisConfig[0].workflowProcessId || ''
+            sthWorkflowProcess: sthConfig.length > 0 && this.getBPMName(sthConfig[0].workflowContainerId, sthConfig[0].workflowProcessId) || '',
+            bopisWorkflowProcess: bopisConfig.length > 0 && this.getBPMName(bopisConfig[0].workflowContainerId, bopisConfig[0].workflowProcessId) || '',
+            transferWorkflowProcess: transferConfig.length > 0 && this.getBPMName(transferConfig[0].workflowContainerId, transferConfig[0].workflowProcessId) || '',
         });
     }
 
@@ -729,8 +752,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         canadapostMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['canadapostExpress3DayDefault']).value;
                         lgConfigModel.carriers.push(canadapostMethod);
                     }
-                    break;        
-               }
+                    break;
+            }
         });
 
         lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
@@ -757,23 +780,45 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
         //BPM Configurations
         var bpmConfigurations: BPMConfiguration[] = [];
-        var sthContainerId = lgconfigForm.get(['sthContainerId']).value;
-        var sthProcessId = lgconfigForm.get(['sthProcessId']).value;
-        var bopisContainerId = lgconfigForm.get(['bopisContainerId']).value;
-        var bopisProcessId = lgconfigForm.get(['bopisProcessId']).value;
 
-        if (sthContainerId !== '' || sthProcessId !== '') {
-            var sthConfig: BPMConfiguration = {
-                shipmentType: 'ShipToHome', workflowContainerId: sthContainerId, workflowProcessId: sthProcessId
-            };
-            bpmConfigurations.push(sthConfig);
+        var sthProcess = lgconfigForm.get(['sthWorkflowProcess']).value;
+        var bopisProcess = lgconfigForm.get(['bopisWorkflowProcess']).value;
+        var transferProcess = lgconfigForm.get(['transferWorkflowProcess']).value;
+
+        if (sthProcess && sthProcess !== '' && sthProcess.includes(' -> ')) {
+            var sthProcessData = sthProcess.split(' -> ');
+            var sthWorkflowProcess = this.model.workflowProcessList.filter(process => process.containerAlias === sthProcessData[0] && process.id === sthProcessData[1]);
+
+            if (sthWorkflowProcess && sthWorkflowProcess.length > 0) {
+                var sthConfig: BPMConfiguration = {
+                    shipmentType: Constants.ShipmentType.sth, workflowContainerId: sthWorkflowProcess[0].containerAlias, workflowProcessId: sthWorkflowProcess[0].id
+                };
+                bpmConfigurations.push(sthConfig);
+            }
         }
 
-        if (bopisContainerId !== '' || bopisProcessId !== '') {
-            var bopisConfig: BPMConfiguration = {
-                shipmentType: 'BOPIS', workflowContainerId: bopisContainerId, workflowProcessId: bopisProcessId
-            };
-            bpmConfigurations.push(bopisConfig);
+        if (bopisProcess && bopisProcess !== '' && bopisProcess.includes(' -> ')) {
+            var bopisProcessData = bopisProcess.split(' -> ');
+            var bopisWorkflowProcess = this.model.workflowProcessList.filter(process => process.containerAlias === bopisProcessData[0] && process.id === bopisProcessData[1]);
+
+            if (bopisWorkflowProcess && bopisWorkflowProcess.length > 0) {
+                var bopisConfig: BPMConfiguration = {
+                    shipmentType: Constants.ShipmentType.bopis, workflowContainerId: bopisWorkflowProcess[0].containerAlias, workflowProcessId: bopisWorkflowProcess[0].id
+                };
+                bpmConfigurations.push(bopisConfig);
+            }
+        }
+
+        if (transferProcess && transferProcess !== '' && transferProcess.includes(' -> ')) {
+            var transferProcessData = transferProcess.split(' -> ');
+            var transferWorkflowProcess = this.model.workflowProcessList.filter(process => process.containerAlias === transferProcessData[0] && process.id === transferProcessData[1]);
+
+            if (transferWorkflowProcess && transferWorkflowProcess.length > 0) {
+                var bopisConfig: BPMConfiguration = {
+                    shipmentType: Constants.ShipmentType.transfer, workflowContainerId: transferWorkflowProcess[0].containerAlias, workflowProcessId: transferWorkflowProcess[0].id
+                };
+                bpmConfigurations.push(bopisConfig);
+            }
         }
 
         lgConfigModel.bpmConfigurations = bpmConfigurations;
@@ -782,7 +827,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
         // USPS Carrier Account
-        const carrierAccountModel= [] as CarrierAccountModel[];
+        const carrierAccountModel = [] as CarrierAccountModel[];
         if (this.model.uspsCarrierAccount && this.model.uspsCarrierAccount.length != 0)
             carrierAccountModel.push({
                 locationGroupCode: this.model.lgConfigModel.locationGroupCode,
@@ -792,7 +837,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     code: this.model.uspsCarrierAccount.data,
                     carrierId: Constants.LCCarriers.usps,
                     name: this.model.uspsCarrierAccount.label,
-                    values:null
+                    values: null
                 }
             })
 
@@ -869,7 +914,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         this._spinner.stop();
                         this._progressButtonService.stop();
                     }
-                    break;        
+                    break;
                 default:
                     isAtLeastOneTypeSelected = true;
                     break;
@@ -999,23 +1044,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             return false;
 
         }
-
-        if (lgModel.bpmConfigurations.length > 0) {
-            if (lgModel && lgModel.bpmConfigurations.map(config => config.workflowContainerId).includes('')) {
-                this._tostrService.showError(ErrorCode.EmptyWorkflowContainerId);
-                this._spinner.stop();
-                this._progressButtonService.stop();
-                return false;
-            }
-
-            if (lgModel && lgModel.bpmConfigurations.map(config => config.workflowProcessId).includes('')) {
-                this._tostrService.showError(ErrorCode.EmptyWorkflowProcessId);
-                this._spinner.stop();
-                this._progressButtonService.stop();
-                return false;
-            }
-        }
-
         return true;
     }
 

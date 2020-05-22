@@ -80,4 +80,13 @@ export class LocationGroupConfigService {
         }
     }
 
+    public getWorkflowProcesses(): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: getWorkflowProcesses');
+        if (environment.isUseMocks) {
+            return of(new HttpResponse({ status: 200 }));
+        } else {
+            return this._http.get(GlobalConstant.webApis.getWorkflowProceses);
+        }
+    }
+
 }
