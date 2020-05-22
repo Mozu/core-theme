@@ -1,10 +1,12 @@
-﻿namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
+﻿using System.Collections.Generic;
+
+namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 {
-    
+
     public class AttributeValue
     {
-        public object Id{ get; set; }
-       
+        public object Id { get; set; }
+
         public string AttributeFQN { get; set; }
 
         public object Value { get; set; }
@@ -19,5 +21,7 @@
         public bool IsOverriden { get; set; }
 
         public int? ValueSequence { get; set; }
+
+        public List<object> MappedGenericValues { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(dest => dest.DynamicExpression, opt => opt.ResolveUsing(c => c.DynamicExpression))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
-                
-                .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
+
+                .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1))
                 .ForMember(dest => dest.ParentName, op => op.ResolveUsing(c => c.ParentCategoryName))
                 .ForMember(dest => dest.ParentCode, op => op.ResolveUsing(c => c.ParentCategoryCode))
 
@@ -30,12 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.MetaTitle, opt => opt.ResolveUsing(c => c.Content?.MetaTagTitle))
                 .ForMember(dest => dest.MetaKeywords, opt => opt.ResolveUsing(c => c.Content?.MetaTagKeywords))
                 .ForMember(dest => dest.Slug, opt => opt.ResolveUsing(c => c.Content?.Slug))
-                .ForMember(dest => dest.CategoryImages, opt => opt.ResolveUsing(c => (c.Content?.CategoryImages?.OrderBy(o=> o.Sequence))))
+                .ForMember(dest => dest.CategoryImages, opt => opt.ResolveUsing(c => (c.Content?.CategoryImages?.OrderBy(o => o.Sequence))))
                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(dc => dc.ChildCount.GetValueOrDefault() == 0))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
+
+                .ForMember(x => x.ShouldSlice, op => op.ResolveUsing(dc => dc.ShouldSlice ?? false))
 
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
@@ -67,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dest => dest.Items, opt => opt.Ignore())
                 .ForMember(dest => dest.leaf, opt => opt.Ignore())
-            
+
                 ;
 
             CreateMap<Category, DC.Category>()
@@ -87,12 +89,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     UpdateBy = x.UpdateBy,
                     UpdateDate = x.UpdateDate
                 }))
-
+                .ForMember(dest => dest.ShouldSlice, opt => opt.ResolveUsing(c => c.ShouldSlice))
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryName, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryCode, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentIsActive, op => op.Ignore())
+                
                 ;
 
             CreateMap<Category, DC.CategoryLocalizedContent>()

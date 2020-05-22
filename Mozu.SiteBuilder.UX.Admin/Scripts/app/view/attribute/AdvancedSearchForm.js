@@ -53,6 +53,9 @@ Ext.define('Taco.view.attribute.AdvancedSearchForm', {
                         }, {
                             name: "Extra",
                             id: "Extra"
+                        }, {
+                            id: "isvaluemappingattribute",
+                            name: "Mapping Attribute"
                         }
                     ]
                 })

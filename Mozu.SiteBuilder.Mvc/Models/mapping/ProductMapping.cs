@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                    {
                        foreach (var prop in product.Properties.Where(x => !x.IsMultiValue.GetValueOrDefault(false) && x.Values != null && x.Values.Count > 0 ))
                        {
-                           dic[prop.AttributeFQN] = prop.Values.First().Value;
+                           dic[prop.AttributeFqn] = prop.Values.First().Value;
                        }
 
                    }

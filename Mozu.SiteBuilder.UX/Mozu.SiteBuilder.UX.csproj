@@ -333,7 +333,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\51Degrees-PremiumV3_2.dat" />
-    <None Include="packages.config" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +439,12 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Abstractions">
+      <HintPath>..\packages\Microsoft.AspNetCore.Mvc.Abstractions\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
   <Import Project="..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
@@ -609,7 +614,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="log4net">
-          <HintPath>..\packages\log4net\lib\net40-full\log4net.dll</HintPath>
+          <HintPath>..\packages\log4net\lib\net45-full\log4net.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1014,7 +1019,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.PricingRuntime.Contracts">
-          <HintPath>..\packages\Mozu.PricingRuntime.Contracts\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.PricingRuntime.Contracts\lib\net461\Mozu.PricingRuntime.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1025,7 +1030,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.ProductAdmin.Contracts">
-          <HintPath>..\packages\Mozu.ProductAdmin.Contracts\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.ProductAdmin.Contracts\lib\net461\Mozu.ProductAdmin.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1036,7 +1041,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.ProductRuntime.Contracts">
-          <HintPath>..\packages\Mozu.ProductRuntime.Contracts\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.ProductRuntime.Contracts\lib\net461\Mozu.ProductRuntime.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1183,8 +1188,11 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
+        <Reference Include="System.Core">
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="Sprache">
-          <HintPath>..\packages\Sprache\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+          <HintPath>..\packages\Sprache\lib\net45\Sprache.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1220,7 +1228,7 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="System.Buffers">
-          <HintPath>..\packages\System.Buffers\lib\netstandard1.1\System.Buffers.dll</HintPath>
+          <HintPath>..\packages\System.Buffers\lib\net461\System.Buffers.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1253,7 +1261,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Memory">
-          <HintPath>..\packages\System.Memory\lib\netstandard1.1\System.Memory.dll</HintPath>
+          <HintPath>..\packages\System.Memory\lib\net461\System.Memory.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1278,7 +1286,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Runtime.CompilerServices.Unsafe">
-          <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+          <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1300,7 +1308,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Threading.Channels">
-          <HintPath>..\packages\System.Threading.Channels\lib\netstandard1.3\System.Threading.Channels.dll</HintPath>
+          <HintPath>..\packages\System.Threading.Channels\lib\net461\System.Threading.Channels.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1311,7 +1319,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Threading.Tasks.Extensions">
-          <HintPath>..\packages\System.Threading.Tasks.Extensions\lib\netstandard1.0\System.Threading.Tasks.Extensions.dll</HintPath>
+          <HintPath>..\packages\System.Threading.Tasks.Extensions\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

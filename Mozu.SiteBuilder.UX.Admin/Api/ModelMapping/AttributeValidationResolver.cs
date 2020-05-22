@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
         {
-            
+
 
             if (source == null)
                 return null;
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     source.Values.ForEach(x =>
                     {
-                        double  dval;
+                        double dval;
                         if (x.Id == null)
                         {
                             if (x.Value is string && double.TryParse((string)x.Value, out dval))
@@ -82,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 x.Id = x.Value;
                             }
                         }
-                        
+
 
                     });
                 }
@@ -95,17 +95,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     source.Values.ForEach(x =>
                     {
-                         if (x.Id == null)
-                         {
-                             x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); ;
-                         }
-                        
+                        if (x.Id == null)
+                        {
+                            x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); ;
+                        }
+
 
                     });
                 }
             }
-           
-            
+
+
 
 
             if (source.DataType == AttributeDataType.None)
@@ -114,25 +114,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     source.DataType = AttributeDataType.String;
                 }
-                if (source.InputType == AttributeInputType.YesNo )
+                if (source.InputType == AttributeInputType.YesNo)
                 {
-                    source.DataType = AttributeDataType.Bool ;
+                    source.DataType = AttributeDataType.Bool;
                 }
             }
-            
+
             destination = new DC.Attribute
             {
-                AdminName = source.AdminName ,
-                AttributeCode =  source.AttributeCode ,
+                AdminName = source.AdminName,
+                AttributeCode = source.AttributeCode,
                 Validation = attributeValidation,
-                VocabularyValues =   Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
+                VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                 AttributeFQN = source.Id,
-                AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata ),
+                AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata),
                 Content = new DC.AttributeLocalizedContent
                 {
                     Description = "",
                     Name = (source.Name ?? "").Trim(),
-   //                 LocaleCode = "??-??",
+                    //                 LocaleCode = "??-??",
                 },
                 InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                 DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
@@ -140,13 +140,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 IsProperty = source.IsProperty,
                 IsExtra = source.IsExtra,
                 IsOption = source.IsOption,
-                SearchSettings =  new DC.AttributeSearchSettings
+                SearchSettings = new DC.AttributeSearchSettings
                 {
                     SearchableInStorefront = source.SearchableInStorefront,
                     SearchDisplayValue = source.SearchDisplayValue,
                     AllowFilteringAndSortingInStorefront = source.AllowFilteringAndSortingInStorefront,
                     SearchableInAdmin = true
-                }
+                },
+                IsValueMappingAttribute = source.IsValueMappingAttribute,
+                ValueMappingAttributeFQN = source.ValueMappingAttributeFQN
             };
 
             return destination;
@@ -180,6 +182,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
         }
 
-        
+
     }
 }

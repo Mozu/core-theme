@@ -117,8 +117,8 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'product.images.useProductImageGroups',
             value: 'Placeholder'
         }, {
-            key: 'product.images.productTypeOption',
-            value: 'Placeholder'
+            key: 'product.images.productSlicing',
+            value: 'Product slicing will enable you to break a product down to its individual variations. For example, a shirt that is offered in 10 colors can now be split up into 10 different products. See Slicing Documentation for more details.'
         }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'

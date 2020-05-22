@@ -34,6 +34,19 @@ Ext.define('Taco.model.Attribute', {
             name: 'isExtra',
             type: 'boolean'
         }, {
+            name: 'isValueMappingAttribute',
+            type: 'boolean'
+        }, {
+            name: 'valueMappingAttributeFQN',
+            type: 'string'
+        }, {
+            name: 'isSeletedChooseMapAttr',
+            type: 'boolean',
+            defaultValue: false,
+            convert: function (v, record) {
+                return record.get("valueMappingAttributeFQN") ? true : false;
+            }
+        }, {
             name: 'adminName',
             type: 'string'
         }, {

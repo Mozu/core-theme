@@ -252,7 +252,18 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                         ProductCode = "abcd"
                     } }},
                     ExpectedFunc = TestDescriptor.CompareLiteral("/p/abcd?vpc=purple-small&test=true")
-                }
+                },
+                    new TestDescriptor
+                    {
+                        Name = "productSliceValue",
+                        Template = @"{% make_url ""product"" product with slicevalue=""purple"" as_parameter %}",
+                        ContainerModifier = containerMods,
+                        Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
+                        {
+                            ProductCode = "abcd"
+                        } }},
+                        ExpectedFunc = TestDescriptor.CompareLiteral("/p/abcd?slicevalue=purple")
+                    }
             };
         }
          

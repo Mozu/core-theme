@@ -83,10 +83,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> ProductDetail(string productCode, string vpc = null)
+        public async Task<HttpResponseMessage> ProductDetail(string productCode, string vpc = null, string sliceValue = null)
         {
             var productResponse = await _productClient.GetProduct(productCode, vpc, 
-                "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
+                "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true, sliceValue:sliceValue).ConfigureAwait(false);
 
             if (!productResponse.ResponseMessage.IsSuccessStatusCode)
             {

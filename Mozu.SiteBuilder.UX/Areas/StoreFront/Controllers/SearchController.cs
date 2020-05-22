@@ -28,7 +28,6 @@ using System.Net.Http.Headers;
 using System.IO;
 using System.Net;
 using System.Linq;
-
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]

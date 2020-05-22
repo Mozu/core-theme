@@ -128,6 +128,9 @@ Ext.define('Taco.view.attribute.Grid', {
                     if (record.get('isProperty')) {
                         ret.push('Property')
                     }
+                    if (record.get('isValueMappingAttribute')) {
+                        ret.push('Mapping Attribute')
+                    }
                     return ret.join(', ');
                 }
             }, {

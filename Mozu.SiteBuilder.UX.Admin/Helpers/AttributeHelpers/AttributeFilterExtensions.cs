@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string ATTRIBUTE_IS_OPTION = "isoption";
         private const string ATTRIBUTE_IS_EXTRA = "isextra";
         private const string ATTRIBUTE_IS_PROPERTY = "isproperty";
+        private const string ATTRIBUTE_ISVALUEMAPPINGATTRIBUTE = "isvaluemappingattribute";
         private const string ATTRIBUTE_INPUT_TYPE = "inputtype";
         private const string ATTRIBUTE_ADMIN_NAME = "adminname";
         private const string ATTRIBUTE_CONTENT_NAME = "content.name";
@@ -69,6 +70,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                         str += $"{ATTRIBUTE_IS_PROPERTY} eq true";
                         seperator = " or ";
                     }
+
+                    if (value.Contains("isvaluemappingattribute"))
+                    {
+                        str += $" {seperator}{ATTRIBUTE_ISVALUEMAPPINGATTRIBUTE} eq true";
+                        seperator = " or ";
+                    }
+                    
 
                     if (value.Contains("extra"))
                     {

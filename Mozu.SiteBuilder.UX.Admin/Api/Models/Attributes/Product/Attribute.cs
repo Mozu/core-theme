@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 {
-    
+
     public class Attribute
     {
         public string Id { get; set; }
@@ -19,10 +19,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 
         public string Name { get; set; }
 
-         [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public AttributeInputType InputType { get; set; }
 
-         [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public AttributeDataType DataType { get; set; }
 
 
@@ -36,7 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
         public bool IsRequired { get; set; }
         public bool IsVisible { get; set; }
 
-        
+        public bool IsValueMappingAttribute { get; set; }
+        public string ValueMappingAttributeFQN { get; set; }
 
         public string DisplayGroup { get; set; }
 
@@ -46,9 +47,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
 
-        
 
- 
+
+
 
         public decimal? Min { get; set; }
 
@@ -76,13 +77,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
     }
 
 
-    
+
     public class AttributeMetadataItem
     {
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Key { get; set; }
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Value { get; set; }
     }
 }

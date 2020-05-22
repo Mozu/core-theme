@@ -413,5 +413,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public string ProductUsage { get; set; }
 
 
+
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SlicingAttributeFQN { get; set; }
+
     }
 }

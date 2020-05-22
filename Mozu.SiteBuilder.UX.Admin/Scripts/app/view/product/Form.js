@@ -197,17 +197,7 @@ Ext.define('Taco.view.product.Form', {
                 );
             }));
         }
-
-        // var productImages = this.record.get('productImages');
-        // var sequence = 0
-        // Ext.Array.each(productImages, function(image, idx){
-        //     if(idx > 0 && image.productImageGroupId !== productImages[idx-1].productImageGroupId){
-        //         sequence = 0;
-        //     }
-        //     image.sequence = sequence;
-        //     sequence++;
-        //     return
-        // });
+       
 
         function compare(a, b){
             return a.sequence - b.sequence;

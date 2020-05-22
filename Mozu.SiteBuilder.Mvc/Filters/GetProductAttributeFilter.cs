@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         {
             var props = typed.Properties ?? new List<ProductProperty>();
             var opts = typed.Options ?? new List<ProductOption>();
-            return ((object)props.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName))) ?? opts.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName));
+            return ((object)props.FirstOrDefault(x => x.AttributeFqn.EqualsIgnoreCase(attrName))) ?? opts.FirstOrDefault(x => x.AttributeFqn.EqualsIgnoreCase(attrName));
         }
 
         private static IEnumerable<object> GetAttributesFrom(object value, IContext context)
