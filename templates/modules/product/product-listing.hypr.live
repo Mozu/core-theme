@@ -2,7 +2,11 @@
     
     <div class="mz-productlisting-image">
         {% block product-image %}
+        {% if model.sliceValue %}
+        <a href="{% make_url "product" model with slicevalue=model.sliceValue as_parameter %}">
+        {% else %}
         <a href="{% make_url "product" model %}">
+        {% endif %}
             {% if model.mainImage.imageUrl %}
                 <img src="{% make_url "image" model.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% endif %} />
             {% else %}
@@ -12,7 +16,11 @@
         {% endblock product-image %}
     </div>
     <div class="mz-productlisting-info">
+        {% if model.sliceValue %}
+        <a class="mz-productlisting-title" href="{% make_url "product" model with slicevalue=model.sliceValue as_parameter %}">{{model.content.productName}}-{{model.sliceValue}}</a>
+        {% else %}
         <a class="mz-productlisting-title" href="{% make_url "product" model %}">{{model.content.productName}}</a>
+        {% endif %}
         {% if model.content.productShortDescription and themeSettings.listProductShortDesc %}
         <p class="mz-productlisting-shortdesc">{{ model.content.productShortDescription|truncatewords(themeSettings.maxProductSummaryWords)|safe }}</p>
         {% endif %}
