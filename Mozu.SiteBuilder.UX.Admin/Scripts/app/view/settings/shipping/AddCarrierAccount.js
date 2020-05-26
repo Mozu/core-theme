@@ -200,11 +200,13 @@
         var settingName = Ext.widget(
             {
                 xtype: 'textfield',
+                allowBlank: false,
+                fieldLabel: 'Easy Post API key',
                 name: 'easypostapikey',
                 margin: "0 0 0 30",
                 width: 300,
-                fieldLabel: 'EasyPost API key'
-
+                inputType: 'password',
+                emptyText: '*****'
             });
         me.items.push(settingName);
 

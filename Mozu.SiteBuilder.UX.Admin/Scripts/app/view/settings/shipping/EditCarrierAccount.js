@@ -242,12 +242,14 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
                 },
                 {
                     xtype: 'textfield',
+                    allowBlank: false,
+                    fieldLabel: 'Easy Post API key',
                     name: 'easypostapikey',
-                    maxWidth: 300,
-                    value: getValues.easypostapikey,
                     margin: "0 0 0 30",
-                    fieldLabel: 'EasyPost API Key'
-
+                    value: getValues.easypostapikey,
+                    maxWidth: 300,
+                    inputType: 'password',
+                    emptyText: '*****'
                 }
             ]
         }
