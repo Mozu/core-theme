@@ -22,6 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
                 .Select(prod => new PR.ProductSortOverride
                 {
                     ProductCode = prod.ProductCode,
+                    SliceValue = prod.SliceValue,
                     IsPinned = prod.IsPinned,
                     Position = prod.Position.GetValueOrDefault(0)
                 });
@@ -31,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
                 .Where(z => z.IsBuried == true)
                 .Select(prod => new PR.ProductSortOverride
                 {
+                    SliceValue = prod.SliceValue,
                     ProductCode = prod.ProductCode,
                     //other values are irrelevant 
                 });
@@ -67,10 +69,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
             var outputList = new List<SB.ProductSortDefinitionPreviewProduct>();
             foreach (var runtimeProduct in runtimeResults)
             {
-                var matchOriginalInput = inputFromUi
-                    .Products
-                    .FirstOrDefault(product => product.ProductCode.Equals(runtimeProduct.ProductCode,
-                        StringComparison.InvariantCultureIgnoreCase));
+                var matchOriginalInput = 
+                    inputFromUi.Products
+                    .FirstOrDefault(product => 
+                        product.UniqueKey.Equals(SB.ProductSortPosition.MakeUniqueKey(runtimeProduct.ProductCode, runtimeProduct.SliceValue),
+                            StringComparison.OrdinalIgnoreCase));
 
                 var newItem = Mapper.Map<PR.Product, SB.ProductSortDefinitionPreviewProduct>(runtimeProduct);
 
@@ -124,14 +127,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
                 throw new Exception("Each ranked/pinned product must have a unique position.");
             }
 
-            var duplicateCodes = sortDefinition.Products
-                .GroupBy(p => p.ProductCode.ToLower())
+            var dups = sortDefinition.Products
+                .GroupBy(p => p.UniqueKey)
                 .Where(g => g.Count() > 1)
-                .Select(code => code.Key);
-
-            if (duplicateCodes.Any())
+                .Select(code => code.Key).ToList();
+            if (dups.Any())
             {
-                throw new Exception("Each product must have a unique product-code.");
+                throw new Exception($"Each product must have a unique product-code: {string.Join(",",dups)}");
             }
 
             if (sortDefinition.Products.Any(p => p.IsPinned == true && p.Position > MAX_PINNED_PRODUCTS))

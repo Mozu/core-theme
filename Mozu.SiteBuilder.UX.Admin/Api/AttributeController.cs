@@ -65,8 +65,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (!string.IsNullOrEmpty(isGrid) && bool.TryParse(isGrid, out isGridOut) && bool.Parse(isGrid))
             {
-                responseFields = 
-                    "items(attributeCode,adminName,attributeFQN,inputType,isProperty,isExtra,isOption,content(name))";
+                responseFields =
+                    "items(attributeCode,adminName,attributeFQN,inputType,isProperty,isExtra,isOption,isValueMappingAttribute,content(name))";
             }
 
             var dcAttributes = await GetAttributesRaw(pagingParams, extFilter, responseFields);

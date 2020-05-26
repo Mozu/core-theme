@@ -130,7 +130,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                 menuAlign: 'tr-br?',
                                 text: 'Reassign Shipment',
                                 itemId: 'reassignShipmentSplitButton',
-                                hidden: me.isShipmentAction() || me.isReassignBlocked(),
+                                hidden: me.isShipmentAction() || me.isReassignBlocked() || me.restrictFulfiller(),
                                 menu: [
                                     {
                                         text: 'Manual Reassign',
@@ -164,7 +164,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                 handler: function () {
 
                                 },
-                                hidden: me.isShipmentAction(),
+                                hidden: me.isShipmentAction() || me.restrictFulfiller(),
                                 menu: me.getShipmentLevelSplitMenu(),
                                 ui: 'action',
                                 scale: 'medium',
@@ -431,6 +431,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
     isReassignBlocked: function () {
         return this.shipmentRecord.shipmentType == "STH" && !Taco.user.taContext.omsEnabled;
+    },
+    restrictFulfiller: function () {
+        if (this.shipmentRecord.shipmentType !== "Transfer" || this.shipmentRecord.workflowState.shipmentState ==  "VALIDATE_INCOMING_TRANSFER")
+            return false;
+
+        var restrictFulfiller = Taco.user.isFulfillerUser && !(Taco.user.locations.length == 0 || Taco.user.locations.includes(this.shipmentRecord.fulfillmentLocationCode))
+
+        return restrictFulfiller;
     },
 
     openShipmentCancellationPopUp: function () {

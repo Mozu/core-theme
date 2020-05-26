@@ -18,8 +18,10 @@ Mozu.ProductRuntime.Contracts
 Mozu.Provisioning.Contracts
 Mozu.Reference.Contracts
 Mozu.ShippingAdmin.Contracts
+Mozu.ShippingRuntime.Contracts
 Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 Mozu.AppDev.Contracts
 protobuf-net
 MongoDB.Driver.GridFS
+nuget Mozu.Core.Extensible.Contracts 

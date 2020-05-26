@@ -30,10 +30,9 @@ export class LocationGroupConfigModel {
     canadaPostCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
     canadaPostCarrierAccountList: SelectedCarrierAccountModel[];
     canadaPostCarrierAccount: any;
-    selectedCanadaPostCarrier: SelectedCarrierAccountModel;
+    selectedCanadaPostCarrier: SelectedCarrierAccountModel;    
+    workflowProcessList: WorkflowProcessModel[]; 
 }
-
-
 
 export interface CarrierModel {
     carrierType: string;
@@ -174,4 +173,11 @@ export interface PagniatedNgSelectPageConfiguration {
 export interface SelectedCarrierAccountModel {
     label: string;
     data: string;
+}
+
+export class WorkflowProcessModel {
+    containerId: string;
+    id: string;
+    version: string;
+    containerAlias: string;
 }

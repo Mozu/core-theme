@@ -244,12 +244,15 @@ Ext.define('Taco.view.order.subform.Detail', {
             orderForm: this
         });
 
+        var attributeGridStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.OrderAttributes',
+            createOnly: true
+        });
+
         this.orderAttrGrid = Ext.create('Taco.view.order.subform.Attributes', {
             ui: "subform-section",
             headerToolbar: true,
-            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.OrderAttributes'
-            }),
+            attributeDefinitionStore: attributeGridStore,
             record: this.record,
             orderForm: this
         });
@@ -260,7 +263,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             header: false,
             record: this.record,
             ui: "form",
-            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
+            attributeDefinitionStore: attributeGridStore
         });
 
         Ext.apply(this, {

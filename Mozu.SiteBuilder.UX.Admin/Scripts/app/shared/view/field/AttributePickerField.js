@@ -17,7 +17,8 @@ Ext.define('Taco.shared.view.field.AttributePickerField', {
     // optionaly exclude attributes by type
     includePropertyAttributes:true,
     includeExtraAttributes:true,
-    includeOptionAttributes:true,
+    includeOptionAttributes: true,
+    includeMappingAttributes: false,
 
     // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
     enableKeyboardPaging: true,
@@ -102,7 +103,7 @@ Ext.define('Taco.shared.view.field.AttributePickerField', {
                 listeners: {
                     beforeload: function (store, operation) {
                         var proxy = store.getProxy();
-                        var type = "";
+                        var type = [];
 
                         if (!proxy.extraParams) {
                             proxy.extraParams = {};
@@ -110,17 +111,22 @@ Ext.define('Taco.shared.view.field.AttributePickerField', {
 
                         // optionaly exclude attributes by type;
                         if (this.includePropertyAttributes) {
-                            type +="Property,";
+                            type.push("Property");
                         }
 
                         if (this.includeExtraAttributes) {
-                            type+= "Extra,";
+                            type.push("Extra");
                         }
                         if (this.includeOptionAttributes) {
-                            type+= "Option";
+                            type.push("Option");
+                        }
+
+                        if (this.includeMappingAttributes) {
+                            type.push("isvaluemappingattribute");
+                          
                         }
                         
-                        proxy.extraParams.type = type;
+                        proxy.extraParams.type = type.join();
                     },
                     scope: this
                 }

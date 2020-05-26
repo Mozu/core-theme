@@ -16,16 +16,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(d => d.IsPinned, opt => opt.Ignore())
                 .ForMember(d => d.IsBuried, opt => opt.Ignore())
                 .ForMember(d => d.NotAvailableInStorefront, opt => opt.Ignore())
-                .ForMember(d => d.Name,
-                    opt => opt.ResolveUsing(r => r.Content != null ? r.Content.ProductName : string.Empty))
-                .ForMember(d => d.Price, opt => opt.ResolveUsing(r => r.Price != null
-                    ? r.Price.CatalogListPrice
-                    : (r.PriceRange != null ? r.PriceRange.Lower?.Price : ((decimal?) null))))
-                .ForMember(d => d.SalePrice, opt => opt.ResolveUsing(r => r.Price != null
-                    ? r.Price.SalePrice
-                    : (r.PriceRange != null ? r.PriceRange.Lower?.SalePrice : ((decimal?) null))))
-                .ForMember(d => d.ImageUrl,
-                    opt => opt.ResolveUsing(r => r.Content?.ProductImages?.FirstOrDefault()?.ImageUrl ?? string.Empty))
+                
+                //.ForMember(d => d.Name,
+                //    opt => opt.ResolveUsing(r => r.Content != null ? r.Content.ProductName : string.Empty))
+                //.ForMember(d => d.Price, opt => opt.ResolveUsing(r => r.Price != null
+                //    ? r.Price.CatalogListPrice
+                //    : (r.PriceRange != null ? r.PriceRange.Lower?.Price : ((decimal?) null))))
+                //.ForMember(d => d.SalePrice, opt => opt.ResolveUsing(r => r.Price != null
+                //    ? r.Price.SalePrice
+                //    : (r.PriceRange != null ? r.PriceRange.Lower?.SalePrice : ((decimal?) null))))
+                //.ForMember(d => d.ImageUrl,
+                //    opt => opt.ResolveUsing(r => r.Content?.ProductImages?.FirstOrDefault()?.ImageUrl ?? string.Empty))
                 ;
 
             CreateMap<ProductSortDefinition, DC.ProductSortDefinition>()
@@ -49,16 +50,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(d => d.property, opt => opt.ResolveUsing(s => s.Field));
 
             CreateMap<ProductSortPosition, DC.ProductSortOverride>()
-                .ForMember(d => d.IsPinned, opt => opt.ResolveUsing(s => s.IsPinned))
-                .ForMember(d => d.Position, opt => opt.ResolveUsing(s => s.Position))
-                .ForMember(d => d.ProductCode, opt => opt.ResolveUsing(s => s.ProductCode));
+                ;
 
             CreateMap<DC.ProductSortOverride, ProductSortPosition>()
-                .ForMember(d => d.IsPinned, opt => opt.ResolveUsing(s => s.IsPinned))
-                .ForMember(d => d.Position, opt => opt.ResolveUsing(s => s.Position))
-                .ForMember(d => d.ProductCode, opt => opt.ResolveUsing(s => s.ProductCode))
                 .ForMember(d => d.IsBuried, opt => opt.ResolveUsing(s => s.Position < 0))
-                .ForMember(d => d.IsRanked, opt => opt.ResolveUsing(s => s.Position >= 1));
+                .ForMember(d => d.IsRanked, opt => opt.ResolveUsing(s => s.Position >= 1))
+                .ForMember(d=>d.UniqueKey, o=>o.Ignore());
         }
     }
 }

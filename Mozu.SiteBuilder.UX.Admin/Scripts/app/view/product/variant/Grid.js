@@ -341,7 +341,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             editor: {
                 xtype: 'currencyfield',
                 currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
+                allowBlank: true,//SUSE-123 : to be able to save blank value.
                 decimalPrecision: 2,
                 showBorder: true,
                 selectOnFocus: true,

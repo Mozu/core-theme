@@ -128,7 +128,7 @@ Ext.define('Taco.view.product.subform.Images', {
             fieldLabel: 'Product Images',
             xtype: 'taco.imagefield',
             width: '100%',
-            margin: '20 0 0 15',
+            margin: '0 0 20 15',
             imageMetadata: product.get('productImages'),
             onValueChanged: function(value) {
                 var defaultImages = product.get('productImages').filter(function(image) {
@@ -179,8 +179,10 @@ Ext.define('Taco.view.product.subform.Images', {
         });
 
         this.useImageGroupsCheckbox = Ext.create('Ext.form.field.Checkbox', {
-            margin: '0 25 0 20',
+            
             boxLabel: 'Assign images to Options',
+            margin: '0 0 20 15px',
+            width: '100%',
             disabled: !this.isGlobal,
             handler: function() {
                 var self = this;
@@ -231,9 +233,8 @@ Ext.define('Taco.view.product.subform.Images', {
         this.productTypeOptions = Ext.widget({
             xtype: 'selectfield',
             fieldLabel: 'Selected option',
-            width: '50%',
             allowBlank: true,
-            margin: '0 0 0 15',
+            margin: '20 0 0 15px',
             queryMode: 'local',
             store: this.product.getOptions(),
             displayField: 'name', 
@@ -289,28 +290,10 @@ Ext.define('Taco.view.product.subform.Images', {
                     return true;
                 },
                 scope: this
-            },
-            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: 'product-type-option',
-                hoverTarget: 'label',
-                messageKey: 'product.images.productTypeOption',
-                offsetLeft: 20,
-                offsetTop: 15
-            })
+            }
         });
 
-        this.productTypeOptionsContainer = Ext.widget({
-            xtype: 'container',
-            width: '100%',
-            layout: 'hbox',
-            margin: '0 0 25 0',
-            items: [
-                this.useImageGroupsCheckbox,
-                this.productTypeOptions
-                
-            ]
-        });
-
+      
         var defaultImages = product.get('productImages').filter(function(image) {
             return image.productImageGroupId === 'default'
         });
@@ -318,7 +301,8 @@ Ext.define('Taco.view.product.subform.Images', {
         me.imagesField.setValue(defaultImages);
 
         this.items = [
-            this.productTypeOptionsContainer,
+            this.useImageGroupsCheckbox,
+            this.productTypeOptions,
             this.addImageGroupButton,
             this.imageGroupGrid,
             this.imagesField
@@ -477,11 +461,12 @@ Ext.define('Taco.view.product.subform.Images', {
     updateFieldVisibility: function() {
         var me = this;
         if (this.product.data) {
-            this.productTypeOptionsContainer.setVisible(
-                this.product.data.productUsage == 'Configurable'
-            );
+
+            var productImageOptionsVisibility = this.product.data.productUsage == 'Configurable';
+
+            this.useImageGroupsCheckbox.setVisible(productImageOptionsVisibility);
         }
-    },
+    }, 
 
     createPopup: function(record, isNew) {
         var me = this;

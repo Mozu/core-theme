@@ -737,6 +737,7 @@
     <Content Include="Scripts\app\model\CarrierAccountList.js" />
     <Content Include="Scripts\app\model\CarrierAccountModel.js" />
     <Content Include="Scripts\app\model\CarrierCredentials.js" />
+    <Content Include="Scripts\app\model\GenericAttribute.js" />
     <Content Include="Scripts\app\model\InventoryExportJob.js" />
     <Content Include="Scripts\app\model\PaymentSettings.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
@@ -872,6 +873,7 @@
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\CustomerSet.js" />
+    <Content Include="Scripts\app\store\GenericAttribute.js" />
     <Content Include="Scripts\app\store\InventoryExportJob.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PaymentGateways.js" />
@@ -947,8 +949,11 @@
     <Content Include="Scripts\app\view\account\Users.js" />
     <Content Include="Scripts\app\view\actionmanagement\Index.js" />
     <Content Include="Scripts\app\view\attribute\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\attribute\ConfirmDisableMappingAttribute.js" />
     <Content Include="Scripts\app\view\attribute\Grid.js" />
     <Content Include="Scripts\app\view\attribute\AttributeValueGrid.js" />
+    <Content Include="Scripts\app\view\attribute\modal\SelectGenericAttributeModal.js" />
+    <Content Include="Scripts\app\view\attribute\GenericAttributeSelect.js" />
     <Content Include="Scripts\app\view\b2baccounts\Create.js" />
     <Content Include="Scripts\app\view\b2baccounts\Edit.js" />
     <Content Include="Scripts\app\view\b2baccounts\Index.js" />
@@ -997,7 +1002,7 @@
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentReassign.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderCancellation.js" />
-	<Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
+    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\TransfersTab.js" />
@@ -6725,6 +6730,7 @@
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.woff2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\app\store\GenericAttribute.json" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.eot" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.ttf" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.woff" />
@@ -8053,7 +8059,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="log4net">
-          <HintPath>..\packages\log4net\lib\net40-full\log4net.dll</HintPath>
+          <HintPath>..\packages\log4net\lib\net45-full\log4net.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8480,7 +8486,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.PricingRuntime.Contracts">
-          <HintPath>..\packages\Mozu.PricingRuntime.Contracts\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.PricingRuntime.Contracts\lib\net461\Mozu.PricingRuntime.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8491,7 +8497,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.ProductAdmin.Contracts">
-          <HintPath>..\packages\Mozu.ProductAdmin.Contracts\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.ProductAdmin.Contracts\lib\net461\Mozu.ProductAdmin.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8502,7 +8508,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.ProductRuntime.Contracts">
-          <HintPath>..\packages\Mozu.ProductRuntime.Contracts\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+          <HintPath>..\packages\Mozu.ProductRuntime.Contracts\lib\net461\Mozu.ProductRuntime.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8660,8 +8666,11 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
+        <Reference Include="System.Core">
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="Sprache">
-          <HintPath>..\packages\Sprache\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
+          <HintPath>..\packages\Sprache\lib\net45\Sprache.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8697,7 +8706,7 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="System.Buffers">
-          <HintPath>..\packages\System.Buffers\lib\netstandard1.1\System.Buffers.dll</HintPath>
+          <HintPath>..\packages\System.Buffers\lib\net461\System.Buffers.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8730,7 +8739,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Memory">
-          <HintPath>..\packages\System.Memory\lib\netstandard1.1\System.Memory.dll</HintPath>
+          <HintPath>..\packages\System.Memory\lib\net461\System.Memory.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8755,7 +8764,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Runtime.CompilerServices.Unsafe">
-          <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+          <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8777,7 +8786,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Threading.Channels">
-          <HintPath>..\packages\System.Threading.Channels\lib\netstandard1.3\System.Threading.Channels.dll</HintPath>
+          <HintPath>..\packages\System.Threading.Channels\lib\net461\System.Threading.Channels.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -8788,7 +8797,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Threading.Tasks.Extensions">
-          <HintPath>..\packages\System.Threading.Tasks.Extensions\lib\netstandard1.0\System.Threading.Tasks.Extensions.dll</HintPath>
+          <HintPath>..\packages\System.Threading.Tasks.Extensions\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

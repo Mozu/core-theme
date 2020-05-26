@@ -63,6 +63,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             return context.ViewContext().LifetimeScope.Resolve<T>();
         }
+        public static IServiceProvider GetServices (this NDjango.Interfaces.IContext context)
+        {
+            return context.ViewContext().LifetimeScope;
+        }
         public static T ResolveOptional<T>(this NDjango.Interfaces.IContext context)
            where T : class
         {

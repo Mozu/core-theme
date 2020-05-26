@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 {
@@ -81,5 +81,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         public string AccessLevel { get; set; }
 
         public bool IsFulfillerUser { get; set; }
+
+        public List<string> Locations { get; set; }
+        
     }
 }

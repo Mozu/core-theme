@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using NDjango.FiltersCS.Compatibility;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -22,7 +23,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             try
             {
-                var controller = context.Resolve<ResourceController>();
+                var fact = ActivatorUtilities.CreateFactory(typeof(ResourceController), Type.EmptyTypes);
+                var controller = (ResourceController)fact(context.ViewContext().LifetimeScope,  arguments: null);
+                controller.ControllerContext.HttpContext = context.HttpContext();
                 //controller.RequestContext = context.ViewContext().RequestMessage.GetRequestContext();
                 //controller.Request = context.ViewContext().RequestMessage;
                 var path = (string)arguments[0].Value;
@@ -38,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 using var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
                 return new[] { WalkResultHelpers.Buffer(sr.ReadToEnd()) };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new[] { WalkResultHelpers.Buffer("error rendering stylesheet") };
             }

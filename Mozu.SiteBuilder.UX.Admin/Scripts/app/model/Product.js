@@ -570,7 +570,12 @@ Ext.define('Taco.model.Product', {
             name: 'dirtyControl',
             type: 'auto',
             useNull: true
-        }
+        },
+        {
+            name: "slicingAttributeFQN",
+            type: "string",
+            useNull: true
+        },
     ],
     loadRuntimeProduct: function(cfg) {
         var me = this,

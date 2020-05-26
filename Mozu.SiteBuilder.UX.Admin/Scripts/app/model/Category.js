@@ -58,6 +58,12 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
+            "name": "shouldSlice",
+            "type": "boolean",
+            "useNull": true,
+            "defaultValue": true,
+        },
+        {
             "name": "parentId",
             "type": "int",
             "useNull": true

@@ -413,32 +413,83 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return MakeProductVariantUrl(obj, config, hostName);
             }
-            Product product = obj as Product;
-            string qs = string.Empty;
-            if (config != null)
+
+            if (config != null && config.ContainsKey("slicevalue"))
             {
-                qs = AddQueryString(config, false);
-            }
-            if (product == null)
-            {
-                string productCode = null;
-                string url = "#";
-                if (obj is string)
-                {
-                    productCode = (string)obj;
-                    url = $"/p/{productCode}";
-                }
-                if (productCode == null)
-                {
-                    url = Resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
-                }
-                return $"{url}{qs}";
+                return MakeSliceUrl();
             }
 
-            var canonicalUrl = _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, 
-                () => Mapper.Map<IDictionary<string, object>>(product), 
-                false, hostName) ?? "/p/" + product.ProductCode;
-            return canonicalUrl + qs;
+            return MakeBasicProductUrl();
+
+            string MakeBasicProductUrl()
+            {
+                var product = obj as Product;
+                var qs = string.Empty;
+                if (config != null)
+                {
+                    qs = AddQueryString(config, false);
+                }
+
+                if (product == null)
+                {
+                    string productCode = null;
+                    var url = "#";
+                    if (obj is string s)
+                    {
+                        productCode = s;
+                        url = $"/p/{productCode}";
+                    }
+
+                    if (productCode == null)
+                    {
+                        url = Resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
+                    }
+
+                    return $"{url}{qs}";
+                }
+
+                var canonicalUrl = _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails,
+                    () => Mapper.Map<IDictionary<string, object>>(product),
+                    false, hostName) ?? "/p/" + product.ProductCode;
+                return canonicalUrl + qs;
+            }
+
+            string MakeSliceUrl()
+            {
+                var product = obj as Product;
+                string url = "#";
+                string sliceValue = config["slicevalue"] as string;
+                string qaSV = $"?slicevalue={sliceValue}";
+                string qs = AddQueryString(config.Where(x => !x.Key.EqualsIgnoreCase("slicevalue"))
+                    .ToDictionary(y => y.Key, z => z.Value), true);
+
+                if (product != null)
+                {
+                    url =
+                        _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, 
+                            () => Mapper.Map<IDictionary<string, object>>(product).ChainSet("slicevalue", sliceValue, true), 
+                            false, hostName);
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        return $"{url}{qaSV}{qs}";
+                    }
+                    url = $"/p/{product.ProductCode}";
+                }
+                else
+                {
+                    string productCode = null;
+                    if (obj is string)
+                    {
+                        productCode = (string)obj;
+                        url = $"/p/{productCode}";
+                    }
+                    if (string.IsNullOrEmpty(productCode))
+                    {
+                        url = Resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
+                    }
+                }
+                return $"{url}{qaSV}{qs}";
+            }
         }
 
         private string MakeProductVariantUrl(object obj, Dictionary<string, object> config, string hostName=null)

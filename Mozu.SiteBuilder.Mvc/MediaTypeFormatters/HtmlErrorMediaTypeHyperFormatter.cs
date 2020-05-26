@@ -17,6 +17,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
@@ -28,19 +29,18 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
         }
-        public IServiceProvider LifetimeScope { get; set; }
-        public HttpContext HttpContext { get; set; }
+ 
 
-        void WriteYSOD(Exception ex, Stream writeStream)
+        void WriteYSOD(HttpContext context, Exception ex, Stream writeStream)
         {
             var stw = new StreamWriter(writeStream);
             stw.Write(ex.ToString());
 
-            var correlationId = LifetimeScope.Resolve<ISiteBuilderApiContext>().TraceContext.CorrelationId;
-            var visist = LifetimeScope.Resolve<PageContext>().Visit;
+            var correlationId = context.RequestServices.Resolve<ISiteBuilderApiContext>().TraceContext.CorrelationId;
+            var visist = context.RequestServices.GetService<PageContext>()?.Visit;
 
             stw.WriteLine("<br>\r\ncorrelationId={0}", correlationId);
-            stw.WriteLine("<br>\r\nvisistId={0}", visist == null ? "n/a": visist.VisitId);
+            stw.WriteLine("<br>\r\nvisistId={0}", visist == null ? "n/a": visist?.VisitId);
 
             stw.Flush();
         }
@@ -59,14 +59,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             var ex = value is SiteBuilderErrorCollection collection ? collection.Exception : null;
 
             var model = ec;
-            var showYSOD = HttpContext.RequestServices.Resolve<ISettings>().AppSettings("YSOD_ERRORS") == "true";
+            var showYSOD = context.HttpContext.RequestServices.Resolve<ISettings>().AppSettings("YSOD_ERRORS") == "true";
             object obj = null;
 
-            if (ex != null && (showYSOD || HttpContext.GetRouteData().Values.TryGetValue("controller", out obj)))
+            if (ex != null && (showYSOD || context.HttpContext.GetRouteData().Values.TryGetValue("controller", out obj)))
             {
                 if (showYSOD || string.Equals("resource", (string)obj, StringComparison.OrdinalIgnoreCase))
                 {
-                    WriteYSOD(ex, context.HttpContext.Response.Body);
+                    WriteYSOD(context.HttpContext,ex, context.HttpContext.Response.Body);
                     tcs.SetResult(true);
                     return tcs.Task;
                 }
@@ -74,20 +74,20 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
             var viewDataDictionary = new ViewDataDictionary<ErrorCollection>(null, model);
 
-            var viewEngine = LifetimeScope.Resolve<HyprViewEngine>();
+            var viewEngine = context.HttpContext.RequestServices.GetService<HyprViewEngine>();
 
             var sw = new StreamWriter(context.HttpContext.Response.Body);
             try
             {
                 var view = viewEngine.FindPageView("error");
 
-                return view.AsyncRender(new HyprViewContext(HttpContext, viewDataDictionary, null), sw).ContinueWith(_ =>
+                return view.AsyncRender(new HyprViewContext(context.HttpContext, viewDataDictionary, null), sw).ContinueWith(_ =>
                 {
                     if (!_.IsFaulted) return _;
 
                     if (ex != null)
                     {
-                        WriteYSOD(ex, context.HttpContext.Response.Body);
+                        WriteYSOD(context.HttpContext,ex, context.HttpContext.Response.Body);
                         tcs.SetResult(true);
                         return tcs.Task;
                     }
@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 if (ex != null)
                 {
-                    WriteYSOD(ex, context.HttpContext.Response.Body);
+                    WriteYSOD(context.HttpContext,ex, context.HttpContext.Response.Body);
                     tcs.SetResult(true);
                     return tcs.Task;
                 }

@@ -10,6 +10,7 @@ Ext.define('Taco.model.AttributeValue', {
         { name: 'value', type: 'any' },
         { name: 'optionalValue', type: 'string' },
         { name: 'isOverriden', type: 'bool' },
-        { name: 'valueSequence', type: 'int', useNull: true }
+        { name: 'valueSequence', type: 'int', useNull: true },
+        { name: 'mappedGenericValues', type: 'auto', defaultValue: []},
     ]
 });

@@ -27,16 +27,16 @@ Ext.define("Taco.view.category.Form", {
         'border-top-width': '0px'
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this,
             categoryType = this.record.get("categoryType"),
             parentDefaultFilters = [{
-                    property:'status',
-                    value:'all'
-                }, {
-                    property:'type',
-                    value:'static'
-                }
+                property: 'status',
+                value: 'all'
+            }, {
+                property: 'type',
+                value: 'static'
+            }
             ];
 
         this.title = this.record.data.name;
@@ -58,56 +58,59 @@ Ext.define("Taco.view.category.Form", {
         this.items = [];
 
         this.dynamicCategoryTypeCombo = Ext.create("Ext.form.field.ComboBox", {
-                xtype: "combobox",
-                name: "dynamicCategoryTypeCombo",
-                itemId: "dynamic-cat-type-combo",
-                fieldLabel: "Product Membership",
-                margin: { left: 20 },
-                flex: 2,
-                valueField: "id",
-                displayField: "name",
-                queryMode: "local",
-                valueNotFoundText: "not found",
-                editable: false,
-                forceSelection: true,
-                initialValue: "Active",
-                disabled: !this.record.phantom,
-                // temporarily disabling the ability to create real time dynamic expressions. service isn't ready yet.
-                //disabled: true,
-                value: (this.record.get("categoryType") == "DynamicPreComputed") ? "yes" : "no",
-                tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
-                    elementId: "dynamic-cat-type-combo",
-                    hoverTarget: 'label',
-                    messageKey: 'category.productMembership',
-                    offsetLeft: 25,
-                    offsetTop: 80
-                }),
-                listeners: {
-                    scope: me,
-                    'change': function(field, newValue) {
-                        var type = "DynamicPreComputed";
-                        if (newValue == "no") {
-                            type = "DynamicRealTime";
-                        }
+            xtype: "combobox",
+            name: "dynamicCategoryTypeCombo",
+            itemId: "dynamic-cat-type-combo",
+            fieldLabel: "Product Membership",
+            margin: { left: 20 },
+            flex: 2,
+            valueField: "id",
+            displayField: "name",
+            queryMode: "local",
+            valueNotFoundText: "not found",
+            editable: false,
+            forceSelection: true,
+            initialValue: "Active",
+            disabled: !this.record.phantom,
+            // temporarily disabling the ability to create real time dynamic expressions. service isn't ready yet.
+            //disabled: true,
+            value: (this.record.get("categoryType") == "DynamicPreComputed") ? "yes" : "no",
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: "dynamic-cat-type-combo",
+                hoverTarget: 'label',
+                messageKey: 'category.productMembership',
+                offsetLeft: 25,
+                offsetTop: 80
+            }),
+            listeners: {
+                scope: me,
+                'change': function (field, newValue) {
+                    var type = "DynamicPreComputed";
 
-                        this.record.set("categoryType", type);
-                        this.expressionTreePanel.setType(type);
+                    this.record.set("categoryType", type);
+                    this.expressionTreePanel.setType(type);
+
+                    //tricker the active field change function to make sure the right options display or don't
+                    var isActiveField = me.getForm().findField('isActive');
+
+                    isActiveField.fireEvent('change', isActiveField, isActiveField.getValue());
+
+                }
+                // need to validate any expressions we have currently since the rules change for each type.
+            },
+            store: Ext.create("Ext.data.Store", {
+                fields: ["id", "name"],
+                data: [
+                    {
+                        name: "Realtime",
+                        id: "no"
+                    }, {
+                        name: "Precomputed",
+                        id: "yes"
                     }
-                    // need to validate any expressions we have currently since the rules change for each type.
-                },
-                store: Ext.create("Ext.data.Store", {
-                    fields: ["id", "name"],
-                    data: [
-                        {
-                            name: "Realtime",
-                            id: "no"
-                        }, {
-                            name: "Precomputed",
-                            id: "yes"
-                        }
-                    ]
-                })
-            }
+                ]
+            })
+        }
         );
 
         me.isActive = Ext.create('Ext.form.field.ComboBox', {
@@ -117,7 +120,7 @@ Ext.define("Taco.view.category.Form", {
             flex: 1,
             editable: false,
             allowBlank: false,
-            disabled: (! me.record.phantom
+            disabled: (!me.record.phantom
                 && me.record.get('parentIsActive') !== null
                 && !me.record.get('parentIsActive')),
             store: [[
@@ -129,9 +132,15 @@ Ext.define("Taco.view.category.Form", {
             ]],
             listeners: {
                 scope: me,
-                change: function(cmp, newValue) {
-                    me.optionsContainer.setVisible(newValue);
-                    //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
+                change: function (cmp, newValue) {
+
+                    if (newValue == null) {
+                        newValue = true;
+                    }
+
+                    me.hiddenOnStorefront.setVisible(newValue);
+
+
                 }
             }
         });
@@ -153,7 +162,7 @@ Ext.define("Taco.view.category.Form", {
             valueField: 'id',
             displayField: 'nameAndCodeAndStatus',
             defaultFilters: parentDefaultFilters,
-            isDirty: function() {
+            isDirty: function () {
                 if (this.initialValue === null && this.value === '') {
                     return false;
                 }
@@ -216,13 +225,26 @@ Ext.define("Taco.view.category.Form", {
             boxLabel: "Hide category on storefront"
         });
 
+
+
+        this.hideSlicingOnCategory = Ext.create('Ext.form.field.Checkbox', {
+            name: "hideSlicing",
+            value: !me.record.get("shouldSlice"),
+            width: "100%",
+            xtype: "checkboxfield",
+            boxLabel: "Hide slicing on category",
+
+
+        });
+
         this.optionsContainer = Ext.create('Ext.form.FieldContainer', {
             xtype: "fieldcontainer",
             layout: "fit",
             width: "100%",
             fieldLabel: "Options",
             items: [
-                me.hiddenOnStorefront
+                me.hiddenOnStorefront,
+                me.hideSlicingOnCategory
             ]
         });
 
@@ -250,7 +272,7 @@ Ext.define("Taco.view.category.Form", {
                             required: true,
                             minLength: 3,
                             listeners: {
-                                change: function(cmp, newValue) {
+                                change: function (cmp, newValue) {
                                     cmp.slugField = cmp.slugField || cmp.up("formform").down("[name=\"slug\"]");
                                     var previous = cmp.slugField.onNameChangeValue,
                                         current = cmp.slugField.getValue();
@@ -308,42 +330,42 @@ Ext.define("Taco.view.category.Form", {
         }
 
         this.items.push({
-                //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.
-                fieldLabel: "Category Image",
-                name: "categoryImages",
-                xtype: "taco.imagefield",
-                width: "100%"
-            }, {
-                name: "slug",
-                fieldLabel: "SEO Friendly URL",
-                width: "100%",
-                xtype: "slugfield"
+            //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.
+            fieldLabel: "Category Image",
+            name: "categoryImages",
+            xtype: "taco.imagefield",
+            width: "100%"
+        }, {
+            name: "slug",
+            fieldLabel: "SEO Friendly URL",
+            width: "100%",
+            xtype: "slugfield"
 
-            }, {
-                name: "pageTitle",
-                fieldLabel: "Page Title",
-                xtype: "textfield",
-                width: "100%",
-                maxLength: 100
-            }, {
-                name: "metaTitle",
-                fieldLabel: "Meta Title",
-                xtype: "textfield",
-                width: "100%",
-                maxLength: 100
-            }, {
-                name: "metaDescription",
-                fieldLabel: "Meta Description",
-                xtype: "textfield",
-                width: "100%",
-                maxLength: 500
-            }, {
-                name: "metaKeywords",
-                xtype: "textfield",
-                width: "100%",
-                fieldLabel: "Keywords",
-                maxLength: 500
-            }
+        }, {
+            name: "pageTitle",
+            fieldLabel: "Page Title",
+            xtype: "textfield",
+            width: "100%",
+            maxLength: 100
+        }, {
+            name: "metaTitle",
+            fieldLabel: "Meta Title",
+            xtype: "textfield",
+            width: "100%",
+            maxLength: 100
+        }, {
+            name: "metaDescription",
+            fieldLabel: "Meta Description",
+            xtype: "textfield",
+            width: "100%",
+            maxLength: 500
+        }, {
+            name: "metaKeywords",
+            xtype: "textfield",
+            width: "100%",
+            fieldLabel: "Keywords",
+            maxLength: 500
+        }
         );
 
         this.items.push(
@@ -353,7 +375,7 @@ Ext.define("Taco.view.category.Form", {
                 title: "Product Ranking Rules",
                 hideSubnavLinks: true,
                 margin: '50 0 0 0',
-                useWhiteContainer:true,
+                useWhiteContainer: true,
                 minHeight: 350,
                 isDisabled: me.record.phantom,
                 contextConfig: {
@@ -400,7 +422,7 @@ Ext.define("Taco.view.category.Form", {
 
         this.callParent(arguments);
 
-        me.mon(me, "boxready", function() {
+        me.mon(me, "boxready", function () {
             var focusField = me.down("#categoryNameField");
             focusField.focus();
         }, {
@@ -410,14 +432,14 @@ Ext.define("Taco.view.category.Form", {
     },
 
     // called by Taco.core.ux.form.Form automatically when the form panel is initializing; can be used to transform the data in the record and populate the fields manually;
-    loadForm: function() {
+    loadForm: function () {
         this.callParent(arguments);
     },
 
-    getCategoryPreviewTotal: function() {
+    getCategoryPreviewTotal: function () {
         var record = this.record;
 
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
             // dont make the preview call unless this is a DynamicRealTime call
             if (record.get('categoryType') !== 'DynamicPreComputed') {
@@ -447,7 +469,7 @@ Ext.define("Taco.view.category.Form", {
         });
     },
 
-    showWarningModal: function(total, cb) {
+    showWarningModal: function (total, cb) {
         Ext.create('Taco.core.ux.window.Modal', {
             autoShow: true,
             closeAction: 'destroy',
@@ -470,7 +492,7 @@ Ext.define("Taco.view.category.Form", {
                 beforesave: function () {
                     cb(true);
                 },
-                beforecancel: function() {
+                beforecancel: function () {
                     cb(false);
                 }
             }
@@ -478,14 +500,14 @@ Ext.define("Taco.view.category.Form", {
     },
 
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
-    beforeAsyncSave: function() {
+    beforeAsyncSave: function () {
         var me = this;
-        return new Promise(function(resolve) {
-            me.updateRecord().then(function() {
-                me.getCategoryPreviewTotal().then(function(total) {
+        return new Promise(function (resolve) {
+            me.updateRecord().then(function () {
+                me.getCategoryPreviewTotal().then(function (total) {
 
                     if (total >= 10000) {
-                        me.showWarningModal(total, function(doSave) {
+                        me.showWarningModal(total, function (doSave) {
                             if (doSave) {
                                 resolve(true);
                             }
@@ -511,15 +533,15 @@ Ext.define("Taco.view.category.Form", {
     },
 
     // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-    updateRecord: function() {
+    updateRecord: function () {
         var me = this;
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var uploadedImages = [],
                 form = me.getForm(),
                 categoryImagesField = form.findField("categoryImages");
 
             if (categoryImagesField) {
-                uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
+                uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function (img) {
                     return img.isUploaded;
                 });
             }
@@ -528,6 +550,7 @@ Ext.define("Taco.view.category.Form", {
             me.record.set("categoryImages", uploadedImages);
 
             me.record.set('parentId', me.parentCategoryPicker.getValue());
+            me.record.set('shouldSlice', !me.hideSlicingOnCategory.getValue());
 
             if (!me.expressionTreePanel) {
                 return resolve()
@@ -539,7 +562,7 @@ Ext.define("Taco.view.category.Form", {
                 type: me.record.get("categoryType")
             };
 
-            me.expressionTreePanel.getExpressionText(expressionData, function(text) {
+            me.expressionTreePanel.getExpressionText(expressionData, function (text) {
                 expressionData.text = text;
                 me.record.set("dynamicExpression", expressionData);
                 resolve();
@@ -549,7 +572,7 @@ Ext.define("Taco.view.category.Form", {
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.
     */
-    onDestroy: function(destroy) {
+    onDestroy: function (destroy) {
         this.callParent(arguments);
     }
 });

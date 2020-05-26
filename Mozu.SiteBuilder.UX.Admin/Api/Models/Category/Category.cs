@@ -86,6 +86,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         [JsonProperty(PropertyName = "lastModifiedDate")]
         public DateTime? UpdateDate { get; set; }
+        
+        public bool ShouldSlice { get; set; }
     }
 
     

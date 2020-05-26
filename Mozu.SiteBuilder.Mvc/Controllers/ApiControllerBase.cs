@@ -47,15 +47,28 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             get => _siteBuilderApiContext ??= LifetimeScope.Resolve<ISiteBuilderApiContext>();
             set => _siteBuilderApiContext = value;
         }
-
-     
+        TaskCompletionSource<bool> _tcs;
         private Task _contextInitTasks;
-
-        public Task ContextInitializationTasks =>
-            _contextInitTasks ??= Task.WhenAll(
-                new CmsHelper(CmsService).InitCmsPageContext(PageContext, SiteContext, SbApiContext,
-                    ExpressionEvaluator, PageRuleVisitor),
-                SiteContext.Init());
+        public Task ContextInitializationTasks
+        {
+            get
+            {
+                if (_contextInitTasks == null)
+                {
+                    if ( PageContext.CmsContext == null)
+                    {
+                        return Task.CompletedTask;
+                    }
+                      //returns a Task that will complete when ALL tasks within it complete.  await Task.WhenAll()
+                      _contextInitTasks =
+                        Task.WhenAll(
+                            new CmsHelper(CmsService)
+                                .InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluator, PageRuleVisitor),
+                            SiteContext.Init());
+                }
+                return _contextInitTasks;
+            }
+        }
 
         public void ResetContextInitilaztionTasks()
         {

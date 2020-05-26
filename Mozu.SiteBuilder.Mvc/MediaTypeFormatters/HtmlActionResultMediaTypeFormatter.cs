@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using MongoDB.Driver.Core.WireProtocol.Messages;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -29,7 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
     public class HtmlActionResultMediaTypeFormatter : OutputFormatter
     {
         private readonly ILogger _logger = LoggingService.LoggerFor<HtmlActionResultMediaTypeFormatter>();
-
+        HtmlErrorMediaTypeHyperFormatter _errorMediaTypeHyperFormatter = new HtmlErrorMediaTypeHyperFormatter();
         public HtmlActionResultMediaTypeFormatter()
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
@@ -84,7 +85,22 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             return typeof(IActionResult).IsAssignableFrom(type);
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public async override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        {
+            try
+            {
+                await WriteResponseBodyAsyncInternal(context);
+            }
+            catch (Exception e)
+            {
+                var ec = new SiteBuilderErrorCollection() {Exception = e};
+                context = new OutputFormatterWriteContext(context.HttpContext, writerFactory:context.WriterFactory, typeof(ErrorCollection), ec);
+                await _errorMediaTypeHyperFormatter.WriteResponseBodyAsync(context);
+            }
+            
+        }
+
+        public  Task WriteResponseBodyAsyncInternal(OutputFormatterWriteContext context)
         {
             if (context.Object is ViewResultBase vrb && vrb is IHyprViewResult)
             {

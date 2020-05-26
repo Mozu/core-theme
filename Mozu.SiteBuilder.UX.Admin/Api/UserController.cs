@@ -156,7 +156,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                        Models.Account.User ContextUser = Mapper.Map<Models.Account.User>(t.Result.ReadAsAsync().Result);
                        ContextUser.BehaviorIds = this._apiContext.UserClaims.BehaviorIds;
                        ContextUser.Id = this._apiContext.UserClaims.UserId;
-                       ContextUser.IsFulfillerUser = this._apiContext.IsFulfillerUserWithOrderAccess(); 
+                       ContextUser.IsFulfillerUser = this._apiContext.IsFulfillerUserWithOrderAccess();
+                       ContextUser.Locations = _apiContext.GetUserLocations();
                        return ContextUser;
                    }
                    return null;

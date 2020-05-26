@@ -21,6 +21,7 @@ using Constants = Mozu.ShippingAdmin.Contracts.Constants;
 using Mozu.Core.Exceptions;
 using System.Net;
 using System.Net.Http;
+using Mozu.ProductAdmin.Contracts.Clients;
 using DC = Mozu.SiteSettings.Order.Contracts;
 using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 
@@ -37,10 +38,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
         private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
-
+        private readonly ISearchWebApiClient _searchWebApiClient;
         public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient, IFulfillmentSettingsWebApiClient fulfillmentSettingsWebApiClient, IReturnSettingsWebApiClient returnSettingsWebApiClient,
             IShippingSettingsWebApiClient shippingSettingsWebApiClient,
-            IFulfillmentProxyWebApiClient fulfillmentProxyClient)
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient, ISearchWebApiClient searchWebApiClient)
         {
             _wrapper = wrapper;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
@@ -50,6 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
             _fulfillmentProxyClient = fulfillmentProxyClient;
+            _searchWebApiClient = searchWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -63,6 +65,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var channels = channelsTask.Result.ReadAsSync().Items;
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
+
+
+            settings.SliceSearchByDefault = await GetSliceSearchSettings();
 
             return List2(settings);
         }
@@ -118,6 +123,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             await SaveEmailTypes(settingsToSave.EmailTypes);
 
+            await SaveSliceSearchSettings(settingsToSave.SliceSearchByDefault);
             return Single2((await GetSettings()).Items.First());
         }
 
@@ -346,6 +352,68 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 prop.SetValue(existing.SupressedEmailTransactions, !update.Enabled.GetValueOrDefault(false));
                 prop.SetValue(existing.EmailTransactionsOnlyOnRequest, update.OnlyOnApiRequest.GetValueOrDefault(false));
             }
+        }
+
+
+        private async Task<bool> GetSliceSearchSettings()
+        {
+            var searchsettings = await (await _searchWebApiClient.GetSettings()).ReadAsAsync();
+
+            if (searchsettings?.SiteSearchSettings == null)
+            {
+                return false;
+            }
+
+            var shouldSlice = searchsettings.SiteSearchSettings.Any(sss => sss.SliceSearchByDefault);
+
+            return shouldSlice;
+        }
+
+
+        private async Task SaveSliceSearchSettings( bool? newValue)
+        {
+            var searchsettings = await (await _searchWebApiClient.GetSettings()).ReadAsAsync();
+
+            var previous = searchsettings?.SiteSearchSettings?.Any(sss => sss.SliceSearchByDefault) ?? false;
+
+            //don't save if they havent changed
+            //coalesce null to false
+            if (previous == (newValue ?? false))
+            {
+                return;
+            }
+
+           
+
+            if (newValue ?? false)
+            {
+                if (searchsettings.SiteSearchSettings == null)
+                {
+                    searchsettings.SiteSearchSettings = new List<ProductAdmin.Contracts.SiteSearchSettings>();
+                }
+                if (!searchsettings.SiteSearchSettings.Any())
+                {
+                    searchsettings.SiteSearchSettings.Add(new ProductAdmin.Contracts.SiteSearchSettings() { SliceSearchByDefault = true });
+                }
+                else
+                {
+                    foreach (var setting in searchsettings.SiteSearchSettings)
+                    {
+                        setting.SliceSearchByDefault = true;
+                    }
+                }
+
+            }
+            else
+            {
+                foreach (var setting in searchsettings.SiteSearchSettings)
+                {
+                    setting.SliceSearchByDefault = false;
+                }
+            }
+
+
+            await _searchWebApiClient.UpdateSettings(searchsettings);
         }
     }
 }

@@ -19,6 +19,7 @@ export interface CtUser {
     lastName: string;
     activity: Activity;
     isFulfillerUser: boolean;
+    locations: string[];
 }
 
 export interface AssignedInScope {

@@ -115,12 +115,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 ))
                 .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForLive))
                 .ForMember(m => m.EnforceSitewideSSL, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.EnforceSitewideSSL))
-                .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending));
+                .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending))
+                .ForMember(x => x.SliceSearchByDefault, opt => opt.Ignore());
             CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
                 .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
                 .ForMember(x => x.EnforceSitewideSSL, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.EnforceSitewideSSL))
-                .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
-
+                .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.MapFrom((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending))
+                .ForMember(x => x.SliceSearchByDefault, opt => opt.Ignore());
             CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.MapFrom((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
                  .ForMember((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL, op => op.MapFrom((ViewModeToggles vm) => vm.EnforceSitewideSSL))

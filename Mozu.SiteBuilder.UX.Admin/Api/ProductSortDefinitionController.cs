@@ -172,9 +172,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var runtimeSolrResultsRaw = (await client.SearchWithDefinition(
                 runtimeSortDef,
-                filter: $"categories.categoryId req {inputSortDefinition?.CategoryId}",
+                filter: $"categoryId req {inputSortDefinition?.CategoryId}",
                 pageSize: pageSize,
-                startIndex: start)).ReadAsAsync().Result;
+                startIndex: start,
+                responseFields:"items(productCode,content(productName,productImages),"+
+                               "options,productType,price,priceRange,sliceValue,slicingAttributeFQN)"
+                )).ReadAsAsync().Result;
 
             var returnResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(runtimeSolrResultsRaw.Items, inputSortDefinition, runtimeSortDef);
 
@@ -184,7 +187,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(returnResults, returnCount);
         }
-
     }
 
     /// <summary>

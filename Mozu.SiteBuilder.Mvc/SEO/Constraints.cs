@@ -401,6 +401,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                         //current ancenstor doesnt have a parent :(  loozer
                         matchedCat = null;
                         break;
+
                     }
                     slug = Convert.ToString(tmp);
 

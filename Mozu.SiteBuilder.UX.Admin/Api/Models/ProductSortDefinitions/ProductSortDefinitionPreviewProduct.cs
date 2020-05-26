@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Mozu.SiteBuilder.Mvc.Extensions;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions
 {
@@ -15,6 +16,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions
 
         public bool? NotAvailableInStorefront{ get; set; }
 
-        public string ImageUrl { get; set; }
+        public string UniqueKey =>
+            ProductCode +
+            (SliceValue.IsNullOrEmpty()
+                ? string.Empty
+                : $"~{SliceValue}");
+
+        //public string ImageUrl { get; set; }
     }
 }

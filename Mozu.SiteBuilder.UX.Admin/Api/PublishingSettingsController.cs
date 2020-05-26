@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 _log.Info("Caught error changing publishing preferences, attempting to publish first..");
                 var masterCatPubClient = _publishingClient.CloneWithApiContext(ctx => { ctx.MasterCatalogId = args.MasterCatalogId; });
-                var publishResponse = await masterCatPubClient.PublishDrafts(ALL_PRODUCTS_SCOPE, TargetContextLevelType.MasterCatalog);
+                var publishResponse = await masterCatPubClient.PublishDrafts(ALL_PRODUCTS_SCOPE, TargetContextLevelType.MasterCatalog.ToString());
                 if (!publishResponse.HasException && publishResponse.ResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
                     _log.Info("Published successfully.");
                 else

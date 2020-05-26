@@ -456,7 +456,7 @@
             {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
-                hidden: me.isShipmentAction(),
+                hidden: me.isShipmentAction() || me.restrictFulfiller(),
                 menuItems: me.getShipmentLevelSplitMenu()
             }
         ];
@@ -472,6 +472,15 @@
 
     isReassignBlocked: function () {
         return this.shipmentRecord.shipmentType == "STH" && !Taco.user.taContext.omsEnabled;
+    },
+
+    restrictFulfiller: function () {
+        if (this.shipmentRecord.shipmentType !== "Transfer" || this.shipmentRecord.workflowState.shipmentState == "VALIDATE_INCOMING_TRANSFER")
+            return false;
+
+        var restrictFulfiller = Taco.user.isFulfillerUser && !(Taco.user.locations.length == 0 || Taco.user.locations.includes(this.shipmentRecord.fulfillmentLocationCode))
+
+        return restrictFulfiller;
     },
 
     getShipmentLevelSplitMenu: function () {

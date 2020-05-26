@@ -184,8 +184,7 @@
             "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
             "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
             "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave",
-            "EmptyWorkflowContainerId": "Please enter workflow container Id",
-            "EmptyWorkflowProcessId": "Please enter workflow process Id"
+            "GetWorkFlowProcessFailed": "Error occured while fetching workflow processes"
           },
             "Warning": {},
             "Information": {},
@@ -408,11 +407,10 @@
         "shiptoHome": "ShiptoHome",
         "bopis": "BOPIS",
         "blockPartialCancel": "Do not allow partial rejection from Customer Pickup step",
-        "unitType": "Unit Type",
-        "bpmConfigurationContainerId": "Workflow Container Id*",
-        "bpmConfigurationProcessId": "Workflow Process Id*",
+        "unitType": "Unit Type",        
         "sthShipment": "Ship to Home",
         "bopisShipment": "BOPIS",
+        "transferShipment": "Transfer",
         "uspsAccountLabel": "Select USPS Account",
         "canadaPostAccountLabel": "Select Canada Post Account"
       },

@@ -23,16 +23,4 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     }
 
 
-  //  
-   
-    ////public class ProductPropertyValue
-    ////{
-	////	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    ////    public object Value { get; set; }
-
-	////	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    ////    public string LocalizedValue { get; set; }
-
-        
-    ////}
 }

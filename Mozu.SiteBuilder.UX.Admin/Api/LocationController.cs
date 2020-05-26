@@ -16,6 +16,8 @@ using DC = Mozu.Location.Contracts;
 using System.Linq;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Kibo.Fulfillment.Contracts.Model;
+using Mozu.CommerceRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -26,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IReferenceDataWebApiClient _referenceDataWebApi;
         private readonly ILocationGroupWebApiClient _locationGroupWebApiClient;
         private readonly ILocationGroupConfigurationWebApiClient _locationGroupConfigurationWebApiClient;
+        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private readonly IApiContext _apiContext;
 
         /// <summary>
@@ -35,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IReferenceDataWebApiClient referenceDataWebApi,
             ILocationGroupWebApiClient locationGroupWebApiClient,
             ILocationGroupConfigurationWebApiClient locationGroupConfigurationWebApiClient,
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient,
             IApiContext apiContext)
         {
             _locationWebApiClient = locationWebApiClient;
@@ -42,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _locationGroupWebApiClient = locationGroupWebApiClient;
             _locationGroupConfigurationWebApiClient = locationGroupConfigurationWebApiClient;
             _apiContext = apiContext;
+            _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         [HttpGetRoute(UriTemplate = "{locationCode}/enable")]
@@ -311,6 +316,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(resp);
         }
 
+        [HttpGetRoute(UriTemplate = "group/configuration/workflow-processes")]
+        public async Task<Response<List<ResourceOfWorkflowProcess>>> GetWorkflowProcesses()
+        {
+            var processes = (await _fulfillmentProxyClient.GetWorkflowProcesses()).ReadAsSync();
+            var data = ExtractResources(processes);
+            return Single2(data);
+        }
+
         [HttpPutRoute(UriTemplate = "group/configuration/{groupCode}/{siteId}")]
         public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]string groupCode, [FromUri]int siteId, DC.LocationGroupConfiguration config)
         {
@@ -339,6 +352,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Sunday = new DC.Hours()
                 };
             }
+        }
+
+        private List<ResourceOfWorkflowProcess> ExtractResources(ResourcesOfResourceOfWorkflowProcess resources)
+        {
+            var processes = resources.Embedded != null ? resources.Embedded["processes"] : new List<ResourceOfWorkflowProcess>();
+
+            return processes.Select(res => res).ToList();
         }
     }
 }

@@ -379,8 +379,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
-
+        
         public CheckoutSettings CheckoutSetting { get; set; }
+
+        [DataMember]
+        public bool? SliceSearchByDefault { get; set; }
     }
 
     public class ViewModeToggles

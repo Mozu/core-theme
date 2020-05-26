@@ -138,10 +138,11 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
         private static void RewriteCurrentRequest(HttpContext context, string destination)
         {
             context.Items[IsSeoRewrite] = true;
-            //var uri = new Uri("http://localhost/" + destination);
+            var uri = new Uri("http://localhost/" + destination.TrimStart('/'));
 
             // set new uri and clear out the old request context, which was built off of that old uri
-            context.Request.Path = destination;
+            context.Request.Path = uri.LocalPath;
+            context.Request.QueryString = new QueryString(uri.Query);
             context.Items[MS_HTTP_RoutingContextKey] = null;
         }
     }

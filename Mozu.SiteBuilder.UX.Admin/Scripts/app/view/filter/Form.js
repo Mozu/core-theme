@@ -229,12 +229,15 @@ Ext.define('Taco.view.filter.Form', {
 
         var isAttributeProperty = this.isAttributeProperty(this.leftField.getValue());
 
+        var isDynamicRealTime = this.getType() === "DynamicRealTime";
+
         this.attributePickerField = Ext.create('Taco.shared.view.field.AttributePickerField', {
             hidden: !isAttributeProperty,
             disabled: !isAttributeProperty,
             includePropertyAttributes: true,
             includeExtraAttributes: false,
             includeOptionAttributes: false,
+            includeMappingAttributes: isDynamicRealTime,
             allowBlank: false,
             value: this.getAttributeId(this.record.get("left")),
             fieldLabel: "Attribute"
