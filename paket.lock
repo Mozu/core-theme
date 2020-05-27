@@ -223,7 +223,7 @@ NUGET
       Microsoft.AspNetCore.Mvc (>= 2.2)
       Mozu.Core.Extensible.Contracts (>= 1.1801.1)
       Mozu.Core.Prime (>= 1.1903.6)
-    Mozu.ProductAdmin.Contracts (1.2021.4)
+    Mozu.ProductAdmin.Contracts (1.2021.6)
       Microsoft.AspNetCore.Mvc (>= 2.2)
       Mozu.Core.Extensible.Contracts (>= 1.1801.1)
       Mozu.Core.Prime (>= 1.1903.6)
