@@ -89,12 +89,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
         }
 
-        public override Task RouteAsync(RouteContext context)
+        //expensive.... leaving out
+        /*public override Task RouteAsync(RouteContext context)
         {
+            
             RewriteRouteData(context, context.RouteData.Values);
 
             return base.RouteAsync(context);
-        }
+        }*/
 
         /// <summary>
         /// Applies any route mappings that are attached to this route to the provided set of route data

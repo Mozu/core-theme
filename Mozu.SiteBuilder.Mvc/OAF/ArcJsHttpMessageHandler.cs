@@ -22,6 +22,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Text.Json;
+using Newtonsoft.Json;
+//using System.Text.Json;
+using Newtonsoft.Json.Linq;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -35,8 +39,12 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         Task IRouter.RouteAsync(RouteContext context)
         {
-            var handler = context.HttpContext.RequestServices.GetService<IArcJSHttpHandlerRunner>();
-            return handler.RouteAsync(context, FunctionId);
+            context.Handler = httpContext =>
+            {
+                var handler = context.HttpContext.RequestServices.GetService<IArcJSHttpHandlerRunner>();
+                return handler.RouteAsync(context, FunctionId);
+            };
+            return Task.CompletedTask;
         }
 
        
@@ -120,8 +128,14 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 return;
             }
             var ctx = ApiActionExtensionFilterContextBuilder.Build(context, functionId);
+            
             await this.RunFunctions(ctx, new List<CustomFunctionBase> { fn }, new FunctionCallbackhandler(context,functionId)).ConfigureAwait(false);
-            var res = ctx.ActionContext.Result as ObjectResult;
+            var res = ctx.ActionContext.Result ;//as ObjectResult;
+            if (res == null)
+            {
+                context.HttpContext.Response.StatusCode = 418;
+                return;
+            }
             await res.ExecuteResultAsync(ctx.ActionContext);
         }
 
@@ -242,7 +256,26 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             var ac = new Microsoft.AspNetCore.Mvc.ActionContext() { HttpContext = reouteContext.HttpContext, ActionDescriptor = new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor(), RouteData = new RouteData() };
             var aec = new ActionExecutingContext(ac, new List<IFilterMetadata>(), new Dictionary<string, object>(), reouteContext);
 
-            return new ApiActionExtensionFilterContext(null, aec, null);
+            return new ApiActionExtensionFilterContext(null, aec, null, (ctx =>
+            {
+                var req = ctx.ActionContext.HttpContext.Request;
+                if (req.ContentLength.HasValue && req.ContentLength.Value >0 && req.Body.CanRead)
+                {
+                    var sr = new StreamReader(req.Body);
+                    if (req.ContentType?.Contains("json") == true)
+                    {
+                        var  jtr = new JsonTextReader(sr);
+                        return JsonSerializer.CreateDefault().Deserialize(jtr);
+                    }
+                    else
+                    {
+                        return sr.ReadToEnd();
+                    }
+                    
+                }
+
+                return null;
+            }));
         }
     }
     public class SbActionExtensionFilterAttribute : ActionExtensionFilterAttribute
@@ -351,54 +384,8 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 InnerStream.Write(buffer, offset, count);
             }
         }
-        public class MyJsonConverter : System.Text.Json.Serialization.JsonConverter<object>
-        {
-            public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
+   
 
-            public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
-            {
-                try
-                {
-                    System.Text.Json.JsonSerializer.Serialize(writer, value);
-                }
-                catch (Exception e)
-                {
-                    int f = 0;
-                }
-                
-            }
-        }
-        public class JObjectTypeConverter : System.Text.Json.Serialization.JsonConverter<Newtonsoft.Json.Linq.JObject>
-        {
-            public override Newtonsoft.Json.Linq.JObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                var temp = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
-                return Newtonsoft.Json.Linq.JObject.Parse(temp.GetRawText());
-            }
-
-            public override void Write(Utf8JsonWriter writer, Newtonsoft.Json.Linq.JObject value, JsonSerializerOptions options)
-            {
-                var temp = JsonSerializer.Deserialize<JsonElement>(value.ToString());
-                JsonSerializer.Serialize<JsonElement>(writer, temp, options);
-            }
-        }
-        public class JArrayTypeConverter : System.Text.Json.Serialization.JsonConverter<Newtonsoft.Json.Linq.JArray>
-        {
-            public override Newtonsoft.Json.Linq.JArray Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                var temp = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
-                return Newtonsoft.Json.Linq.JArray.Parse(temp.GetRawText());
-            }
-
-            public override void Write(Utf8JsonWriter writer, Newtonsoft.Json.Linq.JArray value, JsonSerializerOptions options)
-            {
-                var temp = JsonSerializer.Deserialize<JsonElement>(value.ToString());
-                JsonSerializer.Serialize<JsonElement>(writer, temp, options);
-            }
-        }
         public static void InitSBActionContext(ApiActionExtensionFilterContext actionContext)
         {
             var services = actionContext.ActionContext.HttpContext.RequestServices;

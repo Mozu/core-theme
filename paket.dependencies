@@ -46,7 +46,7 @@ nuget Mozu.Location.Contracts 1.2016.0-ngshotContracts-23
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
 nuget Mozu.PricingRuntime.Contracts 1.2021.4
-nuget Mozu.ProductAdmin.Contracts 1.2021.6
+nuget Mozu.ProductAdmin.Contracts 1.2021.4
 nuget Mozu.ProductRuntime.Contracts 1.2021.4
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20

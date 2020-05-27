@@ -26,8 +26,9 @@ ARG BUILD_VER=0.0.0-alphagit
 ENV BUILD_VER=$BUILD_VER
 COPY . .
 RUN dotnet build /p:Version=${BUILD_VER}   -c Release && \
-	dotnet publish /src/Mozu.SiteBuilder.UX/Mozu.SiteBuilder.UX.csproj -c Release -o /app --no-build --no-restore &&\
-    cd Mozu.CoreTheme &&\
+	dotnet publish /src/Mozu.SiteBuilder.UX/Mozu.SiteBuilder.UX.csproj -c Release -o /app --no-build --no-restore
+RUN dotnet test /src/Mozu.SiteBuilder.UnitTests/Mozu.SiteBuilder.UnitTests.csproj -r /buildoutput/testoutput/UnitTests -l kibo-junit --no-build -c Release --collect:"XPlat Code Coverage" || true 	
+RUN cd Mozu.CoreTheme &&\
     npm i &&\
     npm i grunt-cli -g&&\
     grunt build-production &&\
@@ -38,11 +39,12 @@ FROM base AS final
 WORKDIR /approot/sb/ux
 RUN mkdir -p  /buildoutput/testoutput/ &&\
     mkdir -p /approot/sb/ux &&\
-    mkdir -p /approot/Mozu.CoreTheme &&\
-    echo '<?xml version="1.0" encoding="UTF-8"?><testsuites><testsuite name="src/test/php/Fake" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.011388"><testcase name="SuperSuperFakeTestSuperFakeyFake" class="FakeyFakeTestThatIsFake" classname="FakeyFakeTestThatIsFake" file="/var/www/html/src/test/php/Fake/FakeyFakeTestThatIsFake.php" line="39" assertions="1" time="0.007877"/></testsuite></testsuites>' >  /buildoutput/testoutput/testresults.xml
+    mkdir -p /approot/Mozu.CoreTheme 
+  
 COPY --from=build /app /approot/sb/ux
 COPY --from=build /src/Mozu.CoreTheme /approot/Mozu.CoreTheme
 COPY --from=build /src/Mozu.SiteBuilder.UX/BuiltinScripts /approot/sb/ux/BuiltinScripts
+COPY --from=build /buildoutput /buildoutput
 
 ENTRYPOINT ["dotnet"]
 CMD [ "Mozu.SiteBuilder.UX.dll"]

@@ -84,6 +84,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         public void Configure(IServiceCollection configure)
         {
+            configure.AddCoreExpressionEvaluation();
             configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 

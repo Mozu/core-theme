@@ -20,7 +20,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "http_proxy2":"http://localhost:8866"
+        "http_proxy":"http://localhost:8866"
       },
       "applicationUrl": "http://localhost:57521/"
     }

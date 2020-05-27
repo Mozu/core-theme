@@ -15,6 +15,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Microsoft.Extensions.Primitives;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -134,20 +136,38 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 httpRouteData.Values["categoryId"] = CategoryId = tempInt;
             }
-            if (httpRouteData.Values.TryGetValue("sortBy", out var temp) && !string.IsNullOrWhiteSpace(temp as string))
+            if (httpRouteData.Values.TryGetValue("sortBy", out var temp) && IsNonEmptyString(temp))
             {
-                SortBy = (string)temp;
+                SortBy = temp.ToString();
             }
-            if (httpRouteData.Values.TryGetValue("inStockLocation", out temp) && !string.IsNullOrWhiteSpace(temp as string))
+            if (httpRouteData.Values.TryGetValue("inStockLocation", out temp) && IsNonEmptyString(temp))
             {
-                InStockLocation = (string)temp;
+                InStockLocation = temp.ToString();
             }
-            if (httpRouteData.Values.TryGetValue("query", out temp) && !string.IsNullOrWhiteSpace(temp as string))
+            if (httpRouteData.Values.TryGetValue("query", out temp) && IsNonEmptyString(temp))
             {
-                Query = (string)temp;
+                Query = temp.ToString();
             }
         }
 
+        static bool IsNonEmptyString(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+            if (o is string)
+            {
+                return !string.IsNullOrEmpty((string) o);
+            }
+
+            if (o is StringValues)
+            {
+                return !StringValues.IsNullOrEmpty((StringValues) o);
+            }
+
+            return false;
+        }
         internal void InitRouteData(IDictionary<string, object> httpRouteData)
         {
             httpRouteData[ROUTE_DATA_KEY] = this;

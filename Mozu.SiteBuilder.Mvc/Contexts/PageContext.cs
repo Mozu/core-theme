@@ -267,7 +267,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             IsSecure = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, _context);
             Now = apiContext.PreviewDate.GetValueOrDefault(DateTime.UtcNow);
             Url = requestURLGetter.GetRequestUrl();
-
+            Search = SearchContext.Get(_context.Request);
             Sorting = SortingParameters.Create(Search);
             Pagination = PagingParameters.Create(Search);
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
