@@ -402,12 +402,21 @@ define([
             var self = this;
             $('#wishlistName').focusout(function () {
                 self.model.saveWishlist();
-            });
-
-            $("#wishlistName").keyup(function () {
+            }); 
+            function debounce(func, delay) { 
+            var debounceTimer;
+            return function() {
+                var context = this;
+                var args = arguments;
+                clearTimeout(debounceTimer); 
+                debounceTimer = setTimeout(function(){ func.apply(context, args);},delay); 
+                }
+            }
+            var myInput = document.getElementById("wishlistName");
+            myInput.addEventListener('keyup',debounce(function(){ 
                 $(".mz-itemlisting-action").prop('disabled', true); 
                 $(".mz-itemlisting-action").attr('href', '').css({ 'cursor': 'pointer', 'pointer-events': 'none' });
-            });
+            },1000));             
 
             var wishlistListView = new WishlistListView({
                 el: self.$el.find('.mz-b2b-wishlist-list'),
