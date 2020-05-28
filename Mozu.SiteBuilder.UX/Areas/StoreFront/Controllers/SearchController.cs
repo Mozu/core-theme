@@ -37,8 +37,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction,
+        executionType: ActionExtensionExecutionTypes.BeforeController, Priority =
+            ActionFilterConstants.GlobalPageBeforePriority)]
+    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction,
+        executionType: ActionExtensionExecutionTypes.AfterController, Priority =
+            ActionFilterConstants.GlobalPageAfterPriority)]
     public class SearchController : BaseApiController
     {
         readonly IProductCategoryRuntimeWebApiClient _catClient;
@@ -47,18 +51,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         readonly IProductSearchWebApiClient _searchClient;
 
-        public SearchController(IProductCategoryRuntimeWebApiClient catClient, IProductRuntimeWebApiClient productClient, IProductSearchWebApiClient searchClient, ICustomRouteHandler customRouteHandler)
+        public SearchController(IProductCategoryRuntimeWebApiClient catClient,
+            IProductRuntimeWebApiClient productClient, IProductSearchWebApiClient searchClient,
+            ICustomRouteHandler customRouteHandler)
         {
             _catClient = catClient;
             _productClient = productClient;
             _searchClient = searchClient;
             _customRouteHandler = customRouteHandler;
         }
-        
+
+        [HttpOptions]
+        public IActionResult OptionsIndex()
+        {
+            this.HttpContext.Response.Headers["Access-Control-Allow-Origin"] = "*";
+            this.HttpContext.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS";
+            
+            return Ok();
+        }
 
         [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
+        [HttpOptions]
         public async Task<IActionResult> Index(
             string query = null, 
             int? categoryId = null, 
@@ -70,6 +85,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             [FromQuery]AdvancedSearchParamaters searchParams = null,
             [FromQuery(Name = "debug.explain.structured")]bool  debug_explain_structure = false)
         {
+            if (string.Equals(this.HttpContext.Request.Method , "OPTIONS", StringComparison.OrdinalIgnoreCase))
+            {
+                return OptionsIndex();
+            }
             var _ = searchParams;
 
             //commenting out until bluefly can change their arc actions.

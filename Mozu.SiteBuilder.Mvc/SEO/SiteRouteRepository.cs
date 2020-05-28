@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             var contextData =  _contextProvider.GetContextData();
 
-            if (contextData.GeneralSettings == null) return null;
+            if (contextData?.GeneralSettings == null) return null;
 
             var routes = contextData.GeneralSettings.CustomRoutes;
             var lastUpdate = contextData.GeneralSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;

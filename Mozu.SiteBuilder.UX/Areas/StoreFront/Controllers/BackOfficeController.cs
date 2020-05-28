@@ -1,33 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
-using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
+using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
-using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
+using Kibo.Fulfillment.Contracts.Api;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Microsoft.AspNetCore.Http;
+using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using DCShipment = Kibo.Fulfillment.Contracts.Model.ResourceOfShipment;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -42,17 +43,33 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
+        private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
+        private readonly IPickWaveControllerApiClient _pickWaveControllerApiClient;
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
+        private const string ORDERS_PREVIEW_RESOURCE_NAME = "backoffice.orders1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
+        private const string PICKWAVE_PREVIEW_RESOURCE_NAME = "backoffice.pickwave1";
+        private const string PICKWAVE2_PREVIEW_RESOURCE_NAME = "backoffice.pickwave2";
+        private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
+        private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
+        private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
+        private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger<BackOfficeController> logger)
+        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger<BackOfficeController> logger,
+            Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient shipmentControllerApiClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            Kibo.Fulfillment.Contracts.Api.IPickWaveControllerApiClient  pickWaveControllerApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _shipmentControllerApiClient = shipmentControllerApiClient;
+            _pickWaveControllerApiClient = pickWaveControllerApiClient;
+            _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
         /// <summary>
@@ -67,7 +84,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("order-details"));
             if (template == null)
+            {
                 return NotFound("Could not find order details template for the current Theme.");
+            }
 
             return await RenderWithContext(template, order);
         }
@@ -81,7 +100,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private void PopulatePackageDetails(DC.Order order)
         {
-            if (order.Packages == null) return;
+            if (order.Packages == null)
+            {
+                return;
+            }
 
             foreach (var package in order.Packages)
             {
@@ -91,15 +113,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private void PopulatePackageDetails(Package package, DC.Order order)
         {
-            if (package == null) return;
+            if (package == null)
+            {
+                return;
+            }
 
             IEnumerable<PackageItem> t = package.Items.Select(i => GetDetailedPackageItem(i, order));
             package.Items = t.ToList();
         }
 
+        private void PopulateShipmentDetails(Shipment shipment, DC.Order order)
+        {
+            if (shipment == null)
+            {
+                return;
+            }
+
+            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, order));
+            shipment.Items = t.ToList();
+        }
+
         private void PopulatePickupDetails(DC.Order order)
         {
-            if (order.Pickups == null) return;
+            if (order.Pickups == null)
+            {
+                return;
+            }
 
             foreach (var pickup in order.Pickups)
             {
@@ -117,6 +156,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return result;
         }
 
+        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem, DC.Order order)
+        {
+            var result = Mapper.Map<DetailedShipmentItem>(shipmentItem);
+            var product = FindProduct(shipmentItem.ProductCode, order);
+            result.ProductName = product.Name;
+            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, shipmentItem.Quantity);
+            return result;
+        }
+
         private DetailedPickupItem GetDetailPickupItem(PickupItem pickupItem, DC.Order order)
         {
             var result = Mapper.Map<DetailedPickupItem>(pickupItem);
@@ -128,7 +176,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
         {
-            if (weight == null || !weight.Value.HasValue) return null;
+            if (weight == null || !weight.Value.HasValue)
+            {
+                return null;
+            }
+
             return new Measurement { Unit = weight.Unit, Value = Decimal.Round(weight.Value.Value * quantity, 1) };
         }
 
@@ -145,14 +197,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 if (item.Product.ProductCode == productCode || item.Product.VariationProductCode == productCode)
                 {
-                    simpleProduct.Weight = item.Product.Measurements.Weight;
+                    simpleProduct.Weight = item.Product.Measurements?.Weight;
                     simpleProduct.Name = item.Product.Name;
                     break;
                 }
                 var bundledProduct = item.Product.BundledProducts.FirstOrDefault(bp => bp.ProductCode.Equals(productCode));
                 if (bundledProduct != null)
                 {
-                    simpleProduct.Weight = bundledProduct.Measurements.Weight;
+                    simpleProduct.Weight = bundledProduct.Measurements?.Weight;
                     simpleProduct.Name = bundledProduct.Name;
                     break;
                 }
@@ -174,7 +226,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <param name="order"></param>
         private static void PopulateOptionNames(DC.Order order)
         {
-            if (order.Items == null) return;
+            if (order.Items == null)
+            {
+                return;
+            }
+
             foreach (var item in order.Items.Where(i => i.Product != null && !i.Product.Options.IsNullOrEmpty()))
             {
                 foreach (var optionWithoutName in item.Product.Options.Where(o => o.Name.IsNullOrEmpty()))
@@ -185,29 +241,163 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
+        ///// <summary>
+        ///// Packing Slip.
+        ///// </summary>
+        //[HttpGet]
+        //public async Task<HttpResponseMessage> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        //{
+        //    var order = await GetOrderWithCustomToken(orderId, token);
+        //    var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
+
+        //    if (order == null || package == null)
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
+
+        //    var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
+        //    if (template == null)
+        //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
+
+        //    var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+        //    var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+
+        //    PopulatePackageDetails(package, order);
+
+        //    ViewData["order"] = order;
+        //    return await RenderWithContext(template, package);
+        //}
+
         /// <summary>
         /// Packing Slip.
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> PackingSlip(string orderId, string packageId, [FromQuery(Name = "t")]string token = null)
+        [AddUnifiedCookieFilter]
+        public async Task<IActionResult> PackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
-            var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
+            
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
-            if (order == null || package == null)
-                throw new HttpResponseException(404);
+            if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
+            {
+                return NotFound();
+            }
 
-            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
+            var dcShipment = Mapper.Map<Shipment>(shipment);
+            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
-                return NotFound("Could not find packing slip template for the current Theme.");
+            {
+                return NotFound( "Could not find packing slip template for the current Theme.");
+            }
 
-            var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+            //var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
-            PopulatePackageDetails(package, order);
+            PopulateShipmentDetails(dcShipment, order);
 
             ViewData["order"] = order;
-            return await RenderWithContext(template, package);
+            return await RenderWithContext(template, shipment);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PickWave(int pickWaveNumber, bool printPickWave, bool printPackingLists, bool printSingleOrderSheets)
+        {
+            var pickWaveControllerApiClient = _pickWaveControllerApiClient.CloneWithoutUserClaims();
+            var pickWave = (await pickWaveControllerApiClient.GetPickWaveUsingGET(pickWaveNumber)).ReadAsAsync().Result;
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("pick-wave-print"));
+            if (template == null)
+            {
+                return NotFound( "Could not find pick wave template for the current Theme.");
+            }
+
+            var shipments = new List<DCShipment>();
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers)
+            {
+                var dcShipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+                shipments.Add(dcShipment);
+            }
+            ViewData["shipments"] = shipments;
+
+            var orderIds = shipments.Select(x => x.OrderId).Distinct().ToList();
+            var orders = new List<DC.Order>();
+            foreach (var orderId in orderIds)
+            {
+                var dcOrder = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+                orders.Add(dcOrder);
+            }
+            ViewData["orders"] = orders;
+            
+            ViewData["printPickwave"] = printPickWave;
+            ViewData["printPackingSlips"] = printPackingLists;
+            ViewData["printPickSheets"] = printSingleOrderSheets;
+
+            return await RenderWithContext(template, pickWave);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderPickSheets(int pickWaveNumber)
+        {
+            var fulfillmentProxyClient = _pickWaveControllerApiClient.CloneWithoutUserClaims();
+            var pickWave = (await fulfillmentProxyClient.GetPickWaveUsingGET(pickWaveNumber)).ReadAsAsync().Result;
+            ViewData["pickwave"] = pickWave;
+
+            var shipments = new List<DCShipment>();
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers)
+            {
+                var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+                shipments.Add(shipment);
+            }
+
+            var orderIds = shipments.Select(x => x.OrderId).Distinct().ToList();
+            var orders = new List<DC.Order>();
+            foreach (var orderId in orderIds)
+            {
+                var dcOrder = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+                orders.Add(dcOrder);
+            }
+            ViewData["orders"] = orders;
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("order-pick-sheet"));
+            if (template == null)
+            {
+                return   NotFound("Could not find order pick sheet template for the current Theme.");
+            }
+
+            return await RenderWithContext(template, shipments);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TransferPackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
+        {
+            var order = await GetOrderWithCustomToken(orderId, token);
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+
+            if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
+            {
+                return NotFound();
+            }
+
+            var dcShipment = Mapper.Map<Shipment>(shipment);
+            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
+
+            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("transfer-packing-slip"));
+            if (template == null)
+            {
+                return NotFound( "Could not find transfer packing slip template for the current Theme.");
+            }
+            
+            PopulateShipmentDetails(dcShipment, order);
+
+            var locationCode = shipment.FulfillmentLocationCode;
+            if (!locationCode.IsNullOrEmpty()) {
+                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                ViewData["location"] = location;
+            }
+
+            ViewData["order"] = order;
+            return await RenderWithContext(template, shipment);
         }
 
         /// <summary>
@@ -218,7 +408,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(templateid));
             if (template == null)
+            {
                 return NotFound("could not find order template " + templateid);
+            }
 
             if (templateid == "order-details")
             {
@@ -228,13 +420,51 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "packing-slip")
             {
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["order"] = order;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "pick-list")
+            {
+                object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["shipments"] = shipments;
+
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "order-pick-sheet")
+            {
+                object model = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickwave = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["pickwave"] = pickwave;
+                ViewData["orders"] = orders;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "pick-wave-print")
+            {
+                object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["shipments"] = shipments;
+                ViewData["orders"] = orders;
+                ViewData["printPickwave"] = true;
+                ViewData["printPackingSlips"] = true;
+                ViewData["printPickSheets"] = true;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "transfer-packing-slip")
+            {
+                object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["order"] = order;
+                ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
             else
             {
-                throw new HttpResponseException(StatusCodes.Status404NotFound);
+                return NotFound();
             }
         }
 
@@ -242,7 +472,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Takes a template, smooshes it with any page settings stored in CMS
         /// and returns the renderable result.
         /// </summary>
-        private async Task<IActionResult> RenderWithContext(PageTypeDefinition template, object model)
+        private Task<IActionResult> RenderWithContext(PageTypeDefinition template, object model)
         {
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -256,10 +486,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "order";
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
-            return await Task.WhenAll(ContextInitializationTasks).ContinueWith(_ =>
-            {
-                ViewData["customContent"] = PageContext.CmsContext.Page.Document?.Properties;
-                return Ok(View(template.Template, model));
+            //Should this be WhenAll?
+            return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
+                ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
+                return (IActionResult)Ok(View(template.Template, model));
             });
         }
 
@@ -295,14 +525,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             LightweightUserClaims userClaimFromCustomToken = null;
 
-            // ensure things are on the up and up
+            //ensure things are on the up and up
             bool isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
             if (!isAuthorized) throw new HttpResponseException(StatusCodes.Status403Forbidden);
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
-
+       
             bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
-            if (isExpired) throw TokenExpiredException();
+            if (isExpired)
+            {
+                throw TokenExpiredException();
+            }
 
             return _orderWebApiClient.GetOrder(orderId).ContinueWith(t => t.Result.ReadAsAsync()).Unwrap();
         }
