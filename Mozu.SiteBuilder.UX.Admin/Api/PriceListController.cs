@@ -348,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var overrides = new List<PriceListEntryExtra>();
             DC.ProductType prodType =
-                (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields: "extras")).ReadAsSync();
+                (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId ?? -1, responseFields: "extras")).ReadAsSync();
             return _priceListExtraEntryHelper.MergeExtraEntries(getOverridePrice, dcProduct.Extras, prodType, overrides);
         }
 

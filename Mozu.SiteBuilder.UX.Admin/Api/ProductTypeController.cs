@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (productTypes == null || !Enumerable.Any(productTypes))
                 return Message3<List<ProductType>>(false, "No product types were edited because they were not sent correctly. Please try again.");
 
-            var editedProductTypes = await _productTypeMapper.PerformAction(productTypes, (a, b) => _productTypeClient.UpdateProductType(a, b.Id));
+            var editedProductTypes = await _productTypeMapper.PerformAction(productTypes, (a, b) => _productTypeClient.UpdateProductType(a, b.Id ?? -1));
             return List2(editedProductTypes.ToList());
         }
 
@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (productTypes == null || !Enumerable.Any(productTypes))
                 return Message3<List<ProductType>>(false, "No product types were deleted because they were not sent correctly. Please try again.");
 
-            var deletedProducts = await _productTypeMapper.PerformVoidAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));
+            var deletedProducts = await _productTypeMapper.PerformVoidAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id ?? -1));
 
             return List2(deletedProducts.ToList());
         }

@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                         collection = (await _productTypeWebApiClient
                             .GenerateProductVariations(productOptionsIn: dcOptions,
-                                productTypeId: productTypeId,
+                                productTypeId: productTypeId ?? -1,
                                 productCode: productCode,
                                 startIndex: pagingParams.startIndex,
                                 pageSize: pagingParams.pageSize,
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             //loop through until we have pulled all of them
                             collection = (await _productTypeWebApiClient
                                 .GenerateProductVariations(productOptionsIn: dcOptions,
-                                    productTypeId: productTypeId,
+                                    productTypeId: productTypeId ?? -1,
                                     productCode: productCode,
                                     startIndex: startIndex,
                                     pageSize: pageSize,

@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var facetsToUpdate = facets.Where(x => x.FacetId.HasValue).ToList();
             facetsToUpdate.AddRange(_inheritedFacetHelper.GetOverridenFacetsToUpdate(overridenFacets, overridenServerFacet,
                 inheritedServerFacet));
-            var updateFacetCalls = facetsToUpdate.Select(x => _facetWebApiClient.UpdateFacet(x, x.FacetId)).ToList();
+            var updateFacetCalls = facetsToUpdate.Select(x => _facetWebApiClient.UpdateFacet(x, x.FacetId ?? -1)).ToList();
             if (updateFacetCalls.Count > 0)
             {
                 await Task.WhenAll(updateFacetCalls);
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var facetsToDelete = serverFacets.Where(x => facets.All(y => x.FacetId != y.FacetId)).ToList();
             facetsToDelete.AddRange(_inheritedFacetHelper.GetOverridenFacetsToDelete(overridenFacets, inheritedServerFacet));
-            var deleteFacetCalls = facetsToDelete.Select(x => _facetWebApiClient.DeleteFacetById(x.FacetId)).ToList();
+            var deleteFacetCalls = facetsToDelete.Select(x => _facetWebApiClient.DeleteFacetById(x.FacetId ?? -1)).ToList();
             if (deleteFacetCalls.Count > 0)
             {
                 await Task.WhenAll(deleteFacetCalls);

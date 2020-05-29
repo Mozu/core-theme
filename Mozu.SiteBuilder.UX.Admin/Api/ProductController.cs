@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (product.ProductTypeId.HasValue && !productTypes.Any(x => x.Id == product.ProductTypeId))
                 {
-                    var pt = (await _productTypeWebApiClient.GetProductType(product.ProductTypeId)).ReadAsSync();
+                    var pt = (await _productTypeWebApiClient.GetProductType(product.ProductTypeId ?? -1)).ReadAsSync();
                     if (pt != null)
                     {
                         productTypes.Add(pt);

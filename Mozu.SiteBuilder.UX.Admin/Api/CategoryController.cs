@@ -159,7 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<Response<List<Category>>> GetSingleCategory(int? id)
         {
-            var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+            var cat = (await _categoriesClient.GetCategory(id ?? -1)).ReadAsSync();
             var retList = new List<Category> { Mapper.Map<Category>(cat) };
             return List2(retList, total:1);
         }
@@ -270,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 //single record Create/Update
                 var cat = categories.First();
-                var existingCategory = (await _categoriesClient.GetCategory(cat.Id)).ReadAsSync();
+                var existingCategory = (await _categoriesClient.GetCategory(cat.Id ?? -1)).ReadAsSync();
                 var dcCat = Mapper.Map<DC.Category>(cat);
 
                 // from sitebuilder, when saving a category we dont have the category images, so we go get them
@@ -284,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dcCat.DynamicExpression = existingCategory.DynamicExpression;
                 }
 
-                var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id, false)).ReadAsAsync();
+                var taskResult = (await _categoriesClient.UpdateCategory(dcCat, cat.Id ?? -1, false)).ReadAsAsync();
                 returnList.Add(Mapper.Map<Category>(taskResult.Result));
                 return List2(returnList);
             }
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete/?cascadeDelete={cascadeDelete}")]
         public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool cascadeDelete = false)
         {
-            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, cascadeDelete, forceDelete: true, reassignToParent: !cascadeDelete)).ToList();
+            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id ?? -1, cascadeDelete, forceDelete: true, reassignToParent: !cascadeDelete)).ToList();
             await Task.WhenAll(tasks);
             AnyExceptionsThenThrow(tasks);
 
@@ -360,7 +360,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "node/{id}?showInactive={showInactive}&isDisplayed={isDisplayed}")]
         public async Task<Response<Models.Category.CategoryNode>> GetCategoryNode(int? id=0, bool? showInactive = null, bool? isDisplayed = null)
         {
-            var cat = (await _categoriesClient.GetCategoryTreeNode(id, showInactive, isDisplayed)).ReadAsSync();
+            var cat = (await _categoriesClient.GetCategoryTreeNode(id ?? -1, showInactive, isDisplayed)).ReadAsSync();
             var retList = Mapper.Map<Models.Category.CategoryNode>(cat) ;
             return Single2(retList);
         }

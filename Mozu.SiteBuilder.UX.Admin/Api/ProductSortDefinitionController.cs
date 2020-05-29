@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcDefinition = Mapper.Map<DC.ProductSortDefinition>(productSortDefinition);
             var response = (await _productSortDefinitionWebApiClient.UpdateProductSortDefinition(dcDefinition,
-                dcDefinition.ProductSortDefinitionId)).ReadAsSync();
+                dcDefinition.ProductSortDefinitionId ?? -1)).ReadAsSync();
 
             var mappedResponse = Mapper.Map<ProductSortDefinition>(response);
             return Single2(mappedResponse);
@@ -127,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             productSortDefinitions.ForEach(p => Ensure.That(p.Id, "id").IsNotNull());
 
             var tasks = productSortDefinitions
-                .Select(p => _productSortDefinitionWebApiClient.DeleteProductSortDefinition(p.Id))
+                .Select(p => _productSortDefinitionWebApiClient.DeleteProductSortDefinition(p.Id ?? -1))
                 .ToList();
 
             await Task.WhenAll(tasks);
