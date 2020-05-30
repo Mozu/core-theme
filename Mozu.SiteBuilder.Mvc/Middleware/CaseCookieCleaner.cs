@@ -1,14 +1,19 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
 {
     public class CaseCookieCleaner
     {
         private readonly RequestDelegate _next;
+        private const string Splitter = "; ";
+        private const string CookieHeaderName = "Cookie";
 
         public CaseCookieCleaner(RequestDelegate next)
         {
@@ -19,8 +24,8 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
         {
             var set = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase);
             foreach (var cookieName in allCookies
-                .Split(';')
-                .Select(_ => _.Split('=')[0].Trim()))
+                .Split(Splitter)
+                .Select(_ => _.Split('=')[0]))
             {
                 string existing;
                 if (set.TryGetValue(cookieName, out existing))
@@ -35,14 +40,58 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
                 
             }
         }
+
+        static bool CleanHeader(string allCookies , out string  cleanedCookies)
+        {
+            var cookies = new Dictionary<string,string>();
+            
+            var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            bool cleanded = false;
+            foreach (var cookie in allCookies
+                .Split(Splitter))
+            {
+                var nameIdx = cookie.IndexOf('=');
+                if (nameIdx < 0)
+                {
+                    continue;
+                }
+                var cookieName = cookie.Substring(0, nameIdx);
+                if (set.Contains(cookieName))
+                {
+                    cleanded = true;
+                    if (cookieName != cookieName.ToLower())
+                    {
+                        continue;
+                    }
+                }
+
+                cookies[cookieName] = cookie;
+                set.Add(cookieName);
+
+            }    
+            
+            cleanedCookies =  cleanded ? string.Join(Splitter, cookies.Values) : allCookies;
+            return cleanded;
+
+
+        }
         public  Task Invoke(HttpContext context)
         {
+            var cookies = context.Request.Headers[CookieHeaderName];
+            bool cleaned = CleanHeader(cookies.ToString(), out string cleanedCookies);
+            if (cleaned)
+            {
+                context.Request.Headers[CookieHeaderName] = cleanedCookies;
+            }
+            
             context.Response.OnStarting(() =>
             {
-                var cookies = context.Request.Headers["cookie"];
-                foreach (var cookieName in CookiesToRemove(cookies.ToString()))
+                if (cleaned)
                 {
-                    context.Response.Cookies.Delete(cookieName);
+                    foreach (var cookieName in CookiesToRemove(cookies.ToString()))
+                    {
+                        context.Response.Cookies.Delete(cookieName);
+                    }
                 }
 
                 return Task.CompletedTask;
@@ -50,4 +99,6 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             return  _next.Invoke(context);
         }
     }
+    
+ 
 }
