@@ -17,10 +17,10 @@
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Save',
-    secondaryText: 'Cancel',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.save,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel,
     scale: 'large',
-    title: 'Items Reassign',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.items_reassign,
     isRecordSaved: false,
     layout: {
         type: 'fit'
@@ -81,18 +81,18 @@
         });
 
         var inventorygrid = Ext.create('Ext.grid.Panel', {
-            title: 'Inventory',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.inventory,
             cls: 'taco-order-fulfillment-ReassignItems',
             store: Ext.data.StoreManager.lookup('ItemInventoryStore'),
             itemId: 'inventoryGrid',
             columns: [
                 {
-                    header: 'Location',
+                    header: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location,
                     dataIndex: 'locationName',
                     width: 200,
                 },
                 {
-                    header: 'Distance',
+                    header: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.distance,
                     dataIndex: 'distance',
                     flex: 1,
                     width: 50,
@@ -101,7 +101,7 @@
                     renderer: Ext.util.Format.numberRenderer('0.00')
                 },
                 {
-                    header: 'Location excluded',
+                    header: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location_excluded,
                     dataIndex: 'blockAssignment',
                     flex: 1,
                     width: 50,
@@ -116,7 +116,7 @@
                     }
                 },
                 {
-                    text: 'Available',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.available,
                     dataIndex: 'available',
                     flex: 1,
                     width: 50,
@@ -127,20 +127,20 @@
                     }
                 },
                 {
-                    text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.qty_ordered, dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
                     renderer: function (val, meta, record) {
                         if (me.selectedItem)
                             return me.selectedItem.quantity;
                     }
                 },
                 {
-                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150, allowBlank: false,
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.qty_to_reassign, dataIndex: 'reassignQty', width: 150, allowBlank: false,
                     editor: {
                         xtype: 'textfield',
                         cls: 'x-grid-checkheader-editor',
                         inputValue: true,
                         regex: /^\d{0,9}$/,
-                        regexText: "Invalid Number entered.",
+                        regexText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.invalid_number_entered,
                         uncheckedValue: false,
                         minValue: 1,
                         maxValue: me.selectedItem.quantity,
@@ -148,10 +148,10 @@
                         validator: function (value) {
                             if (!isNaN(value)) {
                                 if (value == 0) {
-                                    return 'Quantity should not be 0';
+                                    return Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.quantity_should_not_be_0;
                                 }
                                 Ext.getCmp('toolbar2').setVisible(false);
-                                return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                                return (value <= me.orderedQuantity) || Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.quantity_to_reassign_should_be_less_than_ordered_quantity;
                             }
                            
                         }
@@ -225,7 +225,7 @@
                     }
                     me.getView().refresh();
                     if (context.value > me.orderedQuantity) {
-                        alert('Quantity to reassign should be less than ordered quantity.');
+                        alert(Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.quantity_to_reassign_should_be_less_than_ordered_quantity);
                         return false;
                     }
                 }
@@ -254,30 +254,30 @@
             }
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
-            title: 'All Locations',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.all_location,
             cls: 'taco-order-fulfillment-locations',
             store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
             columns: [
                 {
-                    text: 'Location',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location,
                     dataIndex: 'name',
                     width: 325,
                 },
                 {
-                    text: 'Location Code',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location_code,
                     dataIndex: 'code',
                     width: 325,
                 },
                 {
-                    text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.qty_ordered, dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
                     renderer: function (val, meta, record) {
                         if (me.selectedItem)
                             return me.selectedItem.quantity;
                     }
                 },
                 {
-                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.qty_to_reassign, dataIndex: 'reassignQty', width: 150,
                     editor: {
                         xtype: 'textfield',
                         cls: 'x-grid-checkheader-editor',
@@ -287,14 +287,14 @@
                         maxValue: me.selectedItem.quantity,
                         width: 425,
                         regex: /^\d{0,9}$/,
-                        regexText: "Invalid Number entered.",
+                        regexText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.invalid_number_entered,
                         validator: function (value) {
                             if (!isNaN(value)) {
                                 if (value == 0) {
-                                    return 'Quantity should not be 0';
+                                    return Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.quantity_should_not_be_0;
                                 }
                                 Ext.getCmp('toolbar2').setVisible(false);
-                                return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                                return (value <= me.orderedQuantity) || Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.quantity_to_reassign_should_be_less_than_ordered_quantity;
                             }
                         }
                     }
@@ -390,7 +390,7 @@
                 },
                 items: [{
                     xtype: 'label',
-                    text: 'Please select location and quantity to reassign',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.please_select_location_and_quantity_to_reassign,
                 }],
             });
         this.addDocked({
@@ -410,7 +410,7 @@
             },
             items: [{
                 xtype: 'label',
-                text: 'Please enter quantity to reassign',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.please_enter_quantity_to_reassign,
             }],
         });
     },
@@ -442,7 +442,7 @@
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
                     }
-                    Taco.app.fireEvent('setmessage', "Item " + payloadData.reassignItemsRequest.items[0].name + " Successfully Reassigned", 'success');
+                    Taco.app.fireEvent('setmessage', "Item " + payloadData.reassignItemsRequest.items[0].name + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.successfully_reassigned, 'success');
                     me.saveSuccess(json);
                     me.close();
                     // close the dialog
@@ -451,7 +451,7 @@
                 failure: function (response) {
                     me.setLoading(false);
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_deallocating_inventory;
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     me.close();
                 }

@@ -13,7 +13,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     ],
 
     scale: 'large',
-    title: 'Add Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.add_payment,
     models: ['Taco.model.CheckoutSettings'],
 
     layout: "anchor",
@@ -103,7 +103,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         this.pullCustomerPaymentData(this.record.customer);
 
         this.newCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'New Credit Card',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.new_credit_card,
             name: 'cardUse',
             itemId: 'useNewCard',
             inputValue: 'newCard',
@@ -120,7 +120,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         });
 
         this.existingCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Order Credit Cards',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.order_credit_cards,
             name: 'cardUse',
             itemId: 'useExistingCard',
             inputValue: 'existingCard',
@@ -136,7 +136,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         });
 
         this.savedCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Saved Credit Cards',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.saved_credit_cards,
             name: 'cardUse',
             itemId: 'useSavedCard',
             inputValue: 'savedCard',
@@ -423,7 +423,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     xtype: 'textfield',
                                     name: 'nameOnCard',
                                     allowBlank: false,
-                                    fieldLabel: 'Name on Card',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.name_on_card,
                                     margin: '0px 5px 0px 5px',
                                     flex: 1
                                 }, {
@@ -431,7 +431,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     width: 170,
                                     currencyCode: this.record.getCurrencyCode(),
                                     name: 'amount',
-                                    fieldLabel: 'Amount',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                     validateOnChange: false,
                                     selectOnFocus: true,
                                     allowBlank: false,
@@ -445,7 +445,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     itemId: 'cardType',
                                     valueField: 'Key',
                                     displayField: 'Value',
-                                    fieldLabel: 'Card Type',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.card_type,
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',
                                     allowBlank: false,
@@ -483,7 +483,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     name: 'cardNumber',
                                     itemId: 'cardNumber',
                                     allowBlank: false,
-                                    fieldLabel: 'Card Number',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.card_number,
                                     margin: '0px 5px 0px 5px',
                                     flex: 1
                                 }, {
@@ -493,7 +493,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     hideTrigger: true,
                                     mouseWheelEnabled: false,
                                     allowBlank: false,
-                                    fieldLabel: 'Exp Month',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.exp_month,
                                     validateOnChange: false,
                                     maxLength: 2,
                                     enforceMaxLength: true,
@@ -512,19 +512,19 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     margin: '0px 5px 0px 5px',
                                     validator: function (value) {
                                         if (value && value.length < 4) {
-                                            return "Year must have 4 digits";
+                                            return Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.year_must_have_four_digits;
                                         }
                                         return true;
                                     },
                                     mouseWheelEnabled: false,
-                                    fieldLabel: 'Exp Year'
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.exp_year
                                 }, {
                                     xtype: 'textfield',
                                     width: 100,
                                     name: 'cvv',
                                     itemId: 'cvv',
                                     allowBlank: false,
-                                    fieldLabel: 'CVV',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.cvv,
                                     margin: '0px 5px 0px 5px'
                                 }
                             ]
@@ -544,7 +544,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                     anchor: 0,
                                     margin: "10 0 10 0",
                                     name: 'skipOtherCCTypeValidation',
-                                    boxLabel: 'Skip Validation',
+                                    boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.skip_validation,
                                     checked: false,
                                     itemId: 'skipValidation',
                                 }
@@ -572,7 +572,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             showLabel: true,
             name: 'existingPaymentPicker',
             itemId: 'existingPaymentPicker',
-            fieldLabel: "Existing Cards on Order",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.existing_cards_on_order,
             labelStyle: "padding-top:16px;",
             store: curPaymentStore,
             width: 500,
@@ -621,7 +621,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'existingCardAmount',
                                 itemId: 'existingCardAmount',
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                 validateOnChange: false,
                                 selectOnFocus: true,
                                 allowBlank: false,
@@ -634,7 +634,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                 name: 'existingCardCvv',
                                 itemId: 'existingCardCVV',
                                 allowBlank: true,
-                                fieldLabel: 'CVV',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.cvv,
                                 margin: '0px 5px 0px 5px',
                             }
                         ]
@@ -670,7 +670,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             showLabel: false,
             name: 'savedPaymentPicker',
             itemId: 'savedPaymentPicker',
-            fieldLabel: "Saved Cards on Order",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.saved_cards_on_order,
             labelStyle: "padding-top:16px;",
             store: savedPaymentStore,
             width: 500,
@@ -718,7 +718,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'savedCardAmount',
                                 itemId: 'savedCardAmount',
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                 validateOnChange: false,
                                 selectOnFocus: true,
                                 allowBlank: false,
@@ -731,7 +731,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                 name: 'savedCardCvv',
                                 itemId: 'savedCardCVV',
                                 allowBlank: true,
-                                fieldLabel: 'CVV',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.cvv,
                                 margin: '0px 5px 0px 5px',
                             }
                         ]
@@ -768,7 +768,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             itemId: 'billingTitle',
             autoEl: {
                 tag: 'h3',
-                html: 'Billing Address'
+                html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.billing_address,
             }
         });
     },
@@ -778,7 +778,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         this.billingCheckbox = Ext.create('Ext.form.field.Checkbox', {
             anchor: 0,
-            boxLabel: 'Use the billing address on the order',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.use_billing_address_order,
             name: 'sameAsBilling',
             margin: "10 0 10 0",
             checked: true,
@@ -808,13 +808,13 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 '</tpl>',
                 '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
                 '<tpl if="homePhone">',
-                '<div>Home Phone: {homePhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.home_phone + ': {homePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="workPhone">',
-                '<div>Work Phone: {workPhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.work_phone + ': {workPhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="mobilePhone ">',
-                '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.mobile_phone + ': {mobilePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="email">',
                 '<div>{email}</div>',
@@ -929,13 +929,13 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 '</tpl>',
                 '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
                 '<tpl if="homePhone">',
-                '<div>Home Phone: {homePhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.home_phone + ': {homePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="workPhone">',
-                '<div>Work Phone: {workPhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.work_phone + ': {workPhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="mobilePhone ">',
-                '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.mobile_phone + ': {mobilePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="email">',
                 '<div>{email}</div>',

@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     //tabTitle: 'All Items',
     initComponent: function () {
 
-        this.tabTitle = this.shipmentRecord.items ? "Items (" + this.shipmentRecord.items.length + ")" : "Items (0)";
+        this.tabTitle = this.shipmentRecord.items ? Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.items +' '+ "(" + this.shipmentRecord.items.length + ")" : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.items+' '+"(0)";
         this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);
@@ -83,7 +83,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                                         lineId: lineId,
                                         minValue: 1,
                                         maxValue: qtyToPickup,
-                                        maxText: 'Max qty available for pickup is {0}',
+                                        maxText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.max_qty_available + '{0}',
                                         value: qtyToPickup,
                                         disabled: true,
                                         hidden: qtyToPickup <= 0,
@@ -126,7 +126,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                         top: 50,
                     },
                     flex: 1,
-                    html: '<h3 class="">Shipment is canceled, see all items on the cancellation tab.</h3>',
+                    html: '<h3 class="">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.shipment_is_canceled+'</h3>',
                 },
                 {
                     flex: 1,

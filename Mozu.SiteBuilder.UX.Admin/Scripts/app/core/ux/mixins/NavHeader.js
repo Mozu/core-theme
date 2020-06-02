@@ -148,7 +148,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 // so when we navigate back from an order, we update the title to 'Orders'
                 if (newTitle === 'Orders') {
                       me.titleCmp.update({
-                        title: newTitle,
+                        title: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.orders,
                         id: this.titleId,
                         showTitleBorder: this.showTitleBorder
                       });

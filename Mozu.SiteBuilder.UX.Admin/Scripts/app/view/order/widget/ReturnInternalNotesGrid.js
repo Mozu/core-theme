@@ -10,7 +10,7 @@ Ext.define('Taco.view.order.widget.ReturnInternalNotesGrid', {
         store: null
     },
     viewConfig: {
-        emptyText: '<div class="empty-grid-message">No internal notes to display</div>',
+        emptyText: '<div class="empty-grid-message">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.no_internal_notes +'< /div>',
         trackOver: false,
         disableSelection: true,
         deferEmptyText: false
@@ -18,7 +18,7 @@ Ext.define('Taco.view.order.widget.ReturnInternalNotesGrid', {
     columns: [
         {
             dataIndex: 'createDate',
-            text: 'Created Date',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.created_date,
             draggable: false,
             sortable: false,
             resizeable: false,
@@ -29,7 +29,7 @@ Ext.define('Taco.view.order.widget.ReturnInternalNotesGrid', {
         },
         {
             dataIndex: 'createByName',
-            text: 'Created By',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.created_by,
             draggable: false,
             sortable: false,
             resizeable: false,
@@ -38,7 +38,7 @@ Ext.define('Taco.view.order.widget.ReturnInternalNotesGrid', {
         },
         {
             dataIndex: 'text',
-            text: 'Note',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.notes,
             draggable: false,
             sortable: false,
             resizeable: false,

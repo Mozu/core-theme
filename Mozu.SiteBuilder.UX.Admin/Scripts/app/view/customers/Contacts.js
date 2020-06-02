@@ -83,13 +83,13 @@ Ext.define('Taco.view.customers.Contacts', {
                         xtype: 'component',
                         flex: 1,
                         cls: 'label',
-                        html: contact.isFromOrder ? 'Order Contact' : 'Customer Contact'
+                        html: contact.isFromOrder ? Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.order_contact : Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.customer_contact
                     }, {
                         xtype: 'button',
                         ui: 'link',
                         scale: 'medium',
                         padding: '0 0 0 0',
-                        text: 'Edit',
+                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.edit,
                         itemId: 'editButton',
                         handler: function () {
                             this.editContact(contact);
@@ -100,7 +100,7 @@ Ext.define('Taco.view.customers.Contacts', {
                         padding: '0 0 0 5',
                         ui: 'link',
                         scale: 'medium',
-                        text: 'Delete',
+                            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.delete_button_text,
                         itemId: 'deleteButton',
                         hidden: contact.isFromOrder,
                         handler: function () {
@@ -149,7 +149,7 @@ Ext.define('Taco.view.customers.Contacts', {
                     xtype: 'radiofield',
                     name: 'customerShipToAddress',
                     inputValue: contact,
-                    boxLabel: 'Ship to this address',
+                    boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.ship_to_this_addr,
                     checked: shippingChecked,
                     margin: '8 0 0 0',
                     hidden: !this.order
@@ -157,7 +157,7 @@ Ext.define('Taco.view.customers.Contacts', {
                     xtype: 'radiofield',
                     name: 'customerBillToAddress',
                     inputValue: contact,
-                    boxLabel: 'Bill to this address',                    
+                    boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.bill_to_this_addr,                    
                     //disabled:(this.order.get('orderStatus') !== 'Pending'),
                     checked: billingChecked,
                     hidden: !this.order || (this.order.get('orderStatus') !== 'Pending')
@@ -169,7 +169,7 @@ Ext.define('Taco.view.customers.Contacts', {
         if (!this.contacts.length) {
             this.addressContainer.add({
                 xtype: 'component',
-                html: '<div class="no-address">There are no Contacts for this user.<br><br>Add an address below.</div>'
+                html: '<div class="no-address">'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.no_contacts_for_user + '<br><br>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.add_address_below+'</div>'
             });
             return;
         }
@@ -339,7 +339,7 @@ Ext.define('Taco.view.customers.Contacts', {
     deleteContact: function (contact) {
         var me = this,
             tpl = new Ext.XTemplate(
-                'Are you sure you want to Delete this contact?',
+                Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.delete_contact_warning,
                 '<div style="padding: 20px;" data-handle="contact-{id}">',
 
                 '{firstName:htmlEncode} {lastName:htmlEncode}<br>',
@@ -360,7 +360,7 @@ Ext.define('Taco.view.customers.Contacts', {
             );
 
         Taco.MessageBox.show({
-            title: 'Confirm Deletion',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.confirm_deletion,
             msg: tpl.apply(contact),
             buttons: Ext.Msg.OKCANCEL,
 

@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.modal.ManualVoidPayment', {
 
     autoShow: true,
     scale: 'medium',
-    title: 'Manual Transaction: Void Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.manual_void_payment,
 
     alternateClassName: ['Taco.view.order.modal.ManualDeclinePayment'],
 
@@ -26,11 +26,11 @@ Ext.define('Taco.view.order.modal.ManualVoidPayment', {
                 items: [{
                     xtype: 'textfield',
                     name: 'gatewayInteractionId',
-                    fieldLabel: 'Gateway Interaction Id'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.gateway_interaction_id
                 }, {
                     xtype: 'datetime',
                     name: 'interactionDate',
-                    fieldLabel: 'Transaction Date'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.transaction_date
                 }]
             }]
         });
@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.modal.ManualVoidPayment', {
         };
 
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         cfg = {

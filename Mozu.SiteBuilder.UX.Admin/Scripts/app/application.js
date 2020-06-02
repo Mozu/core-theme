@@ -579,6 +579,15 @@ Ext.define('Taco.Application', {
     },
 
     init: function () {
+
+        /*var url = '/admin/scripts/app/locale/ResourceLocalizer.js';
+        Ext.Loader.loadScript({
+            url: url,
+            onLoad: function (options) {
+                //console.log('script loaded');
+            }
+        });*/
+
         Ext.setGlyphFontFamily('FontAwesome');
         var stringStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.LocalizedStrings');
         stringStore.loadRawData(Taco.localizationValues);
@@ -638,12 +647,10 @@ Ext.define('Taco.Application', {
     },
     initViewPort: function () {
         var me = this;
-
         this.getView('Viewport').create();
         me.viewPort = Ext.getCmp('primaryViewPort');
         me.relayEvents(me.viewPort, ['setmessage']);
         me.contentView = Ext.getCmp('contentView');
-
     },
 
     initStateManager: function () {

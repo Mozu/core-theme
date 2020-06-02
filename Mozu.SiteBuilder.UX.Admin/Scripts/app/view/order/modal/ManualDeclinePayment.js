@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.modal.ManualDeclinePayment', {
 
     autoShow: true,
     scale: 'medium',    
-    title: 'Manual Transaction: Decline Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.manual_decline_payment,
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {            
@@ -16,11 +16,11 @@ Ext.define('Taco.view.order.modal.ManualDeclinePayment', {
                     xtype: 'textfield',
                     name: 'declineCode',
                     anchor:'0',
-                    fieldLabel: 'Decline Code'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.decline_code
                 }, {
                     xtype: 'textarea',
                     name: 'amount',
-                    fieldLabel: 'Comments'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.comments
                 }
             ]
         });
@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.modal.ManualDeclinePayment', {
         };
 
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         cfg = {

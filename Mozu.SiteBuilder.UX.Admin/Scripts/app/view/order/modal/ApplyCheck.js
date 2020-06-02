@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
 
     autoShow: true,
     scale: 'small',
-    title: 'Collect Check',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.collect_check,
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {
@@ -25,13 +25,13 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
             items: [{
                 xtype: 'textfield',
                 name: 'checkNumber',
-                fieldLabel: 'Check Number',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.check_number,
                 margin: '0 10 0 0'
             }, {
                 xtype: 'currencyfield',
                 currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
-                fieldLabel: 'Amount Collected',                
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_collected,                
                 value: Math.min(this.record.data.amountRequested, this.order.getCaptureAmountHint())
             }]
         });

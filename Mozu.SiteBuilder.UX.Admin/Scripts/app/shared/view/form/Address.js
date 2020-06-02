@@ -14,7 +14,7 @@ Ext.define('Taco.shared.view.form.Address', {
         'Taco.core.ux.form.PhoneNumberField'
     ],
 
-    title: 'Edit Address',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.title,
 
     addressHasNames: true,
 
@@ -61,7 +61,7 @@ Ext.define('Taco.shared.view.form.Address', {
             nameFieldContainer.items.push({
                 xtype: 'textfield',
                 name: 'companyOrOrganization',
-                fieldLabel: 'Company Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.company_name,
                 flex: 1,
                 margin: '0 15 0 0'
             })
@@ -73,7 +73,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 flex: 1,
                 allowBlank: !this.emailRequired,
                 name: 'email',
-                fieldLabel: 'Email',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.email,
                 margin: '0 15 0 0'
             });
         }
@@ -82,9 +82,9 @@ Ext.define('Taco.shared.view.form.Address', {
         var addressType = {
             xtype: 'combobox',
             name: 'addressType',
-            fieldLabel: 'Address Type',
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_type,
             forceSelection: true,
-            store: ['Residential', 'Commercial']
+            store: [Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.residential_addr, Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.commercial_addr]
         };
 
         if (me.showEmail || me.showCompanyName) {
@@ -102,7 +102,7 @@ Ext.define('Taco.shared.view.form.Address', {
             xtype: 'textfield',
             name: 'address1',
             anchor: '0',
-            fieldLabel: 'Address 1',
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_1,
             allowBlank: false
         });
 
@@ -114,19 +114,19 @@ Ext.define('Taco.shared.view.form.Address', {
                     xtype: 'textfield',
                     flex: 1,
                     name: 'address2',
-                    fieldLabel: 'Address 2',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_2,
                     margin: '0 15 0 0'
                 }, {
                     xtype: 'textfield',
                     flex: 1,
                     name: 'address3',
-                    fieldLabel: 'Address 3',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_3,
                     margin: '0 15 0 0'
                 }, {
                     xtype: 'textfield',
                     flex: 1,
                     name: 'address4',
-                    fieldLabel: 'Address 4'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_4
                 }
             ]
         });
@@ -135,7 +135,7 @@ Ext.define('Taco.shared.view.form.Address', {
             name: 'stateOrProvince',
             fieldStyle: isUsaOrCanada ? 'text-transform:uppercase' : '',
             flex: 1,
-            fieldLabel: isUsaOrCanada ? 'State' : 'Region',
+            fieldLabel: isUsaOrCanada ? Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.state : Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.region,
             minLength: isUsaOrCanada ? 2 : 0,
             margin: '0 15 0 0',
             allowBlank: !isUsaOrCanada
@@ -143,7 +143,7 @@ Ext.define('Taco.shared.view.form.Address', {
         me.postalCode = Ext.create('Taco.core.ux.form.TextField', {
             flex: 1,
             name: 'postalOrZipCode',
-            fieldLabel: isUsaOrCanada ? 'ZIP' : 'Postal Code',
+            fieldLabel: isUsaOrCanada ? Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.ZIP : Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.postal_code,
             allowBlank: !isUsaOrCanada
         });
 
@@ -165,7 +165,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 {
                     xtype: 'textfield',
                     name: 'cityOrTown',
-                    fieldLabel: 'City',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.city,
                     flex: 1,
                     margin: '0 15 0 0',
                     allowBlank: false
@@ -188,7 +188,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     xtype: 'combobox',
                     name: 'countryCode',
                     flex: 1,
-                    fieldLabel: 'Country',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.country,
                     allowBlank: false,
                     queryMode: 'local',
                     displayField: 'name',
@@ -218,7 +218,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     xtype: 'phonefield',
                     name: 'homePhone',
                     flex: 1,
-                    fieldLabel: 'Home Phone',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.home_phone,
 
                     margin: '0 15 0 0',
                     allowBlank: false
@@ -226,13 +226,13 @@ Ext.define('Taco.shared.view.form.Address', {
                     xtype: 'phonefield',
                     name: 'workPhone',
                     flex: 1,
-                    fieldLabel: 'Work Phone',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.work_phone,
                     margin: '0 15 0 0'
                 }, {
                     xtype: 'phonefield',
                     name: 'mobilePhone',
                     flex: 1,
-                    fieldLabel: 'Mobile Phone',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.mobile_phone,
                     margin: '0 0 0 0'
                 }]
             });
@@ -248,7 +248,7 @@ Ext.define('Taco.shared.view.form.Address', {
                         xtype: 'textfield',
                         flex: 1,
                         name: 'firstName',
-                        fieldLabel: 'First Name',
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.first_name,
                         margin: '0 15 0 0',
                         allowBlank: false,
                         labelStyle: 'padding-top: 5px'
@@ -257,14 +257,14 @@ Ext.define('Taco.shared.view.form.Address', {
                         // width: 206,
                         flex: 1,
                         name: 'middleName',
-                        fieldLabel: 'Middle Name',
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.middle_name,
                         margin: '0 15 0 0',
                         labelStyle: 'padding-top: 5px'
                     }, {
                         xtype: 'textfield',
                         flex: 1,
                         name: 'lastName',
-                        fieldLabel: 'Last Name',
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.last_name,
                         allowBlank: false,
                         labelStyle: 'padding-top: 5px'
                     }
@@ -284,7 +284,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     {
                         xtype: 'checkbox',
                         margin: '0,10,0,0',
-                        boxLabel: 'Billing Address',
+                        boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.billing_address,
                         name: 'isBilling',
                         inputValue: true,
                         listeners: {
@@ -295,7 +295,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     {
                         xtype: 'checkbox',
                         margin: '0 10',
-                        boxLabel: 'Default Billing Address',
+                        boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.default_billing_address,
                         name: 'isPrimaryBilling',
                         inputValue: true,
                         listeners: {
@@ -305,7 +305,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     }, {
                         xtype: 'checkbox',
                         margin: '0 10',
-                        boxLabel: 'Shipping Address',
+                        boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.shipping_address,
                         name: 'isShipping',
                         inputValue: true,
                         listeners: {
@@ -315,7 +315,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     }, {
                         xtype: 'checkbox',
                         margin: '0,0,0,10',
-                        boxLabel: 'Default Shipping Address',
+                        boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.default_shipping_address,
                         name: 'isPrimaryShipping',
                         inputValue: true,
                         listeners: {
@@ -381,15 +381,15 @@ Ext.define('Taco.shared.view.form.Address', {
         var isUsaOrCanada = (!newVal || newVal === 'US' || newVal === 'CA');
 
         if (isUsaOrCanada) {
-            this.postalRegion.setFieldLabel('State');
+            this.postalRegion.setFieldLabel(Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.state);
             //this.postalRegion.setFieldStyle('text-transform:uppercase');
-            this.postalCode.setFieldLabel('Zip');
+            this.postalCode.setFieldLabel(Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.ZIP);
             this.postalCode.minLength = 2;
         } else {
-            this.postalRegion.setFieldLabel('Region');
+            this.postalRegion.setFieldLabel(Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.region);
             // todo: field style not refreshing DOM - Greg Murray on 2014-10-24
             //this.postalRegion.setFieldStyle(''); 
-            this.postalCode.setFieldLabel('Postal Code');
+            this.postalCode.setFieldLabel(Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.postal_code);
             this.postalCode.minLength = 0;
         }
         this.postalRegion.setAllowBlank(!isUsaOrCanada);

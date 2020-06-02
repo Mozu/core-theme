@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         dockedItems: null
     },
 
-    primaryText: 'OK',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.OK,
 
     closable: true,
     draggable: true,
@@ -65,14 +65,14 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     flex: 1.5,
                     data: userObject,
                     tpl: [
-                        '<tpl if="userName && userName.length &gt; 0"><div><b>User:</b> {userName:htmlEncode}</div></tpl>',
-                        '<div><b>Application:</b> {appName}</div>'
+                        '<tpl if="userName && userName.length &gt; 0"><div><b>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.user + ':</b> {userName:htmlEncode}</div></tpl>',
+                        '<div><b>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.application + ':</b> {appName}</div>'
                     ]
                 }, {
                     flex: 0.5,
                     data: orderObject,
                     tpl: [
-                        '<div><b>Order:</b> #{orderNumber}</div>'
+                        '<div><b>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.order + ':</b> #{orderNumber}</div>'
                     ]
                 }, {
                     flex: 1,
@@ -248,15 +248,15 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: metaData[0],
                 tpl: [
-                    '<div>Updated Fulfillment Info</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.updated_fulfillment_info + '</div>',
                     '<br/>',
                     '<tpl if="updatedFulfillment.FulfillmentContact.Address">',
-                    '<div>Update Address: <br/> {updatedFulfillment.FulfillmentContact.Address.Address1} {updatedFulfillment.FulfillmentContact.Address.Address2}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.update_address + ': <br/> {updatedFulfillment.FulfillmentContact.Address.Address1} {updatedFulfillment.FulfillmentContact.Address.Address2}</div>',
                     '<div>{updatedFulfillment.FulfillmentContact.Address.CityOrTown} {updatedFulfillment.FulfillmentContact.Address.StateOrProvince} {updatedFulfillment.FulfillmentContact.Address.PostalOrZipCode} {updatedFulfillment.FulfillmentContact.Address.CountryCode}</div>',
                     '</tpl>',
                     '<br/>',
                     '<tpl if="updatedFulfillment.ShippingMethodCode">',
-                    '<div>Update Shipping Info: <br/> {updatedFulfillment.ShippingMethodCode} - {updatedFulfillment.ShippingMethodName}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.update_shipping_info + ': <br/> {updatedFulfillment.ShippingMethodCode} - {updatedFulfillment.ShippingMethodName}</div>',
                     '</tpl>'
                 ]
             }]
@@ -272,11 +272,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: quantityData[0],
                 tpl: [
-                    '<div>Product Code: {productCode}</div>',
-                    '<div>Product Name: {productName}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_name + ': {productName}</div>',
                     '<br/>',
-                    '<div>Old Quantity: {oldValue}</div>',
-                    '<div>New Quantity: {newValue}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.old_quantity + ': {oldValue}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.new_quantity + ': {newValue}</div>'
                 ]
             }]
         });
@@ -291,11 +291,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: dutyData[0],
                 tpl: [
-                    '<div>Product Code: {productCode}</div>',
-                    '<div>Product Name: {productName}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_name + ': {productName}</div>',
                     '<br/>',
-                    '<div>Old Duty Amount: {[this.getCurrencyFormat(values.oldValue)]}</div>',
-                    '<div>New Duty Amount: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.old_duty_amount + ': {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.new_duty_amount + ': {[this.getCurrencyFormat(values.newValue)]}</div>',
                     {
                         getCurrencyFormat: function (v) {
                             var retVal,
@@ -333,11 +333,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: priceData[0],
                 tpl: [
-                    '<div>Product Code: {productCode}</div>',
-                    '<div>Product Name: {productName}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_name + ': {productName}</div>',
                     '<br/>',
-                    '<div>Old Amount: {[this.getCurrencyFormat(values.oldValue)]}</div>',
-                    '<div>New Amount: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.old_amount + ': {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.new_amount + ': {[this.getCurrencyFormat(values.newValue)]}</div>',
                     {
                         getCurrencyFormat: function (v) {
                             var retVal,
@@ -375,11 +375,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: packageData[0],
                 tpl: [
-                    '<div>Product Code: {productCode}</div>',
-                    '<div>Product Name: {productName}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_name + ': {productName}</div>',
                     '<br/>',
-                    '<div>Old Shipping Method: {oldValue}</div>',
-                    '<div>New Shipping Method: {newValue}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.old_shipping_method + ': {oldValue}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.new_shipping_method + ': {newValue}</div>'
                 ]
             }]
         });
@@ -394,7 +394,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>Old Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.old_price_list_code + ': {[this.checkForEmptyString(values)]}</div>',
                 {
                     checkForEmptyString: function(value) {
                         var oldCode = value.oldPriceListCode;
@@ -409,11 +409,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>New Price List Code: {[this.checkForEmptyString(values)]}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.new_price_list_code + ': {[this.checkForEmptyString(values)]}</div>',
                 {
                     checkForEmptyString: function (value) {
                         var newCode = value.newPriceListCode;
-                        return !newCode ? 'None' : newCode;
+                        return !newCode ? Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.none : newCode;
                     }
                 }
             ]
@@ -437,7 +437,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: refundMetaData,
                 tpl: [
-                    '<div>Transaction Id: {refundTransactionId}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.transaction_id + ': {refundTransactionId}</div>'
                 ]
             });
         }
@@ -448,7 +448,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: refundMetaData,
             tpl: [
-                '<div>Refund Type: {refundType}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.refund_type + ': {refundType}</div>'
             ]
         });
 
@@ -457,7 +457,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: refundMetaData,
             tpl: [
-                '<div>Refund Amount: {[this.getCurrencyFormat(values.refundAmount)]}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.refund_amount + ': {[this.getCurrencyFormat(values.refundAmount)]}</div>',
                 {
                     getCurrencyFormat: function (v) {
                         var retVal,
@@ -511,7 +511,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: retData,
             tpl: [
-                '<div>Return with Id {returnId} {verb} {verbHelper} order #{orderNumber}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.return_with_id + ' {returnId} {verb} {verbHelper} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.order_hash + '{orderNumber}</div>'
             ]
         });
 
@@ -521,7 +521,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: retData,
                 tpl: [
-                    '<div>TransactionId: {transactionId}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.transaction_id + ': {transactionId}</div>'
                 ]
             });
         }
@@ -532,7 +532,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: retData,
                 tpl: [
-                    '<div>Refund Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.refund_amount + ': {[this.getCurrencyFormat(values.amount)]}</div>',
                     {
                         getCurrencyFormat: function(v) {
                             var retVal,
@@ -560,7 +560,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
 
         var dataColumns = [];
         dataColumns.push({
-            text: 'Product Code',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code,
             dataIndex: 'field1',
             draggable: false,
             resizable: true,
@@ -599,12 +599,12 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: orderData[0],
             tpl: [
-                '<div>Payment Status: {paymentStatus:htmlEncode}</div>',
-                '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
-                '<div>Payment Action: {actionName:htmlEncode}</div>',
-                '<div>Payment Id: {paymentId:htmlEncode}</div>',
-                '<div>Correlation Id: {correlationId:htmlEncode}</div>',
-                '<div>Details: {message:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_status + ': {paymentStatus:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount + ': {[this.getCurrencyFormat(values.amount)]}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_action + ': {actionName:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_id + ': {paymentId:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.correlation_id + ': {correlationId:htmlEncode}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.details + ': {message:htmlEncode}</div>',
                 {
                     getCurrencyFormat: function (v) {
                         if (v) {
@@ -642,11 +642,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
     createOrderMessage: function (orderRecordData) {
         var itemsList = [];
         var orderData = orderRecordData.metadata;
-        var statusLabel = 'Order Status';
+        var statusLabel = Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.order_status;
         if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('fulfillment') > -1) {
             statusLabel = orderRecordData.subject;
         } else if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('payment') > -1) {
-            statusLabel = 'Payment Status';
+            statusLabel = Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_status;
         }
 
         if (orderData[0].hasOwnProperty('amount')) {
@@ -666,7 +666,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: orderData[0],
                 tpl: [
-                    '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount + ': {[this.getCurrencyFormat(values.amount)]}</div>',
                     {
                         getCurrencyFormat: function(v) {
                             var retVal,
@@ -721,11 +721,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: fulfillmentData[0],
                 tpl: [
-                    '<div>Product Code: {productCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>',
                     '<br>',
-                    '<div>Fulfillment moved from: {oldLocation:htmlEncode}</div>',
-                    '<div>Fulfillment moved to: {newLocation:htmlEncode}</div>',
-                    '<div>Fulfillment method: {newMethod}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.fulfillment_moved_from + ': {oldLocation:htmlEncode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.fulfillment_moved_to + ': {newLocation:htmlEncode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.fulfillment_method + ': {newMethod}</div>'
                 ]
             }
         });
@@ -786,7 +786,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>Product Code: {productCode}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ': {productCode}</div>'
             ]
         });
 
@@ -795,7 +795,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>Product Name: {productName}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_name + ': {productName}</div>'
             ]
         });
 
@@ -804,7 +804,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: lineItemData[0],
             tpl: [
-                '<div>Quantity: {quantity}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.quantity + ': {quantity}</div>'
             ]
         });
 
@@ -826,8 +826,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: orderTotalData[0],
                 tpl: [
-                    '<div>Previous Total: {[this.getCurrencyFormat(values.oldValue)]}</div>',
-                    '<div>Current Total: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.previous_total + ': {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.current_total + ': {[this.getCurrencyFormat(values.newValue)]}</div>',
                     {
                         getCurrencyFormat: function (v) {
                             var retVal,
@@ -867,7 +867,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Transaction ID: {transactionId}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.transaction_id + ': {transactionId}</div>'
             ]
         });
 
@@ -876,14 +876,14 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Payment Type: {paymentType}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_type + ': {paymentType}</div>'
             ]
         }, {
             flex: 1,
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount + ': {[this.getCurrencyFormat(values)]}</div>',
                 {
                     // This needs to take the newValue into effect.
                     getCurrencyFormat: function(v) {
@@ -948,7 +948,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: paymentData[0],
                 tpl: [
-                    '<div>Amount Credited: {[this.getCurrencyFormat(values)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount_credited + ': {[this.getCurrencyFormat(values)]}</div>',
                     {
                         // This needs to take the newValue into effect.
                         getCurrencyFormat: function (v) {
@@ -985,7 +985,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Payment Status: {newValue}</div>'
+                '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_status + ': {newValue}</div>'
             ]
         });
 
@@ -1007,8 +1007,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: shippingData[0],
                 tpl: [
-                    '<div>Shipping Method: {shippingMethod}</div>',
-                    '<div>Amount: {[this.getCurrencyFormat(values.value)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.shipping_method + ': {shippingMethod}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount + ': {[this.getCurrencyFormat(values.value)]}</div>',
                     {
                         getCurrencyFormat: function (v) {
                             var retVal,
@@ -1049,9 +1049,9 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: couponData[0],
                 tpl: [
-                    '<div>Coupon Code: {couponCode}</div>',
-                    '<div>Status: {couponStatus}</div>',
-                    '<div>Value: {value}</div>'
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.coupon_code + ': {couponCode}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.status + ': {couponStatus}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.value + ': {value}</div>'
                 ]
             }]
         });
@@ -1082,7 +1082,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '20 0 0',
             columns: [
                 {
-                    text: 'Product Code',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code,
                     dataIndex: 'productCode',
                     draggable: false,
                     resizable: true,
@@ -1109,9 +1109,9 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: rmaRefundData[0],
                 tpl: [
-                    '<div>RMA ID: {rmaID}</div>',
-                    '<div>Payment Transaction ID: {transactionId}</div>',
-                    '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.RMA_ID + ': {rmaID}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.payment_transaction_id + ': {transactionId}</div>',
+                    '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.amount + ': {[this.getCurrencyFormat(values.amount)]}</div>',
                     {
                         getCurrencyFormat: function(v) {
                             var retVal,
@@ -1151,7 +1151,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: stateData,
             tpl: [
-                '<div>{newValue} return with Id {returnNumber}</div>'
+                '<div>{newValue} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.return_with_id + ' {returnNumber}</div>'
             ]
         });
 
@@ -1255,9 +1255,9 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             {
                                 grabDisplayData: function(values) {
                                     if (Object.keys(values).indexOf('orderNumber') > -1) {
-                                        return '<div>Order Number: ' + values.orderNumber + '</div>';
+                                        return '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.order_number + ': ' + values.orderNumber + '</div>';
                                     } else {
-                                        return '<div>RMA ID: ' + values.rmaId + '</div>';
+                                        return '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.RMA_ID + ': ' + values.rmaId + '</div>';
                                     }
                                 }
                             }

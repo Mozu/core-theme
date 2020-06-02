@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
     autoShow: true,
     scale: 'small',
     height: 400,
-    title: 'Collect Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.collect_payment,
 
     initComponent: function () {
         var notes = null;
@@ -37,7 +37,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
             notes = {
                 xtype: 'textareafield',
                 name: 'notes',
-                fieldLabel: 'Notes',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.notes,
                 anchor: '100%'
             };
         }
@@ -50,7 +50,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                 {
                     xtype: 'currencyfield',
                     name: 'amount',
-                    fieldLabel: 'Amount to Capture',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount_to_capture,
                     currencyCode: this.order.getCurrencyCode(),
                     selectOnFocus: true,
                     width: 170,
@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
         };
 
         me.setLoading({
-             msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         this.order.capturePayment(cfg);

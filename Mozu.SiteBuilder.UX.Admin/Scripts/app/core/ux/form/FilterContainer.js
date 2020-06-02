@@ -45,7 +45,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     enableQuickFilters: true,
     disableAdvancedSearch: false,
-    emptySearchText: 'Search',
+    emptySearchText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.Search,
 
     initialValue: null,
 
@@ -133,11 +133,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 xtype: 'combo',
                 itemId: 'quickFilter',
                 name: 'quickFilter',
-                fieldLabel: 'Quick Filter',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.quick_filter,
                 queryMode: 'local',
                 typeAhead: false,
                 isSelectField: true,
-                emptyText: 'Apply Quick Filter',
+                emptyText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.apply_quick_filter,
                 forceSelection: true,
                 store: Ext.isArray(this.quickFilterData) ? this.quickFilterData[0] : this.quickFilterData,
                 value: this.getQuickFilterFromStore(),
@@ -362,8 +362,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     cls: 'advanced-filter',
                     closable: false,
                     closeAction: 'hide',
-                    title: 'Advanced Filter',
-                    primaryText: 'Filter',
+                    title: Localizer.langResources.ORDERS.Orders.AdvancedFilter.title,
+                    primaryText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.filter,
                     draggable: false,
                     ui: 'dialog',
                     // had to override the layout on this becuase invalidattion messages in the forms was causing a scroll to happen.

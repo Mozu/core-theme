@@ -6,10 +6,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Cancel Items',
-    secondaryText: 'Nevermind',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.cancel_items,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.nevermind,
     scale: 'medium',
-    title: 'Cancel Items?',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.cancel_items+'?',
     layout: {
         type: 'fit'
     },
@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     validateOnChange: true,
                                     margin: '0px 5px 0px 5px',
                                     mouseWheelEnabled: false,
-                                    fieldLabel: 'Quantity to cancel',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.quantity_to_cancel,
                                     listeners: {
                                         change: {
                                             scope: this,
@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     itemId: 'cancelReason',
                                     valueField: 'reasonCode',
                                     displayField: 'name',
-                                    fieldLabel: 'Cancel Reason',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.cancel_reason,
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',
                                     allowBlank: false,
@@ -90,7 +90,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     name: 'otherReason',
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
-                                    fieldLabel: 'Specify Reason *',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.specify_reason,
                                     hidden: true,
                                     listeners: {
                                         change: {
@@ -167,12 +167,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
         if (this.validateModal()) {
             var me = this;
             Ext.MessageBox.show({
-                title: 'Cancel Item',
+                title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.cancel_item,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'Are you certain you want to Cancel this item?',
+                msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.are_you_certain_you_want_to_cancel_this_item,
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
@@ -186,16 +186,16 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                 me.setLoading(false, me.body);
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', 'Error while canceling shipment item', 'error');
+                                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_canceling_shipment_item, 'error');
                                     return;
                                 }
-                                Taco.app.fireEvent('setmessage', "Item " + payloadData.cancelItemsRequest.items[0].name + " Successfully Cancelled", 'success');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.item + payloadData.cancelItemsRequest.items[0].name + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.successfully_cancelled, 'success');
                                 me.saveSuccess();
                                 me.close();
                             },
                             failure: function (response) {
                                 me.setLoading(false, me.body);
-                                Taco.app.fireEvent('setmessage', 'Error while canceling shipment item', 'error');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_canceling_shipment_item, 'error');
                                 // close the dialog
                                 me.close();
                             }

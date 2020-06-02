@@ -208,7 +208,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // changing the hover class to get rid of taco overrides of grid
                 //overItemCls: 'taco-orderItem-grid-row-over',
 
-                emptyText: '<div class="empty-grid-message">No order items to display</div>',
+                emptyText: '<div class="empty-grid-message">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.no_order_items + '</div>',
                 deferEmptyText: false,
                 stripeRows: false,
                 disabled: false, // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
@@ -245,7 +245,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             columns: [
                 {
                     dataIndex: 'lineId',
-                    text: 'Line',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.line,
                     draggable: false,
                     resizable: true,
                     width: 140,
@@ -255,7 +255,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     align: 'left',
                 },
                 {
-                    text: 'Code',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.code,
                     draggable: false,
                     resizable: true,
                     width: 140,
@@ -266,7 +266,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'productCode'
                 },
                 {
-                    text: 'Name',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.name,
                     draggable: false,
                     minWidth:80,
                     xtype: 'templatecolumn',
@@ -283,10 +283,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<span class="product-link-disabled">{productName}</span>',
                         '</tpl>',
 
-                        '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock && stock.stockAvailable < quantity">',  
-                        '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">Qty {[values.quantity - values.stock.stockAvailable]} on backorder.</span>',
+                        '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock && stock.stockAvailable < quantity">',
+                        '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.qty + ' {[values.quantity - values.stock.stockAvailable]} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.on_backorder + '.</span>',
                         '<tpl if="stock.availableDate">',
-                        '<span class="product-link-disabled"> Available on {stock.availableDate:date("m/d/Y")}</span>',
+                        '<span class="product-link-disabled">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.available_on + ' {stock.availableDate:date("m/d/Y")}</span>',
                         '</tpl>',                        
                         '</em></tpl>',
 
@@ -318,7 +318,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                 var priceListCodeRecord = me.record.get('priceListCode');
                                 if (priceListCodeRecord) {
                                     if (val.priceListEntryMode === "") {
-                                        return '<div class="product-no-price-list"><span>This item not included in price list</span></div>';
+                                        return '<div class="product-no-price-list"><span>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.item_not_included + '</span></div>';
                                     } else if (val.priceListEntryMode && val.priceListEntryMode.toLowerCase() === 'bulk') {
                                         return '<div class="product-volume-price-list"><span>Volume priced item</span></div>';
                                     }
@@ -422,7 +422,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 //    align: 'left'
                 //},
                 {
-                    text: 'Fulfillment',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.fulfillment,
                     editorId: 'fulfillmentColumn',
                     dataIndex: 'fulfillmentId',
                     draggable: false,
@@ -443,7 +443,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     //75- order update, 242-update Item, 77-fulfill
                     editor: (this.getEditMode() && (Ext.Array.contains(Taco.user.behaviors, 75) || Ext.Array.contains(Taco.user.behaviors, 242) || Ext.Array.contains(Taco.user.behaviors, 77))) ? me.fulfillmentFieldComboEditor : null
                 }, {
-                    text: 'Amount',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.amount,
                     draggable: false,
                     resizable: false,
                     width: 80,
@@ -479,7 +479,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     } : null,
                     dataIndex: 'unitPrice'
                 }, {
-                    text: 'Qty',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.qty,
                     draggable: false,
                     resizable: false,
                     width: 50,
@@ -508,7 +508,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'quantity'
                 },
                 {
-                    text: 'Line Item Total',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.line_item_total,
                     width: 110,
                     draggable: false,
                     resizable: false,
@@ -581,12 +581,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         
 
                         Ext.MessageBox.show({
-                            title: 'Delete Item',
+                            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.delete_item,
                             // pushes the buttons to the right to be consistant with our dialog ux.
                             rightJustifyButtons: true,
                             // reverses the order of the buttons
                             reverseOrder: true,
-                            msg: 'Are you certain you want to delete this item?',
+                            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_delete_item,
                             closable: false,
                             buttons: Ext.Msg.YESNO,
                             fn: function (val) {
@@ -910,7 +910,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 items: [
                     {
                         xtype: 'component',
-                        html: 'Warning: You have draft changes to this order detail',
+                        html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_draft_changes,
                         cls: 'title',
                         flex: 1
                     }, {
@@ -918,7 +918,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         xtype: 'button',
                         ui: 'action',
                         scale:'medium',
-                        text: 'Discard Changes',
+                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.discard_changes,
                         handler: function () {
                             me.removeDraftOrder();
                         },
@@ -928,7 +928,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         xtype: 'button',
                         ui: 'action',
                         scale: 'medium',
-                        text: 'Continue Editing',
+                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.continue_editing,
                         style: 'margin-left:5px;',
                         handler: function (button, e) {
                             var animationTarget = button.el;
@@ -1023,7 +1023,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error adding coupon.', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_coupon, 'error');
                     return;
                 }
                 this.fireEvent('saveSuccess',json);
@@ -1031,7 +1031,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error adding coupon.';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_coupon;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -1059,8 +1059,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     me.fireEvent('saveFailure');
-                    
-                    Taco.app.fireEvent('setmessage', 'Error adding order item.', 'error');
+
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_order_item, 'error');
                     return;
                 }
                 
@@ -1075,7 +1075,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // error handling here
                 me.addInProgress = false;
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error adding order item.';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_order_item;
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.fireEvent('saveFailure');
@@ -1122,8 +1122,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    this.fireEvent('saveFailure');                    
-                    Taco.app.fireEvent('setmessage', 'Error editing order item.', 'error');
+                    this.fireEvent('saveFailure');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_editing_order_item, 'error');
                     // reset the value to its default
                     var evt = e;
                     e.record.set(e.field, e.record.raw[e.field]);
@@ -1149,7 +1149,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error editing order item.';                
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_editing_order_item;                
                 // reset the value to its default
                 var evt = e;
                 e.record.set(e.field, e.record.raw[e.field]);
@@ -1224,7 +1224,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error deleting order item', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_deleting_order_item, 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
@@ -1233,7 +1233,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error deleting order item';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_deleting_order_item;
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1258,7 +1258,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error accepting order', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_accepting_order, 'error');
                     me.fireEvent('saveFailure');
                     return;
                 }
@@ -1269,7 +1269,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 me.setLoading(false);
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error accepting order';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_accepting_order;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.ownerCt.setLoading(false);
                 me.fireEvent('saveFailure');
@@ -1292,7 +1292,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error re-ordering', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_reordering, 'error');
                     return;
                 }
                 me.ownerCt.setLoading(false);
@@ -1304,7 +1304,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 me.setLoading(false);
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error reordering';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_reordering;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.ownerCt.setLoading(false);
             },
@@ -1319,12 +1319,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
         Ext.MessageBox.show({
-            title: 'Cancel Order',
+            title: Localizer.langResources.ORDERS.Orders.OrderDetails.ActionsColumn.cancel_order,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: 'Are you sure you want to cancel this order?',
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_cancel_order,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (rec) {
@@ -1341,7 +1341,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             // success handling here
                             var json = Ext.decode(response.responseText, true);
                             if (!json || !json.success) {
-                                Taco.app.fireEvent('setmessage', 'Error canceling order', 'error');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_canceling_order, 'error');
                                 me.fireEvent('saveFailure');
                                 return;
                             }
@@ -1353,7 +1353,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             me.setLoading(false);
                             // error handling here
                             var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.message) ? json.message : 'Error canceling order';
+                                msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_canceling_order;
                             Taco.app.fireEvent('setmessage', msg, 'error');
                             me.ownerCt.setLoading(false);
                             me.fireEvent('saveFailure');
@@ -1385,7 +1385,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', 'Error suppressing order item discount', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_suppressing_order, 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
@@ -1395,7 +1395,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error suppressing order item discount';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_suppressing_order;
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1417,7 +1417,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', 'Error activating order item discount', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_activating_order, 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
@@ -1426,7 +1426,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error activating order item discount';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_activating_order;
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1451,7 +1451,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', 'Error cancelling changes', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_cancelling_changes, 'error');
                     
                     this.fireEvent('saveFailure');
                     return;
@@ -1461,7 +1461,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error cancelling changes';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_cancelling_changes;
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
@@ -1489,7 +1489,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     this.fireEvent('saveFailure');
-                    Taco.app.fireEvent('setmessage', 'Error saving changes', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_saving_changes, 'error');
                     return;
                 }
                 
@@ -1498,7 +1498,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function(response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error saving changes';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_saving_changes;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
                 this.fireEvent('saveFailure');

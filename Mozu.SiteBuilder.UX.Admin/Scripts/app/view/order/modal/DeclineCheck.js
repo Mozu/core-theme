@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.modal.DeclineCheck', {
 
     autoShow: true,
     scale: 'small',
-    title: 'Decline Check',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.decline_check,
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {
@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.modal.DeclineCheck', {
             items: [{
                 xtype: 'textfield',
                 name: 'checkNumber',
-                fieldLabel: 'Check Number'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.check_number
             }]
         });
 

@@ -18,17 +18,17 @@ Ext.define('Taco.view.order.widget.FulfillmentPickerField', {
     valueField: "fulfillmentId",
     hideLabel: true,
     hideTrigger: false,
-    emptyText: "Fulfillment Search",
+    emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.fulfillment_search,
     selectOnFocus: true,
     autoSelect:true,
     //height: 24,
     matchFieldWidth:false,
     listConfig: {
         width:300,
-        loadingText: 'Searching...',
+        loadingText: Localizer.langResources.SHARED.searching_text,
         cls: "fulfillment-picker-menu",
         deferEmptyText : false,
-        emptyText: '<div style="padding:0px 10px 10px 10px;color:#999999"> No matching fulfillment locations found.</div>',
+        emptyText: '<div style="padding:0px 10px 10px 10px;color:#999999"> ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.no_matching_fulfillment_locations+'</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
             return "<span class='fulfillment-method'>{fulfillmentMethod}</span> <span class='fulfillment-location-code'>  <tpl if='values.fulfillmentMethod == \"Digital\"'> (Download)<tpl else>({locationCode})</tpl> <span style='float:right;display:block' class='fulfillment-location-code'><tpl if='values.stockAvailable'>{stockAvailable} in stock</tpl></span>"

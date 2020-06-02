@@ -118,7 +118,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 '<ul class="package-tab-parent">',
                 '<li class="taco-link-button taco-link-button-packages-collapsable"><div class="taco-link-collapsable"></div></li>',
                 '<tpl for=".">',
-                '<li class="taco-link-button-item taco-link-button <tpl if="xindex == 1">active</tpl> <tpl if="values.isTabTitleHtml">taco-link-button-html</tpl>" ><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
+                '<li class="taco-link-button-item taco-link-button <tpl if="xindex == 1">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.active + '</tpl> <tpl if="values.isTabTitleHtml">taco-link-button-html</tpl>" ><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                 '</tpl>',
                 '</ul>',
                 {
@@ -147,7 +147,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'item',
                         adjustmentId: "itemAdjustment",
-                        name: 'Item Subtotal',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.item_subtotal,
                         originalAmount: me.shipmentRecord.lineItemSubtotal,
                         currentAmount: me.shipmentRecord.lineItemSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.shipmentAdjustment,
@@ -157,7 +157,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'itemTax',
                         adjustmentId: "itemTaxAdjustment",
-                        name: 'Item Tax',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.item_tax,
                         originalAmount: me.shipmentRecord.lineItemTaxTotal,
                         currentAmount: me.shipmentRecord.lineItemTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment,
@@ -166,7 +166,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'shippingSubtotal',
                         adjustmentId: "shippingAdjustment",
-                        name: 'Shipping Subtotal',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.shipping_subtotal,
                         originalAmount: me.shipmentRecord.shippingSubtotal,
                         currentAmount: me.shipmentRecord.shippingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.shippingAdjustment,
@@ -175,7 +175,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'shippingTaxTotal',
                         adjustmentId: "shippingTaxAdjustment",
-                        name: 'Shipping Tax',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.shipping_tax,
                         originalAmount: me.shipmentRecord.shippingTaxTotal,
                         currentAmount: me.shipmentRecord.shippingTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.shippingTaxAdjustment,
@@ -184,7 +184,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'handlingSubtotal',
                         adjustmentId: "handlingAdjustment",
-                        name: 'Handling Subtotal',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.handling_subtotal,
                         originalAmount: me.shipmentRecord.handlingSubtotal,
                         currentAmount: me.shipmentRecord.handlingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.handlingAdjustment,
@@ -193,7 +193,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'handlingTaxTotal',
                         adjustmentId: "handlingTaxAdjustment",
-                        name: 'Handling Tax',
+                        name: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShipmentTotalPanel.handling_tax,
                         originalAmount: me.shipmentRecord.handlingTaxTotal,
                         currentAmount: me.shipmentRecord.handlingTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.handlingTaxAdjustment,
@@ -233,7 +233,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         };
 
         this.validateShipmentAdjustmentFields = function() {
-            var NEGATIVE_ADJUSTMENT_ERROR = "Adjustment totals cannot be negative"
+            var NEGATIVE_ADJUSTMENT_ERROR = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.adjustment_totals_negative
             var validated = true;
             
             this.store.each(function(item){
@@ -265,10 +265,10 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     me.setLoading(false, this.body);
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                        Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_updating_shipment_totals, 'error');
                         return;
                     }
-                    Taco.app.fireEvent('setmessage', "Shipment totals updated Successfully", 'success');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.totals_updated_successfully, 'success');
                     me.fireEvent('shipmentRefresh');
 
                     me.shipmentTotals.show(true);
@@ -281,7 +281,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 failure: function (response) {
                     me.setLoading(false, this.body);
                     // error handling here
-                    Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_updating_shipment_totals, 'error');
                     me.store.resetAdjustmentAmounts();
                 },
                 scope: me
@@ -326,7 +326,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         this.shipmentEditBtn = Ext.create('Ext.Button', {
             itemId: Ext.id(),
             cls: 'Edit',
-            text: 'Edit',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.edit,
             style: {
                 "float": "right",
                 "margin": "0 10px 0 0"
@@ -347,7 +347,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         this.shipmentCancelBtn = Ext.create('Ext.Button', {
             itemId: Ext.id(),
             cls: 'cancel',
-            text: 'Cancel',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel,
             hidden: true,
             ui: 'action',
             scale: 'medium',
@@ -371,7 +371,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             style: {
                 "float": "right"
             },
-            text: 'Save',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.save,
             ui: 'action',
             scale: "medium",
             margin: '0 0 0 0',

@@ -27,7 +27,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
     cancelButtonEnabled: false,
     // No action column at this time.
     showActionsColumn: false,
-        
+
     // No filtering at this time.
     enableQuickFilters: false,
     advancedSearchConfig: {},
@@ -35,12 +35,12 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
     autoHidePagingToolbar:true,
 
     deferEmptyText: false,
-    emptyText:"None available",
+    emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.none_available,
 
     initComponent: function() {
         var me = this;
         if (!me.store) {
-            throw "store is required";
+            throw Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.store_is_required;
         }
         this.columns = this.getColumnConfig();
 
@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
 
         var columns = [{
             dataIndex: 'adminName',
-            text: 'Name',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.name,
             flex: 2,
             renderer: function (value, meta, record, index) {
 
@@ -84,7 +84,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
             }
         }, {
             dataIndex: 'values',
-            text: 'Value',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.value,
             flex: 3,
             renderer: function (value, meta, record, index) {
                 var att = Ext.Array.findBy(me.record.get('attributes'), function (attribute) {
@@ -97,7 +97,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
                         return (attrStringValue.toLowerCase()) === 'true' ? 'Yes' : 'No';
                     }
                     return this.GridEmptyItemText;
-                   
+
                 }
 
                 if (record.get('inputType') === "Date") {
@@ -116,7 +116,7 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
 
                 return (att && !Ext.isEmpty(att.values) ? att.values.map(Ext.util.Format.htmlEncode).join(', ').replace(/\n/g, '<br>') : this.GridEmptyItemText);
             }
-        }]    
+        }]
 
         return columns;
     }

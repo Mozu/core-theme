@@ -28,7 +28,7 @@
             }),
             columns: [
             {
-                text: 'No.',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.no,
                 dataIndex: 'no',
                 sortable: true,
                 width:50
@@ -38,7 +38,7 @@
                 width:30
                 },                
                 {
-                    text: 'Shipment Number',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.shipment_number,
                     width:140,
                     dataIndex: 'shipmentNumber',
                     renderer: function (value, row) {
@@ -54,7 +54,7 @@
                     dataIndex: 'rowIcon'
                 },
                 {
-                    text: 'Image',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.image,
                     flex: 1,
                     dataIndex: 'image',
                     renderer: function (value) {
@@ -65,12 +65,12 @@
                     }
                 },
                 {
-                    text: 'Name',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.name,
                     flex: 2,
                     dataIndex: 'name'
                 },
                 {
-                    text: 'Qty',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.qty,
                     flex: 1,
                     sortable: true,
                     dataIndex: 'quantity'

@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
     autoShow: true,
     scale: 'large',
-    title: 'Refund',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Buttons.refund,
     height: 640,
 
     layout: {
@@ -166,7 +166,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
         this.grid = Ext.create('Taco.core.ux.grid.Panel', {
             height: 240,
-            title: 'Transaction Summary',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.transaction_summary,
             store: transactionStore,
             features: [{
                 ftype: 'grouping',
@@ -177,15 +177,15 @@ Ext.define('Taco.view.order.modal.Refund', {
             }],
             viewConfig: {
                 deferEmptyText: false,
-                emptyText: 'No payments available to refund. Check to make sure the payments have been captured.'
+                emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.no_payments
             },
             tools: [{
                 xtype: 'component',
                 itemId: 'orderTotalCollected',
                 data: this.getModalState(),
                 tpl: [
-                    '<span class="total-label">Total Collected: </span><span class="total-value">{collected:this.formatCurrency}</span>',
-                    '<span class="total-label">Total Refunded: </span><span class="total-value">{refunded:this.formatCurrency}</span>',
+                    '<span class="total-label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.total_collected + ': </span><span class="total-value">{collected:this.formatCurrency}</span>',
+                    '<span class="total-label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.total_refunded + ': </span><span class="total-value">{refunded:this.formatCurrency}</span>',
                     {
                         formatCurrency: function (value) {
                             return me.order.formatCurrency(value);
@@ -199,7 +199,7 @@ Ext.define('Taco.view.order.modal.Refund', {
             }],
             columns: [{
                 dataIndex: 'transactionType',
-                text: 'Type',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.type,
                 width: 100,
                 draggable: false,
                 sortable: false,
@@ -207,7 +207,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 menuDisabled: true
             }, {
                 dataIndex: 'transactionMethod',
-                text: 'Payment Transaction',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.payment_transaction,
                 flex: 2,
                 draggable: false,
                 sortable: false,
@@ -234,7 +234,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 }
             }, {
                 dataIndex: 'amountCollected',
-                text: 'Amount Collected',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.amount_collected,
                 flex: 1,
                 draggable: false,
                 sortable: false,
@@ -251,7 +251,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 }
             }, {
                 dataIndex: 'amountCredited',
-                text: 'Amount Credited',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.amount_credited,
                 flex: 1,
                 draggable: false,
                 sortable: false,
@@ -283,7 +283,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     xtype: 'combobox',
                     name: 'refundMethod',
                     id : 'refundMethod',
-                    fieldLabel: 'Refund Method',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Label.refund_method,
                     margin: 0,
                     allowOnlyWhitespace: false,
                     editable: false,
@@ -306,7 +306,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 }, {
                     xtype: 'combobox',
                     name: 'paymentId',
-                    fieldLabel: 'Payment Transaction',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Label.payment_transaction,
                     width: 300,
                     margin: '0 0 0 20',
                     hidden: true,
@@ -390,7 +390,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 }, {
                     xtype: 'currencyfield',
                     name: 'amount',
-                    fieldLabel: 'Refund Amount',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.refund_amount,
                     margin: '0 0 0 20',
                     hidden: true,
                     hideTrigger: true,
@@ -398,8 +398,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                     allowBlank: false,
                     minValue: Number.MIN_VALUE,
                     emptyText: this.suggestRefund().toFixed(2),
-                    maxText: 'Amount must be less than or equal to {0}',
-                    minText: ('Amount must be greater than ' + this.order.formatCurrency(0)),
+                    maxText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_less_equal_zero,
+                    minText: (Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_greater_than + ' ' + this.order.formatCurrency(0)),
                     listeners: {
                         change: {
                             scope: this,
@@ -423,7 +423,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     msgTarget: 'side',
                     items: [{
                         name: 'allowExcessCredit',
-                        boxLabel: 'Allow credit to exceed amount collected',
+                        boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Label.allow_credit_exceed,
                         inputValue: true
                     }]
                 // }, {
@@ -457,12 +457,12 @@ Ext.define('Taco.view.order.modal.Refund', {
                 name: 'poInformation',
                 id: 'poInformation',
                 width: '100%',
-                html: "For Purchase Orders, the amount refunded will be applied to the Customer's available balance",
+                html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.purchase_order_msg,
                 hidden: true
             }, {
                 xtype: 'textarea',
                 name: 'reason',
-                fieldLabel: 'Reason',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.reason,
                 width: '100%',
                 rows: 3,
                 margin: 0
@@ -473,7 +473,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 allowBlank: false,
                 items: [{
                     name: 'allowSave',
-                    boxLabel: 'Allow save',
+                    boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.allow_save,
                     checked: true
                 }]
             }]

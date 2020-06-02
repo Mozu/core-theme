@@ -5,7 +5,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         'Ext.ux.form.field.BoxSelect'
     ],
 
-    title: 'Customer ID',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.customer_id,
     cls: Taco.baseCSSPrefix + 'customer-information',
 
     layout: {
@@ -29,9 +29,9 @@ Ext.define('Taco.view.customers.subform.Information', {
         var titleString = '';
         if (this.record) {
             isAnonymous = this.record.get('isAnonymous');
-            titleString = 'Customer ID: ' + this.record.getId();
+            titleString = Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.customer_id + ': ' + this.record.getId();
             if (!isAnonymous) {
-                titleString += '  |  Shopper ID: ' + this.record.get('userName');
+                titleString += '  |  ' + Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.shopper_id +': ' + this.record.get('userName');
             }
             this.setTitle(titleString);
         }
@@ -56,7 +56,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'checkboxfield',
                 name: 'taxExempt',
                 itemId: 'taxExemptCheckbox',
-                boxLabel: 'Tax Exempt',
+                boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.tax_exempt,
                 listeners: {
                     change: function (field, newValue, oldValue, eOpts) {
                         this.taxExemptIdField.setVisible(newValue);
@@ -73,7 +73,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             ui: 'action',
             scale: 'medium',
             disabled: data.isDisabled || isAnonymous || !data.isLocked,
-            text: 'Unlock Account',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.unlock_account,
             handler: function () {
                 this.unlockAccountAjax(this.record.getId());
             },
@@ -85,16 +85,16 @@ Ext.define('Taco.view.customers.subform.Information', {
             ui: 'action',
             scale: 'medium',
             disabled: data.isDisabled || isAnonymous,
-            text: 'Reset Password',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.reset_password,
             handler: function () {
                 var id = this.record.getId();
                 Ext.MessageBox.show({
-                    title: 'Reset Password',
+                    title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.reset_password,
                     // pushes the buttons to the right to be consistant with our dialog ux.
                     rightJustifyButtons: true,
                     // reverses the order of the buttons
                     reverseOrder: true,
-                    msg: "Are you sure? This will generate an email that notifies the customer that they will need to create a new password on their next login attempt.",
+                    msg: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.reset_pws_msg,
                     closable: false,
                     buttons: Ext.Msg.YESNO,
                     fn: function (val) {
@@ -125,7 +125,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'checkboxfield',
                 name: 'isDisabled',
                 disabled: isAnonymous,
-                boxLabel: 'Disable Account',
+                boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.disable_account,
                 listeners: {
                     change: function (field, newValue, oldValue, eOpts) {
                         if (this.record.get('isLocked')) {
@@ -142,7 +142,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         });
 
         this.resetPopup = Ext.create('widget.taco-window', {
-            title: 'Reset Password',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.reset_password,
             height: 200,
             width: 400,
             layout: 'fit',
@@ -162,22 +162,22 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'textfield',
                 cls: 'no-field-padding',
                 name: 'firstName',
-                fieldLabel: 'First Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.first_name,
                 allowOnlyWhitespace: false
             }, {
                 xtype: 'textfield',
                 name: 'lastName',
-                fieldLabel: 'Last Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.last_name,
                 allowOnlyWhitespace: false
             }, {
                 xtype: 'textfield',
                 name: 'emailAddress',
-                fieldLabel: 'Email',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.email,
                 allowOnlyWhitespace: false
             }, {
                 xtype: 'textfield',
                 name: 'userName',
-                fieldLabel: 'User Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.user_name,
                 disabled: isAnonymous,
                 maxLength: 180,
                 hidden: !this.record,
@@ -193,14 +193,14 @@ Ext.define('Taco.view.customers.subform.Information', {
             }, {
                 xtype: 'checkboxfield',
                 name: 'isAnonymous',
-                boxLabel: 'Create shopper account',
+                boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.create_shopper_account,
                 itemId: 'createAccountCheckbox',
                 checked: !this.record,
                 hidden: this.record
             }, {
                 xtype: 'checkboxfield',
                 name: 'acceptsMarketing',
-                boxLabel: 'Opt-in to Marketing'
+                boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.opt_in_to_marketing
             },
                 this.taxExamptField,
                 this.disabledField
@@ -218,19 +218,19 @@ Ext.define('Taco.view.customers.subform.Information', {
                     '<table width="100%">',
                     '<tr>',
                     '<td>',
-                    '<label>Lifetime Value</label>',
+                    '<label>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.lifetime_value+'</label>',
                     '<h2 data-handle="customer-total-spent"><tpl if="typeof totalSpent === \'number\'">{totalSpent:currency}<tplelse>N/A</tpl></h2>',
                     '</td>',
                     '<td>',
-                    '<label>Fulfilled Orders</label>',
+                    '<label>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.fulfilled_orders+'</label>',
                     '<h2 data-handle="customer-order-count"><tpl if="typeof orderCount === \'number\'">{orderCount}<tplelse>N/A</tpl></h2>',
                     '</td>',
                     '<td>',
-                    '<label>Total Visits</label>',
+                    '<label>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.total_visits+'</label>',
                     '<h2 data-handle="customer-visit-count"><tpl if="typeof visitCount === \'number\'">{visitCount}<tplelse>N/A</tpl></h2>',
                     '</td>',
                     '</table>',
-                    '<div>Customer Since: <span data-handle="customer-since">{customerSinceDate:date("m/d/Y")}</span></div>'
+                    '<div>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.customer_since+': <span data-handle="customer-since">{customerSinceDate:date("m/d/Y")}</span></div>'
                 ]
             }, {
                 xtype: 'container',
@@ -252,7 +252,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 items: [{
                     xtype: 'boxselect',
                     padding: '0 5 0 0',
-                    fieldLabel: 'Customer Segments',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.customer_segments,
                     itemId: 'customerSegments',
                     store: this.segmentStore,
                     getStore: function () {
@@ -270,7 +270,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
-                    text: 'Add',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.add,
                     scope: this,
                     handler: function () {
                         this.launchSegmentModal();
@@ -280,7 +280,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'button',
                 scale: 'medium',
                 ui: 'link',
-                text: 'View Wishlist',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.view_wishlist,
                 hidden: !(this.record),
                 handler: function () {
                     Ext.create('Taco.shared.view.modal.Wishlist', {
@@ -292,7 +292,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'button',
                 scale: 'medium',
                 ui: 'link',
-                text: 'View Gift Cards & Store Credits',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.view_gift_cards,
                 hidden: !(this.record),
                 handler: function () {
                     Ext.create('Taco.shared.view.modal.StoreCredit', {
@@ -313,7 +313,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     cls: 'customer-history',
                     data:data,
                     tpl: [
-                        '<div>Account Status:</div>'
+                        '<div>'+Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.account_status+'</div>'
                     ]}, {
                         xtype: 'component',
                         flex: 1

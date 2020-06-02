@@ -58,8 +58,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                     fieldLabel: ptAttribute.get('adminName'),
                     items: [
-                        { boxLabel: 'Yes', name: ptAttribute.get('id'), inputValue: 'true', checked: currentValue === 'true' },
-                        { boxLabel: 'No', name: ptAttribute.get('id'), inputValue: 'false', checked: currentValue === 'false' }
+                        { boxLabel: "Yes", name: ptAttribute.get('id'), inputValue: 'true', checked: currentValue === 'true' },
+                        { boxLabel: "No", name: ptAttribute.get('id'), inputValue: 'false', checked: currentValue === 'false' }
                     ],
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
@@ -135,7 +135,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         this.attrs = [];
 
         if (!this.attributeDefinitionStore)
-            throw "Configuration problem: there was no attributeDefinitionStore provided to this subform.";
+            throw Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.configuration_problem;
 
         this.items = [ this.getLoadingComponent() ];
 
@@ -172,14 +172,14 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     getLoadingComponent: function () {
         return {
             xtype: 'component',
-            html: 'Loading attribute definitions..'
+            html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.loading_attribute
         };
     },
 
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'You do not have any attributes defined.'
+            html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.attributes_defined
         };
     },
 
@@ -223,7 +223,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         if (typeof this.statics().editors[editor] !== 'function') {
             return [{
                 xtype: 'component',
-                html: 'Error: could not find editor type: ' + editor
+                html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_editor_type + editor
             }];
         }
 

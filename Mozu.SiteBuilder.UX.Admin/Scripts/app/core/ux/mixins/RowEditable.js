@@ -48,7 +48,7 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
 
         if (this.enableRowEditing) {
             // update the button text to be "Save"
-            Ext.grid.RowEditor.prototype.saveBtnText = "Save";
+            Ext.grid.RowEditor.prototype.saveBtnText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.save;
 
             this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToMoveEditor: 1,
@@ -107,7 +107,7 @@ Ext.define('Taco.core.ux.mixins.RowEditable', {
             },
             failure: function (record, operation) {
                 //handle failure(s) here
-                Taco.app.fireEvent('setmessage', 'Error saving item', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_saving_item, 'error');
             }
         });
     },

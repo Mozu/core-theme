@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 shippingMethodButton.disable();
             }
 
-            var shippingMethodName = record.get("shippingMethodName") || "None Selected";
+            var shippingMethodName = record.get("shippingMethodName") || Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none_selected;
             shippingMethodButton.setText(shippingMethodName);
         }
     },
@@ -224,7 +224,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error setting shipping method.", 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_shipping_method, 'error');
                     return;
                 }
                 //this.fireEvent('saveSuccess', json);
@@ -234,7 +234,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 // error handling here
 
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error setting shipping method.";
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_shipping_method;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -282,7 +282,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 }],
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
                 disabled: !this.isOrderEditable() || (!this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length),
-                text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
+                text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none_selected,
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
                     orderId: me.record.getId(),
@@ -290,7 +290,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     onShippingMethodChange: function (menu, selection) {
 
                         if (me.isAddressValidationEnabled && !me.allowInvalidAddresses && !me.record.get("fulfillmentContact").addressIsValidated) {
-                            Taco.app.fireEvent('setmessage', 'The selected shipping address is not validated.', 'error');
+                            Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.valid_shipping_address, 'error');
                         } else if (selection && (selection.shippingMethodName || Ext.isNumeric(selection.price))) {
                             var data = {
                                 shippingMethodName: selection.shippingMethodName,
@@ -332,8 +332,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     getShippingLabelText: function () {
         return (!this.record.isPickupOnlyOrder() && Ext.Object.isEmpty(this.record.data.fulfillmentContact))
-            ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>"
-            : "Shipping Method";
+            ? Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_method + " <span class='taco-order-shipping-error'>" + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.no_shipping_address + "</span>"
+            : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_method;
     },
 
     isOrderEditable: function () {
@@ -369,14 +369,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     subTpl_1: new Ext.XTemplate(
 
         '<tpl for="orderDiscounts">',
-        '<tr class="adjustment-item discount ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
+        '<tr class="adjustment-item discount ', '<tpl if="!isActive">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.suppressed + '<tpl else>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.active + '</tpl>', '">',
         '<td class="{parent.tdCls}"></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Order Discount: {description}</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.order_discount + ' {description}</div></td>',
         '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
         '<td class="{parent.tdCls}"></td>',
         '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
         '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
-        'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
+        'class="order-action-icon discount-', '<tpl if="isActive">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.suppress + '<tpl else>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.activate + '</tpl>', '">',
         '</div>',
         '</td>',
         '</tr>',
@@ -391,7 +391,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="handlingAmount !== 0">',
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{tdInnerCls}">Order Handling Fee</div></td>',
+        '<td class="{tdCls}"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_handling_fee + '</div></td>',
         '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -399,9 +399,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '</tpl>',
 
         '<tpl for="handlingDiscounts">',
-        '<tr class="shipping-handling-item discount ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
+        '<tr class="shipping-handling-item discount ', '<tpl if="!isActive">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.suppressed + '<tpl else>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.active + '</tpl>', '">',
         '<td class="{tdCls}"></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Order Handling Fee Discount</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_handling + '</div></td>',
         '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
         '<td class="{parent.tdCls}"></td>',
         '<td class="{parent.tdCls}"></td>',
@@ -411,7 +411,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl for="lineItemHandlingFees">',
         '<tr class="shipping-handling-item itemhandlingfees">',
         '<td class="{tdCls}"></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Line {lineId} Handling Fee</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.line + ' {lineId} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling_fee + '</div></td>',
         '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.fee)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -434,7 +434,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="itemTaxTotal &gt; 0">',
         '<tr class="tax-item row-group-start">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{tdInnerCls}">Order Tax</div></td>',
+        '<td class="{tdCls}"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_tax + '</div></td>',
         '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.itemTaxTotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -444,7 +444,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="shippingTaxTotal &gt; 0">',
         '<tr class="tax-item row-group-start">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping Tax</div></td>',
+        '<td class="{tdCls}"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_tax + '</div></td>',
         '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxTotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -454,7 +454,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="handlingTaxTotal &gt; 0">',
         '<tr class="tax-item row-group-start">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{tdInnerCls}">Handling Tax</div></td>',
+        '<td class="{tdCls}"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling_tax + '</div></td>',
         '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxTotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -464,7 +464,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="dutyTotal &gt; 0">',
         '<tr class="tax-item">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{tdInnerCls}">Duty</div></td>',
+        '<td class="{tdCls}"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.duty + '</div></td>',
         '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.dutyTotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -476,7 +476,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         '<tr class="subtotalrow">',
         '<th><div class="{[ (values.taxDutyTotal != 0) ? "tax-summary" : "" ]}"></div></th>',
-        '<th class="summary"><div class="{tdInnerCls}">Tax & Duty</div></th>',
+        '<th class="summary"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.tax_duty + '</div></th>',
         '<th></th>',
         '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.taxDutyTotal)]}</div></th>',
         '<th></th>',
@@ -494,7 +494,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         '<tr class="subtotalrow">',
         '<th></th>',
-        '<th class="summary"><div class="{tdInnerCls}">Order Subtotal</div></th>',
+        '<th class="summary"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_subtotal + '</div></th>',
         '<th></th>',
         '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemSubtotalWithOrderAdjustments)]}</div></th>',
         '<th></th>',
@@ -521,7 +521,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="shippingMethodName">',
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}" colspan=><div class="{tdInnerCls}">Order Shipping Fee<tpl if="values.shippingMethodName">: {shippingMethodName}</tpl></div></td>',
+        '<td class="{tdCls}" colspan=><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_shipping_fee + '<tpl if="values.shippingMethodName">: {shippingMethodName}</tpl></div></td>',
         '<td class="{tdCls}"><tpl if="!isOmsOnly"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAmountBeforeDiscountsAndAdjustments)]}</div></tpl></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
@@ -531,7 +531,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl for="lineItemShippingDiscounts">',
         '<tr class="shipping-handling-item lineitemdiscount">',
         '<td class="{tdCls}"></td>',
-        '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Line {lineId} Shipping Discount: {name}</div></td>',
+        '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.line + ' {lineId} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_discount + ': {name}</div></td>',
         '<td class="{parent.tdCls}"><tpl if="!isOmsOnly"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.fee)]})</div></tpl></td>',
         '<td class="{parent.tdCls}"></td>',
         '<td class="{parent.tdCls}"></td>',
@@ -540,14 +540,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         '<tpl for="shippingDiscounts">',
         '<tr class="shipping-handling-item discount ',
-        '<tpl if="!isActive">suppressed<tpl else>active</tpl>',
+        '<tpl if="!isActive">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.suppressed + '<tpl else>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.active + '</tpl>',
         '">',
         '<td class="{tdCls}"></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount: {description}</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_discount + ': {description}</div></td>',
         '<td class="{parent.tdCls}"><tpl if="!isOmsOnly"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></tpl></td>',
         '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
         '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
-        'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
+        'class="order-action-icon discount-', '<tpl if="isActive">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.suppress + '<tpl else>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.activate + '</tpl>', '">',
         '</div>',
         '</td>',
         '</tr>',
@@ -559,7 +559,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         '<tr class="totalrow" >',
         '<th></th>',
-        '<th class="summary"><div class="{tdInnerCls}">Order Total</div></th>',
+        '<th class="summary"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_total + '</div></th>',
         '<th></th>',
         '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.total)]}</div></th>',
         '<th></th>',
@@ -596,7 +596,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<thead>',
             '<tr>',
             '<th><div class="{[ (values.orderAdjustment.amount != 0 || (values.orderDiscounts && values.orderDiscounts.length > 0) || ' + isEditable + ') ? "adjustment-summary" : "" ]}"></div></th>',
-            '<th class="summary">Order Adjustments</th>',
+            '<th class="summary">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_adjustments + '</th>',
             '<th></th>',
 
             '<th class="summary-price" itemId="taco-subTpl_5">',
@@ -612,7 +612,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<tpl if="' + isEditable + ' || orderAdjustment.amount !== 0">',
             '<tr class="adjustment-item">',
             '<td class="{tdCls}"></td>',
-            '<td class="{tdCls}"><div itemId="orderAdjustmentLabel" class="{tdInnerCls}">Manual Order Adjustment</div></td>',
+            '<td class="{tdCls}"><div itemId="orderAdjustmentLabel" class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_adjustment + '</div></td>',
             '<td class="{tdCls}"><div itemId="orderAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.orderAdjustment.amount < 0) ? "negative-currency" : "" ]}">{[ this.getCurrencyFormat(values.orderAdjustment.amount)]}</div></td>',
             '<td class="{tdCls}"></td>',
             '<td class="{tdCls}"></td>',
@@ -643,7 +643,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<thead>',
             '<tr class="subtotalrow">',
             '<th><div class="{[ (values.shippingTotal != 0 || values.shippingMethodName || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
-            '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping + '</div></th>',
             '<th></th>',
 
             '<th class="summary-price" itemId="taco-subTpl_7">',
@@ -662,7 +662,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<tpl if="' + isEditable + ' || shippingAdjustment.amount !== 0">',
             '<tr class="shipping-handling-item">',
             '<td class="{tdCls}"></td>',
-            '<td class="{tdCls}"><div itemId="shippingAdjustmentLabel" class="{tdInnerCls}">Manual Shipping Adjustment</div></td>',
+            '<td class="{tdCls}"><div itemId="shippingAdjustmentLabel" class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_adjustment + '</div></td>',
             '<td class="{tdCls}"><div itemId="shippingAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.shippingAdjustment.amount < 0) ? "negative-currency" : "" ]}">{[ this.getCurrencyFormat(values.shippingAdjustment.amount)]}</div></td>',
             '<td class="{tdCls}"></td>',
             '<td class="{tdCls}"></td>',
@@ -679,7 +679,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<thead>',
             '<tr class="subtotalrow">',
             '<th><div class="{[ (values.handlingAmount != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
-            '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling + '</div></th>',
             '<th></th>',
 
             '<th class="summary-price" itemId="taco-subTpl_10">',
@@ -699,7 +699,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<tpl if="' + isEditable + ' || handlingAdjustment.amount !== 0">',
             '<tr class="shipping-handling-item">',
             '<td class="{tdCls}"></td>',
-            '<td class="{tdCls}"><div itemId="handlingAdjustmentLabel" class="{tdInnerCls}">Manual Handling Adjustment</div></td>',
+            '<td class="{tdCls}"><div itemId="handlingAdjustmentLabel" class="{tdInnerCls}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling_adjustment + '</div></td>',
             '<td class="{tdCls}"><div itemId="handlingAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.handlingAdjustment.amount < 0) ? "negative-currency" : "" ]}">{[ this.getCurrencyFormat(values.handlingAdjustment.amount)]}</div></td>',
             '<td class="{tdCls}"></td>',
             '<td class="{tdCls}"></td>',

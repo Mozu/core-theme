@@ -6,7 +6,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
 
     autoShow: true,
     scale: 'medium',
-    title: 'Issue Credit',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.issue_credit,
     height: 430,
 
     initComponent: function (eOpts) {
@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                                 name: 'creditToPurchaseOrders',
                                 itemId: 'purchaseOrderCredit',
                                 checked: true,
-                                boxLabel: 'Apply refund to the customer\'s available balance for purchase orders'
+                                boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.apply_refund_for_purchase_orders
                             }
                          : null;
 
@@ -48,7 +48,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 itemId : 'amount',
-                fieldLabel: 'Amount',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.amount,
                 required: true,
                 allowBlank: false,
                 value: availableForCredit,
@@ -59,7 +59,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
             {
                 xtype: 'textarea',
                 name: 'reason',
-                fieldLabel: 'Reason',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.reason,
                 width: '100%'
             }]
         });
@@ -95,7 +95,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
             };
         
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         this.order.issueCredit({

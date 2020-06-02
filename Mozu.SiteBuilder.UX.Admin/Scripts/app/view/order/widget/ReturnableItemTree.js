@@ -118,7 +118,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                     if (this.getSelection().length !== 0) {
                         header.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
                     } else {
-                        this.errorEl.setError('All items have already been returned');
+                        this.errorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.returned_items);
                         this.allSelected = false;
                         return;
                     }

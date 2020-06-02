@@ -9,7 +9,7 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
     scale: "medium",
 
     //itemId: 'resendEmailButton',
-    text: 'Resend Email',
+    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.resend_email,
 
     menuAlign: 'tr-br?',
 
@@ -20,7 +20,7 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
     jsonData: {},
 
     confirmTpl : new Ext.XTemplate([
-        '<p>Successfully resent e-mail</p>'
+        '<p>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.ResendEmailPopup.successfully_resent_email + '</p>'
     ]),
 
     confirmData: {},
@@ -28,12 +28,12 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
     // 
     showSuccessMessage: true,
 
-    errorMsg: "Error resending e-mail",
+    errorMsg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.ResendEmailPopup.error_resend_email,
     
     activeMenuItem : null,
 
     initComponent: function () {
-        var me = this;
+        var me = this;        
         if (me.menu) {
 
         } else {
@@ -104,7 +104,7 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
 
         var json = Ext.decode(response.responseText, true);
         if (!json || !json.success) {
-            var msg = (me.errorMsg) ? me.errorMsg : "Error";
+            var msg = (me.errorMsg) ? me.errorMsg : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error;
             Taco.app.fireEvent('setmessage', msg, 'error');
             return;
         }
@@ -117,7 +117,7 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
     onFailure: function (response) {        
         var me = this,
             json = Ext.decode(response.responseText, true),
-            msg = (json && json.message) ? json.message : (me.errorMsg) ? me.errorMsg : "Error";
+            msg = (json && json.message) ? json.message : (me.errorMsg) ? me.errorMsg : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error;
 
         Taco.app.fireEvent('setmessage', msg, 'error');
     },
@@ -127,7 +127,7 @@ Ext.define('Taco.core.ux.form.ResendEmailButton', {
             msg = me.confirmTpl.apply(me.confirmData);
         
         Ext.MessageBox.show({
-            title: 'Resend E-mail',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.resend_email,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons

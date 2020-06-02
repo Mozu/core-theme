@@ -42,11 +42,11 @@ Ext.define('Taco.view.order.Edit', {
     },
     formCls: 'Taco.view.order.Form',
 
-    saveText: "Submit Order",
+    saveText: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.submit_order,
     saveInProgressText: "Submiting Order...",
 
     parentTitleCfg: {
-        title: 'Orders',
+        title: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.orders,
         controller: 'orders'
     },
     contextConfig: {

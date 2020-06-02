@@ -15,7 +15,7 @@ Ext.define('Taco.view.order.subform.AuditLog', {
 
     itemId: 'orderAuditPanel',
 
-    title: 'Audit Log',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.title,
 
     bodyPadding: '0 0 0 0',
 

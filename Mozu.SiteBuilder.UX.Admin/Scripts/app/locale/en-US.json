@@ -201,7 +201,11 @@
             "order_handling_fee": "Order Handling Fee",
             "order_handling": "Order Handling Fee Discount",
             "handling_fee": "Handling Fee",
-            "line": "Line"
+            "line": "Line",
+            "product_search_char_minimum": "Product Search (4 characters minimum)",
+            "fulfillment_search": "Fulfillment Search",
+            "no_matching_product": "No matching products found.",
+            "no_matching_fulfillment_locations": "No matching fulfillment locations found."
           },
           "Messages": {
             "error_loading_order": "Erreur lors du chargement de la commande",
@@ -652,8 +656,7 @@
             "collect_payment": "Collect Payment",
             "notes": "Notes",
             "amount_to_capture": "Amount to Capture",
-            "decline check": "Decline Check",
-            "check number": "Check Number"
+            "decline_check": "Decline Check"
           }
         },
         "Returns": {
@@ -682,7 +685,10 @@
           "return_amount": "Return Amount",
           "no_returns_for_order": "No returns for this order",
           "create_return_button": "Create Return",
-          "select_return_error": "Please select items to return."
+          "select_return_error": "Please select items to return.",
+          "choose_return_reason": "Please choose a return reason.",
+          "add_return_quantity": "Please add a return quantity to all selected items.",
+          "choose_return_resolution": "Please choose a return resolution."
         },
         "AuditLog": {
           "title": "Audit Log",
@@ -946,6 +952,7 @@
   "SHARED": {
     "paging_empty_msg": "No data to display",
     "pagination_display_msg": "Displaying",
-    "selected_text": "Selected"
+    "selected_text": "Selected",
+    "searching_text": "Searching..."
   }
 }

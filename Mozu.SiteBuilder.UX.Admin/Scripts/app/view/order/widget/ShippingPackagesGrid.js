@@ -16,7 +16,7 @@
 
     viewConfig: {
         deferEmptyText: false,
-        emptyText: "No items available",
+        emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.EmptyText.no_items_available,
     },
 
     selType: 'rowmodel',
@@ -277,7 +277,7 @@
         this.columns = [
             {
                 dataIndex: 'lineId',
-                text: 'Line',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.line,
                 draggable: false,
                 resizable: true,
                 width: 60,
@@ -286,7 +286,7 @@
                 hidden: false
             },
             {
-                text: 'Image',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.image,
                 dataIndex: 'imageUrl',
                 draggable: false,
                 resizable: true,
@@ -301,7 +301,7 @@
             },
             {
                 dataIndex: 'name',
-                text: 'Name',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.name,
                 draggable: false,
                 sortable: false,
                 resizable: true,
@@ -319,7 +319,7 @@
             },
             {
                 dataIndex: 'overridePrice',
-                text: 'Unit Price',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.unit_price,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -343,7 +343,7 @@
             },
             {
                 dataIndex: 'quantity',
-                text: 'Qty',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.qty,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -354,7 +354,7 @@
             },
             {
                 dataIndex: 'itemTax',
-                text: 'Tax',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.tax,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -387,7 +387,7 @@
             //},
             {
                 dataIndex: 'itemDiscount',
-                text: 'Discount',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.discount,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -409,7 +409,7 @@
             },
             {
                 dataIndex: 'lineItemCost',
-                text: 'Subtotal',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.subtotal,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -423,7 +423,7 @@
             },
             {
                 dataIndex: 'backorderReleaseDate',
-                text: 'Backorder Available Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.backorder_available_date,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -439,7 +439,7 @@
             },
             {
                 dataIndex: 'readyForPickupQuantity',
-                text: 'Qty to Pickup',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.qty_to_pickup,
                 draggable: false,
                 sortable: false,
                 menuDisabled: true,
@@ -486,14 +486,14 @@
     getShipmentLevelSplitMenu: function () {
         var me = this;
         var actionCancelItem = {
-            text: 'Cancel Item',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel_item,
             handler: function () {
                 me.openItemCancellationPopup();
             }
         };
         
         var actionRequestTransfer = {
-            text: 'Request Transfer',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.request_transfer,
             handler: function () {
                 me.openItemRequestTransferPopup();
             },
@@ -507,21 +507,21 @@
         };
 
         var actionUpdateBackorderDate = {
-            text: 'Update Backorder Date',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.update_backorder_date,
             handler: function () {
                 me.openUpdateBackorderDatePopUp();
             }
         };
 
         var actionEditItem = {
-            text: 'Edit Item',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.edit_item,
             handler: function () {
                 me.editShipmentItem();
             }
         };
 
         var manualReassign = {
-            text: 'Manual Reassign',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.manual_reassign,
             hidden: me.isReassignBlocked(),
             handler: function () {
                 me.openItemsReassignPopup();
@@ -529,7 +529,7 @@
         };
 
         var autoReassign = {
-            text: 'Auto Reassign',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.auto_reassign,
             hidden: this.shipmentRecord.shipmentType == "BOPIS" || me.isReassignBlocked(),
             handler: function () {
                 me.shipmentItemAutoReassign();
@@ -779,17 +779,17 @@
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error while assigning shipment item', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_assigning_shipment_item, 'error');
                     return;
                 }
-                Taco.app.fireEvent('setmessage', "Item " + me.shipmentItemAutoReassignPayload.reassignItemsRequest.items[0].name + " Successfully Reassigned", 'success');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.item + " " + me.shipmentItemAutoReassignPayload.reassignItemsRequest.items[0].name + " " + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.successfully_reassigned, 'success');
                 me.fireEvent('shipmentReassign');
             },
             failure: function (response) {
                 me.setLoading(false, this.body);
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error while assigning shipment item';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_assigning_shipment_item;
                 Taco.app.fireEvent('setmessage', msg, 'error');
             },
             scope: me
@@ -919,7 +919,7 @@
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
                     }
-                    Taco.app.fireEvent('setmessage', "Item " + " updated successfully", 'success');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.item + " " + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.updated_successfully, 'success');
                     me.fireEvent('shipmentReassign');
                     // close the dialog
 
@@ -928,7 +928,7 @@
                     me.setLoading(false, me.body);
 
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_deallocating_inventory;
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     //me.close();
                 }

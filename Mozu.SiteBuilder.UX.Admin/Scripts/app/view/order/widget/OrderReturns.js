@@ -7,12 +7,12 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
     requires: ['Taco.model.Return',
                'Ext.data.Store'],
 
-    title: 'Returns',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.title,
 
     viewConfig: {
         deferEmptyText: false,
         stripeRows: false,
-        emptyText: "No returns for this order"
+        emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.no_returns_for_order
     },
 
     plugins: [],
@@ -43,7 +43,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
         return [
             {
                 dataIndex: 'returnNumber',
-                text: 'Return #',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.return_hash,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -52,7 +52,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'createDate',
-                text: 'Created Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.created_date,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'updateDate',
-                text: 'Last Modified Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.last_modified_date,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -74,7 +74,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'status',
-                text: 'Return Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.return_status,
                 xtype: 'templatecolumn',
                 draggable: false,
                 resizable: true,
@@ -99,7 +99,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'receiveStatus',
-                text: 'Receive Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.receive_status,
                 xtype: 'templatecolumn',
                 draggable: false,
                 resizable: true,
@@ -124,7 +124,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'refundStatus',
-                text: 'Refund Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.refund_status,
                 xtype: 'templatecolumn',
                 draggable: false,
                 resizable: true,
@@ -149,7 +149,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'replaceStatus',
-                text: 'Replace Status',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.replace_status,
                 xtype: 'templatecolumn',
                 draggable: false,
                 resizable: true,
@@ -174,7 +174,7 @@ Ext.define('Taco.view.order.widget.OrderReturns', {
             },
             {
                 dataIndex: 'productTotal',
-                text: 'Return Amount',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.return_amount,
                 draggable: false,
                 resizable: true,
                 sortable: false,

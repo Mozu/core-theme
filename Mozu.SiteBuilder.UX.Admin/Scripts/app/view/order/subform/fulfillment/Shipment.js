@@ -26,11 +26,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var shipmentTypeDescription = "";
         if (this.shipmentRecord.shipmentType) {
             if (this.shipmentRecord.shipmentType == "STH")
-                shipmentTypeDescription = "Ship to Home";
+                shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.ship_to_home;
             else if (this.shipmentRecord.shipmentType == "BOPIS")
-                shipmentTypeDescription = "Store Pickup";
+                shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.store_pickup;
             else if (this.shipmentRecord.shipmentType == "Transfer")
-                shipmentTypeDescription = "Transfer";
+                shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.transfer;
         }
 
         this.infoContainer = Ext.widget({
@@ -50,14 +50,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     {
                         cls:'taco-shipment-item-header',
                         tpl: [
-                            '<span class="label">Type</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.type + '</span>',
                             '<div class="labelvalue">' + shipmentTypeDescription + '</div>'
                         ]
                     },
                     {
                         cls: 'taco-shipment-item-header',
                         tpl: [
-                            '<span class="label">Shipment</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.shipment +'</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.number + '</div>'
                         ]
                     },
@@ -65,7 +65,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentType != "Transfer",
                         tpl: [
-                            '<span class="label">Parent Shipment No</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.parent_shipment_no + '</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.originalShipmentNumber + '</div>'
                         ]
                     },
@@ -73,14 +73,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
-                            '<span class="label">Last Updated</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.last_updated + '</span>',
                             '<div class="labelvalue">' + lastUpdated + '</div>'
                         ]
                     },
                     {
                         cls: 'taco-shipment-item-header',
                         tpl: [
-                            '<span class="label">Status</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.status + '</span>',
                             '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus) + '</div>'
                         ]
                     },
@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         cls: 'taco-shipment-item-header',
                         hidden: !(this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled'),
                         tpl: [
-                            '<span class="label">Reason</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.reason +'</span>',
                             '<div class="shipmentStatus">' +
                             (this.shipmentRecord.shipmentStatusReason ? this.getReasonDescription(this.shipmentRecord.shipmentStatusReason) : '')
                             + '</div>'
@@ -99,7 +99,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
-                            '<span class="label">Shipment Step Id</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.shipment_step_id + '</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.taskId : '') + '</div>'
                         ]
                     },
@@ -107,14 +107,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
-                            '<span class="label">Fulfillment Step</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.fulfillment_step + '</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.name : '') + '</div>'
                         ]
                     },
                     {
                         cls: 'taco-shipment-item-header',
                         tpl: [
-                            '<span class="label">Total</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.total +'</span>',
                             '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
                         ]
                     },
@@ -128,18 +128,18 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         items: [
                             Ext.widget('splitbutton', {
                                 menuAlign: 'tr-br?',
-                                text: 'Reassign Shipment',
+                                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.reassign_shipment,
                                 itemId: 'reassignShipmentSplitButton',
                                 hidden: me.isShipmentAction() || me.isReassignBlocked() || me.restrictFulfiller(),
                                 menu: [
                                     {
-                                        text: 'Manual Reassign',
+                                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.manual_reassign,
                                         handler: function () {
                                             me.openManualReassignShipmentModal();
                                         }
                                     },
                                     {
-                                        text: 'Auto Reassign',
+                                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.auto_reassign,
                                         hidden: this.shipmentRecord.shipmentType == "BOPIS",
                                         handler: function () {
                                             me.shipmentAutoReassign();
@@ -159,7 +159,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         items: [
                             Ext.widget('splitbutton', {
                                 menuAlign: 'tr-br?',
-                                text: 'Update Shipment',
+                                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.update_shipment,
                                 itemId: 'updateShipmentSplitButton',
                                 handler: function () {
 
@@ -187,7 +187,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     if (partialPickupItems && partialPickupItems.pickupItemsRequest.items && partialPickupItems.pickupItemsRequest.items.length > 0) {
                         for (var count = 0; count < partialPickupItems.pickupItemsRequest.items.length; count++) {
                             if (!partialPickupItems.pickupItemsRequest.items[count].isValid) {
-                                Taco.app.fireEvent('setmessage', 'Please enter a valid qty for pickup', 'error');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.enter_valid_qty_for_pickup, 'error');
                                 return;
                             }
                         }
@@ -202,34 +202,27 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     savePartialPickup: function () {
         //Save
         var me = this;
-        if (me.partialPickupItems.pickupItemsRequest &&
-            me.partialPickupItems.pickupItemsRequest.items &&
-            me.partialPickupItems.pickupItemsRequest.items.length > 0) {
-            me.setLoading(true);
-            this.record.pickupItems({
-                jsonData: me.partialPickupItems,
-                success: function (response) {
-                    me.setLoading(false);
-                    var json = Ext.decode(response.responseText, true);
+        me.setLoading(true);
+        this.record.pickupItems({
+            jsonData: me.partialPickupItems,
+            success: function (response) {
+                me.setLoading(false);
+                var json = Ext.decode(response.responseText, true);
 
-                    if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', json.response, 'error');
-                        return;
-                    }
-                    Taco.app.fireEvent('setmessage', "Item(s) pickup successful", 'success');
-                    me.fireEvent('shipmentRefresh');
-                },
-                failure: function (response) {
-                    me.setLoading(false);
-                    var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : 'Error while pickup';
-                    Taco.app.fireEvent('setmessage', msg, 'error');
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', json.response, 'error');
+                    return;
                 }
-            });
-        }
-        else {
-            Taco.app.fireEvent('setmessage', 'Nothing is available for pickup.', 'error');
-        }
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.pickup_successful, 'success');
+                me.fireEvent('shipmentRefresh');
+            },
+            failure: function (response) {
+                me.setLoading(false);
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_pickup;
+                Taco.app.fireEvent('setmessage', msg, 'error');
+            }
+        });
     },
 
     shipmentAutoReassign: function (locationCode) {
@@ -255,17 +248,17 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error while assigning shipment', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_assigning_shipment, 'error');
                     return;
                 }
-                Taco.app.fireEvent('setmessage', "Shipment " + me.shipmentRecord.number + " Successfully Reassigned", 'success');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.shipment + " " + me.shipmentRecord.number + " " + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.successfully_reassigned, 'success');
                 me.fireEvent('shipmentRefresh', json);
             },
             failure: function (response) {
                 me.setLoading(false, this.body);
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error while assigning shipment';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_assigning_shipment;
                 Taco.app.fireEvent('setmessage', msg, 'error');
             },
             scope: me
@@ -284,7 +277,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             success: function (response) {
                 me.setLoading(false, this.body);
                 if (response.status != 200) {
-                    Taco.app.fireEvent('setmessage', 'Error while fulfilling shipment', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_fulfilling_shipment, 'error');
                     return;
                 }
                 me.fireEvent('shipmentRefresh');
@@ -292,7 +285,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             failure: function (response) {
                 me.setLoading(false, this.body);
                 // error handling here
-                Taco.app.fireEvent('setmessage', 'Error while fulfilling shipment', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_fulfilling_shipment, 'error');
             },
             scope: me
         });
@@ -310,7 +303,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             success: function (response) {
                 me.setLoading(false, this.body);
                 if (response.status != 200) {
-                    Taco.app.fireEvent('setmessage', 'Error while receiving transfer shipment', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_receiving_transfer_shipment, 'error');
                     return;
                 }
                 me.fireEvent('shipmentRefresh');
@@ -318,7 +311,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             failure: function (response) {
                 me.setLoading(false, this.body);
                 // error handling here
-                Taco.app.fireEvent('setmessage', 'Error while receiving transfer shipment', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_receiving_transfer_shipment, 'error');
             },
             scope: me
         });
@@ -337,7 +330,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 me.setLoading(false, this.body);
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error while moving shipment to backorder', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_moving_shipment_to_backorder, 'error');
                     return;
                 }
                 me.fireEvent('shipmentRefresh');
@@ -345,7 +338,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             failure: function (response) {
                 me.setLoading(false, this.body);
                 // error handling here
-                Taco.app.fireEvent('setmessage', 'Error while moving shipment to backorder', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_moving_shipment_to_backorder, 'error');
             },
             scope: me
         });
@@ -354,14 +347,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     getShipmentLevelSplitMenu: function () {
         var me = this;
         var actionCancelShipment = {
-            text: 'Cancel Shipment',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.cancel_shipment,
             handler: function () {
                 me.openShipmentCancellationPopUp();
             }
         };
 
         var actionMarkAsShipped = {
-            text: 'Mark as shipped',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.mark_as_shipped,
             hidden: this.shipmentRecord.shipmentType.toLowerCase() == 'transfer',
             handler: function () {
                 me.shipmentMarkAsShipped();
@@ -369,7 +362,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         };
 
         var shipmentMarkAsReceiveTransfer = {
-            text: 'Receive Transfer',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.receive_transfer,
             handler: function () {
                 me.shipmentMarkAsReceiveTransfer();
             }
@@ -383,7 +376,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         //};
 
         var actionUpdateBackorderDate = {
-            text: 'Update Backorder Date',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.update_backorder_date,
             handler: function () {
                 me.openUpdateBackorderDatePopUp();
             }
@@ -391,7 +384,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         var splitMenus = [];
         var actionPickup = {
-            text: 'Pickup',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.pickup,
             handler: function () {
                 me.savePartialPickup();
             }

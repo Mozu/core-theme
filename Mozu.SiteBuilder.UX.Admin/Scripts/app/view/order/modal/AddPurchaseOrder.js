@@ -6,16 +6,16 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
 
     autoShow: true,
     scale: 'large',
-    title: 'Create Purchase Order',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.create_purchase_order,
 
-    primaryText: 'Done',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.done,
 
     initComponent: function (eOpts) {
         var me = this;
 
         // Throw an error if there are no payment terms assigned
         if (this.record.customer.raw.purchaseOrderAccount.customerPurchaseOrderPaymentTerms.length == 0) {
-            Taco.app.fireEvent('setmessage', 'All required fields for Purchase Order are not configured for this customer', 'error');
+            Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.required_fields_for_purchase_order, 'error');
         } else {
 
             var balance = me.getBalance(me.record.get('customer').purchaseOrderAccount.availableBalance),
@@ -49,7 +49,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                         items: [
                             {
                                 allowBlank: false,
-                                fieldLabel: 'Purchase Order #',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.purchase_order,
                                 flex: 1,
                                 itemId: 'purchaseOrderNumber',
                                 name: 'purchaseOrderNumber',
@@ -58,7 +58,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                             {
                                 allowBlank: false,
                                 currencyCode: me.record.getCurrencyCode(),
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount,
                                 flex: 1,
                                 itemId: 'amount',
                                 margin: '0 0 0 30',
@@ -72,7 +72,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                                     }
 
                                     if (valueBalance > totalBalance) {
-                                        return 'Amount must not exceed your total available balance. Please select an alternative payment method.';
+                                        return Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_must_not_exceed_available_balance;
                                     } else {
                                         return true;
                                     }
@@ -252,7 +252,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 cls: 'taco-static-text',
                 children: [
                     {
-                        html: 'Available Balance',
+                        html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.available_balance,
                         tag: 'p'
                     },
                     {
@@ -278,7 +278,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 cls: 'taco-static-text',
                 children: [
                     {
-                        html: 'Credit Limit',
+                        html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.credit_limit,
                         tag: 'p'
                     },
                     {
@@ -319,7 +319,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                 cls: 'taco-static-text',
                 children: [
                     {
-                        html: 'Payment Terms',
+                        html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.payment_terms,
                         tag: 'p'
                     },
                     {
@@ -358,7 +358,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
                     cls: 'taco-static-text',
                     children: [
                         {
-                            html: 'Payment Terms',
+                            html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.payment_terms,
                             tag: 'p'
                         },
                         {
@@ -388,7 +388,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             }
 
             return Ext.create('Ext.form.field.ComboBox', {
-                fieldLabel: 'Payment Terms',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.payment_terms,
                 allowBlank: false,
                 itemId: 'paymentTerms',
                 name: 'paymentTerms',

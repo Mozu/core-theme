@@ -92,8 +92,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         var orderAdjustment = this.record.data.orderAdjustment.amount;
 
-        var subtractOrderLabelText = "Subtract from Order Subtotal";
-        var addOrderLabelText = "Add to Order Total";
+        var subtractOrderLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.subtract_from_order;
+        var addOrderLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_add;
 
         this.orderAdjustmentLabelButton = new Ext.button.Button({
             ui: "action",
@@ -398,20 +398,20 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     },
 
     getShippingAdjustmentText: function (value){
-        var subtractLabelText = "Subtract from Shipping Total";
-        var addLabelText = "Add to Shipping Total";
+        var subtractLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_subtract;
+        var addLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.shipping_add;
         return (value) ? subtractLabelText : addLabelText;
     },
 
     getOrderAdjustmentText: function (value){
-        var subtractLabelText = "Subtract from Order Subtotal";
-        var addLabelText = "Add to Order Total";
+        var subtractLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_subtract;
+        var addLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_add; 
         return (value) ? subtractLabelText : addLabelText;
     },
 
     getHandlingAdjustmentText: function (value) {
-        var subtractLabelText = "Subtract from Handling Total";
-        var addLabelText = "Add to Handling Total";
+        var subtractLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling_subtract; 
+        var addLabelText = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.handling_add; 
         return (value) ? subtractLabelText : addLabelText;
     },
 
@@ -479,7 +479,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     this.fireEvent('saveFailure');
-                    Taco.app.fireEvent('setmessage', "Error adding adjustments", 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_adjustments, 'error');
                     return;
                 }
 
@@ -496,7 +496,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             },
             failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding adjustments.";
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_adjustments;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('savefailure');
             },
@@ -567,7 +567,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = "";
         if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
-            placeholder = "None provided";
+            placeholder = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none_provided;
         }
 
         me.initPriceListCombo();
@@ -575,7 +575,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         me.customerNoteField = Ext.widget({
             xtype: "textarea",
-            fieldLabel: "Customer Notes",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.customer_notes,
             value: customerNotesText,
             placeholder: placeholder,
             disabled: !this.isOrderEditable(),
@@ -589,7 +589,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         me.giftMessageField = Ext.widget({
             xtype: "textarea",
-            fieldLabel: "Gift Message",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.gift_message,
             value: giftMessageText,
             placeholder: placeholder,
             disabled: !this.isOrderEditable(),
@@ -619,7 +619,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 success: function(response) {
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', "Error setting price list.", 'error');
+                        Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_price_list, 'error');
                         return;
                     }
 
@@ -629,7 +629,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     // Reset pricelist combo value.
                     me.priceListCombo.setValue(me.record.get('priceListCode'));
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : "Error setting price list.";
+                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_price_list;
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     me.fireEvent('saveFailure');
                 }
@@ -643,8 +643,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     autoShow: true,
                     width: 400,
                     height: 250,
-                    primaryText: 'Ok',
-                    secondaryText: 'Cancel',
+                    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.ok,
+                    secondaryText: Localizer.langResources.ORDERS.Orders.OrderDetails.BulkActionButton.cancel,
                     doSave: function() {
                         this.saveSuccess(null);
                         setNewPriceList(me.record.getId(), priceListRecord.get('code'));
@@ -657,7 +657,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                             items: [
                                 {
                                     width: '100%', height: '100%', flex: 1,
-                                    html: '<div>Applying this exclusive price list may remove certain products from the order.</div>'
+                                    html: '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.exclusive_price_list + '</div>'
                                 }
                             ]
                         }
@@ -670,11 +670,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         this.priceListCombo = Ext.create('Taco.view.order.widget.PriceListPickerField', {
             flex: 1,
-            fieldLabel: "Price List",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.price_list,
             labelStyle: "padding-top:16px;",
 
-            emptyText: "None",
-            valueNotFoundText: "None",
+            emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none,
+            valueNotFoundText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none,
             editable: true,
             forceSelection: false,
             disabled: !this.isOrderEditable(),
@@ -769,9 +769,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             padding: '0 8 0 0',
             validOnDate: this.record.get("createDate"),
             hideLabel: false,            
-            fieldLabel: "Add Coupon (Order, Item, or Shipping)<br/>Note: For coupon codes belonging to a coupon set, manually enter (free type) the coupon code and select Apply.",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.add_coupons + '<br/>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.note_coupon_codes,
             labelStyle:"padding-top:16px;",
-            emptyText: "Add Coupon",
+            emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.add_coupon,
             disabled: !this.isOrderEditable(),
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Discounts',
@@ -814,7 +814,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         this.couponApply = Ext.create('Ext.button.Button', {
             ui: 'action',
             scale: 'medium',
-            text: 'Apply',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.apply,
             disabled: true,
             requiredBehaviors: [{
                                 model: 'Taco.model.Order',
@@ -859,7 +859,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error adding coupon.", 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_coupon, 'error');
                     return;
                 }
 
@@ -880,7 +880,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding coupon.";
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_coupon;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -909,7 +909,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             return {
                 couponCode: code,
                 // Reason text pulled from PricingRuntime's DiscountHandler.
-                reason: "Coupon is not valid for any applicable discount."
+                reason: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.valid_coupon_msg
                 // Missing discountId, reasonCode, and createDate.
             };
         });

@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
     ],
     alias: 'widget.taco-order-fulfillment',
 
-    tabTitle: 'Shipments',
+    tabTitle: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.shipments,
 
     initComponent: function () {
         var me = this;

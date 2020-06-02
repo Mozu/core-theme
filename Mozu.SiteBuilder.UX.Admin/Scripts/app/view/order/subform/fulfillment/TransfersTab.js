@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.fulfillment.TransfersTab', {
 
     initComponent: function () {
 
-        this.tabTitle = "Transfers";
+        this.tabTitle = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.transfers;
         this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);

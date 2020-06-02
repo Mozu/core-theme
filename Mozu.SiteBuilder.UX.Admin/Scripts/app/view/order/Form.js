@@ -37,7 +37,7 @@ Ext.define('Taco.view.order.Form', {
     stickyClass: 'taco-fixed-navForm2-no-padding',
 
     editTitle: [
-        'Order No. {number}',
+        Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.edit_order_no + ' {number}',
         '<span class="taco-order-status {status}">',
             //'{status}',
             'Site: {siteName}',
@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.Form', {
     ],
 
     createTitle: [
-        'Create Order No. {number}',
+        Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.create_order_no + ' {number}',
         '<span class="taco-order-status">',
             //'{status}',
             'Site: {siteName}',
@@ -314,22 +314,22 @@ Ext.define('Taco.view.order.Form', {
 
         if (!this.record.get("customerId")) {
             isValid = false;
-            errors.push("A customer must be created or selected before submitting this order");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.submitting_order);
         } else if (!isPickupOnly && Ext.Object.isEmpty(this.record.get("fulfillmentContact"))) {
             isValid = false;
-            errors.push("Shipping Address must be added before submitting this order.");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.added_shipping_address);
         } else if (!isPickupOnly && !this.record.get("fulfillmentContact").email) {
             isValid = false;
-            errors.push("Shipping Address must contain an email address.");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.contain_email_address);
         } else if (Ext.Object.isEmpty(this.record.get("billingContact"))) {
             isValid = false;
-            errors.push("Billing Address must be added before submitting this order.");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.added_billing_address);
         } else if (!this.record.itemsStore.count()) {
             isValid = false;
-            errors.push("Products must be added before submitting this order. Click the \"Edit Details\" button to add products.");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.add_products);
         } else if (isShippable && !this.record.get("shippingMethodCode")) {
             isValid = false;
-            errors.push("A shipping method must be selected before submitting this order");
+            errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.selected_shipping_method);
         }
         
         if (errors.length) {
@@ -365,12 +365,12 @@ Ext.define('Taco.view.order.Form', {
                     },
                     failure: function (response) {                        
                         var json = Ext.decode(response.responseText, true),
-                            msg = (json && json.message) ? json.message : "Error adding saving order.";
+                            msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_saving_order;
 
                         // this is the validation message that you get when you have not met the min. requirements for saving a form.
                         if (msg == "Item not found: Action 'SubmitOrder' not found or available. ") {
                             // TODO: This is probably not the only reason submit can fail. Handle this scenario better.
-                            msg = "Unable to submit order. Please review and try again.";
+                            msg = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.unable_to_submit_order;
                         }
 
                         Taco.app.fireEvent('setmessage', msg, 'error');

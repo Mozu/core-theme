@@ -11,7 +11,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
     autoShow: true,
     scale: 'large',
-    title: 'Edit Contacts',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.edit_contacts_title,
     isNewCustomer: false,
 
     closeAction: 'destroy',
@@ -21,7 +21,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         ui: 'action',
         scale: 'medium',
         itemId: 'addNewContact',
-        text: 'Add New Address',
+        text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.add_new_address,
         handler: function () {
             this.down('#customerContacts').createNewContact();
         }
@@ -111,9 +111,9 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         if (shipping) {
             // need to check for the shipping contact email as its required for the order;
             if (!shipping.inputValue.email) {
-                errors.push("The selected shipping address is missing an email address.")
+                errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.shipping_addr_missing_error)
             } else if (this.isAddressValidationEnabled && !this.allowInvalidAddresses && !shipping.inputValue.addressIsValidated) {
-                errors.push("The selected shipping address is not validated.")
+                errors.push(Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.shipping_addr_validation_error)
             } else {
                 this.order.set('fulfillmentContact', shipping.inputValue);
                 jsonData.fulfillmentContact = shipping.inputValue;
@@ -137,7 +137,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     fnComplete();
                 },
                 failure: function () {
-                    Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.error_saving_customer, 'error');
                 }
             });
         } else {
@@ -158,7 +158,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     fnComplete();
                 },
                 failure: function () {
-                    Taco.app.fireEvent('setmessage', 'Error saving order', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.error_saving_order, 'error');
                 }
             });
         } else {
