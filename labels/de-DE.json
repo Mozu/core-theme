@@ -417,5 +417,14 @@
     "onItsWay": "Auf dem Weg",
     "unitPrice": "Stückpreis",
     "quantity": "Menge",
-    "partialPickupReadyBlob": "Vielen Dank für Ihren Einkauf bei {0}. Ein Teil Ihrer Bestellung steht zur Abholung bereit."
+    "partialPickupReadyBlob": "Vielen Dank für Ihren Einkauf bei {0}. Ein Teil Ihrer Bestellung steht zur Abholung bereit.",
+    "shipmentCancelMessage":"IArticle (s) annulé (s): Boutique {0} Allez à {1} pour plus d'informations OU Gérez les envois à {2}",
+    "locationAssignedMessage":"L'expédition est affectée au magasin: Boutique {0} {1} Allez à {2} pour plus d'informations OU Gérez les envois à {3}",
+    "shipmentNo":"Expédition #",  
+    "shipmentType":"type d'expédition:",
+    "pickLocation":"Ramasser / Expédier de:",
+    "shipmentStatus":"expédition statut:",
+    "shipmentCanceledInfo":"Articles annulés",
+    "shipmentFulfillInfo":"Éléments à remplir",
+    "shipmentTitle":"Expédition"
 }

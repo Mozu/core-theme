@@ -571,5 +571,17 @@
   "onItsWay": "On its way",
   "unitPrice": "Unit Price",
   "quantity": "Qty",
-  "partialPickupReadyBlob": "Thank you for shopping at {0}. Part of your order is ready for pickup."
+  "partialPickupReadyBlob": "Thank you for shopping at {0}. Part of your order is ready for pickup.",
+  "shipmentCancelMessage":"Item(s) Cancelled: Store {0} Go to {1} for more information OR Manage Shipments at {2}",
+  "locationAssignedMessage":"Shipment is assigned to store: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
+  "shipmentNo":"Shipment #",  
+  "shipmentType":"Shipment Type:",
+  "pickLocation":"Pickup from/Ship from:",
+  "shipmentStatus":"Shipment Status:",
+  "shipmentCanceledInfo":"Canceled Items",
+  "shipmentFulfillInfo":"Items to Fulfill",
+  "shipmentTitle":"Shipment",
+  "discount":"Discount:",
+  "shipmentTax":"Tax:"
+
 }

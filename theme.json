@@ -262,13 +262,36 @@
       "template": "back-office/order-pick-sheet",
       "customEditor": "back-office@mozu"
     },
+    
     {
       "id": "pick-wave-print",
       "title": "Pick Wave Print",
       "template": "back-office/pick-wave-print",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "mobile-notification",
+      "title": "Mobile Notification",
+      "template": "back-office/mobile-notification",
+      "customEditor": "back-office@mozu"
     }
   ],
+  "mobileTemplate":[
+      {
+      
+        "id": "shipment.itemscanceled",
+        "properties": {},
+        "template": "mobile-notification/shipment-cancel",
+        "title": "Item Canceled"
+      },
+      {
+      
+        "id": "shipment.locationassigned",
+        "properties": {},
+        "template": "mobile-notification/location-assigned",
+        "title": "Location Assigned"
+      }
+    ],
   "pageTypes": [
     {
       "documentType": "web_page",
