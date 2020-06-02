@@ -27,7 +27,8 @@ var baseConfig = {
                 "Account_Item_ID": "Account_Item_ID"
             },
             "recDetailLink":{
-                "detailUrl":"link"
+                "detailUrl":"link",
+                "itemId":"Account_Item_ID"
             },
             "recImage":{
                 "name":"short_description",
@@ -73,6 +74,7 @@ var baseConfig = {
                             }
                         ],
                         "returnFields":[
+                            "Account_Item_ID",
                             "title",
                             "image_link",
                             "short_description",
@@ -118,6 +120,7 @@ var baseConfig = {
         templates: {
             suggestion: '<a class="tt-suggestion-wrapper tt-suggestion-wrapper-custom" href="/p/[[itemId]]/[[detailUrl]]" data-itemid="[[itemId]]" onmouseover="CertonaVisualSearch.suggestionHover(this)"><div class="tt-suggestion-text tt-suggestion-text-custom">[[name]]</div></a>',
             recImage: '<div class="tt-recommendation-image-wrapper tt-recommendation-image-wrapper-custom"><img class="tt-recommendation-image tt-recommendation-image-custom" src="[[imageUrl]]?max=120" alt="[[name]]"></div>',
+            recDetailLink: '<a class="tt-recommendation-detail-link tt-recommendation-detail-link-custom" href="/p/[[itemId]]/[[detailUrl]]"></a>'
         }
     };
 
