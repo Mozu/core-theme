@@ -400,23 +400,18 @@ define([
         render: function () {
             Backbone.MozuView.prototype.render.apply(this, arguments);
             var self = this;
-            $('#wishlistName').focusout(function () {
-                self.model.saveWishlist();
-            }); 
-            function debounce(func, delay) { 
-            var debounceTimer;
-            return function() {
-                var context = this;
-                var args = arguments;
-                clearTimeout(debounceTimer); 
-                debounceTimer = setTimeout(function(){ func.apply(context, args);},delay); 
-                }
-            }
-            var myInput = document.getElementById("wishlistName");
-            myInput.addEventListener('keyup',debounce(function(){ 
+
+            var onKeyUpHandler = _.debounce(function(){
                 $(".mz-itemlisting-action").prop('disabled', true); 
                 $(".mz-itemlisting-action").attr('href', '').css({ 'cursor': 'pointer', 'pointer-events': 'none' });
-            },1000));             
+            }, 500);
+
+            $('#wishlistName')
+                .keyup(onKeyUpHandler)
+                .focusout(function () {
+                    self.model.saveWishlist();
+                });
+                
 
             var wishlistListView = new WishlistListView({
                 el: self.$el.find('.mz-b2b-wishlist-list'),
