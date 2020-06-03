@@ -18,6 +18,9 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
         public CustomerContactType? ContactType { get; set; }
     }
 
+
+
+
     [DataContract]
     public enum CustomerContactType
     {

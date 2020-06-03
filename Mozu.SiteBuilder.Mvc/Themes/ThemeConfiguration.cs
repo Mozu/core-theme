@@ -12,59 +12,59 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// <summary>
     /// Deserialization target for theme.json.
     /// </summary>
-    [DataContract]
+ 
     public  class ThemeConfiguration
     {
-        [DataMember(Name="about")]
+        
         public ThemeAbout About { get; set; }
 
-        [DataMember(Name="settings")]
+        
         public Dictionary<string,object> Settings { get; set; }
 
-        [DataMember(Name = "pageTypes")]
+        
         public List<PageTypeDefinition> PageTypes { get; set; }
 
-        [DataMember(Name = "emailTemplates")]
+        
         public List<PageTypeDefinition> EmailTemplates { get; set; }
 
-        [DataMember(Name = "backOfficeTemplates")]
+        
         public List<PageTypeDefinition> BackOfficeTemplates { get; set; }
         
-        [DataMember(Name = "widgets")]
+        
         public List<WidgetDefinition> Widgets { get; set; }
 
-        [DataMember(Name = "layoutWidgets")]
+       
         public List<LayoutWidgetDefinition> Layouts { get; set; }
 
-        [DataMember(Name = "editors")]
+       
         public List<EditorDefinition> Editors { get; set; }
 
-        [DataContract]
+   
         public class ThemeAbout
         {
-            [DataMember(Name = "name")]
+          
             public string Name { get; set; }
 
-            [DataMember(Name = "author")]
+           
             public string Author { get; set; }
 
-            [DataMember(Name = "extends")]
+        
             public string Extends { get; set; }
 
-            [DataMember(Name = "isDesktop")]
+            
             public bool IsDesktop { get; set; }
 
-            [DataMember(Name = "isMobile")]
+            
             public bool IsMobile { get; set; }
             
-            [DataMember(Name = "isTablet")]
+            
             public bool IsTablet { get; set; }
 
 
-            [DataMember(Name = "defaultLanguage")]
+            
             public string DefaultLanguage { get; set; }
 
-            [DataMember(Name = "allowProduction")]
+            
             public bool? AllowProduction  { get; set; }
         }
     }

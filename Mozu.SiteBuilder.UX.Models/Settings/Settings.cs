@@ -329,13 +329,14 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(EmitDefaultValue = false/*, Name = "favIconPath"*/)]
         public string FavIconPath { get; set; }
 
+        [System.Text.Json.Serialization.JsonIgnore]
         //[DataMember(Name = "themeStr")]
         //[Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
         public string ThemeStr { get; set; }
 
         [DataMember/*(Name = "mobileThemeStr")*/]
         public string MobileThemeStr { get; set; }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public ThemeSelection MobileTheme { get; set; }
 
         [DataMember/*(Name = "desktopTheme")*/]
@@ -380,6 +381,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
         
+        [System.Text.Json.Serialization.JsonIgnore]
         public CheckoutSettings CheckoutSetting { get; set; }
 
         [DataMember]
@@ -388,11 +390,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
     public class ViewModeToggles
     {
-        [DataMember]
+     
         public bool? EnforceSitewideSSL { get; set; }
-        [DataMember]
+     
         public bool IsRequiredLoginForLiveEnabled { get; set; }
-        [DataMember]
+     
         public bool IsRequiredLoginForStagingEnabled { get; set; }
     }
 

@@ -11,11 +11,12 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     [DataContract]
     public class Product : Mozu.ProductRuntime.Contracts.Product
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public string ProductName
         {
             get { return this.Content != null ? this.Content.ProductName : null; }
         }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public ProductImageCollection Images
         {
             get { return this.Content != null ? this.Content.ProductImages : new ProductImageCollection(); }
@@ -344,6 +345,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     [DataContract]
     public class ProductContent : Mozu.ProductRuntime.Contracts.ProductContent
     {
+        [System.Text.Json.Serialization.JsonIgnore]
         public ProductImageCollection Images { get; set; }
         [DataMember]
         public new ProductImageCollection ProductImages { get; set; }
@@ -825,17 +827,20 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int? Index
         {
             get { return this.Sequence; }
             set {  }
         }
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int? Id
         {
             get { return this.CategoryId; }
         }
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Name
         {
             get { return this.Content == null ? null : this.Content.Name; }
@@ -850,6 +855,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public new  Category ParentCategory { get; set; }
 
         private string _url;

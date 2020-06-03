@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
 
         [DataMember(Name = "validPageTypes")]
         public List<string> ValidPageTypes { get; set; }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public string FullPath { get; set; }
 
     }

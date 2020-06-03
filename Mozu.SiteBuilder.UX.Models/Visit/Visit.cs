@@ -28,6 +28,7 @@ namespace Mozu.SiteBuilder.UX.Models.Visit
         public bool IsUserTracked { get; set; }
 
         [IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
         public bool IsLanding { get; set; }
     }
 }

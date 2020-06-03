@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
 
         [DataMember(Name = "zones")]
         public List<Chorizo.ZoneRuntimeData> Zones { get; set; }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public string FullPath { get; set; }
 
          [DataMember(Name = "listFQN")]

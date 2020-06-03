@@ -17,9 +17,9 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
             get { return MiddleNameOrInitial; }
             set { MiddleNameOrInitial = value; }
         }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public string MiddleNameOrInitial { get; set; }
-
+        [System.Text.Json.Serialization.JsonIgnore]
         public string LastNameOrSurname { get; set; }
 
         [DataMember(Name = "lastName")]

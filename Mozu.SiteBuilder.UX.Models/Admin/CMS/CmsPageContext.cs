@@ -8,7 +8,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
 {
-    [DataContract(Name = "cms")]
+    
     public class CmsPageContext
     {
         public CmsPageContext()
@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         }
 
         private DocumentRequest _page;
-        [DataMember(Name = "page")]
+        
         public DocumentRequest Page 
         {
             get { return _page; }
@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         }
 
         private DocumentRequest _template;
-        [DataMember(Name = "template")]
+        
         public DocumentRequest Template
         {
             get { return _template; }
@@ -50,7 +50,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             }
         }
         private DocumentRequest _siteTemplate;
-        [DataMember(Name = "site")]
+        [Newtonsoft.Json.JsonProperty( "site")]
+        [System.Text.Json.Serialization.JsonPropertyName("site")]
         public DocumentRequest SiteTemplate
         {
             get { return _siteTemplate; }
