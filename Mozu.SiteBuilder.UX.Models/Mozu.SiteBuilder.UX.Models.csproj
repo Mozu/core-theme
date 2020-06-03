@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
-    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2021.0-gshotContracts-146" />
+    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2021.2" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Messaging" Version="1.2018.0-dotnetcore.82" />
