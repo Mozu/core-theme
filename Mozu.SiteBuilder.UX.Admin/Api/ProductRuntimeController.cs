@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Storefront;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductRuntimeHelpers;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,9 +46,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var prod = (await _productRuntimeWebApiClient.Value.GetProduct(productCode)).ReadAsSync();
 
             var jobj = JObject.FromObject(prod);
+            optionMapping(jobj);
+
             return Single2(jobj);
         }
-        
+
         [HttpPostRoute(UriTemplate = "preview")]
         public async Task<Response<List<StorefrontProduct>>> PreviewExpressionProducts(ProductRuntimePreviewArgs inputArgs)
         {
@@ -62,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 foreach (var kvp in values)
                 {
                     if (kvp.Key == "keyword")
-                        keywords = (string) kvp.Value;
+                        keywords = (string)kvp.Value;
                 }
             }
             var client = _productSearchWebApiClient.Value.CloneWithApiContext(context =>
@@ -71,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 context.DataViewMode = FastEnum<DataViewModeType>.Parse(inputArgs?.dataViewMode);
                 context.PreviewDate = inputArgs?.previewDate;
             });
-            
+
             var products = (await client.Search(keywords, inputArgs?.expression, pageSize: pageSize, sortBy: sortString, startIndex: start)).ReadAsSync();
 
             var mapped = products.Items.Map<List<StorefrontProduct>>();
@@ -84,7 +87,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = (await _productRuntimeWebApiClient.Value.ConfiguredProduct(selections, productCode, true, quantity: quantity)).ReadAsSync();
             var jobj = JObject.FromObject(res);
+            optionMapping(jobj);
+
             return Single2(jobj);
+        }
+
+        private void optionMapping(JObject jobj)
+        {
+            jobj.TryGetValue("Options", out var options);
+            if (options != null)
+            {
+                var optionsJArray = options.ToJArray();
+                if (optionsJArray.Count() > 0)
+                {
+                    foreach (var option in optionsJArray)
+                    {
+                        option["AttributeFQN"] = option.Value<string>("attributeFQN");
+                        option["attributeFQN"].Parent.Remove();
+                    }
+                    jobj["Options"] = optionsJArray;
+                }
+            }
         }
     }
 
