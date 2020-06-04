@@ -172,23 +172,50 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "MiscActions",  }, 
                _constraintResolver);
 
+           
+
+            //start bo
+
             routes.MapRoute(_defaultHandler,
-                "order details (back office)",
+               "order details (back office)",
                 "back-office/orders/{orderId}",
                 new { controller = "BackOffice", action = "OrderSummary" },
-				_constraintResolver);
+                _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
-                "packing slip (back office)",
-                "back-office/orders/{orderId}/packages/{packageId}",
+               "packing slip (back office)",
+                "back-office/orders/{orderId}/shipments/{shipmentNumber}",
                 new { controller = "BackOffice", action = "PackingSlip" },
-				_constraintResolver);
+                _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
-                "back office (admin view) - PREVIEW",
+               "transfer packing slip (back office)",
+                "back-office/orders/{orderId}/transfers/{shipmentNumber}",
+                new { controller = "BackOffice", action = "TransferPackingSlip" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+               "pick wave (back office)",
+                "back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}",
+                new { controller = "BackOffice", action = "PickWave" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+              "order pick sheets (back office)",
+               "back-office/order-pick-sheets/{pickWaveNumber}",
+               new { controller = "BackOffice", action = "OrderPickSheets" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+               "back office (admin view) - PREVIEW",
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" },
-				_constraintResolver);
+                _constraintResolver);
+
+
+
+
+            //end bo
 
             routes.MapRoute(_defaultHandler,
               "Storefront_User_ResetPAssword",
