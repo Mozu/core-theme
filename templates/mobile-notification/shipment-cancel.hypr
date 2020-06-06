@@ -1,2 +1,2 @@
-{% comment %} message character limit should not be exceed 160 characters {% endcomment %}
+{% comment %} message length should not exceed 160 characters {% endcomment %}
 {{ labels.mobileShipmentCancelMessage|string_format(model.storeId, model.shipmenturl,model.fulfillerurl)|safe }}

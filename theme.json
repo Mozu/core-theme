@@ -276,7 +276,7 @@
       "customEditor": "back-office@mozu"
     }
   ],
-  "mobileTemplate":[
+  "mobileNotificationTemplates":[
       {
       
         "id": "shipment.itemscanceled",
@@ -286,10 +286,10 @@
       },
       {
       
-        "id": "shipment.locationassigned",
+        "id": "shipment.assigned",
         "properties": {},
-        "template": "mobile-notification/location-assigned",
-        "title": "Location Assigned"
+        "template": "mobile-notification/shipment-assignment",
+        "title": "Shipment Assignment"
       }
     ],
   "pageTypes": [

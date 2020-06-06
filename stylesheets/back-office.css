@@ -241,3 +241,18 @@ table {
   height: 20px;
     width: 107px;
 }
+
+.mobile-ShipmentInfo-table{
+  float: right;
+  background-color: #e5e5e5;
+  font-weight: normal;
+  padding: 8px 14px;
+  text-align: left;
+  white-space: nowrap;
+  width: 32%;
+  font-size: small;
+}
+
+.mobile-ShipmentInfo-table span{
+  float: right;
+}
