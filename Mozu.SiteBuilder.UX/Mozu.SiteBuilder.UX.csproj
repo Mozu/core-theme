@@ -20,7 +20,7 @@
     <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
     <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2021.0-master.19" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.11" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.12" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
