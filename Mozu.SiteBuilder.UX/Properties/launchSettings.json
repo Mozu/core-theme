@@ -8,19 +8,24 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
+   
     "Mozu.SiteBuilder.UX": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "http_proxy":"http://localhost:8866"
+        "http_proxy_2":"http://localhost:8866"
+      },
+      "applicationUrl": "http://localhost:57521/"
+    },
+    "perf-tp1": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "http_proxy_2":"http://localhost:8866",
+        "mozu__appsettings__environment": "pert",
+        "mozu__appsettings__scaleunint": "tp1"
       },
       "applicationUrl": "http://localhost:57521/"
     }
