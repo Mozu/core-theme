@@ -583,7 +583,7 @@
         if (selectedItem) {
             me.record.getInventory({
                 jsonData: me.getReassignItemPayload(),
-                success: function (response) {
+                callback: function (request, isSuccess, response) {
                     me.isRecordSaved = true;
                     me.setLoading(false, me.body);
                     var json = Ext.decode(response.responseText, true);
