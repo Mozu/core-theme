@@ -33,12 +33,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public class CustomRouteRepository : ICustomRouteCollectionRepository
     {
 
-        private readonly HttpContext _httpContext;
+     
+        
         readonly ILogger _logger;
         readonly ISiteBuilderApiContext _siteBuilderApiContext;
         readonly ICustomRouteConstraintFactory _customRouteConstraintFactory;
         readonly IRouteDataMappingFactory _routeDataMappingFactory;
-  
+        private readonly IInlineConstraintResolver _inlineConstraintResolver;
+        private readonly IRouter _defaultHandler;
         Mozu.SiteBuilder.Mvc.Context.ISiteBuilderContextProvider _contextProvider;
 
         static IDictionary<FancyRoute, string> ControllerRoutes = new Dictionary<FancyRoute, string> {
@@ -67,7 +69,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             ISiteBuilderContextProvider contextProvider,
             ICustomRouteConstraintFactory customRouteConstraintFactory,
             IRouteDataMappingFactory routeDataMappingFactory,
-            HttpContext httpContext
+            IRouteConfig routeConfig,
+            IInlineConstraintResolver inlineConstraintResolver
           )
         {
             _siteBuilderApiContext = siteBuilderApiContext;
@@ -75,7 +78,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _contextProvider = contextProvider;
             _customRouteConstraintFactory = customRouteConstraintFactory;
             _routeDataMappingFactory = routeDataMappingFactory;
-            _httpContext = httpContext;
+            _inlineConstraintResolver = inlineConstraintResolver;
+            _defaultHandler = routeConfig.DefaultHandler;
+            
         }
 
         public class HttpRouteCollectionContainer
@@ -224,10 +229,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             var scheme = routeDef.UrlScheme.IsNullOrEmpty() ? (CustomRoute.Scheme?)null : routeDef.UrlScheme.ToEnum<CustomRoute.Scheme>();
 
-            var defaultRouter = _httpContext.Items["DefaultRouter"] as IRouter ?? new RouteHandler(ctx => ctx.Response.WriteAsync("no handler provided"));
-            var constraintResolver = _httpContext.Items["ConstraintResolver"] as IInlineConstraintResolver ?? new DefaultInlineConstraintResolver(new OptionsWrapper<RouteOptions>(new RouteOptions()), _httpContext.RequestServices ?? new ServiceContainer());
-
-            return new CustomRoute(defaultRouter,
+            
+            return new CustomRoute(_defaultHandler,
                 null,
                 template, 
                 qString, 
@@ -238,7 +241,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 knownMappings, 
                 routeDef.FunctionId, 
                 scheme,
-                constraintResolver);
+                _inlineConstraintResolver);
         }
 
         private static class QueryStringPreProcessor

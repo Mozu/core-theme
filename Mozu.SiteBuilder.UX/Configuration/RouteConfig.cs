@@ -31,9 +31,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
         //public IList<IRouter> SystemRoutes => _systemRoutes ??= GetSystemRoutes();
         public RouteCollection DefaultRoutes => _standardRoutes ??= GetStandardRoutes();
 
+        public IRouter DefaultHandler { get { return _defaultRrouter;} }
+        static IRouter _defaultRrouter;
+
         public static void Register(IRouteBuilder builder)
         {
             GetSystemRoutes(builder);
+            _defaultRrouter = builder.DefaultHandler;
         }
         public static IList<IRouter> GetSystemRoutes(IRouteBuilder builder)
         {

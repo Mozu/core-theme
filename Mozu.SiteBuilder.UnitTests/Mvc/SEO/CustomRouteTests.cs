@@ -534,6 +534,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new object[] { listConstraint, typeof(StringListRouteConstraint) };
         }
 
+       
         [Test]
         public async Task CanGetRouteCollectionFromSettingsDoc()
         {
@@ -577,7 +578,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             contextProvider.GetContextData().Returns(sbcd);
             var constraintFactory = new ConstraintFactory(contextProvider, apiContext);
             var mappingFactory = new RouteMappingFactory(contextProvider);
-            var repo = new CustomRouteRepository(apiContext, logger, contextProvider, constraintFactory, mappingFactory, new DefaultHttpContext());
+            var r = Substitute.For<IRouter>();
+            var rc = Substitute.For<IRouteConfig>();
+            rc.DefaultHandler.Returns(r);
+            var repo = new CustomRouteRepository(apiContext, logger, contextProvider, constraintFactory, mappingFactory, rc, NSubstitute.Substitute.For<IInlineConstraintResolver>());
 
             var collection =  ((ICustomRouteCollectionRepository) repo).GetRouteCollection();
             collection.Count.ShouldEqual(numRoutes);

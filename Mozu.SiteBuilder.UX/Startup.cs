@@ -138,7 +138,10 @@ namespace Mozu.SiteBuilder.UX
                 .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
                 .UseMiddleware<SiteContextInitializationMiddleware>()
                 .UseRewriter(rewriteOptions)
-                .UseMvc(RouteConfig.Register)
+                .UseMvc(builder => {
+                    RouteConfig.Register(builder);
+
+                })
                 .UseMiddleware<FourHundredMiddleware>()
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
                

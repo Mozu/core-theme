@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public interface IRouteConfig
     {
         RouteCollection DefaultRoutes { get; }
-
+        IRouter DefaultHandler { get; }
         void RouteIncomingDefaultRouteRequest(RouteContext context);
         Task RouteAsync(RouteContext context);
 
@@ -104,11 +104,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             routeContext.RouteData = routeData;
             return routeData.Routers[0];
         }
-
-        IList<IRouter> GetRouteCollection()
+        
+        RouteCollection GetRouteCollection()
         {
             _httpRouteCollection ??= _customRouteRepository.Value.GetRouteCollection();
-            return _httpRouteCollection as IList<IRouter> ?? new List<IRouter>();
+            return _httpRouteCollection as RouteCollection ?? new RouteCollection();
         }
 
         System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<RouteCollection, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<RouteCollection, List<CustomRoute>>>();
