@@ -15,6 +15,7 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -29,12 +30,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public  Task<object> Preview(WidgetPreviewData<WidgetDefinition> wpd)
+        public  Task<object> Preview([FromBody] WidgetPreviewData<WidgetDefinition> wpd)
         {
             return WidgetPreview(wpd);
         }
         [HttpPost]
-        public async Task<object> WidgetPreview(WidgetPreviewData<WidgetDefinition> wpd)
+        public async Task<object> WidgetPreview([FromBody] WidgetPreviewData<WidgetDefinition> wpd)
         {
             SiteContext.IsEditMode = true;
             SbApiContext.IsEditMode = true;
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<object> LayoutPreview(WidgetPreviewData<LayoutWidgetDefinition> wpd)
+        public async Task<object> LayoutPreview([FromBody] WidgetPreviewData<LayoutWidgetDefinition> wpd)
         {
             SiteContext.IsEditMode = true;
             SbApiContext.IsEditMode = true;
@@ -86,7 +87,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView(root + template);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(Request.HttpContext, new ViewDataDictionary<WidgetPreviewData<T>>(null, wpd));
+                var modelState = new ModelStateDictionary();
+                var modelMetadataProvider = new EmptyModelMetadataProvider();
+                var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+                var viewContext = new HyprViewContext(Request.HttpContext, new ViewDataDictionary<WidgetPreviewData<T>>(viewData, wpd));
                 await view.AsyncRender(viewContext, tw).ConfigureAwait(false);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }
