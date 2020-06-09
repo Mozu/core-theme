@@ -181,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     Path = template
                 };
-            if (((Request.HttpContext.GetRouteData().Routers.OfType<CustomRoute>().First())?.IsCanonicalFor(FancyRoute.CmsPage))
+            if (((Request.HttpContext.GetRouteData().Routers.OfType<CustomRoute>().FirstOrDefault())?.IsCanonicalFor(FancyRoute.CmsPage))
                 .GetValueOrDefault(false))
                 PageContext.CrawlerInfo.CanonicalUrl = Request.HttpContext.GetRequestUri().AbsolutePath;
             else
