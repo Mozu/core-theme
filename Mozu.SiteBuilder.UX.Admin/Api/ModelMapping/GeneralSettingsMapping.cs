@@ -18,7 +18,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
             CreateMap<EmailTypeSettingVM, GDC.EmailTypeSetting>();
 
-
+            CreateMap<GDC.SMSTypeSetting, SMSTypeSettingVM>()
+                 .ForMember(x => x.Enabled, OP => OP.Ignore())
+                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
+            CreateMap<SMSTypeSettingVM, GDC.SMSTypeSetting>();
 
             CreateMap<Reference.Contracts.TimeZone, TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());

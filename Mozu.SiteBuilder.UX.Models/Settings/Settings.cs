@@ -260,8 +260,17 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? PartialPickupReady { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-        public bool? TransferShipmentCreatedByFulfiller { get; set; } 
-        
+        public bool? TransferShipmentCreatedByFulfiller { get; set; }
+
+    }
+
+    public class SMSTransactionSettings
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentItemCanceled { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentAssigned { get; set; }
     }
 
     [DataContract]
@@ -379,11 +388,17 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
-        
+
         public CheckoutSettings CheckoutSetting { get; set; }
 
         [DataMember]
         public bool? SliceSearchByDefault { get; set; }
+
+        [DataMember]
+        public List<SMSTypeSettingVM> SmsTypes { get; set; }
+
+        [DataMember(EmitDefaultValue = true)]
+        public SMSTransactionSettings SmsTransactions { get; set; }
     }
 
     public class ViewModeToggles

@@ -193,6 +193,7 @@
     <Compile Include="Settings\EmailSetting.cs" />
     <Compile Include="Settings\IpBlocking.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SMSSetting.cs" />
     <Compile Include="Settings\TimeZone.cs" />
     <Compile Include="StoreFront\Catalog\Product.cs" />
     <Compile Include="Admin\CMS\WidgetPreviewContext.cs" />

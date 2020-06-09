@@ -65,8 +65,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var channels = channelsTask.Result.ReadAsSync().Items;
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
-
-
+            settings.SmsTypes = (await GetSMSTypes(new PagingParamaters(), new FilterCollection())).Items;
+            
             settings.SliceSearchByDefault = await GetSliceSearchSettings();
 
             return List2(settings);
@@ -122,7 +122,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
             await SaveEmailTypes(settingsToSave.EmailTypes);
-
+            await SaveSMSTypes(settingsToSave.SmsTypes);
+            
             await SaveSliceSearchSettings(settingsToSave.SliceSearchByDefault);
             return Single2((await GetSettings()).Items.First());
         }
@@ -298,6 +299,59 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return await GetEmailTypes(new PagingParamaters(), new FilterCollection());
         }
 
+        [HttpGetRoute(UriTemplate = "smsTypes/read")]
+        public async Task<Response<List<SMSTypeSettingVM>>> GetSMSTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            var results = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
+
+            var smsTypes = ToSMSTypeSettingVms(results);
+
+            return List2(smsTypes);
+        }
+
+        private static List<SMSTypeSettingVM> ToSMSTypeSettingVms(SiteSettings.General.Contracts.GeneralSettings results)
+        {
+            var convertedTypes = Mapper.Map<List<SMSTypeSettingVM>>(results.SmsTypes);
+            var props = typeof(Mozu.SiteSettings.General.Contracts.SMSTransactionSettings).GetProperties();
+            var dic = new Dictionary<string, SMSTypeSettingVM>(StringComparer.OrdinalIgnoreCase);
+            foreach (string name in Enum.GetNames(typeof(SMSTypes)))
+            {
+                dic[name] = new SMSTypeSettingVM()
+                {
+                    Id = name,
+                    Enabled = false
+                };
+            }
+            if (results.SmsTypes != null)
+            {
+                foreach (var smsEntry in convertedTypes)
+                {
+                    var prop = props.FirstOrDefault(x => x.Name.Equals(smsEntry.Id));
+
+                    var smsTransactions = (bool?)prop.GetValue(results.SmsTransactions);
+                    smsEntry.Enabled = smsTransactions.GetValueOrDefault(false);                 
+
+                    dic[smsEntry.Id] = smsEntry;
+                }
+            }
+            return dic.Values.ToList();
+        }
+
+        [HttpPostRoute(UriTemplate = "smsTypes/edit")]
+        public async Task<Response<List<SMSTypeSettingVM>>> SaveSMSTypes(List<SMSTypeSettingVM> updates)
+        {
+            var existing = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
+            AddSMSSettings(updates, existing);
+
+            var res = await _generalSettingsWebApiClient.UpdateGeneralSettings(existing);
+            if (res.HasException)
+            {
+                throw res.ReadException();
+            }
+
+            return await GetSMSTypes(new PagingParamaters(), new FilterCollection());
+        }
+
         [HttpGetRoute(UriTemplate = "serviceTypes/read")]
         public Response<List<ServiceType>> GetDefaultServiceTypes()
         {
@@ -354,6 +408,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        private static void AddSMSSettings(List<SMSTypeSettingVM> updates, SiteSettings.General.Contracts.GeneralSettings existing)
+        {
+            var props = typeof(Mozu.SiteSettings.General.Contracts.SMSTransactionSettings).GetProperties();
+            foreach (var update in updates)
+            {
+                existing.SmsTypes.Remove(
+                    existing.SmsTypes.FirstOrDefault(x => x.Id.Equals(update.Id, StringComparison.OrdinalIgnoreCase)));
+                existing.SmsTypes.Add(Mapper.Map<Mozu.SiteSettings.General.Contracts.SMSTypeSetting>(update));
+
+                var prop = props.First(x => x.Name.Equals(update.Id, StringComparison.OrdinalIgnoreCase));
+                prop.SetValue(existing.SmsTransactions, update.Enabled.GetValueOrDefault(false));
+            }
+        }
 
         private async Task<bool> GetSliceSearchSettings()
         {
