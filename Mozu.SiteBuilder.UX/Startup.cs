@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX
         {
             services
                 .AddTransient<IStartupFilter,SbStartupFilter>()
-                .AddMozuMvc()
+                .AddMozuMvc(useLegacyNewtonsoftInputFormatter:true, useLegacyNewtonsoftOutputFormatter:true)
                 .AddMozuMapping()
                 .AddSwaggerGenForMozu("Kibo Content Service")
                 .ConfigureMozuServices(factory =>

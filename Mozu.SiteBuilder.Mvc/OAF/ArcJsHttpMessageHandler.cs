@@ -329,7 +329,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
             Task IFunctionCallbackHandler.OnExe<T>(string key, object[] value, T context)
             {
-                throw new NotImplementedException();
+                return Task.CompletedTask;
             }
 
             FunctionContinuationBehavior IFunctionCallbackHandler.OnResult(object result, CustomFunctionBase function, FunctionContextBase context)
