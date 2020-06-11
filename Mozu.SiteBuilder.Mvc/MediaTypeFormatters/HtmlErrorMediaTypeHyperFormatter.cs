@@ -34,11 +34,12 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         void WriteYSOD(HttpContext context, Exception ex, Stream writeStream)
         {
             var stw = new StreamWriter(writeStream);
+            stw.Write("<pre>");
             stw.Write(ex.ToString());
 
             var correlationId = context.RequestServices.Resolve<ISiteBuilderApiContext>().TraceContext.CorrelationId;
             var visist = context.RequestServices.GetService<PageContext>()?.Visit;
-
+            stw.Write("</pre>");
             stw.WriteLine("<br>\r\ncorrelationId={0}", correlationId);
             stw.WriteLine("<br>\r\nvisistId={0}", visist == null ? "n/a": visist?.VisitId);
 

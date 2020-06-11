@@ -59,18 +59,20 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 statusCode = HttpStatusCode.UnsupportedMediaType;
             }
 
-            if (ex is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
-            {
-                ex = aggregateException.InnerExceptions.First();
-            }
+            ex = Unwrap(ex);
 
-            var errorResp = new ActionFilters.HttpResponseException
-            {
-                Value = ex,
-                Status = (int)statusCode
-            };
+            var errorResp = new ActionFilters.HttpResponseException( ex, ex.Message,(int) statusCode);
 
             return errorResp;
+        }
+
+        static Exception Unwrap(Exception ex)
+        {
+            while (ex is AggregateException agg && agg.InnerExceptions.Count == 1)
+            {
+                ex = agg.InnerException;
+            }
+            return ex;
         }
 
         private static void InitAdditioanViewContext (HyprViewContext context)
