@@ -256,26 +256,26 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             var ac = new Microsoft.AspNetCore.Mvc.ActionContext() { HttpContext = reouteContext.HttpContext, ActionDescriptor = new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor(), RouteData = new RouteData() };
             var aec = new ActionExecutingContext(ac, new List<IFilterMetadata>(), new Dictionary<string, object>(), reouteContext);
 
-            return new ApiActionExtensionFilterContext(null, aec, null, (ctx =>
+            return SbApiActionExtensionFilter.InitSBActionContext(new ApiActionExtensionFilterContext(null, aec, null, (ctx =>
             {
                 var req = ctx.ActionContext.HttpContext.Request;
-                if (req.ContentLength.HasValue && req.ContentLength.Value >0 && req.Body.CanRead)
+                if (req.ContentLength.HasValue && req.ContentLength.Value > 0 && req.Body.CanRead)
                 {
                     var sr = new StreamReader(req.Body);
                     if (req.ContentType?.Contains("json") == true)
                     {
-                        var  jtr = new JsonTextReader(sr);
+                        var jtr = new JsonTextReader(sr);
                         return JsonSerializer.CreateDefault().Deserialize(jtr);
                     }
                     else
                     {
                         return sr.ReadToEnd();
                     }
-                    
+
                 }
 
                 return null;
-            }));
+            })));
         }
     }
     public class SbActionExtensionFilterAttribute : ActionExtensionFilterAttribute
@@ -386,7 +386,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
         }
    
 
-        public static void InitSBActionContext(ApiActionExtensionFilterContext actionContext)
+        public static ApiActionExtensionFilterContext InitSBActionContext(ApiActionExtensionFilterContext actionContext)
         {
             var services = actionContext.ActionContext.HttpContext.RequestServices;
             actionContext.GlobalContext = actionContext.GlobalContext ?? new Dictionary<string, GlobalContextItem>();
@@ -429,7 +429,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             //{
             //    AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", new CategoryHelper(catTreeProvider));
             //}
-            return;
+            return actionContext;
         }
 
     }
