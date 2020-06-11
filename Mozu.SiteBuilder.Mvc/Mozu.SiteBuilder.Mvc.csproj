@@ -53,4 +53,10 @@
     <Folder Include="MessageHandler\" />
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Remove="TestData" />
+
+    <EmbeddedResource Include="TestData\**\*.json" />
+  </ItemGroup>
 </Project>
