@@ -57,6 +57,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             CreateMap<CR.Shipment, F.ResourceOfShipment>()
                 .ForMember(x => x.Data, opt => opt.Ignore()) // Mapping this would create a Dictionary<string, object>() where the values are JValue wrappers.
                 .ForMember(x => x.ShipmentNumber, opt => opt.MapFrom(dc => dc.Number));
+
+            CreateMap<CR.FulfillmentTask, F.Task>();
+            CreateMap<F.Task, CR.FulfillmentTask>();
         }
     }
 }
