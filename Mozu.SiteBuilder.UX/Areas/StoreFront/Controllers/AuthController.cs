@@ -222,8 +222,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             ////redir.Headers.AddCookies(
             ////    HttpContext.Response.Cookies.AllKeys.Select(x=> HttpContext.Response.Cookies[x]).Select(x=> new CookieHeaderValue(x.Name, x.Value ){Expires =x.Expires,Secure=x.Secure }));
-
-            returnUrl = MakeRedirectUri(returnUrl).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var uri = MakeRedirectUri(returnUrl);
+            if (uri.IsAbsoluteUri)
+            {
+                returnUrl = uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            }
+            else
+            {
+                returnUrl = uri.ToString();
+            }
             return new RedirectResult(returnUrl);
         }
 
