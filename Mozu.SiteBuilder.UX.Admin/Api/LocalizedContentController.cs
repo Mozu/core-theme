@@ -149,6 +149,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<JObject>> UpsertLocalizedProductProperties(JObject jObject)
         {
             var localizedProp = jObject.ToObject<LocalizedProductProperty>();
+            var content = new List<DC.ProductPropertyValueLocalizedContent>();
+
+            //Add master catalog locale and string value in collection to support edit from localization product properties grid. 
+            //Refer jira SUSE-223 for more details.
+            content.Add(new DC.ProductPropertyValueLocalizedContent
+            {
+                LocaleCode = localizedProp.LocaleCode,
+                StringValue = localizedProp.StringValue
+            });
+
             var localizedContent = (from supportedLocale in localizedProp.SupportedLocales
                                     let localizedName = (string)jObject["value_" + supportedLocale]
                                     where localizedName != null
@@ -157,11 +167,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         LocaleCode = supportedLocale,
                                         StringValue = localizedName,
                                     }).ToList();
-            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContentsQS(localizedContent, productCode: localizedProp.ProductCode, attributeFQN: localizedProp.AttributeFQN,
+
+            content.AddRange(localizedContent);
+
+            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContentsQS(content, productCode: localizedProp.ProductCode, attributeFQN: localizedProp.AttributeFQN,
                 value: localizedProp.CanonicalValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
+
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedProp, updatedResults, (property, locales) => property.SupportedLocales = locales,
                 rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue, localizedProp.LocaleCode, localizedProp.SupportedLocales);
-            
+
             return Single2(jResult);
         } 
         

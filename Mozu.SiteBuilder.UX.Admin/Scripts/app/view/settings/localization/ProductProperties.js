@@ -50,7 +50,18 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                     xtype: 'gridcolumn',
                     dataIndex: 'stringValue',
                     text: mcLocale + 'Text' + mcName,
-                    flex: 1
+                    flex: 1,
+                    editor: {
+                        xtype: "textarea",
+                        showBorder: true,
+                        hideTrigger: true,
+                        emptyText: "missing",
+                        msgTarget: "qtip",
+                        selectOnFocus: true
+                    },
+                    renderer: function (value) {
+                        return Ext.String.htmlEncode(value);
+                    }
                 }
             ];
         supportedLocales = Taco.view.settings.localization.util.Locales.getSupported();

@@ -33,6 +33,10 @@ Ext.define('Taco.store.LocalizedProductProperties', {
                     type: 'string',
                     useNull: true
                 }, {
+                    name: 'isRequiredByAdmin',
+                    type: 'bool',
+                    useNull: false
+                }, {
                     name: 'supportedLocales',
                     type: 'auto',
                     defaultValue: []

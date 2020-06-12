@@ -110,6 +110,17 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
             data.records[0].set('index', 1);
         }, this);
+
+        me.mon(this, 'beforeedit', function (editor, e) {
+            //set the allowblank property of a master catalog text column in product properties grid.
+            if (e.grid.id.startsWith("localizedproductpropertiesgrid") && e.column.dataIndex == "stringValue") {
+                if (e.record.get('isRequiredByAdmin') == true)
+                    e.column.getEditor().allowBlank = false;
+                else
+                    e.column.getEditor().allowBlank = true;
+            }
+            return true;
+        }, this);
     },
     
 
