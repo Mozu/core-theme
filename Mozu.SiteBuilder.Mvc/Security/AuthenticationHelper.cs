@@ -47,7 +47,8 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         bool IsheaderTrue(string headerName, HttpContext context)
         {
-            if (!context.Request.Headers.TryGetValue(headerName, out var values)) return false;
+
+            if (context == null || !context.Request.Headers.TryGetValue(headerName, out var values)) return false;
 
             var val = values.FirstOrDefault();
             if (bool.TryParse(val, out var ret))
