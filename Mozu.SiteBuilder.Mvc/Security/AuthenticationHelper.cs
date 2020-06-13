@@ -8,6 +8,7 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using RestSharp;
+using Microsoft.Extensions.Primitives;
 
 namespace Mozu.SiteBuilder.Mvc.Security
 {
@@ -47,8 +48,15 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         bool IsheaderTrue(string headerName, HttpContext context)
         {
-
-            if (context == null || !context.Request.Headers.TryGetValue(headerName, out var values)) return false;
+            StringValues values = StringValues.Empty;
+            try
+            {
+                if (context == null || !context.Request.Headers.TryGetValue(headerName, out  values)) return false;
+            }
+            catch
+            {
+                return false;
+            }
 
             var val = values.FirstOrDefault();
             if (bool.TryParse(val, out var ret))
