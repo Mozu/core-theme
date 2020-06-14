@@ -107,37 +107,54 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _siteBuilderApiContext = siteBuilderApiContext;
             _themeRepository = themeRepository;
             _themeSettingsRepository = themeSettingsRepository;
-            _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
             SiteExists = siteBuilderApiContext.SiteId.HasValue;
-            var url = context.GetRequestUri().ToString();
-
-            if (context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out var values))
+            if (Enum.TryParse(_siteBuilderApiContext.CurrencyCode, out CurrencyCode cc))
             {
-                url = values.FirstOrDefault();
+                CurrencyInfo = CurrencyRepository.Get(cc);
+                NumberFormat = new NumberFormatInfo()
+                {
+                    CurrencyDecimalDigits = this.CurrencyInfo.Precision,
+                    CurrencySymbol = this.CurrencyInfo.Symbol
+                };
             }
+            InitFromContext(context, cookieProvider);
 
-            var uriBuilder = new UriBuilder(url);
+        }
 
-            _currentHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-            uriBuilder.Port = 443;
-            uriBuilder.Scheme = "https";
-            var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-
-            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
-
-            if (!Enum.TryParse(_siteBuilderApiContext.CurrencyCode, out CurrencyCode cc)) return;
-
-            CurrencyInfo = CurrencyRepository.Get(cc);
-
-            NumberFormat = new NumberFormatInfo()
+        private void InitFromContext(HttpContext context, ICookieProvider cookieProvider)
+        {
+            //can fault if parts of httpcontext are disposed
+            if (context != null)
             {
-                CurrencyDecimalDigits = this.CurrencyInfo.Precision,
-                CurrencySymbol = this.CurrencyInfo.Symbol
-            };
+                try
+                {
+                    _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
+
+                    var url = context.GetRequestUri().ToString();
+
+                    if (context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out var values))
+                    {
+                        url = values.FirstOrDefault();
+                    }
+
+                    var uriBuilder = new UriBuilder(url);
+
+                    _currentHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                    uriBuilder.Port = 443;
+                    uriBuilder.Scheme = "https";
+                    var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                    SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
+                }
+                catch { }
+            }
         }
 
         private string ProcessThemeOverride(HttpContext context, ICookieProvider cookieProvider)
         {
+            if ( context == null)
+            {
+                return null;
+            }
             var nvc = context.Request.Query;
             if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
             {

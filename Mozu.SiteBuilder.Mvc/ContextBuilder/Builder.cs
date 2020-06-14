@@ -208,11 +208,19 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         private async Task<List<SBCategory>> ProcessCategoryListWork(SiteBuilderContextWorkItem work, SiteBuilderApiContext apiContext)
         {
-            using var scope = _globalScope.CreateScope();
-            apiContext.UserClaims = null;
-            scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
-            var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
-            return await serviceAggregator.BuildCategoryTree().ConfigureAwait(false);
+           using (var scope = _globalScope.CreateScope())
+           {
+                var httpContext = new DefaultHttpContext();
+                httpContext.Request.Scheme = "http";
+                httpContext.Request.Host = new HostString("localhost");
+                httpContext.Request.PathBase = "";
+                httpContext.Request.Path = "/";
+                apiContext.UserClaims = null;
+                scope.ServiceProvider.Resolve<IHttpContextAccessor>().HttpContext = httpContext;
+                scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
+                var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
+                return await serviceAggregator.BuildCategoryTree().ConfigureAwait(false);
+            }
         }
 
         private async Task CleanOldJobs()

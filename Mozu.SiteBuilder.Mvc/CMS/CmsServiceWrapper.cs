@@ -16,11 +16,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public class CmsServiceWrapper : ICmsServiceWrapper
     {
-        private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
+        private readonly Lazy<IThemeEntityDefinitionProvider> _themeEntityDefinitionProvider;
 
         public CmsServiceWrapper(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
-            IThemeEntityDefinitionProvider themeEntityDefinitionProvider
+            Lazy<IThemeEntityDefinitionProvider> themeEntityDefinitionProvider
             )
         {
             DocumentListWebApiClient = docRepo;
@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         PageTypeDefinition GetPageTypeDefinition(string documentTypeId)
         {
-            var pageTypeDef = documentTypeId == null ? new PageTypeDefinition() : _themeEntityDefinitionProvider.GetPageTypeDefinition(documentTypeId);
+            var pageTypeDef = documentTypeId == null ? new PageTypeDefinition() : _themeEntityDefinitionProvider.Value.GetPageTypeDefinition(documentTypeId);
             if (pageTypeDef == null)
             {
                 throw new InvalidOperationException("unknonw pageTypeDefinition " + documentTypeId);
