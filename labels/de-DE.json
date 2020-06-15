@@ -192,7 +192,7 @@
     "missing"   : "fehlt",
     "missingParts"   : "Fehlende Teile oder Zubehör",
     "mobileDiscount": "Rabatt",
-    "mobileLocationAssignedMessage":"L'expédition est affectée au magasin: Boutique {0} {1} Allez à {2} pour plus d'informations OU Gérez les envois à {3}",
+    "mobileLocationAssignedMessage":"Envoi attribué: Boutique {0} {1} Allez à {2} pour plus d'informations OU Gérez les envois à {3}",
     "mobilePickLocation":"Ramasser / Expédier de:",
     "mobileShipmentCanceledInfo":"Articles annulés",
     "mobileShipmentCancelMessage":"IArticle (s) annulé (s): Boutique {0} Allez à {1} pour plus d'informations OU Gérez les envois à {2}",

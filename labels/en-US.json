@@ -261,7 +261,7 @@
   "missingCheckoutPayments": "Somthing went very wrong and there seem to be no payments attached to the checkout",
   "missingParts": "Missing parts or accessories",
   "mobileDiscount": "Discount:",
-  "mobileLocationAssignedMessage": "Shipment is assigned to store: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
+  "mobileLocationAssignedMessage": "Shipment assigned: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
   "mobilePickLocation": "Pickup from/Ship from:",
   "mobileShipmentCanceledInfo": "Canceled Items",
   "mobileShipmentCancelMessage": "Item(s) Cancelled: Store {0} Go to {1} for more information OR Manage Shipments at {2}",

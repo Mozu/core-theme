@@ -1,2 +1,2 @@
 {% comment %} message length should not exceed 160 characters {% endcomment %}
-{{ labels.mobileLocationAssignedMessage|string_format(model.storeId, model.shipmentType, model.shipmenturl,model.fulfillerurl)|safe }}
+{{ labels.mobileLocationAssignedMessage|string_format(model.storeId, model.shipmentType, model.shipmenturl, model.fulfillerurl)|safe }}

@@ -212,37 +212,37 @@ table {
 .header .shipment-essentials .order-date .label {
   font-weight: 600;
 }
-.shipment-Title {
+.shipment-title {
   font-size: 30px;
   text-align:center;
   margin-top: 10px;
 }
 
-.shipment-satus{
+.shipment-status {
   background: black;
-    color: white !important;
+  color: white !important;
 }
 
- .shipment-Item-info{
-    font-weight: bold;
-    margin-left: 28px;
-    padding-top: 6px;
+.shipment-item-info {
+  font-weight: bold;
+  margin-left: 28px;
+  padding-top: 6px;
 }
 
-.shipment-Info-header{
+.shipment-info-header {
   background-color: #330065;
-    margin-bottom: 0!important;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
+  margin-bottom: 0!important;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
 }
 
-.sidebar-kibo-logo{
+.sidebar-kibo-logo {
   height: 20px;
-    width: 107px;
+  width: 107px;
 }
 
-.mobile-ShipmentInfo-table{
+.mobile-shipment-info-table {
   float: right;
   background-color: #e5e5e5;
   font-weight: normal;
@@ -253,6 +253,6 @@ table {
   font-size: small;
 }
 
-.mobile-ShipmentInfo-table span{
+.mobile-shipment-info-table span {
   float: right;
 }
