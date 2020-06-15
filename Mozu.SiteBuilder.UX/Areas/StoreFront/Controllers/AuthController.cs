@@ -854,5 +854,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
     }
+    public class PantsController : BaseApiController
+    {
+        private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly ICookieProvider _cookieProvider;
+
+        public PantsController(IAuthenticationHelper authenticationHelper, ICookieProvider cookieProvider)
+        {
+            _authenticationHelper = authenticationHelper;
+            _cookieProvider = cookieProvider;
+        }
+
+        [HttpPost]
+        public  IActionResult Pants()
+        {
+            Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(this.HttpContext, _cookieProvider, this.SbApiContext, _authenticationHelper, "/", true);
+            return Redirect("/");
+        }
+    }
 
 }
