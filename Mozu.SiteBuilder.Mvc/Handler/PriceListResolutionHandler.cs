@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Handler
         public PriceListResolutionHandler(ISiteBuilderApiContext apiContext,
             Lazy<IMozuSession> session,
             Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
-            ILogger logger
+            ILogger<PriceListResolutionHandler> logger
             )
         {
             _apiContext = apiContext;

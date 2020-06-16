@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public VisitController(HttpContext httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, VisitEventPublisher publisher, ILogger logger)
+        public VisitController(HttpContext httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, VisitEventPublisher publisher, ILogger<VisitController> logger)
         {
             _httpContext = httpContext;
             _pageContext = pageContext;

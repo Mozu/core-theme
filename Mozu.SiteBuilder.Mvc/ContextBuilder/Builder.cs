@@ -840,7 +840,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             INavigationRepository navigationRepository,
             IThemeRepository themeRepository,
             ISitebuilderContextCacheRepository cacheRepo,
-            ILogger logger,
+            ILogger<ContextServiceAggregator> logger,
             IApiContext apiContext2 ,
             IApiContextAccessor apiContextAccessor
 

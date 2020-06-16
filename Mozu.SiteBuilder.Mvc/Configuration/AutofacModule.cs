@@ -93,8 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddSingleton<IThemeCache, ThemeCache>();
             builder.AddSingleton<ISitebuilderContextCacheRepository, SitebuilderContextCacheRepository>();
 
-            builder.AddSingleton<INfsConnectionWarmer, StorageGatewayConnectionWarmer>();
-
+          
             //Rule based page stuff
             //static property provider
             builder.AddSingleton<StaticMetadataProvider<CmsPageRuleContext>>();

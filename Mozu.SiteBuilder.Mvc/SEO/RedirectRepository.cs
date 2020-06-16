@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         //Task<RuntimeRedirects> _redirectEntryListTask;
         readonly IDocumentListWebApiClient _userDocumentClient;
         ISiteBuilderContextProvider _sbCp;
-        public RedirectRepository(ISiteBuilderContextProvider sbCp, IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger)
+        public RedirectRepository(ISiteBuilderContextProvider sbCp, IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger<RedirectRepository> logger)
         {
             _sbCp = sbCp;
             _siteBuilderApiContext = siteBuilderApiContext;

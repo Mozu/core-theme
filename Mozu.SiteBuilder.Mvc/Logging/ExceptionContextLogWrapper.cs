@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.Logging
         private ILogger _logger;
         private ISiteBuilderApiContext _apiContext;
 
-        public ExceptionContextLogWrapper(ILogger logger, ISiteBuilderApiContext apiContext)
+        public ExceptionContextLogWrapper(ILogger<ExceptionContextLogWrapper> logger, ISiteBuilderApiContext apiContext)
         {
             _logger = logger;
             _apiContext = apiContext;

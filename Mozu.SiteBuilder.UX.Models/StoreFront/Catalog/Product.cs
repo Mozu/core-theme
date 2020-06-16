@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Mozu.Core.Exceptions;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 {
     [DataContract]
+  //  [System.Text.Json.Serialization.JsonConverter(typeof(ProductConverter))]
     public class Product : Mozu.ProductRuntime.Contracts.Product
     {
         [System.Text.Json.Serialization.JsonIgnore]
@@ -80,8 +83,29 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
     }
-    
 
+/*
+    public class ProductConverter : System.Text.Json.Serialization.JsonConverter<Product>
+    {
+        public override Product Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Product value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            
+            writer.WriteString("Date", wf.Date);
+            writer.WriteNumber("TemperatureCelsius", wf.TemperatureCelsius);
+            if (!string.IsNullOrWhiteSpace(wf.Summary) && wf.Summary != "N/A")
+            {
+                writer.WriteString("Summary", wf.Summary);
+            }
+
+            writer.WriteEndObject();
+        }
+    }*/
     public class RepeaterItem
     {
         public string Text { get; set; }

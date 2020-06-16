@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public ResourceController(Lazy<IMozuVirtualPathProvider> pathProvider, 
             Lazy<INavigationGandalf> gandalf, 
             Lazy<IThemeContentRetriever> contentRetriever, 
-            ILogger logger, 
+            ILogger<ResourceController> logger, 
             ISettings settings, 
             IApiContext apiContext, 
             ITemplateInheritanceHandler templateGetter,

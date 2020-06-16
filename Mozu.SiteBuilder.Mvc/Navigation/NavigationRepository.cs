@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ILogger log)
+        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ILogger<NavigationRepository> log)
         {
             _cmsService = cmsService;
             _log = log;

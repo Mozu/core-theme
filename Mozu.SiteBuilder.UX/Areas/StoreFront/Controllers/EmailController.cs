@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public EmailController(
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             ISitesWebApiClient sitesWebApiClient,
-            ILogger logger,
+            ILogger<EmailController> logger,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,

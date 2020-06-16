@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         private Exception CreateandLogFormattingException(Exception ex, OutputFormatterWriteContext context)
         {
+            ex = Unwrap(ex);
             _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
 
             var statusCode = HttpStatusCode.InternalServerError;

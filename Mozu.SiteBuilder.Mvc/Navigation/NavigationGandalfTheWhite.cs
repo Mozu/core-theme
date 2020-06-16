@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Public constructor.
         /// </summary>
         public NavigationGandalfTheWhite(ISiteBuilderContextProvider contextProvider,
-            IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, IServiceProvider lifetimeScope = null,
+            IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger<NavigationGandalfTheWhite> logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, IServiceProvider lifetimeScope = null,
             Lazy<ISiteContext> siteContext = null)
         {
             _contextProvider = contextProvider;

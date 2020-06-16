@@ -65,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     
         public CustomRouteRepository(
             ISiteBuilderApiContext siteBuilderApiContext,
-            ILogger logger,
+            ILogger<CustomRouteRepository> logger,
             ISiteBuilderContextProvider contextProvider,
             ICustomRouteConstraintFactory customRouteConstraintFactory,
             IRouteDataMappingFactory routeDataMappingFactory,

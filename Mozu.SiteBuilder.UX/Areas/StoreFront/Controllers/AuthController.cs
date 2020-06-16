@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ISiteContext siteContext,
             IErrorResultConverterCollection errorGenerator,
            Lazy<ICaptchaClient> captchaClient,
-           ILogger logger)
+           ILogger<AuthController> logger)
         {
             _authenticationHelper = authenticationHelper;
             _customerAccountWebApiClient = customerAccountWebApiClient ?? throw new ArgumentNullException(nameof(customerAccountWebApiClient));
@@ -362,7 +362,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             readonly ILogger _logger;
             public CaptchaClient(
                 ISettings settings,
-                ILogger logger)
+                ILogger<CaptchaClient> logger)
             {
                 _settings = settings;
                 _logger = logger;
