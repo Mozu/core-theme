@@ -563,7 +563,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             };
 
             var sbapiContext = Substitute.For<ISiteBuilderApiContext>();
-            var logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger<CustomRouteRepository>>();
           
 
 
