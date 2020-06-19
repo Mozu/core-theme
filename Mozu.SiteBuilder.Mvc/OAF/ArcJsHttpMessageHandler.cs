@@ -131,9 +131,13 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             
             await this.RunFunctions(ctx, new List<CustomFunctionBase> { fn }, new FunctionCallbackhandler(context,functionId)).ConfigureAwait(false);
             var res = ctx.ActionContext.Result ;//as ObjectResult;
-            if (res == null)
+            var loc = ctx.ActionContext.HttpContext.Response.Headers["Location"];
+            
+            if (res == null )
             {
-                context.HttpContext.Response.StatusCode = 418;
+                context.HttpContext.Response.StatusCode = context.HttpContext.Response.StatusCode == 200
+                    ? 418
+                    : context.HttpContext.Response.StatusCode;
                 return;
             }
             await res.ExecuteResultAsync(ctx.ActionContext);
