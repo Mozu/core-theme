@@ -18,6 +18,7 @@ using Microsoft.Extensions.FileProviders;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Caching;
 using Mozu.Core.Configuration;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
@@ -147,8 +148,24 @@ namespace Mozu.SiteBuilder.UX
                
                 ;
             //  .UseMiddleware<PageContextCookieMiddleware>();
-
+            
+            WarmRedis(app);
         }
+
+        private static void WarmRedis(IApplicationBuilder app)
+        {
+            var pool = app.ApplicationServices.GetService<IRedisCacheConnectionPoolManager>();
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                var g = $"test/" + Guid.NewGuid().ToString();
+                var cm = pool.GetConnection();
+                cm.GetDatabase().StringSet(g, "hi");
+                var x = cm.GetDatabase().StringGet(g);
+            }
+        }
+
         public class SbStartupFilter : IStartupFilter
         {
             public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
