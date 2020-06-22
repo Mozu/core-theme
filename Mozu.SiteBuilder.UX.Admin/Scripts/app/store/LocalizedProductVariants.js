@@ -75,16 +75,9 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                 mc,
                 cat;
 
-            if (ctxType === 'm') {
-                mc = Taco.app.context.getMasterCatalog();
-                if (mc) {
-                    supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
-                }
-            } else if (ctxType === 'c') {
-                cat = Taco.app.context.getCatalog();
-                if (cat) {
-                    supportedCurrencies.push(cat.currencyCode);
-                }
+            mc = Taco.app.context.getMasterCatalog();
+            if (mc) {
+                supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
             }
 
             Ext.Array.each(supportedCurrencies, function (cur) {
