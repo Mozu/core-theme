@@ -50,18 +50,31 @@
             "enabledForReturns": false,
             "areCredentialsSet": false
         },
-        {
-            "id": "canadapost",
-            "settings": {
-                "aesitn": "",
-                "apipassword": null,
-                "apiusername": null,
-                "appid": ""
-            },
-            "isConfigured": true,
-            "enabled": true,
-            "enabledForReturns": false,
-            "areCredentialsSet": false
-        }
+      {
+        "id": "canadapost",
+        "settings": {
+          "aesitn": "",
+          "apipassword": null,
+          "apiusername": null,
+          "appid": ""
+        },
+        "isConfigured": true,
+        "enabled": true,
+        "enabledForReturns": false,
+        "areCredentialsSet": false
+      },
+      {
+        "id": "purolator",
+        "settings": {
+          "aesitn": "",
+          "apipassword": null,
+          "apiusername": null,
+          "appid": ""
+        },
+        "isConfigured": true,
+        "enabled": true,
+        "enabledForReturns": false,
+        "areCredentialsSet": false
+      }
     ]
 }

@@ -18,6 +18,7 @@ export class LocationGroupConfigModel {
     LCUPSCanadaShippingTypes: any[];
     LCFedExShippingType: any[];
     LCCanadaPostShippingType: any[];
+    LCPurolatorShippingType: any[];
     subscriptions: any[];
     lgConfigModel: LocationGroupConfigurationModel;
     packageSettingUnitTypes: any[];
@@ -30,7 +31,11 @@ export class LocationGroupConfigModel {
     canadaPostCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
     canadaPostCarrierAccountList: SelectedCarrierAccountModel[];
     canadaPostCarrierAccount: any;
-    selectedCanadaPostCarrier: SelectedCarrierAccountModel;    
+    selectedCanadaPostCarrier: SelectedCarrierAccountModel;
+    purolatorCarrierAccountPagination: PagniatedNgSelectPageConfiguration;
+    purolatorCarrierAccountList: SelectedCarrierAccountModel[];
+    purolatorCarrierAccount: any;
+    selectedPurolatorCarrier: SelectedCarrierAccountModel;  
     workflowProcessList: WorkflowProcessModel[]; 
 }
 

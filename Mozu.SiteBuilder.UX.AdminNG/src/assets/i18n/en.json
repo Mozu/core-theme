@@ -158,42 +158,43 @@
                 "isLogoutOnPrimaryButton": "false"
             }
         },
-      "Toastr": {
-        "Error": {
-          "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-          "EmptyEmailAddress": "Please enter Email Address.",
-          "EmptyPassword": "Please enter Password.",
-          "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-          "QuoteListGetFailed": "Error occured while fetching quote list",
-          "QuoteGetFailed": "Error occured while fetching quote information",
-          "GetAccountInfoFailed": "Error occured while fetching account details",
-          "EmptyLocationGroupName": "Please enter Name.",
-          "EmptyLocationGroupCode": "Please enter Location Group Code.",
-          "EmptyLocationGroupSites": "Please select Site.",
-          "EmptyLocationGroupCodes": "Please select Location(s)",
-          "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
-          "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
-          "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data",
-          "EmptyBoxTypeName": "Please enter box type Name",
-          "EmptyBoxTypeLength": "Please enter box type Length",
-          "EmptyBoxTypeWidth": "Please enter box type Width",
-          "EmptyBoxTypeHeight": "Please enter box type Height",
-          "EmptyDefaultPrintType": "Please select Default Printer Type",
-          "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
-          "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
-          "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
-          "EmptyCanadaPostShippingTypes": "Please select at least one Canada Post Shipping Type for default carrier Canada Post",
-          "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
-          "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave",
-          "GetWorkFlowProcessFailed": "Error occured while fetching workflow processes"
-        },
-        "Warning": {},
-        "Information": {},
-        "Success": {
-          "LGCSavedSuccessfully": "Location Group Config saved successfully."
-        },
-        "Custom": {}
-      }
+        "Toastr": {
+          "Error": {
+            "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
+            "EmptyEmailAddress": "Please enter Email Address.",
+            "EmptyPassword": "Please enter Password.",
+            "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
+            "QuoteListGetFailed": "Error occured while fetching quote list",
+            "QuoteGetFailed": "Error occured while fetching quote information",
+            "GetAccountInfoFailed": "Error occured while fetching account details",
+            "EmptyLocationGroupName": "Please enter Name.",
+            "EmptyLocationGroupCode": "Please enter Location Group Code.",
+            "EmptyLocationGroupSites": "Please select Site.",
+            "EmptyLocationGroupCodes": "Please select Location(s)",
+            "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
+            "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
+            "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data",
+            "EmptyBoxTypeName": "Please enter box type Name",
+            "EmptyBoxTypeLength": "Please enter box type Length",
+            "EmptyBoxTypeWidth": "Please enter box type Width",
+            "EmptyBoxTypeHeight": "Please enter box type Height",
+            "EmptyDefaultPrintType": "Please select Default Printer Type",
+            "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
+            "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
+            "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
+            "EmptyPurolatorShippingTypes": "Please select at least one Purolator Shipping Type for default carrier Purolator",
+            "EmptyCanadaPostShippingTypes": "Please select at least one Canada Post Shipping Type for default carrier Canada Post",
+            "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
+            "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave",
+            "GetWorkFlowProcessFailed": "Error occured while fetching workflow processes"
+          },
+            "Warning": {},
+            "Information": {},
+            "Success": {
+                "LGCSavedSuccessfully": "Location Group Config saved successfully."
+            },
+            "Custom": {}
+        }
     },
     "QUOTES": {
         "GridHeader": {
@@ -406,6 +407,12 @@
         "canadaPostExpress2Default": "Canada Post 2 Day Default",
         "canadaPostExpress3Default": "Canada Post 3 Day Default",
         "canadaPostReturnLabelShippingTypes": "Canada Post Return Label Shipping Types",
+        "purolatorShippingTypes": "Purolator Shipping Types",
+        "purolatorStandardDefault": "Purolator Standard Default",
+        "purolatorExpress1Default": "Purolator 1 Day Default",
+        "purolatorExpress2Default": "Purolator 2 Day Default",
+        "purolatorExpress3Default": "Purolator 3 Day Default",
+        "purolatorReturnLabelShippingTypes": "Purolator Return Label Shipping Types",
         "autoPackingListPopup": "Auto generate packing list",
         "blockPartialStock": "Do not allow partial quantity on validate stock",
         "defaultMaxNumberOfShipmentsInPickWave": "Default number of orders in pickwave",
@@ -419,7 +426,8 @@
         "bopisShipment": "BOPIS",
         "transferShipment": "Transfer",
         "uspsAccountLabel": "Select USPS Account",
-        "canadaPostAccountLabel": "Select Canada Post Account"
+        "canadaPostAccountLabel": "Select Canada Post Account",
+        "purolatorAccountLabel": "Select Purolator Account"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",
@@ -430,6 +438,7 @@
         "fedexSettings": "FedEx Settings",
         "uspsSettings": "USPS Settings",
         "canadaPostSettings": "Canada Post Settings",
+        "purolatorSettings": "Purolator Settings",
         "otherSettings": "Other Settings",
         "packageSettings": "Package Settings",
         "bpmConfigurations": "BPM Configurations"

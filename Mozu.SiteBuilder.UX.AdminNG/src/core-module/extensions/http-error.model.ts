@@ -45,6 +45,7 @@ export enum ErrorCode {
     NonIntDefaultMaxNumberOfShipmentsInPickWave = <any>'NonIntDefaultMaxNumberOfShipmentsInPickWave',    
     EmptyCanadaPostShippingTypes = <any>'EmptyCanadaPostShippingTypes',
     GetWorkFlowProcessFailed = <any>'GetWorkFlowProcessFailed',
+    EmptyPurolatorShippingTypes = <any>'EmptyPurolatorShippingTypes'
 }
 
 export enum ToastrCode {
