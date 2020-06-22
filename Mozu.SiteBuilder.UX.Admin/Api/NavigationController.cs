@@ -341,7 +341,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 if (item.Id == null)
+                {
                     item.Id = "link^^" + ++currentHighestLinkIndex;
+                    item.Index = ++currentHighestLinkIndex;
+                }
 
                 navSet.Add(item);
             }
