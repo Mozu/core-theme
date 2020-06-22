@@ -117,7 +117,12 @@ Ext.define('Taco.view.settings.shipping.CarrierAccountsGrid', {
                     else if (value.toLowerCase() === "fedex") {
                         value = "FedEx";
                         return value;
-                    } else {
+                    }
+                    else if (value.toLowerCase() === "purolator") {
+                        value = "Purolator";
+                        return value;
+                    }
+                    else {
                         return value.toUpperCase();
                     }
                     

@@ -50,7 +50,7 @@ nuget Mozu.ProductAdmin.Contracts 1.2024.0-develop.39
 nuget Mozu.ProductRuntime.Contracts 1.2022.0-develop.33
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
-nuget Mozu.ShippingAdmin.Contracts  1.2016.0-gshot-contracts-15
+nuget Mozu.ShippingAdmin.Contracts 1.2026.0-gshot-contracts-20
 nuget Mozu.SiteSettings.General.Contracts 1.2012.0-gshot-contracts-77
 nuget Mozu.SiteSettings.Order.Contracts 1.2012.0-gshot-contracts-77
 nuget Mozu.SiteSettings.Ship.Contracts 1.1936.0-gshot-contracts-40

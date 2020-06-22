@@ -124,55 +124,30 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
 
     beforeSave: function () {
         if (this.configFields.isDirty() || this.configContainer.isDirty()) {
-            var settings=this.configFields.getForm().getValues(false, false, false, true);
-            
-                if (settings[Object.keys(settings)[0]] === "0" && this.customFileds[0].record) {
-                    this.deleteCarrierCredentials();
-                }
-                else if (this.customFileds[0].record && settings[Object.keys(settings)[0]]!="0") {
-
-                    this.updateCarrierCredentials();
-                }
-                else if (!this.customFileds[0].record && settings[Object.keys(settings)[0]] != "0") {
-                    this.insertCarrierCredentials();
-                }
-                
-          //  }
-
-            // TODO Need to remove this code.
-            //if (this.returnItems) {
-            //    var returnSettings = this.returnItems.getForm().getValues(false, false, false, true);
-            //    if (settings != undefined && settings != null) {
-            //        delete settings[Object.keys(settings)[0]];
-            //    }
-            //    settings = Ext.apply(settings, returnSettings);
-            //    issettingSet = true;
-            //}
-           
-            //if (issettingSet) {
-            //    this.record.set('settings', settings);
-            //}
-
+            //handling insert,update and delete in sitebuilder.
+            this.saveCarrierCredentials();
         }
     },
 
     getCarrierCredentialModel: function () {
-        var me = this;
-        
+        var me = this;       
         var selectedRecord = this.configFields.getForm().getValues(false, false, false, true);
         var carrierId = this.providerId.toLowerCase();
         var siteId = Taco.app.context.getSiteId();
-        var model = {
+        var model = [];
+        var carrier = {
             carrierId: carrierId,
             siteId: siteId,
             CredentialSet: {
                 code: selectedRecord[Object.keys(selectedRecord)[0]]
             }
         }
+
+        model.push(carrier);
         return model;
 
     },
-    insertCarrierCredentials: function () {
+    saveCarrierCredentials: function () {
         me = this;
         if (this.configFields.isDirty() || this.configContainer.isDirty()) {
            var model = this.getCarrierCredentialModel();
@@ -185,7 +160,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             }
 
             Ext.Ajax.request({
-                url: '/admin/app/carriers/credentials/create',
+                url: '/admin/app/carriers/credentials/save',
                 method: 'POST',
                 jsonData: data,
                 success: function () {
@@ -204,83 +179,5 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 }
             });
         }
-    },
-
-    updateCarrierCredentials: function () {
-        me = this;
-        if (this.configFields.isDirty() || this.configContainer.isDirty()) {
-            var model = this.getCarrierCredentialModel();
-
-            try {
-                data = Ext.JSON.encode(model);
-            } catch (e) {
-                Taco.app.fireEvent('setmessage', 'The JSON you are attempting to save is not in a valid format', 'error');
-                return;
-            }
-
-            Ext.Ajax.request({
-                url: '/admin/app/carriers/credentials/update',
-                method: 'POST',
-                jsonData: data,
-                success: function () {
-                    Taco.app.fireEvent('savesuccess', this);
-                },
-                failure: function (response) {
-                    var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
-                    var oRes = Ext.JSON.decode(response.responseText);
-                    if (oRes.message) {
-                        msg = oRes.message;
-                    }
-                    if (oRes.items && oRes.items.length) {
-                        msg = oRes.items[0].message;
-                    }
-                    Taco.app.fireEvent('setmessage', msg, 'error');
-
-                }
-            });
-        }
-
-
-    },
-
-     deleteCarrierCredentials: function () {
-        me = this;
-        if (this.configFields.isDirty() || this.configContainer.isDirty()) {
-            // var settings = this.configFields.getForm().getValues(false, false, false, true);
-
-            var model = this.getCarrierCredentialModel();
-
-            try {
-                data = Ext.JSON.encode(model);
-            } catch (e) {
-                Taco.app.fireEvent('setmessage', 'The JSON you are attempting to save is not in a valid format', 'error');
-                return;
-            }
-
-            Ext.Ajax.request({
-                url: '/admin/app/carriers/credentials/delete',
-                method: 'POST',
-                jsonData: data,
-                success: function () {
-                    Taco.app.fireEvent('savesuccess', this);
-                },
-                failure: function (response) {
-                    var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
-                    var oRes = Ext.JSON.decode(response.responseText);
-                    if (oRes.message) {
-                        msg = oRes.message;
-                    }
-                    if (oRes.items && oRes.items.length) {
-                        msg = oRes.items[0].message;
-                    }
-                    Taco.app.fireEvent('setmessage', msg, 'error');
-
-                }
-            });
-        }
-
-
     }
-
-
 });

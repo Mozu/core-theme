@@ -56,6 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             FeatureDic[DC.Constants.Ups.CarrierId] = "upsrates";
             FeatureDic[DC.Constants.Usps.CarrierId] = "uspsrates";
             FeatureDic[DC.Constants.CanadaPost.CarrierId] = "canadapostrates";
+            FeatureDic[DC.Constants.Purolator.CarrierId] = "purolatorrates";
 
         }
 
@@ -68,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             list2.Add("upsrates");
             list2.Add("uspsrates");
             list2.Add("canadapostrates");
+            list2.Add("purolatorrates");
             return list2;
         }
 
@@ -617,6 +619,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!settings.Any(x => x.id == DC.Constants.CanadaPost.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.CanadaPost.CarrierId , IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == DC.Constants.Purolator.CarrierId))
+            {
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Purolator.CarrierId, IsConfigured = false });
             }
             if (!settings.Any(x => x.id == DC.Constants.Custom.CarrierId))
             {

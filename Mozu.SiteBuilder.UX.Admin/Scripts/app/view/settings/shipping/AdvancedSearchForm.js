@@ -50,6 +50,7 @@ Ext.define('Taco.view.settings.shipping.AdvancedSearchForm', {
                                      //{ "id": '', value: '' },
                                      { "id": "canadapost", "value": "CanadaPost" },
                                      { "id": "fedex", "value": "FedEx" },
+                                     { "id": "purolator", "value": "Purolator" },
                                      { "id": "ups", "value": "UPS" },
                                      { "id": "usps", "value": "USPS" }                                    
                                  ]

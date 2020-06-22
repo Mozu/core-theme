@@ -507,8 +507,111 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         this.canadapostStore.load({
             callback: function () { canadapostCombo.setValue(setcanadapostValue) }
         });
+
+
+        this.purolatorStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.CarrierAccountList',
+            idProperty: 'code',
+            storeId: 'purolatorstoreid',
+            remoteFilter: true,
+            remoteSort: false,
+            pageSize: 15,
+            storeManagerConfig: {
+                clearFilters: true,
+                clearSort: true,
+                autoLoad: true
+            },
+            proxy: {
+                type: 'ajax',
+                api: {
+                    read: '/admin/app/carriers/credentialsset/List?carrierId=purolator',
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: "message"
+                },
+                writer: {
+                    allowSingle: false,
+                    type: 'json'
+                }
+            }
+        });
+
+        var purolatorCombo = Ext.create('widget.combo', {
+            xtype: 'combo',
+            name: 'name',
+            editable: true,
+            record: carrierAccountStore.getById('purolator'),
+            fieldLabel: 'Carrier Account',
+            valueField: 'code',
+            displayField: 'name',
+            pageSize: 15,
+            forceSelection: true,
+            queryMode: 'remote',
+            allowBlank: true,
+            store: this.purolatorStore,
+            setValue: function (value, doSelect) {
+                var copyArgs = arguments;
+
+                var selectedValue = typeof (value) === 'object' ? value[0].get('code') : value
+                if (selectedValue && !this.store.findRecord('code', selectedValue)) {
+                    this.store.model.setProxy({
+                        type: 'ajaxproxy',
+
+                        api: {
+                            read: '/admin/app/carriers/credentialsset/List?carrierId=purolator',
+                        },
+                        reader: {
+                            type: 'json',
+                            root: 'items',
+                            successProperty: 'success',
+                            messageProperty: "message"
+                        },
+
+                        writer: {
+                            allowSingle: true,
+                            type: 'json'
+                        }
+                    }),
+
+                        this.store.model.load(selectedValue, {
+                            scope: this,
+                            success: function (record, operation) {
+                                this.store.add(record);
+                                this.setValue.apply(this, [selectedValue]);
+                            }
+                        });
+                } else if (selectedValue) {
+                    this.__proto__.setValue.apply(this, [selectedValue])
+                }
+            },
+        });
+
+        var getRecord = carrierAccountStore.getById('purolator');
+        var setpurolatorValue = "0"
+        if (getRecord) {
+            setpurolatorValue = getRecord.get('code')
+        }
+
+        this.purolator = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
+            record: store.getById('purolator'),
+            title: 'Purolator',
+            providerId: 'purolator',
+            configureCopy: '<img src="https://www.purolator.com/themes/custom/purolator_theme/logo.svg"/> <div>Please provide your Purolator account credentials.</div>',
+            ratesCopy: '<img src="https://www.purolator.com/themes/custom/purolator_theme/logo.svg"/> <div>Please provide your Purolator account credentials.</div>',
+            stateStore: stateStore,
+            customFileds: [
+                purolatorCombo
+            ]
+        });
+
+        this.purolatorStore.load({
+            callback: function () { purolatorCombo.setValue(setpurolatorValue) }
+        });
        
-        this.tabs.add([this.fedex, this.UPS, this.USPS, this.canadaPost]);
+        this.tabs.add([this.fedex, this.UPS, this.USPS, this.canadaPost, this.purolator]);
 
 
     },
