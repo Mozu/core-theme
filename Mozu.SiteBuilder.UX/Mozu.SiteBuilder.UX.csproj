@@ -171,6 +171,7 @@
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutV2Controller.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\MobileNotificationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\AnonymousNotificationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
@@ -447,6 +448,12 @@
     </Reference>
   </ItemGroup>
   <Import Project="..\.paket\paket.targets" />
+  <ItemGroup>
+    <Reference Include="KuttSharp">
+      <HintPath>..\packages\KuttSharp\lib\netstandard2.0\KuttSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>  
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>

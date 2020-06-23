@@ -333,12 +333,14 @@ Ext.define('Taco.view.website.Tree', {
                 template: 'template-icon',
                 ordertemplate: 'template-icon',
                 contentlist: 'template-icon',
+                mobilenotificationTemplate: 'template-icon',
                 group: function (record) { return this['parent' + record.data.id]; },
                 parent_navigation: 'folder-icon',
                 parent_unlinked: 'folder-icon',
                 parent_backOffice: 'folder-icon',
                 parent_templates: 'folder-icon',
-                parent_emailTemplates: 'folder-icon'
+                parent_emailTemplates: 'folder-icon',
+                parent_mobilenotificationTemplates: 'folder-icon'
             };
 
         return typeof iconDefinitions[descriptor] === 'function' ? iconDefinitions[descriptor](record) : iconDefinitions[descriptor];

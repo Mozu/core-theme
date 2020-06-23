@@ -36,7 +36,7 @@ nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
 nuget Mozu.CommerceRuntime.Contracts 1.2021.0-gshotContracts-146
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging 1.1902.1
-nuget Mozu.Core.Messaging.Contracts 1.1902.1
+nuget Mozu.Core.Messaging.Contracts 1.2026.0-ngshotContracts-47
 nuget Mozu.Core.Test 1.1903.1
 nuget Mozu.Customer.Contracts 1.1909.2
 nuget Mozu.DeployWeb
@@ -81,7 +81,7 @@ nuget Mozu.ShippingRuntime.Contracts 1.1623.1
 nuget Mozu.Core.Extensible.Contracts 1.1801.1
 nuget AutofacContrib.NSubstitute 3.3.2
 nuget FluentValidation 5.5.0.0
-
+nuget KuttSharp 0.4.1
 nuget Autofac 3.5.2
 nuget FSharp.Core 3.1.2.1
 nuget FSharpx.Collections 1.9.6

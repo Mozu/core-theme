@@ -560,37 +560,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}",
                 new {action = "Index"},
-                new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|health" }
+                new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|health|mobileNotification" }
                 );
             //removing default... add a matching route above
             routes.MapHttpRoute(
                 "StoreFront_default",
                 "{controller}/{action}/{id}",
                 new { action = "Index", id = RouteParameter.Optional },
-                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing" }
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|mobileNotification" }
                 );
-
-
-
-          
-
-
-
-
-
-            
-
-
             //routes.MapHttpRoute("resources",
             //   "resources/{action}/{*pathInfo}",
             //   new { controller = "Resource", Action = "script", pathInfo = UrlParameter.Optional });
-
-
-
-
-
-            
-
 
             /*********************************************************************
              * 

@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         private const string NODE_TYPE_PRODUCT = "product";
         private const string NODE_TYPE_TEMPLATE = "template";
         private const string NODE_TYPE_EMAIL_TEMPLATE = "emailtemplate";
+        private const string NODE_TYPE_MOBILENOTIFICATION_TEMPLATE = "mobilenotificationTemplate";
         private const string NODE_TYPE_ORDER_TEMPLATE = "ordertemplate";
         private const string NODE_TYPE_CONTENT_LIST = "contentlist";
 
@@ -38,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public static NavigationNodeType EmailTemplate = new NavigationNodeType(NODE_TYPE_TEMPLATE);
         public static NavigationNodeType Template = new NavigationNodeType(NODE_TYPE_EMAIL_TEMPLATE);
         public static NavigationNodeType ContentList = new NavigationNodeType(NODE_TYPE_CONTENT_LIST);
+        public static NavigationNodeType MobileNotificationTemplate = new NavigationNodeType(NODE_TYPE_MOBILENOTIFICATION_TEMPLATE);
 
         /// <summary>
         /// Operator overload to allow for comparison with strings.
@@ -82,6 +84,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                     return Product;
                 case NODE_TYPE_EMAIL_TEMPLATE:
                     return EmailTemplate;
+                case NODE_TYPE_MOBILENOTIFICATION_TEMPLATE:
+                    return MobileNotificationTemplate;
                 default:
                     throw new ArgumentException("Attempt to cast invalid string to NavigationNodeType: " + type);
             }

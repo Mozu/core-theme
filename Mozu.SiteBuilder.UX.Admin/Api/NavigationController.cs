@@ -134,6 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             list.AddRange(GetPageTemplateNodes());
             list.AddRange(GetEmailTemplateNodes());
             list.AddRange(GetBackOfficeTemplateNodes());
+            list.AddRange(GetMobileNotificationTemplateNodes());
 
             if (showContentLists.GetValueOrDefault(false))
             {
@@ -235,6 +236,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     };
         }
 
+        private IEnumerable<ITreeNavigationNode> GetMobileNotificationTemplateNodes()
+        {
+            var mobileNotificationsTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.MobileNotificationTemplates;
+
+            // first return each of the email templates
+            foreach (var t in mobileNotificationsTemplates)
+            {
+                yield return new NavigationTreeNode
+                {
+                    AllowDrag = false,
+                    AllowDrop = false,
+                    NodeType = NavigationNodeType.MobileNotificationTemplate,
+                    Id = "templates-" + t.Id,
+                    OriginalId = t.Id,
+                    Expanded = true,
+                    Expandable = false,
+                    Name = t.Title,
+                    Url = "/mobilenotification/preview/" + t.Id,
+                    ParentId = "_mobilenotificationTemplates",
+                    IsHidden = false
+                };
+            }
+
+            // now return the parent node
+            yield return new NavigationTreeNode
+            {
+                AllowDrag = false,
+                AllowDrop = false,
+                NodeType = NavigationNodeType.Group,
+                Id = "_mobilenotificationTemplates",
+                OriginalId = "_templates",
+                Expanded = false,
+                Expandable = true,
+                Index = 103,
+                Name = "Mobile Templates",
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsHidden = false
+            };
+        }
         private IEnumerable<ITreeNavigationNode> GetExtensibleContentTypeNodes(IEnumerable<Mozu.SiteBuilder.UX.Admin.Api.EntityControllerController.Node> eccns)
         {
             // first return each of the extensible type templates

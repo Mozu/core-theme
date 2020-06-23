@@ -1048,6 +1048,20 @@
       "isHidden": false
     },
     {
+      "id": "_mobileNotificationTemplate",
+      "originalId": "shipment.cancelled",
+      "parentId": "root",
+      "index": 100,
+      "name": "MobileNotification Templates",
+      "nodeType": "template",
+      "leaf": false,
+      "expanded": false,
+      "expandable": true,
+      "iconCls": "taco-nav-node-template",
+      "allowDrag": false,
+      "isHidden": false
+    },
+    {
       "id": "_cmsContentTypes",
       "originalId": "_cmsContentTypes",
       "parentId": "root",

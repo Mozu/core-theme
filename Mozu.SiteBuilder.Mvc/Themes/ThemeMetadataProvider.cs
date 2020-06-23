@@ -325,6 +325,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
             themecfg.PageTypes = themecfgJson["pageTypes"] == null ? new List<PageTypeDefinition>() : themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.EmailTemplates = themecfgJson["emailTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["emailTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
+            themecfg.MobileNotificationTemplates = themecfgJson["mobileNotificationTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["mobileNotificationTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.BackOfficeTemplates = themecfgJson["backOfficeTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["backOfficeTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition>() : themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Editors = themecfgJson["editors"] == null ? new List<EditorDefinition>() : themecfgJson["editors"].ToObject<List<EditorDefinition>>();
@@ -351,6 +352,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
             themecfg.PageTypes = themecfgJson["pageTypes"] == null ? new List<PageTypeDefinition> (): themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.EmailTemplates = themecfgJson["emailTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["emailTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
+            themecfg.MobileNotificationTemplates = themecfgJson["mobileNotificationTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["mobileNotificationTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.BackOfficeTemplates = themecfgJson["backOfficeTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["backOfficeTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Editors = themecfgJson["editors"] == null ? new List<EditorDefinition>() : themecfgJson["editors"].ToObject<List<EditorDefinition>>();
