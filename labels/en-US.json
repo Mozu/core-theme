@@ -264,7 +264,7 @@
   "mobileLocationAssignedMessage": "Shipment assigned: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
   "mobilePickLocation": "Pickup from/Ship from:",
   "mobileShipmentCanceledInfo": "Canceled Items",
-  "mobileShipmentCancelMessage": "Item(s) Cancelled: Store {0} Go to {1} for more information OR Manage Shipments at {2}",
+  "mobileShipmentCancelMessage": "Item(s) canceled: Store {0} Go to {1} for more information OR Manage Shipments at {2}",
   "mobileShipmentFulfillInfo": "Items to Fulfill",
   "mobileShipmentNo": "Shipment #",
   "mobileShipmentStatus": "Shipment Status:",
