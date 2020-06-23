@@ -27,10 +27,10 @@
   <ItemGroup>
     <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="Mozu.Core.Api.Test" Version="1.2021.22" />
-    <PackageReference Include="Mozu.Core.JunitTestLogger" Version="1.2021.22" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.22" />
-    <PackageReference Include="Mozu.Core.Test" Version="1.2021.22" />
+    <PackageReference Include="Mozu.Core.Api.Test" Version="1.2021.25" />
+    <PackageReference Include="Mozu.Core.JunitTestLogger" Version="1.2021.25" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.25" />
+    <PackageReference Include="Mozu.Core.Test" Version="1.2021.25" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
       <PrivateAssets>all</PrivateAssets>
