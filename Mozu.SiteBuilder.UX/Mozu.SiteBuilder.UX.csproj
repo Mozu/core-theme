@@ -34,9 +34,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Misc\Views\Testing\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="wwwroot\Assets\Fonts\Calibri.eot" />
     <None Include="wwwroot\Assets\Fonts\Calibri.otf" />
     <None Include="wwwroot\Assets\Fonts\Calibri.svg" />

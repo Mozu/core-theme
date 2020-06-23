@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
         'Taco.view.order.widget.InternalNotesGrid'
     ],
     
-    title: 'Internal Notes',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.internal_notes,
     ui: 'subform-section',
     bodyPadding: '20 0 40 0',
     cls: 'taco-grid-hide-more-btn', // this hides the combobox that is used to show/hide columns
@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Add Internal Notes',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.add_internal_notes,
                 scope: this.grid,
                 requiredBehaviors: this.orderUpdateBehaviors,
                 handler: function () {

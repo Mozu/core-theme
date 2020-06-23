@@ -262,6 +262,15 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     }
                 ]
             }
+            ,{
+                xtype: 'textfield',
+                    name: 'attribute',
+                    fieldLabel: 'Attribute Search (e.g. code1=value1;code2=value2)',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex: 1
+            }
         ]
 
         items = this.removeFilters(items);

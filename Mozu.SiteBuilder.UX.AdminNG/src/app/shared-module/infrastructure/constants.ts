@@ -207,7 +207,8 @@ export class Constants {
         usps: 'usps',
         ups: 'ups',
         fedex: 'fedex',
-        canadapost: 'canadapost'
+        canadapost: 'canadapost',
+        purolator:'purolator'
     };
     static LCPrintReturnLabel = [{ data: true, label: 'Yes' }, { data: false, label: 'No' }];
     static LCDefaultPrinterType = [{ data: 'Laser', label: 'Laser' }, { data: 'Thermal', label: 'Thermal' }];
@@ -262,6 +263,22 @@ export class Constants {
         data: '0',
         label: 'No Carrier Credentials Selected',
     }
+
+    static PurolatorCarrierAccountPageConfig = {
+        startIndex: 0,
+        pageSize: 15,
+        query: "",
+        isMultiSelect: false,
+        placeholder: 'Search',
+        totalRecordCount: 0,
+        id: 'PurolatorCarrierAccount'
+    }
+
+    static DefaultPurolatorAccount = {
+        data: '0',
+        label: 'No Carrier Credentials Selected',
+    }
+
 
     static ShipmentType = {
         sth: 'ShipToHome',

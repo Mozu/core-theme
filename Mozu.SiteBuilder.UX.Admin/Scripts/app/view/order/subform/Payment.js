@@ -21,12 +21,12 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.model.PaymentSettings'
     ],
 
-    title: 'Payments',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Title.payments,
 
     bodyPadding:"0 0 0 0",
 
     // optional override of the title to be used in Tabs.
-    tabTitle: 'Payments',
+    tabTitle: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Title.payments,
 
     layout: {
         type: 'vbox',
@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 itemId: 'refundButton',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Refund',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Buttons.refund,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
@@ -73,7 +73,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             }),
             me.addPaymentButton = Ext.widget('splitbutton', {
                 menuAlign: 'tr-br?',
-                text: 'Add Payment',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Buttons.add_payment,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
@@ -156,10 +156,10 @@ Ext.define('Taco.view.order.subform.Payment', {
 
         this.refundGrid = Ext.create('Ext.grid.Panel', {
             hidden: true,
-            title: 'Refunds',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Title.refunds,
             cls: 'taco-payments-refund-grid',
             margin: '10 0 0 0',
-            emptyText: 'There are no refunds to display',
+            emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.EmptyText.no_refund,
             viewConfig: {
                 deferEmptyText: false
             },
@@ -167,12 +167,12 @@ Ext.define('Taco.view.order.subform.Payment', {
             columns: [{
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',
-                text: 'Date',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.date,
                 flex: 1,
                 format: 'Y-m-d H:i:s'
             }, {
                 dataIndex: 'amount',
-                text: 'Amount',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.amount,
                 flex: 1,
                 renderer: function (value, meta, record) {
                     if (!value) return "-Failure-";
@@ -180,7 +180,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }, {
                 dataIndex: 'payment',
-                text: 'Refund Method',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.refund_method,
                 flex: 2,
                 cardTemplate: new Ext.XTemplate([
                     '{cardType}: {cardNumber}'
@@ -204,7 +204,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }, {
                 dataIndex: 'reason',
-                text: 'Reason',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.reason,
                 flex: 2,
                 renderer: function (value) {
                     return Ext.String.htmlEncode(value);
@@ -223,7 +223,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             }, {
                 xtype: 'taco.menucolumn',
                 menuItems: [{
-                    text: 'Resend Email',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.GridHeader.resend_email,
                     menuColumnHandler: function (item, eventData) {
                         var cfg = {
                             type:"refund",
@@ -317,16 +317,16 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
 
         var actions = me.paymentActions = {
-            addPurchaseOrder: makeAction('Purchase Order', 'Taco.view.order.modal.AddPurchaseOrder', 'purchaseOrderOption'),
-            addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
-            requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
-            addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
-            addEcommerceGiftCard: makeAction('eCommerce Gift Card', 'Taco.view.order.modal.AddEcommerceGiftCard', 'eCommerceGiftCardOption'),
-            addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddEcommerceGiftCard', 'storeCreditOption')
+            addPurchaseOrder: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.purchase_order, 'Taco.view.order.modal.AddPurchaseOrder', 'purchaseOrderOption'),
+            addCreditCard: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.credit_card, 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
+            requestCheck: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.check, 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
+            addManualCreditCard: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.credit_card_manual, 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
+            addEcommerceGiftCard: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.ecommerce_gift_card, 'Taco.view.order.modal.AddEcommerceGiftCard', 'eCommerceGiftCardOption'),
+            addStoreCredit: makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.store_credit, 'Taco.view.order.modal.AddEcommerceGiftCard', 'storeCreditOption')
         };
 
         if (me.isGatewayGiftCardEnabled()) {
-            actions.addGiftCard = makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption');
+            actions.addGiftCard = makeAction(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ActionsColumn.gift_card, 'Taco.view.order.modal.AddGiftCard', 'giftCardOption');
         }
 
         return Ext.Object.getValues(actions);
@@ -375,7 +375,7 @@ Ext.define('Taco.view.order.subform.Payment', {
             canAddPayment = orderStatus !== 'Completed',
             paymentStatus = me.record.get('paymentStatus');
         
-        this.setHeaderTitleStatus('Payments', paymentStatus);
+        this.setHeaderTitleStatus(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Title.payments, paymentStatus);
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);
         });

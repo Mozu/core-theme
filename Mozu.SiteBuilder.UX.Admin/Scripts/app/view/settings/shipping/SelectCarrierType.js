@@ -30,6 +30,7 @@
                     data: [
                         { "id": "canadapost", "name": "CanadaPost" },
                         { "id": "fedex", "name": "FedEx" },
+                        { "id": "purolator", "name": "Purolator" },
                         { "id": "ups", "name": "UPS" },
                         { "id": "usps", "name": "USPS" }
                     ]

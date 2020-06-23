@@ -198,7 +198,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 discount.RequiresCoupon =
                     !discount.CouponSets.IsNullOrEmpty() || !string.IsNullOrEmpty(discount.CouponCode);
                 var dc = Mapper.Map<DC.Discount>(discount);
-                var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id)).ReadAsSync();
+                var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id ?? -1)).ReadAsSync();
 
                 await MergeCouponSets(discount);
                 var savedCouponSets = (await _couponSetClient.GetCouponSets(
@@ -247,7 +247,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IEnumerable<DC.CouponSet> deleteList)
         {
             var deleteTasks = deleteList
-                .Select(x => _couponSetClient.UnAssignDiscount(x.CouponSetCode, discountId))
+                .Select(x => _couponSetClient.UnAssignDiscount(x.CouponSetCode, discountId ?? -1))
                 .ToList();
 
             return deleteTasks;
@@ -269,7 +269,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
         {
-            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id)).ToList();
+            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id ?? -1)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
@@ -309,7 +309,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<Response<List<Discount>>> GetSingleDiscountAsync(PagingParamaters pagingParams)
         {
-            var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId)).ReadAsSync();
+            var singleDiscount = (await _discountWebClient.GetDiscount(pagingParams.NumericId ?? -1)).ReadAsSync();
             var couponSets = (await _couponSetClient.GetCouponSets(
                 filter: $"assigneddiscountid eq {pagingParams.NumericId}",
                 responseGroups: "Counts")).ReadAsSync();

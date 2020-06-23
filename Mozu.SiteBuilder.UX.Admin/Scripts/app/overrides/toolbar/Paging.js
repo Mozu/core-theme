@@ -86,5 +86,29 @@ Ext.define('Taco.overrides.toolbar.Paging', {
             handler: me.doRefresh,
             scope: me
         }];
+    },
+
+    updateInfo: function () {
+        var me = this,
+            displayItem = me.child('#displayItem'),
+            store = me.store,
+            pageData = me.getPageData(),
+            count, msg;
+
+        if (displayItem) {
+            count = store.getCount();
+            if (count === 0) {
+                msg = Localizer.langResources.SHARED.paging_empty_msg;
+            } else {
+                me.displayMsg = me.displayMsg.replace('Displaying', Localizer.langResources.SHARED.pagination_display_msg);
+                msg = Ext.String.format(
+                    me.displayMsg,
+                    pageData.fromRecord,
+                    pageData.toRecord,
+                    pageData.total
+                );
+            }
+            displayItem.setText(msg);
+        }
     }
 });

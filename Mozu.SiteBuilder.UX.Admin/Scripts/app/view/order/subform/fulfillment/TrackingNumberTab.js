@@ -2,7 +2,7 @@
 Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    title: 'Track Shipment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.track_shipment,
 
     initComponent: function () {
         this.cls += ' orderform-package-packagetab';
@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
     },
 
     initUI: function () {        
-        this.tabTitle = 'Tracking' + ' (' + this.tracking.count + ')';
+        this.tabTitle = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.tracking + ' (' + this.tracking.count + ')';
 
         this.items = [];
         for (var count = 0; count < this.tracking.count; count++) {

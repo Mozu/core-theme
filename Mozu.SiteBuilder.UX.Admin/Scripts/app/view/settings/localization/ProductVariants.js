@@ -78,7 +78,7 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
         }
         else if (ctxType === 'c') {
             var cat = Taco.app.context.getCatalog();
-            if (cat) {
+            if (cat && cat.currencyCode !== mc.currencyCode) {
                 supportedCurrencies.push(cat.currencyCode);
             }
         }

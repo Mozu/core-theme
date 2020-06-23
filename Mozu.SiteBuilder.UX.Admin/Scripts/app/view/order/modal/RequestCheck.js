@@ -10,7 +10,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
     
     autoShow: true,
     scale: 'medium',
-    title: 'Request Check',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.request_check,
 
     initComponent: function () {
         this.form = Ext.create('Ext.form.Panel', {            
@@ -24,14 +24,14 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                     name: 'firstName',
                     //width: 170,
                     flex:1,
-                    fieldLabel: 'First Name'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.first_name
                 }, {
                     xtype: 'textfield',
                     name: 'lastName',
                     margin:"0 0 0 10",
                     //width: 170,
                     flex: 1,
-                    fieldLabel: 'Last Name'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.last_name
                 }]
             },
 
@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                 xtype: 'currencyfield',
                 name: 'amount',
                 width: 170,
-                fieldLabel: 'Amount Requested',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount_requested,
                 currencyCode: this.record.getCurrencyCode(),
                 value: this.record.getNewPaymentAmountHint()
             }]
@@ -57,7 +57,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
         data.orderId = this.record.getId();
 
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         this.record.requestCheck({

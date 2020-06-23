@@ -29,7 +29,7 @@ Ext.define('Taco.view.order.widget.EcommerceGiftCardForm', {
 
         me.actions = {
             applyGiftCard: Ext.create('Ext.Action', {
-                text: 'Apply Card',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.apply_card,
                 ui: "action",
                 scale: "medium",
                 margin:'41 0 0 10',
@@ -61,16 +61,16 @@ Ext.define('Taco.view.order.widget.EcommerceGiftCardForm', {
                                 var now = new Date().getTime(),
                                     expDate = record.get('expirationDate'),
                                     activationDate = record.get('activationDate');
-                                if (expDate && expDate < now) errorText = "expired on " + expDate.toString();
-                                if (activationDate && activationDate > now) errorText = "does not become active until " + activationDate.toString();
-                                if (record.get('currentBalance') <= 0) errorText = "has no remaining funds.";
-                                if (record.get('customerId')) errorText = "has already been claimed.";
+                                if (expDate && expDate < now) errorText = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.expired_on +" " + expDate.toString();
+                                if (activationDate && activationDate > now) errorText = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.not_become_active_until + " " + activationDate.toString();
+                                if (record.get('currentBalance') <= 0) errorText = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.no_remaining_funds;
+                                if (record.get('customerId')) errorText = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.already_claimed;
 
                                 // check to see if the code has already been added to the store;double click on apply button.                
                                 if (me.store.getById(record.getId())) {
-                                    errorText = "has already been added below";
+                                    errorText = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.already_added_below;
                                 }
-                                if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
+                                if (errorText) return codeField.markInvalid([Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.credit_code +" " + code + " " + errorText]);
 
                                 me.store.insert(0, record);
                             })
@@ -93,10 +93,10 @@ Ext.define('Taco.view.order.widget.EcommerceGiftCardForm', {
                     {
                         xtype: 'textfield',
                         name: 'giftCardCode',
-                        fieldLabel: 'Gift Card Code',
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.gift_card_code,
                         itemId: 'giftCardCodeField',
                         width: 380,
-                        invalidText: 'The gift card code you entered is not valid.',
+                        invalidText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.gift_card_not_valid,
                         msgTarget: 'giftCardErrorEl',
                         autoFitErrors: false,
                         listeners: {

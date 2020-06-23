@@ -31,7 +31,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             items: [{
                 padding: '0 50 0 0',
                 tpl: [
-                    '<span class="label">Shipment Status</span><br>',
+                    '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.shipment_status+'</span><br>',
                     '<span class="x-column-content-pill x-column-content-pill-false">' + fulfillmentStatus + '</span>&nbsp;&nbsp;&nbsp;'
                 ]
             }, {
@@ -47,7 +47,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                         hidden: (this.record.get('orderStatus') == 'Cancelled' || this.record.get('fulfillmentStatus') == 'Fulfilled') ? true : false,
                         disabled: this.record.get('orderStatus') == 'PendingReview' ? true : false,
                         scale: 'medium',
-                        text: 'Cancel Order',
+                        text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel_order,
                         handler: function () {
                             me.openCancellationPopUp();
                         }

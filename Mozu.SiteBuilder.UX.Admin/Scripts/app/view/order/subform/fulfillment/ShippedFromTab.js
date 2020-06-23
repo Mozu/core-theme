@@ -2,17 +2,17 @@
 Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    title: 'Location',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.location,
 
     initComponent: function () {
         var shipmentTypeDescription = "";
         if (this.shipmentRecord.shipmentType) {
             if (this.shipmentRecord.shipmentType == "STH")
-                shipmentTypeDescription = "Shipped From";
+                shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.shipped_from;
             else if (this.shipmentRecord.shipmentType == "BOPIS")
-                shipmentTypeDescription = "Pickup From";
+            shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.pickup_from;
             else if (this.shipmentRecord.shipmentType == "Transfer")
-                shipmentTypeDescription = "Transfer From";
+                shipmentTypeDescription = Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.transfer_from;
         }
 
         if (this.shipmentRecord.location && this.shipmentRecord.location.displayName) {
@@ -47,13 +47,13 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                     {
                         minWidth: '400',
                         tpl: [
-                            '<span class="label">Name</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.name + '</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.location.displayName + '</div>'
                         ]
                     },
                     {
                         tpl: [
-                            '<span class="label">Code</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.code + '</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.location.displayCode + '</div>'
                         ]
                     }
@@ -78,13 +78,13 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                     {
                         minWidth: '400',
                         tpl: [
-                            '<span class="label">Address</span>',
+                            '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.address + '</span>',
                             '<div class="labelvalue">' + me.getFullfillmentFromAddress(this.shipmentRecord.location.address) + '</div>'
                         ]
                     },
                     {
                         tpl: [
-                            '<span class="label">' + (me.shipmentRecord.shipmentType == "BOPIS" ? "Pickup" : "Shipping")  +' Origin Contact</span>',
+                            '<span class="label">' + (me.shipmentRecord.shipmentType == "BOPIS" ? Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.pickup : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.shipping)+' '+ Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.origin_contact +'</span>',
                             '<div class="labelvalue">' + me.getFullfillmentFromContact(this.shipmentRecord.location.shippingOriginContact) + '</div>'
                         ]
                     }

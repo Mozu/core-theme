@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.modal.ManualCreditPayment', {
 
     autoShow: true,
     scale: 'medium',    
-    title: 'Manual Transaction: Credit Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.manual_transaction_credit_payment,
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {            
@@ -20,20 +20,20 @@ Ext.define('Taco.view.order.modal.ManualCreditPayment', {
                     xtype: 'textfield',
                     name: 'gatewayInteractionId',
                     anchor:'0',
-                    fieldLabel: 'Gateway Interaction Id'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.gateway_interaction_id
                 }, {
                     xtype: 'currencyfield',
                     currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
                     width:200,
-                    fieldLabel: 'Amount Captured',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.amount_captured,
                     value: this.record.data.amountAuthorized,
                     
                 }, {
                     xtype: 'datetime',
                     name: 'interactionDate',
                     width: 200,
-                    fieldLabel: 'Transaction Date'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.transaction_date
                 }
             ]
         });
@@ -58,7 +58,7 @@ Ext.define('Taco.view.order.modal.ManualCreditPayment', {
         };
 
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         cfg = {

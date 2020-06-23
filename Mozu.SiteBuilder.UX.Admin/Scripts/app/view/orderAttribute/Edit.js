@@ -6,7 +6,7 @@ Ext.define('Taco.view.orderAttribute.Edit', {
     enableSearchBarInHeader: false,
     formCls: 'Taco.view.orderAttribute.Form',
     parentTitleCfg: {
-        title: 'Order Attributes',
+        title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_attributes,
         controller: 'orderattributes'
     },
     initComponent: function () {

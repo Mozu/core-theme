@@ -10,9 +10,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Update',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.update,
     scale: 'large',
-    title: 'Item Tax',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.item_tax,
     isRecordSaved: false,
     unitTaxPerc: 0,
     layout: {

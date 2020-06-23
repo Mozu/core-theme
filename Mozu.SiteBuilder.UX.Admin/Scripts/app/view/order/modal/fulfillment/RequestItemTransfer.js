@@ -6,10 +6,10 @@ Ext.define('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Transfer Item',
-    secondaryText: 'Nevermind',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.transfer_item,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.nevermind,
     scale: 'small',
-    title: 'Transfer Item?',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.transfer_item+'?',
     layout: {
         type: 'fit'
     },
@@ -34,7 +34,7 @@ Ext.define('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
                         items:
                             [{
                                 xtype: 'label',
-                                text: 'Quantity available to transfer',
+                                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.quantity_available_to_transfer,
                                 margin: '0px 5px 0px 5px',
                             }, {
                                     xtype: 'label',
@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
                                 validateOnChange: true,
                                 margin: '0px 5px 0px 5px',
                                 mouseWheelEnabled: false,
-                                fieldLabel: 'Quantity to transfer',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.quantity_to_transfer,
                                 listeners: {
                                     change: {
                                         scope: this,
@@ -106,12 +106,12 @@ Ext.define('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
         if (this.validateModal()) {
             var me = this;
             Ext.MessageBox.show({
-                title: 'Transfer Item',
+                title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.transfer_item,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'Are you certain you want to Transfer this item?',
+                msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.are_you_certain_you_want_to_transfer_this_item,
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
@@ -125,16 +125,16 @@ Ext.define('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
                                 me.setLoading(false, me.body);
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', 'Error while transfering shipment item', 'error');
+                                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_transfering_shipment_item, 'error');
                                     return;
                                 }
-                                Taco.app.fireEvent('setmessage', "Item Successfully transferred.", 'success');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.item_successfully_transferred, 'success');
                                 me.saveSuccess();
                                 me.close();
                             },
                             failure: function (response) {
                                 me.setLoading(false, me.body);
-                                Taco.app.fireEvent('setmessage', 'Error while transfering shipment item', 'error');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_transfering_shipment_item, 'error');
                                 // close the dialog
                                 me.close();
                             }

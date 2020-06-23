@@ -201,7 +201,11 @@
             "order_handling_fee": "Frais de traitement des commandes",
             "order_handling": "Remise sur les frais de traitement des commandes",
             "handling_fee": "Frais de gestion",
-            "line": "Ligne"
+            "line": "Ligne",
+            "product_search_char_minimum": "Recherche de produit (4 caractères minimum)",
+            "fulfillment_search": "Recherche de réalisation",
+            "no_matching_product": "Aucun produit correspondant trouvé.",
+            "no_matching_fulfillment_locations": "Aucun emplacement de traitement correspondant trouvé."
           },
           "Messages": {
             "error_loading_order": "Erreur lors du chargement de la commande",
@@ -320,8 +324,8 @@
             "pickup": "Ramasser",
             "stock": "Stock",
             "partial": "Partial",
-            "yes": "Yes",
-            "no": "No"
+            "yes": "Oui",
+            "no": "Non"
           },
           "ShippingPackageColumn": {
             "line": "Ligne",
@@ -401,8 +405,8 @@
             "successfully_reassigned": "Réaffecté avec succès",
             "error_deallocating_inventory": "Erreur lors de la désallocation de l'inventaire",
             "error_while_canceling_shipment_item": "Erreur lors de l'annulation de l'envoi",
-            "successfully_cancelled": "Successfully Cancelled",
-            "item": "Item",
+            "successfully_cancelled": "Annulé avec succès",
+            "item": "Article",
             "are_you_certain_you_want_to_transfer_this_item": "Êtes-vous certain de vouloir transférer cet article?",
             "cancel_this_shipment": "Voulez-vous vraiment annuler cet envoi?",
             "error_while_transfering_shipment_item": "Erreur lors du transfert de l'envoi",
@@ -652,8 +656,7 @@
             "collect_payment": "Recueillir le paiement",
             "notes": "Remarques",
             "amount_to_capture": "Montant à capturer",
-            "decline check": "Refuser la vérification",
-            "check number": "Numéro de chèque"
+            "decline_check": "Refuser la vérification"
           }
         },
         "Returns": {
@@ -682,7 +685,10 @@
           "return_amount": "Montant de retour",
           "no_returns_for_order": "Aucun retour pour cette commande",
           "create_return_button": "Créer un retour",
-          "select_return_error": "Veuillez sélectionner les articles à retourner."
+          "select_return_error": "Veuillez sélectionner les articles à retourner.",
+          "choose_return_reason": "Veuillez choisir un motif de retour.",
+          "add_return_quantity": "Veuillez ajouter une quantité de retour à tous les articles sélectionnés.",
+          "choose_return_resolution": "Veuillez choisir une résolution de retour."
         },
         "AuditLog": {
           "title": "Journal d'audit",
@@ -946,6 +952,7 @@
   "SHARED": {
     "pagination_empty_msg": "aucune donnée à afficher",
     "pagination_display_msg": "Affichage",
-    "selected_text": "Choisi"
+    "selected_text": "Choisi",
+    "searching_text": "Recherche..."
   }
 }

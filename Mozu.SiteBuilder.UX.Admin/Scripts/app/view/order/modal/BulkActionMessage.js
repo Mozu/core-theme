@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.modal.BulkActionMessage', {
     autoShow: true,
     header: false,
     scale: 'small',
-    title: 'Bulk Actions',
+    title: Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.title,
 
     layout: {
         type: 'card'
@@ -24,7 +24,7 @@ Ext.define('Taco.view.order.modal.BulkActionMessage', {
     actions: [{
         ui: 'action',
         itemId: 'primaryAction',
-        text: 'Dismiss'
+        text: Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.dismiss
     }],
 
     config: {
@@ -50,23 +50,23 @@ Ext.define('Taco.view.order.modal.BulkActionMessage', {
         });
 
         this.summaryCard = Ext.create('Ext.panel.Panel', {
-            title: 'first',
+            title: Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.first,
             header: false,
             layout: 'fit',
             html: [
                 '<div class="taco-bulk-actions-message ',
-                    (isSuccess ? 'success' : 'error'),
+                (isSuccess ? 'success' : 'error'),
                 '"><div class="message-heading">',
-                    (isSuccess ? 'Success' : 'Complete, with errors'),
+                (isSuccess ? Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.success_message : Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.error_message),
                 '</div><div class="message">',
                     message,
-                '<a class="show-link">Details</a></div></div>'
+                '<a class="show-link">' + Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.details + '</a></div></div>'
             ].join('')
         });
 
         this.detailsCard = Ext.create('Ext.panel.Panel', {
             xtype: 'panel',
-            title: 'second',
+            title: Localizer.langResources.ORDERS.Orders.OrderDetails.Actions.second,
             header: false,
             layout: 'fit',
             bodyPadding: '9 0 0',
@@ -75,18 +75,18 @@ Ext.define('Taco.view.order.modal.BulkActionMessage', {
                 store: this.ordersStore,
                 columns: [{
                     dataIndex: 'orderNumber',
-                    text: 'Order',
+                    text: Localizer.langResources.ORDERS.Orders.OrderDetails.DetailsCard.order,
                     flex: 1
                 }, {
                     dataIndex: 'successful',
-                    text: 'Result',
+                        text: Localizer.langResources.ORDERS.Orders.OrderDetails.DetailsCard.result,
                     flex: 1,
                     renderer: function (value) {
-                        return value ? 'Succeeded' : 'Failed'
+                        return value ? Localizer.langResources.ORDERS.Orders.OrderDetails.DetailsCard.succeeded : Localizer.langResources.ORDERS.Orders.OrderDetails.DetailsCard.failed;
                     }
                 }, {
                     dataIndex: 'message',
-                    text: 'Message',
+                        text: Localizer.langResources.ORDERS.Orders.OrderDetails.DetailsCard.message,
                     flex: 3,
                     renderer: function (value) {
                         return Ext.String.format('<span title="{0}">{0}</span>', value);

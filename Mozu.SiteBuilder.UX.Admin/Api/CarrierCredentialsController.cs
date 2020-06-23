@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<CarrierCredentialSet>>> Get(string locationGroupCode = null, int? siteId = null, string locationCode = null)
         {
-            var pageSize = 600;
+            var pageSize = 200;
            var carrierCredentialSets =new List<CarrierCredential>();
             var carrierCredentials = (await _carrierCredentialWebApiClient.GetCarrierCredentials(startIndex: 0,
                  pageSize: pageSize)).ReadAsSync();

@@ -114,7 +114,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
         me.columns = [
             {
                 dataIndex: 'lineId',
-                text: 'Line',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.line,
                 draggable: false,
                 resizable: true,
                 width: 60,
@@ -122,7 +122,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 menuDisabled: true
             },
             {
-                text: 'Date Created',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.date_created,
                 dataIndex: 'auditInfo',
                 draggable: false,
                 resizable: true,
@@ -136,7 +136,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
             },
             {
                 dataIndex: 'name',
-                text: 'Name',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.name,
                 draggable: false,
                 sortable: false,
                 resizable: true,
@@ -145,7 +145,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 flex: 2
             },
             {
-                text: 'Qty Canceled',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.qty_canceled,
                 dataIndex: 'quantity',
                 draggable: false,
                 sortable: false,
@@ -156,7 +156,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 flex: 1
             },
             {
-                text: 'Cancellation Reason',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.cancellation_reason,
                 dataIndex: 'canceledReason',
                 draggable: false,
                 sortable: false,
@@ -182,7 +182,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             },
             {
-                text: 'Canceled By',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.canceled_by,
                 dataIndex: 'auditInfo',
                 draggable: false,
                 sortable: false,
@@ -198,7 +198,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             },
             {
-                text: 'Shipment Number',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.shipment_number,
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -212,7 +212,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
             },
             {
                 dataIndex: 'unitPrice',
-                text: 'Unit Price',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ShippingPackageColumn.unit_price,
                 draggable: false,
                 sortable: false,
                 //resizable: false,

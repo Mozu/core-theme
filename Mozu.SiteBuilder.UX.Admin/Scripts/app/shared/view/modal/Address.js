@@ -14,7 +14,7 @@ Ext.define('Taco.shared.view.modal.Address', {
 
     height: 620,
     width: 700,
-    title: 'Edit Address',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.title,
 
     // need this layout in order for scrollbar showing up to cause the form to resize. criminy...
     layout:"anchor",
@@ -41,7 +41,7 @@ Ext.define('Taco.shared.view.modal.Address', {
             itemId: 'otherAction',
             ui: 'action',
             scale: 'medium',
-            text: 'Validate',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.validate,
             handler: function () {
                 this.validateAndPrompt(true, Ext.emptyFn);
             }
@@ -126,8 +126,8 @@ Ext.define('Taco.shared.view.modal.Address', {
             var mobilePhone = this.form.findField("mobilePhone").getValue();
             
             if (!(homePhone.length || workPhone.length || mobilePhone.length)) {
-                Taco.app.fireEvent('setmessage', 'Validation error. At least one of the phone numbers is required', 'error');
-                return;
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.phone_number_required, 'error');
+                return
             }            
         }
 
@@ -141,8 +141,8 @@ Ext.define('Taco.shared.view.modal.Address', {
         this.validateForm(function (response) {
             if (response.error) {
                 Ext.Msg.show({
-                    title: 'Address',
-                    msg: 'Unable to validate address',
+                    title: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address,
+                    msg: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.unable_validate_address,
                     buttons: Ext.Msg.OK
                 });
                 callback();
@@ -158,17 +158,17 @@ Ext.define('Taco.shared.view.modal.Address', {
                 message += response.validatedAddr['countryCode'];
                 Ext.Msg.show({
                     cls: 'taco-validate-address-modal',
-                    title: 'Validated Address',
-                    msg: 'Valid address is:<p>' + message + '</p>',
+                    title: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.validated_address,
+                    msg: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.valid_address+':<p>' + message + '</p>',
                     buttons: Ext.Msg.YESNO,
-                    buttonText: {yes: "Use This", no: "Keep Original"},
+                    buttonText: { yes: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.use_this, no: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.keep_original},
                     xbuttons: { 
-                        ok: "Use This", 
+                        ok: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.use_this, 
                         handler: function(){ 
                             Ext.MessageBox.hide(); 
 
                         },
-                        cancel: "Keep Original",
+                        cancel: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.keep_original,
                         handler: function(){
                             Ext.MessageBox.hide();
                         }
@@ -187,8 +187,8 @@ Ext.define('Taco.shared.view.modal.Address', {
             } else {
                 if (onDemandMode) {
                     Ext.Msg.show({
-                        title: 'Address',
-                        msg: 'Address is valid',
+                        title: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address,
+                        msg: Localizer.langResources.ORDERS.Orders.OrderEdit.AddNewAddress.address_is_valid,
                         buttons: Ext.Msg.OK
                     });
                 }

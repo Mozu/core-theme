@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
     enableRowEditing: true,
 
     viewConfig: {
-        emptyText: '<span class="no-notes-available">No items to display</span>',
+        emptyText: '<span class="no-notes-available">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.empty_text + '</span>',
         deferEmptyText: false
     },
 
@@ -22,7 +22,7 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
     columns: [
         {
             dataIndex: 'createDate',
-            text: 'Created Date',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.created_date,
             flex: 2,
             nowrap: false,
             renderer: function (value) {
@@ -31,13 +31,13 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
         },
         {
             dataIndex: 'createByUser',
-            text: 'Created By',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.created_by,
             flex: 2,
             nowrap: false
         },
         {
             dataIndex: 'text',
-            text: 'Notes',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.notes,
             flex: 8,
             nowrap: false,
             editor: {

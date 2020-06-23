@@ -7,7 +7,7 @@
     autoShow: true,
     closeAction: 'destroy',
     scale: 'large',
-    title: 'Configure Product',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.configure_product,
 
     productCode: null,
     record: null,
@@ -38,7 +38,7 @@
 
         var callback = function(error) {
             if (error) {
-                var errorMessage = error.message || 'Something went wrong';
+                var errorMessage = error.message || Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.something_went_wrong;
                 Taco.app.fireEvent("setmessage", errorMessage, "error");
                 return;
             }

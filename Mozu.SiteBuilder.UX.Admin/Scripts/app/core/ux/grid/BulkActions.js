@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.grid.BulkActions', {
     },
 
     updateCount: function(selModel) {
-    	this.countDisplay.update(selModel.getCount() + ' selected');
+    	this.countDisplay.update(selModel.getCount() + ' ' + Localizer.langResources.SHARED.selected_text);
     },
 
     getButtonConfig: function(config) {

@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
-    title: 'Order Details',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_details,
     headerToolbar: true,
 
     bodyPadding: '0 0 0 0 ',
@@ -49,7 +49,7 @@ Ext.define('Taco.view.order.subform.Detail', {
     ],
 
 
-// width of the actionColumn. used to align the grid total container
+    // width of the actionColumn. used to align the grid total container
     actionColumnWidth: 120,
     priceListStore: null,
     priceListName: '',
@@ -57,13 +57,13 @@ Ext.define('Taco.view.order.subform.Detail', {
     initComponent: function(eOpts) {
         var me = this;
         this.titleTemplate = new Ext.XTemplate(
-            'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>' +
+            Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_details + '<tpl if="priceListAvail"> | {priceListName}' +' '+ Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.pricing + '</tpl>' +
             '<tpl if="parentCheckoutAvail">' +
-                '<div class="order-detail-parentCheckoutId-container">' +
-                    '<div class="order-detail-parentCheckoutId-text">This order is a part of order reference number: {parentCheckoutNumber}</div>' +
-                    '<i id="order-reference-tool-tip-icon" data-qtip="<p class=order-reference-top-line > This is part {partialOrderNumber} of {partialOrderCount} for order reference number {parentCheckoutNumber}</p><p class=order-reference-bottom-line > This order is displayed in parts because it contains items shipping to multiple addresses</p>" class="parentCheckoutTooltip mozu-c-tooltip__icon mozu-c-tooltip__icon--switch mozu-c-tooltip__icon--dense mozu-c-tooltip__icon--left">' +
-                    '</i>' +
-                '</div>' +
+            '<div class="order-detail-parentCheckoutId-container">' +
+            '<div class="order-detail-parentCheckoutId-text">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_reference_number + '{parentCheckoutNumber}</div>' +
+            '<i id="order-reference-tool-tip-icon" data-qtip="<p class=order-reference-top-line > ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.this_is_part + ' {partialOrderNumber} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.of + ' {partialOrderCount} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.for_order_reference_number + ' {parentCheckoutNumber}</p><p class=order-reference-bottom-line > ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_is_displayed_in_parts_because_it_contains_items_shipping_to_multiple_addresses + '</p>" class="parentCheckoutTooltip mozu-c-tooltip__icon mozu-c-tooltip__icon--switch mozu-c-tooltip__icon--dense mozu-c-tooltip__icon--left">' +
+            '</i>' +
+            '</div>' +
             '</tpl>'
         );
         Ext.tip.QuickTipManager.init();
@@ -87,12 +87,12 @@ Ext.define('Taco.view.order.subform.Detail', {
                     // Add a "None" option to the top to clear the price list.
                     me.priceListStore.insert(0,
                         Ext.create(me.priceListStore.model,
-                        {
-                            name: 'None',
-                            code: '',
-                            filteredInStorefront: false,
-                            isSiteDefault: false
-                        }));
+                            {
+                                name: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.none,
+                                code: '',
+                                filteredInStorefront: false,
+                                isSiteDefault: false
+                            }));
 
                     // Hacky crap to grab an inactive price list from ProductAdmin, then convert it to a "runtime" pricelist.
                     var currentCode = me.record.get('priceListCode');
@@ -206,7 +206,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.customerNoteRow = Ext.create('Ext.panel.Panel', {
             //cls: "orderform-detail-customerNotesRow",
             ui: "subform-section",
-            title: "Customer Notes",
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.customer_notes,
             margin: "0 0 20px 0 ",
             bodyStyle: "padding:20px 0px 40px 0px ",
             tpl: [
@@ -224,7 +224,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.giftMessageRow = Ext.create('Ext.panel.Panel', {
             //cls: "orderform-detail-customerNotesRow",
             ui: "subform-section",
-            title: "Gift Message",
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.gift_message,
             margin: "0 0 20px 0 ",
             bodyStyle: "padding:20px 0px 40px 0px ",
             tpl: [
@@ -259,7 +259,7 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         //todo refactor attributes to encapsolate this form; and to make the dialog auto destroy;
         this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
-            title: 'Attributes',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.attributes,
             header: false,
             record: this.record,
             ui: "form",
@@ -272,7 +272,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     padding: '0 40 0 0',
                     height: 20,
                     cls: '',
-                    html: '<div class="order-detail-pill"> <span class="x-column-content-pill x-column-content-pill-true order-detail-pill-size">This is an old order. To Perform Operations please switch to classic admin.</span></div>',
+                    html: '<div class="order-detail-pill"> <span class="x-column-content-pill x-column-content-pill-true order-detail-pill-size">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.perform_operations + '</span></div>',
                     hidden: this.record.get('isUnified')
                 },
                 {
@@ -280,7 +280,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     ui: "subform-section",
                     headerToolbar: true,
                     tools: this.record.get('isUnified') ? me.getButtonActions() : null,
-                    title: "Items Ordered",
+                    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.items_ordered,
                     items: [
                         me.detailGrid,
                         this.totalRow
@@ -292,7 +292,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 this.internalNoteRow
             ]
         });
-        
+
         this.callParent(arguments);
     },
     constructTitle: function () {
@@ -338,7 +338,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     }
                 },
                 close: function (view, e) {
-                    
+
                     if (isDraft && view.getHasDraft()) {
                         me.record.set('hasDraft',true);
                         me.updateHasDraftToolbar();
@@ -352,13 +352,13 @@ Ext.define('Taco.view.order.subform.Detail', {
                 },
 
                 draftOrderSaved: function () {
-                        me.record.reload();
-                        me.setLoading(false, this.body);
+                    me.record.reload();
+                    me.setLoading(false, this.body);
                 },
 
                 draftOrderRemoved: function (data) {
-                        //me.setLoading(true, this.body);
-                        // hide the toolbar
+                    //me.setLoading(true, this.body);
+                    // hide the toolbar
                     me.detailGrid.removeDocked(me.detailGrid.hasDraftToolbar, true);
                     me.detailGrid.hasDraftToolbar = null;
 
@@ -410,10 +410,10 @@ Ext.define('Taco.view.order.subform.Detail', {
         me.setTitle(me.constructTitle());
         // Record is reloaded, need to update the ui.
         me.updateUi();
-        Ext.resumeLayouts(true);        
+        Ext.resumeLayouts(true);
         me.setLoading(false, this.body);
     },
-    
+
     updateHasDraftToolbar : function() {
         var me = this;
         //hide or show the toolbar accordingly
@@ -424,19 +424,19 @@ Ext.define('Taco.view.order.subform.Detail', {
             me.detailGrid.hasDraftToolbar = null;
         }
     },
-    
+
     /*
      * ExtJS doesn't handle reload of data with sub-stores well.
      * So we manually re-populate the order.items()
      */
     rebuildItems: function() {
         var me = this;
-        
+
         me.record.items().removeAll();
         var itemsToAdd = [];
         Ext.each(me.record.data.items, function (itemRaw) {
             var itemRecord = Ext.create('Taco.model.OrderItem', itemRaw);
-            
+
             var discountsToAdd = [];
             Ext.each(itemRecord.data.discounts, function (raw) {
                 var discountRecord = Ext.create('Taco.model.OrderItemDiscount', raw);
@@ -448,33 +448,33 @@ Ext.define('Taco.view.order.subform.Detail', {
                 itemRecord.discounts().removeAll();
                 itemRecord.discounts().add(discountsToAdd);
             }
-            
+
             var shippingDiscountsToAdd = [];
             Ext.each(itemRecord.data.shippingDiscounts, function (raw) {
                 var shippingDiscountRecord = Ext.create('Taco.model.OrderShippingDiscount', raw);
                 shippingDiscountsToAdd.push(shippingDiscountRecord);
             });
-            
+
             if (itemRecord.shippingDiscounts) {
                 itemRecord.shippingDiscounts().removeAll();
                 itemRecord.shippingDiscounts().add(shippingDiscountsToAdd);
             }
-            
+
             itemsToAdd.push(itemRecord);
         });
-        
+
         me.record.items().add(itemsToAdd);
 
 
     },
-    
+
     updateUi: function () {
-        var me = this;        
+        var me = this;
         me.totalRow.setRecord(me.record);
 
         me.customerNoteRow.update(me.record.data);
         me.giftMessageRow.update(me.record.data);
-        
+
         me.detailGrid.record = me.record;
         // todo: update the internalNotes
         //me.internalNoteRow.setRecord(me.record);
@@ -491,7 +491,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             availableActions = me.record.get("availableActions"),
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')) && partialOrderCount< 2,
+            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')) && partialOrderCount < 2,
             canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
@@ -515,7 +515,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         }
 
         if (resendEmailButton) {
-        resendEmailButton.setVisible(canSendEmail);
+            resendEmailButton.setVisible(canSendEmail);
         }
     },
 
@@ -529,13 +529,13 @@ Ext.define('Taco.view.order.subform.Detail', {
             canSendEmail = !Ext.Array.contains(['Pending', 'Abandoned'], me.record.get('orderStatus')),
             canEditInStoreFront = !(me.record.get('items') && me.record.get('items').length ),
             buttons;
-        
+
         buttons = [
             {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Accept Order',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.accept_order,
                 itemId: 'acceptOrderButton',
                 requiredBehaviors: me.orderUpdateBehaviors,
                 handler: function () {
@@ -545,7 +545,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 hidden: !canAccept
             },
             {
-                text: 'Cancel Order',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.cancel_order,
                 xtype: "button",
                 ui: "action",
                 itemId: "cancelOrderButton",
@@ -558,13 +558,13 @@ Ext.define('Taco.view.order.subform.Detail', {
                     this.detailGrid.cancelOrder();
                 },
                 scope: me,
-                disabled: this.record.get('orderStatus') == 'PendingReview' ? false : true 
+                disabled: this.record.get('orderStatus') == Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Statuses.pendingreview ? false : true
             },
             {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Print Order',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.print_order,
                 requiredBehaviors: me.orderUpdateBehaviors,
                 margin: {
                     right: 2
@@ -582,7 +582,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 },
                 disabled: !canSendEmail
             },{
-                text: 'Edit Details',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.edit_details,
                 xtype: "button",
                 ui: "action",
                 itemId: "editOrderButton",
@@ -597,7 +597,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             },
             {
                 // Deprecated by the "View User's Cart" link in the order's Header.js.
-                text: 'Edit In Storefront',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.edit_in_storefront,
                 xtype: "button",
                 ui: "action",
                 itemId: "editStorefrontButton",
@@ -615,13 +615,13 @@ Ext.define('Taco.view.order.subform.Detail', {
         return buttons;
 
     },
-    
+
 
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
     onDestroy: function () {
-       
+
         this.callParent(arguments);
     },
 

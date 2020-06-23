@@ -105,7 +105,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             ui: 'action',
             scale: 'medium',
             fieldBodyCls: 'order-addproducttoolbar-cell',
-            text: 'Add',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.add,
             itemId: 'addButton',
             disabled: true,
             width: this.gridColumns[6].width,

@@ -29,11 +29,11 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
         this.items = [
             {
                 name: 'keyword',
-                fieldLabel: 'Keyword Search'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.keyword_search
             },
             {
                 name: 'firstName',
-                fieldLabel: 'Customer First Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.customer_first_name,
                 listeners: {
                     blur: {
                         scope: this,
@@ -43,7 +43,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'lastName',
-                fieldLabel: 'Customer Last Name',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.customer_last_name,
                 listeners: {
                     blur: {
                         scope: this,
@@ -53,12 +53,12 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'emailAddress',
-                fieldLabel: 'Customer Email Address'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.customer_email_address
             },
             {
                 xtype: 'numberfield',
                 name: 'customerid',
-                fieldLabel: 'Customer Account Id'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.customer_account_id
                 /*hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
@@ -72,74 +72,73 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: sites,
                 valueField: 'id',
                 displayField: 'name',
-                fieldLabel: 'Site'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.site
             },
             {
                 xtype: 'combobox',
                 name: 'orderStatus',
-                fieldLabel: 'Order Status',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.order_status,
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "Open", id: "Open" },
-                        { name: "Submitted", id: "Submitted" },
-                        { name: "Processing", id: "Processing" },
-                        { name: "Pending", id: "Pending" },
-                        { name: "Pending Review", id: "PendingReview" },
-                        { name: "Accepted", id: "Accepted" },
-                        { name: "Completed", id: "Completed" },
-                        { name: "Cancelled", id: "Cancelled" },
-                        { name: "Closed", id: "Closed" },
-                        { name: "Validated", id: "Validated" },
-                        { name: "Errored", id: "Errored" },
-                        { name: "Abandoned", id: "Abandoned" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.open, id: "Open" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.submitted, id: "Submitted" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.processing, id: "Processing" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.pending, id: "Pending" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.pending_review, id: "PendingReview" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.accepted, id: "Accepted" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.completed, id: "Completed" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.cancelled, id: "Cancelled" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.closed, id: "Closed" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.validated, id: "Validated" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.errored, id: "Errored" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.abandoned, id: "Abandoned" }
                     ]
                 })
             },
             {
                 xtype: 'combobox',
                 name: 'paymentStatus',
-                fieldLabel: 'Payment Status',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.PaymentStatus.payment_status,
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "Paid", id: "Paid" },
-                        { name: "Unpaid", id: "Unpaid" },
-                        { name: "Pending", id: "Pending" },
-                        { name: "Errored", id: "Errored" },
-                        { name: "Unpaid or Pending or Errored", id: "Unpaid,Pending,Errored" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.PaymentStatus.paid, id: "Paid" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.PaymentStatus.unpaid, id: "Unpaid" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.PaymentStatus.pending, id: "Pending" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.PaymentStatus.unpaid_pending, id: "Unpaid,Pending" }
                     ]
                 })
             },
             {
                 xtype: 'combobox',
                 name: 'fulfillmentStatus',
-                fieldLabel: 'Fulfillment Status',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.fulfillment_status,
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "Not Fulfilled", id: "NotFulfilled" },
-                        { name: "Partially Fulfilled", id: "PartiallyFulfilled" },
-                        { name: "Customer Care", id: "CustomerCare" },
-                        { name: "Fulfilled", id: "Fulfilled" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.not_fulfilled, id: "NotFulfilled" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.partially_fulfilled, id: "PartiallyFulfilled" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.customer_care, id: "CustomerCare" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.fulfilled, id: "Fulfilled" }
                     ]
                 })
             },
@@ -167,27 +166,27 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 xtype: 'combobox',
                 name: 'returnStatus',
-                fieldLabel: 'Return Status',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ReturnStatus.return_status,
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.not_found,
                 editable: true,
                 forceSelection: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "None", id: "None" },
-                        { name: "In Progress", id: "InProgress" },
-                        { name: "Order Partially Returned", id: "Closed" },
-                        { name: "Order Fully Returned", id: "ReturnedInFull" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ReturnStatus.none, id: "None" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ReturnStatus.in_progress, id: "InProgress" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ReturnStatus.order_partially_returned, id: "Closed" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ReturnStatus.order_fully_returned, id: "ReturnedInFull" }
                     ]
                 })
             },
             {
                 xtype: 'combobox',
                 name: 'orderType',
-                fieldLabel: 'Order Type',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderType.order_type,
                 valueField: 'id',
                 displayField: 'name',
                 editable: true,
@@ -195,26 +194,26 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "Online", id: "Online" },
-                        { name: "Offline", id: "Offline" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderType.online, id: "Online" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderType.offline, id: "Offline" }
                     ]
                 })
             },
             {
                 xtype: 'combobox',
                 name: 'channel',
-                fieldLabel: 'Channel',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.channel,
                 valueField: 'code',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 store: { type: 'Taco.store.ChannelPicker' }
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Total Price Range',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.total_price_range,
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -246,11 +245,11 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
-                fieldLabel: 'Modified By'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.modified_by
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Modfied Range',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.modified_range,
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -279,7 +278,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Submitted Date Range',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.submitted_date_range,
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -308,14 +307,14 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'cardnumber',
-                fieldLabel: 'Last Four Digits of Credit Card Number',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.cardnumber,
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             },
             {
                 name: 'returnNumber',
-                fieldLabel: 'Return Number',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.return_number,
                 xtype: 'numberfield',
                 hideTrigger: true,
                 keyNavEnabled: false,
@@ -323,7 +322,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'orderReferenceNumber',
-                fieldLabel: 'Order Reference Number',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.order_reference_number,
                 xtype: 'numberfield',
                 hideTrigger: true,
                 keyNavEnabled: false,
@@ -331,7 +330,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'phonenumber',
-                fieldLabel: 'Phone Number',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.phone_number,
                 listeners: {
                     change: {
                         scope: this,
@@ -341,13 +340,12 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'externalid',
-                fieldLabel: 'External Id'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.external_id
             },
             {
                 name: 'attributeName',
-                fieldLabel: 'Attribute Name'
-            }
-            ];
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.attribute_name
+            }];
         this.callParent(arguments);
     },
 

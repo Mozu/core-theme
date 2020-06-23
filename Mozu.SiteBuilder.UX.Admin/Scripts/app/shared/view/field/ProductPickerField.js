@@ -26,15 +26,15 @@ Ext.define('Taco.shared.view.field.ProductPickerField', {
     displayField: 'name',
     hideLabel: true,
     hideTrigger: false,
-    emptyText: "Product Search (4 characters minimum)",
+    emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.product_search_char_minimum,
     selectOnFocus: true,
     flex: 1,
     value: "",
 
     listConfig: {
-        loadingText: 'Searching...',
+        loadingText: Localizer.langResources.SHARED.searching_text,
         cls: "product-picker-menu",
-        emptyText: '<div style="padding:20px; 10px; ">No matching products found.</div>',
+        emptyText: '<div style="padding:20px; 10px; ">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.no_matching_product+'</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
             return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"

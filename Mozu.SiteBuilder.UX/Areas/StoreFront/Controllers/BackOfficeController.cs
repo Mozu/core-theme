@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
         private readonly IPickWaveControllerApiClient _pickWaveControllerApiClient;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
+        private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string ORDERS_PREVIEW_RESOURCE_NAME = "backoffice.orders1";
@@ -63,13 +66,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger<BackOfficeController> logger,
             Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient shipmentControllerApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
-            Kibo.Fulfillment.Contracts.Api.IPickWaveControllerApiClient  pickWaveControllerApiClient)
+            Kibo.Fulfillment.Contracts.Api.IPickWaveControllerApiClient  pickWaveControllerApiClient,
+            ILocationAdminWebApiClient locationAdminWebApi,
+            IReturnSettingsWebApiClient returnSettingsWebApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _shipmentControllerApiClient = shipmentControllerApiClient;
             _pickWaveControllerApiClient = pickWaveControllerApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
+            _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
+            _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
         }
 
         /// <summary>
@@ -182,6 +189,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             return new Measurement { Unit = weight.Unit, Value = Decimal.Round(weight.Value.Value * quantity, 1) };
+        }
+
+        private async Task<Location.Contracts.Location> GetDefaultReturnLocation()
+        {
+            var returnSettings = await _returnSettingsWebApiClient.GetReturnSettings();
+            var locationCode = returnSettings.ResponseMessage.IsSuccessStatusCode ? (returnSettings.ReadAsSync())?.DefaultShippingLocation : null;
+            if (!string.IsNullOrEmpty(locationCode))
+            {
+                var shippingLocation = await _locationAdminWebApi.GetLocation(locationCode);
+                return shippingLocation.ResponseMessage.IsSuccessStatusCode ? shippingLocation.ReadAsSync() : null;
+            }
+
+            return null;
+        }
+
+        private async Task<Location.Contracts.Location> GetLocation(string locationCode)
+        {
+            if (!string.IsNullOrEmpty(locationCode))
+            {
+               return (await _locationAdminWebApi.GetLocation(locationCode)).ReadAsSync();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -297,6 +327,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PopulateShipmentDetails(dcShipment, order);
 
             ViewData["order"] = order;
+            ViewData["returnLocation"] = await GetDefaultReturnLocation();
+            ViewData["fulfillmentLocation"] = await GetLocation(shipment.FulfillmentLocationCode);
             return await RenderWithContext(template, shipment);
         }
 
@@ -421,7 +453,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["order"] = order;
+                ViewData["returnLocation"] = location;
+                ViewData["fulfillmentLocation"] = location;
                 return await RenderWithContext(template, model);
             }
             else if (templateid == "pick-list")

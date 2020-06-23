@@ -51,7 +51,7 @@
                         tpl: [
                             '<ul class="taco-product-option-value-list">',
                             '<tpl for=".">',
-                            '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> disabled</tpl>">',
+                            '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.disabled + '</tpl>">',
                             '{StringValue}',
                             '</li>',
                             '</tpl>',
@@ -133,7 +133,7 @@
             xtype: 'component',
             cls: 'fieldSetHeading',
             hidden: true,
-            html: 'Choose your options...'
+            html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.choose_your_options
         });
 
 
@@ -157,7 +157,7 @@
             xtype: 'component',
             cls: 'productCode',
             tpl: [
-                '<span class="label">Product Code:</span> <span class="value">{code}</span>'
+                '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.product_code + ':</span> <span class="value">{code}</span>'
             ]
         });
 
@@ -172,7 +172,7 @@
             cls: 'price',
             tpl: [
                 '<tpl if="Price">',
-                '<span class="label">Price:</span><span class="price-value',
+                '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.price + '</span><span class="price-value',
                 '<tpl if="Price.SalePrice">',
                 ' onsale',
                 '</tpl>',
@@ -185,7 +185,7 @@
 
                 '<tpl if="PriceRange">',
 
-                '<span class="label">Price:</span><span class="price-value',
+                '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.price + '</span><span class="price-value',
                 '<tpl if="PriceRange.Lower.SalePrice">',
                 ' onsale',
                 '</tpl>',
@@ -285,7 +285,7 @@
             xtype: 'component',
             flex: 1,
             cls: 'error-loading',
-            html: 'Error loading this product configuration'
+            html: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_loading_product_configuration
         });
     },
 
@@ -312,7 +312,7 @@
                 failure: function (response) {
                     // error handling here
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : 'Error adding coupon.';
+                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_adding_coupon;
                     Taco.app.fireEvent('setmessage', msg, 'error');
                     this.fireEvent('loadFailure');
                 },
@@ -336,7 +336,7 @@
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Unable to load product information.';
+                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.load_product_information;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('loadFailure');
             },

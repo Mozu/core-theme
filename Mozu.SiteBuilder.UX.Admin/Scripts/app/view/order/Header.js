@@ -95,15 +95,15 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-    canViewShopperCart: function () {
-        return this.record.getCustomer() && this.record.get('orderStatus') === 'Pending';
+    canViewShopperCart: function() {
+        return this.record.getCustomer() && this.record.get('orderStatus') === Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Statuses.pending;
     },
 
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var addCartItems = function (button) {
-            modalConfigWindow.setLoading({ msg: 'Loading' });
+        var addCartItems = function(button) {
+            modalConfigWindow.setLoading({ msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.loading });
             Ext.Ajax.request({
                 url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
                 method: 'POST',
@@ -122,8 +122,8 @@ Ext.define('Taco.view.order.Header', {
                 }
             });
         };
-        var linkOrderToCart = function (cartId) {
-            modalConfigWindow.setLoading({ msg: 'Loading' });
+        var linkOrderToCart = function(cartId) {
+            modalConfigWindow.setLoading({ msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.loading });
             Ext.Ajax.request({
                 url: '/admin/app/order/linkOrderToCart?cartId=' + cartId + '&orderId=' + orderId,
                 method: 'POST',
@@ -256,7 +256,7 @@ Ext.define('Taco.view.order.Header', {
             items: [
                 {
                     xtype: 'label',
-                    text: (this.getCustomer().accountType === 'B2B' ? 'User' : 'Account:'),
+                    text: (this.getCustomer().accountType === 'B2B' ? Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.user : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.account),
                     cls: 'label label-light'
                 },
                 {
@@ -288,12 +288,12 @@ Ext.define('Taco.view.order.Header', {
             flex: 33,
             items: [{
                 xtype: 'label',
-                text: 'Addresses:',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.addresses,
                 cls: 'label label-light'
             }, {
                 xtype: 'button',
                 ui: 'link',
-                text: 'Change Address',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.change_address,
                 itemId: "changeLink",
                 requiredBehaviors: [
                     { model: 'Taco.model.Order', behavior: 'update' },
@@ -311,10 +311,10 @@ Ext.define('Taco.view.order.Header', {
             hidden: !(this.record.get('parentOrderId') || this.record.get('externalId')),
             tpl: [
                 '<tpl if="parentOrderId">',
-                '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderNumber}</a></div>',
+                '<div class="parent-order"><span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.ref_order + '</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderNumber}</a></div>',
                 '</tpl>',
                 '<tpl if="externalId">',
-                '<div class="external-order"><span class="label">External Order #:</span>{externalId}</div>',
+                '<div class="external-order"><span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.external_order + '</span>{externalId}</div>',
                 '</tpl>'
             ],
             data: this.record.getData()
@@ -330,7 +330,7 @@ Ext.define('Taco.view.order.Header', {
 
                 //'<tr>', '<td colspan="2"><div class="order-status"><span class="label">Order Status:</span><span data-handle="orderStatus">{orderStatus}</span></div></td>', '</tr>',
 
-                '<tr>', '<td><span class="label-light">Payment</span></td>', '<td><span class="label-light">Fulfillment</span></td>', '</tr>',
+                '<tr>', '<td><span class="label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.payment + '</span></td>', '<td><span class="label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.fulfillment + '</span></td>', '</tr>',
 
                 '<tpl if="orderSummary.totalItemCount &gt; 0">',
 
@@ -338,23 +338,23 @@ Ext.define('Taco.view.order.Header', {
                 '<td>',
                 '<table class="header-summary">',
                 '<tr>',
-                '<td>Order Total:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_total + ':</td>',
                 '<td data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</td>',
                 '</tr>',
                 '<tpl if="this.calculatePending(payments)">',
                 '<tr>',
-                '<td>Pending:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.pending + '</td>',
                 '<td>{[values.orderRecord.formatCurrency(this.calculatePending(values.payments))]}</td>',
                 '</tr>',
                 '</tpl>',
                 '<tr>',
-                '<td>Collected:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.collected + '</td>',
                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
                 '</tr><tpl if="amountRefunded"><tr>',
-                '<td>Refunded:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.refunded + '</td>',
                 '<td>{[values.orderRecord.formatCurrency(values.amountRefunded)]}</td>',
                 '</tr></tpl><tr>',
-                '<td>Balance:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.balance + '</td>',
                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
                 '</tr>',
                 '</table>',
@@ -362,13 +362,13 @@ Ext.define('Taco.view.order.Header', {
                 '<td>',
                 '<table class="header-summary">',
                 '<tr>',
-                '<td>Items:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.items + '</td>',
                 '<td>{orderSummary.totalItemCount}</td>',
                 '</tr><tr>',
-                '<td>Fulfilled:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.fulfilled + '</td>',
                 '<td>{orderSummary.fulfilledItemCount}</td>',
                 '</tr><tr>',
-                '<td>Remaining:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.remaining + '</td>',
                 '<td>{orderSummary.unfulfilledItemCount}</td>',
                 '</tr>',
                 '</table>',
@@ -381,13 +381,13 @@ Ext.define('Taco.view.order.Header', {
                 '<td>',
                 '<table class="header-summary">',
                 '<tr>',
-                '<td>Order Total:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.order_total +':</td>',
                 '<td data-handle="orderSummaryOrderTotal">N/A</td>',
                 '</tr><tr>',
-                '<td>Collected:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.collected + '</td>',
                 '<td>N/A</td>',
                 '</tr><tr>',
-                '<td>Balance:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.balance + '</td>',
                 '<td>N/A</td>',
                 '</tr>',
                 '</table>',
@@ -395,13 +395,13 @@ Ext.define('Taco.view.order.Header', {
                 '<td>',
                 '<table class="header-summary">',
                 '<tr>',
-                '<td>Items:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.items + '</td>',
                 '<td>N/A</td>',
                 '</tr><tr>',
-                '<td>Fulfilled:</td>',
+                '<td>' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.fulfilled + '</td>',
                 '<td>N/A</td>',
                 '</tr><tr>',
-                '<td>Remaining:</td>',
+                '<td>'+ Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.remaining + '</td>',
                 '<td>N/A</td>',
                 '</tr>',
                 '</table>',
@@ -451,28 +451,28 @@ Ext.define('Taco.view.order.Header', {
                 '<tr>',
                 '<td>',
                 '<tpl if="submittedDate">',
-                '<span class="label label-light">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
+                '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.order_date + ':</span>{submittedDate:date("m/d/Y h:i a")}',
                 '<tplelse>',
-                '<span class="label label-light">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
+                '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.order_create_date + ':</span>{createDate:date("m/d/Y h:i a")}',
                 '</tpl>',
                 '</td>',
                 '<tpl if="channelName">',
-                '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName">{channelName}</span>', '</td>',
+                '<td>', '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.channel + ':</span><span data-handle="channelName">{channelName}</span>', '</td>',
                 '<tplelse>',
-                '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName" class="channel-name">N/A</span>', '</td>',
+                '<td>', '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.channel + ':</span><span data-handle="channelName" class="channel-name">N/A</span>', '</td>',
                 '</tpl>',
                 '</tr>',
                 '<tr>',
-                '<td>', '<span class="label label-light">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</td>',
+                '<td>', '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.last_updated + ':</span>{updateDate:date("m/d/Y h:i a")}', '</td>',
                 '<tpl if="orderType === \'Online\'">',
-                '<td data-handle="ipAddress">', '<span class="label label-light">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</td>',
+                '<td data-handle="ipAddress">', '<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.iP_address + '</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</td>',
                 '<tpl elseif="orderType === \'Offline\'">',
-                '<td><span class="label label-light">Offline Order</span></td>',
+                '<td><span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.offline_order + '</span></td>',
                 '</tpl>',
                 '</tr>',
                 '<tpl if="parentReturnId">',
                 '<tr>',
-                '<td>', '<span class="label label-light">Parent Return:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/returns/edit/{parentReturnId}">{parentReturnNumber}</a></span>', '</td>',
+                '<td>','<span class="label label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.parent_return + ':</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/returns/edit/{parentReturnId}">{parentReturnNumber}</a></span>','</td>',
                 '</tr>',
                 '</tpl>',
                 '</table>'
@@ -484,7 +484,7 @@ Ext.define('Taco.view.order.Header', {
             xtype: 'component',
             itemId: 'addressesCmp',
             tpl: [
-                '<table class="order-addresses-table"><tr><td><span class="label-light">Billing Address</span></td><td><span class="label-light">Shipping Address</span></td></tr>',
+                '<table class="order-addresses-table"><tr><td><span class="label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.billing_address + '</span></td><td><span class="label-light">' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.GridHeader.shipping_address + '</span></td></tr>',
 
                 '<tr><td>',
 
@@ -805,7 +805,7 @@ Ext.define('Taco.view.order.Header', {
             },
             callback: function (options, success, response) {
                 if (!success) {
-                    var message = 'Failed to assign customer account on this order.';
+                    var message = Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.failed_customeraccount;
                     try {
                         var responseMessage = JSON.parse(response.responseText).message;
                         message = message + ' ' + responseMessage;

@@ -18,7 +18,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
     layout: "anchor",
 
     scale: 'medium',
-    title: 'Add Gift Card',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.add_gift_card,
     getBillingForm: Ext.emptyFn,
     hasValidBillingContact: Ext.emptyFn,
     toggleExtraInfo: Ext.emptyFn,
@@ -46,7 +46,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         this.pullCustomerPaymentData(this.record.customer);
 
         this.newCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'New Gift Card',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.new_gift_card,
             name: 'cardUse',
             itemId: 'useNewCard',
             inputValue: 'newCard',
@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         });
 
         this.existingCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Order Gift Cards',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.order_gift_cards,
             name: 'cardUse',
             itemId: 'useExistingCard',
             inputValue: 'existingCard',
@@ -77,7 +77,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         });
 
         this.savedCardRadio = Ext.create('Ext.form.field.Radio', {
-            boxLabel: 'Saved Gift Cards',
+            boxLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.saved_gift_cards,
             name: 'cardUse',
             itemId: 'useSavedCard',
             inputValue: 'savedCard',
@@ -172,7 +172,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 currencyCode: this.record.getCurrencyCode(),
                 name: namePrefix + 'GiftCardBalanceField',
                 itemId: namePrefix + 'GiftCardBalanceField',
-                fieldLabel: 'Balance',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.balance,
                 readOnly: true,
                 margin: '0px 5px 0px 5px',
                 hidden: true,
@@ -185,7 +185,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 name: namePrefix + 'CheckBalanceButton',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Check Balance',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.check_balance,
                 margin: '30 0 0 0',
                 handler: function () {
                     me.doGetBalance(function (data) {
@@ -244,7 +244,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
             showLabel: false,
             name: 'savedPaymentPicker',
             itemId: 'savedPaymentPicker',
-            fieldLabel: "Saved Cards on Order",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.saved_cards_on_order,
             labelStyle: "padding-top:16px;",
             store: savedPaymentStore,
             width: 500,
@@ -291,7 +291,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'savedCardAmount',
                                 itemId: 'savedCardAmount',
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                 validateOnChange: false,
                                 selectOnFocus: true,
                                 allowBlank: false,
@@ -346,17 +346,17 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
             showLabel: true,
             name: 'existingPaymentPicker',
             itemId: 'existingPaymentPicker',
-            fieldLabel: "Existing Gift Cards on Order",
+            fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.existing_cards_on_order,
             labelStyle: "padding-top:16px;",
             store: curPaymentStore,
             width: 500,
             allowBlank: false,
             margin: '0px 5px 0px 5px',
-            emptyText: "Select a Giftcard",
+            emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.select_giftcard,
             displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{cardType} {cardNumber} </tpl>'),
             listConfig: {
-                loadingText: 'Loading...',
-                emptyText: 'No matching payments found.',
+                loadingText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.loading,
+                emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.no_matching_payments,
                 // Custom rendering template for each item
                 // Card type (Visa) Card Mask (****) exp (month/year)
                 getInnerTpl: function () {
@@ -410,7 +410,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'existingCardAmount',
                                 itemId: 'existingCardAmount',
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                 validateOnChange: true,
                                 selectOnFocus: true,
                                 allowBlank: false,
@@ -424,7 +424,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     } else if (balanceField.parseValue(value[0]) <= balanceField.value) {
                                         return true;
                                     } else {
-                                        return "Amount cannot exceed card balance.";
+                                        return Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_cannot_exceed_card;
                                     }
                                 }
                             },
@@ -468,7 +468,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     xtype: 'textfield',
                                     name: 'giftCardNumber',
                                     allowBlank: false,
-                                    fieldLabel: 'Gift Card Number',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.gift_card_number,
                                     margin: '0px 5px 0px 5px',
                                     flex: 2,
                                     listeners: {
@@ -491,7 +491,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     xtype: 'textfield',
                                     name: 'giftCardSecurityCode',
                                     allowBlank: true,
-                                    fieldLabel: 'Security Code',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.security_code,
                                     margin: '0px 5px 0px 5px',
                                     flex: 1,
                                     listeners: {
@@ -527,7 +527,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     width: 170,
                                     currencyCode: this.record.getCurrencyCode(),
                                     name: 'newCardAmount',
-                                    fieldLabel: 'Amount',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amount,
                                     validateOnChange: true,
                                     selectOnFocus: true,
                                     allowBlank: false,
@@ -541,7 +541,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                         } else if (balanceField.parseValue(value[0]) <= balanceField.value) {
                                             return true;
                                         } else {
-                                            return "Amount cannot exceed card balance.";
+                                            return Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_cannot_exceed_card;
                                         }
                                     }
                                 },
@@ -598,7 +598,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
             PCI = me.getPCIaaS();
 
         if (!PCI) {
-            Taco.app.fireEvent('setmessage', 'Unable to communicate with payment service.', 'error');
+            Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.unable_communicate_payment_service, 'error');
             return;
         }
 
@@ -714,7 +714,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         var me = this;
 
         me.setLoading({
-            msg: "Retrieving balance"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.retrieving_balance
         }, me.body);
 
         var PCI = me.getPCIaaS();
@@ -756,7 +756,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
     doSave: function () {
         var self = this;
         this.setLoading({
-            msg: "Applying gift cards"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.applying_gift_cards
         }, this.body);
         var prefix;
         if (self.newCardRadio && self.newCardRadio.getValue()) {
@@ -775,7 +775,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                     // Check amount to add value and compare to balance 
                     var amount = self.query('[name="' + prefix + 'CardAmount"]')[0].getValue();
                     if (amount > data.balance) {
-                        Taco.app.fireEvent('setmessage', 'Applied amount exceeds the balance on the gift card.', 'error');
+                        Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_exceeds_gift_card, 'error');
                         self.query('[name="' + prefix + 'CheckBalanceButton"]')[0].setVisible(false);
                         balanceField.setValue(data.balance);
                         balanceField.setVisible(true);

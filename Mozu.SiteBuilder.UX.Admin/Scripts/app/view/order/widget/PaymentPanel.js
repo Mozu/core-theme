@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Ext.MessageBox',
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
-        'Taco.view.order.modal.ApplyCheck',
+        'Taco.view.order.modal.ApplyCheck', 
         'Taco.view.order.modal.AddPurchaseOrder',
         'Taco.view.order.modal.CapturePayment',
         'Taco.view.order.modal.AuthAndCapture',
@@ -21,7 +21,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.ManualVoidPayment',
         'Taco.view.order.modal.ManualCreditPayment',
         'Taco.view.order.modal.DeclineCheck',
-        'Ext.window.MessageBox'
+        'Ext.window.MessageBox' 
     ],
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
@@ -79,67 +79,67 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         return Ext.Array.map([
             {
-                text: 'Apply Check',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.apply_check,
                 itemId: 'ApplyCheck'
             },
             {
-                text: 'Decline Check',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.decline_check,
                 itemId: 'DeclineCheck'
             },
             {
-                text: 'Decline Payment',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.decline_payment,
                 itemId: 'ManualDeclinePayment',
                 //TODO: when service supports the data from the manual decline modal, comment out the below line
                 handler: me.manualDeclinePayment,
                 hidden: me.isAutoCaptureEnabled
             },
             {
-                text: 'Credit Payment',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.credit_payment,
                 itemId: 'CreditPayment',
                 hidden: me.record.get('amountCollected') <= 0
             },
             {
-                text: 'Auth and Capture',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.auth_and_capture,
                 itemId: 'AuthAndCapture',
                 disabled: isDeclined
             },
             {
-                text: 'Rollback',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.rollback,
                 itemId: 'Rollback',
                 handler: me.rollBackTransaction
             },
             {
-                text: 'Rollback Capture',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.rollback_capture,
                 itemId: 'RollbackCapture',
                 handler: me.rollBackTransaction
             },
             {
-                text: 'Rollback Credit',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.rollback_credit,
                 itemId: 'RollbackCredit',
                 handler: me.rollBackTransaction
             },
             {
-                text: 'Rollback Void',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.rollback_void,
                 itemId: 'RollbackVoid',
                 handler: me.rollBackTransaction
             },
             {
-                text: 'Capture Payment (Manual)',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.capture_payment_manual,
                 itemId: 'ManualCapturePayment',
                 hidden: me.isAutoCaptureEnabled
             },
             {
-                text: 'Credit Payment (Manual)',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.credit_payment_manual,
                 itemId: 'ManualCreditPayment',
                // hidden: me.isAutoCaptureEnabled
             },
             {
-                text: 'Void Payment',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.void_payment,
                 itemId: 'VoidPayment',
                 handler: me.voidTransaction
             },
             {
-                text: 'Void Payment (Manual)',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.void_payment_manual,
                 itemId: 'ManualVoidPayment'
             }
         ], function(actionConf) {
@@ -195,20 +195,20 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             cls: cls,
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl if="this.displayAmountRequested(payment)">',
-                lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_requested + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountAuthorized != 0">',
-                lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_authorized + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
                 '</tpl>',
-                lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_collected + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
                 '<tpl if="payment.paymentType == \'PurchaseOrder\' && payment.status != \'Voided\'">',
-                lbl('Amount Remaining: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested - values.payment.amountCollected)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.Amount_Remaining + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested - values.payment.amountCollected)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountCredited != 0">',
-                lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_credited + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountRefunded != 0">',
-                lbl('Amount Refunded: ', '{[values.orderRecord.formatCurrency(values.payment.amountRefunded)]}'),
+                lbl(Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount_refunded + ': ', '{[values.orderRecord.formatCurrency(values.payment.amountRefunded)]}'),
                 '</tpl>',
                 {
                     displayAmountRequested: function (payment) {
@@ -252,7 +252,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             purchaseOrderNumber = '';
 
         if (me.record.get('paymentType') === 'PurchaseOrder') {
-            purchaseOrderNumber = '<br />Purchase Order #' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
+            purchaseOrderNumber = '<br />' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.purchase_order + ' #' + me.record.get('purchaseOrderInfo').purchaseOrderNumber;
         }
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
@@ -306,12 +306,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         var subpayments = me.record.data.subpayments;
 
                         if (subpayments && subpayments.length > 1) {
-                            msg = "All child orders associated with Order Reference # "
+                            msg = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.child_orders_reference
                                 + parentCheckoutNumber +
-                                " will change to an authorized state. Are you sure you would like to proceed?";
+                                Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.change_to_authorized;
 
                             this.actionModal = Ext.MessageBox.show({
-                                title: 'Authorize Purchase Order',
+                                title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.authorize_purchase_order,
                                 rightJustifyButtons: true,
                                 reverseOrder: true,
                                 cls: 'auth-purchase-order',
@@ -323,7 +323,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                     if (val !== 'yes') return;
 
                                     me.setLoading({
-                                        msg: "Saving"
+                                        msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
                                     }, me.body);
 
                                     // call the model method to persist the change
@@ -332,7 +332,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             });
                         } else {
                             me.setLoading({
-                                msg: "Saving"
+                                msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
                             }, me.body);
 
                             me.order.authorize(cfg);
@@ -346,7 +346,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
-                    text: 'Mark as Invoiced',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.mark_as_invoiced,
                     width: 115,
                     margin: '0 10 0 0',
                     itemId: 'invoicedButton',
@@ -377,12 +377,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         var subpayments = me.record.data.subpayments;
 
                         if (subpayments && subpayments.length > 1) {
-                            var msg = "All child orders associated with Order Reference # "
+                            var msg = Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.child_orders_reference
                                 + parentCheckoutNumber +
-                                " will change to an invoiced state. Are you sure you would like to proceed?";
+                                Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.change_to_invoiced;
 
                             this.actionModal = Ext.MessageBox.show({
-                                title: 'Invoice Purchase Order',
+                                title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.invoice_purchase_order,
                                 rightJustifyButtons: true,
                                 reverseOrder: true,
                                 cls: 'invoice-purchase-order',
@@ -394,7 +394,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                     if (val !== 'yes') return;
 
                                     me.setLoading({
-                                        msg: 'Saving'
+                                        msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
                                     }, me.body);
 
                                     me.order.markAsInvoiced(cfg);
@@ -402,7 +402,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             });
                         } else {
                             me.setLoading({
-                                msg: 'Saving'
+                                msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
                             }, me.body);
 
                             me.order.markAsInvoiced(cfg);
@@ -488,7 +488,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         }
 
         if (paymentStatus === 'Authorized') {
-            packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.authorized + '</span>';
         } else {
             packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">' + paymentStatus + '</span>';
         }
@@ -506,13 +506,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     flex: 1,
                     itemId: "statusField",
                     cls: "statusField",
-                    html: '<span class="label">Status: </label>' + packageStatus +
+                    html: '<span class="label">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.status + ': </label>' + packageStatus +
                         purchaseOrderNumber
                 },
                 {
                     xtype: 'component',
                     itemId: 'orderApprovedNotice',
-                    html: 'Order must be approved first',
+                    html: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.order_must_approved,
                     margin: '0 10 0 0',
                     hidden: !pendingReview,
                     style: {
@@ -611,38 +611,38 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 },
                 tpl: Ext.create('Ext.XTemplate',
                     '<div class="' + collapsableCls + ' collapsed">',
-                        '<div class="title">Transaction History</div>',
+                    '<div class="title">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.transaction_history + '</div>',
                         '<div class="body" >',
                             toggleBtnHtml,
                             '<tpl for=".">',
                                 '<div class="payment-transaction {[xindex == 1 ? \'recent-transaction\' : \'previous-transaction\']}">',
                                     '<div class="details">',
                                         '<tpl if="target">',
-                                        'From: ',
+                                             Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.from + ': ',
                                             '<tpl if="this.forThisOrder(target)">',
-                                              '<span class="x-column-content-pill x-column-content-pill-true">This Order</span>',
+                                            '<span class="x-column-content-pill x-column-content-pill-true">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.this_order + '</span>',
                                             '<tpl else>',
                                                 '<tpl switch="target.targetType.toLowerCase()">',
                                                   '<tpl case="checkout">',
-                                                              'Order Reference #{[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                   Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.order_reference + '{[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
                                                   '<tpl case="order" case="return">',
-                                                              'Order {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                   Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.order + ' {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
                                                   '<tpl default>',
-                                                              'Order {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                   Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.order  + ' {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
                                                 '</tpl>',
                                               '</tpl>',
                                               '</br>',
                                           '</tpl>',
-                                        'Date: {createDate:date("M d g:ia")} ',
+                                        Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.date + ': {createDate:date("M d g:ia")} ',
                                             '<span class="seperator"></span>',
-                                        'Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
+                                        Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount + ': {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
                                             '<br />',
                                         'Type: {interactionType} ',
                                             '<span class="seperator"></span>',
-                                        'Status: {status} ',
+                                        Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.status + ': {status} ',
                                         '<tpl if="gatewayTransactionId != 0">',
                                             '<br />',
-                                            'Transaction ID: {gatewayTransactionId}',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.transaction_id + ': {gatewayTransactionId}',
                                         '</tpl>',
                                         '<tpl if="gatewayResponseCode">',
                                             '<br />',
@@ -650,11 +650,11 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                             '<br />',
                                         '</tpl>',
                                         '<tpl if="gatewayResponseCode">',
-                                            'Response Code: {gatewayResponseCode} ',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.response_code + ': {gatewayResponseCode} ',
                                             '<span class="seperator"></span>',
                                         '</tpl>',
                                         '<tpl if="gatewayResponseText">',
-                                            'Response Message: {gatewayResponseText} ',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.response_message + ': {gatewayResponseText} ',
                                         '</tpl>',
                                         '<tpl if="gatewayAVSResponse">',
                                             '<br />',
@@ -662,15 +662,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                             '<br />',
                                         '</tpl>',
                                         '<tpl if="gatewayAVSResponse">',
-                                            'AVS Response: {gatewayAVSResponse} ',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.avs_response + ': {gatewayAVSResponse} ',
                                             '<span class="seperator"></span>',
                                         '</tpl>',
                                         '<tpl if="gatewayCVV2Response">',
-                                            'CVV2 Response: {gatewayCVV2Response} ',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.cvv2_response + ': {gatewayCVV2Response} ',
                                         '</tpl>',
                                         '<tpl if="note">',
                                             '<br />',
-                                            'Note: {note} ',
+                                            Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.note + ': {note} ',
                                         '</tpl>',
                                     '</div>',
                                 '</div>',
@@ -714,10 +714,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '<tpl if="paymentType != \'StoreCredit\'">',
                 '<div class="billingInformation">',
 
-                            '<h4 class="paymentDetailsHeader">Bill To:</h4>',
+                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.bill_to + ':</h4>',
                             // bad data check;
                             '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
-                                '<div class="fullName">N/A</div>',
+                '<div class="fullName">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.na + '</div>',
                             '<tpl elseif="values.billingContact.firstName">',
                                 '<div class="fullName">{billingContact.firstName:htmlEncode} {billingContact.lastName:htmlEncode}</div>',
                                 '<div class="address">{billingContact.address1:htmlEncode}</div>',
@@ -734,28 +734,28 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                     '<tpl if="paymentType == \'Check\'">',
                         '<div class="paymentTypeCheck">',
-                            '<h4 class="paymentDetailsHeader">Method:</h4>',
+                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.method + ':</h4>',
                             '<div class="check">Check</div>',
                         '</div>',
                     '<tpl elseif="paymentType == \'StoreCredit\'">',
                         '<div class="paymentTypeStoreCredit">',
-                            '<h4 class="paymentDetailsHeader">Method:</h4>',
-                            '<div class="credit">Store Credit</div>',
+                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.method + ':</h4>',
+                        '<div class="credit">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.store_credit + '</div>',
                                 '<tpl if="storeCreditType && storeCreditType != \'StoreCredit\' && storeCreditType != \'GiftCard\'" >',
-                                     '<div class="credit">Code: {storeCreditCode}</div>',
-                                     '<div class="credit">Type: {storeCreditType} - {customCreditType}</div>',
+                                     '<div class="credit">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.code + ': {storeCreditCode}</div>',
+                                     '<div class="credit">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.type + ': {storeCreditType} - {customCreditType}</div>',
                                 '<tpl else>',
-                                     '<div class="credit">Code: {storeCreditCode} (<a href="/StoreCredits/edit/{storeCreditCode}">click for details</a>)</div>',
+                        '<div class="credit">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.code + ': {storeCreditCode} (<a href="/StoreCredits/edit/{storeCreditCode}">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.click_for_details + '</a>)</div>',
                                 '</tpl>',
                         '</div>',
                     '<tpl elseif="paymentType == \'PaypalExpress\'">',
                         '<div class="paymentTypePaypalExpress">',
-                            '<h4 class="paymentDetailsHeader">Method:</h4>',
-                            '<div class="ppx">Paypal Express (Transaction ID: {paymentServiceTransactionId})</div>',
+                            '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.method + ':</h4>',
+                '<div class="ppx">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.paypal_express + ' (' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.transaction_id + ': {paymentServiceTransactionId})</div>',
                         '</div>',
                     '<tpl elseif="paymentType == \'PurchaseOrder\'">',
                         '<div class="paymentTypePurchaseOrder">',
-                            '<h4 class="paymentDetailsHeader">Payment Terms:</h4>',
+                        '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.payment_terms + ':</h4>',
                             '<div class="paymentterms">{purchaseOrderInfo.paymentTerm.description}</div>',
                             '<br />',
                             '<tpl if="purchaseOrderInfo.customFields.length < 6">',
@@ -774,7 +774,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
-                            '<h4 class="paymentDetailsHeader">Method:</h4>',
+                                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.method + ':</h4>',
                                 '<tpl if="paymentType==\'token\'">',
                                     '<div class="creditCard"><span class="paymentType">{tokenType}</span></div>',
                                 '<tpl else>',
@@ -783,7 +783,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             // if the auth data has an id than its been authorized
                             '<tpl if="id">',
                                 '<div class="authorization">',
-                                    '<h4 class="paymentDetailsHeader">Authorization ID:</h4>',
+                                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.authorization_id + ':</h4>',
                                     '{id}',
                                 '</div>',
                             '</tpl>',
@@ -793,15 +793,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '<tpl>',
                         '<div class="auth-and-workflow">',
                             '<div class="referenceId">',
-                                '<h4 class="paymentDetailsHeader">Reference ID:</h4>',
+                                '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.reference_id + ':</h4>',
                                 '<tpl if="externalTransactionId">',
                                     '{externalTransactionId}',
                                 '<tpl else>',
-                                    '<div>None</div>',
+                            '<div>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.none + '</div>',
                                 '</tpl>',
                             '</div>',
                             '<div class="workflow">',
-                                '<h4 class="paymentDetailsHeader">Workflow:</h4>',
+                            '<h4 class="paymentDetailsHeader">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.workflow + ':</h4>',
                                 '<div class="workflow">{paymentWorkflow}</div>',
                             '</div>',
                         '</div>',
@@ -837,12 +837,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             actionSimpleName = actionName.replace('Rollback', '');
 
         this.actionModal = Ext.MessageBox.show({
-            title: 'Rollback',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.rollback,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transaction?',
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.rollback_msg + actionSimpleName + ' ' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.transaction + '?',
             closable: false,
             buttons: Ext.Msg.OKCANCEL,
             fn: function (rec) {
@@ -858,7 +858,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             me.setLoading(false);
                             var json = Ext.decode(response.responseText, true);
                             if (!json || !json.success) {
-                                Taco.app.fireEvent('setmessage', "Error rolling back.", 'error');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.error_rolling_back, 'error');
                                 return;
                             }
 
@@ -868,7 +868,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         failure: function (response) {
                             me.setLoading(false);
                             var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.message) ? json.message : "Error rolling back.";
+                                msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.error_rolling_back;
                             Taco.app.fireEvent('setmessage', msg, 'error');
                             delete me.actionModal;
                         }
@@ -901,13 +901,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     voidTransaction: function() {
         var me = this,
             msg = me.record.get('paymentType') === 'PurchaseOrder'
-                  ? '<p>Amount voided will be applied to the customer\'s line of credit for purchase orders.</p>'
+                  ? '<p>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.amount_voided + '</p>'
                   + '<br />'
-                  + '<p>Void Amount</p>'
+                  + '<p>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.void_amount + '</p>'
                   + '<h2>' + me.order.formatCurrency(me.getPaymentData().amountRequested) + '</h2>'
                   + '<br />'
-                  + '<p>Are you certain you want to void this payment?</p>'
-                  : 'Are you certain you want to void this payment?',
+                  + '<p>' + Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.void_this_payment + '</p>'
+                  :  Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.void_this_payment ,
             config = {
                 jsonData: {
                     orderId: me.order.getId(),
@@ -932,7 +932,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             };
 
         this.actionModal = Ext.MessageBox.show({
-            title: 'Void Payment',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.void_payment,
             rightJustifyButtons: true,
             reverseOrder: true,
             cls: 'void-purchase-order',
@@ -978,10 +978,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             };
 
         this.actionModal = Ext.MessageBox.show({
-            title: 'Manually Decline Payment',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.manually_decline_payment,
             rightJustifyButtons: true,
             reverseOrder: true,
-            msg: 'Are you certain you want to manually record this payment as declined?',
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.manually_record_payment,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function(val) {

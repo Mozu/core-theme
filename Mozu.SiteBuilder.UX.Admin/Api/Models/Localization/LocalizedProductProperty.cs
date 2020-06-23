@@ -26,6 +26,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
         
         public string StringValue { get; set; }
 
+        public bool IsRequiredByAdmin { get; set; }
+
         public List<string> SupportedLocales { get; set; } 
 
     }

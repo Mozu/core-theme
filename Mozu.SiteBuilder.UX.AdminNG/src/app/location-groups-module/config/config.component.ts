@@ -61,6 +61,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.packageSettingUnitTypes = Constants.PackageSettingUnitTypes;
         this.model.uspsCarrierAccountPagination = Constants.UspsCarrierAccountPageConfig;
         this.model.canadaPostCarrierAccountPagination = Constants.CanadaPostCarrierAccountPageConfig;
+        this.model.purolatorCarrierAccountPagination = Constants.PurolatorCarrierAccountPageConfig;
         this.model.workflowProcessList = [];
 
         this.model.locationGroupConfigForm = this.fb.group({
@@ -111,6 +112,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             canadapostExpress3DayDefault: ['', []],
             canadapostReturnLabelShippingTypes: ['', []],
 
+            //Purolator Carrier types
+            purolatorShippingTypes: new FormArray([]),
+            purolatorStandardDefault: ['', []],
+            purolatorExpress1DayDefault: ['', []],
+            purolatorExpress2DayDefault: ['', []],
+            purolatorExpress3DayDefault: ['', []],
+            purolatorReturnLabelShippingTypes: ['', []],
+           
             autoPackingListPopup: ['', []],
             blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
@@ -224,6 +233,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
     }
 
+    private addPurolatorShippingTypesCheckboxes() {
+        this.model.LCPurolatorShippingType.map((o, i) => {
+            const control = new FormControl();
+            (this.model.locationGroupConfigForm.controls.purolatorShippingTypes as FormArray).push(control);
+        });
+    }
+
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
@@ -284,6 +300,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             this.model.LCUSPSShippingTypes = [];
             this.model.LCFedExShippingType = [];
             this.model.LCCanadaPostShippingType = [];
+            this.model.LCPurolatorShippingType = [];
 
             carrierShippingType.map((value, index) => {
                 const shippingTypeObj = {
@@ -298,6 +315,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     this.model.LCFedExShippingType.push(shippingTypeObj);
                 } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.canadapost) {
                     this.model.LCCanadaPostShippingType.push(shippingTypeObj);
+                } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.purolator) {
+                    this.model.LCPurolatorShippingType.push(shippingTypeObj);
                 }
             });
         }
@@ -359,8 +378,9 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const uspsCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.uspsCarrierAccountPagination, Constants.LCCarriers.usps);
         const carrierAccount = this.configService.getCarrierAccount(locationGroupCode, siteId);
         const canadaPostCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.canadaPostCarrierAccountPagination, Constants.LCCarriers.canadapost);
+        const purolatorCarrierAccountSets = this.configService.getCarrierAccountSets(this.model.purolatorCarrierAccountPagination, Constants.LCCarriers.purolator);
         // join this services result.
-        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount, canadaPostCarrierAccountSets]).subscribe(response => {
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig, uspsCarrierAccountSets, carrierAccount, canadaPostCarrierAccountSets, purolatorCarrierAccountSets]).subscribe(response => {
             this._loggerService.info('LocationGroupConfigComponent : forkJoin');
 
             if (response && response[0] && response[0].items) {
@@ -392,6 +412,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this.getAllCanadaPostCarrierAccount(response[5].items);
                 this.model.canadaPostCarrierAccountPagination.totalRecordCount = response[5].total;
             }
+
+            if (response && response[6] && response[6].items) {
+                this.getAllPurolatorCarrierAccount(response[6].items);
+                this.model.purolatorCarrierAccountPagination.totalRecordCount = response[6].total;
+            }
         }, (response) => {
             this.getLocationGroupConfigError(response.error.message);
         });
@@ -411,6 +436,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.locationGroupConfigForm.controls.uspsShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.fedExShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.canadapostShippingTypes = new FormArray([]);
+        this.model.locationGroupConfigForm.controls.PurolatorShippingTypes = new FormArray([]);
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
@@ -429,11 +455,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.addFedExShippingTypesCheckboxes();
         this.addUSPSShippingTypesCheckboxes();
         this.addCanadaPostShippingTypesCheckboxes();
+        this.addPurolatorShippingTypesCheckboxes();
 
         let unitedStatesUpsSettings: ShippingMethodMappings;
         let shippingSettingsForFedEx: ShippingMethodMappings;
         let shippingSettingsForUsps: ShippingMethodMappings;
         let shippingSettingsForCanadaPost: ShippingMethodMappings;
+        let shippingSettingsForPurolator: ShippingMethodMappings;
 
         if (lgConfigModel && lgConfigModel.carriers.length > 0) {
             lgConfigModel.carriers.forEach((carrier) => {
@@ -453,6 +481,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     case 'canadapost':
                         shippingSettingsForCanadaPost = carrier.shippingMethodMappings;
                         break;
+                    case 'purolator':
+                        shippingSettingsForPurolator = carrier.shippingMethodMappings;
+                        break;
+
                 }
             });
         }
@@ -502,6 +534,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 canadapostExpress3DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express3DayDefault : null,
                 canadapostReturnLabelShippingTypes: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.returnLabelShippingMethod : null,
 
+                //Purolator settings.
+                purolatorShippingTypes: this.setSelectedPurolatorShippingTypes(shippingSettingsForPurolator),
+                purolatorStandardDefault: shippingSettingsForPurolator ? shippingSettingsForPurolator.standardDefault : null,
+                purolatorExpress1DayDefault: shippingSettingsForPurolator ? shippingSettingsForPurolator.express1DayDefault : null,
+                purolatorExpress2DayDefault: shippingSettingsForPurolator ? shippingSettingsForPurolator.express2DayDefault : null,
+                purolatorExpress3DayDefault: shippingSettingsForPurolator ? shippingSettingsForPurolator.express3DayDefault : null,
+                purolatorReturnLabelShippingTypes: shippingSettingsForPurolator ? shippingSettingsForPurolator.returnLabelShippingMethod : null,
+
                 autoPackingListPopup: lgConfigModel.autoPackingListPopup === undefined ? false : lgConfigModel.autoPackingListPopup,
                 blockPartialStock: lgConfigModel.blockPartialStock === undefined ? false : lgConfigModel.blockPartialStock,
                 defaultMaxNumberOfShipmentsInPickWave: lgConfigModel.defaultMaxNumberOfShipmentsInPickWave,
@@ -532,7 +572,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             bopisWorkflowProcess: bopisConfig.length > 0 && this.getBPMName(bopisConfig[0].workflowContainerId, bopisConfig[0].workflowProcessId) || '',
             transferWorkflowProcess: transferConfig.length > 0 && this.getBPMName(transferConfig[0].workflowContainerId, transferConfig[0].workflowProcessId) || '',
         });
-    }
+    } 
+
 
     private updateCarrierAccountsConfigForm(carrierAccountModel: any): void {
         const uspsCarrierAccount = carrierAccountModel.filter(a => a.carrierId === 'usps')
@@ -553,6 +594,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         } else {
             this.model.selectedCanadaPostCarrier = Constants.DefaultCanadaPostAccount;
         }
+
+        const purolatorCarrierAccount = carrierAccountModel.filter(a => a.carrierId === Constants.LCCarriers.purolator);
+        if (purolatorCarrierAccount.length > 0) {
+            this.model.selectedPurolatorCarrier = {
+                data: purolatorCarrierAccount[0].code,
+                label: purolatorCarrierAccount[0].name
+            }
+        } else {
+            this.model.selectedPurolatorCarrier = Constants.DefaultPurolatorAccount;
+        }
     }
 
     private setSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost: ShippingMethodMappings): boolean[] {
@@ -560,6 +611,22 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if (shippingSettingsForCanadaPost) {
             const shippingMethods = shippingSettingsForCanadaPost.shippingMethods;
             this.model.LCCanadaPostShippingType.map((o, i) => {
+                const isShippingTypeSelected = _.indexOf(shippingMethods, o.data);
+                if (isShippingTypeSelected === -1) {
+                    shippingTypeLst.push(false);
+                } else {
+                    shippingTypeLst.push(true);
+                }
+            });
+        }
+        return shippingTypeLst;
+    }
+
+    private setSelectedPurolatorShippingTypes(shippingSettingsForPurolator: ShippingMethodMappings): boolean[] {
+        const shippingTypeLst: boolean[] = [];
+        if (shippingSettingsForPurolator) {
+            const shippingMethods = shippingSettingsForPurolator.shippingMethods;
+            this.model.LCPurolatorShippingType.map((o, i) => {
                 const isShippingTypeSelected = _.indexOf(shippingMethods, o.data);
                 if (isShippingTypeSelected === -1) {
                     shippingTypeLst.push(false);
@@ -753,7 +820,22 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         lgConfigModel.carriers.push(canadapostMethod);
                     }
                     break;
-            }
+
+                case 'purolator':
+                    if (element.value) {
+                        const purolatorMethod = {} as CarrierModel;
+                        purolatorMethod.carrierType = shippingType.CarrierType;
+                        purolatorMethod.isEnabled = element.value;
+                        purolatorMethod.shippingMethodMappings = {} as ShippingMethodMappings;
+                        purolatorMethod.shippingMethodMappings.shippingMethods = this.getSelectedPurolatorShippingTypes(lgconfigForm.get(['purolatorShippingTypes']).value);
+                        purolatorMethod.shippingMethodMappings.returnLabelShippingMethod = lgconfigForm.get(['purolatorReturnLabelShippingTypes']).value;
+                        purolatorMethod.shippingMethodMappings.standardDefault = lgconfigForm.get(['purolatorStandardDefault']).value;
+                        purolatorMethod.shippingMethodMappings.express1DayDefault = lgconfigForm.get(['purolatorExpress1DayDefault']).value;
+                        purolatorMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['purolatorExpress2DayDefault']).value;
+                        purolatorMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['purolatorExpress3DayDefault']).value;
+                        lgConfigModel.carriers.push(purolatorMethod);
+                    }
+               }
         });
 
         lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
@@ -854,6 +936,20 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 }
             })
 
+
+        if (this.model.purolatorCarrierAccount && this.model.purolatorCarrierAccount.length != 0)
+            carrierAccountModel.push({
+                locationGroupCode: this.model.lgConfigModel.locationGroupCode,
+                siteId: this.model.lgConfigModel.siteId,
+                carrierId: Constants.LCCarriers.purolator,
+                credentialSet: {
+                    code: this.model.purolatorCarrierAccount.data,
+                    carrierId: Constants.LCCarriers.purolator,
+                    name: this.model.purolatorCarrierAccount.label,
+                    values: null
+                }
+            })
+
         if (!this.validateShippingTypes(lgconfigForm)) {
             return false;
         }
@@ -915,6 +1011,19 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         this._progressButtonService.stop();
                     }
                     break;
+                case 'purolator':
+                    lgconfigForm.controls.purolatorShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyPurolatorShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;
+
                 default:
                     isAtLeastOneTypeSelected = true;
                     break;
@@ -994,6 +1103,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         let shippingTypeLst: string[] = [];
         if (shippingSettingsForCanadaPost) {
             shippingTypeLst = shippingSettingsForCanadaPost.map((v, i) => v ? this.model.LCCanadaPostShippingType[i].data : null)
+                .filter(v => v !== null);
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedPurolatorShippingTypes(shippingSettingsForPurolator: boolean[]): string[] {
+        let shippingTypeLst: string[] = [];
+        if (shippingSettingsForPurolator) {
+            shippingTypeLst = shippingSettingsForPurolator.map((v, i) => v ? this.model.LCPurolatorShippingType[i].data : null)
                 .filter(v => v !== null);
         }
         return shippingTypeLst;
@@ -1089,6 +1207,23 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
     }
 
+    private getAllPurolatorCarrierAccount(result: CarrierAccountSetModel[]) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllPurolatorCarrierAccount' + JSON.stringify(result));
+        if (result) {
+            const carrierAccountType: CarrierAccountSetModel[] = <CarrierAccountSetModel[]>result;
+            this.model.purolatorCarrierAccountList = [] as SelectedCarrierAccountModel[];
+            carrierAccountType.map((value, index) => {
+                const carrierAccountObj = {
+                    data: value.code,
+                    label: value.name
+                };
+                if (value.carrierId.toLowerCase() === Constants.LCCarriers.purolator) {
+                    this.model.purolatorCarrierAccountList.push(carrierAccountObj);
+                }
+            });
+        }
+    }
+
     public getUSPSCarrierAccounts(pageDetails: any) {
         this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.usps).subscribe(response => {
             this.model.uspsCarrierAccountPagination.totalRecordCount = 0;
@@ -1105,6 +1240,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         })
     }
 
+    public getPurolatorCarrierAccounts(pageDetails: any) {
+        this.configService.getCarrierAccountSets(pageDetails, Constants.LCCarriers.purolator).subscribe(response => {
+            this.model.purolatorCarrierAccountPagination.totalRecordCount = 0;
+            this.getAllPurolatorCarrierAccount(response.items);
+            this.model.purolatorCarrierAccountPagination.totalRecordCount = response.total;
+        })
+    }
+
     public getSelectedUSPSCarrier(SelectedValues: SelectedCarrierAccountModel) {
         this.model.uspsCarrierAccount = [];
         this.model.uspsCarrierAccount = SelectedValues;
@@ -1113,5 +1256,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     public getSelectedCanadaPostCarrier(SelectedValues: SelectedCarrierAccountModel) {
         this.model.canadaPostCarrierAccount = [];
         this.model.canadaPostCarrierAccount = SelectedValues;
+    }
+
+    public getSelectedPurolatorCarrier(SelectedValues: SelectedCarrierAccountModel) {
+        this.model.purolatorCarrierAccount = [];
+        this.model.purolatorCarrierAccount = SelectedValues;
     }
 }

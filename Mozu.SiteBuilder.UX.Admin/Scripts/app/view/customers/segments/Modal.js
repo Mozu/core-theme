@@ -11,9 +11,9 @@ Ext.define('Taco.view.customers.segments.Modal', {
 
   autoShow: true,
   closeAction: 'destroy',
-  primaryText: 'Apply',
+  primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.apply,
   scale: 'medium',
-  title: 'Select Segments',
+  title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.select_segments,
 
   layout: {
     type: 'fit'
@@ -46,16 +46,16 @@ Ext.define('Taco.view.customers.segments.Modal', {
         ],
         columns: [{
             dataIndex: 'code',
-            text: 'Code',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.code,
             width: 80
         }, {
             dataIndex: 'name',
-            text: 'Name',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.name,
             minWidth: 120,
             resizable: false
         }, {
             dataIndex: 'description',
-            text: 'Description',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.description,
             width: 70,
             flex: 1
         }]

@@ -6,10 +6,10 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Update',
-    secondaryText: 'Cancel',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.update,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel,
     scale: 'small',
-    title: 'Update Backorder Date',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.update_backorder_date,
 
     layout: {
         type: 'fit'
@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
                                 width: 270,
                                 name: 'backorderDate',
                                 anchor: '100%',
-                                fieldLabel: 'Backorder Date',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.backorder_date,
                                 format: 'm/d/Y',
                                 value: new Date(),  // defaults to today
                                 minValue: new Date(),  // defaults to today
@@ -108,10 +108,10 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
                     // success handling here
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
-                        Taco.app.fireEvent('setmessage', 'Error while updating backorder date', 'error');
+                        Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_updating_backorder_date, 'error');
                         return;
                     }
-                    Taco.app.fireEvent('setmessage', "Backorder date Successfully Updated", 'success');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.backorder_date_successfully_updated, 'success');
                     me.fireEvent('dateUpdated', json);
                     me.close();
                 },
@@ -119,7 +119,7 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
                     me.setLoading(false);
                     // error handling here
                     var json = Ext.decode(response.responseText, true),
-                        msg = (json && json.message) ? json.message : 'Error while updating backorder date';
+                        msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_while_updating_backorder_date;
 
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 },

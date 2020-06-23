@@ -495,7 +495,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var dc = Mapper.Map<DC.Search.SynonymDefinition>(synonymDef);
                
-                var updatedDef = (await searchClient.UpdateSynonymDefinition(dc, dc.SynonymId)).ReadAsSync();
+                var updatedDef = (await searchClient.UpdateSynonymDefinition(dc, dc.SynonymId ?? -1)).ReadAsSync();
                 result.Add(Mapper.Map<SynonymDefinition>(updatedDef));
             }
 
@@ -507,7 +507,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var searchClient = GetSearchClientForSite(_apiCtx.SiteId, localeCode ?? _apiCtx.LocaleCode);
 
-            var tasks = synonymDefinitions.Select(d => searchClient.DeleteSynonymDefinition(d.SynonymId)).ToList();
+            var tasks = synonymDefinitions.Select(d => searchClient.DeleteSynonymDefinition(d.SynonymId ?? -1)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
@@ -524,7 +524,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 searchClient = GetSearchClientForSite(siteId, localeCodeString);
             }
-            var singleSynonymDef = (await searchClient.GetSynonymDefinition(pagingParams.NumericId)).ReadAsSync();
+            var singleSynonymDef = (await searchClient.GetSynonymDefinition(pagingParams.NumericId ?? -1)).ReadAsSync();
             //We only add the whole blocked products & boosted products when there is a single item requested (edit mode)  Greg made me do this....
             var mapped = Mapper.Map<SynonymDefinition>(singleSynonymDef);
             return List2(mapped);

@@ -15,8 +15,8 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
     
     sortableColumns: false,
     enableColumnHide: false,
-    overOrderBalanceError: "Gift cards cannot apply more than the total order balance.",
-    overCardBalanceError: "You cannot apply more than the amount of a gift card's balance.",
+    overOrderBalanceError: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.gift_card_cant_apply,
+    overCardBalanceError: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.more_than_gift_balance,
     
     getOrderBalance: function () {
         return this.orderBalance;
@@ -32,7 +32,7 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         deferEmptyText: false
     },
     deferEmptyText: false,
-    emptyText: "This customer has no gift cards or store credits.",
+    emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.no_gift_cards,
     // the index of the column to pass focus too by default when the grid gains focus via keyboard tab key;
     defaultFocusColumn: 2,
     initComponent: function () {
@@ -68,12 +68,12 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
 
         this.columns = [
         {
-            text: 'Card Code',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.card_code,
             dataIndex: 'code',
             flex: 1
         },
         {
-            text: 'Balance',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.balance,
             dataIndex: 'currentBalance',
                 renderer: function (value) {
                     return me.order.formatCurrency(value);
@@ -81,7 +81,7 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         },
         {
             dataIndex: 'amtToApply',
-            text: 'Amt. to Apply',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amt_to_apply,
             renderer: function (value) {
                 return me.order.formatCurrency(value);
             },
@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         {
             dataIndex: 'remainderToAccount',
             align: 'center',
-            text: 'Remainder to Acct.',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.remainder_to_acct,
             xtype: 'booleancolumn',
             width: 180,
             trueText: 'Yes',

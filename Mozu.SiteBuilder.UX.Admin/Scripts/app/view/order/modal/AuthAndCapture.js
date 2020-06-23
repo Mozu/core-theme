@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
 
     autoShow: true,
     scale: 'small',
-    title: 'Authorize and Capture Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.auth_and_capture,
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {
@@ -22,7 +22,7 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
                 xtype: 'currencyfield',
                 currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
-                fieldLabel: 'Amount to Authorize and Capture',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.amt_to_capture,
                 selectOnFocus: true,
                 width: 170,
                 value: this.order.getNewPaymentAmountHint()

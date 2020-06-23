@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
 
     autoShow: true,
     scale: 'medium',
-    title: 'Manual Transaction: Capture Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.manual_capture_payment,
 
     initComponent: function() {
         var amountRequested = 0;
@@ -43,12 +43,12 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
                 items: [{
                     xtype: 'textfield',
                     name: 'gatewayInteractionId',
-                    fieldLabel: 'Gateway Interaction Id'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.gateway_interaction_id
                 }, {
                     xtype: 'currencyfield',
                     currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
-                    fieldLabel: 'Amount Captured',
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.amount_captured,
                     value: amountRequested,
                     margin: '0 0 0 0'
                 }]
@@ -63,7 +63,7 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
                 items: [{
                     xtype: 'datetime',
                     name: 'interactionDate',
-                    fieldLabel: 'Transaction Date'
+                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.transaction_date
                 }]
             }]
         });
@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
         };
 
         me.setLoading({
-            msg: "Saving"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.saving
         }, me.body);
 
         // package up the data for the model to persist

@@ -341,7 +341,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 if (item.Id == null)
+                {
                     item.Id = "link^^" + ++currentHighestLinkIndex;
+                    item.Index = ++currentHighestLinkIndex;
+                }
 
                 navSet.Add(item);
             }
@@ -469,7 +472,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             ));
                 
                     category.Content.Name = change.Name;
-                    return _catClient.UpdateCategory(category, category.Id);
+                    return _catClient.UpdateCategory(category, category.Id ?? -1);
                 })
                 .Unwrap()
                 ;
@@ -639,7 +642,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             {
                                 originalCat.Sequence = originalCat.Sequence.GetValueOrDefault(0) + 1;
                             }
-                            updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                            updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id ?? -1));
                             
                         }
                        
@@ -688,7 +691,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         originalCat.Sequence = change.Index - newSiblingsNav.Count(n => n.Index <= change.Index);
                         originalCat.ParentCategoryId = Convert.ToInt32(list.First(n => n.Id == change.ParentId).OriginalId);
 
-                        updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id));
+                        updateTasks.Add(_catClient.UpdateCategory(originalCat, originalCat.Id ?? -1));
                         updateTasks.Add(_navRepo.SaveSetAsync(navSet));
                     }
 

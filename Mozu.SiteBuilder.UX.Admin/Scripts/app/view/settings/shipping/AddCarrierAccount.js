@@ -27,6 +27,9 @@
         if (me.record.get('carrierId') === "canadapost") {
             this.getCanadaPostColumnConfig();
         }
+        if (me.record.get('carrierId') === "purolator") {
+            this.getPurolatorColumnConfig();
+        }
 
         me.callParent(arguments);
     },
@@ -200,11 +203,13 @@
         var settingName = Ext.widget(
             {
                 xtype: 'textfield',
+                allowBlank: false,
+                fieldLabel: 'Easy Post API key',
                 name: 'easypostapikey',
                 margin: "0 0 0 30",
                 width: 300,
-                fieldLabel: 'EasyPost API key'
-
+                inputType: 'password',
+                emptyText: '*****'
             });
         me.items.push(settingName);
 
@@ -246,6 +251,52 @@
             fieldLabel: 'Customer Number',
             width: 300,
             margin: "0 0 0 30",
+        });
+        me.items.push(settingName);
+
+    },
+
+    getPurolatorColumnConfig: function () {
+        var me = this;
+        var settingName = Ext.widget(
+            {
+                xtype: 'textfield',
+                allowBlank: false,
+                fieldLabel: 'Nickname',
+                name: 'name',
+                width: 300,
+                margin: "0 0 0 30",
+                inputType: 'text'
+            });
+        me.items.push(settingName);
+
+        ;
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'accountnumber',
+            fieldLabel: 'Account Number',
+            width: 300,
+            margin: "0 0 0 30",
+        });
+        me.items.push(settingName)
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'purolatorapikey',
+            width: 300,
+            margin: "0 0 0 30",
+            fieldLabel: 'Purolator API Key'
+
+        });
+        
+        me.items.push(settingName);
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'apikeypassword',
+            fieldLabel: 'Purolator API Key Password',
+            width: 300,
+            margin: "0 0 0 30",
+            inputType: 'password',
+            emptyText: '*****'
         });
         me.items.push(settingName);
 

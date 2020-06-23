@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
         'Ext.form.field.ComboBox',
         'Ext.form.FieldContainer'
     ],
-    title: 'Add Manual Payment',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.add_manual_payment,
     initComponent: function () {
         //Note: this classes' items are added in the base class;
         this.callParent(arguments);
@@ -44,22 +44,22 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                        xtype: 'textfield',
                        name: 'gatewayTransactionId',
                        flex:1,
-                       fieldLabel: 'Gateway Transaction Id'
+                       fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.gateway_transaction_id
                    }, {
                        xtype: 'numberfield',
                        name: 'gatewayInteractionId',
                        hideTrigger: true,
                        flex: 1,
                        mouseWheelEnabled: false,
-                       fieldLabel: 'Gateway Interaction Id'
+                       fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.gateway_interaction_id
                    }, {
                        xtype: 'combobox',
                        name: 'actionName',
-                       fieldLabel: 'Interaction Type',
+                       fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.interaction_type,
                        allowBlank: false,
                        flex: 1,
                        forceSelection: true,
-                       store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
+                        store: [['AuthorizePayment', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.authorize_only], ['AuthAndCapture', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.ManualTransaction.authorize_and_capture]],
                        value: 'AuthorizePayment',
                        margin: '0 0 0 0'
                    }
@@ -75,14 +75,14 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     {
                         xtype: 'datetime',
                         name: 'interactionDate',
-                        fieldLabel: 'Transaction Date'
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.transaction_date
                     },  {
                         xtype: 'combobox',
                         name: 'cardType',
                         itemId: 'cardType',
                         valueField: 'Key',
                         displayField: 'Value',
-                        fieldLabel: 'Card Type',
+                        fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.card_type,
                         queryMode: 'local',
                         allowBlank: false,
                         editable: false,
@@ -100,7 +100,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                             {
                                 xtype: 'textfield',
                                 name: 'cardLastFour',
-                                fieldLabel: 'Last 4 Digits',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.last_four_digits,
                                 minLength: 4,
                                 maxLength: 4,
                                 enforceMaxLength: true,
@@ -110,7 +110,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                                 xtype: 'currencyfield',
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'amount',
-                                fieldLabel: 'Amount',
+                                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.amount,
                                 selectOnFocus:true,
                                 validateOnChange: true,
                                 allowBlank: false,

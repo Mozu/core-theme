@@ -15,10 +15,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Save',
-    secondaryText: 'Cancel',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.save,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel,
     scale: 'large',
-    title: 'Shipment Reassign',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.shipment_reassign,
     isRecordSaved: false,
     layout: {
         type: 'fit'
@@ -81,7 +81,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         });
      
         var inventorygrid = Ext.create('Ext.grid.Panel', {
-            title: 'Inventory',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.inventory,
             cls: 'taco-order-fulfillment-ReassignShipment',
             itemId: 'inventoryGrid',
 
@@ -89,16 +89,16 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
            
             columns: [
                 {
-                    text: 'Location',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location,
                     dataIndex: 'locationName',
                     width: 500,
                 },
                 {
-                    text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.distance, dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
                 },
                 {
                     xtype: 'actioncolumn',
-                    text: 'Stock',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.stock,
                     dataIndex: 'stock',
                     renderer: function (v, meta, rec) {
                         var type = "";  
@@ -166,11 +166,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
                         switch (type) {
                             case 'checked':
-                                return '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>';
+                                return '<span class="x-column-content-pill x-column-content-pill-true">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.yes + '</span>';
                             case 'partial':
-                                return '<span class="x-column-content-pill x-column-content-pill-false">Partial</span>';
+                                return '<span class="x-column-content-pill x-column-content-pill-false">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.partial + '</span>';
                             default:
-                                return '<span class="x-column-content-pill x-column-content-pill-false">No</span>';
+                                return '<span class="x-column-content-pill x-column-content-pill-false">' + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.ActionsColumn.no + '</span>';
                         }
                     }
                 }
@@ -284,18 +284,18 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         });
        
         var allLocations = Ext.create('Ext.grid.Panel', {
-            title: 'All Locations',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.all_location,
             cls: 'taco-order-fulfillment-locations',
             store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
             columns: [
                 {
-                    text: 'Location',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location,
                     dataIndex: 'name',
                     width: 500,
                 },
                 {
-                    text: 'Location Code',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.HeaderColumn.location_code,
                     dataIndex: 'code',
                     width: 500,
                 }
@@ -355,7 +355,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                     Taco.app.fireEvent('setmessage', json.response, 'error');
                                     return;
                                 }
-                                Taco.app.fireEvent('setmessage', "Shipment " + payloadData.ShipmentNumber + " successfully reassigned", 'success');
+                                Taco.app.fireEvent('setmessage', +Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.GridHeader.shipment+" " + payloadData.ShipmentNumber + Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.successfully_reassigned, 'success');
                                 me.saveSuccess(json);
                                 // close the dialog
                                 me.close();
@@ -364,7 +364,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                 me.setLoading(false, me.body);
                                 
                                 var json = Ext.decode(response.responseText, true),
-                                    msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_deallocating_inventory;
                                 Taco.app.fireEvent('setmessage', msg, 'error');
                                 me.close();
                             }

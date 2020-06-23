@@ -11,8 +11,8 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
 
     autoShow: true,
     scale: 'large',
-    title: 'Create Customer',
-    primaryText: 'Save & Create Address',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.title,
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.primary_text,
 
     // this should really be the default;
     closeAction: 'destroy',
@@ -79,7 +79,7 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
                     },
                     callback: function (options, success, response) {
                         if (!success) {
-                            Taco.app.fireEvent('setmessage', 'Failed to set Assign Customer Account to this Order');
+                            Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.failed_to_assign_customer_error);
                             console.error(options, response);
                             return;
                         }
@@ -104,7 +104,7 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
                 });
             },
             failure: function (record, operation) {
-                Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.CreateCustomer.error_saving_customer, 'error');
             },
             scope: this
         });

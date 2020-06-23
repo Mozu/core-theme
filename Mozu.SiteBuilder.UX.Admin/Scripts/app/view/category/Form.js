@@ -86,7 +86,9 @@ Ext.define("Taco.view.category.Form", {
                 scope: me,
                 'change': function (field, newValue) {
                     var type = "DynamicPreComputed";
-
+                    if (newValue === "no") {
+                        type = "DynamicRealTime";
+                    }
                     this.record.set("categoryType", type);
                     this.expressionTreePanel.setType(type);
 

@@ -27,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PUBLISH_SET_CODE = "publishsetcode";
         private const string PRODUCT_USAGE = "productUsage";
         private const string BASE_PRODUCT_CODE = "baseProductCode";
+        private const string ATTRIBUTE_CODE = "attributecode";
+        private const string ATTRIBUTE= "attribute";
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
@@ -193,6 +195,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("({0} eq standard or {0} eq component or ({0} eq configurable and {1} eq true))", PRODUCT_USAGE, IS_VARIATION);
                 case "baseproductcode":
                     return string.Format("({0} eq \"{1}\")", BASE_PRODUCT_CODE, filter.value);
+                case "attributecode":
+                    return string.Format("({0} eq \"{1}\")", ATTRIBUTE_CODE, filter.value);
+                case "attribute":
+
+                    //allow for multiple 
+                    var splitOnSemiColon = filter.value.ToString().Split(';');
+
+                    var formattedString = "(";
+                    for(int i = 0; i < splitOnSemiColon.Length; i++)
+                    {
+                        if(i > 0)
+                        {
+                            formattedString += " and ";
+                        }
+                        formattedString +=  string.Format("{0} eq \"{1}\"", ATTRIBUTE, splitOnSemiColon[i]);
+                    }
+                    formattedString += ')';
+
+                    return formattedString;
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

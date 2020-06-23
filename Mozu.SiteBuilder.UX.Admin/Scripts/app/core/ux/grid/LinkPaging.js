@@ -342,5 +342,4 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
         me.pageChooser.showBy(button);
     }
-
 });

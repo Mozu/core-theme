@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '95%',
     scale: 'large',
-    title: 'Edit Order Details',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.edit_order_details,
     width: '95%',
 
     actionColumnWidth: 50,
@@ -31,7 +31,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             itemId: 'discardAction',
             ui: 'action',
             scale: 'medium',
-            text: 'Discard Changes',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.discard_changes,
             handler: function() {
                 this.removeDraftOrder();
             }
@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             xtype: 'tbfill'
         }, {
             xtype: 'button',
-            text: "Save Draft",
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.save_draft,
             itemId: 'secondaryAction',
             handler: function() {
                 // we just close the dialog since this ui is chatty save;
@@ -87,7 +87,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
         this.titleTemplate = new Ext.XTemplate(
-            'Order No. {orderNumber}<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
+            Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.edit_order_no + ' {orderNumber}<tpl if="priceListAvail"> | {priceListName} ' + Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EditDetailsPopup.pricing + '</tpl>'
         );
 
         this.title = this.titleTemplate.apply({
@@ -199,13 +199,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             orderModel = Ext.ModelManager.getModel('Taco.model.Order');
         
          var mask = me.setLoading({
-             msg: "Loading"
+             msg: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.loading
          }, me.body);
         
         orderModel.load(orderId, {
             params: { 'draft': me.isDraftMode },
             failure: function (record, operation) {
-                Taco.app.fireEvent('setmessage', "Error loading order", 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.error_loading_order, 'error');
                 me.setLoading(false, this.body);
             },
             success: function (record, operation) {
@@ -499,10 +499,10 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             msg;
         // if user has valid add item data prompt them to add the item;
         if (me.detailGrid.addProductToolbar && me.detailGrid.addProductToolbar.isValid() && !me.detailGrid.addInProgress) {
-            msg = (isSave) ? 'Do you want to add the configured order item before saving this order?' : 'Do you want to add the configured item before closing the order editor?'
+            msg = (isSave) ? Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_saving_order : Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.warning_closing_order;
 
             Ext.MessageBox.show({
-                title: 'Add order item?',
+                title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.add_order_item,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons

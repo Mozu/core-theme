@@ -390,6 +390,84 @@
             </div>
 
             <div class="subform">
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.purolatorSettings' | translate}}</h4>
+                <div class="col-md-12 for-no-padding">
+                    <div class="form-row col-md-5 for-no-padding">
+                        <label class="subform-label" for="purolatorCarrierAccountTypes">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorAccountLabel' | translate}}</label>
+                        <paginated-ngselect [items]="model.purolatorCarrierAccountList" [selectedValue]="model.selectedPurolatorCarrier" [pageConfig]="model.purolatorCarrierAccountPagination" (ngSelectPaginatorSelectionChanged)="getSelectedPurolatorCarrier($event)" (ngSelectPaginatorPageIndexChanged)="getPurolatorCarrierAccounts($event)">></paginated-ngselect>
+                    </div>
+                </div>
+                <div class="row nomargin">
+                    <div class="col-md-6 for-no-padding">
+                        <div class="col-md-4 for-no-padding">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.purolatorShippingTypes' | translate}}
+                        </div>
+                        <div class="col-md-8 for-no-padding">
+                            <label class="subform-label nopadding col-md-12" formArrayName="purolatorShippingTypes" *ngFor="let shippingType of model.locationGroupConfigForm.get('purolatorShippingTypes')['controls']; let shippingTypeIndex = index">
+                                <input type="checkbox" [formControlName]="shippingTypeIndex">
+                                {{model.LCPurolatorShippingType[shippingTypeIndex].label}}
+                            </label>
+                        </div>
+                        <div class="form-row col-md-8 for-no-padding">
+                            <label class="subform-label" for="purolatorReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorReturnLabelShippingTypes' | translate}}</label>
+                            <select id="purolatorReturnLabelShippingTypes" class="form-control" formControlName="purolatorReturnLabelShippingTypes">
+                                <option *ngFor="let shippingType of model.LCPurolatorShippingType"
+                                        [ngValue]="shippingType.data">
+                                    {{ shippingType.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 for-no-padding">
+                        <div class="row nomargin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="purolatorStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorStandardDefault' | translate}}</label>
+                                <select id="purolatorStandardDefault" class="form-control" formControlName="purolatorStandardDefault">
+                                    <option *ngFor="let shippingType of model.LCPurolatorShippingType"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="purolatorExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorExpress1Default' | translate}}</label>
+                                <select id="purolatorExpress1DayDefault" class="form-control" formControlName="purolatorExpress1DayDefault">
+                                    <option *ngFor="let shippingType of model.LCPurolatorShippingType"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="purolatorExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorExpress2Default' | translate}}</label>
+                                <select id="purolatorExpress2DayDefault" class="form-control" formControlName="purolatorExpress2DayDefault">
+                                    <option *ngFor="let shippingType of model.LCPurolatorShippingType"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="purolatorExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.purolatorExpress3Default' | translate}}</label>
+                                <select id="purolatorExpress3DayDefault" class="form-control" formControlName="purolatorExpress3DayDefault">
+                                    <option *ngFor="let shippingType of model.LCPurolatorShippingType"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.upsSettings' | translate}}</h4>
                 <h5>
                     {{'LOCATIONGROUPCONFIG.FormLabels.upsSettingsInfo' | translate}}

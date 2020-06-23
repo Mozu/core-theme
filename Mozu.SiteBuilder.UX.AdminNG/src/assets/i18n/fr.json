@@ -182,6 +182,7 @@
             "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
             "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
             "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
+            "EmptyPurolatorShippingTypes": "Please select at least one Purolator Shipping Type for default carrier Purolator",
             "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
             "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave",
             "GetWorkFlowProcessFailed": "Error occured while fetching workflow processes"
@@ -399,6 +400,12 @@
         "fedexExpress2Default": "Fedex Express 2 Default",
         "fedexExpress3Default": "Fedex Express 3 Default",
         "fedexReturnLabelShippingTypes": "FedEx Return Label Shipping Types",
+        "purolatorShippingTypes": "Purolator Shipping Types",
+        "purolatorStandardDefault": "Purolator Standard Default",
+        "purolatorExpress1Default": "Purolator 1 Day Default",
+        "purolatorExpress2Default": "Purolator 2 Day Default",
+        "purolatorExpress3Default": "Purolator 3 Day Default",
+        "purolatorReturnLabelShippingTypes": "Purolator Return Label Shipping Types",
         "autoPackingListPopup": "Auto generate packing list",
         "blockPartialStock": "Do not allow partial quantity on validate stock",
         "defaultMaxNumberOfShipmentsInPickWave": "Default number of orders in pickwave",
@@ -412,7 +419,8 @@
         "bopisShipment": "BOPIS",
         "transferShipment": "Transfer",
         "uspsAccountLabel": "Select USPS Account",
-        "canadaPostAccountLabel": "Select Canada Post Account"
+        "canadaPostAccountLabel": "Select Canada Post Account",
+        "purolatorAccountLabel": "Select Purolator Account"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",
@@ -423,6 +431,7 @@
         "fedexSettings": "FedEx Settings",
         "uspsSettings": "USPS Settings",
         "canadaPostSettings": "Canada Post Settings",
+        "purolatorSettings": "Purolator Settings",
         "otherSettings": "Other Settings",
         "packageSettings": "Package Settings",
         "bpmConfigurations": "BPM Configurations"

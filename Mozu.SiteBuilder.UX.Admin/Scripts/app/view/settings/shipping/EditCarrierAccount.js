@@ -35,7 +35,11 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
         }
 
         if (me.record.data.carrierId === "canadapost") {
-            this.setCanadaPostColumnConfig()
+            this.setCanadaPostColumnConfig();
+        }
+
+        if (me.record.data.carrierId === "purolator") {
+            this.setPurolatorColumnConfig();
         }
        
         me.callParent(arguments);
@@ -242,12 +246,14 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
                 },
                 {
                     xtype: 'textfield',
+                    allowBlank: false,
+                    fieldLabel: 'Easy Post API key',
                     name: 'easypostapikey',
-                    maxWidth: 300,
-                    value: getValues.easypostapikey,
                     margin: "0 0 0 30",
-                    fieldLabel: 'EasyPost API Key'
-
+                    value: getValues.easypostapikey,
+                    maxWidth: 300,
+                    inputType: 'password',
+                    emptyText: '*****'
                 }
             ]
         }
@@ -308,7 +314,65 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
 
             ]
         }
-     },
+    },
+
+    setPurolatorColumnConfig: function () {
+        var me = this;
+        var getValues = me.convertKeyValueToObject();
+        this.formCfg = {
+            xtype: 'formform',
+            // flex: 1,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+
+            },
+            title: this.title,
+            items: [
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Nickname',
+                    name: 'name',
+                    allowBlank: false,
+                    maxWidth: 300,
+                    margin: "0 0 0 30",
+                    value: me.record.get('name'),
+                    inputType: 'text'
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'accountnumber',
+                    fieldLabel: 'Account Number',
+                    value: getValues.accountnumber,
+                    maxWidth: 300,
+                    margin: "0 0 0 30",
+                },
+
+                {
+                    xtype: 'textfield',
+                    name: 'purolatorapikey',
+                    value: getValues.purolatorapikey,
+                    maxWidth: 300,
+                    margin: "0 0 0 30",
+                    fieldLabel: 'Purolator API Key'
+
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'apikeypassword',
+                    fieldLabel: 'Purolator API Key Password',
+                    value: getValues.apikeypassword,
+                    maxWidth: 300,
+                    margin: "0 0 0 30",
+                    inputType: 'password',
+                    emptyText: '*****'
+                },
+
+            ]
+        }
+    },
+
+
 
     getCarrierAccountDetails: function () {
         var me = this;

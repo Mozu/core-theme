@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.subform.Return', {
         'Taco.model.Order'
     ],
 
-    title: 'Returns',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.title,
     itemId: 'orderReturn',
 
     config: {
@@ -50,7 +50,7 @@ Ext.define('Taco.view.order.subform.Return', {
        // console.log(newTab);
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
         this.initUI();
         this.callParent(arguments);
@@ -87,7 +87,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.createButton = Ext.create('Ext.button.Button', {
             ui: 'action',
             scale: 'medium',
-            text: 'Create Return',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.create_return_button,
             scope: this,
             handler: this.handleCreateClick
         });
@@ -190,7 +190,7 @@ Ext.define('Taco.view.order.subform.Return', {
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled')) || isShowCreateReturn;
         this.createButton.setDisabled(!this.record.get('isUnified') || !enabled);
         
-        this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
+        this.returnableItemsErrorEl.setError(enabled ? "" : Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.return_error_msg);
     },
 
     refreshReturnableItems: function() {
@@ -259,7 +259,7 @@ Ext.define('Taco.view.order.subform.Return', {
         var erroredReturns = [],
             selected = this.returnableItems.getSelectionModel().getSelection();     
         if (selected.length === 0) {
-            this.returnableItemsErrorEl.setError('Please select items to return.');
+            this.returnableItemsErrorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.select_return_error);
             return;
         }
 
@@ -277,19 +277,19 @@ Ext.define('Taco.view.order.subform.Return', {
         if (Ext.Array.some(selected, function(item) {
             return !item.get('quantity');
         })) {
-            this.returnableItemsErrorEl.setError('Please add a return quantity to all selected items.');
+            this.returnableItemsErrorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.add_return_quantity);
             return;
         }
 
         erroredReturns = Ext.Array.filter(selected, function(item) { return item.get('reason') === 'Select'; });
         if (erroredReturns.length > 0) {
-            this.returnableItemsErrorEl.setError('Please choose a return reason.');
+            this.returnableItemsErrorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.choose_return_reason);
             return;
         }
   
         erroredReturns = Ext.Array.filter(selected, function(item) { return item.get('returnType') === 'Select'; });
         if (erroredReturns.length > 0) {
-            this.returnableItemsErrorEl.setError('Please choose a return resolution.');
+            this.returnableItemsErrorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.choose_return_resolution);
             return;
         }
 

@@ -109,7 +109,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     getColumnConfig: function () {
 
         var columns = [{
-            text: 'Date',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.date,
             dataIndex: 'createDate',
             align: 'left',
             xtype: 'datecolumn',
@@ -120,7 +120,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             sortable: false,
             menuDisabled: true
         }, {
-            text: 'Event',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.event,
             dataIndex: 'subject',
             draggable: false,
             resizable: true,
@@ -129,7 +129,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             sortable: false,
             menuDisabled: true
         }, {
-            text: 'User',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.AuditLog.user,
             dataIndex: 'userDisplayName',
             draggable: false,
             resizable: true,

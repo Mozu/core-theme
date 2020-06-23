@@ -5,7 +5,7 @@
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.Attributes', {
     extend: 'Taco.view.order.subform.Subform',    
-    title: 'Attributes',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.attributes,
     ui: 'subform',
     bodyPadding: '11 0 0 0',
 
@@ -25,7 +25,7 @@ Ext.define('Taco.view.order.subform.Attributes', {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-                text: 'Edit',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.edit,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
@@ -71,7 +71,7 @@ Ext.define('Taco.view.order.subform.Attributes', {
             this.attributesDialog = Ext.create('Taco.core.ux.window.Modal', {
                 autoShow: true,
                 scale: 'large',
-                title: 'Order Attributes',
+                title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.order_attributes,
                 overflowY: 'auto',
                 closeAction: 'hide',
                 layout: {

@@ -6,10 +6,10 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Cancel Order',
-    secondaryText: 'Nevermind',
+    primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel_order,
+    secondaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.nevermind,
     scale: 'small',
-    title: 'Cancel Order?',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel_order + '?',
     isRecordSaved: false,
     layout: {
         type: 'fit'
@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                     itemId: 'cancelReason',
                                     valueField: 'reasonCode',
                                     displayField: 'name',
-                                    fieldLabel: 'Cancel Reason',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.cancel_reason,
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',
                                     allowBlank: false,
@@ -68,7 +68,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                     name: 'otherReason',
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
-                                    fieldLabel: 'Specify Reason *',
+                                    fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Label.specify_reason,
                                     hidden: true,
                                     listeners: {
                                         change: {
@@ -124,12 +124,12 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
             var me = this;
 
             Ext.MessageBox.show({
-                title: 'Cancel Item',
+                title: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.cancel_item,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'Are you certain you want to Cancel this Order?',
+                msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.are_you_certain_you_want_to_cancel_this_order,
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
@@ -143,7 +143,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                 // success handling here
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success) {
-                                    Taco.app.fireEvent('setmessage', 'Error canceling order', 'error');
+                                    Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_canceling_order, 'error');
                                     //me.fireEvent('saveFailure');
                                     return;
                                 }
@@ -154,7 +154,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                 me.setLoading(false);
                                 // error handling here
                                 var json = Ext.decode(response.responseText, true),
-                                    msg = (json && json.message) ? json.message : 'Error canceling order';
+                                    msg = (json && json.message) ? json.message : Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Message.error_canceling_order;
 
                                 Taco.app.fireEvent('setmessage', msg, 'error');
                             },

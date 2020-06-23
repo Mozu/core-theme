@@ -67,7 +67,7 @@ Ext.define('Taco.overrides.grid.RowEditorButtons', {
                     }
                 },
                 handler: plugin.cancelEdit,
-                text: rowEditor.cancelBtnText
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Buttons.cancel //rowEditor.cancelBtnText
             }]
         }, config);
 

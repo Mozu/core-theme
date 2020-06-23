@@ -15,7 +15,7 @@ Ext.define('Taco.view.order.modal.AddEcommerceGiftCard', {
     layout: "anchor",
 
     scale: 'large',
-    title: 'Add eCommerce Gift Card/Store Credit',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentMethod.add_ecommerce_gift_card,
 
     initComponent: function () {
         var me = this;
@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.modal.AddEcommerceGiftCard', {
 
     doSave: function () {
         this.setLoading({
-            msg: "Applying gift cards"
+            msg: Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.Message.applying_gift_cards
         }, this.body);
 
         var me = this,

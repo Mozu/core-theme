@@ -10,12 +10,12 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     requires: ['Taco.model.Return',
         'Ext.data.Store'],
 
-    title: 'Returnable Items',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.returnable_items,
 
     viewConfig: {
         deferEmptyText: false,
         stripeRows: false,
-        emptyText: "No items available to return",
+        emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.no_items_available_to_return,
         getRowClass: function (record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
         }
@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     }
                 }
                 if (isAllItemsAreReturned)
-                    me.returnableItemsErrorEl.setError('All items have already been returned');
+                    me.returnableItemsErrorEl.setError(Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.returned_items);
                 else
                     me.returnableItemsErrorEl.setError('');
             }
@@ -109,7 +109,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         return [
             {
                 dataIndex: 'shipmentNumber',
-                text: 'Shipment #',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.Shipment_hash,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -118,7 +118,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'shipmentItemId',
-                text: 'Line Id',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.line_id,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -127,7 +127,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'productCode',
-                text: 'Code',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.code,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -137,7 +137,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'productName',
-                text: 'Products',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.products,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -162,7 +162,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             //},
             {
                 dataIndex: 'quantityOrdered',
-                text: 'Qty Ordered',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.qty_ordered,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -171,7 +171,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'quantityFulfilled',
-                text: 'Qty Fulfilled',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.qty_fulfilled,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -180,7 +180,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'quantityReturned',
-                text: 'Qty Returned',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.qty_returned,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -189,7 +189,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'quantityReturnable',
-                text: 'Qty Returnable',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.qty_returnable,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -198,7 +198,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'reason',
-                text: 'Reported Issue',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.reported_issue,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -217,7 +217,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'returnType',
-                text: 'Resolution',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.resolution,
                 draggable: false,
                 sortable: false,
                 resizable: false,
@@ -234,7 +234,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'quantity',
-                text: 'Qty to Return',
+                text: Localizer.langResources.ORDERS.Orders.OrderEdit.Returns.qty_to_return,
                 draggable: false,
                 sortable: false,
                 resizable: false,

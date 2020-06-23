@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return this.FailureList2<CouponSet>("No Discount ID Provided");
             }
             var response =
-                (await _couponSetWebClient.UnAssignDiscount(args.CouponSetCode, args.AssignedDiscount.Id))
+                (await _couponSetWebClient.UnAssignDiscount(args.CouponSetCode, args.AssignedDiscount.Id ?? -1))
                     .ReadAsSync();
             return EmptyList2<CouponSet>();
 
