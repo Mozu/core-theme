@@ -272,6 +272,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "MyAnonymousAccount", action = "Index" });
 
             routes.MapHttpRoute(
+               "Anonymous Shipment View",
+               "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
+               new { controller = "AnonymousNotification", action = "RenderShipmentView" });
+
+            routes.MapHttpRoute(
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" });

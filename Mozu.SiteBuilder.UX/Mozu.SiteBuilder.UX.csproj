@@ -172,6 +172,7 @@
     <Compile Include="Areas\StoreFront\Controllers\CheckoutV2Controller.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\AnonymousNotificationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\FulfillmentMapping.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\JObjectMapping.cs" />
