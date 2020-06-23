@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions
             ProductCode +
             (SliceValue.IsNullOrEmpty()
                 ? string.Empty
-                : $"~{SliceValue}");
+                : $"{SliceValue}");
 
         //public string ImageUrl { get; set; }
     }
