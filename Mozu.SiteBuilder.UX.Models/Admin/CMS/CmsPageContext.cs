@@ -29,8 +29,32 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             get { return _page; }
             set
             {
-                _page = value;
-                this.Initialized = false;
+                if (value == null||_page  == null)
+                {
+                    this._page = value;
+                    this.Initialized = true;
+                    return;
+                }
+                if (value.Document != null)
+                {
+                    _page = value;
+                    this.Initialized = true;
+                    return;
+                }
+
+                if (value.Id != _page.Id 
+                    || value.Path != _page.Path 
+                    || value.ListFQN != _page.ListFQN 
+                    || value.DocumentTypeFQN != _page.DocumentTypeFQN)
+                {
+                    _page = value;
+                    this.Initialized = false;
+                    return;
+                }
+                
+
+
+                this.Initialized = value?.Document != null;
             }
         }
 
@@ -41,12 +65,40 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             get { return _template; }
             set
             {
-                _template = value;
-                if (value != null && value.ListFQN == null)
+                if (value == null||_template  == null)
+                {
+                    this._template = value;
+                    this.Initialized = true;
+                    return;
+                }
+                if (value.Document != null)
+                {
+                    _template = value;
+                    this.Initialized = true;
+                    return;
+                }
+
+                if ( value.ListFQN == null)
                 {
                     value.ListFQN = "pageTemplateContent@mozu";
                 }
-                this.Initialized = false;
+                
+                if (value.Id != _template.Id 
+                    || value.Path != _template.Path 
+                    || value.ListFQN != _template.ListFQN 
+                    || value.DocumentTypeFQN != _template.DocumentTypeFQN)
+                {
+                    
+                    _template = value;
+                    this.Initialized = false;
+                    return;
+                }
+                
+
+
+                this.Initialized = value?.Document != null;
+                
+                
             }
         }
         private DocumentRequest _siteTemplate;
@@ -57,12 +109,38 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             get { return _siteTemplate; }
             set
             {
-                _siteTemplate = value;
-                if (value != null && value.ListFQN == null)
+                if (value == null||_siteTemplate  == null)
+                {
+                    this._siteTemplate = value;
+                    this.Initialized = true;
+                    return;
+                }
+                if (value.Document != null)
+                {
+                    _siteTemplate = value;
+                    this.Initialized = true;
+                    return;
+                }
+
+                if ( value.ListFQN == null)
                 {
                     value.ListFQN = "pageTemplateContent@mozu";
                 }
-                this.Initialized = false;
+                
+                if (value.Id != _siteTemplate.Id 
+                    || value.Path != _siteTemplate.Path 
+                    || value.ListFQN != _siteTemplate.ListFQN 
+                    || value.DocumentTypeFQN != _siteTemplate.DocumentTypeFQN)
+                {
+                    
+                    _siteTemplate = value;
+                    this.Initialized = false;
+                    return;
+                }
+                
+
+
+                this.Initialized = value?.Document != null;
             }
         }
 

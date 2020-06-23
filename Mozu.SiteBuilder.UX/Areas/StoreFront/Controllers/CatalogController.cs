@@ -135,7 +135,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-            await ContextInitializationTasks;
+            await GetContextInitializationTasks();
 
             PageContext.CmsContext.Template = new DocumentRequest
             {
@@ -359,7 +359,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-            await Task.WhenAll(ContextInitializationTasks);
+            await Task.WhenAll(GetContextInitializationTasks());
 
             //await _expressionEvaluator.Value.EvaluatePageRules(PageContext, _pageRuleVisitor.Value);
 

@@ -10,11 +10,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            
+            var rc = await next();
             var controller = (ApiControllerBase)context.Controller;
-            if (controller != null && !controller.ContextInitializationTasks.IsCompleted)
+           
+            if (controller != null) 
             {
-                var rc = await next();
-                if (controller.ContextInitializationTasks.IsCompleted && controller.PageContext?.CmsContext != null && !controller.PageContext.CmsContext.Initialized)
+                var tasks =  controller.GetContextInitializationTasks();
+        
+                if ( tasks.IsCompleted && controller.PageContext?.CmsContext != null && !controller.PageContext.CmsContext.Initialized)
                 {
                     await new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext,
                             controller.SiteContext,
@@ -25,10 +29,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 }
                 else
                 {
-                    await controller.ContextInitializationTasks.ContinueWith(y => rc.Result);
+                    await tasks.ContinueWith(y => rc.Result);
                 }
             }
-            await next();
         }
     }
 }

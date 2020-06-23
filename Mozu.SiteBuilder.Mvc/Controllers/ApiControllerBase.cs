@@ -49,25 +49,28 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         }
         TaskCompletionSource<bool> _tcs;
         private Task _contextInitTasks;
-        public Task ContextInitializationTasks
+
+        public Task GetContextInitializationTasks()
         {
-            get
+
+            if (_contextInitTasks == null)
             {
-                if (_contextInitTasks == null)
+                if (PageContext.CmsContext == null)
                 {
-                    if ( PageContext.CmsContext == null)
-                    {
-                        return Task.CompletedTask;
-                    }
-                      //returns a Task that will complete when ALL tasks within it complete.  await Task.WhenAll()
-                      _contextInitTasks =
-                        Task.WhenAll(
-                            new CmsHelper(CmsService)
-                                .InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluator, PageRuleVisitor),
-                            SiteContext.Init());
+                    return Task.CompletedTask;
                 }
-                return _contextInitTasks;
+
+                //returns a Task that will complete when ALL tasks within it complete.  await Task.WhenAll()
+                _contextInitTasks =
+                    Task.WhenAll(
+                        new CmsHelper(CmsService)
+                            .InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluator,
+                                PageRuleVisitor),
+                        SiteContext.Init());
             }
+
+            return _contextInitTasks;
+
         }
 
         public void ResetContextInitilaztionTasks()

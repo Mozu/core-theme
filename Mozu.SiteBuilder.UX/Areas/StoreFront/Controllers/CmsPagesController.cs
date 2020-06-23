@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
 
-            await ContextInitializationTasks;
+            await GetContextInitializationTasks();
             if (PageContext.CmsContext.Page.Document != null)
             {
                 PageTypeDefinition pageDefinition = null;
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.ListName = documentListName;
             PageContext.ListViewName = listView;
 
-            await ContextInitializationTasks;
+            await GetContextInitializationTasks();
             var view = View(template, new {listFQN = documentListName});
             return Ok(view);
         }
@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 PageContext.VariationId = variationId;
             }
 
-            await ContextInitializationTasks;
+            await GetContextInitializationTasks();
 
             if (PageContext.CmsContext.Page.Document == null)
                 return NotFound("page not found");

@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pc = PageContext;
             pc.PageType = pageType.EntityType;
 
-            pc.CmsContext = new CmsPageContext();
+            pc.CmsContext =  pc.CmsContext ?? new CmsPageContext();
 
 
            

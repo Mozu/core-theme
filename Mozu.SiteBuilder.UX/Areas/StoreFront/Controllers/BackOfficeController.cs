@@ -487,7 +487,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
             //Should this be WhenAll?
-            return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
+            return Task.WhenAll(this.GetContextInitializationTasks()).ContinueWith(_ => {
                 ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
                 return (IActionResult)Ok(View(template.Template, model));
             });
