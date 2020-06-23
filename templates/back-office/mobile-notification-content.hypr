@@ -1,0 +1,106 @@
+<div class="header shipment-info-header">
+    <img class="sidebar-kibo-logo" src="/resources/images/kibo-logo-sidebar.png">
+</div>
+<div class="shipment-title"><b>{{ labels.mobileShipmentTitle }}</b></div>
+<table class="mz-printable-order mz-printable-shipment-mobilenotification">
+<thead class="header">
+   <tr>
+      <th class="shipment-essentials">
+         <div class="order-number"><span class="label">{{ labels.orderNo }}</span><span>{{ model.orderNumber }}</span></div>
+         <div class="order-number"><span class="label">{{ labels.mobileShipmentNo }}</span><span>{{ model.shipmentNumber }}</span></div>
+         <div class="order-number"><span class="label">{{ labels.mobileShipmentType }} </span><span>{{ model.shipmentType }}</span></div>
+         <div class="order-number"><span class="label">{{ labels.mobilePickLocation }} </span><span>{{ model.fulfillmentLocationCode }}</span></div>
+         <div><span class="shipment-status"><span class="label">{{ labels.mobileShipmentStatus }} </span><span>{{ model.shipmentStatus }}</span></span></div>
+      </th>
+   </tr>
+</thead>
+{% if model.items.length > 0 %}
+    <tbody><tr><td colspan="4">
+        <div class="shipment-item-info">{{ labels.mobileShipmentFulfillInfo }}</div>
+        <table class="grid">
+            <thead><tr>
+                <th>{{ labels.item }}</th>
+                <th> </th>
+                <th>{{ labels.price }}</th>
+                <th>{{ labels.qty }}</th>
+                <th>{{ labels.subtotal }}</th>
+            </tr></thead>
+            <tbody>
+                {% for item in model.items %}
+                    <tr>
+                        <td>
+                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                        </td>
+                        <td>
+                            <div class="product-name">
+                                <span><b>{{ item.name }}</b></span></br>
+                                <span class="label">{{ labels.mobileDiscount }}{{ item.itemDiscount|currency }}</span></br>
+                                <span class="label">{{ labels.mobileShipmentTax }}{{ item.itemTax|currency }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {{ item.actualPrice|currency }}
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>
+                            {{ item.lineItemCost|currency }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}    
+{% if model.canceledItems.length > 0 %}
+    <tbody><tr><td colspan="4">
+        <div class="shipment-item-info">{{ labels.mobileShipmentCanceledInfo }} </div>
+        <table class="grid">
+            <thead><tr>
+                <th>{{ labels.item }}</th>
+                <th> </th>
+                <th>{{ labels.price }}</th>
+                <th>{{ labels.qty }}</th>
+                <th>{{ labels.subtotal }}</th>
+            </tr></thead>
+            <tbody>
+                {% for item in model.canceledItems %}
+                    <tr>
+                        <td>
+                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                        </td>
+                        <td>
+                            <div class="product-name">
+                            <span><b>{{ item.name }}</b></span></br>
+                            <span class="label">{{ labels.mobileDiscount }}{{ item.itemDiscount|currency }}</span></br>
+                            <span class="label">{{ labels.mobileShipmentTax }}{{ item.itemTax|currency }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {{ item.actualPrice|currency }}
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>
+                        {{ item.lineItemCost|currency }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+   {% endif %} 
+<table class="grid mobile-shipment-info-table">
+    <tr>
+        <th>{{ labels.mobileItemTotal }}<span>{{ model.lineItemTotal|currency }} </span></th>
+    </tr>
+    <tr>
+        <th>{{ labels.mobileShipping }}<span>{{ model.shippingTotal|currency }} </span></th>
+    </tr>
+    <tr>
+        <th>{{ labels.mobileHandling }}<span>{{ model.handlingTotal|currency }} </span></th>
+    </tr>
+    <tr>
+        <th>{{ labels.total }}<span>{{ model.total|currency }} </span></th>
+    </tr>
+</table>

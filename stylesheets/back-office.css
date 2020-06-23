@@ -194,3 +194,65 @@ table {
 .section-orderitems .order-totals-breakdown td:nth-of-type(1) {
   text-align: right;
 }
+
+.header .shipment-essentials {
+  text-align: left;
+}
+.header .shipment-essentials .order-number {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.header .shipment-essentials .order-number .label {
+  color: #b3b3b3;
+  font-weight: 400;
+}
+
+.header .shipment-essentials .order-date .label {
+  font-weight: 600;
+}
+.shipment-title {
+  font-size: 30px;
+  text-align:center;
+  margin-top: 10px;
+}
+
+.shipment-status {
+  background: black;
+  color: white !important;
+}
+
+.shipment-item-info {
+  font-weight: bold;
+  margin-left: 28px;
+  padding-top: 6px;
+}
+
+.shipment-info-header {
+  background-color: #330065;
+  margin-bottom: 0!important;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-kibo-logo {
+  height: 20px;
+  width: 107px;
+}
+
+.mobile-shipment-info-table {
+  float: right;
+  background-color: #e5e5e5;
+  font-weight: normal;
+  padding: 8px 14px;
+  text-align: left;
+  white-space: nowrap;
+  width: 32%;
+  font-size: small;
+}
+
+.mobile-shipment-info-table span {
+  float: right;
+}
