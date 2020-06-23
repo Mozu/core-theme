@@ -31,14 +31,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             {
                 if (value == null||_page  == null)
                 {
+                    this.Initialized = (value != null || _page == null) && Initialized;
                     this._page = value;
-                    this.Initialized = true;
                     return;
                 }
                 if (value.Document != null)
                 {
                     _page = value;
-                    this.Initialized = true;
                     return;
                 }
 
@@ -53,8 +52,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
                 }
                 
 
-
-                this.Initialized = value?.Document != null;
             }
         }
 
@@ -67,14 +64,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             {
                 if (value == null||_template  == null)
                 {
+                    this.Initialized = (value != null || _template == null) && Initialized;
                     this._template = value;
-                    this.Initialized = true;
                     return;
                 }
                 if (value.Document != null)
                 {
                     _template = value;
-                    this.Initialized = true;
                     return;
                 }
 
@@ -94,11 +90,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
                     return;
                 }
                 
-
-
-                this.Initialized = value?.Document != null;
-                
-                
             }
         }
         private DocumentRequest _siteTemplate;
@@ -111,14 +102,13 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
             {
                 if (value == null||_siteTemplate  == null)
                 {
+                    this.Initialized = (value != null || _siteTemplate == null) && Initialized;
                     this._siteTemplate = value;
-                    this.Initialized = true;
                     return;
                 }
                 if (value.Document != null)
                 {
                     _siteTemplate = value;
-                    this.Initialized = true;
                     return;
                 }
 
@@ -139,8 +129,6 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
                 }
                 
 
-
-                this.Initialized = value?.Document != null;
             }
         }
 

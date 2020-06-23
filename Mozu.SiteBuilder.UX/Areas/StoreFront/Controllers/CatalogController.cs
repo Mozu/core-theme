@@ -124,15 +124,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.MetaDescription = prod.Content.MetaTagDescription;
             PageContext.MetaTitle = prod.Content.MetaTagTitle;
             PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
-            PageContext.CmsContext = new CmsPageContext
+            PageContext.CmsContext ??= new CmsPageContext();
+            PageContext.CmsContext.Page = new DocumentRequest
             {
-                Page = new DocumentRequest
-                {
-                    Path = "product-" + productCode,
-                    ListFQN = "catalogContent@mozu",
-                    DocumentTypeFQN = "productContent@mozu",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                }
+                Path = "product-" + productCode,
+                ListFQN = "catalogContent@mozu",
+                DocumentTypeFQN = "productContent@mozu",
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+            PageContext.CmsContext.Template = new DocumentRequest
+            {
+                Path = "product",
+                ListFQN = "pageTemplateContent@mozu",
+                IncludeInactiveDocument = PageContext.IsEditMode
             };
 
             await GetContextInitializationTasks();
@@ -348,15 +352,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.MetaTitle = cat.Content.MetaTagTitle;
             PageContext.MetaKeywords = cat.Content.MetaTagKeywords;
             PageContext.Title = cat.Name;
-            PageContext.CmsContext = new CmsPageContext
+            PageContext.CmsContext ??= new CmsPageContext();
+            PageContext.CmsContext.Page = new DocumentRequest
             {
-                Page = new DocumentRequest
-                {
-                    Path = "category-" + categoryId,
-                    ListFQN = "catalogContent@mozu",
-                    DocumentTypeFQN = "categoryContent@mozu",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                }
+                Path = "category-" + categoryId,
+                ListFQN = "catalogContent@mozu",
+                DocumentTypeFQN = "categoryContent@mozu",
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+            PageContext.CmsContext.Template = new DocumentRequest()
+            {
+                Path = "category",
+                ListFQN = "pageTemplateContent@mozu",
+
             };
 
             await Task.WhenAll(GetContextInitializationTasks());
