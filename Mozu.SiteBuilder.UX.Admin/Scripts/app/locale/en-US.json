@@ -1233,6 +1233,17 @@
     "code": "Code",
     "product_name": "Product Name",
     "quantity": "Quantity",
-    "close": "Close"
+    "close": "Close",
+    "empty_search_text": "Search",
+    "filter": "Filter",
+    "search": "Search",
+    "print": "Print",
+    "reject": "Reject",
+    "await": "Await",
+    "receive": "Receive",
+    "refund": "Refund",
+    "restock": "Restock",
+    "ship": "Ship",
+    "authorize": "Authorize"
   }
 }

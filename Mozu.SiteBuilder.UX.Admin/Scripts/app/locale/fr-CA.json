@@ -1232,6 +1232,17 @@
     "code": "Code",
     "product_name": "Nom du produit",
     "quantity": "Quantité",
-    "close": "proche"
+    "close": "proche",
+    "empty_search_text": "Chercher",
+    "filter": "Filtre",
+    "search": "Chercher",
+    "print": "Impression",
+    "reject": "Rejeter",
+    "await": "Attendre",
+    "receive": "Recevoir",
+    "refund": "Rembourser",
+    "restock": "Réapprovisionner",
+    "ship": "Navire",
+    "authorize": "Autoriser"
   }
 }
