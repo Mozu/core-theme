@@ -12,12 +12,12 @@ Ext.define('Taco.view.product.images.ImageGroupEditor', {
     ],
 
     closeAction: 'destroy',
-    primaryText: 'Update',
+    primaryText: Localizer.langResources.SHARED.update,
     autoShow: true,
     closable: true,
     cls: Taco.baseCSSPrefix + 'imagegroup-editor',
     height: '90%',
-    title: 'Add Image Group',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.add_image_group,
     width: '80%',
     isCreateMode: true,
     record: null,
@@ -44,7 +44,7 @@ Ext.define('Taco.view.product.images.ImageGroupEditor', {
             type: 'fit'
         };
 
-        this.title = (me.isCreateMode ? 'Add Image Group' : 'Edit Image Group');
+        this.title = (me.isCreateMode ? Localizer.langResources.CATALOG.Products.ProductEdit.add_image_group : Localizer.langResources.CATALOG.Products.ProductEdit.edit_image_group);
 
         this.initUi();
 

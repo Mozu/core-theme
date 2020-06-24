@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             name: 'optionValues',
             grow: true,
             growToLongestValue: false,
-            fieldLabel: 'Option Values',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.option_values,
             displayField: 'value',
             valueField: 'id',
             value: [],
@@ -54,7 +54,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
 
         me.groupNameInput = Ext.widget({
             name: 'groupName',
-            fieldLabel: 'Group Code',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.group_code,
             itemId: 'groupNameField',
             xtype: 'textfield',
             width: '50%',
@@ -68,7 +68,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             disabled: !this.isGlobal,
             valueField: 'groupName',
             regex: /^[a-z0-9_\-]+$/i,
-            regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.',
+            regexText: Localizer.langResources.CATALOG.Products.ProductEdit.invalid_character_msg,
             validator: function(val) {
                 if (val.length < 3) {
                     return null;
@@ -85,7 +85,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
                     });
     
                     if (existingGroup) {
-                        return 'That group code is already in use.';
+                        return Localizer.langResources.CATALOG.Products.ProductEdit.group_code_in_use;
                     }
                 }
                 
@@ -94,7 +94,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
         });
 
         me.imagePicker = Ext.widget({
-            fieldLabel: 'Product Images',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.Product_Images,
             name: 'imageGroupImages',
             xtype: 'taco.imagefield',
             width: '100%',

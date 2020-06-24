@@ -9,9 +9,9 @@ Ext.define('Taco.view.product.variant.Options', {
     autoShow: true,
     closeAction: 'destroy',
 
-    primaryText: 'Save',
+    primaryText: Localizer.langResources.SHARED.save,
     scale: 'large',
-    title: 'Child Products',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.child_products,
 
     layout: 'fit',
 

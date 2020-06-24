@@ -9,7 +9,7 @@ Ext.define('Taco.view.product.subform.Bundle', {
         'Taco.view.product.widget.ProductBundleGrid'
     ],
     itemId: 'bundleSubForm',
-    title: 'Bundle Items',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.bundle_items,
     margin: '20 0',
     isGlobal: false,
     product: null,
@@ -25,7 +25,7 @@ Ext.define('Taco.view.product.subform.Bundle', {
                 ui: "action-primary",
                 scale: "medium",
                 margin: "0 0 0, 0",
-                text: "Add",
+                text: Localizer.langResources.SHARED.add,
                 handler: function () {
                     this.productBundleGrid.addItem();
                 },
@@ -92,7 +92,7 @@ Ext.define('Taco.view.product.subform.Bundle', {
             },
             failure: function (resp) {
                 var json = Ext.decode(resp.responseText, true),
-                  msg = (json && json.message) ? json.message : "Error retrieving catalog pricing for bundle item(s).";
+                  msg = (json && json.message) ? json.message : Localizer.langResources.CATALOG.Products.ProductEdit.error_retrieving_catalog_pricing;
                 Taco.app.fireEvent('setmessage', msg, 'error');
             },
             callback: function() {

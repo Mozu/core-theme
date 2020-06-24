@@ -4,12 +4,12 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
         'Taco.view.publishing.grid.Publish'
     ],
     scale: 'small',
-    title: 'Move to Publish Set',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.move_to_publish_set,
     modal: true,
     closeAction: 'destroy',
     height: 350,
     width: 500,
-    primaryText: 'Done',
+    primaryText: Localizer.langResources.SHARED.done,
     layout: { 
         type: 'fit' 
     },
@@ -67,7 +67,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
                     });
                 },
                 change: function (cmp) {
-                    if (cmp.valueModels && cmp.valueModels[0] && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'M j, Y g:ia T') || 'Unscheduled');
+                    if (cmp.valueModels && cmp.valueModels[0] && cmp.getValue() !== -1) me.down('#publish-date-field').setValue(Ext.util.Format.date(cmp.valueModels[0].get('publishDate'), 'M j, Y g:ia T') || Localizer.langResources.CATALOG.Products.ProductEdit.unscheduled);
                 }
             }
         });
@@ -76,7 +76,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            text: 'Create',
+            text: Localizer.langResources.SHARED.create,
             margin:{
                 left:4
             },
@@ -87,7 +87,7 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
         this.publishSetPickerContainer = Ext.widget({
             xtype: 'fieldcontainer',
             itemId: 'publish-set-picker',
-            fieldLabel: 'Publish Set',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.publish_set,
             layout: { 
                 type: 'hbox' 
             },
@@ -99,10 +99,10 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
 
         this.publishDateField = Ext.create('Ext.form.field.Text', {
             name: 'scope',
-            fieldLabel: 'Publish Date',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.publish_date,
             labelAlign: 'top',
             itemId: 'publish-date-field',
-            text: 'Publish Date',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.publish_date,
             width: 400,
             style: 'padding-top:30px;font:bold 14px/14px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;',
             border: false,

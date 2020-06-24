@@ -16,17 +16,17 @@
     cls: 'product-header',
 
     parentTitleCfg: {
-        title: 'Products',
+        title: Localizer.langResources.CATALOG.Products.ProductDetails.Title.products,
         lightTagLabel: 'productCode',
         controller: 'products',
         pillType: 'dark',
         pillText: null,
         pillTooltipTpl: [
             '<div style="line-height: 15px;">',
-                '<span>Publish Set: {publishSetName}</span>',
+            '<span>' + Localizer.langResources.CATALOG.Products.ProductEdit.publish_set + ': {publishSetName}</span>',
             '</div>',
             '<div style="line-height: 15px;">',
-                '<span>Publish Date: {publishDate}</span>',
+            '<span>' + Localizer.langResources.CATALOG.Products.ProductEdit.publish_date + ': {publishDate}</span>',
             '</div>'
         ],
         pillTooltipData: {
@@ -83,8 +83,8 @@
     nextPreviousCfg: {
         store: 'Taco.store.ProductGrid',
         stateId: 'statefulProductGrid',
-        nextButtonTipTpl: 'Next Product <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
-        previousButtonTipTpl: 'Previous Product <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
+        nextButtonTipTpl: Localizer.langResources.CATALOG.Products.ProductEdit.next_product + ' <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
+        previousButtonTipTpl: Localizer.langResources.CATALOG.Products.ProductEdit.previous_product + ' <div style="padding-top:10px;">{productName}</div><div style="margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;">{shortCutTip}</div>',
         url: '/products/edit/'
     },
 
@@ -97,7 +97,7 @@
     saveAndCreateButtonEnabled : true,
 
     afterDuplicate: function () {
-        Taco.app.fireEvent('setmessage', 'Please enter a product code.', 'success');
+        Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.after_duplicate_msg, 'success');
         Taco.app.fireEvent('productduplicated', true);
     },
 
@@ -135,7 +135,7 @@
                         me.record.save({
                             success: function() {
                                 me.publishButton.setLoading(false);
-                                Taco.app.fireEvent('setmessage', 'Moved to Publish Set', 'success');
+                                Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.move_to_publish_msg, 'success');
                             }
                         });
                     });
@@ -169,7 +169,7 @@
                 shadow: false,
                 items: [{
                     itemId: 'live',
-                    text: 'View Live',
+                    text: Localizer.langResources.CATALOG.Products.ProductEdit.view_live,
                     menu: {
                         cls: 'taco-ellipsis-split-button',
                         plain: true,
@@ -178,7 +178,7 @@
                     }
                 },{
                     itemId: 'preview',
-                    text: 'View Staged',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.view_staged,
                     menu: {
                         cls: 'taco-ellipsis-split-button',
                         plain: true,
@@ -190,7 +190,7 @@
                     xtype: 'menuseparator',
                     style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
                 }, {
-                    text: 'Duplicate',
+                    text: Localizer.langResources.CATALOG.Products.ProductEdit.duplicate,
                     disabled: me.record.phantom,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
@@ -207,7 +207,7 @@
                 },
                 {
                     itemId: 'delete',
-                    text: 'Delete',
+                    text: Localizer.langResources.CATALOG.Products.ProductEdit.delete_msg,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'destroy'
@@ -216,7 +216,7 @@
                 },
                 {
                     itemId: 'changeProductCode',
-                    text: 'Change Product Code',
+                    text: Localizer.langResources.CATALOG.Products.ProductEdit.change_product_code,
                     handler: Ext.bind(me.changeProductCode, me)
                 }
                 ],
@@ -444,7 +444,7 @@
                             items: [
                                 Ext.create('Ext.panel.Panel', {
                                     width: '100%',
-                                    html: options.message || 'Are you sure you want to ...'
+                                    html: options.message || Localizer.langResources.CATALOG.Products.ProductEdit.are_you_sure
                                 })
                             ]
                         }],
@@ -515,7 +515,7 @@
                                 }
                                 me.setPublishStatus();
                                 me.record.save({
-                                    success: me.showMessage.bind(me, 'Moved to Publish Set', 'success')
+                                    success: me.showMessage.bind(me, Localizer.langResources.CATALOG.Products.ProductEdit.moved_to_publish_set, 'success')
                                 });
                             });
                         }
@@ -562,11 +562,11 @@
         me.publishButton.setLoading(true);
         this.record.save({
             success:  function() {
-                me.showMessage('Removed from Publish Set', 'success');
+                me.showMessage(Localizer.langResources.CATALOG.Products.ProductEdit.removed_from_publish_set, 'success');
                 me.publishButton.setLoading(false);
             },
             failure: function() {
-                Taco.app.fireEvent('setmessage', 'Error removing draft from publish set', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.error_removing_draft, 'error');
             }
         });
     },
@@ -587,7 +587,7 @@
                     msg = (json && json.message) ? json.message : '';
 
                 me.publishButton.setLoading(false);
-                Taco.app.fireEvent('setmessage', 'Error discarding draft.' + msg, 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.error_discarding_draft + msg, 'error');
             }
         });
     },
@@ -596,12 +596,12 @@
         var me = this;
 
         Ext.MessageBox.show({
-            title: 'Delete',
+            title: Localizer.langResources.SHARED.delete_btn_text,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: 'Are you sure you want to delete this?',
+            msg: Localizer.langResources.CATALOG.Products.ProductEdit.are_you_sure_msg,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
@@ -619,7 +619,7 @@
                             Taco.core.StateManager.attemptNavigate(contextUrl + '/products');
                         },
                         failure: function (m) {
-                            Taco.app.fireEvent('setmessage', 'error deleting product', 'error');
+                            Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.delete_error, 'error');
                         },
                         callback: function () {
                             me.setLoading(true, me.body);
@@ -650,7 +650,7 @@
             },
             failure: function (err) {
                 var errMsg = (err && err.responseText) ? JSON.parse(err.responseText).message : '';
-                Taco.app.fireEvent('setmessage', 'Product change was unable to be published.  ' + errMsg, 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.unable_publish_msg + errMsg, 'error');
             },
             callback: function () {
                 this.doPublishAfterSave = false;

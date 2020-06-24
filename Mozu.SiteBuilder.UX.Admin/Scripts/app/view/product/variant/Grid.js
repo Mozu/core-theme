@@ -92,7 +92,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             autoSelect: true,
             forceSelection: true,
             store: fulfillmentTypeData,
-            emptyText: 'Same as product',
+            emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.fulfillment_emptyText,
             listeners: {
                 select: {
                     fn: function (combo, records) {
@@ -270,12 +270,12 @@ Ext.define('Taco.view.product.variant.Grid', {
                 shadow: false,
                 cls: Taco.baseCSSPrefix + 'grid-row-menu',
                 items: [{
-                    text: "Enable All",
+                    text: Localizer.langResources.CATALOG.Products.ProductEdit.enable_all,
                     handler: function () {
                         me.enableAll(record)
                     }
                 }, {
-                    text: "Disable All",
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.disable_all,
                     handler: function () {
                         me.disableAll(record)
                     }
@@ -319,7 +319,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             isDigitalCredit = (goodsType === 'DigitalCredit');
 
         return [{
-            text: 'List Price',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.list_price,
             dataIndex: 'fixedListPrice',
             stateId: 'fixedListPrice',
             editor: {
@@ -335,7 +335,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 msgTarget: "qtip"
             }
         }, {
-            text: 'Sale Price',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.sale_price,
             dataIndex: 'fixedSalePrice',
             stateId: 'fixedSalePrice',
             editor: {
@@ -351,7 +351,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 msgTarget: "qtip"
             }
         }, {
-            text: 'Cost',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.cost,
             dataIndex: 'deltaCost',
             stateId: 'deltaCost',
             hideable: true,
@@ -368,7 +368,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Weight',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.weight,
             dataIndex: 'fixedWeight',
             stateId: 'fixedWeight',
             hideable: true,
@@ -400,7 +400,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Gift Card/Credit Value',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.gift_card,
             dataIndex: 'fixedCreditValue',
             stateId: 'fixedCreditValue',
             hideable: isDigitalCredit,
@@ -430,7 +430,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             isDigitalCredit = (goodsType === 'DigitalCredit');
 
         return [{
-            text: 'Extra Price',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.extra_price,
             dataIndex: 'deltaPrice',
             stateId: 'deltaPrice',
             editor: {
@@ -446,7 +446,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 msgTarget: "qtip"
             }
         }, {
-            text: 'Cost',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.cost,
             dataIndex: 'deltaCost',
             stateId: 'deltaCost',
             hideable: true,
@@ -463,7 +463,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Extra Weight',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.extra_weight,
             dataIndex: 'deltaWeight',
             stateId: 'deltaWeight',
             hideable: true,
@@ -495,7 +495,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Gift Card/Credit Value',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.gift_card,
             dataIndex: 'creditValue',
             stateId: 'creditValue',
             hideable: isDigitalCredit,
@@ -526,7 +526,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     getIsActiveColumn :function (){
         return {
-            text: 'Enabled',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.enabled,
             dataIndex: 'isActive',
             stateId: 'isActive',
             xtype: "checkcolumn",
@@ -564,7 +564,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
 
         return {
-            text: 'Option Summary',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.option_summary,
             dataIndex: 'isActive',
             stateId: 'optionSummary',
             xtype: "templatecolumn",
@@ -628,7 +628,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     getProductCodeColumn: function() {
         return {
-            text: 'Product Code',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.product_code,
             xtype:"templatecolumn",
             dataIndex: 'productCode',
             stateId: 'productCode',
@@ -637,7 +637,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 '<tpl if="values.productCode">',
                 '{productCode}',
                 '<tpl else>',                
-                '<span style="color:#ccc">Auto-generated by system</span>',
+                '<span style="color:#ccc">' + Localizer.langResources.CATALOG.Products.ProductEdit.auto_generated_by_system + '</span>',
                 '</tpl>'
             ],
             editor: {
@@ -663,7 +663,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit');
         return [  {
-            text: 'Fulfillment Types',            
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.fulfillment_types,            
             dataIndex: 'fulfillmentTypesSupported',
             stateId: 'fulfillmentTypesSupported',
             hideable: true,
@@ -680,7 +680,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                         }
                     })
                 } else {
-                    str = "Same as product"
+                    str = Localizer.langResources.CATALOG.Products.ProductEdit.fulfillment_emptyText;
                 }
                 return str;
 
@@ -688,7 +688,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             editor: this.fulfillmentEditor
 
         }, {
-            text: 'Mfg Part #',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.mfg_part,
             dataIndex: 'mfgPartNumber',
             stateId: 'mfgPartNumber',
             hideable: true,
@@ -714,7 +714,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 enforceMaxLength: true
             }
         }, {
-            text: 'Dist Part #',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.dist_part,
             dataIndex: 'distPartNumber',
             stateId: 'distPartNumber',
             hideable: true,

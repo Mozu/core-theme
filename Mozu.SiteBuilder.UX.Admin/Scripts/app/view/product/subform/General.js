@@ -34,7 +34,7 @@ Ext.define('Taco.view.product.subform.General', {
             return defaultValue;
         }
     },
-    title: 'General',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.general,
     margin: '0 0 20 0',
     bodyPadding: '0',
     initComponent: function () {
@@ -125,16 +125,16 @@ Ext.define('Taco.view.product.subform.General', {
             fields: ['id', "name"],
             data: [
                 {
-                    name: "Standard Product",
+                    name: Localizer.langResources.CATALOG.Products.ProductEdit.standard_product,
                     id: "Standard"
                 }, {
-                    name: "Configurable Product With Options",
+                    name: Localizer.langResources.CATALOG.Products.ProductEdit.product_with_options,
                     id: "Configurable"
                 }, {
-                    name: "Product Bundle",
+                    name: Localizer.langResources.CATALOG.Products.ProductEdit.product_bundle,
                     id: "Bundle"
                 }, {
-                    name: "Bundle Component",
+                    name: Localizer.langResources.CATALOG.Products.ProductEdit.bundle_component,
                     id: "Component"
                 }
             ]
@@ -145,7 +145,7 @@ Ext.define('Taco.view.product.subform.General', {
 
 
             this.productCodeField = Ext.widget({
-                fieldLabel: 'Product Code',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_code,
                 name: 'productCode',
                 emptyText: '#######',
                 width: '50%',
@@ -165,7 +165,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.productTypeField = Ext.widget({
                 xtype: 'taco-producttypepickerfield',
-                fieldLabel: 'Product Type',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_type,
                 name: 'productTypeId',
                 includeBaseProductType:false,
                 readOnly: !this.product.phantom,
@@ -189,7 +189,7 @@ Ext.define('Taco.view.product.subform.General', {
                 validator: function(val) {
                     if (me.isCreateMode) {
                         var matches = this.store.queryBy(function(record, id) { return record.get('name') === val });
-                        return (matches.items.length === 1) ? true : 'No matches';
+                        return (matches.items.length === 1) ? true : Localizer.langResources.CATALOG.Products.ProductEdit.no_matches;
                     } else {
                         // previously saved and is uneditable.
                         return true;
@@ -201,7 +201,7 @@ Ext.define('Taco.view.product.subform.General', {
             this.productUsageField = Ext.widget({
                 xtype: 'selectfield',
                 itemId: 'productUsageField',
-                fieldLabel: 'Product Usage',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_usage,
                 name: 'productUsage',
                 readOnly: !this.product.phantom,
                 required: true,
@@ -237,13 +237,13 @@ Ext.define('Taco.view.product.subform.General', {
                 hideEmptyLabel : false,
                 name: 'isTaxable',
                 margin: "10 0 0 15",
-                boxLabel: 'Taxable',
+                boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.taxable,
                 checked: isTaxable
             });
 
             this.costField = Ext.widget({
                 xtype: 'currencyfield',
-                fieldLabel: 'Cost',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.cost,
                 currencyCode:me.currencyCode,
                 name: 'cost',
                 columnWidth: 0.5,
@@ -257,10 +257,10 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.discountsRestrictedField = Ext.widget({
                 xtype: 'checkboxfield',
-                fieldLabel: 'Product Discounts',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_discounts,
                 width: '50%',
                 margin: "0 15 0 0",
-                boxLabel: 'Restrict discounts on this product',
+                boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.box_label,
                 name: 'discountsRestricted',
                 checked: isDiscountRestricted,
                 handler: me.onDiscountRestrictedChange,
@@ -269,7 +269,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.discountsRestrictedStartField = Ext.widget({
                 xtype: 'datetime',
-                fieldLabel: 'Restriction Start Date',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.restriction_start_date,
                 columnWidth: 0.5,
                 margin: '0 15 0 0',
                 name: 'discountsRestrictedStartDate',
@@ -277,14 +277,14 @@ Ext.define('Taco.view.product.subform.General', {
                 disabled: !isDiscountRestricted,
                 allowBlank: true,
                 validator: function() {
-                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, "Restricted start date must be before end date", 0);
+                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, Localizer.langResources.CATALOG.Products.ProductEdit.start_date_error_message, 0);
                 }
 
             });
 
             this.discountsRestrictedEndField = Ext.widget({
                 xtype: 'datetime',
-                fieldLabel: 'Restriction End Date',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.restriction_end_date,
                 name: 'discountsRestrictedEndDate',
                 columnWidth: 0.5,
                 margin: "0 0 0 15",
@@ -292,13 +292,13 @@ Ext.define('Taco.view.product.subform.General', {
                 disabled: !isDiscountRestricted,
                 allowBlank: true,
                 validator: function() {
-                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, "Restricted end date must be after start date", 0);
+                    return Taco.core.util.Validation.validateDateRange(me.discountsRestrictedStartField, me.discountsRestrictedEndField, Localizer.langResources.CATALOG.Products.ProductEdit.end_date_error_message, 0);
                 }
             });
 
             this.mfgPartNumField = Ext.widget({
                 xtype: 'textfield',
-                fieldLabel: 'Manufacturer Part Number',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.manufacturer_part_number,
                 name: 'mfgPartNumber',
                 width: '50%',
                 margin: '0 15 0 0',
@@ -310,7 +310,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.upcField = Ext.widget({
                 xtype: 'textfield',
-                fieldLabel: 'Universal Product Code (UPC)',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.universal_product_code,
                 name: 'upc',
                 width: '50%',
                 margin: "0 0 0 15",
@@ -322,7 +322,7 @@ Ext.define('Taco.view.product.subform.General', {
 
             this.distPartNumField = Ext.widget({
                 xtype: 'textfield',
-                fieldLabel: 'Distributor Part Number',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.distributor_part_number,
                 name: 'distPartNumber',
                 width: '50%',
                 margin: '0 15 0 0',
@@ -335,7 +335,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         var priceField = {
             xtype: 'currencyfield',
-            fieldLabel: 'Price',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.price,
             width: '50%',
             margin: '0 15 0 0',
             name: 'price',
@@ -370,7 +370,7 @@ Ext.define('Taco.view.product.subform.General', {
             style: "font-size:14px;",
             tpl: [
                 "<tpl if='price'>",
-                "<span>Total price of individual products</span><br/>",
+                "<span>" + Localizer.langResources.CATALOG.Products.ProductEdit.total_price_individual + "</span><br/>",
                 "<span class='taco-rolledup-price'>{price}</span>",
                 "</tpl>"
             ]
@@ -379,7 +379,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         var salePriceField = {
             xtype: 'currencyfield',
-            fieldLabel: 'Sale Price',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.sale_price,
             name: 'salePrice',
             margin: "0 0 0 15",
             width: '50%',
@@ -391,7 +391,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.creditValueField = Ext.widget({
             xtype: 'currencyfield',
-            fieldLabel: 'Gift Card/Credit Value',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.gift_card,
             name: 'creditValue',
             margin: "0 15 0 0",
             width: '50%',
@@ -414,7 +414,7 @@ Ext.define('Taco.view.product.subform.General', {
             style:"font-size:14px;",
             tpl: [
                 "<tpl if='price'>",
-                    "<span>Total sale price of individual products</span><br/>",
+                    "<span>" + Localizer.langResources.CATALOG.Products.ProductEdit.sale_price_individual + "</span><br/>",
                     "<span class='taco-rolledup-price'>{price}</span>",
                 "</tpl>"
             ]
@@ -435,7 +435,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         var mapField = {
             xtype: 'currencyfield',
-            fieldLabel: 'Minimum Advertised Price',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.minimum_advertised_price,
             name: 'map',
             width: '50%',
             margin: '0 15 0 0',
@@ -456,7 +456,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.mapStartField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'MAP Start Date',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.map_start_date,
             name: 'mapStartDate',
             columnWidth: 0.5,
             margin: "0 15 0 0",
@@ -464,13 +464,13 @@ Ext.define('Taco.view.product.subform.General', {
             disabled: !isMapEnabled,
             allowBlank: true,
             validator: function() {
-                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, "MAP start date must be before end date", 0);
+                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, Localizer.langResources.CATALOG.Products.ProductEdit.map_start_date_error, 0);
             }
         });
 
         this.mapEndField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'MAP End Date',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.map_end_date,
             name: 'mapEndDate',
             itemId: 'mapenddt',
             columnWidth: 0.5,
@@ -478,7 +478,7 @@ Ext.define('Taco.view.product.subform.General', {
             disabled: !isMapEnabled,
             allowBlank: true,
             validator: function() {
-                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, "MAP end date must be after start date", 0);
+                return Taco.core.util.Validation.validateDateRange(me.mapStartField, me.mapEndField, Localizer.langResources.CATALOG.Products.ProductEdit.map_end_date_error, 0);
             }
         });
 
@@ -506,7 +506,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.activeStartDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'Active Start Date',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.active_start_date,
             name: 'activeStartDate',
             width: '50%',
             margin: "0 15 0 0",
@@ -521,7 +521,7 @@ Ext.define('Taco.view.product.subform.General', {
 
                 if (me.productInCatalogInfo && me.activeStartDateField.isVisible()) {
                     // if both fields have values we need to validate the dates are in order;
-                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "Start date must be before end date", 0);
+                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, Localizer.langResources.CATALOG.Products.ProductEdit.active_start_date_error, 0);
                     return isValid;
                 }
                 return true;
@@ -530,7 +530,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.activeEndDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'Active End Date',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.active_end_date,
             name: 'activeEndDate',
             itemId: 'activeEndDt',
             width: '50%',
@@ -545,7 +545,7 @@ Ext.define('Taco.view.product.subform.General', {
 
                 if (me.productInCatalogInfo && me.activeEndDateField.isVisible()) {
                     // if both fields have values we need to validate the dates are in order;
-                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, "End date must be after start date", 0);
+                    var isValid = Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField, Localizer.langResources.CATALOG.Products.ProductEdit.active_end_date_error, 0);
                     return isValid;
                 }
                 return true;
@@ -554,7 +554,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         me.statusCombo = Ext.widget({
             xtype: 'combobox',
-            fieldLabel: 'Status',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.status,
             name: 'status',
             labelAlign: 'top',
             hidden: this.isGlobal,
@@ -567,7 +567,7 @@ Ext.define('Taco.view.product.subform.General', {
             margin: '0 15 0 0',
             store: [['Active', 'Active'], ['Scheduled', 'Scheduled'], ['Disable', 'Disabled']],
             value: this.productInCatalogInfo ? this.productInCatalogInfo.get('status') : 'Disable',
-            dateValidationMsg: "An active start or end date is required",
+            dateValidationMsg: Localizer.langResources.CATALOG.Products.ProductEdit.date_validation_msg,
             //validateDate: function() {
             //    if (Ext.isEmpty(me.activeStartDateField.getValue()) && Ext.isEmpty(me.activeEndDateField.getValue())) {
             //        this.markInvalid(this.dateValidationMsg);
@@ -604,7 +604,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         var productTitle = {
             xtype: 'textfield',
-            fieldLabel: 'Product Title',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_title,
             allowBlank: false,
             minLength: 3,
             width: '100%',
@@ -651,9 +651,9 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'htmleditor',
                     flex: 1,
                     enableFont: false,
-                    fieldLabel: 'Short Description',
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.short_description,
                     name: 'productShortDescription',
-                    emptyText: 'Words',
+                    emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.short_emptytext,
                     width: '50%',
                     margin: '0 15 0 0',
                     height: 300,
@@ -664,9 +664,9 @@ Ext.define('Taco.view.product.subform.General', {
                     xtype: 'htmleditor',
                     flex: 1,
                     enableFont: false,
-                    fieldLabel: 'Long Description',
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.long_description,
                     name: 'productFullDescription',
-                    emptyText: 'Words, words, and more words.  Also, with lists.',
+                    emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.long_emptytext,
                     //width: classDef.getBufferedWidth(null, '100%'),
                     width: '50%',
                     height: 300,

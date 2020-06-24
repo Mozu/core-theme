@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         'Ext.ux.form.field.BoxSelect'
     ],
 
-    title: 'Properties',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.properties,
 
     bodyPadding: '0 0 0 0',
 

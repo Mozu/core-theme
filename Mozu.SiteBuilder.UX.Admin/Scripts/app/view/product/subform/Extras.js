@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.Extras', {
         'Taco.core.ux.form.CurrencyField'
     ],
 
-    title: 'Extras',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.extras,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -102,9 +102,9 @@ Ext.define('Taco.view.product.subform.Extras', {
                 valueField: 'attributeFQN',
                 itemId: 'extraAdder',
                 displayField: 'adminName',
-                emptyText: 'Add Extra',
+                emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.add_extra,
                 listConfig: {
-                    emptyText:"No extras available"
+                    emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.no_extras_available
                 },
                 maxWidth: 200,
                 queryMode: 'local',
@@ -165,7 +165,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     getEmptyComponent: function () {
         return {
             xtype: 'component',
-            html: 'This product type does not have any associated extras.'
+            html: Localizer.langResources.CATALOG.Products.ProductEdit.product_type_associated_extra
         };
     },
 
@@ -208,7 +208,7 @@ Ext.define('Taco.view.product.subform.Extras', {
         isMultiSelect = Ext.widget({
             xtype: 'checkbox',
             hidden: ptAttribute.get('inputType') != 'List',
-            boxLabel: 'Allow Multi Select',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.allow_multi_select,
             value: pExtra ? pExtra.get('isMultiSelect') : false,
             checked: pExtra ? pExtra.get('isMultiSelect') : false,
             listeners: {
@@ -219,7 +219,7 @@ Ext.define('Taco.view.product.subform.Extras', {
         });
         checkbox = Ext.widget({
             xtype: 'checkbox',
-            boxLabel: 'Required by Shopper',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.required_shopper,
             value: pExtra ? pExtra.get('isRequired') : false,
             checked: pExtra ? pExtra.get('isRequired') : false,
             listeners: {
@@ -256,7 +256,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             tools: [
                 {
                     xtype: "button",
-                    text: "Delete",
+                    text: Localizer.langResources.SHARED.delete_btn_text,
                     ui: "action",
                     scale: "medium",
                     hidden: ptAttribute.get('isRequired'),
@@ -324,7 +324,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                     forcePrecision: true,
                     unitAtEnd: false,
                     name: this.getFieldName(ptAttribute),
-                    fieldLabel: 'Extra Cost',
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.extra_cost,
                     labelStyle:"padding-top:0px",
                     value: pExtra ? pExtra.get('values')[0].deltaPrice : null,
                     listeners: {

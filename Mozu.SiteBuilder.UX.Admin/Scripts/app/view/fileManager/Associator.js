@@ -17,15 +17,15 @@ Ext.define('Taco.view.fileManager.Associator', {
     ],
 
     autoShow: true,
-    primaryText: 'Select',
-    title: 'File Manager',
+    primaryText: Localizer.langResources.SHARED.FileManager.select,
+    title: Localizer.langResources.SHARED.FileManager.title,
 
     mixins: {
         savable: 'Taco.shared.util.Uploadable'
     },
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.fileManager.AdvancedSearchForm',
-        emptySearchText: 'Search'
+        emptySearchText: Localizer.langResources.SHARED.FileManager.empty_search_text
     },
     initComponent: function () {
         var selModel = this.selModel || new Ext.selection.CheckboxModel;
@@ -68,10 +68,10 @@ Ext.define('Taco.view.fileManager.Associator', {
             ],
             columns: [{
                 xtype: 'templatecolumn',
-                header: 'Image',
+                header: Localizer.langResources.SHARED.FileManager.image,
                 tpl: '<tpl if="localthumbnail"><div class="taco-basegrid-thumbnail"><img height="60" src="{localthumbnail}" /></div><tpl else><div class="taco-basegrid-thumbnail"><img height="60" width="60" src="{thumbnail}?size=60" /></div></tpl>'
             }, {
-                text: 'Name',
+                    text: Localizer.langResources.SHARED.FileManager.name,
                 editor: {
                     xtype: 'taco.textfield',
                     listeners: {
@@ -95,7 +95,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                 dataIndex: 'name',
                 flex: 1
             }, {
-                text: 'Date Modified',
+                    text: Localizer.langResources.SHARED.FileManager.date_modified,
                 
                 dataIndex: 'dateModified',
                 width: 150,
@@ -103,7 +103,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                     return Ext.Date.format(val, 'M j, Y g:i a');
                 }
             }, {
-                text: 'Type',
+                    text: Localizer.langResources.SHARED.FileManager.type,
                 sortable: false,
                 dataIndex: 'fileType',
                 align: 'right',
@@ -111,7 +111,7 @@ Ext.define('Taco.view.fileManager.Associator', {
                     return val.toUpperCase();
                 }
             }, {
-                text: 'Size',
+                    text: Localizer.langResources.SHARED.FileManager.size,
                 sortable: false,
                 dataIndex: 'fileSize',
                 align: 'right'

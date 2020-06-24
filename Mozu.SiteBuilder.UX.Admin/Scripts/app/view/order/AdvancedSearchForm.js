@@ -145,21 +145,21 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 xtype: 'combobox',
                 name: 'shipmentstatuses',
-                fieldLabel: 'Shipment Status',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.Shipments.Title.shipment_status,
                 valueField: 'id',
                 displayField: 'name',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', "name"],
                     data: [
-                        { name: "Ready", id: "READY" },
-                        { name: "Backorder", id: "BACKORDER" },
-                        { name: "Fulfilled", id: "FULFILLED" },
-                        { name: "Customer Care", id: "CUSTOMER_CARE" },
-                        { name: "Cancelled", id: "CANCELED" }
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.ready, id: "READY" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.backorder, id: "BACKORDER" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.fulfilled, id: "FULFILLED" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.FulfillmentStatus.customer_care, id: "CUSTOMER_CARE" },
+                        { name: Localizer.langResources.ORDERS.Orders.AdvancedFilter.OrderStatus.cancelled, id: "CANCELED" }
                     ]
                 })
             },
@@ -229,7 +229,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     },
                     {
                         xtype: 'component',
-                        html: 'to',
+                        html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                         margin: '0 10'
                     },
                     {
@@ -264,7 +264,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     },
                     {
                         xtype: 'component',
-                        html: 'to',
+                        html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                         margin: '0 10'
                     },
                     {
@@ -293,7 +293,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     },
                     {
                         xtype: 'component',
-                        html: 'to',
+                        html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                         margin: '0 10'
                     },
                     {

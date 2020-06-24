@@ -7,7 +7,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
     alias: 'widget.productinventorysubform',
   //  requires: ['Taco.view.product.option.Form'],
 
-    title: 'Inventory',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.inventory,
     
     // enables the manage button; This is part of future work;
     manageEnabled: true,
@@ -30,7 +30,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 hidden: this.product.get("productUsage") == "Bundle",
                 scale: "medium",
                 margin: "0 0 0 0",
-                text: "Manage Inventory",
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.manage_inventory,
                 handler: me.manageInventory,
                 scope: me
             });
@@ -41,7 +41,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
         this.manageStock = Ext.widget({
             xtype: 'checkboxfield',
             name: 'manageStock',
-            boxLabel: 'Track stock level',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.track_stock_level,
             checked: track,
             width: '50%',
             margin: '5 15 0 0',
@@ -60,16 +60,16 @@ Ext.define('Taco.view.product.subform.Inventory', {
         
         this.outOfStockState = Ext.widget({
             xtype: 'selectfield',
-            fieldLabel: 'If out of stock...',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.if_out_of_stock,
             width: '50%',
             allowBlank: true,
             margin: '0 0 0 15',
             //hidden: (!track || this.product.get("productUsage") == "Component"),
             queryMode: 'local',
             store: [
-                ['DisplayMessage', 'Show out of stock message'],
-                ['AllowBackorder', 'Allow backordering'],
-                ['HideProduct', 'Hide Product in Store']
+                ['DisplayMessage', Localizer.langResources.CATALOG.Products.ProductEdit.show_out_of_stock_message],
+                ['AllowBackorder', Localizer.langResources.CATALOG.Products.ProductEdit.allow_backordering],
+                ['HideProduct', Localizer.langResources.CATALOG.Products.ProductEdit.hid_product_in_store]
             ],
             name:'outOfStockBehavior'
         });
@@ -213,12 +213,12 @@ Ext.define('Taco.view.product.subform.Inventory', {
         var productEditor = this.up('taco-product-editor');
         if (productEditor.requiresSave) {
             Ext.MessageBox.show({
-                title: 'Unsaved Changes',
+                title: Localizer.langResources.CATALOG.Products.ProductEdit.unsaved_changes,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'You have unsaved changes. Save changes now?',
+                msg: Localizer.langResources.CATALOG.Products.ProductEdit.save_changes_now,
                 closable: true,
                 buttons: Ext.Msg.OKCANCEL,
                 fn: function (rec) {

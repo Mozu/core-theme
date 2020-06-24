@@ -27,13 +27,13 @@
      * @cfg {String}
      * The text to appear inside the save action
      */
-    saveText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.save,
+    saveText: Localizer.langResources.SHARED.save,
     
     /**
      * @cfg {String}
      * The text to appear inside the cancel action
      */
-    cancelText: Localizer.langResources.ORDERS.Orders.OrderDetails.Label.cancel_button_text,
+    cancelText: Localizer.langResources.SHARED.cancel,
 
     saveHidden: false,
     cancelHidden: false,

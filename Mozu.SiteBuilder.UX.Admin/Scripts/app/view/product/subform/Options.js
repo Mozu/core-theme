@@ -10,7 +10,7 @@ Ext.define('Taco.view.product.subform.Options', {
         'Taco.view.product.variant.Grid',
         'Taco.view.product.variant.Options'],
 
-    title: 'Options',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.options,
     pricingModeChanged: false,
 
     cls: "taco-product-subform-option",
@@ -25,7 +25,7 @@ Ext.define('Taco.view.product.subform.Options', {
             xtype: 'combobox',
             name: 'variationPricingMethod',
             labelAlign: 'left',
-            fieldLabel: 'Pricing Mode',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.pricing_mode,
             forceSelection: true,
             editable: false,
             autoSelect: true,
@@ -34,9 +34,9 @@ Ext.define('Taco.view.product.subform.Options', {
             valueField: 'value',
             store: Ext.create('Ext.data.Store', {
                 fields: ['text', 'value'],
-                data: [
-                    { 'text': 'Relative', 'value': 'Delta' },
-                    { 'text': 'Explicit', 'value': 'Fixed' }
+                data : [
+                    { 'text': Localizer.langResources.CATALOG.Products.ProductEdit.relative, 'value':'Delta'},
+                    { 'text': Localizer.langResources.CATALOG.Products.ProductEdit.explicit, 'value':'Fixed'}
                 ]
             }),
             listeners: {
@@ -121,15 +121,15 @@ Ext.define('Taco.view.product.subform.Options', {
 
         this.items = [{
             xtype: 'component',
-            flex: 1,
-            itemId: 'list',
-            html: ''
-        }, this.pricingMode, {
-            xtype: 'button',
-            text: 'Select Values',
-            scale: 'medium',
-            ui: 'action',
-            width: 150,
+                flex:1,
+                itemId: 'list',
+                html: ''
+            }, this.pricingMode, {
+                xtype: 'button',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.select_values,
+                scale: 'medium',
+                ui: 'action',
+                width: 150,
 
             handler: function () {
                 //if (this.product.phantom) {

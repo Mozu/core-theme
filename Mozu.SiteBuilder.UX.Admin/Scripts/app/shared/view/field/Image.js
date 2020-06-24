@@ -78,7 +78,7 @@ Ext.define('Taco.shared.view.field.Image', {
                 tag: 'ul',
                 cls: 'taco-image-tiles'
             },
-            html: '<li class="taco-image-drop"><div class="square">Drop images here</div></li>'
+            html: '<li class="taco-image-drop"><div class="square">' + Localizer.langResources.SHARED.drop_images_here + '</div></li>'
         });
 
         this.imageDropZone = Ext.widget({
@@ -98,7 +98,7 @@ Ext.define('Taco.shared.view.field.Image', {
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">',
-                                '<div class="square">Progress {progress}%</div>',
+                                '<div class="square">' + Localizer.langResources.SHARED.progress + ' {progress}%</div>',
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
@@ -109,16 +109,16 @@ Ext.define('Taco.shared.view.field.Image', {
                                     '</tpl>',
                                 '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
                                     '<ul class="toolbar">',
-                                        '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
-                                        '<li class="remove" title="Remove">Remove</li>',
-                                        '<li class="alt-text" title="Edit Properties">Alt Text</li>',
+                                        '<li class="drag-handle" title="' + Localizer.langResources.SHARED.drag_to_resequence + '">Drag</li>',
+                                        '<li class="remove" title="' + Localizer.langResources.SHARED.remove + '">Remove</li>',
+                                        '<li class="alt-text" title="' + Localizer.langResources.SHARED.edit_properties + '">Alt Text</li>',
                                     '</ul>',
                                 '</div>',
                             '</li>',
                         '</tpl>',
                     '</tpl>',
                     '<li class="taco-image-drop">',
-                        '<div class="square">Drop images here</div>',
+                        '<div class="square">' + Localizer.langResources.SHARED.drop_images_here + '</div>',
                     '</li>'
             ],
             itemSelector: 'li.item'
@@ -130,7 +130,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'Upload from Computer',
+            text: Localizer.langResources.SHARED.upload_from_computer,
             scope: this,
             handler: function () {
                 this.uploadButton.fileInputEl.dom.click();
@@ -156,7 +156,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'Upload from File Manager',
+            text: Localizer.langResources.SHARED.upload_from_file_manager,
             scope: this,
             handler: this.onAssociatorClick
         });
@@ -218,7 +218,7 @@ Ext.define('Taco.shared.view.field.Image', {
             }
         });
         if (invalidFiles.length > 0) {
-            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+            Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.files_not_permitted + invalidFiles.join(', '), 'error');
             return false;
         }
         return true;

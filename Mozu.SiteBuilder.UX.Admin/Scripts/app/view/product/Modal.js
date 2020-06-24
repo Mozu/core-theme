@@ -13,9 +13,9 @@ Ext.define('Taco.view.product.Modal', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Apply',
+    primaryText: Localizer.langResources.SHARED.apply,
     scale: 'large',
-    title: 'Select Products',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.select_products,
 
     layout: {
         type: 'fit'
@@ -62,12 +62,12 @@ Ext.define('Taco.view.product.Modal', {
             },
             columns: [{
                 dataIndex: 'productCode',
-                text: 'Code',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.code,
                 width: 100,
                 left: '33px'
             }, {
                 dataIndex: 'productName',
-                text: 'Name',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.name,
                 minWidth: 120,
                 resizable: false,
                 flex: 1,
@@ -77,7 +77,7 @@ Ext.define('Taco.view.product.Modal', {
                 }
             }, {
                 dataIndex: 'price',
-                text: 'Price',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.price,
                 width: 70,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true)|| '--';
@@ -85,7 +85,7 @@ Ext.define('Taco.view.product.Modal', {
                 }
             }, {
                 dataIndex: 'salePrice',
-                text: 'Sale Price',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.sale_price,
                 width: 100,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('salePrice', true) || '--';

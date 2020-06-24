@@ -26,10 +26,10 @@ Ext.define('Taco.view.product.subform.SEO', {
                 hideOverride: (this.isGlobal),
                 items: [
                     {
-                        fieldLabel: 'Meta Title',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.meta_title,
                         name: 'metaTitle'
                     }, {
-                        fieldLabel: 'Slug',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.slug,
                         xtype: 'taco-slugfield',
                         name: 'slug',
                         margin: '20 0 0 0'
@@ -39,7 +39,7 @@ Ext.define('Taco.view.product.subform.SEO', {
                         margin: '20 0 0 0',
                         items: [
                             {
-                                fieldLabel: 'Meta Description',
+                                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.meta_description,
                                 name: 'metaDescription',
                                 xtype: 'textarea',
                                 flex: 1,
@@ -50,7 +50,7 @@ Ext.define('Taco.view.product.subform.SEO', {
                                 xtype: 'textarea',
                                 flex: 1,
                                 name: 'metaKeywords',
-                                fieldLabel: 'Meta Keywords',
+                                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.meta_keywords,
                                 width: '50%',
                                 margin: '0 0 0 15',
                                 height: 250
