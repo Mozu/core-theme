@@ -155,7 +155,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                     'behaviorIds': [4],
                     'items': [{
                         'id': 'launchPad',
-                        'label': 'Launchpad',
+                        'label': Localizer.langResources.DASHBOARD.MAIN.launchpad,
                         'address': '/admin/auth/launchpad',
                         'behaviorIds': [4]
                     }]
@@ -173,7 +173,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                 'behaviorIds': [4],
                 'items': [{
                     'id': 'logout',
-                    'label': 'Logout',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.logout,
                     'address': '/admin/auth/logout',
                     'behaviorIds': [4]
                 }]
@@ -185,7 +185,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             data: {
                 'id': 'switchToClassic',
                 'navParent': 'main',
-                'label': 'Switch to Classic UI',
+                'label': Localizer.langResources.DASHBOARD.MAIN.switch_to_classic_ui,
                 'icon': 'fa fa-undo',
                 'menucolor': 'purple',
                 'behaviorIds': [4],
@@ -216,10 +216,10 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
                 activeTab: activeTab,
                 cls: 'taco-primary-menu-toolbar',
                 items: [{
-                    title: 'MAIN',
+                    title: Localizer.langResources.DASHBOARD.MAIN.main,
                     style: "width: 136px;"
                 }, {
-                    title: 'SYSTEM',
+                    title: Localizer.langResources.DASHBOARD.SYSTEM.system,
                     style: "width: 136px;"
                 }, {
                     style: "width: 48px;",

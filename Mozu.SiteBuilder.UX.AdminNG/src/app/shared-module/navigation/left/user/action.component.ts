@@ -11,6 +11,7 @@ import { MenuItem } from 'primeng/api';
 import { NavigationLeftUserActionModel } from './action.model';
 import { NavigationLeftUserActionService } from './action.service';
 import { CookieService } from 'ngx-cookie-service';
+import { NavigationService } from '../../navigation.service';
 
 @Component({
   selector: 'navigation-left-user-action',
@@ -27,7 +28,8 @@ export class NavigationLeftUserActionComponent implements OnInit {
     private _loggerService: LoggerService,
     private _navigationLeftUserActionService: NavigationLeftUserActionService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _cookieService: CookieService
+    private _cookieService: CookieService,
+    private _navigationService: NavigationService
   ) { }
 
   ngOnInit() {
@@ -35,6 +37,9 @@ export class NavigationLeftUserActionComponent implements OnInit {
     this.model = new NavigationLeftUserActionModel();
     this.fetchloggedInUserData();
     this.model.showSwitchAdminButton = this._sharedData._sharedData.items.ctTaContext.hasLegacyAdmin;
+    if(this.model.showSwitchAdminButton){
+        this.leftNavigationMenu();
+    }
   }
   public fetchRedirectionLink = () => {
     this._loggerService.info('NavigationLeftUserActionComponent : fetchRedirectionLink');
@@ -58,4 +63,10 @@ export class NavigationLeftUserActionComponent implements OnInit {
     window.location.reload(true);
   }
 
+  public leftNavigationMenu() {
+    this._navigationService.fetchLeftNavigationHamburgerMenu().subscribe(successResponse => {
+        this._loggerService.info('NavigationLeftUserActionComponent : leftNavigationMenu');
+        this.model.switchToClassicUI = successResponse[4].label;
+    })        
+  }   
 }

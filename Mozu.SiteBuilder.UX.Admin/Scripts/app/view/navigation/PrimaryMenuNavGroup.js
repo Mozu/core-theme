@@ -67,7 +67,10 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                         Ext.fly(t2).removeCls('fal');
                         Ext.fly(t2).addCls('fas');
 
-                        if (!(e.target.innerText == 'Fulfiller' || e.target.innerText == 'Order Routing' || e.target.innerText == 'Home' || e.target.innerText == 'Help')) {
+                        if (!(e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.fulfiller
+                            || e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.order_routing
+                            || e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.home
+                            || e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.help)) {
                             var el1 = Ext.get(me.record.get('label')); // takes an element id
                             var el2 = Ext.get(el1); // takes an Ext.Element
                             var t = Ext.get(el1.dom); // takes an HTMLElement
@@ -97,7 +100,12 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
             recordMenuColor = this.record.get('menucolor'),
             recordIcon = this.record.get('icon'),
             collapsedStateKey = Ext.state.Manager.get(this.collapsedStateKey),
-            isShowChevronIcon = (recordLabel == "Home" || recordLabel === "Help" || recordId === "switchToClassic" || recordId === "fulfillment" || recordId === "orderRoutingParent" || recordId === "report");
+            isShowChevronIcon = (recordLabel == Localizer.langResources.DASHBOARD.MAIN.home
+                || recordLabel === Localizer.langResources.DASHBOARD.MAIN.help
+                || recordId === "switchToClassic"
+                || recordId === "fulfillment"
+                || recordId === "orderRoutingParent"
+                || recordId === "report");
         switch (id) {
             case 'userName':
                 htmlText = '<div style="width:316px;height:4px;background-image:linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.08)99%);"></div><label class="taco-primary-menu-heading color-kibo-' + recordMenuColor + ' "><i id="color-' + recordLabel + '" class="usericon menuicon fal ' + recordIcon + ' color-kibo-' + recordMenuColor + '"></i><span>' + recordLabel + '</span><i id="' + recordLabel + '" class="chevronicon fal ' + (isShowChevronIcon ? ' ' : ((collapsedStateKey ? 'fa-chevron-down' : 'fa-chevron-up'))) + '"></i></label>';
@@ -116,25 +124,25 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
 
     redirectToLinks: function (innerText) {
         switch (innerText) {
-            case 'Home':
+            case Localizer.langResources.DASHBOARD.MAIN.home:
                 window.location.href = '/admin';
                 return;
-            case 'Fulfiller':
+            case Localizer.langResources.DASHBOARD.MAIN.fulfiller:
                 var fulFillerURL = window.location.origin + '/_fulfiller';
                 window.location.href = fulFillerURL;
                 return;
-            case 'Order Routing':
+            case Localizer.langResources.DASHBOARD.MAIN.order_routing:
                 var orderRoutingURL = Taco.app.context.getOrderRoutingURI() + '?service=/_orderRouting/login/cas';
                 window.location.href = orderRoutingURL;
                 return;
-            case 'Reports':
+            case Localizer.langResources.DASHBOARD.MAIN.reports:
                 var reprotsURL = window.location.origin + '/admin/' + Taco.app.context.getReportURL();
                 window.location.href = reprotsURL;
                 return;
-            case 'Help':
+            case Localizer.langResources.DASHBOARD.MAIN.help:
                 window.open('https://www.mozu.com/docs/guides/guides.htm');
                 return;
-            case 'Switch to Classic UI':
+            case Localizer.langResources.DASHBOARD.MAIN.switch_to_classic_ui:
                 Ext.util.Cookies.set('isUnified', false);
                 window.location.reload(true);
                 return;

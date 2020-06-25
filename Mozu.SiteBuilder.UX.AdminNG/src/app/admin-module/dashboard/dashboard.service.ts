@@ -8,17 +8,29 @@ import {
          Constants
 } from '@shared/index';
 import { SharedDataService } from '@global';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigurationSettings } from '@shared/infrastructure/configuration-settings';
 
 @Injectable()
 export class DashbaordService {
+    private browserLang:string;
+    private languageConfiguredForJson:string;
 
     constructor(private _http: HttpClientService,
                 private _loggerService: LoggerService,
-                private _sharedDataService: SharedDataService) {}
+                private _sharedDataService: SharedDataService,
+                private _translate: TranslateService) 
+                {
+                  this.browserLang = _translate.getBrowserLang();
+                  this.languageConfiguredForJson = this.browserLang.match(
+                    ConfigurationSettings.supportedBrowserLanguages.join('|'))
+                    ? this.browserLang : ConfigurationSettings.fallbackBrowserLanguage;
+                }
 
     public fetchAllDashboardTiles(): Observable<any> {
       this._loggerService.info('AdminDashboardComponent : fetchAllDashboardTiles');
-        return this._http.get(Constants.JsonResources.dasbhoardTiles);
+        //return this._http.get(Constants.JsonResources.dasbhoardTiles);
+        return this._http.get(Constants.setDasbhoardTilesJsonFile(this.languageConfiguredForJson));
     }
 
     public MapDasasboardCategoryToTiles(dashboardCategories: any): AccessTileModel[] {

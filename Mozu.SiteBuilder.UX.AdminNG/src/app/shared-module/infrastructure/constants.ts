@@ -5,6 +5,26 @@ import { SubtotalOptions } from './enums';
 
 export class Constants {
 
+    static setDasbhoardTilesJsonFile(lang: string): string {
+       return environment.appUrl +'/assets/json/dashboard-categories-'+lang+'.json';        
+    };
+
+    static setTabsNameJsonFile(lang: string): string {
+       return environment.appUrl + '/assets/json/dashboard-menu-'+lang+'.json';
+    };
+
+    static setLeftNavigationItemsJsonFile(lang: string): string {
+        return environment.appUrl + '/assets/json/leftNavigation-items-'+lang+'.json';
+    };
+
+    static setRedirectionLinkJsonFile(lang: string): string {
+        return environment.appUrl + '/assets/json/user-redirection-'+lang+'.json';
+    };
+
+    static setLeftNavigationHamburgerMenuJsonFile(lang: string): string {
+        return environment.appUrl + '/assets/json/leftNavigation-HamburgerMenu-'+lang+'.json';
+    };
+
     static regExType = {
         numeric: /^\d+$/,
         alphanumeric: /^[a-zA-Z0-9]*$/,

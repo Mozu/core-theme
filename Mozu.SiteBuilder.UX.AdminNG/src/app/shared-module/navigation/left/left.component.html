@@ -9,12 +9,12 @@
             <p-tabView>
                 <navigation-left-sandbox></navigation-left-sandbox>
                 <!--Main tab-->
-                <p-tabPanel header="MAIN">
+                <p-tabPanel header={{menuModel.mainLabel}}>
 
                     <p-scrollPanel>
                         <div class="menuHeader menu-ends kibo-purple">
                             <a type="button active collapsed" class="button" [href]="model.homeURL">
-                                <span class="fa fa-home"></span> <span>Home</span>
+                                <span class="fa fa-home"></span> <span>{{menuModel.homeLabel}}</span>
                             </a>
                         </div>
                         <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
@@ -40,7 +40,7 @@
                                             </ng-template>
                                             <ng-template #importExportDynamicLink>
                                                 <a class="import-export-cursor" (click)="openDynamicLinksDialog(menuOptions)">
-                                                    {{menuOptions.label}}
+                                                    {{menuModel.importExport}}
                                                 </a>
                                             </ng-template>
                                         </div>
@@ -63,11 +63,11 @@
                     </p-scrollPanel>
                 </p-tabPanel>
                 <!--System tab-->
-                <p-tabPanel header="SYSTEM" class="main-sidebar-tabs">
+                <p-tabPanel header={{menuModel.systemLabel}} class="main-sidebar-tabs">
                     <p-scrollPanel>
                         <div class="menuHeader menu-ends kibo-purple">
                             <a type="button active collapsed" class="button" [routerLink]="['/admin']" [routerLinkActive]="['is-active']">
-                                <span class="fa fa-home"></span> <span>Home</span>
+                                <span class="fa fa-home"></span> <span>{{menuModel.homeLabel}}</span>
                             </a>
                         </div>
                         <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">

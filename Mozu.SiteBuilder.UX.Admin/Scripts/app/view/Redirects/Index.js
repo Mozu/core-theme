@@ -188,7 +188,7 @@ Ext.define('Taco.view.redirects.Index', {
         this.moreButtonCfg = {
             menu: [
                 {
-                    text: 'Import',
+                    text: Localizer.langResources.DASHBOARD.MAIN.import_text,
                     scale: 'medium',
                     ui: 'action',
                     hidden: !this.allowCreate(),
@@ -199,7 +199,7 @@ Ext.define('Taco.view.redirects.Index', {
                     },
                     scope: this
                 }, {
-                    text: 'Export',
+                    text: Localizer.langResources.DASHBOARD.MAIN.export_text,
                     scale: 'medium',
                     ui: 'action',
                     hidden: !this.allowCreate(),

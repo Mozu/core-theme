@@ -88,6 +88,13 @@ Ext.define('Taco.store.Navigation', {
                             return;
                         }
 
+                        if (item.get('modalWindowTitle') == "Import/Export") {
+                            item.set('modalWindowTitle', Localizer.langResources.IMPORT_EXPORT.ImportExport)
+                            var localizerKey = item.get('windowTitle').replace(/[^0-9a-z]/gi, ''),
+                                localizerValue = eval('Localizer.langResources.IMPORT_EXPORT.' + localizerKey);
+                            item.set('windowTitle', localizerValue)
+                        }
+
                         var subNavObject = Ext.apply({
                             id: 'subNav' + item.get('badgeInitials'),
                             label: item.get('modalWindowTitle') || item.get('windowTitle') || 'Mozu Admin Extension',
@@ -209,7 +216,7 @@ Ext.define('Taco.store.Navigation', {
         data: [{
             'id': 'home',
             'navParent': 'main',
-            'label': 'Home',
+            'label': Localizer.langResources.DASHBOARD.MAIN.home,
             'icon': 'fa-home',
             'menucolor': 'purple',
             'behaviorIds': [4],
@@ -217,29 +224,29 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'products',
             'navParent': 'main',
-            'label': 'Catalog',
+            'label': Localizer.langResources.DASHBOARD.MAIN.catalog,
             'icon': 'fa-book',
             'menucolor': 'green',
             'behaviorIds': [4],
             'items': [{
                 'id': 'catalogProducts',
-                'label': 'Products',
+                'label': Localizer.langResources.DASHBOARD.MAIN.products,
                 'address': 'products',
                 'behaviorIds': [4]
             }, {
                 'id': 'categories',
-                'label': 'Categories',
+                'label': Localizer.langResources.DASHBOARD.MAIN.categories,
                 'address': 'categories',
                 'behaviorIds': [16]
             }, {
                 'id': 'inventory',
-                'label': 'Inventory',
+                'label': Localizer.langResources.DASHBOARD.MAIN.inventory,
                 'address': 'inventory',
                 'behaviorIds': [4]
             }, {
                 'id': 'priceLists',
                 'behaviorIds': [239],
-                'label': 'Price Lists',
+                'label': Localizer.langResources.DASHBOARD.MAIN.price_lists,
                 'address': 'priceLists'
             }
             ]
@@ -248,29 +255,29 @@ Ext.define('Taco.store.Navigation', {
             'id': 'marketing',
             'navParent': 'main',
             'menucolor': 'blue',
-            'label': 'Marketing',
+            'label': Localizer.langResources.DASHBOARD.MAIN.marketing,
             'icon': 'fa-megaphone',
             'behaviorIds': [24],
             'items': [
                 {
                     'id': 'discounts',
                     'behaviorIds': [24],
-                    'label': 'Discounts',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.discounts,
                     'address': 'discounts'
                 }, {
                     'id': 'couponset',
                     'behaviorIds': [24],
-                    'label': 'Coupon Sets',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.coupon_sets,
                     'address': 'CouponSets'
                 }, {
                     'id': 'productRanking',
                     'behaviorIds': [235],
-                    'label': 'Product Ranking',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.product_ranking,
                     'address': 'ProductRankings'
                 }, {
                     'id': 'searchSynonyms',
                     'behaviorIds': [24],
-                    'label': 'Search Synonyms',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.search_synonyms,
                     'address': 'synonyms'
                 }
             ]
@@ -278,27 +285,27 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'content',
             'navParent': 'main',
-            'label': 'Site Builder',
+            'label': Localizer.langResources.DASHBOARD.MAIN.site_builder,
             'icon': 'fa-paint-roller',
             'menucolor': 'orange',
             'showBreadCrumbs': true,
             'items': [
                 {
                     'id': 'webedit',
-                    'label': 'Editor',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.editor,
                     'address': 'website'
                 }, {
                     'id': 'themes',
-                    'label': 'Themes',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.themes,
                     'address': 'themes'
                 },
                 {
                     'id': 'redirects',
-                    'label': 'Redirects',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.redirects,
                     'address': 'redirects'
                 }, {
                     'id': 'fileManager',
-                    'label': 'Files',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.files,
                     'address': 'fileManager'
                 }
                 //todo: include with content? greg_murray on 12/1/2015
@@ -313,19 +320,19 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'publishing',
             'navParent': 'main',
-            'label': 'Publishing ',
+            'label': Localizer.langResources.DASHBOARD.MAIN.publishing,
             'icon': 'fa-calendar-star',
             'menucolor': 'purple',
             'behaviorIds': [8],
             'items': [
                 {
                     'id': 'drafts',
-                    'label': 'Drafts',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.drafts,
                     'address': 'publishing/drafts'
                 },
                 {
                     'id': 'publishSets',
-                    'label': 'Publish Sets',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.publish_sets,
                     'address': 'publishing/publishsets'
                 }
             ]
@@ -333,34 +340,34 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'order',
             'navParent': 'main',
-            'label': 'Orders',
+            'label': Localizer.langResources.DASHBOARD.MAIN.orders,
             'icon': 'fa-home',
             'menucolor': 'green',
             'behaviorIds': [73],
             'items': [
                 {
                     'id': 'orders',
-                    'label': 'Orders',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.orders,
                     'address': 'orders',
                     'behaviorIds': [73]
                 }, {
                     'id': 'returns',
-                    'label': 'Returns',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.returns,
                     'address': 'returns',
                     'behaviorIds': [73]
                 }, {
                     'id': 'locations-inventory',
-                    'label': 'Inventory',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.inventory,
                     'address': 'locationInventory'
                 }, {
                     'id': 'locations',
-                    'label': 'Locations',
+                    'label': Localizer.langResources.DASHBOARD.MAIN.locations,
                     'address': 'locations',
                     'behaviorIds': [186]
                 },
                 {
                     "id": "locations-group",
-                    "label": "Location Groups",
+                    "label": Localizer.langResources.DASHBOARD.MAIN.location_groups,
                     "address": "/admin?locationGroups",
                     //'visible': Taco.user.taContext.omsEnabled === false ? true : false,
                 }
@@ -369,7 +376,7 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'fulfillment',
             'navParent': 'main',
-            'label': 'Fulfiller',
+            'label': Localizer.langResources.DASHBOARD.MAIN.fulfiller,
             'icon': 'fa-warehouse-alt',
             'menucolor': 'blue',
             'behaviorIds': [187]
@@ -377,7 +384,7 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'orderRoutingParent',
             'navParent': 'main',
-            'label': 'Order Routing',
+            'label': Localizer.langResources.DASHBOARD.MAIN.order_routing,
             'icon': 'fa-map-signs',
             'menucolor': 'orange',
             'behaviorIds': [251]
@@ -385,21 +392,21 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'customer',
             'navParent': 'main',
-            'label': 'Customers',
+            'label': Localizer.langResources.DASHBOARD.MAIN.customers,
             'icon': 'fa-user-crown',
             'menucolor': 'purple',
             'items': [{
                 'id': 'customers',
-                'label': 'Customers',
+                'label': Localizer.langResources.DASHBOARD.MAIN.customers,
                 'address': 'customers',
                 'behaviorIds': [41]
             }, {
                 'id': 'customerSegments',
-                'label': 'Customer Segments',
+                'label': Localizer.langResources.DASHBOARD.MAIN.customer_segments,
                 'address': 'customer/segments'
             }, {
                 'id': 'storecredit',
-                'label': 'Store Credit',
+                'label': Localizer.langResources.DASHBOARD.MAIN.store_credit,
                 'address': 'StoreCredits'
             }
             ]
@@ -407,13 +414,13 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'b2baccount',
             'navParent': 'main',
-            'label': 'B2B',
+            'label': Localizer.langResources.DASHBOARD.MAIN.B2B,
             'icon': 'fa-building',
             'menucolor': 'green',
             'behaviorIds': [188],
             'items': [{
                 'id': 'b2b-accounts',
-                'label': 'B2B Accounts',
+                'label': Localizer.langResources.DASHBOARD.MAIN.B2B_accounts,
                 'address': 'b2baccounts'
             }
             ]
@@ -421,7 +428,7 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'report',
             'navParent': 'main',
-            'label': 'Reports',
+            'label': Localizer.langResources.DASHBOARD.MAIN.reports,
             'menucolor': 'blue',
             'icon': 'fa-file-chart-line',
             'behaviorIds': [188],
@@ -430,7 +437,7 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'help-main',
             'navParent': 'main',
-            'label': 'Help',
+            'label': Localizer.langResources.DASHBOARD.MAIN.help,
             'icon': 'fal fa-question-circle',
             'menucolor': 'orange',
             'behaviorIds': [188],
@@ -438,47 +445,47 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'settings',
             'navParent': 'sys',
-            'label': 'Settings',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.settings,
             'icon': 'fa-cog',
             'menucolor': 'purple',
             //'visible': false,
             'items': [
                 {
                     'id': 'generalsettings',
-                    'label': 'General',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.general,
                     'address': 'generalsettings'
                 },
                 {
                     'id': 'paymentgateways',
-                    'label': 'Payment Gateways',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.payment_gateways,
                     'address': 'settings/paymentGateways'
                 },
                 {
                     'id': 'paymenttypes',
-                    'label': 'Payment Types',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.payment_types,
                     'address': 'settings/paymentTypes'
                 },
                 {
                     'id': 'inventoryexportjob',
-                    'label': 'Inventory Settings',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.inventory_settings,
                     'address': 'settings/inventoryExportJob'
                 },
                 {
                     'id': 'discountsettings',
-                    'label': 'Discount Settings',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.discount_settings,
                     'address': 'settings/discounts'
                 },
                 {
                     'id': 'tax',
-                    'label': 'Tax',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.tax,
                     'address': 'settings/tax'
                 }, {
                     'id': 'shippingMain',
-                    'label': 'Shipping',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.shipping,
                     'address': 'shipping'
                 }, {
                     'id': 'publishing',
-                    'label': 'Publishing',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.publishing,
                     'address': 'settings/publishing'
                 }
             ]
@@ -486,62 +493,62 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'schema',
             'navParent': 'sys',
-            'label': 'Schema',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.schema,
             'icon': 'fa-project-diagram',
             'menucolor': 'green',
             'behaviorIds': [4],
             'items': [{
                 'id': 'productTypes',
-                'label': 'Product Types',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.product_types,
                 'address': 'producttypes'
             }, {
                 'id': 'productAttributes',
-                'label': 'Product Attributes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.product_attributes,
                 'address': 'attributes'
             }, {
                 'id': 'orderAttributes',
-                'label': 'Order Attributes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.order_attributes,
                 'address': 'orderattributes'
             }, {
                 'id': 'customerAttributes',
-                'label': 'Customer Attributes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.customer_attributes,
                 'address': 'CustomerAttributes'
             }, {
                 'id': 'b2bAttributes',
-                'label': 'B2B Attributes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.B2B_attributes,
                 'address': 'b2battributes'
             }, {
                 'id': 'locationTypes',
-                'label': 'Location Types',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.location_types,
                 'address': 'locationTypes'
             }, {
                 'id': 'locationAttributes',
-                'label': 'Location Attributes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.location_attributes,
                 'address': 'locationattributes'
             }, {
                 'id': 'customSchema',
-                'label': 'Custom Schema',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.custom_schema,
                 'address': 'customSchema'
             }
             ]
         }, {
             'id': 'customization',
             'navParent': 'sys',
-            'label': 'Customization',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.customization,
             'icon': 'fa-tools',
             'menucolor': 'blue',
             'behaviorIds': [4],
             'items': [{
                 'id': 'applications-manage',
-                'label': 'Applications',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.applications,
                 'address': 'capability'
             }, {
                 'id': 'actionmanagement',
-                'label': 'Arc.js',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.arc_js,
                 'address': 'actionmanagement'
             }, {
                 'id': 'customroutes',
-                'label': 'Custom Routes',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.custom_routes,
                 'address': 'customroutes'
             }
             ]
@@ -550,25 +557,25 @@ Ext.define('Taco.store.Navigation', {
             'id': 'structure',
             'navParent': 'sys',
             'menucolor': 'blue',
-            'label': 'Structure',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.structure,
             'icon': 'fa-sitemap',
             'behaviorIds': [4],
             'items': [{
                 'id': 'siteprovisioning',
-                'label': 'Sites',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.sites,
                 'address': 'provisioning/sites'
             }, {
                 'id': 'catalogprovisioning',
-                'label': 'Catalogs',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.catalogs,
                 'address': 'provisioning/catalogs'
             }, {
                 'id': 'channels',
-                'label': 'Channels',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.channels,
                 'address': 'channels'
             },
             {
                 'id': 'customersets',
-                'label': 'Customer Sets',
+                'label': Localizer.langResources.DASHBOARD.SYSTEM.customer_sets,
                 'address': 'customersets'
             }
             ]
@@ -578,19 +585,19 @@ Ext.define('Taco.store.Navigation', {
             'navParent': 'sys',
             'menucolor': 'orange',
             'icon': 'fa-unlock',
-            'label': 'Permissions',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.permissions,
             'items': [
                 {
                     'id': 'users',
-                    'label': 'Users',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.users,
                     'address': 'account/users'
                 }, {
                     'id': 'roles',
-                    'label': 'Roles',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.roles,
                     'address': 'roles'
                 }, {
                     'id': 'ipblocking',
-                    'label': 'IP Restrictions',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.ip_restrictions,
                     'address': 'ipblocking'
                 }
             ]
@@ -601,35 +608,35 @@ Ext.define('Taco.store.Navigation', {
             'locAtts': ['multiLang', 'multCurrency'],
             'menucolor': 'blue',
             'icon': 'fa-home',
-            'label': 'Localization',
+            'label': Localizer.langResources.DASHBOARD.SYSTEM.localization,
             'items': [
                 {
                     'id': 'localizationAttr',
-                    'label': 'Attributes',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.attributes,
                     'address': 'Localization/attributes',
                     'locAtts': ['multiLang']
                 },
                 {
                     'id': 'localizationAttrVal',
-                    'label': 'Attribute Values',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.attribute_values,
                     'address': 'Localization/attributeValues',
                     'locAtts': ['multiLang']
                 },
                 {
                     'id': 'localizationProp',
-                    'label': 'Product Properties',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.product_properties,
                     'address': 'Localization/productProperties',
                     'locAtts': ['multiLang']
                 },
                 {
                     'id': 'localizationExtra',
-                    'label': 'Product Extras',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.product_extras,
                     'address': 'Localization/productExtras',
                     'locAtts': ['multCurrency']
                 },
                 {
                     'id': 'localizationVar',
-                    'label': 'Product Variants',
+                    'label': Localizer.langResources.DASHBOARD.SYSTEM.product_variants,
                     'address': 'Localization/productVariants',
                     'locAtts': ['multCurrency']
                 }
@@ -638,7 +645,7 @@ Ext.define('Taco.store.Navigation', {
         {
             'id': 'help-system',
             'navParent': 'sys',
-            'label': 'Help',
+            'label': Localizer.langResources.DASHBOARD.MAIN.help,
             'icon': 'fal fa-question-circle',
             'menucolor': 'orange'
         }

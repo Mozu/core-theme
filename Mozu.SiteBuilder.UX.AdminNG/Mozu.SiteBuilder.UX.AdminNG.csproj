@@ -296,6 +296,8 @@
     <Content Include="tslint.json" />
     <Content Include="src\assets\json\account-information.json" />
     <Content Include="src\assets\json\secureForm.json" />
+    <Content Include="src\assets\json\leftNavigation-items-en.json" />
+    <Content Include="src\assets\json\leftNavigation-items-fr.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

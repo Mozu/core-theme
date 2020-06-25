@@ -90,7 +90,8 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
         href = e.target.getAttribute('href');
 
-        if (e.target.innerText == 'Launchpad' || e.target.innerText == 'Logout') {
+        if (e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.launchpad
+            || e.target.innerText == Localizer.langResources.DASHBOARD.MAIN.logout) {
             window.location.href = href;
             return;
         }

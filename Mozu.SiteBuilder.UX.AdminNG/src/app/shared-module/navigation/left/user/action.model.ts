@@ -6,4 +6,5 @@ export class NavigationLeftUserActionModel {
     loggedInUserInitials: string;
     userRedirectionLinks: MenuItem;
     showSwitchAdminButton: boolean;
+    switchToClassicUI: string;
 }
