@@ -35,7 +35,7 @@ Ext.define('Taco.view.couponCode.Grid', {
 
     
 
-    emptyText:'None Available',
+    emptyText: Localizer.langResources.SHARED.none_available,
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
@@ -53,13 +53,13 @@ Ext.define('Taco.view.couponCode.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    createButtonText: "Create New Coupon Code",
+    createButtonText: Localizer.langResources.MARKETING.CouponSets.create_new_coupon_code,
 
     showActionsColumn: true,
 
     hideSearchToolbar: false,
     
-    title: "Codes",
+    title: Localizer.langResources.MARKETING.CouponSets.codes_title,
 
     pageSize: 5,
 
@@ -69,12 +69,12 @@ Ext.define('Taco.view.couponCode.Grid', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg: "If a coupon code is currently active, deleting it could affect pending orders and carts. <br/>Are you sure you want to delete this?",
+    deletePromptMsg: Localizer.langResources.MARKETING.CouponSets.coupon_code_delete_msg + '<br/>' + Localizer.langResources.MARKETING.CouponSets.delete_confirm_msg,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponCode.AdvancedSearchForm',
         quickFilterData: [],
-        emptySearchText: 'Search'
+        emptySearchText: Localizer.langResources.SHARED.search
     },
 
     onCreate: Ext.emptyFn,
@@ -211,7 +211,7 @@ Ext.define('Taco.view.couponCode.Grid', {
             scope: this
         };
 
-        this.setLoading("Loading...");
+        this.setLoading(Localizer.langResources.SHARED.loading_text);
         Ext.Ajax.request(config);
 
 
@@ -223,7 +223,7 @@ Ext.define('Taco.view.couponCode.Grid', {
             me.quickAddField = Ext.widget({
                 xtype: "textfield",
                 flex: 1,
-                emptyText: "Type one or more new codes and hit ENTER key or click Add button",
+                emptyText: Localizer.langResources.MARKETING.CouponSets.add_coupon_code_empty_text,
                 listeners: {
                     scope: me,
                     specialkey: function (field, e) {
@@ -243,7 +243,7 @@ Ext.define('Taco.view.couponCode.Grid', {
             xtype: "button",
             ui: "action",
             scale: "medium",
-            text: "Add",
+            text: Localizer.langResources.SHARED.add_btn_text,
             handler: me.onQuickAdd,
             scope: me
         });
@@ -272,13 +272,13 @@ Ext.define('Taco.view.couponCode.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'couponCode',
                 stateId: 'couponCode',
-                text: 'Code',
+                text: Localizer.langResources.MARKETING.CouponSets.code,
                 hideable: false,
                 flex: 1,
                 minWidth: 150,
                 editor: {
                     // defaults to textfield if no xtype is supplied
-                    emptyText: "Enter code",
+                    emptyText: Localizer.langResources.MARKETING.CouponSets.enter_code_text,
                     msgTarget: "qtip",
                     // optional enhancement to rowEditor. Makes the field only editable during a create;
                     editableOnCreateOnly: true,
@@ -290,7 +290,7 @@ Ext.define('Taco.view.couponCode.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'redemptionCount',
                 stateId: 'redemptionCount',
-                text: 'Redemption Count',
+                text: Localizer.langResources.MARKETING.CouponSets.redemption_count_text,
                 hideable: false,
                 width: 150,
                 minWidth: 150,
@@ -298,7 +298,7 @@ Ext.define('Taco.view.couponCode.Grid', {
             }, {
                 dataIndex: 'createDate',
                 stateId: 'createDate',
-                text: 'Create Date',
+                text: Localizer.langResources.MARKETING.CouponSets.create_date,
                 width: 130,
                 hidden: true,
                 sortable: true,
@@ -321,7 +321,7 @@ Ext.define('Taco.view.couponCode.Grid', {
                 //flex: 1,
                 menuItems: [
                     {
-                        text: 'Delete',
+                        text: Localizer.langResources.SHARED.delete_text,
                         itemId: "deleteMenuItem",
                         // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                         menuColumnHandler: "deleteMenuColumnHandler",

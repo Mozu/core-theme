@@ -101,8 +101,8 @@ Ext.define('Taco.model.CouponSet', {
 
     getDeletePromptMessage: function () {
         return (this.get('status') === 'Active')
-            ? 'This Coupon Set is currently active and could affect pending orders and carts.<br/>Are you sure you want to delete this?'
-            : 'Are you sure you want to delete this?';
+            ? Localizer.langResources.MARKETING.CouponSets.coupon_set_active_delete_msg +' ' + Localizer.langResources.SHARED.delete_confirm_msg
+            : Localizer.langResources.SHARED.delete_confirm_msg;
     },
 
     // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
