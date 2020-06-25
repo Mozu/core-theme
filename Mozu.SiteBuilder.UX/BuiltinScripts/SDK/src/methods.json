@@ -372,6 +372,10 @@
       "verb": "POST",
       "template": "{+storefrontUserService}save-curbside-info"
     },
+    "order-curbside-details": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}curbside-pickup"
+    },
     "update": {
       "verb": "PUT",
       "template": "{+customerService}{id}",

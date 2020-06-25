@@ -421,6 +421,8 @@
     <EmbeddedResource Include="TestData\shipment.assigned\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.itemscanceled\Shipment1.json" />
     <None Include="SEO\proto_routeTable" />
+    <EmbeddedResource Include="TestData\backoffice\Customeratcurbside.json" />
+    <EmbeddedResource Include="TestData\backoffice\Customer-at-curbside-qrcode.json" />
     <EmbeddedResource Include="TestData\backoffice\Return1.json" />
     <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>

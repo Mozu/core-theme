@@ -24,6 +24,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Tenant.Contracts;
+using Mozu.Tenant.Contracts.Clients;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 
@@ -44,6 +46,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
+        private readonly ISitesWebApiClient _sitesWebApiClient;
+
         private readonly IReturnWebApiClient _returnWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
@@ -55,17 +59,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
         private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
         private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
+        private const string CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME = "backoffice.customeratcurbside";
+        private const string CUSTOMER_AT_CURBSIDE_QRCODE_PREVIEW_RESOURCE_NAME = "backoffice.customer-at-curbside-qrcode";
         private const string RETURN_PREVIEW_RESOURCE_NAME = "backoffice.return1";
 
         /// <summary>
         /// Public constructor.
         /// </summary>
+        /// 
         public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger,
             IFulfillmentProxyWebApiClient fulfillmentProxyClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
-            IReturnWebApiClient returnWebApiClient)
+            IReturnWebApiClient returnWebApiClient,
+            ISitesWebApiClient sitesWebApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
@@ -73,6 +81,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
+            _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
+
             _returnWebApiClient = returnWebApiClient;
         }
 
@@ -513,7 +523,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
-            else if (templateid == "mobile-notification")
+            else if (templateid == "customer-at-curbside" )
+            {
+                object model = TestDataBroker.GetFileContents(CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["isBackofficePreview"] = true;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "customer-at-curbside-qrcode")
+            {
+                object model = TestDataBroker.GetFileContents(CUSTOMER_AT_CURBSIDE_QRCODE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["isBackofficePreview"] = true;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "curbside-shipment-ready")
+            {
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+                ViewData["location"] = location;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "mobile-notification") 
             {
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
