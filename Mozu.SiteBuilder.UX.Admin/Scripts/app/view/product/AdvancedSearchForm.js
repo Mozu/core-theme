@@ -38,7 +38,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
             {
                 name: 'keyword',
                 flex: 1,
-                fieldLabel: 'Keyword Search'
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.keyword_search
             },
             {
                 xtype: 'fieldcontainer',
@@ -50,7 +50,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     {
                         xtype: 'textfield',
                         name: 'productCode',
-                        fieldLabel: 'Product Code',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_code,
                         flex: 1
                     },
                     {
@@ -72,13 +72,13 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     {
                         xtype: 'textfield',
                         name: 'mfgPartNumber',
-                        fieldLabel: 'Mfg Part #',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.mfg_part,
                         flex:1
                     },
                     {
                         xtype: 'textfield',
                         name: 'distPartNumber',
-                        fieldLabel: 'Dist Part #',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.dist_part,
                         margin: '0 0 0 35',
                         flex: 1
                     }
@@ -90,7 +90,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 items: [
                     {
                         xtype: "taco-producttypepickerfield",
-                        fieldLabel: 'Product Type',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_type,
                         name: 'productType',
                         flex:1,
                         includeBaseProductType: false
@@ -98,29 +98,29 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     {
                         xtype: 'combobox',
                         name: 'productUsage',
-                        fieldLabel: 'Product Usage',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_usage,
                         flex: 1,
                         margin: '0 0 0 35',
                         valueField: 'id',
                         displayField: 'name',
                         queryMode: 'local',
-                        valueNotFoundText: 'not found',
+                        valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                         editable: true,
                         forceSelection: true,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', "name"],
                             data: [
                                 {
-                                    name: "Standard Product",
+                                    name: Localizer.langResources.CATALOG.Products.ProductEdit.standard_product,
                                     id: "Standard"
                                 }, {
-                                    name: "Configurable Product With Options",
+                                    name: Localizer.langResources.CATALOG.Products.ProductEdit.product_with_options,
                                     id: "Configurable"
                                 }, {
-                                    name: "Product Bundle",
+                                    name: Localizer.langResources.CATALOG.Products.ProductEdit.product_bundle,
                                     id: "Bundle"
                                 }, {
-                                    name: "Bundle Component",
+                                    name: Localizer.langResources.CATALOG.Products.ProductEdit.bundle_component,
                                     id: "Component"
                                 }
                             ]
@@ -133,11 +133,11 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 store: { type: 'Taco.store.Categories' },
                 flex:1,
                 name: 'category',
-                fieldLabel: 'Category',
+                fieldLabel: Localizer.langResources.CATALOG.Products.AdvancedFilter.category,
                 valueField: 'id',
                 displayField: 'nameAndCodeAndStatus',
                 queryMode: 'local',
-                valueNotFoundText: 'not found',
+                valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                 editable: true,
                 forceSelection: true,
                 listeners: {
@@ -148,7 +148,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Price Range',
+                fieldLabel: Localizer.langResources.CATALOG.Products.AdvancedFilter.price_range,
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -162,7 +162,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                         flex:1
                     }, {
                         xtype: 'component',
-                        html: 'to',
+                        html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                         margin: '0 10'
                     }, {
                         xtype: 'currencyfield',
@@ -201,12 +201,12 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
             {
                 xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
-                fieldLabel: 'Modified By',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.modified_by,
                 flex: 1
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Modfied Range',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.AdvancedFilter.modfied_range,
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -219,7 +219,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                         flex: 1
                     }, {
                         xtype: 'component',
-                        html: 'to',
+                        html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                         margin: '0 10'
                     }, {
                         xtype: 'datefield',
@@ -236,25 +236,25 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     {
                         xtype: 'combobox',
                         name: 'publishedStateFilter',
-                        fieldLabel: 'Status',
+                        fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.status,
                         flex: 1,
                         valueField: 'id',
                         displayField: 'name',
                         queryMode: 'local',
-                        valueNotFoundText: 'not found',
+                        valueNotFoundText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.not_found,
                         editable: true,
                         forceSelection: true,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', "name"],
                             data: [
                                 {
-                                    name: "Live",
+                                    name: Localizer.langResources.CATALOG.Products.AdvancedFilter.live,
                                     id: "Live"
                                 }, {
-                                    name: "Draft",
+                                    name: Localizer.langResources.CATALOG.Products.AdvancedFilter.draft,
                                     id: "Draft"
                                 }, {
-                                    name: "New",
+                                    name: Localizer.langResources.CATALOG.Products.AdvancedFilter.new_text,
                                     id: "New"
                                 }
                             ]

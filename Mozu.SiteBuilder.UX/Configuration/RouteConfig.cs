@@ -300,6 +300,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+            routes.MapHttpRoute(
+               "Anonymous Shipment View",
+               "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
+               new { controller = "AnonymousNotification", action = "RenderShipmentView" });
+
+            routes.MapHttpRoute(
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" },
@@ -546,14 +552,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}",
                 new {action = "Index"},
-                new Dictionary<string, object>{{"controller", @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|health"}}, 
+                new Dictionary<string, object>{{"controller", @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|health|mobileNotification"}}, 
                 _constraintResolver);
             //removing default... add a matching route above
             routes.MapRoute(_defaultHandler,
                 "StoreFront_default",
                 "{controller}/{action}/{id?}",
                 new { action = "Index" },
-                new Dictionary<string, object>{{"controller", @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing"}}, 
+                new Dictionary<string, object>{{"controller", @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|mobileNotification"}}, 
                 _constraintResolver);
 
             //routes.MapRoute(_defaultHandler,"resources",

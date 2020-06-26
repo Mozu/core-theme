@@ -5,7 +5,7 @@
 Ext.define('Taco.view.product.subform.Images', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productimagessubform',
-    title: 'Images',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.images,
     bodyPadding: '10 0 0 0',
     requires: [
         'Taco.view.product.images.imageGroupGrid.Grid',
@@ -89,7 +89,7 @@ Ext.define('Taco.view.product.subform.Images', {
             xtype: 'button',
             ui: 'action-primary',
             scale: 'medium',
-            text: 'Create Image Group',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.create_image_group,
             itemId: 'addImageGroupButton',
             scope: me,
             hidden: initActiveOption === undefined,
@@ -109,7 +109,7 @@ Ext.define('Taco.view.product.subform.Images', {
             useWhiteContainer: true,
             viewConfig: {
                 deferEmptyText: true,
-                emptyText: me.record.phantom ? 'Create an Image Group to add images ' : 'None Available'
+                emptyText: me.record.phantom ? Localizer.langResources.CATALOG.Products.ProductEdit.create_image_group + ' ' : Localizer.langResources.CATALOG.Products.ProductEdit.none_available
             },
             hideNavMenu: true,
             isCatalogLevel: true,
@@ -125,7 +125,7 @@ Ext.define('Taco.view.product.subform.Images', {
         });
 
         this.imagesField = Ext.widget({
-            fieldLabel: 'Product Images',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.product_images,
             xtype: 'taco.imagefield',
             width: '100%',
             margin: '0 0 20 15',
@@ -180,7 +180,7 @@ Ext.define('Taco.view.product.subform.Images', {
 
         this.useImageGroupsCheckbox = Ext.create('Ext.form.field.Checkbox', {
             
-            boxLabel: 'Assign images to Options',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.assign_images_to_options,
             margin: '0 0 20 15px',
             width: '100%',
             disabled: !this.isGlobal,
@@ -212,7 +212,7 @@ Ext.define('Taco.view.product.subform.Images', {
 
                 if(me.hasOverriddenContent()){
                     me.fireEvent('resetImages', {
-                        message: "This will also change product groups in all overridden catalogs. Would you like to proceed?",
+                        message: Localizer.langResources.CATALOG.Products.ProductEdit.change_product_group_msg,
                         callback: toggleImageOptions
                     });
                     return;
@@ -232,7 +232,8 @@ Ext.define('Taco.view.product.subform.Images', {
         
         this.productTypeOptions = Ext.widget({
             xtype: 'selectfield',
-            fieldLabel: 'Selected option',
+            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.selected_option,
+            width: '50%',
             allowBlank: true,
             margin: '20 0 0 15px',
             queryMode: 'local',
@@ -281,7 +282,7 @@ Ext.define('Taco.view.product.subform.Images', {
 
                     if(me.hasOverriddenContent()) {
                         me.fireEvent('resetImages', {
-                            message: 'This will remove product groups in all overridden catalogs. Would you like to proceed?',
+                            message: Localizer.langResources.CATALOG.Products.ProductEdit.remove_product_group_msg,
                             callback: setNewOption
                         });
                         return false;
@@ -439,7 +440,7 @@ Ext.define('Taco.view.product.subform.Images', {
         
         if(self.hasOverriddenContent()){
             self.fireEvent('resetImages', {
-                message: "This will delete product groups in all overridden catalogs. Would you like to proceed?",
+                message: Localizer.langResources.CATALOG.Products.ProductEdit.delete_product_group_msg,
                 callback: deleteGroup
             });
             return;

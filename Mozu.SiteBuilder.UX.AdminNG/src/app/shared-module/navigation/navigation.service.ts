@@ -5,22 +5,40 @@ import { Constants } from '../infrastructure/constants';
 import { HttpClientService, IRequestOptions } from '@core/extensions/http-client.service';
 import { LoggerService } from '@core';
 import { SharedDataService, CtTaContext, MasterCatalog2 } from '@global';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigurationSettings } from '@shared/infrastructure/configuration-settings';
 
 @Injectable()
 export class NavigationService {
+  private browserLang:string;
+  private languageConfiguredForJson:string;
 
   constructor(private _http: HttpClientService,
     private _loggerService: LoggerService,
-    private _sharedData: SharedDataService) { }
+    private _sharedData: SharedDataService,
+    private _translate: TranslateService) 
+    {
+      this.browserLang = _translate.getBrowserLang();
+      this.languageConfiguredForJson = this.browserLang.match(
+        ConfigurationSettings.supportedBrowserLanguages.join('|'))
+        ? this.browserLang : ConfigurationSettings.fallbackBrowserLanguage;
+    }
 
   public fetchTabsName = () => {
     this._loggerService.info('NavigationService : fetchTabsName');
-    return this._http.get(Constants.JsonResources.tabsNames);
+    //return this._http.get(Constants.JsonResources.tabsNames);
+    return this._http.get(Constants.setTabsNameJsonFile(this.languageConfiguredForJson));
   }
 
   public fetchLeftNavigationItems = () => {
     this._loggerService.info('NavigationService : fetchLeftNavigationItems');
-    return this._http.get(Constants.JsonResources.leftNavigationItems);
+      //return this._http.get(Constants.JsonResources.leftNavigationItems);
+      return this._http.get(Constants.setLeftNavigationItemsJsonFile(this.languageConfiguredForJson));
+  }
+
+  public fetchLeftNavigationHamburgerMenu = () => {
+      this._loggerService.info('NavigationService : fetchLeftNavigationHamburgerMenu');
+      return this._http.get(Constants.setLeftNavigationHamburgerMenuJsonFile(this.languageConfiguredForJson));
   }
 
   public fetchCapabilitiesForSecureForm = (appId, jsonData) => {
@@ -28,7 +46,7 @@ export class NavigationService {
     return this._http.post(Constants.webApis.secureFormLink + `${appId}`, jsonData, this.getHttpHeaders());
   }
 
-  public fetchIntegrationResponse = (ImportExportLink) => {
+  public fetchIntegrationResponse = (ImportExportLink) => {             
     this._loggerService.info('NavigationService : fetchIntegrationResponse');
     const headers = new HttpHeaders();
     return this._http.post(ImportExportLink, null, { headers: headers });

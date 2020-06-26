@@ -98,7 +98,7 @@ Ext.define('Taco.overrides.toolbar.Paging', {
         if (displayItem) {
             count = store.getCount();
             if (count === 0) {
-                msg = Localizer.langResources.SHARED.paging_empty_msg;
+                msg = Localizer.langResources.SHARED.pagination_empty_msg;
             } else {
                 me.displayMsg = me.displayMsg.replace('Displaying', Localizer.langResources.SHARED.pagination_display_msg);
                 msg = Ext.String.format(

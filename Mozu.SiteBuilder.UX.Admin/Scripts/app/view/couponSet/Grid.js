@@ -55,7 +55,7 @@ Ext.define('Taco.view.couponSet.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    createButtonText: "Create New Coupon Set",
+    createButtonText: Localizer.langResources.MARKETING.CouponSets.create_new_coupon_set,
 
     showActionsColumn: true,
 
@@ -64,7 +64,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     hideSearchToolbar: false,
 
-    title: "Coupon Sets",
+    title: Localizer.langResources.MARKETING.CouponSets.coupon_sets_title,
 
     store: { type: 'Taco.store.CouponSetGrid' },
 
@@ -72,7 +72,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
     enableQuickFilters:false,
 
-    deletePromptMsg : "If a coupon set is currently active, deleting it could affect pending orders and carts.<br/>Are you sure you want to delete this?",
+    deletePromptMsg: Localizer.langResources.MARKETING.CouponSets.delete_warning_msg + '<br/>' + Localizer.langResources.MARKETING.CouponSets.delete_confirmation_msg,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.couponSet.AdvancedSearchForm',
@@ -82,7 +82,7 @@ Ext.define('Taco.view.couponSet.Grid', {
             //[{ prop: 'value' }, 'Title']
         ],
 
-        emptySearchText: 'Search'
+        emptySearchText: Localizer.langResources.SHARED.search,
     },
 
     onCreate: Ext.emptyFn,
@@ -118,7 +118,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'name',
                 stateId: 'name',
-                text: 'Name',
+                text: Localizer.langResources.MARKETING.CouponSets.name,
                 hideable: false,
                 flex: 1,
                 minWidth: 150,
@@ -127,14 +127,14 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'couponCodeType',
                 stateId: 'couponCodeType',
-                text: 'Type',
+                text: Localizer.langResources.MARKETING.CouponSets.type,
                 width: 150,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'countOrSetSize',
                 stateId: 'countOrSetSize',
-                text: 'Total Codes',
+                text: Localizer.langResources.MARKETING.CouponSets.total_codes,
                 width: 180,
                 hidden: false,
                 sortable: false,
@@ -143,7 +143,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'redemptionCount',
                 stateId: 'redemptionCount',
-                text: '# Redeemed',
+                text: Localizer.langResources.MARKETING.CouponSets.hash_redeemed,
                 width: 180,
                 hidden: false,
                 sortable: false,
@@ -152,7 +152,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'redemptionPercent',
                 stateId: 'redemptionPercent',
-                text: '% Redeemed',
+                text: Localizer.langResources.MARKETING.CouponSets.percent_redeemed,
                 width: 180,
                 hidden: false,
                 sortable: false,
@@ -161,7 +161,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'assignedDiscountCount',
                 stateId: 'assignedDiscountCount',
-                text: '# of Assigned Discounts',
+                text: Localizer.langResources.MARKETING.CouponSets.hash_assigned_discounts,
                 width: 180,
                 hidden: false,
                 sortable: false,
@@ -170,7 +170,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'couponSetCode',
                 stateId: 'couponSetCode',
-                text: 'Code Prefix',
+                text: Localizer.langResources.MARKETING.CouponSets.code_prefix,
                 width: 180,
                 hidden: true,
                 sortable: true
@@ -180,7 +180,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 stateId: 'startDate',
                 format: 'n/j/Y g:i a',
                 width: 130,
-                text: 'Start Date',
+                text: Localizer.langResources.MARKETING.CouponSets.start_date,
                 hidden: true,
                 sortable: true
             }, {
@@ -189,7 +189,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 stateId: 'endDate',
                 format: 'm-d-Y g:i a',
                 width: 130,
-                text: 'End Date',
+                text: Localizer.langResources.MARKETING.CouponSets.end_date,
                 hidden: true,
                 sortable: true,
                 renderer: function (value, metaData, record) {
@@ -204,7 +204,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'maxRedemptionsPerCouponCode',
                 stateId: 'maxRedemptionsPerCouponCode',
-                text: 'Max Redemptions (Per Code)',
+                text: Localizer.langResources.MARKETING.CouponSets.max_redemptions,
                 width: 180,
                 hidden: true,
                 sortable: true
@@ -212,7 +212,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'maxRedemptionsPerUser',
                 stateId: 'maxRedemptionsPerUser',
-                text: 'Max Redemptions per Customer (Per Code)',
+                text: Localizer.langResources.MARKETING.CouponSets.max_Redemptions_per_customer,
                 width: 210,
                 hidden: true,
                 sortable: true
@@ -227,7 +227,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
         if (this.enableEditAction) {
             actions.push({
-                text: 'Edit',
+                text: Localizer.langResources.SHARED.edit,
                 requiredBehaviors: {
                     model: 'Taco.model.CouponSet',
                     behavior: 'update'
@@ -239,7 +239,7 @@ Ext.define('Taco.view.couponSet.Grid', {
 
         if (this.enableDeleteAction) {
             actions.push({
-                text: 'Delete',
+                text: Localizer.langResources.SHARED.delete_text,
                 itemId: "deleteMenuItem",
                 // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
                 menuColumnHandler: "deleteMenuColumnHandler",
@@ -349,7 +349,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                 },
                 items: [
                     {
-                        text: 'Manual Coupon Set',
+                        text: Localizer.langResources.MARKETING.CouponSets.manual_coupon_set,
                         requiredBehaviors: {
                             model: 'Taco.model.CouponSet',
                             behavior: 'create'
@@ -374,7 +374,7 @@ Ext.define('Taco.view.couponSet.Grid', {
                             }
                         }
                     }, {
-                        text: 'Generated Coupon Set',
+                        text: Localizer.langResources.MARKETING.CouponSets.generated_coupon_set,
                         requiredBehaviors: {
                             model: 'Taco.model.CouponSet',
                             behavior: 'create'

@@ -13,20 +13,20 @@ Ext.define('Taco.view.fileManager.AdvancedSearchForm', {
     },
     items: [{
             name: 'keyword',
-            fieldLabel: 'filename'
+            fieldLabel: Localizer.langResources.SHARED.FileManager.AdvancedFilter.filename
     },
     {
         name:'tag',
-        fieldLabel:'tags'
+        fieldLabel: Localizer.langResources.SHARED.FileManager.AdvancedFilter.tags
     },
         {
             xtype: 'taco-adminuserfield',
             name: 'createdBy',
-            fieldLabel: 'Created By'
+            fieldLabel: Localizer.langResources.SHARED.FileManager.AdvancedFilter.created_by
         },
         {
             xtype: 'fieldcontainer',
-            fieldLabel: 'Created Range',
+            fieldLabel: Localizer.langResources.SHARED.FileManager.AdvancedFilter.created_range,
             layout: {
                 type: 'hbox',
                 align: 'middle'
@@ -38,7 +38,7 @@ Ext.define('Taco.view.fileManager.AdvancedSearchForm', {
                     width: 200
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.FileManager.AdvancedFilter.to,
                     margin: '0 10'
                 }, {
                     xtype: 'datefield',

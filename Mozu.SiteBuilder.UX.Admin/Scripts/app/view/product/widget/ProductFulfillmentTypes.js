@@ -9,7 +9,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
         'Ext.data.Store',
         'Taco.store.Products'
     ],
-    fieldLabel: 'Fulfillment Types',
+    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.fulfillment_types,
     layout: {
         type: "hbox"
     },
@@ -29,7 +29,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
 
         this.directShipCheckbox = Ext.widget({
             xtype: 'checkboxfield',
-            boxLabel: 'Direct Ship',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.direct_ship,
             name: 'directShipCb',
             inputValue: 'DirectShip',
             checked: ((this.fulfillmentTypes.indexOf('DirectShip') != -1) && this.isPhysical),
@@ -43,7 +43,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
 
         this.inStorePickupCheckbox = Ext.widget({
             xtype: 'checkboxfield',
-            boxLabel: 'In Store Pickup',
+            boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.in_store_pickup,
             name: 'inStoreCb',
             margin: '0 15 0 15',
             inputValue: 'InStorePickup',
@@ -57,7 +57,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
 
         this.digitalCreditCheckbox = Ext.widget({
             xtype: 'checkboxfield',
-            boxLabel: 'Email',
+            boxLabel: Localizer.langResources.SHARED.email_text,
             name: 'digitalCreditCb',
             margin: '0 0 0 15',
             inputValue: 'Digital',

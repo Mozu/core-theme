@@ -31,7 +31,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
     width: "100%",
     viewConfig: {
         deferEmptyText: false,
-        emptyText: "No items in this bundle",
+        emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.no_items_in_this_bundle,
         stripeRows: false,
         plugins: {
             ptype: 'gridviewdragdrop',
@@ -191,13 +191,13 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         var catName, warningMsg;
         if (catWarnings.length > 0) {
             catName = this.productInCatalogInfo.get('catalog').name;
-            warningMsg = 'Warning: ';
+            warningMsg = Localizer.langResources.CATALOG.Products.ProductEdit.warning +': ';
             if (catWarnings.length === 1) {
-                warningMsg += ('"' + catWarnings[0] + '" is');
+                warningMsg += ('"' + catWarnings[0] + '" ' + Localizer.langResources.CATALOG.Products.ProductEdit.is + '');
             } else {
-                warningMsg += ('These bundle items, "' + catWarnings.join('", "') + '" are');
+                warningMsg += (Localizer.langResources.CATALOG.Products.ProductEdit.these_bundle_items + ', "' + catWarnings.join('", "') + '" ' + Localizer.langResources.CATALOG.Products.ProductEdit.are + '');
             }
-            warningMsg += (' not active in "' + catName + '"');
+            warningMsg += (' ' + Localizer.langResources.CATALOG.Products.ProductEdit.not_active_in + '"' + catName + '"');
             Taco.app.fireEvent('setmessage', warningMsg, 'error');
         }
     },
@@ -233,7 +233,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         columns = Ext.Array.push(columns, [
             {
                 dataIndex: "quantity",
-                text: "Quantity",
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.quantity,
                 stateId:"quantity",
                 sortable: false,
                 resizable: true,
@@ -247,7 +247,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 stateId: "productCode",
                 resizable: true,
                 menuDisabled: true,
-                text: 'Code',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.code,
                 width: 150
             }, {
                 dataIndex: 'productName',
@@ -255,7 +255,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 stateId: "productName",
                 resizable: true,
                 menuDisabled: true,
-                text: 'Name',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.name,
                 flex: 1
             }, {
                 dataIndex: 'price',
@@ -267,7 +267,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 resizable: true,
                 menuDisabled: true,
                 width: 150,
-                text: (!me.isGlobal ? 'Catalog ' : '') + 'Price'
+                text: (!me.isGlobal ? Localizer.langResources.CATALOG.Products.ProductEdit.catalog + ' ' : '') + Localizer.langResources.CATALOG.Products.ProductEdit.price
             }, {
                 dataIndex: 'salePrice',
                 stateId: "salePrice",
@@ -278,7 +278,7 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 resizable: true,
                 menuDisabled: true,
                 width: 150,
-                text: (!me.isGlobal ? 'Catalog ' : '') + 'Sale Price'
+                text: (!me.isGlobal ? Localizer.langResources.CATALOG.Products.ProductEdit.catalog + ' ' : '') + Localizer.langResources.CATALOG.Products.ProductEdit.sale_price
             }
         ]);
 
@@ -356,10 +356,10 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
         var me = this;
         
         Ext.MessageBox.show({
-            title: 'Remove Item',
+            title: Localizer.langResources.CATALOG.Products.ProductEdit.remove_item,
             rightJustifyButtons: true,
             reverseOrder: true,
-            msg: 'Are you sure you want to remove this item?',
+            msg: Localizer.langResources.CATALOG.Products.ProductEdit.remove_this_item_msg,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {

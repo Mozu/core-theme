@@ -190,6 +190,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name = "emailTemplates")]
         public List<Models.CMS.PageTypeDefinition> EmailTemplates { get; set; }
 
+        [DataMember(Name = "mobileNotificationTemplates")]
+        public List<Models.CMS.PageTypeDefinition> MobileNotificationTemplates { get; set; }
+
         [DataMember(Name = "orderTemplates")]
         public IEnumerable<PageTypeDefinition> BackOfficeTemplates { get; set; }
 

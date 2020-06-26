@@ -11,7 +11,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
          'Taco.core.ux.form.UnitField'
     ],
     alias: 'widget.productshippingsubform',
-    title: 'Shipping',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.shipping,
     
     bodyPadding:"19 0 0 0",
 
@@ -101,7 +101,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                         xtype: 'checkboxfield',
                         name: 'isPackagedStandAlone',
                         margin: '0 0 0 15',
-                        boxLabel: 'Ships by itself',
+                        boxLabel: Localizer.langResources.CATALOG.Products.ProductEdit.ships_by_itself,
                         inputValue: true,
                         checked: record.get("isPackagedStandAlone")
                     }
@@ -200,7 +200,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             items: [
                 {
                     name: (isBundle) ? "" : 'packageWeight',
-                    fieldLabel: 'Weight',
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.weight,
                     selectOnFocus: true,
                     emptyText: 'lbs',
                     unitString: ' lbs',
@@ -217,18 +217,18 @@ Ext.define('Taco.view.product.subform.Shipping', {
                     margin: '0 15 0 0'
                 },
                 {
-                    fieldLabel: "Length",
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.length,
                     name: (isBundle) ? "" : 'packageLength',
                     value:  (isPhysical ? record.get('packageLength') : '0 in'),
                     emptyText: 'l'
                 }, {
                     name: (isBundle) ? "" : 'packageWidth',
-                    fieldLabel: "Width",
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.width,
                     value: (isPhysical ? record.get('packageWidth') : '0 in'),
                     emptyText: 'w'
                 }, {
                     name: (isBundle) ? "" : 'packageHeight',
-                    fieldLabel: "Height",
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.height,
                     value: (isPhysical ? record.get('packageHeight') : '0 in'),
                     emptyText: 'h',
                     margin: '0 0 0 15'
@@ -254,7 +254,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 itemId: "shippingBundleContainer",
                 items: [{
                     xtype: "component",
-                    html: "No bundle items selected"
+                    html: Localizer.langResources.CATALOG.Products.ProductEdit.no_bundle_item_selected
                 }]
             },
             store = me.product.getBundledProducts(),
@@ -289,7 +289,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 hideTrigger: true,
                 readOnly: true,
                 margin: "20 0 0 260",
-                fieldLabel: "Total Weight",
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.total_weight,
                 value: totalWeight
             });
         }

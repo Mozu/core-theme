@@ -17,7 +17,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
     ui: 'subform',
     margin: '0 0 39 0',
 
-    title: 'Code Configuration',
+    title: Localizer.langResources.MARKETING.CouponSets.code_configuration,
     
     config : {
         isCreateMode: false
@@ -42,7 +42,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
             hideTrigger: true,
             width: twoColumnFieldWidth,
             margin: "0 50 0 0",
-            fieldLabel: 'Number of Codes',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.number_of_codes,
             //emptyText: '',
             readOnly: !me.isCreateMode,
             minValue: 0,
@@ -54,13 +54,13 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
                 name: 'couponSetCode',
                 itemId: 'coupon-set-prefix-field',
                 readOnly: !me.isCreateMode,
-                fieldLabel: "Code Prefix",
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.code_prefix,
                 labelAlign: 'top',
                 allowBlank: true,
                 enforceMaxLength: true,
                 maxLength: 32,
                 flex:1,
-                emptyText: 'Generated if blank',
+                emptyText: Localizer.langResources.MARKETING.CouponSets.generated_if_blank,
                 enableKeyEvents: true,
                 //regex: /^[BCDFGHJKLMNPQRSTVWXYZ1-9\$!]+$/i,
                 //regexText: 'Invalid character. Vowels, the number 0, and any special characters, except "$" or "!", are not allowed.',
@@ -86,7 +86,7 @@ Ext.define('Taco.view.couponSet.GeneratedCodeForm', {
             scale: "medium",
             width: 100,
             margin: "41 0 0 5",
-            text: "Suggest",
+            text: Localizer.langResources.MARKETING.CouponSets.suggest_text,
             handler: me.suggestPrefix,
             scope: me
         });

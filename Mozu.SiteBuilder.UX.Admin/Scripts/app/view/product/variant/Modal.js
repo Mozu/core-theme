@@ -11,7 +11,7 @@ Ext.define('Taco.view.product.variant.Modal', {
         'Taco.view.product.variant.Options'
     ],
 
-    primaryText: 'Save',
+    primaryText: Localizer.langResources.SHARED.save,
     closeAction :'destroy',
     closeOnSave: true,
 
@@ -21,7 +21,7 @@ Ext.define('Taco.view.product.variant.Modal', {
     itemId: 'variantionModal',
 
     scale: 'large',
-    title: 'Edit Variants',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.edit_variants,
 
     resizable: true,
     layout: 'fit',
@@ -32,7 +32,7 @@ Ext.define('Taco.view.product.variant.Modal', {
 
     actions: [{
         xtype: 'button',
-        text: 'Update Options',
+        text: Localizer.langResources.CATALOG.Products.ProductEdit.update_options,
         ui: 'action',
         scale: 'large',
         handler: function() {
@@ -175,10 +175,10 @@ Ext.define('Taco.view.product.variant.Modal', {
         });
 
         if (needsPrompt) {
-            var msg = "You have entered data for variations, that have not been enabled. <br/>This data will not be saved. <br/>Do you want to enable these variations before saving?. ";
+            var msg = Localizer.langResources.CATALOG.Products.ProductEdit.variation_msg1 + "<br/>" + Localizer.langResources.CATALOG.Products.ProductEdit.variation_msg2 + "<br/>" + Localizer.langResources.CATALOG.Products.ProductEdit.variation_msg3;
 
             Ext.MessageBox.show({
-                title: 'Enable Variations?',
+                title: Localizer.langResources.CATALOG.Products.ProductEdit.enable_variations,
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons

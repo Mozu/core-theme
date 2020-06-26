@@ -17,14 +17,14 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
     minHeight:300,
     height: 300,
     width:800,
-    title: 'Change Product Code',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.change_product_code,
     layout: {
         type: 'fit'
     },
 
     defaultFocus: "newProductCode",
 
-    sameCodeErrorTxt : "The new and current product code cannot be the same",
+    sameCodeErrorTxt: Localizer.langResources.CATALOG.Products.ProductEdit.same_code_error,
 
     initComponent: function () {
         var me = this;
@@ -126,7 +126,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             layout: 'anchor',
             items: [{                
                 xtype: "component",
-                tpl: "<span class=''>Product Name: {productName}</span>",
+                tpl: "<span class=''>" + Localizer.langResources.SHARED.product_name + ": {productName}</span>",
                 data:{
                     productName: this.product.get("productName")
                 },
@@ -139,18 +139,18 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     xtype: "textfield",
                     readOnly: true,
                     tabIndex:-1,
-                    fieldLabel: "Current Product Code",
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.current_product_code,
                     flex: 1,
                     value: this.product.get("productCode")
                 },{
                     xtype: "textfield",                    
-                    fieldLabel: "New Product Code",
+                    fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.new_product_code,
                     name: "newProductCode",
                     itemId: "newProductCode",
                     margin: "0 0 0 20",
                     allowBlank: hasVariations,
                     labelClsExtra: (hasVariations) ? '' : 'x-form-item-required',
-                    emptyText: "Enter New Product Code",                    
+                    emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.new_product_code_emptytext,                    
                     invalidValue : this.product.get("productCode"),
                     validator: function (value) {
                         return (value && value == this.invalidValue) ? me.sameCodeErrorTxt : true
@@ -292,7 +292,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             error = [];
 
         if (!jsonData.length) {
-            Taco.app.fireEvent('setmessage', "No product code changes found", 'error');
+            Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.product_code_error_msg, 'error');
             return false
         } else {
             error = Ext.Array.findBy(jsonData, function (record) {                
@@ -323,10 +323,10 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             return;
         };
 
-        var msg = "<div style='padding-left:10px;padding-right:10px;'><div>Changing the product code may:</div> <ul><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>Leave existing orders in an undesirable state</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>Impact linkages with other products</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'> Affect reporting</li></ul> <div style='padding-top:10px'>Would you like to proceed?</div></div>"
+        var msg = "<div style='padding-left:10px;padding-right:10px;'><div>" + Localizer.langResources.CATALOG.Products.ProductEdit.changing_code_msg1 + "</div> <ul><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>" + Localizer.langResources.CATALOG.Products.ProductEdit.changing_code_msg2 + "</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>" + Localizer.langResources.CATALOG.Products.ProductEdit.changing_code_msg3 + "</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'> " + Localizer.langResources.CATALOG.Products.ProductEdit.changing_code_msg4 + "</li></ul> <div style='padding-top:10px'>" + Localizer.langResources.CATALOG.Products.ProductEdit.changing_code_msg5 + "</div></div>"
         
         Ext.MessageBox.show({
-            title: 'Warning',
+            title: Localizer.langResources.CATALOG.Products.ProductEdit.warning,
             defaultFocus: Ext.MessageBox.msgButtons[2],
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,

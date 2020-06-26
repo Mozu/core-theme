@@ -45,7 +45,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
-    createButtonText: 'Create New Image Group',
+    createButtonText: Localizer.langResources.CATALOG.Products.ProductEdit.create_new_image_group,
 
     showActionsColumn: true,
 
@@ -63,7 +63,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
 
     enableQuickFilters: false,
 
-    deletePromptMsg: 'Are you sure you want to delete this image group?',
+    deletePromptMsg: Localizer.langResources.CATALOG.Products.ProductEdit.delete_image_msg,
 
     isCatalogLevel: false,
     categoryCode: null,
@@ -112,7 +112,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: 'groupName',
                 stateId: 'name',
-                text: 'Group Code',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.group_code,
                 hideable: false,
                 sortable: true,
                 flex: 1
@@ -120,7 +120,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'optionValues',
-                text: 'Option Values',
+                text: Localizer.langResources.CATALOG.Products.ProductEdit.option_values,
                 hideable: false,
                 sortable: false,
                 flex: 1,
@@ -144,7 +144,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
 
         if (this.enableEditAction) {
             actions.push({
-                text: 'Edit',
+                text: Localizer.langResources.SHARED.edit,
                 menuColumnHandler: me.doEdit,
                 scope: me,
                 disabled: !me.isGlobal
@@ -153,7 +153,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
 
         if (this.enableDeleteAction) {
             actions.push({
-                text: 'Delete',
+                text: Localizer.langResources.SHARED.delete_btn_text,
                 itemId: 'deleteMenuItem',
                 menuColumnHandler: me.doDelete,
                 scope: me,

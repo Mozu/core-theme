@@ -24,8 +24,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         
         public List<PageTypeDefinition> PageTypes { get; set; }
 
-        
-        public List<PageTypeDefinition> EmailTemplates { get; set; }
+      
+        public List<PageTypeDefinition> EmailTemplates { get; set; }        
+               
+   
+        public List<PageTypeDefinition> MobileNotificationTemplates { get; set; }
 
         
         public List<PageTypeDefinition> BackOfficeTemplates { get; set; }

@@ -35,23 +35,26 @@ nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
 nuget Mozu.CommerceRuntime.Contracts 1.2021.0-gshotContracts-146
 nuget mozu.Content.Contracts < 1.20
-nuget Mozu.Core.Messaging 1.1902.1
-nuget Mozu.Core.Messaging.Contracts 1.1902.1
+nuget Mozu.Core.Messaging 1.2026.0-ngshotContracts-52
+nuget Mozu.Core.Messaging.Contracts 1.2026.0-ngshotContracts-52
 nuget Mozu.Core.Test 1.1903.1
 nuget Mozu.Customer.Contracts 1.1909.2
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
-nuget Mozu.Location.Contracts 1.2016.0-ngshotContracts-23
+nuget Mozu.Location.Contracts 1.2026.0-ngshotContracts-26
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
-nuget Mozu.PricingRuntime.Contracts 1.2022.0-develop.33
-nuget Mozu.ProductAdmin.Contracts 1.2024.0-develop.39
-nuget Mozu.ProductRuntime.Contracts 1.2022.0-develop.33
+
+nuget Mozu.PricingRuntime.Contracts 1.2025.2
+nuget Mozu.ProductAdmin.Contracts 1.2025.2
+nuget Mozu.ProductRuntime.Contracts 1.2025.2
+
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts 1.2026.0-gshot-contracts-20
-nuget Mozu.SiteSettings.General.Contracts 1.2012.0-gshot-contracts-77
+nuget Mozu.PricingRuntime.Contracts >= 1.1916.0-develop-6
+nuget Mozu.SiteSettings.General.Contracts 1.2023.0-gshot-contracts-82
 nuget Mozu.SiteSettings.Order.Contracts 1.2012.0-gshot-contracts-77
 nuget Mozu.SiteSettings.Ship.Contracts 1.1936.0-gshot-contracts-40
 nuget protobuf-net 2.0.0.668
@@ -78,7 +81,7 @@ nuget Mozu.ShippingRuntime.Contracts 1.1623.1
 nuget Mozu.Core.Extensible.Contracts 1.1801.1
 nuget AutofacContrib.NSubstitute 3.3.2
 nuget FluentValidation 5.5.0.0
-
+nuget KuttSharp 0.4.1
 nuget Autofac 3.5.2
 nuget FSharp.Core 3.1.2.1
 nuget FSharpx.Collections 1.9.6

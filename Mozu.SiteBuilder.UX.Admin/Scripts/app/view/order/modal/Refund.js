@@ -290,8 +290,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                     forceSelection: true,
                     queryMode: 'local',
                     store: [
-                        ['CreditCard', 'Direct Refund'],
-                        ['StoreCredit', 'Store Credit']
+                        ['CreditCard', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.direct_refund],
+                        ['StoreCredit', Localizer.langResources.ORDERS.Orders.OrderEdit.Payments.PaymentPanel.store_credit]
                     ],
                     listeners: {
                         change: {

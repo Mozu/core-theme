@@ -44,7 +44,7 @@ Ext.define('Taco.core.ux.window.Modal', {
      * @cfg {String} primaryText
      * Text of the primary action that will fire the 'save' event
      */
-    primaryText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.save,
+    primaryText: Localizer.langResources.SHARED.save,
 
     /**
      * @cfg {Boolean} scopeActionsToWindow
@@ -56,7 +56,7 @@ Ext.define('Taco.core.ux.window.Modal', {
      * @cfg {String} secondaryText
      * Text of the secondary action that will fire the 'cancel' event
      */
-    secondaryText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.cancel,
+    secondaryText: Localizer.langResources.SHARED.cancel,
     
     closable: true,
     draggable: true,

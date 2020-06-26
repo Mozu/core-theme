@@ -80,7 +80,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
             fieldActions: [
                 {
                     xtype: "button",
-                    text: "Create",
+                    text: Localizer.langResources.MARKETING.CouponSets.create,
                     margin:{left:4},
                     ui: "action",
                     scale: "medium",
@@ -90,7 +90,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         shadow: false,
                         items: [
                             {
-                                text: 'Manual Coupon Set',
+                                text: Localizer.langResources.MARKETING.CouponSets.manual_coupon_set,
                                 requiredBehaviors: {
                                     model: 'Taco.model.CouponSet',
                                     behavior: 'create'
@@ -108,7 +108,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                                     }
                                 }
                             }, {
-                                text: 'Generated Coupon Set',
+                                text: Localizer.langResources.MARKETING.CouponSets.generated_coupon_set,
                                 requiredBehaviors: {
                                     model: 'Taco.model.CouponSet',
                                     behavior: 'create'
@@ -131,7 +131,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                 }
             ],
             //flex: 1,
-            emptyText: fieldCfg.emptyText || "Select coupon sets",
+            emptyText: fieldCfg.emptyText || Localizer.langResources.MARKETING.CouponSets.select_coupon_sets,
             value: value,
             listeners: {
                 'change':function () {
@@ -146,7 +146,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'name',
                         stateId: 'name',
-                        text: 'Name',
+                        text: Localizer.langResources.MARKETING.CouponSets.name,
                         hideable: false,
                         flex: 1,
                         minWidth: 150,
@@ -155,14 +155,14 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'couponCodeType',
                         stateId: 'couponCodeType',
-                        text: 'Type',
+                        text: Localizer.langResources.MARKETING.CouponSets.type,
                         width: 150,
                         sortable: true
                     }, {
                         xtype: 'gridcolumn',
                         dataIndex: 'countOrSetSize',
                         stateId: 'countOrSetSize',
-                        text: 'Total Codes',
+                        text: Localizer.langResources.MARKETING.CouponSets.total_codes,
                         width: 180,
                         hidden: false,
                         sortable: false,
@@ -171,7 +171,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'redemptionCount',
                         stateId: 'redemptionCount',
-                        text: '# Redeemed',
+                        text: Localizer.langResources.MARKETING.CouponSets.hash_redeemed,
                         width: 180,
                         hidden: false,
                         sortable: false,
@@ -180,7 +180,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'redemptionPercent',
                         stateId: 'redemptionPercent',
-                        text: '% Redeemed',
+                        text: Localizer.langResources.MARKETING.CouponSets.percent_redeemed,
                         width: 180,
                         hidden: false,
                         sortable: false,
@@ -190,7 +190,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'assignedDiscountCount',
                         stateId: 'assignedDiscountCount',
-                        text: '# of Assigned Discounts',
+                        text: Localizer.langResources.MARKETING.CouponSets.hash_assigned_discounts,
                         width: 180,
                         hidden: false,
                         sortable: false,
@@ -199,7 +199,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         xtype: 'gridcolumn',
                         dataIndex: 'couponSetCode',
                         stateId: 'couponSetCode',
-                        text: 'Code Prefix',
+                        text: Localizer.langResources.MARKETING.CouponSets.code_prefix,
                         width: 180,
                         hidden: true,
                         sortable: true
@@ -209,7 +209,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         stateId: 'startDate',
                         format: 'n/j/Y g:i a',
                         width: 130,
-                        text: 'Start Date',
+                        text: Localizer.langResources.MARKETING.CouponSets.start_date,
                         hidden: true,
                         sortable: true
                     }, {
@@ -218,7 +218,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         stateId: 'endDate',
                         format: 'm-d-Y g:i a',
                         width: 130,
-                        text: 'End Date',
+                        text: Localizer.langResources.MARKETING.CouponSets.end_date,
                         hidden: true,
                         sortable: true,
                         renderer: function (value, metaData, record) {
@@ -254,7 +254,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
         
         gridActions.push(
             {
-                text: 'Edit',
+                text: Localizer.langResources.SHARED.edit,
                 requiredBehaviors: {
                     model: 'Taco.model.Discount',
                     behavior: 'update'
@@ -266,7 +266,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                 scope:me
             },
             {
-                text: 'Create Manual Coupon Set',
+                text: Localizer.langResources.MARKETING.CouponSets.create_manual_coupon_set,
                 requiredBehaviors: {
                     model: 'Taco.model.Discount',
                     behavior: 'update'
@@ -277,7 +277,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                 scope: me
             },
             {
-                text: 'Create Generated Coupon Set',
+                text: Localizer.langResources.MARKETING.CouponSets.create_generated_coupon_set,
                 requiredBehaviors: {
                     model: 'Taco.model.Discount',
                     behavior: 'update'
@@ -494,7 +494,7 @@ Ext.define('Taco.view.discount.widget.CouponSetSelector', {
                         data: fieldRecord.get("validEnumValues")
                     }),
                     queryMode: 'local',
-                    valueNotFoundText: 'not found',
+                    valueNotFoundText: Localizer.langResources.MARKETING.CouponSets.not_found_text,
                     editable: false,
                     forceSelection: true,
                     displayField: displayField,

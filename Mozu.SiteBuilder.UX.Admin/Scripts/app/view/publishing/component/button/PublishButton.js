@@ -11,7 +11,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     menuAlign: 'tr-br',
     height: 40,
     scale: 'medium',
-    text: 'Publish Now',
+    text: Localizer.langResources.SHARED.publish_now,
     margin: '0 0 0 10',
     initComponent: function() {
 
@@ -38,21 +38,21 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         };
 
         this.moveOption =   {
-            text: 'Move to Publish Set',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.move_to_publish_set,
             scope: this,
             itemId: this.itemSelectors.move,
             handler: this._onMoveToPublish
         };
 
         this.removeOption = {
-            text: 'Remove From Publish Set',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.remove_from_publish_set,
             scope: this,
             itemId: this.itemSelectors.remove,
             handler: this._onRemoveFromPublishSet
         };
 
         this.discardOption = {
-            text: 'Discard Draft',
+            text: Localizer.langResources.CATALOG.Products.ProductEdit.discard_draft,
             itemId: this.itemSelectors.discard,
             scope: this,
             handler: this._onDiscardDraft
@@ -96,7 +96,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     setLoading: function(isLoading, cb) {
 
         var method = isLoading ? 'addCls' : 'removeCls',
-            text = isLoading ?  'Proccessing...': 'Publish Now',
+            text = isLoading ? Localizer.langResources.SHARED.proccessing : Localizer.langResources.SHARED.publish_now,
             me = this;
 
         if (isLoading) {
@@ -111,7 +111,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
     onMenuShow: function(cmp) {
 
         if (!this.record) {
-            console.warn('A record must be supplied for this component to function correctly');
+            console.warn(Localizer.langResources.CATALOG.Products.ProductEdit.record_supplied_msg);
             return false;
         }
 
@@ -141,8 +141,8 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         this.getPublishSetById(function(publishSet) {
             me.getModal({
-                header: 'Remove Draft',
-                message: 'Are you sure you want to remove ' + name + ' from ' + publishSet.get('name') ,
+                header: Localizer.langResources.CATALOG.Products.ProductEdit.remove_draft,
+                message: Localizer.langResources.SHARED.remove_msg + name + ' ' + Localizer.langResources.SHARED.from + ' ' + publishSet.get('name') ,
                 onSave: me.onRemoveFromPublishSet.bind(me, me.record),
                 onCancel: me.onCancelRemove
             });
@@ -155,9 +155,9 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
         var name = this.record.get('name') || this.record.get('productName');
 
         this.getModal({
-            header: 'Discard Draft',
-            message: 'Are you sure you want to discard ' + name + '?',
-            primaryText: 'Yes, Discard',
+            header: Localizer.langResources.CATALOG.Products.ProductEdit.discard_draft,
+            message: Localizer.langResources.SHARED.discard_msg + name + '?',
+            primaryText: Localizer.langResources.SHARED.discard_text,
             onSave: this.onDiscardDraft.bind(me, me.record),
             onCancel: this.onCancelDiscard
         });
@@ -220,7 +220,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
                 cb(record);
             },
             failure: function() {
-                Taco.app.fireEvent('setmessage', 'Error Retrieving Publish Set Information', 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.error_retrieving_publish_set , 'error');
             }
         }, this);
     },
@@ -232,8 +232,8 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             modal: true,
             closeAction: 'destroy',
             height: 200,
-            primaryText: config.primaryText ? config.primaryText : 'Confirm',
-            secondaryText: config.secondaryText ? config.secondaryText :'Cancel',
+            primaryText: config.primaryText ? config.primaryText : Localizer.langResources.SHARED.confirm,
+            secondaryText: config.secondaryText ? config.secondaryText : Localizer.langResources.SHARED.cancel,
             items: [{
                 xtype: 'container',
                 layout: { 

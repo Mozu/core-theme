@@ -21,7 +21,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
     cls: Taco.baseCSSPrefix + 'orderform-editor',
     height: '90%',
     width: '80%',
-    title: 'Create Coupon Set',
+    title: Localizer.langResources.MARKETING.CouponSets.create_coupon_set,
     createType: '',
     isCreateMode: true,
     record: null,
@@ -50,12 +50,22 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
         this.titleTemplate = new Ext.XTemplate(
-            '{editType} {couponSetType} Coupon Set'
+            '{editType} {couponSetType} ' + Localizer.langResources.MARKETING.CouponSets.coupon_set_text
         );
 
+        var couponSetType;
+        var createText;
+        if (me.record && me.record.get('couponSetType')) {
+            couponSetType = eval('Localizer.langResources.MARKETING.CouponSets.' + me.record.get('couponSetType').toLowerCase());
+        } else {
+            if (me.createType) {
+                createText = eval('Localizer.langResources.MARKETING.CouponSets.' + me.createType.toLowerCase());
+            }
+        }
+
         this.title = this.titleTemplate.apply({
-            editType: me.isCreateMode ? 'Create' : 'Edit',
-            couponSetType: me.record ? me.record.get('couponSetType') : me.createType
+            editType: me.isCreateMode ? Localizer.langResources.MARKETING.CouponSets.create : Localizer.langResources.SHARED.edit,
+            couponSetType: me.record ? couponSetType : createText
         });
 
         //onBeforeClose
@@ -66,7 +76,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         this.callParent(arguments);
         
         if (this.isCreateMode) {
-            this.managePanelsOnCreate(false, 'Save & Continue', false);  //has to be after parent call
+            this.managePanelsOnCreate(false, Localizer.langResources.MARKETING.CouponSets.save_continue_btn_text, false);  //has to be after parent call
         }
     },
 
@@ -153,12 +163,12 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
             couponSetModel = Ext.ModelManager.getModel('Taco.model.CouponSet');
         
          me.setLoading({
-             msg: "Loading"
+             msg: Localizer.langResources.SHARED.loading_text
          }, me.body);
         
         couponSetModel.load(couponSetCode, {
             failure: function () {
-                Taco.app.fireEvent('setmessage', "Error loading couponSet", 'error');
+                Taco.app.fireEvent('setmessage', Localizer.langResources.MARKETING.CouponSets.error_loading_couponSet, 'error');
                 me.setLoading(false, this.body);
             },
             success: function (record) {
@@ -290,7 +300,7 @@ Ext.define('Taco.view.couponSet.modal.CouponSetEditor', {
         this.record.save({
             success: onSuccess,
             failure: function(item, response) {
-                var message = (response.error.status == 409) ? 'That code prefix is already in use' : 'There was an error saving the Coupon Set';
+                var message = (response.error.status == 409) ? Localizer.langResources.MARKETING.CouponSets.code_prefix_already_in_use : Localizer.langResources.MARKETING.CouponSets.error_saving_coupon_set;
                 Taco.app.fireEvent('setmessage', message, 'error');
             },
             scope: me

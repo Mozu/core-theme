@@ -497,6 +497,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
+            else if (templateid == "mobile-notification")
+            {
+                object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                return await RenderWithContext(template, model);
+            }
             else
             {
                 return NotFound();

@@ -21,7 +21,7 @@ Ext.define('Taco.view.order.Header', {
 
     cls: 'taco-order-header',
 
-    title: 'Customer',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.customer,
 
     ui: 'default',
 
@@ -96,7 +96,7 @@ Ext.define('Taco.view.order.Header', {
     },
 
     canViewShopperCart: function() {
-        return this.record.getCustomer() && this.record.get('orderStatus') === Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Statuses.pending;
+        return this.record.getCustomer() && this.record.get('orderStatus') === 'Pending'
     },
 
     showStorefrontModal: function (customerId, userId, orderId) {
@@ -190,11 +190,11 @@ Ext.define('Taco.view.order.Header', {
             scale: 'large',
             width: '95%',
             height: '95%',
-            primaryText: 'Add Items to Order',
-            secondaryText: 'Close',
+            primaryText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.add_items_to_order,
+            secondaryText: Localizer.langResources.SHARED.close,
             primaryHandler: addCartItems,
             shadow: true,
-            title: 'Do not proceed to checkout after adding items to cart. Use <em>Add Items to Order</em> to complete the order.',
+            title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.title_checkout,
             showActionsBar: false, // Opt for tools in the title.
             actionBar: { dock: 'top' },
             tools: [
@@ -202,7 +202,7 @@ Ext.define('Taco.view.order.Header', {
                     ui: 'action',
                     xtype: 'button',
                     scale: 'medium',
-                    text: 'Add Items to Order',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.add_items_to_order,
                     handler: addCartItems,
                     scope: me,
                     margin: '0, 30, 0, 0' // Make room for the close button.
@@ -236,7 +236,7 @@ Ext.define('Taco.view.order.Header', {
         this.viewCartLink = Ext.widget({
             xtype: 'button',
             ui: 'link',
-            text: 'View User\'s Cart',
+            text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.view_users_cart,
             itemId: 'viewCartLink',
             hidden: !this.canViewShopperCart(),
             // Customer update behavior required for impersonation.
@@ -564,12 +564,12 @@ Ext.define('Taco.view.order.Header', {
             items: [
                 {
                     xtype: 'label',
-                    text: 'Email:',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.email,
                     cls: 'label label-light'
                 }, this.emailCmp, {
                     xtype: 'button',
                     ui: 'link',
-                    text: 'Edit Email Address',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.edit_email_address,
                     itemId: "changeEmailLink",
                     requiredBehaviors: [
                         { model: 'Taco.model.Order', behavior: 'update' },
@@ -595,7 +595,7 @@ Ext.define('Taco.view.order.Header', {
             showAnonymousCustomers: true,
             filterByCustomerSet: true,
             width: 300,
-            emptyText: 'Customer Search',
+            emptyText: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.EmptyText.customer_search,
             disabled: Taco.user.isFulfillerUser,
             listeners: {
                 select: function (combo, records) {
@@ -624,7 +624,7 @@ Ext.define('Taco.view.order.Header', {
                     ui: 'action-primary',
                     scale: 'medium',
                     itemId: "createNewCustomerButton",
-                    text: 'Create New Customer',
+                    text: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Buttons.create_new_customer,
                     handler: this.createCustomer,
                     scope: this,
                     requiredBehaviors: [{
@@ -696,7 +696,7 @@ Ext.define('Taco.view.order.Header', {
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: "<div style='padding:0px 10px ;'>The customer's default shipping address is missing an email address.<div style='padding-top:20px'>Edit customer now?</div>",
+                msg: "<div style='padding:0px 10px ;'>"+Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.missing_email_address+"<div style='padding-top:20px'>Edit customer now?</div>",
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {

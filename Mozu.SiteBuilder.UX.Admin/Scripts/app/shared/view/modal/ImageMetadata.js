@@ -7,8 +7,8 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
     closeAction: 'destroy',
     autoShow: true,
     scale: 'medium',
-    title: 'Image Alternative Text',
-    primaryText: 'OK',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.image_alternative_text,
+    primaryText: Localizer.langResources.SHARED.ok,
 
     initComponent: function () {
         var me = this;
@@ -21,7 +21,7 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
             items: [{
                 xtype: 'textarea',
                 name: 'alt',
-                fieldLabel: 'Enter Alt Text for this Image',
+                fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.alt_text_for_image,
                 allowBlank: true,
                 selectOnFocus: true,            
                 width: "100%",
@@ -31,7 +31,7 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
                         encodedLength = (!val) ? 0 : Ext.util.Format.htmlEncode(val).length;
                     if (encodedLength <= maxLen)
                         return true;
-                    return 'The maximum number of characters is ' + maxLen + ', including characters escaped into HTML, such as "&". Please reduce text by ' + (encodedLength - 150) + ' character' + ((encodedLength - 150 > 1) ? 's.' : '.');
+                    return Localizer.langResources.CATALOG.Products.ProductEdit.maximum_characters_is + ' ' + maxLen + ', ' + Localizer.langResources.CATALOG.Products.ProductEdit.including_characters_escaped_html + ' "&". ' + Localizer.langResources.CATALOG.Products.ProductEdit.reduce_text + ' ' + (encodedLength - 150) + ' ' + Localizer.langResources.CATALOG.Products.ProductEdit.character + '' + ((encodedLength - 150 > 1) ? 's.' : '.');
                 }
             }]
         });

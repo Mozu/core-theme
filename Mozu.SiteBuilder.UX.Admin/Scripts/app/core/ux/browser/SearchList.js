@@ -217,12 +217,12 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
 
         Ext.MessageBox.show({
-            title: 'Delete',
+            title: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.delete_prod,
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: this.deleteItemMsg ? this.deleteItemMsg :  "Are you sure you want to delete this?",
+            msg: this.deleteItemMsg ? this.deleteItemMsg : Localizer.langResources.CATALOG.Products.ProductDetails.Message.delete_msg,
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
@@ -239,7 +239,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
                             store.reload();
                             grid.setLoading(false);
 
-                            var text = "Unknown error.";
+                            var text = Localizer.langResources.CATALOG.Products.ProductDetails.Message.unknown_error;
                             if (m.exceptions && Taco.core.util.ExceptionWhiner.wasHandled(m.exceptions)) {
                                 return;
                             }

@@ -43,7 +43,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             valueField: 'id',
             itemId:'itemAdder',
             displayField: 'value',
-            emptyText: 'Add Value',
+            emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.add_value,
             queryMode: 'local',
             width: 400,
             listeners: {
@@ -96,13 +96,13 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                 all: [
                     {
                         dataIndex: 'value',
-                        text: 'Value',
+                        text: Localizer.langResources.SHARED.value,
                         flex: 1
 
                     },
                     {
                         dataIndex: 'deltaPrice',
-                        text: 'Price',
+                        text: Localizer.langResources.SHARED.price,
                         renderer: function (value) {
                             return (value || value === 0) ? me.product.formatCurrency(value) : '--';
                         },
@@ -115,7 +115,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     },
                     {
                         dataIndex: 'deltaWeight',
-                        text: 'Weight',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.weight,
                         editor: {
                             xtype: 'numberfield',
                             hideTrigger: true
@@ -125,7 +125,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                   
                     {
                         dataIndex: 'isDefaulted',
-                        text: 'Defaulted',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.defaulted,
                         xtype: 'booleancolumn',
 
                         trueText: 'Yes',
@@ -140,17 +140,17 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                 productcode: [
                     {
                         dataIndex: 'value',
-                        text: 'Code'
+                        text: Localizer.langResources.SHARED.code,
                     },
                     {
                         dataIndex: 'productName',
-                        text: 'Product Name',
+                        text: Localizer.langResources.SHARED.product_name,
                         flex: 1
 
                     },
                     {
                         dataIndex: 'price',
-                        text: 'Mast Catalog Price',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.mast_catalog_price,
                         renderer: function (v) {
                             return v ? me.product.formatCurrency(v) : undefined;
                         }
@@ -158,7 +158,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     },
                     {
                         dataIndex: 'salePrice',
-                        text: 'Mast Catalog Sale Price',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.mast_catalog_sale_price,
                         renderer: function (v) {
                             return v ? me.product.formatCurrency(v) : undefined;
                         }
@@ -166,7 +166,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     },
                     {
                         dataIndex: 'deltaPrice',
-                        text: 'Price',
+                        text: Localizer.langResources.SHARED.price,
                         renderer: function (value) {
                             return me.product.formatCurrency(value);
                         },
@@ -179,7 +179,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     },
                     {
                         dataIndex: 'quantity',
-                        text: 'Quantity',
+                        text: Localizer.langResources.SHARED.quantity,
                         editor: {
                             xtype: 'numberfield',
                             hideTrigger: true
@@ -188,7 +188,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     },
                     {
                         dataIndex: 'isDefaulted',
-                        text: 'Defaulted',
+                        text: Localizer.langResources.CATALOG.Products.ProductEdit.defaulted,
                         xtype: 'booleancolumn',
                         trueText: 'Yes',
                         falseText: 'No',

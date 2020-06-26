@@ -22,7 +22,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
     //},
     launchEditorOnClick: false,
     deferEmptyText:false,
-    emptyText: 'None Available',
+    emptyText: Localizer.langResources.SHARED.none_available,
 
     autoScroll: false,
 
@@ -173,7 +173,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
             me.quickAddField = Ext.create('Taco.shared.view.field.DiscountPickerField',{
                 statusFilter: 'active,scheduled',
                 flex: 1,
-                emptyText: "Search for discount and hit ENTER key to Add",
+                emptyText: Localizer.langResources.MARKETING.CouponSets.search_discount_text,
                 listeners: {
                     scope: me,
                     select: function (field, records, e) {
@@ -216,7 +216,7 @@ Ext.define('Taco.view.couponCode.DiscountGrid', {
         originalActions = this.callParent(arguments);
         
         actions.push({
-            text: 'Remove',
+            text: Localizer.langResources.SHARED.remove_btn_text,
             menuColumnHandler: function(item, eventData) {
                 var record = eventData.record;
                 me.removeDiscount(record);

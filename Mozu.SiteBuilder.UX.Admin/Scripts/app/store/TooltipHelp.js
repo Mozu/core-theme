@@ -97,7 +97,7 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'When checked, shoppers must be logged into a storefront account<br/>in order for both the discount and restriction to apply.'
         }, {
             key: 'publishset.publishsetdate',
-            value: 'Publish Date is inherited from the<br/> Publish Set, and designates the<br/> date and time when all drafts in<br/> Publish Set publish.'
+            value: Localizer.langResources.SHARED.publish_tooltip1 + '<br/> ' + Localizer.langResources.SHARED.publish_tooltip2 + '<br/> ' + Localizer.langResources.SHARED.publish_tooltip3 + '<br/> ' + Localizer.langResources.SHARED.publish_tooltip4
         }, {
             key: 'couponSet.generatedCode.prefix',
             value: 'The Code Prefix field specifies the prefix of all generated<br/>coupon codes within the coupon set.  This coupon prefix<br/>should be unique to the coupon set.  You can either specify<br/>a custom prefix or have Mozu suggest one.'

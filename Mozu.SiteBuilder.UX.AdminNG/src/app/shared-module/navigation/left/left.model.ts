@@ -12,7 +12,7 @@ export class LeftNavigationModel {
     isShowSearchComponent : boolean;
     linkColors: string[]  = ['kibo-purple', 'kibo-green', 'kibo-blue', 'kibo-orange'];
     mainHelpLinkStyleClass: string;
-    systemHelpLinkStyleClass: string;
+    systemHelpLinkStyleClass: string;   
 }
 
 export class LeftNavigationTabs {
@@ -48,4 +48,11 @@ export class LeftNavigationTabs {
 export interface SecureForm {
     dateStamp: Date;
     messageHash: string;
+}
+
+export class LeftNavigationHamburgerMenu {
+    homeLabel: string;
+    mainLabel: string;
+    systemLabel: string;
+    importExport: string;
 }

@@ -59,9 +59,9 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
         );
     },
 
-    deletePromptMsg : "Are you sure you want to delete this?",
+    deletePromptMsg: Localizer.langResources.SHARED.delete_confirm_msg,
 
-    deletePromptTitle: 'Delete',
+    deletePromptTitle: Localizer.langResources.SHARED.delete_text,
 
     getDeletePromptMessage: function (record) {
         return this.deletePromptMsg;
@@ -143,6 +143,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
             msg: me.getDeletePromptMessage(record),
             closable: false,
             buttons: Ext.Msg.YESNO,
+            buttonText: { yes: Localizer.langResources.SHARED.yes, no: Localizer.langResources.SHARED.no },
             fn: function (val) {
                 if (val === 'yes') {
                     removeRecord(record);

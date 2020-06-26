@@ -18,11 +18,11 @@ Ext.define('Taco.view.couponCode.AdvancedSearchForm', {
         this.items = [
             {
                 name: 'couponCode',
-                fieldLabel: 'Coupon Code'
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.coupon_code
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Create Date Range',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.create_date_range,
                 layout: {
                     type: 'hbox'
                 },
@@ -34,7 +34,7 @@ Ext.define('Taco.view.couponCode.AdvancedSearchForm', {
                     flex: 1
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.to_text,
                     margin: '8 10'
                 }, {
                     xtype: 'datetime',

@@ -45,7 +45,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
     enableQuickFilters: true,
     disableAdvancedSearch: false,
-    emptySearchText: Localizer.langResources.ORDERS.Orders.AdvancedFilter.Search,
+    emptySearchText: Localizer.langResources.SHARED.FileManager.empty_search_text,
 
     initialValue: null,
 

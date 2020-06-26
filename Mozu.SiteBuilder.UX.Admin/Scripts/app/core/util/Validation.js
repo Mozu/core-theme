@@ -84,7 +84,7 @@ Ext.define('Taco.core.util.Validation', {
         var seoFriendlyRegex = Taco.core.util.Validation.getSeoFriendlyRegex(),
             isValid = !value || seoFriendlyRegex.test(value);
         if (!isValid) {
-            return 'Invalid format: no spaces or special characters are allowed except hyphens, underscores, parentheses, and periods, but may not end with a period.';
+            return Localizer.langResources.SHARED.ValidationMsg.invalid_format_seofriendly_msg;
         }
         return true;
     },
@@ -99,9 +99,9 @@ Ext.define('Taco.core.util.Validation', {
             isValid = !value || queryStringRegex.test(value),
             validationMsg;
         if (!isValid) {
-            validationMsg = 'Invalid format: please remove any of these special characters % * & + : < > ? / \\';
+            validationMsg = Localizer.langResources.SHARED.ValidationMsg.invalid_format_special_character;
             if (value.endsWith('.')) {
-                validationMsg += '  Periods are not allowed at the end.';
+                validationMsg += '  ' + Localizer.langResources.SHARED.ValidationMsg.periods_not_allowed_error_msg;
             }
             return validationMsg;
         }
@@ -132,7 +132,7 @@ Ext.define('Taco.core.util.Validation', {
         if (requiredCount === 0 && (!startDateFld.getValue() || !endDateFld.getValue())) {
             return true;
         } else if (requiredCount >= 1 && (!startDateFld.getValue() && !endDateFld.getValue())) {
-            return "You must enter an active start " + (requiredCount == 1 ? "or" : "and") + " end date.";
+            return Localizer.langResources.SHARED.ValidationMsg.date_range_error_msg + " " + (requiredCount == 1 ? Localizer.langResources.SHARED.ValidationMsg.or_text : Localizer.langResources.SHARED.ValidationMsg.and_text) + " " + Localizer.langResources.SHARED.ValidationMsg.end_date_text;
         }
 
         var startDate = startDateFld.parseDate(startDateFld.getValue());

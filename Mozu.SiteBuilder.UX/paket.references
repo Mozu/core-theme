@@ -26,3 +26,4 @@ Microsoft.AspNet.WebApi.Tracing
 Mozu.Log4net.Gelf
 RestSharp
 Microsoft.AspNetCore.Mvc.Abstractions
+KuttSharp

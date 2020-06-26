@@ -555,7 +555,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     saveButtonCfg.menu = {
                         cls: 'taco-header-split-button',
                         items: [{
-                            text: "Save and Create New",
+                            text: Localizer.langResources.SHARED.save_and_create_new,
                             handler: me.saveAndCreate,
                             scope: me,
                             hidden: !(me.allowUpdate() || me.allowCreate())

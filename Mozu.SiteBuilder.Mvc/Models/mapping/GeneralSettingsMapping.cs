@@ -84,10 +84,19 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.Enabled, op => op.Ignore())
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
 
+            CreateMap<GDC.SMSTypeSetting, SMSTypeSettingVM>()
+               .ForMember(m => m.Enabled, op => op.Ignore())
+               .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
+
             CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
+                .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
+                .ForMember(m => m.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
+                .ForMember(m => m.EmailTypes, op => op.ResolveUsing(x => x.EmailTypes))
+                .ForMember(m => m.SmsTypes, op => op.ResolveUsing(x => x.SmsTypes))
+                .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
                 .ForMember(m => m.CdnCacheBustKey, op => op.MapFrom(x => x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
                 .ForMember(m => m.MissingImageSubstitute, op => op.MapFrom(x => x.MissingImageSubstitute))
                 .ForMember(m => m.EmailTypes, op => op.MapFrom(x => x.EmailTypes))
@@ -157,6 +166,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
             CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
+
+            CreateMap<Mozu.SiteSettings.General.Contracts.SMSTransactionSettings, SMSTransactionSettings>();
+            CreateMap<SMSTransactionSettings, Mozu.SiteSettings.General.Contracts.SMSTransactionSettings>();
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
         public static ThemeSelection Deserialize(string val)

@@ -1,290 +1,470 @@
-{ 
-    "shipmentNumber":13997,
-    "orderId":"0f2232ca6d16840001d263340000433f",
-    "orderNumber":2661,
-    "orderSubmitDate":"2020-01-17T15:39:25.641Z",
-    "userId":"",
-    "customerAccountId":1006,
-    "tenantId":17215,
-    "siteId":21153,
-    "shipmentType":"STH",
-    "shipmentStatus":"READY",
-    "fulfillmentLocationCode":"warehouselocation1",
-    "shipmentAdjustment":0.0,
-    "lineItemSubtotal":55.0,
-    "lineItemTaxAdjustment":0.0,
-    "lineItemTaxTotal":0.0,
-    "lineItemTotal":55.0,
-    "shippingAdjustment":0.0,
-    "shippingSubtotal":10.3,
-    "shippingTaxAdjustment":0.0,
-    "shippingTaxTotal":0.0,
-    "shippingTotal":10.3,
-    "handlingAdjustment":0.0,
-    "handlingSubtotal":11.03,
-    "handlingTaxAdjustment":0.0,
-    "handlingTaxTotal":0.0,
-    "handlingTotal":11.03,
-    "dutyAdjustment":0.0,
-    "dutyTotal":0.0,
-    "total":76.33,
-    "currencyCode":"USD",
-    "pickStatus":"IN_WAVE",
-    "pickType":"NORMAL",
-    "destination":{ 
-       "destinationContact":{ 
-          "id":1005,
-          "address":{ 
-             "address1":"1900 W Girard Ave",
-             "address2":"",
-             "address3":"",
-             "address4":"",
-             "addressType":"Residential",
-             "cityOrTown":"Sheridan",
-             "countryCode":"US",
-             "isValidated":true,
-             "postalOrZipCode":"80110",
-             "stateOrProvince":"CO"
-          },
-          "companyOrOrganization":"",
-          "email":"epratt@legend.net",
-          "firstName":"Ernest",
-          "lastNameOrSurname":"Pratt",
-          "middleNameOrInitial":"",
-          "phoneNumbers":{ 
-             "home":"303-303-3003",
-             "mobile":"",
-             "work":""
-          }
-       }
+{
+  "_links": {
+    "self": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952"
     },
-    "shippingMethodCode":"usps_Standard Post",
-    "shippingMethodName":"Standard Mail",
-    "trackingNumbers":[ 
-
-    ],
-    "items":[ 
-       { 
-          "lineId":1,
-          "originalOrderItemId":"42cd0148d0354ea9a27eab450101b559",
-          "productCode":"CHICKENJEANS",
-          "variationProductCode":"CHICKENJEANS-1",
-          "quantity":1,
-          "imageUrl":"//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/ab64b421-2498-4c20-8b01-aadb06e44e3d",
-          "name":"DENIM CHICKEN",
-          "partNumber":"CHICKENJEANS",
-          "upc":"CHICKENJEANS-1",
-          "unitPrice":25.0,
-          "isTaxable":true,
-          "actualPrice":25.0,
-          "itemDiscount":25.0,
-          "lineItemCost":25.0,
-          "itemTax":0.0,
-          "shipping":5.15,
-          "shippingDiscount":0.0,
-          "shippingTax":0.0,
-          "handling":5.32,
-          "handlingDiscount":0.0,
-          "handlingTax":0.0,
-          "duty":0.0,
-          "weightedShipmentAdjustment":0.0,
-          "weightedLineItemTaxAdjustment":0.0,
-          "weightedShippingAdjustment":0.0,
-          "weightedShippingTaxAdjustment":0.0,
-          "weightedHandlingAdjustment":0.0,
-          "weightedHandlingTaxAdjustment":0.0,
-          "weightedDutyAdjustment":0.0,
-          "taxableShipping":5.15,
-          "taxableLineItemCost":0.0,
-          "taxableHandling":5.32,
-          "weight":1.0,
-          "weightUnit":"lbs",
-          "auditInfo":{ 
-             "updateDate":"2020-01-17T15:42:32.362Z",
-             "createDate":"2020-01-17T15:39:30.392Z",
-             "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-             "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
-          },
-          "options":[ 
-             { 
-                "attributeFQN":"tenant~listoptionnumber123",
-                "name":"ListOptionNumber123",
-                "value":1,
-                "shopperEnteredValue":1
-             }
-          ]
-       },
-       { 
-          "lineId":2,
-          "originalOrderItemId":"f163e6c882784a5a8211ab450101c3d2",
-          "productCode":"sp_04",
-          "quantity":1,
-          "imageUrl":"//cdn-sb.mozu.com/2295-2527/cms/2527/files/116bedf3-1f32-44d6-85af-ee57c361903b",
-          "name":"Standard Product - 4",
-          "partNumber":"sp_04",
-          "upc":"sp_04",
-          "unitPrice":60.0,
-          "isTaxable":true,
-          "actualPrice":55.0,
-          "itemDiscount":0.0,
-          "lineItemCost":55.0,
-          "itemTax":0.0,
-          "shipping":5.15,
-          "shippingDiscount":0.0,
-          "shippingTax":0.0,
-          "handling":5.71,
-          "handlingDiscount":0.0,
-          "handlingTax":0.0,
-          "duty":0.0,
-          "weightedShipmentAdjustment":0.0,
-          "weightedLineItemTaxAdjustment":0.0,
-          "weightedShippingAdjustment":0.0,
-          "weightedShippingTaxAdjustment":0.0,
-          "weightedHandlingAdjustment":0.0,
-          "weightedHandlingTaxAdjustment":0.0,
-          "weightedDutyAdjustment":0.0,
-          "taxableShipping":5.15,
-          "taxableLineItemCost":55.0,
-          "taxableHandling":5.71,
-          "weight":1.0,
-          "weightUnit":"lbs",
-          "auditInfo":{ 
-             "updateDate":"2020-01-17T15:42:32.362Z",
-             "createDate":"2020-01-17T15:39:30.392Z",
-             "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-             "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
-          },
-          "options":[ 
-
-          ]
-       }
-    ],
-    "canceledItems":[ 
-
-    ],
-    "reassignedItems":[ 
-
-    ],
-    "rejectedItems":[ 
-
-    ],
-    "packages":[ 
-       { 
-          "packageId":"5e21d532b60cd40001cae93c",
-          "trackingNumbers":[ 
-
-          ]
-       }
-    ],
-    "workflowState":{ 
-       "shipmentState":"PRE_ACCEPT_SHIPMENT",
-       "taskList":[ 
-          { 
-             "attributes":{ 
-
-             },
-             "taskId":"40799",
-             "name":"Accept Shipment",
-             "subject":"",
-             "description":"Accept shipment",
-             "skippable":false,
-             "inputs":[ 
-                { 
-                   "name":"shipmentAccepted",
-                   "required":true,
-                   "label":"Accept Shipment?",
-                   "helpMessage":"",
-                   "type":"BOOLEAN"
-                }
-             ],
-             "active":true,
-             "completed":false
-          },
-          { 
-             "attributes":{ 
-
-             },
-             "name":"Validate Items In Stock",
-             "subject":"",
-             "inputs":[ 
-                { 
-                   "name":"stockLevel",
-                   "type":"STRING"
-                }
-             ],
-             "active":false,
-             "completed":false
-          },
-          { 
-             "attributes":{ 
-
-             },
-             "name":"Print Packing Slip",
-             "subject":"",
-             "inputs":[ 
-                { 
-                   "name":"back",
-                   "type":"BOOLEAN"
-                }
-             ],
-             "active":false,
-             "completed":false
-          },
-          { 
-             "attributes":{ 
-
-             },
-             "name":"Prepare for Shipment",
-             "subject":"",
-             "inputs":[ 
-                { 
-                   "name":"canceled",
-                   "type":"BOOLEAN"
-                },
-                { 
-                   "name":"back",
-                   "type":"BOOLEAN"
-                }
-             ],
-             "active":false,
-             "completed":false
-          }
-       ],
-       "processInstanceId":"28346",
-       "auditInfo":{ 
-          "updateDate":"2020-01-17T15:42:32.362Z",
-          "createDate":"2020-01-17T15:39:30.507Z",
-          "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-          "createBy":""
-       }
+    "shipments": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments"
     },
-    "changeMessages":[ 
-       { 
-          "changeMessageId":"5e21d5e8b60cd40001cae9fe",
-          "createdDate":"2020-01-17T15:42:32.361Z",
-          "correlationId":"5ea88f5b270f4fe58575dcfe505f9304",
-          "message":"'pickStatus' value changed from '' to 'IN_WAVE'",
-          "oldValue":"null",
-          "newValue":"IN_WAVE",
-          "subject":"pickStatus",
-          "userId":"355060a60a5e48eeb7f2fb8d92af2ba5"
-       },
-       { 
-          "changeMessageId":"5e21d5e8b60cd40001cae9ff",
-          "createdDate":"2020-01-17T15:42:32.361Z",
-          "correlationId":"5ea88f5b270f4fe58575dcfe505f9304",
-          "message":"'pickType' value changed from '' to 'NORMAL'",
-          "oldValue":"null",
-          "newValue":"NORMAL",
-          "subject":"pickType",
-          "userId":"355060a60a5e48eeb7f2fb8d92af2ba5"
-       }
-    ],
-    "email":"wwilson@deadpool.net",
-    "auditInfo":{ 
-       "updateDate":"2020-01-17T15:42:32.362Z",
-       "createDate":"2020-01-17T15:39:30.507Z",
-       "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-       "createBy":""
+    "tasks": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/tasks"
+    },
+    "workflowInstanceImage": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/workflow-instance-image"
+    },
+    "backorder": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/backordered"
+    },
+    "backorderItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/backorderedItems"
+    },
+    "pickupItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/pickedUpItems"
+    },
+    "transfer": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/transferred"
+    },
+    "transferItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/transferredItems"
+    },
+    "reject": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/rejected"
+    },
+    "rejectItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/rejectedItems"
+    },
+    "cancel": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/canceled"
+    },
+    "fulfill": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/fulfilled"
+    },
+    "reassign": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/reassigned"
+    },
+    "reassignItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/reassignedItems"
+    },
+    "cancelItems": {
+      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/canceledItems"
     }
- }
+  },
+  "auditInfo": {
+    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "createDate": "2020-06-06T09:42:50.475Z",
+    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "updateDate": "2020-06-06T09:51:14.045Z"
+  },
+  "canceledItems": [
+    {
+      "actualPrice": 500.0,
+      "allowsBackOrder": false,
+      "auditInfo": {
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createDate": "2020-06-06T09:51:13.207Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "updateDate": "2020-06-06T09:51:14.046Z"
+      },
+      "canceledReason": {
+        "reasonCode": "ItemDidNotMatchWebsite"
+      },
+      "duty": 0.0,
+      "handling": 0.0,
+      "handlingDiscount": 0.0,
+      "handlingTax": 0.0,
+      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/0c345b61-7d47-4c30-9024-b0d0efa09bd7",
+      "isTaxable": true,
+      "itemDiscount": 0.0,
+      "itemTax": 82.5,
+      "lineId": 1,
+      "lineItemCost": 1000.0,
+      "name": "IPhone",
+      "options": [
+
+      ],
+      "originalOrderItemId": "c851c9d6ec7e44a59101abd2009f6e3e",
+      "productCode": "4044155044140",
+      "quantity": 1,
+      "shipping": 0.0,
+      "shippingDiscount": 0.0,
+      "shippingTax": 0.0,
+      "taxableHandling": 0.0,
+      "taxableLineItemCost": 1000.0,
+      "taxableShipping": 0.0,
+      "unitPrice": 600.0,
+      "upc": "4044155044140",
+      "weight": 1.0,
+      "weightUnit": "lbs",
+      "weightedDutyAdjustment": 0.0,
+      "weightedHandlingAdjustment": 0.0,
+      "weightedHandlingTaxAdjustment": 0.0,
+      "weightedLineItemTaxAdjustment": 0.0,
+      "weightedShipmentAdjustment": 0.0,
+      "weightedShippingAdjustment": 0.0,
+      "weightedShippingTaxAdjustment": 0.0
+    }
+  ],
+  "changeMessages": [
+    {
+      "changeMessageId": "5edb6711bb61a4000166f4eb",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:13.222Z",
+      "message": "'quantity' value changed from '2' to '1'",
+      "metadata": "ItemDidNotMatchWebsite",
+      "newValue": "1",
+      "oldValue": "2",
+      "subject": "quantity",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6711bb61a4000166f4ec",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:13.222Z",
+      "message": "'canceledItems' collection changes :\n  0. 'CanceledItem/5edb651abb61a4000166df77' added",
+      "metadata": "ItemDidNotMatchWebsite",
+      "subject": "canceledItems",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f1",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'lineItemSubtotal' value changed from '1023.0' to '523.0'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "523.0",
+      "oldValue": "1023.0",
+      "subject": "lineItemSubtotal",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f2",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'lineItemTaxTotal' value changed from '84.4' to '43.15'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "43.15",
+      "oldValue": "84.4",
+      "subject": "lineItemTaxTotal",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f3",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'lineItemTotal' value changed from '1107.4' to '566.15'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "566.15",
+      "oldValue": "1107.4",
+      "subject": "lineItemTotal",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f4",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'total' value changed from '1107.4' to '566.15'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "566.15",
+      "oldValue": "1107.4",
+      "subject": "total",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f5",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'lineItemCost' value changed from '1000.0' to '500.0'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "500.0",
+      "oldValue": "1000.0",
+      "subject": "lineItemCost",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f6",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'itemTax' value changed from '82.5' to '41.25'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "41.25",
+      "oldValue": "82.5",
+      "subject": "itemTax",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    {
+      "changeMessageId": "5edb6712bb61a4000166f4f7",
+      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
+      "createdDate": "2020-06-06T09:51:14.042Z",
+      "message": "'taxableLineItemCost' value changed from '1000.0' to '500.0'",
+      "metadata": "Repriced after canceling items",
+      "newValue": "500.0",
+      "oldValue": "1000.0",
+      "subject": "taxableLineItemCost",
+      "userDisplayName": "Kibo admin",
+      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    }
+  ],
+  "currencyCode": "USD",
+  "customerAccountId": 1000,
+  "destination": {
+    "destinationContact": {
+      "address": {
+        "address1": "1817 W BRAKER LN",
+        "address2": "",
+        "address3": "",
+        "address4": "",
+        "addressType": "Residential",
+        "cityOrTown": "AUSTIN",
+        "countryCode": "US",
+        "isValidated": true,
+        "postalOrZipCode": "78758-3624",
+        "stateOrProvince": "TX"
+      },
+      "companyOrOrganization": "",
+      "email": "Storefrontcustomer1@volusion.com",
+      "firstName": "Moses",
+      "id": 1191,
+      "lastNameOrSurname": "Mitchell",
+      "middleNameOrInitial": "",
+      "phoneNumbers": {
+        "home": "(469) 466-5500",
+        "mobile": "(469) 466-5500",
+        "work": "(469) 466-5500"
+      }
+    },
+    "isDestinationCommercial": false
+  },
+  "dutyAdjustment": 0.0,
+  "dutyTotal": 0.0,
+  "email": "Storefrontcustomer1@volusion.com",
+  "fulfillmentLocationCode": "Austin_Both",
+  "handlingAdjustment": 0.0,
+  "handlingSubtotal": 0.0,
+  "handlingTaxAdjustment": 0.0,
+  "handlingTaxTotal": 0.0,
+  "handlingTotal": 0.0,
+  "items": [
+    {
+      "actualPrice": 500.0,
+      "allowsBackOrder": false,
+      "auditInfo": {
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createDate": "2020-06-06T09:42:50.347Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "updateDate": "2020-06-06T09:51:14.046Z"
+      },
+      "duty": 0.0,
+      "handling": 0.0,
+      "handlingDiscount": 0.0,
+      "handlingTax": 0.0,
+      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/0c345b61-7d47-4c30-9024-b0d0efa09bd7",
+      "isTaxable": true,
+      "itemDiscount": 0.0,
+      "itemTax": 41.25,
+      "lineId": 1,
+      "lineItemCost": 500.0,
+      "name": "IPhone",
+      "options": [
+
+      ],
+      "originalOrderItemId": "c851c9d6ec7e44a59101abd2009f6e3e",
+      "productCode": "4044155044140",
+      "quantity": 1,
+      "shipping": 0.0,
+      "shippingDiscount": 0.0,
+      "shippingTax": 0.0,
+      "taxableHandling": 0.0,
+      "taxableLineItemCost": 500.0,
+      "taxableShipping": 0.0,
+      "transferQuantity": 0,
+      "unitPrice": 600.0,
+      "upc": "4044155044140",
+      "weight": 1.0,
+      "weightUnit": "lbs",
+      "weightedDutyAdjustment": 0.0,
+      "weightedHandlingAdjustment": 0.0,
+      "weightedHandlingTaxAdjustment": 0.0,
+      "weightedLineItemTaxAdjustment": 0.0,
+      "weightedShipmentAdjustment": 0.0,
+      "weightedShippingAdjustment": 0.0,
+      "weightedShippingTaxAdjustment": 0.0
+    },
+    {
+      "actualPrice": 23.0,
+      "allowsBackOrder": true,
+      "auditInfo": {
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createDate": "2020-06-06T09:42:50.347Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "updateDate": "2020-06-06T09:51:14.046Z"
+      },
+      "duty": 0.0,
+      "handling": 0.0,
+      "handlingDiscount": 0.0,
+      "handlingTax": 0.0,
+      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/49b45f74-f601-4dd8-862a-6bb826935971",
+      "isTaxable": true,
+      "itemDiscount": 0.0,
+      "itemTax": 1.9,
+      "lineId": 2,
+      "lineItemCost": 23.0,
+      "name": "FIGHT MILK",
+      "options": [
+
+      ],
+      "originalOrderItemId": "4c47aebac6fc4a1cb823abd2009fff1e",
+      "productCode": "FIGHTMULK",
+      "quantity": 1,
+      "shipping": 0.0,
+      "shippingDiscount": 0.0,
+      "shippingTax": 0.0,
+      "taxableHandling": 0.0,
+      "taxableLineItemCost": 23.0,
+      "taxableShipping": 0.0,
+      "transferQuantity": 0,
+      "unitPrice": 23.0,
+      "upc": "FIGHTMULK",
+      "weight": 1.0,
+      "weightUnit": "lbs",
+      "weightedDutyAdjustment": 0.0,
+      "weightedHandlingAdjustment": 0.0,
+      "weightedHandlingTaxAdjustment": 0.0,
+      "weightedLineItemTaxAdjustment": 0.0,
+      "weightedShipmentAdjustment": 0.0,
+      "weightedShippingAdjustment": 0.0,
+      "weightedShippingTaxAdjustment": 0.0
+    }
+  ],
+  "lineItemSubtotal": 523.0,
+  "lineItemTaxAdjustment": 0.0,
+  "lineItemTaxTotal": 43.15,
+  "lineItemTotal": 566.15,
+  "orderId": "0fdbc25d39fd7f0001db73830000433f",
+  "orderNumber": 3797,
+  "orderSubmitDate": "2020-06-06T09:42:49.935Z",
+  "packages": [
+    {
+      "packageId": "5edb651abb61a4000166df76",
+      "trackingNumbers": [
+
+      ]
+    }
+  ],
+  "reassignedItems": [
+
+  ],
+  "rejectedItems": [
+
+  ],
+  "shipmentAdjustment": 0.0,
+  "shipmentNumber": 15952,
+  "shipmentStatus": "READY",
+  "shipmentType": "BOPIS",
+  "shippingAdjustment": 0.0,
+  "shippingSubtotal": 0.0,
+  "shippingTaxAdjustment": 0.0,
+  "shippingTaxTotal": 0.0,
+  "shippingTotal": 0.0,
+  "siteId": 21153,
+  "tenantId": 17215,
+  "total": 566.15,
+  "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+  "workflowState": {
+    "auditInfo": {
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createDate": "2020-06-06T09:42:50.475Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "updateDate": "2020-06-06T09:51:14.045Z"
+    },
+    "processInstanceId": "120357",
+    "shipmentState": "PRE_ACCEPT_SHIPMENT",
+    "taskList": [
+      {
+        "_links": {
+          "execute": {
+            "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/tasks/Accept%20Shipment/completed"
+          }
+        },
+        "active": true,
+        "completed": false,
+        "description": "Accept shipment",
+        "inputs": [
+          {
+            "name": "shipmentAccepted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "name": "Accept Shipment",
+        "skippable": false,
+        "subject": "",
+        "taskId": "151373"
+      },
+      {
+        "_links": {
+
+        },
+        "active": false,
+        "completed": false,
+        "inputs": [
+
+        ],
+        "name": "Print Pick List",
+        "subject": ""
+      },
+      {
+        "_links": {
+
+        },
+        "active": false,
+        "completed": false,
+        "inputs": [
+          {
+            "name": "createTransfer",
+            "type": "BOOLEAN"
+          },
+          {
+            "name": "stockLevel",
+            "type": "STRING"
+          }
+        ],
+        "name": "Validate Items In Stock",
+        "subject": ""
+      },
+      {
+        "_links": {
+
+        },
+        "active": false,
+        "completed": false,
+        "inputs": [
+
+        ],
+        "name": "Wait for Transfer",
+        "subject": ""
+      },
+      {
+        "_links": {
+
+        },
+        "active": false,
+        "completed": false,
+        "inputs": [
+          {
+            "name": "customerAccepted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "name": "Customer Pickup",
+        "subject": ""
+      }
+    ]
+  }
+}

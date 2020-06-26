@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.modal.EditOrderEmail', {
 
     autoShow: true,
     scale: 'small',
-    title: 'Edit Order Email Address',
+    title: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.edit_order_email_address,
 
     initComponent: function () {
         this.form = Ext.widget(Ext.apply(Ext.create('Taco.core.ux.form.Form', {
@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.modal.EditOrderEmail', {
             items: [{
                 xtype: 'textfield',
                 name: 'email',
-                fieldLabel: 'Email',
+                fieldLabel: Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Title.email,
                 value: this.record.getData().email,
                 data: this.record.getData()
             }]
@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.modal.EditOrderEmail', {
 
         var email = data.email;
         if (email && !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
-            Taco.app.fireEvent('setmessage', 'Validation error. Email is not formatted correctly', 'error');
+            Taco.app.fireEvent('setmessage', Localizer.langResources.ORDERS.Orders.OrderEdit.OrderDetails.Messages.email_not_formatted_correctly, 'error');
             return;
         }
 

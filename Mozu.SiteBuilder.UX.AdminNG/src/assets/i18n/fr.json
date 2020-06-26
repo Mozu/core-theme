@@ -46,9 +46,9 @@
             },
             "OMSClassic": {
                 "omsclassicapp": "OMS Classic Apps",
-                "customercare": "Customer Care",
+                "customercare": "Service client",
                 "fulfiller": "Fulfiller",
-                "orderrouting":"Order Routing"
+                "orderrouting":"Acheminement des commandes"
             }
         },
         "FOOTER": {
@@ -320,7 +320,7 @@
     },
     "Header": {
         "SearchMessage": {
-            "noMatchingItem": "No matching items found."
+            "noMatchingItem": "Aucun élément correspondant trouvé."
         },
         "SwitchAdminButton": {
             "text": "Switch to Classic",
@@ -328,7 +328,7 @@
         },
         "Label": {
             "kibo": "Kibo eCommerce",
-            "help": "Help",
+            "help": "Aidez-moi",
             "seeAll": "see all"
         }
     },

@@ -1,13 +1,13 @@
 Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
     extend:'Taco.core.ux.window.Modal',
     scale: 'medium',
-    title: 'Create Publish Set',
+    title: Localizer.langResources.CATALOG.Products.ProductEdit.create_publish_set,
     modal: true,
     closeAction: 'destroy',
     height: 400,
     width: 800,
-    primaryText: 'Save',
-    secondaryText: 'Cancel',
+    primaryText: Localizer.langResources.SHARED.save,
+    secondaryText: Localizer.langResources.SHARED.cancel,
     initComponent: function() {
 
         this.form = this.buildForm();
@@ -31,24 +31,24 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
                         {
                             xtype: 'textfield',
                             name: 'name',
-                            fieldLabel: 'Name',
+                            fieldLabel: Localizer.langResources.SHARED.FileManager.name,
                             width: 340,
                             allowOnlyWhitespace: false
                         },
                         {
                             xtype: 'textfield',
                             name: 'code',
-                            fieldLabel: 'Code',
+                            fieldLabel: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.code,
                             readOnly: this.isEdit,
                             width: 340,
                             required: true,
-                            emptyText: 'If left blank, a code will be generated'
+                            emptyText: Localizer.langResources.CATALOG.Products.ProductEdit.code_emptytext
                         },
 
                         {
                             xtype: 'datetime',
                             name: 'publishDate',
-                            fieldLabel: 'Publish Date',
+                            fieldLabel: Localizer.langResources.CATALOG.Products.ProductEdit.publish_date,
                             minDate: new Date(),
                             width: 340
                         }
@@ -62,10 +62,10 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
                         {
                             xtype: 'textarea',
                             name: 'notes',
-                            fieldLabel: 'Notes',
+                            fieldLabel: Localizer.langResources.SHARED.notes,
                             width: 375,
                             height: 225,
-                            afterLabelTextTpl: '<float style="float:right; font-weight:normal;">For internal use</span>'
+                            afterLabelTextTpl: '<float style="float:right; font-weight:normal;">' + Localizer.langResources.CATALOG.Products.ProductEdit.for_internal_use + '</span>'
                         }
                     ]
                 }
@@ -90,7 +90,7 @@ Ext.define('Taco.view.publishing.modal.CreatePublishSet', {
                     me.saveSuccess(data);
                 },
                 failure: function() {
-                    Taco.app.fireEvent('setmessage', 'There was an error with this Publish Set!', 'error');
+                    Taco.app.fireEvent('setmessage', Localizer.langResources.CATALOG.Products.ProductEdit.publish_error_msg, 'error');
                 }
             });
     }

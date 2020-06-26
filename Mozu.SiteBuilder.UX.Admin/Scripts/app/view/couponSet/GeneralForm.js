@@ -14,7 +14,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
     cls: 'taco-subform-noborder taco-subform-nopadding taco-subform-nohr',
     margin: '0 0 39 0',
 
-    title: 'General',
+    title: Localizer.langResources.MARKETING.CouponSets.general_title,
     config: {
         isCreateMode: false
     },
@@ -34,18 +34,18 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
-            fieldLabel: "Name",
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.name,
             labelAlign: 'top',
             allowBlank: false,
             width: 600,
             enforceMaxLength: true,
             maxLength: 200,
-            emptyText: 'Enter a coupon set name'
+            emptyText: Localizer.langResources.MARKETING.CouponSets.coupon_set_name_empty_text
         });
 
         this.activeStartDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'Start Date',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.start_date,
             name: 'startDate',
             width: twoColumnFieldWidth,
             margin: "0 50 0 0",
@@ -54,13 +54,13 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             allowBlank: true,
             validator: function() {
                 return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
-                    "Start date must be before end date", 0);
+                    Localizer.langResources.MARKETING.CouponSets.start_date_validation_msg, 0);
             }
         });
 
         this.activeEndDateField = Ext.widget({
             xtype: 'datetime',
-            fieldLabel: 'End Date',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.end_date,
             name: 'endDate',
             itemId: 'endDt',
             width: twoColumnFieldWidth,
@@ -69,7 +69,7 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             allowBlank: true,
             validator: function() {
                 return Taco.core.util.Validation.validateDateRange(me.activeStartDateField, me.activeEndDateField,
-                    "End date must be after start date", 0);
+                    Localizer.langResources.MARKETING.CouponSets.end_date_validation_msg, 0);
             }
         });
 
@@ -79,8 +79,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
                 hideTrigger: true,
                 width: twoColumnFieldWidth,
                 margin: "0 50 0 0",
-                fieldLabel: 'Max Redemptions (Per Code)',
-                emptyText: 'Defaults to 1',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.max_redemptions,
+                emptyText: Localizer.langResources.MARKETING.CouponSets.defaults_to_one_empty_text,
                 value: 1,
                 minValue: 1
             }
@@ -91,8 +91,8 @@ Ext.define('Taco.view.couponSet.GeneralForm', {
             hideTrigger: true,
             width: twoColumnFieldWidth,
             margin: "0 0 0 0",
-            fieldLabel: 'Max Redemptions per Customer (Per Code)',
-            emptyText: 'Defaults to 1',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.max_Redemptions_per_customer,
+            emptyText: Localizer.langResources.MARKETING.CouponSets.defaults_to_one_empty_text,
             value: 1,
             minValue: 1
             }

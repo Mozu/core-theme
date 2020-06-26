@@ -17,13 +17,13 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
 
         this.couponSetType = Ext.widget('combobox', {
             name: 'couponCodeType',
-            fieldLabel: 'Type',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.type,
             margin: { right: 40 },
             flex: 1,
             valueField: 'id',
             displayField: 'name',
             queryMode: 'local',
-            valueNotFoundText: 'not found',
+            valueNotFoundText: Localizer.langResources.MARKETING.CouponSets.not_found_text,
             editable: false,
             forceSelection: false,
             initialValue: "Active",
@@ -35,20 +35,20 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                 fields: ['id', "name"],
                 data: [
                     {
-                        name: "Manual",
+                        name: Localizer.langResources.MARKETING.CouponSets.coupon_set_type_manual,
                         id: "Manual"
                     }, {
-                        name: "Generated",
+                        name: Localizer.langResources.MARKETING.CouponSets.coupon_set_type_generated,
                         id: "Generated"
                     }
                 ]
             }),
             listeners: {
                 change: function(cmp, newVal, oldVal) {
-                    if (newVal === 'Manual') {
+                    if (newVal === Localizer.langResources.MARKETING.CouponSets.coupon_set_type_manual) {
                         me.codePrefix.setDisabled(true);
                         me.setSizeContainer.setDisabled(true);
-                    } else if (oldVal === 'Manual') {
+                    } else if (oldVal === Localizer.langResources.MARKETING.CouponSets.coupon_set_type_manual) {
                         me.codePrefix.setDisabled(false);
                         me.setSizeContainer.setDisabled(false);
                     }
@@ -58,13 +58,13 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
 
         this.codePrefix = Ext.widget('textfield', {
                 name: 'couponSetCode',
-                fieldLabel: 'Code Prefix',
-                disabled: me.couponSetType.getValue() === 'Manual'
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.code_prefix,
+                disabled: me.couponSetType.getValue() === Localizer.langResources.MARKETING.CouponSets.coupon_set_type_manual
             }
         );
 
         this.setSizeContainer = Ext.widget('fieldcontainer', {
-            fieldLabel: 'Generated Coupon Count',
+            fieldLabel: Localizer.langResources.MARKETING.CouponSets.generated_coupon_count,
             layout: {
                 type: 'hbox'
             },
@@ -78,7 +78,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                 width:100
             }, {
                 xtype: 'component',
-                html: 'to',
+                html: Localizer.langResources.SHARED.to_text,
                 margin: '10 10'
             }, {
                 xtype: 'numberfield',
@@ -94,14 +94,14 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
         this.items = [
             {
                 name: 'couponSetName',
-                fieldLabel: 'Name'
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.name,
             }, {
                 xtype: 'fieldcontainer',
                 layout:"hbox",
                 items: [this.couponSetType, {
                     xtype: 'combobox',
                     name: 'status',
-                    fieldLabel: 'Status',
+                    fieldLabel: Localizer.langResources.MARKETING.CouponSets.status,
                     flex: 1,
                     valueField: 'id',
                     displayField: 'name',
@@ -118,16 +118,16 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                         fields: ['id', "name"],
                         data: [
                             {
-                                name: "Active",
+                                name: Localizer.langResources.MARKETING.CouponSets.active_status,
                                 id: "Active"
                             }, {
-                                name: "Scheduled",
+                                name: Localizer.langResources.MARKETING.CouponSets.scheduled_status,
                                 id: "Scheduled"
                             }, {
-                                name: "Ended",
+                                name: Localizer.langResources.MARKETING.CouponSets.ended_status,
                                 id: "Ended"
                             }, {
-                                name: "All",
+                                name: Localizer.langResources.MARKETING.CouponSets.all_status,
                                 id: "All"
                             }
                         ]
@@ -137,7 +137,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
             this.codePrefix,
             this.setSizeContainer, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Max Redemptions Per Coupon Code',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.max_redemptions_per_coupon_code,
                 layout: {
                     type: 'hbox'
                 },
@@ -151,7 +151,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                     width:100
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.to_text,
                     margin: '10 10'
                 }, {
                     xtype: 'numberfield',
@@ -164,7 +164,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                 }]
             }, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Max Redemptions Per User',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.max_redemptions_per_user,
                 layout: {
                     type: 'hbox'
                 },
@@ -178,7 +178,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                     width:100
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.to_text,
                     margin: '0 10'
                 }, {
                     xtype: 'numberfield',
@@ -191,7 +191,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                 }]
             }, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Start Date Range',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.start_date_range,
                 layout: {
                     type: 'hbox'
                 },
@@ -203,7 +203,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                     flex: 1
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.to_text,
                     margin: '0 10'
                 }, {
                     xtype: 'datetime',
@@ -215,7 +215,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'End Date Range',
+                fieldLabel: Localizer.langResources.MARKETING.CouponSets.end_date_range,
                 layout: {
                     type: 'hbox'
                 },
@@ -227,7 +227,7 @@ Ext.define('Taco.view.couponSet.AdvancedSearchForm', {
                     flex: 1
                 }, {
                     xtype: 'component',
-                    html: 'to',
+                    html: Localizer.langResources.SHARED.to_text,
                     margin: '0 10'
                 }, {
                     xtype: 'datetime',

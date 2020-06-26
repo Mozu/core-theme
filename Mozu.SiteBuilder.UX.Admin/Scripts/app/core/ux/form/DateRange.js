@@ -22,8 +22,8 @@ Ext.define('Taco.core.ux.form.DateRange', {
     startDateFieldName: null,
     endDateFieldName: null,
 
-    invalidText: "{0} is not a valid date - it must be in the format mm/dd/yy",
-    emptyText: 'mm/dd/yy',
+    invalidText: "{0}" + Localizer.langResources.SHARED.ValidationMsg.invalid_date_range_msg,
+    emptyText: Localizer.langResources.SHARED.ValidationMsg.date_format_mm_dd_yy,
     pickerOffset: 4,
   
     initComponent: function () {

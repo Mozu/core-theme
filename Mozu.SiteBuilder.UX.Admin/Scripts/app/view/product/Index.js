@@ -21,7 +21,7 @@ Ext.define('Taco.view.product.Index', {
     editorName: 'Taco.view.product.Edit',
     filterProperty: 'productName2',
     useTilePanel: false,
-    title: 'Products',
+    title: Localizer.langResources.CATALOG.Products.ProductDetails.Title.products,
     enableNavHeader: true,
     addContentViewPadding: true,
     stateful: true,
@@ -32,7 +32,7 @@ Ext.define('Taco.view.product.Index', {
     saveButtonEnabled: false,
     createButtonEnabled: true,
     enableAutoSelect: false,
-    createButtonText: 'Create New Product',
+    createButtonText: Localizer.langResources.CATALOG.Products.ProductDetails.Label.create_new_product,
     contextConfig: {
         supportedLevels: ['m', 'c'],
         requiresContextOfType: ['m', 'c', 's']
@@ -75,11 +75,11 @@ Ext.define('Taco.view.product.Index', {
     },
     bulkEditorColumns: [{
         dataIndex: 'productCode',
-        text: 'Code',
+        text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.code,
         width: 100
         }, {
         dataIndex: 'productName',
-        text: 'Name',
+        text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.name,
         minWidth: 120,
         flex: 1,
         editor: {
@@ -87,7 +87,7 @@ Ext.define('Taco.view.product.Index', {
         }
         }, {
         dataIndex: 'price',
-        text: 'Price',
+        text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.price,
         width: 100,
         renderer: function (value, metaData, record) {
             return (value || value === 0) ? record.formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
@@ -102,7 +102,7 @@ Ext.define('Taco.view.product.Index', {
         }
         }, {
         dataIndex: 'salePrice',
-        text: 'Sale Price',
+        text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.sale_price,
         width: 100,
         renderer: function (value, metaData, record) {
             return (value || value === 0) ? record.formatCurrency(value) : "<span class='taco-empty-cell'>N/A</span>";
@@ -120,15 +120,15 @@ Ext.define('Taco.view.product.Index', {
     tilePanelConf: {
         actions: [{
             iconCls: 'download',
-            tooltip: 'View Product',
+            tooltip: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.view_product,
             eventName: 'viewitem'
             }, {
             iconCls: 'duplicate',
-            tooltip: 'Duplicate Product',
+            tooltip: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.duplicate_product,
             eventName: 'duplicateitem'
             }, {
             iconCls: 'delete',
-            tooltip: 'Delete Product',
+            tooltip: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.delete_product,
             eventName: 'deleteitem'
             }],
         imageCollection: 'productImages',
@@ -139,7 +139,7 @@ Ext.define('Taco.view.product.Index', {
 
     advancedSearchConfig: {
         advancedFormCls: 'Taco.view.product.AdvancedSearchForm',
-        emptySearchText: 'Search'
+        emptySearchText: Localizer.langResources.CATALOG.Products.ProductDetails.Label.search
     },
 
     doCreate: function() {
@@ -200,13 +200,13 @@ Ext.define('Taco.view.product.Index', {
             {
                 stateId: 'productCode',
                 dataIndex: 'productCode',
-                text: 'Code',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.code,
                 flex: 4
             },
             {
                 stateId: 'productName',
                 dataIndex: 'productName',
-                text: 'Name',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.name,
                 flex: 8,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('productName');
@@ -215,7 +215,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 stateId: 'publishedState',
                 dataIndex: 'publishedState',
-                text: 'Status',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.status,
                 flex: 2,
                 renderer: function (value, metaData, record) {
                     var status = record.get('publishedState');
@@ -227,7 +227,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 dataIndex: 'price',
                 stateId: 'price',
-                text: 'Price',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.price,
                 flex: 3,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true) || '<span class="taco-empty-cell">N/A</span>';
@@ -236,7 +236,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 dataIndex: 'salePrice',
                 stateId: 'salePrice',
-                text: 'Sale Price',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.sale_price,
                 flex: 4,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('salePrice', true) || '<span class="taco-empty-cell">N/A</span>';
@@ -245,7 +245,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 dataIndex: 'productInCatalogs',
                 stateId: 'catalogs',
-                text: 'Catalogs',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.catalogs,
                 sortable: false,
                 flex: 2,
                 renderer: function (value) {
@@ -255,7 +255,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 dataIndex: 'productInCatalogs',
                 stateId: 'overridden',
-                text: 'Overridden',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.overridden,
                 sortable: false,
                 flex: 2,
                 renderer: function (value, metaData, record) {
@@ -280,21 +280,21 @@ Ext.define('Taco.view.product.Index', {
                 stateId: 'lastModifiedDate',
                 xtype: 'datecolumn',
                 format: 'Y-m-d',
-                text: 'Last Modified',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.last_modified,
                 hidden: true,
                 flex: 2
             },
             {
                 dataIndex: "productTypeName",
                 stateId: 'productTypeName',
-                text: 'Product Type',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.product_type,
                 sortable: false,
                 hidden: true,
                 flex: 4
              },
             {
                 dataIndex: "productUsage",
-                text: 'Product usage',
+                text: Localizer.langResources.CATALOG.Products.ProductDetails.GridHeader.product_usage,
                 stateId:"productUsage",
                 hidden: true,
                 sortable: false,
@@ -305,7 +305,7 @@ Ext.define('Taco.view.product.Index', {
                 stateId: 'actionsColumn',
                 menuItems: [{
                     itemId: 'live',
-                    text: 'View Live',
+                    text: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.view_live,
                     hideOnClick: false,
                     menu: {
                         plain: true,
@@ -316,7 +316,7 @@ Ext.define('Taco.view.product.Index', {
                 },
                 {
                     itemId: 'preview',
-                    text: 'View Staged',
+                    text: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.view_staged,
                     hideOnClick: false,
                     menu: {
                         plain: true,
@@ -326,7 +326,7 @@ Ext.define('Taco.view.product.Index', {
                     }
                 },
                 {
-                    text: 'Edit',
+                    text: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.edit,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'update'
@@ -342,7 +342,7 @@ Ext.define('Taco.view.product.Index', {
                     }
                 },
                 {
-                    text: 'Duplicate',
+                    text: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.duplicate,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'create'
@@ -357,7 +357,7 @@ Ext.define('Taco.view.product.Index', {
                     }
                 },
                 {
-                    text: 'Delete',
+                    text: Localizer.langResources.CATALOG.Products.ProductDetails.ActionColumn.delete_prod,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'destroy'
