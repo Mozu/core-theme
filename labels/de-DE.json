@@ -1,4 +1,4 @@
-﻿
+
 {
     "newUserEmailSalutation": "Wilkommen auf {0}",
     "accountMyWishlist"   : "Mein Wunschzettel",
@@ -427,5 +427,13 @@
     "yourOrderNumber"   : "Ihre Auftragsnummer ist <strong> {0} </ strong>.",
     "mobileItemTotal": "Objet total:",
     "mobileShipping": "livraison:",
-    "mobileHandling": "Manipulation:"
+    "mobileHandling": "Manipulation:",
+    "returnReceiptHeader": "Rücksendung abgeschlossen für {0} Bestellnummer # {1}",
+    "returnReceiptBodyHeader": "<p> Sehr geehrte {0} {1}, </ p> <br /> <p> Wir haben die Bearbeitung Ihrer Rücksendung # {2} für {3} Bestellung # {4} abgeschlossen. </ p> <br /> Die Artikel, die Sie zurückgegeben werden nachfolgend beschrieben:",
+    "returnReceiptItemQtyColumn": "Menge",
+    "returnReceiptItemPartNoColumn": "PartNo",
+    "returnReceiptItemNameColumn": "Name",
+    "returnReceiptItemTotalColumn": "Gesamt",
+    "returnReceiptItemStatusColumn": "Status",
+    "returnReceiptBodyContent": "<p> Bei einer akzeptierten Rücksendung wird innerhalb von 10 Werktagen eine Rückerstattung auf die  Kreditkarte oder eine andere für die Bestellung verwendete Zahlungsmethode vorgenommen. Abhängig vom Finanzinstitut sollte in ein oder zwei Abrechnungsperioden eine Gutschrift auf Ihrem Kontoauszug erscheinen. Versand- und Bearbeitungsgebühren werden nicht erstattet. <P> <br /> <br /> <p> Wenn eine Rücksendung abgelehnt wird, wird das Produkt an Sie zurückgesandt. Rücksendungen werden in der Regel abgelehnt, weil die Produkte in gebrauchtem Zustand oder nach Ablauf der zulässigen Frist eingegangen sind. Bitte gehen Sie zu {0}, um unsere spezifischen Rückgabebedingungen zu sehen. <P> <br /> Vielen Dank, dass Sie mit {1} einkaufen."
 }

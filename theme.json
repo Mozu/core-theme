@@ -274,6 +274,12 @@
       "title": "Mobile Notification",
       "template": "back-office/mobile-notification",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "return-receipt",
+      "title": "Return Receipt",
+      "template": "back-office/return-receipt",
+      "customEditor": "back-office@mozu"
     }
   ],
   "mobileNotificationTemplates":[

@@ -1,0 +1,58 @@
+  <table>
+    <tr>
+        <td>
+		    {{ labels.returnReceiptHeader | string_format(customContent.companyName,model.originalOrderNumber)|safe }}
+        </td>
+    </tr>    
+    <tr>
+        <td>
+            {{ labels.returnReceiptBodyHeader | string_format(model.contact.firstName,model.contact.lastNameOrSurname,model.returnNumber,customContent.companyName,model.originalOrderNumber) |safe}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="company-name">{{ customContent.companyName }}</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>{{ labels.returnReceiptItemQtyColumn }}</th>
+                        <th>{{ labels.returnReceiptItemPartNoColumn }}</th>
+                        <th>{{ labels.returnReceiptItemNameColumn }}</th>
+                        <th>{{ labels.returnReceiptItemTotalColumn }}</th>
+                        <th>{{ labels.returnReceiptItemStatusColumn }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in model.items %}
+                        <tr>
+                            <td>
+                                {{ item.quantityRestocked }}
+                            </td>
+                            <td>
+                                {{ item.product.mfgPartNumber }}
+                            </td>
+                            <td>
+                                {{ item.product.name }}
+                            </td>
+                            <td>
+                                {{ item.refundAmount }}
+                            </td>
+                            <td>
+                                {{ item.receiveStatus }}
+                            </td> 
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ labels.returnReceiptBodyContent | string_format(customContent.websiteUrl, customContent.companyName) |safe}}
+        </td>
+    </tr>
+</table>	
