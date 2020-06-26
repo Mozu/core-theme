@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
+using Microsoft.Extensions.DependencyInjection;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Configuration;
 using Mozu.SiteBuilder.UX.Filters;
@@ -30,6 +31,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Shipment = Mozu.CommerceRuntime.Contracts.Fulfillment.Shipment;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
@@ -74,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static readonly List<MobileNotificationTypeInfo> _smsMobileNotificationTypeInfo;
 
         private readonly ISitesWebApiClient _sitesWebApiClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<MobileNotificationController> _logger;
         private readonly ISettings _settings;
 
         static MobileNotificationController()
@@ -97,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public MobileNotificationController(
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             ISitesWebApiClient sitesWebApiClient,
-            ILogger logger,
+            ILogger<MobileNotificationController> logger,
             ISettings settings,
             ICustomRouteHandler customRouteHandler,
             Lazy<UrlHelper> urlhelper,
@@ -111,15 +116,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> Preview(string id)
+        public async Task<IActionResult> Preview(string id)
         {
             var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
-            var queryStringParams = Request.GetQueryNameValuePairs();
+            var queryStringParams = Request.Query;
 
 
             if (mobileNotificationTemplate == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find a MobileNotification template for the current Theme.");
+                return NotFound( "Could not find a MobileNotification template for the current Theme.");
             }
 
             var model = TestDataBroker.GetFileContents(id).FirstOrDefault() ?? new object();
@@ -163,13 +168,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return StatusCode(501);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, View(mobileNotificationTemplate.Template, notificationModel));
+            return  View(mobileNotificationTemplate.Template, notificationModel);
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> Render(SmsNotification notification)
+        public async Task<IActionResult> Render(SmsNotification notification)
         {
             User user = null;
             var mobileNotificationTypeInfo = _smsMobileNotificationTypeInfo.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
@@ -181,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var warnMessage = "no templates defined for topic " + notification.Topic;
                 _logger.Warn(warnMessage);
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, warnMessage);
+                return NotFound(warnMessage);
             }
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
@@ -219,7 +224,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return StatusCode(501);
             }
 
             var renderedTemplate = await GetRenderedTemplate(notification, mobileNotificationTemplate, notificationModel, user, site);
@@ -234,12 +239,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Body = renderedTemplate
             };
 
-            return Request.CreateResponse(HttpStatusCode.OK, response);
+            return Ok(response);
         }
 
         private async Task<string> GetRenderedTemplate(SmsNotification notification, VM.PageTypeDefinition mobileNotificationTemplate, object model, User user, Site site)
         {
-            var viewEngine = Request.Resolve<HyprViewEngine>();
+            var viewEngine = HttpContext.RequestServices.GetService<HyprViewEngine>();
             var view = viewEngine.FindPageView(mobileNotificationTemplate.Template);
 
             if (view == null)
@@ -250,15 +255,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return String.Empty;
             }
 
-            var vdd = new ViewDataDictionary
-            {
-                ["model"] = model,
-                ["User"] = user,
-                ["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(),
-                ["storefrontOrderAttributes"] = await GetShopperOrderAttributes()
-            };
 
-            var context = new HyprViewContext(Request, vdd);
+
+            ViewData["model"] = model;
+            ViewData["User"] = user;
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
+        
+
+            var context = new HyprViewContext(HttpContext, ViewData);
             return await Render(view, context);
         }
 
@@ -276,11 +281,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return obj;
         }
 
-        private JObject MergeNotificationParams(IEnumerable<KeyValuePair<string, string>> query, object model)
+        private JObject MergeNotificationParams(IQueryCollection query, object model)
         {
-            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
 
-            var notificationParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
+            var z = query["queryParams"];
+
+            var notificationParams = JsonConvert.DeserializeObject<JObject>(z.ToString(), CaseInsensitiveJsonSerializerSettings.Default);
             var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
             returnObj.Merge(notificationParams);
             return returnObj;

@@ -300,12 +300,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
-            routes.MapHttpRoute(
                "Anonymous Shipment View",
                "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
-               new { controller = "AnonymousNotification", action = "RenderShipmentView" });
+               new { controller = "AnonymousNotification", action = "RenderShipmentView" },
+               _constraintResolver);
 
-            routes.MapHttpRoute(
+            routes.MapRoute(_defaultHandler,
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" },

@@ -19,6 +19,7 @@
     <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
     <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2021.0-master.19" />
+    <PackageReference Include="KuttSharp" Version="0.4.1" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.2013.0-bpm.5" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
@@ -39,6 +40,7 @@
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
     <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2016.0-pr-23.4" />
+    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2025.2" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2011.0-dotnetcore.60" />
     <PackageReference Include="NDjangoParser40" Version="1.2019.0-pr-1.1" />
     <PackageReference Include="NDjangoParserFilters40" Version="1.2019.0-pr-1.1" />

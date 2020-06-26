@@ -14,38 +14,40 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Kibo.Fulfillment.Contracts.Api;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class AnonymousNotificationController : BaseApiController
     {
-        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
+        private readonly IShipmentControllerApiClient _fulfillmentProxyClient;
 
-        public AnonymousNotificationController(IFulfillmentProxyWebApiClient fulfillmentProxyClient)
+        public AnonymousNotificationController( Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient  fulfillmentProxyClient)
         {
             _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> RenderShipmentView(int shipmentNumber, string orderId)
+        public async Task<IActionResult> RenderShipmentView(int shipmentNumber, string orderId)
         {
-            var model = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var model = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (model == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (model.OrderId != orderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("mobile-notification"));
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find MobileNotification template for the current Theme.");
+                return NotFound( "Could not find MobileNotification template for the current Theme.");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
+            return  View(template.Template, model);
         }
     }
 }
