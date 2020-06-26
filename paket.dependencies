@@ -35,8 +35,8 @@ nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
 nuget Mozu.CommerceRuntime.Contracts 1.2021.0-gshotContracts-146
 nuget mozu.Content.Contracts < 1.20
-nuget Mozu.Core.Messaging 1.1902.1
-nuget Mozu.Core.Messaging.Contracts 1.2026.0-ngshotContracts-47
+nuget Mozu.Core.Messaging 1.2026.0-ngshotContracts-52
+nuget Mozu.Core.Messaging.Contracts 1.2026.0-ngshotContracts-52
 nuget Mozu.Core.Test 1.1903.1
 nuget Mozu.Customer.Contracts 1.1909.2
 nuget Mozu.DeployWeb

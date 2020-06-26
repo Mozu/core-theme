@@ -169,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> Render(StoreSmsNotification notification)
+        public async Task<HttpResponseMessage> Render(SmsNotification notification)
         {
             User user = null;
             var mobileNotificationTypeInfo = _smsMobileNotificationTypeInfo.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
@@ -237,7 +237,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
-        private async Task<string> GetRenderedTemplate(StoreSmsNotification notification, VM.PageTypeDefinition mobileNotificationTemplate, object model, User user, Site site)
+        private async Task<string> GetRenderedTemplate(SmsNotification notification, VM.PageTypeDefinition mobileNotificationTemplate, object model, User user, Site site)
         {
             var viewEngine = Request.Resolve<HyprViewEngine>();
             var view = viewEngine.FindPageView(mobileNotificationTemplate.Template);

@@ -150,10 +150,10 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.1801.1)
       Mozu.Core.Prime (>= 1.1750.1)
-    Mozu.Core.Messaging (1.1902.1)
+    Mozu.Core.Messaging (1.2026.0-ngshotContracts-52)
       Burrows (>= 0.3.3)
       Mozu.Core.Messaging.Contracts
-    Mozu.Core.Messaging.Contracts (1.2026.0-ngshotContracts-47)
+    Mozu.Core.Messaging.Contracts (1.2026.0-ngshotContracts-52)
       Mozu.Core.Prime
     Mozu.Core.Prime (1.1903.6)
       Autofac (>= 3.5.2)
