@@ -1,5 +1,6 @@
 ﻿using Kibo.Fulfillment.Contracts.Model;
 using KuttSharp;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Expressions;
 using Mozu.Core.Extensions;
@@ -39,9 +40,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public const string ShipmentAssigned = "shipment.assigned";
         public const string ShipmentItemCanceled = "shipment.itemscanceled";
+        public const string CustomerIntransit = "shipment.customerintransit";
+        public const string CustomerAtCurbside = "shipment.customeratcurbside";
+        public const string IntransitConfirmation = "shipment.intransitconfirmation";
+        public const string OrderConfirmation = "order.changed";
+        public const string ShipmentConfirmation = "shipment.fulfilled";
+        public const string OrderPickupReady = "shipment.pickupready";
     }
 
     public class ShipmentNotification : Shipment
+    {
+        public string StoreId { get; set; }
+        public string ShipmentUrl { get; set; }
+        public string FulfillerUrl { get; set; }
+    }
+
+    public class OrderNotification : Order
     {
         public string StoreId { get; set; }
         public string ShipmentUrl { get; set; }
@@ -90,6 +104,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     ModelType = typeof (ShipmentNotification),
                     Topic = Topics.ShipmentItemCanceled
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.CustomerAtCurbside
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.CustomerIntransit
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.IntransitConfirmation
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (OrderNotification),
+                    Topic = Topics.OrderConfirmation
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.OrderPickupReady
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.ShipmentConfirmation
                 }
             };
         }

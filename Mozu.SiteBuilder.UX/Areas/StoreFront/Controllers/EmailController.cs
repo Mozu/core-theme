@@ -207,6 +207,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.TransferShipmentCreatedByFulfiller 
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.IntransitConfirmation 
                                            }
 
 
@@ -590,6 +595,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string TransferShipmentCreated = "shipment.transfercreated";
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
+            public const string IntransitConfirmation = "shipment.intransitconfirmation";
         }
 
     }
