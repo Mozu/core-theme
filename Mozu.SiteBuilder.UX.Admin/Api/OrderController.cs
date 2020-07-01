@@ -244,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var pagedShipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED")).ReadAsSync();
             if (pagedShipments != null)
             {
-                var shipments = pagedShipments.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<ResourceOfShipment>();
+                var shipments = pagedShipments.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<EntityModelOfShipment>();
                 order.Shipments = Mapper.Map<List<DCs.Shipment>>(shipments).OrderByDescending(x => x.Number).ToList();
             }
 

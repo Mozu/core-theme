@@ -386,7 +386,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/cancel")]
-        public async Task<Response<DCm.ResourceOfShipment>> CancelShipment(CancelShipmentArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> CancelShipment(CancelShipmentArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.CancelShipment(args.ShipmentNumber, args.CancelShipment)).ReadAsSync();
             return Single2(serviceResponse);
@@ -399,7 +399,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/reject")]
-        public async Task<Response<DCm.ResourceOfShipment>> RejectShipment(RejectShipmentArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> RejectShipment(RejectShipmentArgs args)
         {            
             var serviceResponse = (await _fulfillmentProxyClient.RejectShipment(args.ShipmentNumber, args.RejectShipment)).ReadAsSync();
             return Single2(serviceResponse);
@@ -412,14 +412,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/fulfill")]
-        public async Task<Response<DCm.ResourceOfShipment>> FuflfillShipment(FuflfillShipmentArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> FuflfillShipment(FuflfillShipmentArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.FulfillShipment(args.ShipmentNumber)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
         [HttpPutRoute(UriTemplate = "shipment/receivetransfer")]
-        public async Task<Response<DCm.ResourceOfShipment>> ReceiveTransfer(FuflfillShipmentArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> ReceiveTransfer(FuflfillShipmentArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.ReceiveTransfer(args.ShipmentNumber)).ReadAsSync();
             return Single2(serviceResponse);
@@ -432,7 +432,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DCm.BackorderShipmentRequest BackorderShipmentBody { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/backordered")]
-        public async Task<Response<DCm.ResourceOfShipment>> BackorderShipment(BackorderShipmentArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> BackorderShipment(BackorderShipmentArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.BackorderShipment(args.ShipmentNumber, args.BackorderShipmentBody)).ReadAsSync();
             return Single2(serviceResponse);
@@ -444,7 +444,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DCm.ReassignShipment ReassignShipment { get; set; }
         }
         [HttpPutRoute(UriTemplate = "shipment/reassign")]
-        public async Task<Response<DCm.ResourceOfShipment>> ReassignShipment(ReassignShipmenttArgs args)
+        public async Task<Response<DCm.EntityModelOfShipment>> ReassignShipment(ReassignShipmenttArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.ReassignShipment(args.ShipmentNumber, args.ReassignShipment)).ReadAsSync();
             return Single2(serviceResponse);
@@ -486,7 +486,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Shipment>>> GetShipments(ShipmentFilterArgs args)
         {
             var pagedShipments = (await _fulfillmentProxyClient.GetShipments(args.Filter)).ReadAsSync();
-            var shipmentContracts = pagedShipments?.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<DCm.ResourceOfShipment>();
+            var shipmentContracts = pagedShipments?.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<DCm.EntityModelOfShipment>();
 
             var shipments = Mapper.Map<List<Shipment>>(shipmentContracts);
             return List2(shipments);

@@ -219,7 +219,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var mobileNotificationTypeInfo = _smsMobileNotificationTypeInfo.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
             var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));
 
-            var shipment = JsonConvert.DeserializeObject<ResourceOfShipment>(notification.Payload);
+            var shipment = JsonConvert.DeserializeObject<EntityModelOfShipment>(notification.Payload);
 
             if (mobileNotificationTemplate == null)
             {

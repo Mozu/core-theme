@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
         [Test]
         public void Should_be_able_to_map_fulfillment_style_data_bags_to_commerce()
         {
-            var source = new F.ResourceOfShipment
+            var source = new F.EntityModelOfShipment
             {
                 Data = new Dictionary<string, object>
                 {
@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
         [Test]
         public void Should_be_able_to_handle_null_fulfillment_data_bags()
         {
-            var fulfillmentShipment = new F.ResourceOfShipment
+            var fulfillmentShipment = new F.EntityModelOfShipment
             {
                 Items = new List<F.Item>
                 {
@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
                 )
             };
 
-            var mapped = source.Map<F.ResourceOfShipment>();
+            var mapped = source.Map<F.EntityModelOfShipment>();
             
             mapped.Data.ShouldBeNull();
         }

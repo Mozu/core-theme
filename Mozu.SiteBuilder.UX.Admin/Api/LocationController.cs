@@ -317,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "group/configuration/workflow-processes")]
-        public async Task<Response<List<ResourceOfWorkflowProcess>>> GetWorkflowProcesses()
+        public async Task<Response<List<EntityModelOfWorkflowProcess>>> GetWorkflowProcesses()
         {
             var processes = (await _fulfillmentProxyClient.GetWorkflowProcesses()).ReadAsSync();
             var data = ExtractResources(processes);
@@ -354,9 +354,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private List<ResourceOfWorkflowProcess> ExtractResources(ResourcesOfResourceOfWorkflowProcess resources)
+        private List<EntityModelOfWorkflowProcess> ExtractResources(CollectionModelOfEntityModelOfWorkflowProcess resources)
         {
-            var processes = resources.Embedded != null ? resources.Embedded["processes"] : new List<ResourceOfWorkflowProcess>();
+            var processes = resources.Embedded != null ? resources.Embedded["processes"] : new List<EntityModelOfWorkflowProcess>();
 
             return processes.Select(res => res).ToList();
         }

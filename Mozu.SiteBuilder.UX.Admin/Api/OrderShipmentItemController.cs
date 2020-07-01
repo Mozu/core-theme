@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "shipment/items/reassign")]
-        public async Task<Response<ResourceOfShipment>> ReassignShipmentItems(ReassignShipmentItemArgs args)
+        public async Task<Response<EntityModelOfShipment>> ReassignShipmentItems(ReassignShipmentItemArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.ReassignShipmentItems(args.ShipmentNumber, args.ReassignItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "shipment/items/cancel")]
-        public async Task<Response<ResourceOfShipment>> CancelShipmentItems(CancelShipmentItemArgs args)
+        public async Task<Response<EntityModelOfShipment>> CancelShipmentItems(CancelShipmentItemArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.CancelItems(args.ShipmentNumber, args.CancelItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public BackorderItemsUpdateRequest BackorderItemsRequest { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/backorderItemsUpdate")]
-        public async Task<Response<ResourceOfShipment>> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
+        public async Task<Response<EntityModelOfShipment>> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.BackorderItemsUpdate(args.ShipmentNumber, args.BackorderItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public PickupItemsRequest PickupItemsRequest { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/pickupItems")]
-        public async Task<Response<ResourceOfShipment>> PickupItems(PickupItemsRequestArgs args)
+        public async Task<Response<EntityModelOfShipment>> PickupItems(PickupItemsRequestArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.PickupItems(args.PickupItemsRequest,args.ShipmentNumber)).ReadAsSync();
             return Single2(serviceResponse);
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public TransferItemsRequest TransferItemsRequest { get; set; }
         }
         [HttpPutRoute(UriTemplate = "shipment/transferredItems")]
-        public async Task<Response<ResourceOfShipment>> TransferShipmentItems(TransferShipmentItemsArgs args)
+        public async Task<Response<EntityModelOfShipment>> TransferShipmentItems(TransferShipmentItemsArgs args)
         {
             var serviceResponse = (await _fulfillmentProxyClient.TransferShipmentItems(args.ShipmentNumber, args.TransferItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);

@@ -281,6 +281,17 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "AnonymousNotification", action = "RenderShipmentView" });
 
             routes.MapHttpRoute(
+               "Anonymous Save Curbside Info",
+               "user/save-curbside-info",
+               new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
+               new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+                "Anonymous CurbsideInfo View",
+                "anonymous-notification/curbsideInfo/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "GetCurbsideInfo" });
+
+            routes.MapHttpRoute(
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" });

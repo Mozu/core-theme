@@ -368,6 +368,10 @@
       "verb": "POST",
       "template": "{+storefrontUserService}anonymous-login"
     },
+    "order-curbside-event": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}save-curbside-info"
+    },
     "update": {
       "verb": "PUT",
       "template": "{+customerService}{id}",
@@ -387,7 +391,7 @@
       "verb": "POST",
       "template": "{+customerService}{id}/change-password{?userId}",
       "includeSelf": true,
-      "shortcutParam":  "userId"
+      "shortcutParam": "userId"
     },
     "get-attributes": {
       "template": "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",

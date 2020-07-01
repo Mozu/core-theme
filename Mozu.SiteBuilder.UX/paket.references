@@ -27,3 +27,4 @@ Mozu.Log4net.Gelf
 RestSharp
 Microsoft.AspNetCore.Mvc.Abstractions
 KuttSharp
+QRCoder

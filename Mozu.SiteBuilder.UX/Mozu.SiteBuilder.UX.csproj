@@ -453,7 +453,7 @@
       <HintPath>..\packages\KuttSharp\lib\netstandard2.0\KuttSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-  </ItemGroup>  
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
@@ -1165,6 +1165,17 @@
       <ItemGroup>
         <Reference Include="protobuf-net">
           <HintPath>..\packages\protobuf-net\lib\net40\protobuf-net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="QRCoder">
+          <HintPath>..\packages\QRCoder\lib\net40\QRCoder.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

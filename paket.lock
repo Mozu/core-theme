@@ -85,6 +85,7 @@ NUGET
       System.IO.Pipelines (>= 4.5.1)
       System.Runtime.CompilerServices.Unsafe (>= 4.5.2)
     protobuf-net (2.0.0.668)
+    QRCoder (1.3.9)
     RabbitMQ.Client (3.3.5)
     RestSharp (106.6.9)
     Should (1.1.20)
@@ -140,7 +141,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1913.2)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.2021.0-gshotContracts-146)
+    Mozu.CommerceRuntime.Contracts (1.2027.0-COM-2010-152)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
