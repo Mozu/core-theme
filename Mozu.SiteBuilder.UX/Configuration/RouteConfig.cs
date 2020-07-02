@@ -184,6 +184,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "TransferPackingSlip" });
 
             routes.MapHttpRoute(
+                "Return Receipt (back office)",
+                "back-office/return-receipt/{orderId}/{returnId}",
+                new { controller = "BackOffice", action = "ReturnReceipt" });
+            routes.MapHttpRoute(
                 "pick wave (back office)",
                 "back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}",
                 new { controller = "BackOffice", action = "PickWave" });

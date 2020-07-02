@@ -1,0 +1,654 @@
+{
+  "Id": "0f9a468e5fc5080001fad1b20000433f",
+  "CustomerAccountId": 1129,
+  "VisitId": null,
+  "WebSessionId": null,
+  "CustomerInteractionType": "Unknown",
+  "AvailableActions": [
+
+  ],
+  "ReturnNumber": 376,
+  "Contact": {
+    "Email": "johnny.tapia@badguy.com",
+    "FirstName": "Johnny",
+    "MiddleNameOrInitial": "",
+    "LastNameOrSurname": "Tapia",
+    "PhoneNumbers": {
+      "Home": "55555555555",
+      "Mobile": "",
+      "Work": ""
+    },
+    "Address": {
+      "Address1": "825 Buckley Rd #200",
+      "Address2": "",
+      "Address3": "",
+      "Address4": "",
+      "CityOrTown": "San Luis Obispo",
+      "StateOrProvince": "CA",
+      "PostalOrZipCode": "93401",
+      "CountryCode": "US",
+      "AddressType": "Residential",
+      "IsValidated": false
+    }
+  },
+  "LocationCode": "Austin_Both",
+  "OriginalOrderId": "0f978b9623a1a300015d322c0000433f",
+  "OriginalOrderNumber": 3554,
+  "ReturnOrderId": null,
+  "CurrencyCode": "USD",
+  "Status": "Closed",
+  "ReceiveStatus": "FullyReceived",
+  "RefundStatus": "FullyRefunded",
+  "ReplaceStatus": "NotRequested",
+  "Items": [
+    {
+      "Id": "13bd97a12e9e41d29b12aba001218500",
+      "OrderItemId": "71e06284a2cb48ba8183ab9e01058bf5",
+      "OrderLineId": 1,
+      "OrderItemOptionAttributeFQN": "",
+      "Product": {
+        "MfgPartNumber": null,
+        "UPC": null,
+        "FulfillmentTypesSupported": null,
+        "ImageAlternateText": null,
+        "ImageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/2aea716a-dd56-4384-9811-4541abb5e613",
+        "VariationProductCode": null,
+        "Options": [
+
+        ],
+        "Properties": [
+
+        ],
+        "Categories": [
+
+        ],
+        "Price": {
+          "Price": 4.99,
+          "SalePrice": null,
+          "TenantOverridePrice": null,
+          "MSRP": null,
+          "CreditValue": null,
+          "PriceListCode": null,
+          "PriceListEntryMode": null
+        },
+        "DiscountsRestricted": null,
+        "DiscountsRestrictedStartDate": null,
+        "DiscountsRestrictedEndDate": null,
+        "IsRecurring": null,
+        "IsTaxable": true,
+        "ProductType": "StandardProductType1",
+        "ProductUsage": null,
+        "BundledProducts": [
+
+        ],
+        "ProductCode": "DoN0tT0ucH",
+        "Name": "PickwaveTestProduct2",
+        "Description": null,
+        "GoodsType": "Physical",
+        "Stock": {
+          "ManageStock": true,
+          "IsOnBackOrder": false,
+          "AvailableDate": null,
+          "StockAvailable": 978
+        },
+        "IsPackagedStandAlone": false,
+        "ProductReservationId": null,
+        "AllocationId": null,
+        "AllocationExpiration": null,
+        "Measurements": {
+          "Height": {
+            "Unit": "in",
+            "Value": 1.000
+          },
+          "Width": {
+            "Unit": "in",
+            "Value": 1.000
+          },
+          "Length": {
+            "Unit": "in",
+            "Value": 1.000
+          },
+          "Weight": {
+            "Unit": "lbs",
+            "Value": 1.000
+          }
+        },
+        "FulfillmentStatus": "Pending"
+      },
+      "Reasons": [
+        {
+          "Reason": "Damaged",
+          "Quantity": 1
+        }
+      ],
+      "ExcludeProductExtras": false,
+      "ReturnType": "Refund",
+      "ReturnNotRequired": false,
+      "QuantityReceived": 1,
+      "ReceiveStatus": "Received",
+      "QuantityShipped": 0,
+      "ReplaceStatus": "NotRequested",
+      "QuantityRestockable": 0,
+      "QuantityRestocked": 1,
+      "RefundAmount": 0.4,
+      "RefundStatus": "Refunded",
+      "QuantityReplaced": null,
+      "Notes": [
+
+      ],
+      "ProductLossAmount": 4.99,
+      "ProductLossTaxAmount": 0.41,
+      "ShippingLossAmount": 0.0,
+      "ShippingLossTaxAmount": 0.0,
+      "BundledProducts": [
+
+      ],
+      "TotalWithoutWeightedShippingAndHandling": 5.40,
+      "TotalWithWeightedShippingAndHandling": 5.40,
+      "ShipmentItemId": 1,
+      "ShipmentNumber": 15747
+    }
+  ],
+  "Notes": [
+    {
+      "Id": "447cf2612ea54deda652abba007d5d60",
+      "Text": "test1",
+      "AuditInfo": {
+        "UpdateDate": "2020-05-13T07:36:26.344Z",
+        "CreateDate": "2020-05-13T07:36:26.344Z",
+        "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    }
+  ],
+  "rmaDeadline": null,
+  "ReturnType": "Replace",
+  "RefundAmount": 0.4,
+  "AuditInfo": {
+    "UpdateDate": "2020-05-13T07:37:07.686Z",
+    "CreateDate": "2020-04-17T17:34:06.498Z",
+    "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+  },
+  "Payments": [
+    {
+      "Id": "dd41eca2548d44a48197ab9f0065b30f",
+      "GroupId": {
+        "TargetType": "Order",
+        "TargetId": "0f978b9623a1a300015d322c0000433f",
+        "TargetNumber": null
+      },
+      "PaymentServiceTransactionId": "bd0fbae3a87841e4b4762ba021f18794",
+      "AvailableActions": [
+        "CreditPayment"
+      ],
+      "OrderId": "0f978b9623a1a300015d322c0000433f",
+      "PaymentType": "CreditCard",
+      "PaymentWorkflow": "Mozu",
+      "ExternalTransactionId": null,
+      "BillingInfo": {
+        "PaymentType": "CreditCard",
+        "PaymentWorkflow": null,
+        "BillingContact": {
+          "Email": "johnny.tapia@badguy.com",
+          "FirstName": "Johnny",
+          "MiddleNameOrInitial": "",
+          "LastNameOrSurname": "Tapia",
+          "PhoneNumbers": {
+            "Home": "55555555555",
+            "Mobile": "",
+            "Work": ""
+          },
+          "Address": {
+            "Address1": "825 Buckley Rd #200",
+            "Address2": "",
+            "Address3": "",
+            "Address4": "",
+            "CityOrTown": "San Luis Obispo",
+            "StateOrProvince": "CA",
+            "PostalOrZipCode": "93401",
+            "CountryCode": "US",
+            "AddressType": "Residential",
+            "IsValidated": false
+          }
+        },
+        "IsSameBillingShippingAddress": false,
+        "Card": {
+          "PaymentServiceCardId": "8cdf56c613334b68bf05b500594ec281",
+          "IsUsedRecurring": false,
+          "NameOnCard": "Johnny Tapia",
+          "IsCardInfoSaved": false,
+          "PaymentOrCardType": "VISA",
+          "CardNumberPartOrMask": "***************1111",
+          "ExpireMonth": 3,
+          "ExpireYear": 2024,
+          "Bin": null
+        },
+        "Token": null,
+        "PurchaseOrder": null,
+        "Check": null,
+        "AuditInfo": {
+          "UpdateDate": "2020-04-16T06:10:16.582Z",
+          "CreateDate": "2020-04-15T15:51:58.634Z",
+          "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "CreateBy": "b7cb725655004949ba28ab0c831bf9ba"
+        },
+        "StoreCreditCode": null,
+        "StoreCreditType": null,
+        "CustomCreditType": null,
+        "ExternalTransactionId": null,
+        "Data": null
+      },
+      "Data": null,
+      "Status": "Credited",
+      "SubPayments": [
+
+      ],
+      "Interactions": [
+        {
+          "Id": "21ee39e54f07410ea329ab9f0065b4a0",
+          "GatewayInteractionId": 85847,
+          "PaymentId": "dd41eca2548d44a48197ab9f0065b30f",
+          "OrderId": "0f978b9623a1a300015d322c0000433f",
+          "Target": {
+            "TargetType": "Order",
+            "TargetId": "0f978b9623a1a300015d322c0000433f",
+            "TargetNumber": 3554
+          },
+          "CurrencyCode": "USD",
+          "InteractionType": "Authorization",
+          "CheckNumber": null,
+          "Status": "Authorized",
+          "PaymentEntryStatus": "New",
+          "IsRecurring": false,
+          "IsManual": false,
+          "GatewayTransactionId": "",
+          "GatewayAuthCode": "AUTHORIZED",
+          "GatewayAVSCodes": "",
+          "GatewayCVV2Codes": "",
+          "GatewayResponseCode": "AUTHORIZED",
+          "GatewayResponseText": "Authorized via NoOP",
+          "GatewayResponseData": null,
+          "PaymentTransactionInteractionIdReference": null,
+          "Amount": 5.4,
+          "Note": null,
+          "InteractionDate": "2020-04-16T06:10:17.918Z",
+          "AuditInfo": {
+            "UpdateDate": "2020-04-16T06:10:17.918Z",
+            "CreateDate": "2020-04-16T06:10:17.918Z",
+            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "ReturnId": null,
+          "RefundId": null
+        },
+        {
+          "Id": "4532677a0a0144d8a922ab9f0065be4c",
+          "GatewayInteractionId": 85848,
+          "PaymentId": "dd41eca2548d44a48197ab9f0065b30f",
+          "OrderId": "0f978b9623a1a300015d322c0000433f",
+          "Target": {
+            "TargetType": "Order",
+            "TargetId": "0f978b9623a1a300015d322c0000433f",
+            "TargetNumber": 3554
+          },
+          "CurrencyCode": "USD",
+          "InteractionType": "Capture",
+          "CheckNumber": null,
+          "Status": "Captured",
+          "PaymentEntryStatus": "Authorized",
+          "IsRecurring": false,
+          "IsManual": false,
+          "GatewayTransactionId": "",
+          "GatewayAuthCode": "CAPTURED",
+          "GatewayAVSCodes": "",
+          "GatewayCVV2Codes": "",
+          "GatewayResponseCode": "CAPTURED",
+          "GatewayResponseText": "Captured via NoOP",
+          "GatewayResponseData": null,
+          "PaymentTransactionInteractionIdReference": null,
+          "Amount": 5.4,
+          "Note": null,
+          "InteractionDate": "2020-04-16T06:10:26.172Z",
+          "AuditInfo": {
+            "UpdateDate": "2020-04-16T06:10:26.172Z",
+            "CreateDate": "2020-04-16T06:10:26.172Z",
+            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "ReturnId": null,
+          "RefundId": null
+        },
+        {
+          "Id": "6f6fdab4ada14d8aa3b8aba00121ac7e",
+          "GatewayInteractionId": 86030,
+          "PaymentId": "dd41eca2548d44a48197ab9f0065b30f",
+          "OrderId": "0f978b9623a1a300015d322c0000433f",
+          "Target": {
+            "TargetType": "Order",
+            "TargetId": "0f978b9623a1a300015d322c0000433f",
+            "TargetNumber": 3554
+          },
+          "CurrencyCode": "USD",
+          "InteractionType": "Credit",
+          "CheckNumber": null,
+          "Status": "Credited",
+          "PaymentEntryStatus": "Collected",
+          "IsRecurring": false,
+          "IsManual": false,
+          "GatewayTransactionId": "",
+          "GatewayAuthCode": null,
+          "GatewayAVSCodes": null,
+          "GatewayCVV2Codes": null,
+          "GatewayResponseCode": "CREDITED",
+          "GatewayResponseText": "Credited via NoOP",
+          "GatewayResponseData": null,
+          "PaymentTransactionInteractionIdReference": 85848,
+          "Amount": 0.4,
+          "Note": null,
+          "InteractionDate": "2020-04-17T17:34:40.203Z",
+          "AuditInfo": {
+            "UpdateDate": "2020-04-17T17:34:40.203Z",
+            "CreateDate": "2020-04-17T17:34:40.203Z",
+            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "ReturnId": "0f9a468e5fc5080001fad1b20000433f",
+          "RefundId": null
+        }
+      ],
+      "IsRecurring": false,
+      "AmountCollected": 5.4,
+      "AmountCredited": 0.0,
+      "AmountRequested": 5.4,
+      "ChangeMessages": [
+        {
+          "Id": "4ac7951d1eeb43cc9c72ab9f0065b455",
+          "CorrelationId": "17dddae250b74bfb9bc08d87ca772f5b",
+          "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "UserFirstName": "Kibo",
+          "UserLastName": "admin",
+          "UserScopeType": "Tenant",
+          "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+          "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+          "AppName": null,
+          "SubjectType": "StateChange.Payment",
+          "Success": true,
+          "Identifier": "dd41eca2548d44a48197ab9f0065b30f",
+          "Subject": "CreatePayment",
+          "Verb": "Applied",
+          "Message": "Workflow action succeeded.",
+          "Metadata": [
+            {
+              "transactionId": "dd41eca2548d44a48197ab9f0065b30f",
+              "paymentServiceTransactionId": null,
+              "paymentType": "CreditCard",
+              "amountCollected": 0.0,
+              "amountCredited": 0.0,
+              "amountRequested": 5.4,
+              "oldValue": "New",
+              "newValue": "New"
+            }
+          ],
+          "OldValue": "New",
+          "NewValue": "New",
+          "Amount": null,
+          "CreateDate": "2020-04-16T06:10:17.669Z"
+        },
+        {
+          "Id": "9337aaaed98b48a5a24eab9f0065b500",
+          "CorrelationId": "17dddae250b74bfb9bc08d87ca772f5b",
+          "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "UserFirstName": "Kibo",
+          "UserLastName": "admin",
+          "UserScopeType": "Tenant",
+          "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+          "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+          "AppName": null,
+          "SubjectType": "StateChange.Payment",
+          "Success": true,
+          "Identifier": "dd41eca2548d44a48197ab9f0065b30f",
+          "Subject": "AuthorizePayment",
+          "Verb": "Applied",
+          "Message": "Workflow action succeeded.",
+          "Metadata": [
+            {
+              "transactionId": "dd41eca2548d44a48197ab9f0065b30f",
+              "paymentServiceTransactionId": "bd0fbae3a87841e4b4762ba021f18794",
+              "paymentType": "CreditCard",
+              "amountCollected": 0.0,
+              "amountCredited": 0.0,
+              "amountRequested": 5.4,
+              "oldValue": "New",
+              "newValue": "Authorized"
+            }
+          ],
+          "OldValue": "New",
+          "NewValue": "Authorized",
+          "Amount": null,
+          "CreateDate": "2020-04-16T06:10:18.239Z"
+        },
+        {
+          "Id": "a27faa6ce24c4de19ccbab9f0065be6a",
+          "CorrelationId": "88e77f82d0804fbb94536ba91aa89814",
+          "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "UserFirstName": "Kibo",
+          "UserLastName": "admin",
+          "UserScopeType": "Tenant",
+          "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+          "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+          "AppName": null,
+          "SubjectType": "StateChange.Payment",
+          "Success": true,
+          "Identifier": "dd41eca2548d44a48197ab9f0065b30f",
+          "Subject": "CapturePayment",
+          "Verb": "Applied",
+          "Message": "Workflow action succeeded.",
+          "Metadata": [
+            {
+              "transactionId": "dd41eca2548d44a48197ab9f0065b30f",
+              "paymentServiceTransactionId": "bd0fbae3a87841e4b4762ba021f18794",
+              "paymentType": "CreditCard",
+              "amountCollected": 5.4,
+              "amountCredited": 0.0,
+              "amountRequested": 5.4,
+              "oldValue": "Authorized",
+              "newValue": "Collected"
+            }
+          ],
+          "OldValue": "Authorized",
+          "NewValue": "Collected",
+          "Amount": null,
+          "CreateDate": "2020-04-16T06:10:26.274Z"
+        },
+        {
+          "Id": "387f11bd895044919b5daba00121ad57",
+          "CorrelationId": "52d702de7e194505bb0a3e454d22d3ec",
+          "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "UserFirstName": "Kibo",
+          "UserLastName": "admin",
+          "UserScopeType": "Tenant",
+          "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+          "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+          "AppName": null,
+          "SubjectType": "StateChange.Payment",
+          "Success": true,
+          "Identifier": "dd41eca2548d44a48197ab9f0065b30f",
+          "Subject": "CreditPayment",
+          "Verb": "Applied",
+          "Message": "Workflow action succeeded.",
+          "Metadata": [
+            {
+              "transactionId": "dd41eca2548d44a48197ab9f0065b30f",
+              "paymentServiceTransactionId": "bd0fbae3a87841e4b4762ba021f18794",
+              "paymentType": "CreditCard",
+              "amountCollected": 5.4,
+              "amountCredited": 0.0,
+              "amountRequested": 5.4,
+              "oldValue": "Collected",
+              "newValue": "Credited"
+            }
+          ],
+          "OldValue": "Collected",
+          "NewValue": "Credited",
+          "Amount": null,
+          "CreateDate": "2020-04-17T17:34:40.924Z"
+        }
+      ],
+      "AuditInfo": {
+        "UpdateDate": "2020-05-13T07:37:08.099Z",
+        "CreateDate": "2020-04-16T06:10:16.582Z",
+        "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    }
+  ],
+  "Packages": null,
+  "ProductLossTotal": 4.99,
+  "ShippingLossTotal": 0.0,
+  "LossTotal": 4.99,
+  "ProductLossTaxTotal": 0.41,
+  "ShippingLossTaxTotal": 0.0,
+  "TenantId": 17215,
+  "SiteId": 21153,
+  "UserId": "fbc60009e961479aad10d3e16b9fbdd8",
+  "ChannelCode": "Online01",
+  "ChangeMessages": [
+    {
+      "Id": "8093e2a9b7974e9eb8c4aba0012184fe",
+      "CorrelationId": "78165d3fab594743aa661b0905204ff1",
+      "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "UserFirstName": "Kibo",
+      "UserLastName": "admin",
+      "UserScopeType": "Tenant",
+      "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+      "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+      "AppName": null,
+      "SubjectType": "StateChange.Return",
+      "Success": true,
+      "Identifier": null,
+      "Subject": "Create",
+      "Verb": "Applied",
+      "Message": "Workflow action succeeded.",
+      "Metadata": [
+        {
+          "rmaId": null,
+          "amount": 0.0,
+          "returnNumber": null,
+          "productCodes": [
+            "DoN0tT0ucH"
+          ],
+          "oldValue": "Null",
+          "newValue": "Created"
+        }
+      ],
+      "OldValue": "Null",
+      "NewValue": "Created",
+      "Amount": null,
+      "CreateDate": "2020-04-17T17:34:06.494Z"
+    },
+    {
+      "Id": "91012add33d7488baf8eaba00121855a",
+      "CorrelationId": "78165d3fab594743aa661b0905204ff1",
+      "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "UserFirstName": "Kibo",
+      "UserLastName": "admin",
+      "UserScopeType": "Tenant",
+      "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+      "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+      "AppName": null,
+      "SubjectType": "StateChange.Return",
+      "Success": true,
+      "Identifier": "0f9a468e5fc5080001fad1b20000433f",
+      "Subject": "Authorize",
+      "Verb": "Applied",
+      "Message": "Workflow action succeeded.",
+      "Metadata": [
+        {
+          "rmaId": "0f9a468e5fc5080001fad1b20000433f",
+          "amount": 0.0,
+          "returnNumber": 376,
+          "productCodes": [
+            "DoN0tT0ucH"
+          ],
+          "oldValue": "Created",
+          "newValue": "Authorized"
+        }
+      ],
+      "OldValue": "Created",
+      "NewValue": "Authorized",
+      "Amount": null,
+      "CreateDate": "2020-04-17T17:34:06.801Z"
+    },
+    {
+      "Id": "8d5b83b863304c328baeaba00121ad58",
+      "CorrelationId": "52d702de7e194505bb0a3e454d22d3ec",
+      "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "UserFirstName": "Kibo",
+      "UserLastName": "admin",
+      "UserScopeType": "Tenant",
+      "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+      "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+      "AppName": null,
+      "SubjectType": "Order",
+      "Success": null,
+      "Identifier": "0f978b9623a1a300015d322c0000433f",
+      "Subject": "Return Updated",
+      "Verb": "Updated",
+      "Message": "Updated Return 0f9a468e5fc5080001fad1b20000433f on Order 0f978b9623a1a300015d322c0000433f",
+      "Metadata": [
+        {
+          "returnId": "376",
+          "orderNumber": 3554,
+          "returnType": "Replace",
+          "productCodes": [
+            "DoN0tT0ucH"
+          ],
+          "amount": 0.4,
+          "transactionId": "bd0fbae3a87841e4b4762ba021f18794"
+        }
+      ],
+      "OldValue": null,
+      "NewValue": null,
+      "Amount": null,
+      "CreateDate": "2020-04-17T17:34:40.928Z"
+    },
+    {
+      "Id": "534ef243797149e482b8abba007d8db7",
+      "CorrelationId": "4c580fe184274b18b4582dcf0285d404",
+      "UserId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "UserFirstName": "Kibo",
+      "UserLastName": "admin",
+      "UserScopeType": "Tenant",
+      "AppId": "2e778ae20c7c433885c8e5e418774cb4",
+      "AppKey": "mozu.MozuAdmin.1903.6.0.Release",
+      "AppName": null,
+      "SubjectType": "StateChange.Return",
+      "Success": true,
+      "Identifier": "0f9a468e5fc5080001fad1b20000433f",
+      "Subject": "Close",
+      "Verb": "Applied",
+      "Message": "Workflow action succeeded.",
+      "Metadata": [
+        {
+          "rmaId": "0f9a468e5fc5080001fad1b20000433f",
+          "amount": 0.4,
+          "returnNumber": 376,
+          "productCodes": [
+            "DoN0tT0ucH"
+          ],
+          "oldValue": "Authorized",
+          "newValue": "Closed"
+        }
+      ],
+      "OldValue": "Authorized",
+      "NewValue": "Closed",
+      "Amount": null,
+      "CreateDate": "2020-05-13T07:37:07.596Z"
+    }
+  ],
+  "ActionRequired": false,
+  "OriginalShipmentId": null,
+  "OriginalShipmentNumber": null,
+  "IsUnified": true
+}

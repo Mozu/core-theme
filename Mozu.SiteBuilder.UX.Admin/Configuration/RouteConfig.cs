@@ -45,6 +45,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             routes.MapHttpRoute("order details", "s-{siteId}/orderdetails/{orderId}",
                                 new {action = "Deets", controller = "OrderDetails"});
 
+            routes.MapHttpRoute("return receipt", "s-{siteId}/return-receipt/{orderId}/{returnId}",
+                                new { action = "ReturnReceipt", controller = "OrderDetails" });
             routes.MapHttpRoute("packing slip", "s-{siteId}/orderdetails/{orderId}/shipments/{shipmentNumber}",
                                 new { action = "PackingSlip", controller = "OrderDetails" });
 

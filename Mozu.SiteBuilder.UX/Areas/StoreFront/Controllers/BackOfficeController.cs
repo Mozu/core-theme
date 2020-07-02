@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.ResourceOfShipment;
+using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -43,6 +44,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
+        private readonly IReturnWebApiClient _returnWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string ORDERS_PREVIEW_RESOURCE_NAME = "backoffice.orders1";
@@ -53,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
         private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
         private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
+        private const string RETURN_PREVIEW_RESOURCE_NAME = "backoffice.return1";
 
         /// <summary>
         /// Public constructor.
@@ -61,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IFulfillmentProxyWebApiClient fulfillmentProxyClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
-            IReturnSettingsWebApiClient returnSettingsWebApiClient)
+            IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            IReturnWebApiClient returnWebApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
@@ -69,6 +73,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
+            _returnWebApiClient = returnWebApiClient;
         }
 
         /// <summary>
@@ -403,24 +408,44 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var dcShipment = Mapper.Map<Shipment>(shipment);
-            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
+            order.Shipments = order.Shipments ?? new List<Shipment>(new[] { dcShipment });
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("transfer-packing-slip"));
             if (template == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find transfer packing slip template for the current Theme.");
             }
-            
+
             PopulateShipmentDetails(dcShipment, order);
 
             var locationCode = shipment.FulfillmentLocationCode;
-            if (!locationCode.IsNullOrEmpty()) {
+            if (!locationCode.IsNullOrEmpty())
+            {
                 var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
                 ViewData["location"] = location;
             }
 
             ViewData["order"] = order;
             return await RenderWithContext(template, shipment);
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> ReturnReceipt(string orderId , string returnId, [FromUri(Name = "t")]string token = null)
+        {
+            DCReturns.Return returnObject = (await this._returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
+            if (returnObject.Status != DCReturns.Return.ReturnStatusConst.CLOSED &&
+                ((returnObject.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.FULLY_RECEIVED && returnObject.RefundStatus != DCReturns.Return.RefundStatusConst.FULLY_REFUNDED) ||
+                (returnObject.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.PARTIALLY_RECEIVED && returnObject.RefundStatus != DCReturns.Return.RefundStatusConst.PARTIALLY_REFUNDED))
+                )
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Return Receipt can not be generated for a return which is not processed");
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("return-receipt"));
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find return receipt template for the current Theme.");
+            }
+            return await RenderWithContext(template, returnObject);
         }
 
         /// <summary>
@@ -491,6 +516,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "mobile-notification")
             {
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                return await RenderWithContext(template, model);
+            }
+			else if (templateid == "return-receipt")
+            {
+                object model = TestDataBroker.GetFileContents(RETURN_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
             }
             else
