@@ -441,7 +441,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.formSelector = 'form[name="mz-loginform"]';
             loginPage.pageType = 'login';
             loginPage.init(this);
-        });
+        });   
         $('[data-mz-action="anonymousorder-submit"]').each(function () {
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-anonymousorder"]';

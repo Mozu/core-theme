@@ -64,7 +64,7 @@ Ext.widget({
                   response.items[0].item.bf_merchant_currency_code
                 );
               } catch (e) {
-                console.log(e);
+                window.console.log(e);
               }
             } else {
               var errormessage = me.down("#errormessage");
