@@ -1,0 +1,72 @@
+<div class="header customer-at-curbside-header">
+    <h2> {{ labels.orderRedayForPickup }} </h2>
+</div>
+<div class="pageContent">
+    <div class="pStyle">
+        <p> {{ labels.curbsideShipmentReadyGoodNewsText }} </p>
+        <p> {{ labels.curbsideShipmentReadyText }} </p>
+        <p> {{ labels.curbsideShipmentReadyThanksText }} </p>
+    </div>
+    <div class="spacingStyle">
+            <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-cell">
+                    <button class="mz-button mz-button-large mz-delivery-button"  onclick="location.href = 'http://{{ domainName }}/anonymous-notification/onmyway/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
+                        <div class="mz-l-formfieldgroup-cell">
+                            <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                        </div>
+                </div>
+            </div>
+            <div> <h5>Actually I'm already curbside. <a href="http://{{ domainName }}/anonymous-notification/curbsideArrive/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.alreadyCurbside }}</a><br/><br/></h5> </div>
+    </div>
+    <div class="demobox">
+        <p class="pStyle"> Please Note...</p>
+        <ul>
+        <li>{{labels.curbsideIdText}}</li>
+        <li>{{labels.curbsideRefundText}}</li>
+        <li>{{labels.curbsideSLandingText}}</li>
+        </ul>
+    </div>
+    <div class="orderMain">
+        <div class="orderLeft">
+         <h2  style="color:white"> <b>Order Details</b></h2>
+        </div>
+        <div class="orderRight" align="left">
+        <p> <b>Order Number: <br> 1357 </b></p>
+        </div>
+    </div>
+    <div class = "storedetails">
+      <span> <b> Store Details </b><span> <br>
+      <p> Store location : {{location.name }}<br />
+       {{location.address.address1}}  {{location.address.address2}}<br />
+       {{location.address.cityOrTown}} {{location.address.postalOrZipCode}}<br />
+       {{location.phone}}
+    </div>
+</div>
+
+ <tbody><tr><td colspan="4">
+        <table class="grid">
+            <thead><tr>
+                <th>{{ labels.item }}</th>
+                <th> </th>
+                <th>{{ labels.subtotal }}</th>
+            </tr></thead>
+            <tbody>
+                {% for item in model.items %}
+                    <tr>
+                        <td>
+                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                        </td>
+                        <td>
+                            <div class="product-name">
+                                <span><b>{{ item.name }}</b></span></br>
+                                <span class="label">{{ labels.ProductPart }} {{ item.productCode }}</span></br>
+                                <span class="label">{{ labels.qty }} {{ item.quantity }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>

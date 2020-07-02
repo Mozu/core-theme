@@ -280,6 +280,27 @@
       "title": "Return Receipt",
       "template": "back-office/return-receipt",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "entityType": "customer-at-curbside",
+      "id": "customer-at-curbside",
+      "template": "back-office/customer-at-curbside",
+      "title": "Customer At Curbside",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer-at-curbside",
+      "id": "customer-at-curbside-qrcode",
+      "template": "back-office/customer-at-curbside",
+      "title": "Customer At Curbside QRCode",
+      "userCreatable": false
+    },
+    {
+      "entityType": "curbsideShipmentReady",
+      "id": "curbside-shipment-ready",
+      "template": "back-office/curbside-shipment-ready",
+      "title": "Curbside Shipment Ready",
+      "userCreatable": false
     }
   ],
   "mobileNotificationTemplates":[
