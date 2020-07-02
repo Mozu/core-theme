@@ -21,17 +21,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class AnonymousNotificationController : BaseApiController
     {
-        private readonly IShipmentControllerApiClient _fulfillmentProxyClient;
+        private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
 
-        public AnonymousNotificationController( Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient  fulfillmentProxyClient)
+        public AnonymousNotificationController( Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient  shipmentControllerApiClient)
         {
-            _fulfillmentProxyClient = fulfillmentProxyClient;
+            _shipmentControllerApiClient = shipmentControllerApiClient;
         }
 
         [HttpGet]
         public async Task<IActionResult> RenderShipmentView(int shipmentNumber, string orderId)
         {
-            var model = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            var model = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (model == null)
             {

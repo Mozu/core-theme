@@ -124,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (mobileNotificationTemplate == null)
             {
-                return NotFound( "Could not find a MobileNotification template for the current Theme.");
+                return NotFound("Could not find a MobileNotification template for the current Theme.");
             }
 
             var model = TestDataBroker.GetFileContents(id).FirstOrDefault() ?? new object();
@@ -224,7 +224,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else
             {
-                return StatusCode(501);
+                return StatusCode(500);
             }
 
             var renderedTemplate = await GetRenderedTemplate(notification, mobileNotificationTemplate, notificationModel, user, site);
