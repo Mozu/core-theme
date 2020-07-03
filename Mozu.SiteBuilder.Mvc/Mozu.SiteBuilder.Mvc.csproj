@@ -425,6 +425,7 @@
     <EmbeddedResource Include="TestData\backoffice\Customer-at-curbside-qrcode.json" />
     <EmbeddedResource Include="TestData\backoffice\Return1.json" />
     <None Include="TestData\refund.created\Refund1.json" />
+    <EmbeddedResource Include="TestData\shipment.customeratcurbside\Shipment1.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />
