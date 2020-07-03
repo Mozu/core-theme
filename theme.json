@@ -280,6 +280,18 @@
       "title": "Return Receipt",
       "template": "back-office/return-receipt",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "crubside-arrive",
+      "title": "Crubside Arrive",
+      "template": "back-office/crubside-arrive",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "crubside-seeyousoon",
+      "title": "Crubside SeeYouSoon",
+      "template": "back-office/curbside-see-you-soon",
+      "customEditor": "back-office@mozu"
     }
   ],
   "mobileNotificationTemplates":[

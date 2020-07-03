@@ -1,0 +1,4 @@
+{% extends "back-office/curbside-base" %}
+{% block body-content %}
+{% include "back-office/crubside-arrive-content" %}
+{% endblock body-content %}
