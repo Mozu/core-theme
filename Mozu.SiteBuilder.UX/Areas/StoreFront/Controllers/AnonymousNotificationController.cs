@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Linq;
 using QRCoder;
 using System;
@@ -29,11 +30,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
-
-        public AnonymousNotificationController(IFulfillmentProxyWebApiClient fulfillmentProxyClient, ILocationRuntimeWebApiClient locationRuntimeWebApiClient)
+        private readonly ISitesWebApiClient _sitesWebApiClient;
+        public AnonymousNotificationController(IFulfillmentProxyWebApiClient fulfillmentProxyClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            ISitesWebApiClient sitesWebApiClient)
         {
             _fulfillmentProxyClient = fulfillmentProxyClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient;
+            _sitesWebApiClient = sitesWebApiClient;
         }
 
         [HttpGet]
@@ -56,6 +60,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find MobileNotification template for the current Theme.");
             }
             return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> RenderCurbsideArriveView(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (shipment.OrderId != orderId)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-arrive"));
+
+            var location = await GetLocation(shipment.FulfillmentLocationCode);
+
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find curbside-arrive template for the current Theme.");
+            }
+
+            ViewData["location"] = location;
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(); 
+
+            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
         }
 
 

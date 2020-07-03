@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.Tenant.Contracts.Clients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -519,6 +520,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["order"] = order;
+                ViewData["location"] = location;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "curbside-arrive" || templateid == "crubside-seeyousoon")
+            {
+                object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+
+                ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
                 ViewData["order"] = order;
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);

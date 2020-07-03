@@ -276,20 +276,33 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "MyAnonymousAccount", action = "Index" });
 
             routes.MapHttpRoute(
+              "Anonymous Curbside View",
+              "anonymous-notification/curbsideArrive/{shipmentNumber}/{orderId}",
+              new { controller = "AnonymousNotification", action = "RenderCurbsideArriveView" });
+
+            routes.MapHttpRoute(
                "Anonymous Shipment View",
                "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
                new { controller = "AnonymousNotification", action = "RenderShipmentView" });
 
+            
+
             routes.MapHttpRoute(
-               "Anonymous Save Curbside Info",
-               "user/save-curbside-info",
-               new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
+               "Anonymous Publish Curbside Event",
+               "user/publish-curbside-event",
+               new { controller = "AnonymousNotification", action = "PublishCurbsideEvent" },
                new { acceptConstraint = new AcceptConstraint("application/json", true) });
 
             routes.MapHttpRoute(
                 "Anonymous CurbsideInfo View",
                 "anonymous-notification/curbsideInfo/{shipmentNumber}/{orderId}",
                 new { controller = "AnonymousNotification", action = "GetCurbsideInfo" });
+
+            routes.MapHttpRoute(
+              "Anonymous Save Curbside Info",
+              "user/save-curbside-info",
+              new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
+              new { acceptConstraint = new AcceptConstraint("application/json", true) });
 
             routes.MapHttpRoute(
                 "refresh tokens",
