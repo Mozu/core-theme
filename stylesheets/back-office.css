@@ -256,3 +256,61 @@ table {
 .mobile-shipment-info-table span {
   float: right;
 }
+
+.curbside-order-details {
+  background-color: #b3b3b3;
+  margin-bottom: 0!important;
+  padding: 18px 100px;
+  display: flex;
+  text-align: left;
+  padding-top: 8px;
+  padding: 0px;
+  margin-top: 20px;
+  vertical-align: middle;
+  align-self: center;
+}
+
+.curbside-order-details-right {
+  width: 50%;
+  margin-left: 80px;
+  text-align: right;
+  color: white;
+  padding-right: 10px;
+}
+
+.curbside-order-details-left {
+  width: 50%;
+  vertical-align: middle;
+  padding-top: 15px;
+  color: white !important; 
+  padding-left: 10px;
+  font-weight: 900;
+}
+
+.curbside-page-content {
+  padding: 25px;
+}
+
+.curbside-spacing {
+  padding-top: 8px;
+}
+
+.curbside-notedetails {
+  background-color: #d3edf8;
+  padding-top: 8px;
+  margin-top: 20px;
+  border: 1px solid #87ceeb;
+}
+
+.curbside-storedetails {
+  background-color: #e5e5e5;
+  padding : 15px;
+  margin-top: 20px;
+  padding-top: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.mz-delivery-button {
+  background-color: #FA6400!important;
+  color: white!important;
+}
