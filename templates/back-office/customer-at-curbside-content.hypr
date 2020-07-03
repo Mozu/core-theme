@@ -34,7 +34,7 @@
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
-                            <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.MethodDelivery }}</label>
+                            <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.methodDelivery }}</label>
                                 <select data-mz-deliverymethod>
                                     <option value="Place Items In Trunk">Place Items In Trunk</option>
                                     <option value="Place items in backseat">Place items in backseat</option>
@@ -63,7 +63,7 @@
              </div>
         </div>
     {% endif %}
-    <div class="orderMain">
+    <div class="order-details-header">
         <div class="orderLeft">
             <h2 style="color:white"> <b>{{ labels.orderDetails }}</b></h2>
         </div>
@@ -71,7 +71,7 @@
             <p> <b>{{ labels.orderNumber }} <br> {{ model.orderNumber }} </b></p>
         </div>
     </div>
-    <div class = "storedetails">
+    <div class = "store-detail-info">
         <span><b> {{ labels.storeDetails }} </b><span> <br>
 		<div> {{ labels.storeLocation }} : {{ model.location.name }}</div>
 		<div> {{ model.location.address.address1 }} </div>

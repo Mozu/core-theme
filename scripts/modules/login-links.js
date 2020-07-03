@@ -480,7 +480,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.init(this);
         });
         $('[data-mz-action="deliverymethod-submit"]').each(function () {
-            console.log('test');
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-curbsidedelivery"]';
             loginPage.pageType = 'curbsidedelivery';

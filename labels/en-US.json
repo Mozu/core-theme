@@ -597,11 +597,8 @@
   "deliverYourItem": "Thanks for letting us know you're here! please fill out the questions below, and a store associate will be right out with your items.",
   "vehicleModel": "Vechicle Color, Make, Model",
   "parkingSpotNumber": "Parking Spot Number",
-  "MethodDelivery":"Method of Delivery",
+  "methodDelivery": "Method of Delivery",
   "qrDetails": "Thanks for providing your information! A store asscoiate will be with you shortly. Please show the below QR Code to store asscoiate so they can verify your order details.",
-  "curbsideIdText":"Please bring your ID that matches the name on your order (Unless otherwise specified).",
-  "curbsideRefundText": "If your package is not picked up in 5 business days, your order will be cancelled and you will be refunded",
-  "curbsideSLandingText":"When you arrive at the store please click the I'm CurbSide button shown above.From there, you will be brought to a landing page where you can provide your delivery information",
   "curbsideShipmentReadyGoodNewsText": " More Good News!",
   "curbsideShipmentReadyText": "Your order is available and ready for you to pick up. please click the 'I am on my way' button to inform the store you are on your way to pick up your order.",
   "curbsideShipmentReadyThanksText": "Thank you for your purchase!",
@@ -611,5 +608,9 @@
   "orderRedayForPickup": "YOUR ORDER IS READY FOR PICKUP!",
   "storeDetails": "Store Details",
   "curbsidePickupreadybtnTxt": "I'm on my way",
-  "alreadyCurbside": "Bring me my order."
+  "alreadyCurbside": "Actually I'm already curbside.",
+  "bringMeOrder": "Bring me my order.",
+  "curbsideNoteTitle": "Please Note...",
+  "customerAtCurbsideBlob3": "Please note...<br/><ul><li>Please bring your ID that matches the name on your order (unless otherwise specified).</li><li>If your package is not picked up within 5 business days, your order will be cancelled and you will be refunded.</li><li>When you arrive at the store please click on the \"I'm Curbside\" button shown above. From there, you will be brought to a landing page where you can provide delivery information.</li></ul>",
+  "curbsideItemInfo": "This order include the following items(s):"
 }

@@ -305,7 +305,7 @@ table {
   width: 200px;
 }
 
-.storedetails {
+.store-detail-info {
   background-color: #E5E5E5;
   padding : 15px ;
   margin-top: 20px;
@@ -313,13 +313,11 @@ table {
   border: 1px solid #E5E5E5 ;
 }
 
-
-.pageContent
-{
+.pageContent {
   padding: 25px;
 }
-.orderMain
-{
+
+.order-details-header {
   background-color: #B3B3B3;
   margin-bottom: 0!important;
   padding: 18px 100px;
@@ -331,14 +329,15 @@ table {
   vertical-align: middle;
   align-self: center;
 }
-.orderRight
-{
+
+.orderRight {
   width: 50%;
   margin-left: 80px;
   text-align: right;
   color: white;
   padding-right: 10px;
 }
+
 .orderLeft
 {
   width: 50%;
@@ -349,21 +348,11 @@ table {
   font-weight: 900;
 }
 
-.demobox {
+.curbside-info-notes {
   background-color: #D3EDF8 ;
   padding-top: 8px;
   margin-top: 20px;
   border: 1px solid #87CEEB ;
-}
-
-.pStyle
-{
- padding-top: -15px;
-}
-
-.spacingStyle
-{
-  padding-top: 8px;
 }
 
 .customer-at-curbside-header{
@@ -377,8 +366,4 @@ table {
 .customer-at-curbside-header h2{
   display:block;
   margin:auto; 
-}
-
-.mz-ordersummary-lineitems tr:last-child td {
-  border-bottom: 1px solid #fff;
 }
