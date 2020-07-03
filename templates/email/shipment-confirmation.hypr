@@ -2,7 +2,39 @@
 
 {% block body-content %}
     <br>
-    <p>{{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!</p>
+    <p>{{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!</p>    
+
+  {% if model.shipmentType == labels.curbsideShipmentType %}
+
+   <p>{{ labels.orderCompleteBlob2|safe }} </p>
+    <br/>
+
+    <!--- Order Details --->
+    <div class="mz-multiship-email" style="width: 100%;">
+        <div class="mz-table-header" style="padding:15px">
+            <span style="font-size:25px">{{ labels.orderDetails }}</span>
+            <div style="font-size:14px;float:right;">
+                <div> {{ labels.orderNumber }}: </div>
+                <div style="float:right;"> {{ model.orderNumber }} </div>
+            </div>
+        </div>
+    </div>
+
+    <!--- Store Details --->
+    <div class="mz-store-details">
+        <div>
+            <strong>{{ labels.storeDetails }}</strong>
+        </div>
+        <div>
+            <div> {{ labels.storeLocation }} : {{ model.storeLocation.name }}</div>
+            <div> {{ model.storeLocation.address.address1 }} </div>
+            <div> {{ model.storeLocation.address.cityOrTown }}, {{ model.storeLocation.address.stateOrProvince }}, {{ model.storeLocation.address.postalOrZipCode }} </div>
+            <div> {{ model.storeLocation.phone }}</div>
+        </div>
+    </div>
+    <hr/>
+    
+   {% else %}
     <br>
     <p>{{ labels.shipmentConfirmationBlob1 }}</p>
 
@@ -55,6 +87,8 @@
         </tbody>
     </table>
 
+   {% endif %}
+
     {% include "modules/common/email-shipment-summary" %}
 
     {% if model.shopperNotes.comments %}
@@ -67,7 +101,17 @@
         <br><p>{{ model.shopperNotes.giftMessage }}</p>
     {% endif %}
 
-    <p>{{ labels.shipmentConfirmationBlob2 |string_format(siteContext.generalSettings.websiteName)|safe  }}</p>
-
+    {% if model.shipmentType == labels.curbsideShipmentType %} 
+    <br/>
+        <div class="mz-curbside-card">
+            <div class="mz-curbside-card-header">{{ labels.orderCompleteBlob3 }}</div>
+            <div class="mz-curbside-card-body">
+                <p>{{ labels.orderCompleteBlob4|string_format(domainName)|safe }}</p>
+            </div>
+        </div>
+        <br/>
+    {% else %}
+        <p>{{ labels.shipmentConfirmationBlob2 |string_format(siteContext.generalSettings.websiteName)|safe  }}</p>
+    {% endif %}
     {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 {% endblock body-content %}
