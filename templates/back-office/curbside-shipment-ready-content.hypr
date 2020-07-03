@@ -10,7 +10,7 @@
     <div class="curbside-onmyway-button">
             <div class="mz-l-formfieldgroup-row">
                 <div class="mz-l-formfieldgroup-cell">
-                    <button class="mz-button mz-button-large mz-delivery-button"  onclick="location.href = 'http://{{ domainName }}/anonymous-notification/onmyway/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
+                    <button class="mz-button mz-button-large mz-delevery-button"  onclick="location.href = 'http://{{ domainName }}/anonymous-notification/onmyway/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
                         <div class="mz-l-formfieldgroup-cell">
                             <section data-mz-role="popover-message" class="mz-popover-message"></section>
                         </div>
@@ -22,10 +22,10 @@
         {{ labels.customerAtCurbsideBlob3|safe }}
     </div>
     <div class="order-details-header">
-        <div class="orderLeft">
+        <div class="curbside-order-details-left">
             <h2  style="color:white"> <b>{{ labels.orderDetails }}</b></h2>
         </div>
-        <div class="orderRight" align="left">
+        <div class="curbside-order-details-right" align="left">
             <p> <b>{{ labels.orderNumber }} <br> {{ model.orderNumber }} </b></p>
         </div>
     </div>

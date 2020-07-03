@@ -269,7 +269,7 @@ table {
   width: 350px!important;
 }
 
-.mz-delivery-button {
+.mz-delevery-button {
   background-color: #fa6400!important;
   color: white!important;
 }
@@ -330,7 +330,7 @@ table {
   align-self: center;
 }
 
-.orderRight {
+.curbside-order-details-right {
   width: 50%;
   margin-left: 80px;
   text-align: right;
@@ -338,8 +338,7 @@ table {
   padding-right: 10px;
 }
 
-.orderLeft
-{
+.curbside-order-details-left {
   width: 50%;
   vertical-align: middle;
   padding-top: 15px;

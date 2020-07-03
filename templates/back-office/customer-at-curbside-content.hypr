@@ -46,7 +46,7 @@
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
-                            <button class="mz-button mz-button-large mz-delivery-button" data-mz-action="deliverymethod-submit">{{ labels.submit }}</button>
+                            <button class="mz-button mz-button-large mz-delevery-button" data-mz-action="deliverymethod-submit">{{ labels.submit }}</button>
                                 <div class="mz-l-formfieldgroup-cell">
                                     <section data-mz-role="popover-message" class="mz-popover-message"></section>
                                 </div>
@@ -64,10 +64,10 @@
         </div>
     {% endif %}
     <div class="order-details-header">
-        <div class="orderLeft">
+        <div class="curbside-order-details-left">
             <h2 style="color:white"> <b>{{ labels.orderDetails }}</b></h2>
         </div>
-        <div class="orderRight" align="left">
+        <div class="curbside-order-details-right" align="left">
             <p> <b>{{ labels.orderNumber }} <br> {{ model.orderNumber }} </b></p>
         </div>
     </div>
