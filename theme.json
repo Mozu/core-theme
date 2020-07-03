@@ -95,7 +95,7 @@
       "properties": {},
       "template": "email/order-cancel",
       "title": "Order Cancel"
-    },
+    },   
     {
       "id": "shipment.itemscanceled",
       "properties": {},
@@ -229,6 +229,12 @@
       "properties": {},
       "template": "email/shipment-assignment",
       "title": "Shipment Assignment"
+    },
+    {
+      "id": "shipment.customeratcurbside",
+      "properties": {},
+      "template": "email/customer-at-curbside",
+      "title": "Customer At Curbside"
     }
   ],
   "backOfficeTemplates": [

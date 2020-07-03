@@ -1,0 +1,49 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<!--- Header --->
+<div class="mz-curbside-email-header">  
+  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <div class="mz-curbside-header-body">
+    <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+    <h3>{{ labels.customerAtCurbsideBlob1 }}</h3>
+  </div>
+</div>
+<br/>
+
+<p> {{ labels.customerAtCurbsideBlob2|safe }} </p>
+<p> <button class="mz-button mz-button-large mz-btn-curbside" 
+    onclick="location.href = 'http://{{ domainName }}/notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}';"> 
+    {{ labels.Curbsidebtntxt }} </button> </p>
+<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div>
+<br/>
+
+<!--- Order Details --->
+<div class="mz-multiship-email" style="width: 100%;">
+	<div class="mz-table-header" style="padding:15px">
+		<span style="font-size:25px">{{ labels.orderDetails }}</span>
+		<div style="font-size:14px;float:right;">
+			<div> {{ labels.orderNumber }}: </div>
+			<div style="float:right;"> {{ model.orderNumber }} </div>
+		</div>
+	</div>
+</div>
+
+<!--- Store Details --->
+<div class="mz-store-details">
+	<div>
+		<strong>{{ labels.storeDetails }}</strong>
+	</div>
+	<div>
+        <div> {{ labels.storeLocation }} : {{ model.storeLocation.name }}</div>
+        <div> {{ model.storeLocation.address.address1 }} </div>
+        <div> {{ model.storeLocation.address.cityOrTown }}, {{ model.storeLocation.address.stateOrProvince }}, {{ model.storeLocation.address.postalOrZipCode }} </div>
+        <div> {{ model.storeLocation.phone }}</div>
+    </div>
+</div>
+<hr/>
+<br/>
+
+<p>{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+{% endblock body-content %}
