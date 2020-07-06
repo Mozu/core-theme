@@ -270,6 +270,37 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             api.action('customer', 'loginStorefront', data).then(this.handleLoginComplete.bind(this, returnUrl), this.displayApiMessage);
 
         },
+        curbsidedelivery:function(){
+            var isBackofficePreview = this.$parent.find('[data-mz-isBackofficePreview]').val();
+
+            var data=[
+                {
+                    key: document.getElementById('parkingspotlabel').textContent,
+                    value: this.$parent.find('[data-mz-parkingspotText]').val()
+                },
+                {
+                    key: document.getElementById('vehiclemodelLabel').textContent,
+                    value: this.$parent.find('[data-mz-vehiclemodel]').val()
+                },
+                {
+                    key: document.getElementById('deliverymethodlabel').textContent,
+                    value:  this.$parent.find('[data-mz-deliverymethod]').val()
+                }
+            ];
+
+            this.setLoading(true);
+            // if it is preview then blocking the acutal call and redirecting to qrcode.
+            if(isBackofficePreview === 'True'){
+                  window.location.href = window.location.pathname + '-qrcode';
+                } else {
+                    api.action('customer', 'orderCurbsideEvent', {
+                        orderNumber: this.$parent.find('[data-mz-orderNumber]').val(),
+                        orderId: this.$parent.find('[data-mz-orderId]').val(),
+                        shipmentNumber: this.$parent.find('[data-mz-shipmentNumber]').val(),
+                        CurbsideFormData: data
+                    }).then(function () { window.location.reload(); }, _.bind(this.retrieveErrorLabel, this));
+                }
+        },
         anonymousorder: function() {
             var email = "";
             var billingZipCode = "";
@@ -441,11 +472,17 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.formSelector = 'form[name="mz-loginform"]';
             loginPage.pageType = 'login';
             loginPage.init(this);
-        });
+        });   
         $('[data-mz-action="anonymousorder-submit"]').each(function () {
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-anonymousorder"]';
             loginPage.pageType = 'anonymousorder';
+            loginPage.init(this);
+        });
+        $('[data-mz-action="deliverymethod-submit"]').each(function () {
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-curbsidedelivery"]';
+            loginPage.pageType = 'curbsidedelivery';
             loginPage.init(this);
         });
         $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){

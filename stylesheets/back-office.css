@@ -270,6 +270,116 @@ table {
   align-self: center;
 }
 
+.mz-l-formfieldgroup .mz-l-formfieldgroup-cell label, .mz-l-formfieldgroup-cell label {
+  text-align: left!important;
+}
+
+.mz-curbsidedelivery-page {
+  margin: 38px;
+}
+
+.mz-l-formfieldgroup input[type="text"], .mz-l-formfieldgroup select {
+  width: 350px!important;
+}
+
+.mz-delevery-button {
+  background-color: #fa6400!important;
+  color: white!important;
+}
+
+.order-info-table {
+  background-color: #666666;
+}
+
+.order-info-table span {
+  float: right;
+  text-align: right;
+  font-size: small;
+}
+
+.order-info-table span h4 {
+    margin-top: 0px;
+    height: 0px;
+}
+
+.order-info-table th {
+  font-size: 25px;
+}
+
+.curbside-description p {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.with-you-shortly img {
+  display:block;
+  margin:auto;
+  height: 200px;
+  width: 200px;
+}
+
+.store-detail-info {
+  background-color: #E5E5E5;
+  padding : 15px ;
+  margin-top: 20px;
+  padding-top: 8px;
+  border: 1px solid #E5E5E5 ;
+}
+
+.pageContent {
+  padding: 25px;
+}
+
+.order-details-header {
+  background-color: #B3B3B3;
+  margin-bottom: 0!important;
+  padding: 18px 100px;
+  display: flex;
+  text-align: left;
+  padding-top: 8px;
+  padding: 0px;
+  margin-top: 20px;
+  vertical-align: middle;
+  align-self: center;
+}
+
+.curbside-order-details-right {
+  width: 50%;
+  margin-left: 80px;
+  text-align: right;
+  color: white;
+  padding-right: 10px;
+}
+
+.curbside-order-details-left {
+  width: 50%;
+  vertical-align: middle;
+  padding-top: 15px;
+  color: white !important; 
+  padding-left: 10px;
+  font-weight: 900;
+}
+
+.curbside-info-notes {
+  background-color: #D3EDF8 ;
+  padding-top: 8px;
+  margin-top: 20px;
+  border: 1px solid #87CEEB ;
+}
+
+.customer-at-curbside-header{
+  background-color: #B3B3B3;
+  margin-bottom: 0!important;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.customer-at-curbside-header h2{
+  display:block;
+  margin:auto; 
+}
+
 .curbside-order-details-right
 {
   width: 50%;

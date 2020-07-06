@@ -1,0 +1,4 @@
+{% extends "back-office/curbside-base" %}
+{% block body-content %}
+{% include "back-office/customer-at-curbside-content" isBackofficePreview=isBackofficePreview %}
+{% endblock body-content %}
