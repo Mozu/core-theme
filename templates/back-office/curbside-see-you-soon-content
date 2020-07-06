@@ -1,0 +1,36 @@
+<div class="curbside-page-content">
+    <div>       
+        <p class="curbside-pStyle">{{ labels.CurbsideSeeYouSoonText }} </p>
+    </div>
+
+    <div class="curbside-notedetails">
+        <p class="curbside-pStyle"> {{labels.curbsideNoteTitle}} </p>
+        <ul>
+        <li>{{labels.curbsideIdText}}</li>
+        <li>{{labels.curbsideRefundText}}</li>
+        <li>{{labels.curbsidWHenYouArriveText}}</li>
+        </ul>
+    </div>
+
+    <div class="curbside-order-details">
+        <div class="curbside-order-details-left">
+         <h2  style="color:white"> <b>{{labels.orderDetails}}</b></h2>
+        </div>
+        <div class="curbside-order-details-right" align="left">
+        <p> <b>{{labels.orderNumber}}: <br> {{model.orderNumber}} </b></p>
+        </div>
+    </div>
+
+    <div class = "curbside-storedetails curbside-spacing">
+      <span> <b> {{labels.curbsideStoreDetailsTitleText}} </b><span> <br>
+     <p> {{labels.storeLocation}} : {{location.name }}<br />
+       {{location.address.address1}}  {{location.address.address2}}<br />
+       {{location.address.cityOrTown}} {{location.address.postalOrZipCode}}<br />
+       {{location.phone}}
+    </div>
+
+    <hr>
+
+    
+</div>
+
