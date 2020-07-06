@@ -13,7 +13,7 @@
         <br><br>
         <div>            
             <button class="mz-button mz-button-large mz-btn-curbside" 
-                onclick="location.href = 'http://{{ domainName }}/anonymous-notification/publishonmywayevents/{{model.shipmentNumber}}/{{model.orderId}}';"> 
+                onclick="location.href = 'http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}';"> 
                 {{ labels.curbsidePickupreadybtnTxt }} </button>
         </div>
         <p>{{ labels.alreadyCurbsidePickupTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br>              
