@@ -1,11 +1,8 @@
 ﻿using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Core.Actions;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Location.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Tenant.Contracts.Clients;
@@ -21,7 +18,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -174,6 +170,37 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
+        public async Task<HttpResponseMessage> CustomerInTransit(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (shipment.OrderId != orderId)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+
+            //publish fulfillment customer intrasit and intransit confirmation curside event
+            await _fulfillmentProxyClient.CloneWithoutUserClaims().CustomerInTransit(shipmentNumber);
+
+            var location = await GetLocation(shipment.FulfillmentLocationCode);
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-seeyousoon"));
+
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find see you soon curside template for the current Theme.");
+            }
+
+            ViewData["location"] = location;
+            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
+        }
+
+        [HttpGet]
         public async Task<HttpResponseMessage> CurbSideShipmentReadyView(int shipmentNumber, string orderId)
         {
             var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
@@ -220,7 +247,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             return $"data:image/bmp;base64,{qrCodeImage.ToBase64String(ImageFormat.Bmp)}";
         }
-
     }
 
     public class CurbsideFormData : KeyValuePairBase<string, string>

@@ -310,6 +310,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
               new { acceptConstraint = new AcceptConstraint("application/json", true) });
 
             routes.MapHttpRoute(
+               "Anonymous I am on My Way Endpoint",
+               "anonymous-notification/customerintransit/{shipmentNumber}/{orderId}",
+               new { controller = "AnonymousNotification", action = "CustomerInTransit" });
+
+            routes.MapHttpRoute(
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" });
