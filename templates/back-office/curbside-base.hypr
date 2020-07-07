@@ -4,11 +4,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         {% include "modules/json-required-for-hyprlive" %}
-        {% require_script "modules/login-links" %}
-        {% require_script "modules/cart-monitor" %}
+
         {% include "modules/trailing-scripts" %}
     	    {% cms_resources %}
         {% block stylesheets %}
+
         <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
         <style type="text/css">{% inline_style "back-office.css" %}</style>

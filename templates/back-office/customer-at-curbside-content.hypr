@@ -16,29 +16,25 @@
         <div class="mz-l-column">
             <form method="post" class="mz-curbsidedeliveryform mz-curbsidedelivery-page" name="mz-curbsidedelivery">
                 <div class="mz-l-formfieldgroup">
-                    <input type="hidden" name="orderNumber" value="{{ model.orderNumber }}"  data-mz-orderNumber />
-                    <input type="hidden" name="isBackofficePreview" value="{{ isBackofficePreview }}"  data-mz-isBackofficePreview />
-                    <input type="hidden" name="orderId" value="{{ model.orderId }}"  data-mz-orderId />
-                    <input type="hidden" name="shipmentNumber" value="{{ model.shipmentNumber }} "data-mz-shipmentNumber />
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="vehiclemodel" name="vehiclemodellabel" id="vehiclemodelLabel" >{{ labels.vehicleModel }}</label>
-                            <input name="vehiclemodeltext" value="" type="text" data-mz-vehiclemodel />
+                            <input name="vehiclemodeltext" value="" type="text" data-mz-value="vehicleModel' />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="parkingspotlabel" name="parkingspotlabel" id="parkingspotlabel">{{ labels.parkingSpotNumber }}</label>
-                            <input name="parkingspotText" value="" type="text" data-mz-parkingspotText />
+                            <input name="parkingspotText" value="" type="text" data-mz-value="parkingSpotText" />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.methodDelivery }}</label>
-                                <select data-mz-deliverymethod>
+                                <select data-mz-value="deliveryMethod">
                                     <option value="Place Items In Trunk">Place Items In Trunk</option>
                                     <option value="Place items in backseat">Place items in backseat</option>
-                                    <option value="Place items in front passenger seat">Place items in front passenger seat</option>
+                                    <option value="Place items i<selectn front passenger seat">Place items in front passenger seat</option>
                                     <option value="deliver to drivers window">deliver to drivers window</option>
                                     <option value="leave item outside car">leave item outside car</option>
                                 </select>
@@ -46,10 +42,7 @@
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
-                            <button class="mz-button mz-button-large mz-delevery-button" data-mz-action="deliverymethod-submit">{{ labels.submit }}</button>
-                                <div class="mz-l-formfieldgroup-cell">
-                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
-                                </div>
+                            <button class="mz-button mz-button-large mz-delevery-button" data-mz-action="onDeliveryMethodSubmit">{{ labels.submit }}</button>
                         </div>
                     </div>
                 </div>

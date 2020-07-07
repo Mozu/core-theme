@@ -1,4 +1,11 @@
 {% extends "back-office/curbside-base" %}
 {% block body-content %}
-{% include "back-office/customer-at-curbside-content" isBackofficePreview=isBackofficePreview %}
+
+    {% require_script "pages/curbside" %}
+    <!-- https://www.mozu.com/docs/developer/themes/reference.htm#preload_json -->
+    {% preload_json model "curbside" %}
+
+    <div id="mz-customer-at-curbside-content">
+        {% include "back-office/customer-at-curbside-content" isBackofficePreview=isBackofficePreview %}
+    </div>
 {% endblock body-content %}
