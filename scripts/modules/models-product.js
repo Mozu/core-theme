@@ -275,6 +275,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
             this.set({ url: (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + (slug ? "/" + slug : "") +  "/p/" + this.get("productCode")});
             this.lastConfiguration = [];
+            this.updateConfiguration();
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);
         },
@@ -384,7 +385,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         updateConfiguration: function() {
             var me = this,
               newConfiguration = this.getConfiguredOptions();
-            if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
+            if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration) && newConfiguration.length > 0) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
                     .then(function (apiModel) {
