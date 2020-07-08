@@ -13,7 +13,7 @@
 <br/>
 
 <p> {{ labels.customerAtCurbsideBlob2|safe }} </p>
-<p><a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/notification/curbsideInfo/{{model.number}}/{{model.orderId}}"> 
+<p><a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}"> 
                 {{ labels.Curbsidebtntxt }}</a></p>
 <div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div>
 <br/>
