@@ -65,7 +65,6 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
 
 
 $(document).ready(function () {
-    console.log("test");
     var crubsideModel = new CrubsideCustomerModel(require.mozuData("curbside") || {});
     var crubSideView = new CrubsideCustomerView({
         el: $('#mz-customer-at-curbside-content'),
