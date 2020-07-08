@@ -357,7 +357,20 @@
         "properties": {},
         "template": "mobile-notification/curbside-intransit",
         "title": "Shipment Intransit"
+      },
+      {
+        "id": "shipment.pickupready",
+        "properties": {},
+        "template": "mobile-notification/order-pickup-ready",
+        "title": "Order Pickup Ready"
+      },
+      {
+        "id": "shipment.partialpickupready",
+        "properties": {},
+        "template": "mobile-notification/partial-pickup-ready",
+        "title": "Partial Pickup Ready"
       }
+
     ],
   "pageTypes": [
     {

@@ -1,0 +1,1 @@
+{{ labels.mobileCurbsidePartialPickupReady|string_format(model.shipmenturl)|safe }}
