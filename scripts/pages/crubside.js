@@ -51,7 +51,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
 
                 this.model.onDeliveryMethodSubmit(payload).then(function(respnse){
                     self.model.set('hasCurbsideData', respnse.data.hasCurbsideData);
-                    self.model.set('qrCode',respnse.data.qrCode)
+                    self.model.set('qrCode',respnse.data.qrCode);
                     self.render();
 
                 });
