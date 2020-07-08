@@ -1,6 +1,10 @@
-<div class="header customer-at-curbside-header">
-    <h2> {{ labels.orderRedayForPickup }} </h2>
-</div>
+<div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+            <h3>{{ labels.orderRedayForPickup }}</h3>
+        </div>
+    </div>  
 <div class="pageContent">
     <div class="curbside-info">
         <p> {{ labels.curbsideShipmentReadyGoodNewsText }} </p>
@@ -10,13 +14,13 @@
     <div class="curbside-onmyway-button">
             <div class="mz-l-formfieldgroup-row">
                 <div class="mz-l-formfieldgroup-cell">
-                    <button class="mz-button mz-button-large mz-delevery-button"  onclick="location.href = 'http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
+                    <button class="mz-button mz-button-large mz-delevery-button"  onclick="location.href = '//{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
                         <div class="mz-l-formfieldgroup-cell">
                             <section data-mz-role="popover-message" class="mz-popover-message"></section>
                         </div>
                 </div>
             </div>
-            <div> <h5>{{ labels.alreadyCurbside }} <a href="http://{{ domainName }}/anonymous-notification/curbsideArrive/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.bringMeOrder }}</a><br/><br/></h5> </div>
+            <div> <h5>{{ labels.alreadyCurbside }} <a href="//{{ domainName }}/anonymous-notification/curbsideArrive/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.bringMeOrder }}</a><br/><br/></h5> </div>
     </div>
     <div class="curbside-info-notes">
         {{ labels.customerAtCurbsideBlob3|safe }}

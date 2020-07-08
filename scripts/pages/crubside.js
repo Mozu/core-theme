@@ -10,6 +10,7 @@ define([
 var CrubsideCustomerModel = Backbone.MozuModel.extend({
     mozuType: 'crubside', //This is a reference to the JS SDK object
     onDeliveryMethodSubmit: function(payload){
+        console.log("test");
         var self = this;
         return api.action('customer', 'orderCurbsideEvent', payload);
     }
@@ -60,6 +61,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
 
 $(document).ready(function () {
     var crubsideModel = new CrubsideCustomerModel(require.mozuData("curbside") || {});
+    console.log("test");
     var crubSideView = new CrubsideCustomerView({
         el: $('#mz-customer-at-curbside-content'),
         model: crubsideModel

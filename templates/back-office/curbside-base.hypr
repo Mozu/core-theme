@@ -8,7 +8,6 @@
         {% include "modules/trailing-scripts" %}
     	    {% cms_resources %}
         {% block stylesheets %}
-
         <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
         <style type="text/css">{% inline_style "back-office.css" %}</style>
@@ -16,5 +15,8 @@
     <body>   
         {% block body-content %}
         {% endblock body-content %}
+        {% block page-footer %}
+            {% include "modules/page-footer" %}
+        {% endblock page-footer %}
     </body>
 </html>
