@@ -1,12 +1,20 @@
-{% if model.hasCurbsideData==false %}        
-    <div class="header customer-at-curbside-header">
-        <h2> {{ labels.customerAtCurbsideLetUsKnow }} </h2>
-    </div>
+{% if model.hasCurbsideData==false %}     
+<div class="mz-curbside-header">  
+  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <div class="mz-curbside-header-body">
+    <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+    <h3>{{ labels.customerAtCurbsideLetUsKnow }}</h3>
+  </div>
+</div>   
 {% endif %}
 {% if model.hasCurbsideData==true %}
-    <div class="header customer-at-curbside-header">
-        <h2> {{ labels.customerAtCurbsideWithYouShortly }} </h2>
-    </div>
+    <div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+            <h3>{{ labels.customerAtCurbsideWithYouShortly }}</h3>
+        </div>
+    </div>  
 {% endif %}
 <div class="pageContent">
     {% if model.hasCurbsideData==false %}        
@@ -15,23 +23,24 @@
         </div>
         <div class="mz-l-column">
             <form method="post" class="mz-curbsidedeliveryform mz-curbsidedelivery-page" name="mz-curbsidedelivery">
+            <input type="hidden" name="isBackofficePreview" value="{{ isBackofficePreview }}"  data-mz-isBackofficePreview />
                 <div class="mz-l-formfieldgroup">
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="vehiclemodel" name="vehiclemodellabel" id="vehiclemodelLabel" >{{ labels.vehicleModel }}</label>
-                            <input name="vehiclemodeltext" value="" type="text" data-mz-value="vehicleModel' />
+                            <input name="vehiclemodeltext" value="" type="text" data-mz-parkingspotText />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="parkingspotlabel" name="parkingspotlabel" id="parkingspotlabel">{{ labels.parkingSpotNumber }}</label>
-                            <input name="parkingspotText" value="" type="text" data-mz-value="parkingSpotText" />
+                            <input name="parkingspotText" value="" type="text" data-mz-vehiclemodel />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.methodDelivery }}</label>
-                                <select data-mz-value="deliveryMethod">
+                                <select data-mz-deliverymethod" id="selectdeliverymethod">
                                     <option value="Place Items In Trunk">Place Items In Trunk</option>
                                     <option value="Place items in backseat">Place items in backseat</option>
                                     <option value="Place items i<selectn front passenger seat">Place items in front passenger seat</option>
