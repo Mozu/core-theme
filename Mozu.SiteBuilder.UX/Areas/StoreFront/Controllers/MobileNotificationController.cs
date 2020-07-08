@@ -176,6 +176,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<IActionResult> Render(SmsNotification notification)
         {
+            
             User user = null;
             var mobileNotificationTypeInfo = _smsMobileNotificationTypeInfo.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
             var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));

@@ -10,9 +10,9 @@
     <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2021.2" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="1.2025.4" />
+    <PackageReference Include="Mozu.Core.Messaging" Version="1.2018.0-dotnetcore.82" />
     <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2025.4" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2021.25" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2025.6" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.1929.0-dotnetcore.26" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.1915.0-dotnetcore.4" />
@@ -25,7 +25,7 @@
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.1943.0-dotnetcore.78" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2005.0-plat-153.2" />
-    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2013.2" />
+    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2025.2" />
     <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2025.2" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.1942.0-dotnetcore.42" />
   </ItemGroup>
