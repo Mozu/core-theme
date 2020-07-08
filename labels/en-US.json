@@ -631,5 +631,6 @@
   "ProductPart": "Part#:",
   "qrDetails": "Thanks for providing your information! A store asscoiate will be with you shortly. Please show the below QR Code to store asscoiate so they can verify your order details.",
   "storeDetails": "Store Details",
-  "vehicleModel": "Vechicle Color, Make, Model"
+  "vehicleModel": "Vechicle Color, Make, Model",
+  "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup ."
 }
