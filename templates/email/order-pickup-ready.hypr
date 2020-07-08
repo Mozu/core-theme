@@ -8,6 +8,16 @@
     <br>
     <p>{{ labels.orderPickupReadyBlob1|string_format(siteContext.generalSettings.websiteName,  model.orderNumber,  model.order.externalId |safe }}</p>
 
+    {% if model.shipmentType == labels.curbsideShipmentType %}
+        <strong>{{ labels.curbsidePickupOntheWayTxt }}</strong>
+        <br><br>
+        <div>            
+            <a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/anonymous-notification/customerintransit/{{model.number}}/{{model.orderId}}"> 
+                {{ labels.curbsidePickupreadybtnTxt }} </a>
+        </div>
+        <p>{{ labels.alreadyCurbsidePickupTxt|string_format(domainName, model.number, model.orderId)|safe}}</p><br>        
+    {% endif %}   
+
     <table class="mz-ordersummary">
         <thead>
             <tr>
