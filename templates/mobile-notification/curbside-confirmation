@@ -1,0 +1,2 @@
+
+{{ labels.curbsideThanks }} {{ model.ShipmentUrl}}
