@@ -40,7 +40,7 @@
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.methodDelivery }}</label>
-                                <select data-mz-deliverymethod">
+                                <select data-mz-deliverymethod" id="selectdeliverymethod">
                                     <option value="Place Items In Trunk">Place Items In Trunk</option>
                                     <option value="Place items in backseat">Place items in backseat</option>
                                     <option value="Place items i<selectn front passenger seat">Place items in front passenger seat</option>

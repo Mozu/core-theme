@@ -29,7 +29,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
         
         var self = this,
             $target = $(e.currentTarget);
-
+        console.log("test");
 
             //Our payload is kinda odd for this request. Normally we would not have to manually create the payload 
             // The request would just use the data in the model.
@@ -51,7 +51,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
                     },
                     {
                         key: $('#deliverymethodlabel').text(),
-                        value: $('[data-mz-deliverymethod]').val()
+                        value: $( "#selectdeliverymethod" ).val()
                     }
                 ]
             };
@@ -81,6 +81,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
 
 
 $(document).ready(function () {
+    console.log("test");
     var crubsideModel = new CrubsideCustomerModel(require.mozuData("curbside") || {});
     var crubSideView = new CrubsideCustomerView({
         el: $('#mz-customer-at-curbside-content'),
