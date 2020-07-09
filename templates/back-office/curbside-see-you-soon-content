@@ -1,3 +1,6 @@
+<div class="header customer-at-curbside-header">
+    <h2> {{ labels.seeYouSoonTitle }} </h2>
+</div>
 <div class="curbside-page-content">
     <div>       
         <p class="curbside-pStyle">{{ labels.CurbsideSeeYouSoonText }} </p>
@@ -8,7 +11,7 @@
         <ul>
         <li>{{labels.curbsideIdText}}</li>
         <li>{{labels.curbsideRefundText}}</li>
-        <li>{{labels.curbsidWHenYouArriveText}}</li>
+        <li>{{labels.curbsideWhenYouArriveText}}</li>
         </ul>
     </div>
 

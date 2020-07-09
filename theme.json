@@ -288,14 +288,14 @@
       "customEditor": "back-office@mozu"
     },
     {
-      "id": "crubside-arrive",
-      "title": "Crubside Arrive",
-      "template": "back-office/crubside-arrive",
+      "id": "curbside-arrive",
+      "title": "curbside Arrive",
+      "template": "back-office/curbside-arrive",
       "customEditor": "back-office@mozu"
     },
     {
-      "id": "crubside-seeyousoon",
-      "title": "Crubside SeeYouSoon",
+      "id": "curbside-seeyousoon",
+      "title": "Curbside SeeYouSoon",
       "template": "back-office/curbside-see-you-soon",
       "customEditor": "back-office@mozu"
     },
