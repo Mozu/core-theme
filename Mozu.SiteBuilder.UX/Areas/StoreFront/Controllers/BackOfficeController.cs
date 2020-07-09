@@ -524,7 +524,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
-            else if (templateid == "curbside-arrive" || templateid == "crubside-seeyousoon")
+            else if (templateid == "curbside-arrive" || templateid == "curbside-seeyousoon")
             {
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();

@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> RenderCurbsideArriveView(int shipmentNumber, string orderId)
         {
             var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
 
             if (shipment == null)
             {
@@ -108,14 +108,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
 
-            CurbsideInfo curbsideInfo = new CurbsideInfo();
+            CurbsideInfo curbsideInfo = new CurbsideInfo
+            {
 
-            //Get store info
-            curbsideInfo.Location = await GetLocation(shipment.FulfillmentLocationCode);
+                //Get store info
+                Location = await GetLocation(shipment.FulfillmentLocationCode),
 
-            curbsideInfo.ShipmentNumber = shipmentNumber;
-            curbsideInfo.OrderId = orderId;
-            curbsideInfo.OrderNumber = shipment.OrderNumber;
+                ShipmentNumber = shipmentNumber,
+                OrderId = orderId,
+                OrderNumber = shipment.OrderNumber
+            };
 
             //Has PickupInfo
             if (shipment.PickupInfo != null)

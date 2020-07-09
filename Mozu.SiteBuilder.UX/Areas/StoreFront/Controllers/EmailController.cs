@@ -57,6 +57,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class ShipmentEmail : Shipment
     {
+        public int? ShipmentNumber { get; set; }
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
     }
