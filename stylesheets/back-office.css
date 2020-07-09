@@ -428,6 +428,25 @@ table {
   background-color: #FA6400!important;
   color: white!important;
 }
+
+.mz-curbside-header {
+  height: 75px;  
+  background-color: #f7f7f7;
+}
+
+.mz-curbside-header-body {
+  position: relative;
+  top: 25%;
+  left: 10px;
+}
+
+.mz-curbside-header img {
+  float: left;
+  width: 20%;
+  height: 100%;
+  background: #330065;
+}
+
 .h2-curbside-order-color {
   color:white;
 }
