@@ -194,7 +194,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentItemCanceled
                                            },
-                                       new EmailTypeInfo
+                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentAssigned
@@ -213,8 +213,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.IntransitConfirmation 
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CurbsidePickupReady
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CurbsidePartialPickupReady
                                            }
-
 
                 };
         }
@@ -597,8 +606,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
             public const string IntransitConfirmation = "shipment.intransitconfirmation";
+            public const string CurbsidePickupReady = "shipment.curbsideready";
+            public const string CurbsidePartialPickupReady = "shipment.partialcurbsideready";
         }
-
     }
 
    

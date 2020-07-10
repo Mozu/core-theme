@@ -1,0 +1,88 @@
+{
+  "code": "storelocation1",
+  "locationTypes": [
+    {
+      "code": "storelocationtype1",
+      "name": "Store Location Type1",
+      "auditInfo": {
+        "updateDate": "2016-05-04T20:07:18.859Z",
+        "createDate": "2016-05-04T20:07:18.859Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    }
+  ],
+  "name": "Store Location 1",
+  "description": "",
+  "address": {
+    "address1": "1835 Kramer Ln",
+    "address2": "",
+    "address3": "",
+    "address4": "",
+    "cityOrTown": "Austin",
+    "stateOrProvince": "TX",
+    "postalOrZipCode": "78758",
+    "countryCode": "US",
+    "isValidated": false
+  },
+  "geo": {
+    "lat": 30.3871389,
+    "lng": -97.7100097
+  },
+  "phone": "",
+  "fax": "",
+  "supportsInventory": true,
+  "fulfillmentTypes": [
+    {
+      "code": "SP",
+      "name": "In Store Pickup"
+    }
+  ],
+  "regularHours": {
+    "sunday": {
+      "label": "9AM-4PM"
+    },
+    "monday": {
+      "label": "9AM-6PM"
+    },
+    "tuesday": {
+      "label": "9AM-6PM"
+    },
+    "wednesday": {
+      "label": "9AM-6PM"
+    },
+    "thursday": {
+      "label": "9AM-6PM"
+    },
+    "friday": {
+      "label": "9AM-6PM"
+    },
+    "saturday": {
+      "label": "9AM-9PM"
+    }
+  },
+  "shippingOriginContact": {
+    "firstName": "Alpha",
+    "middleNameOrInitial": "",
+    "lastNameOrSurname": "Beta",
+    "companyOrOrganization": "Volusion",
+    "phoneNumber": "6662227878",
+    "email": "ab@volusion.com"
+  },
+  "note": "",
+  "tags": [],
+  "attributes": [],
+  "auditInfo": {
+    "updateDate": "2019-09-03T16:58:16.279Z",
+    "createDate": "2016-05-04T20:27:23.589Z",
+    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+  },
+  "allowFulfillmentWithNoStock": false,
+  "isDisabled": false,
+  "express": false,
+  "transferEnabled": false,
+  "includeInInventoryAggregrate": true,
+  "includeInLocationExport": false,
+  "warehouseEnabled": false
+}

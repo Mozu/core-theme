@@ -465,6 +465,177 @@
         "name": "Customer Pickup",
         "subject": ""
       }
-    ]
+    ],
+    "processInstanceId": "2516",
+    "auditInfo": {
+      "updateDate": "2019-08-30T18:02:35.952Z",
+      "createDate": "2019-08-30T17:26:44.583Z"
+    }
+  },
+  "changeMessages": [
+    {
+      "changeMessageId": "5d695c7b3b35f80001c58fb7",
+      "createdDate": "2019-08-30T17:27:23.382Z",
+      "correlationId": "7c47542b5ac542e69ef4c60b153a576e",
+      "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+      "oldValue": "PRE_ACCEPT_SHIPMENT",
+      "newValue": "ACCEPTED_SHIPMENT",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d695c803b35f80001c58fbe",
+      "createdDate": "2019-08-30T17:27:28.350Z",
+      "correlationId": "93b858c11cf740119426af7b67cd7397",
+      "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
+      "oldValue": "ACCEPTED_SHIPMENT",
+      "newValue": "PROCESSING_PICK_LIST",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d695ca33b35f80001c58fcb",
+      "createdDate": "2019-08-30T17:28:03.308Z",
+      "correlationId": "9ead76d824a94c98884219f483c1c36c",
+      "message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
+      "oldValue": "PROCESSING_PICK_LIST",
+      "newValue": "READY_FOR_PICKUP",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f126",
+      "createdDate": "2019-08-30T18:02:35.926Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
+      "oldValue": "READY_FOR_PICKUP",
+      "newValue": "COMPLETED",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12c",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
+      "oldValue": "null",
+      "newValue": "2019-08-30T18:02:35.931701Z",
+      "subject": "fulfillmentDate",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12d",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
+      "oldValue": "READY",
+      "newValue": "FULFILLED",
+      "subject": "shipmentStatus",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12e",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
+      "oldValue": "null",
+      "newValue": "Fulfilled",
+      "subject": "fulfillmentStatus",
+      "userId": "12345"
+    }
+  ],
+  "email": "jack_wu@mailtrap.com",
+  "readyForPickup": false,
+  "auditInfo": {
+    "updateDate": "2019-08-30T18:02:35.952Z",
+    "createDate": "2019-08-30T17:26:44.583Z"
+  },
+  "storeLocation": {
+    "code": "storelocation1",
+    "locationTypes": [
+      {
+        "code": "storelocationtype1",
+        "name": "Store Location Type1",
+        "auditInfo": {
+          "updateDate": "2016-05-04T20:07:18.859Z",
+          "createDate": "2016-05-04T20:07:18.859Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
+      }
+    ],
+    "name": "Store Location 1",
+    "description": "",
+    "address": {
+      "address1": "1835 Kramer Ln",
+      "address2": "",
+      "address3": "",
+      "address4": "",
+      "cityOrTown": "Austin",
+      "stateOrProvince": "TX",
+      "postalOrZipCode": "78758",
+      "countryCode": "US",
+      "isValidated": false
+    },
+    "geo": {
+      "lat": 30.3871389,
+      "lng": -97.7100097
+    },
+    "phone": "(512) 555-8925",
+    "fax": "",
+    "supportsInventory": true,
+    "fulfillmentTypes": [
+      {
+        "code": "SP",
+        "name": "In Store Pickup"
+      }
+    ],
+    "regularHours": {
+      "sunday": {
+        "label": "9AM-4PM"
+      },
+      "monday": {
+        "label": "9AM-6PM"
+      },
+      "tuesday": {
+        "label": "9AM-6PM"
+      },
+      "wednesday": {
+        "label": "9AM-6PM"
+      },
+      "thursday": {
+        "label": "9AM-6PM"
+      },
+      "friday": {
+        "label": "9AM-6PM"
+      },
+      "saturday": {
+        "label": "9AM-9PM"
+      }
+    },
+    "shippingOriginContact": {
+      "firstName": "a",
+      "middleNameOrInitial": "",
+      "lastNameOrSurname": "b",
+      "companyOrOrganization": "Volusion",
+      "phoneNumber": "6662227878",
+      "email": "ab@volusion.com"
+    },
+    "note": "",
+    "tags": [],
+    "attributes": [],
+    "auditInfo": {
+      "updateDate": "2019-09-03T16:58:16.279Z",
+      "createDate": "2016-05-04T20:27:23.589Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    "allowFulfillmentWithNoStock": false,
+    "isDisabled": false,
+    "express": false,
+    "transferEnabled": false,
+    "includeInInventoryAggregrate": true,
+    "includeInLocationExport": false,
+    "warehouseEnabled": false
   }
 }

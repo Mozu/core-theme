@@ -430,7 +430,9 @@
     <EmbeddedResource Include="TestData\shipment.customeratcurbside\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.customerintransit\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.shopper.itemscancelled\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Location1.json" />
     <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.curbsideready\Location1.json" />
     <EmbeddedResource Include="TestData\shipment.curbsideready\Shipment1.json" />
   </ItemGroup>
   <ItemGroup>
