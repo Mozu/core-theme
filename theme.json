@@ -359,16 +359,22 @@
         "title": "Shipment Intransit"
       },
       {
-        "id": "shipment.pickupready",
+        "id": "shipment.curbsideready",
         "properties": {},
-        "template": "mobile-notification/order-pickup-ready",
-        "title": "Order Pickup Ready"
+        "template": "mobile-notification/order-curbside-ready",
+        "title": "Order Curbside Ready"
       },
       {
-        "id": "shipment.partialpickupready",
+        "id": "shipment.partialcurbsideready",
         "properties": {},
-        "template": "mobile-notification/partial-pickup-ready",
-        "title": "Partial Pickup Ready"
+        "template": "mobile-notification/partial-curbside-ready",
+        "title": "Partial Curbside Ready"
+      },
+      {
+        "id": "shipment.shopper.itemscancelled",
+        "properties": {},
+        "template": "mobile-notification/shipment-shopper-cancel",
+        "title": "Shipment Shopper Canceled"
       }
 
     ],
