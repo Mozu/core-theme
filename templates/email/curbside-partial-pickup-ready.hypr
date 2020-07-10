@@ -67,7 +67,7 @@
           <td>
               {{ item.name }}
               <dl>
-                <dd>{{ item.productCode }}</dd>
+                <dd>{{ labels.part }} #: {{ item.partNumber }}</dd>
                 <dd>{{ labels.qty }}: {{ item.quantity }}</dd>&nbsp;
               </dl>
           </td>

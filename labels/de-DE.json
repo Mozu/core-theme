@@ -479,5 +479,6 @@
     "curbsidePartialPickupTitle": "IHRE TEILBESTELLUNG IST BEREIT FÜR DIE ABHOLUNG!",
     "curbsidePartialPickupBlob1": "Einige Artikel in Ihrer Bestellung sind nicht verfügbar. Details sind unten gezeigt.",
     "curbsidePartialPickupBlob2": "Um <strong> Ihre Bestellung zu stornieren, </strong> rufen Sie bitte das Geschäft unter der unten angegebenen Nummer an",
-    "quantityFulfilled": "Menge erfüllt"
+    "quantityFulfilled": "Menge erfüllt",
+    "part": "Teil"
 }
