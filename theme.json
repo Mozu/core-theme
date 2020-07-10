@@ -339,6 +339,24 @@
         "properties": {},
         "template": "mobile-notification/sms-optin",
         "title": "Order Sms Opt In"
+      },
+      {
+        "id": "shipment.intransitconfirmation",
+        "properties": {},
+        "template": "mobile-notification/curbside-confirmation",
+        "title": "Shipment Confirmation"
+      },
+      {
+        "id": "shipment.customeratcurbside",
+        "properties": {},
+        "template": "mobile-notification/curbside-customer",
+        "title": "Customer Curbside"
+      },
+      {
+        "id": "shipment.customerintransit",
+        "properties": {},
+        "template": "mobile-notification/curbside-intransit",
+        "title": "Shipment Intransit"
       }
     ],
   "pageTypes": [
