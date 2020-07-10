@@ -322,19 +322,23 @@
     }
   ],
   "mobileNotificationTemplates":[
-      {
-      
+      {      
         "id": "shipment.itemscanceled",
         "properties": {},
         "template": "mobile-notification/shipment-cancel",
         "title": "Item Canceled"
       },
-      {
-      
+      {      
         "id": "shipment.assigned",
         "properties": {},
         "template": "mobile-notification/shipment-assignment",
         "title": "Shipment Assignment"
+      },
+      {      
+        "id": "order.smsoptin",
+        "properties": {},
+        "template": "mobile-notification/sms-optin",
+        "title": "Order Sms Opt In"
       }
     ],
   "pageTypes": [
