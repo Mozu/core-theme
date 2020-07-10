@@ -1,0 +1,63 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<!--- Header --->
+<div class="mz-curbside-email-header">  
+  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <div class="mz-curbside-header-body">
+    <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+    <h3>{{ labels.curbsidePartialPickupTitle }}</h3>
+  </div>
+</div>
+<br/>
+
+<p><strong>{{ labels.curbsidePartialPickupBlob1 }}</strong></p>
+<p>{{ labels.curbsidePartialpickuptxt }}</p>
+<br><br>
+
+<div> 
+    <a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}"> 
+        {{ labels.curbsidePickupreadybtnTxt }} </a>
+</div>
+
+<p>{{ labels.alreadyCurbsidePickupTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br> 
+<p>{{ labels.curbsidePartialPickupBlob2|safe}}</p><br> 
+<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div><br/>
+
+<!--- Order Details Header--->
+<div class="mz-multiship-email" style="width: 100%;">
+	<div class="mz-table-header" style="padding:15px">
+		<span style="font-size:25px">{{ labels.orderDetails }}</span>
+		<div style="font-size:14px;float:right;">
+			<div> {{ labels.orderNumber }}: </div>
+			<div style="float:right;"> {{ model.orderNumber }} </div>
+		</div>
+	</div>
+</div>
+
+<!--- Store Details --->
+<div class="mz-store-details">
+	<div>
+		<strong>{{ labels.storeDetails }}</strong>
+	</div>
+	<div>
+        <div> {{ labels.storeLocation }} : {{ model.storeLocation.name }}</div>
+        <div> {{ model.storeLocation.address.address1 }} </div>
+        <div> {{ model.storeLocation.address.cityOrTown }}, {{ model.storeLocation.address.stateOrProvince }}, {{ model.storeLocation.address.postalOrZipCode }} </div>
+        <div> {{ model.storeLocation.phone }}</div>
+    </div>
+</div>
+<hr/>
+<br/>
+<!--- Need Order Help Card --->
+<div class="mz-curbside-card">
+    <div class="mz-curbside-card-header">{{ labels.orderCompleteBlob3 }}</div>
+    <div class="mz-curbside-card-body">
+        <p>{{ labels.orderCompleteBlob4|string_format(domainName)|safe }}</p>
+    </div>
+</div>
+<br/>
+
+<p>{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+{% endblock body-content %}

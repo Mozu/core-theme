@@ -473,5 +473,10 @@
     "returnReceiptBodyContent": "<p> Bei einer akzeptierten Rücksendung wird innerhalb von 10 Werktagen eine Rückerstattung auf die  Kreditkarte oder eine andere für die Bestellung verwendete Zahlungsmethode vorgenommen. Abhängig vom Finanzinstitut sollte in ein oder zwei Abrechnungsperioden eine Gutschrift auf Ihrem Kontoauszug erscheinen. Versand- und Bearbeitungsgebühren werden nicht erstattet. <P> <br /> <br /> <p> Wenn eine Rücksendung abgelehnt wird, wird das Produkt an Sie zurückgesandt. Rücksendungen werden in der Regel abgelehnt, weil die Produkte in gebrauchtem Zustand oder nach Ablauf der zulässigen Frist eingegangen sind. Bitte gehen Sie zu {0}, um unsere spezifischen Rückgabebedingungen zu sehen. <P> <br /> Vielen Dank, dass Sie mit {1} einkaufen.",
     "storeDetails": "Détails du magasin",
     "vehicleModel": "Couleur, marque, modèle du véhicule",
-    "mobileOrderOptInMessage": "Vielen Dank, dass Sie sich für SMS-Benachrichtigungen für Ihre Curbside-Bestellung angemeldet haben. Wir werden Sie benachrichtigen, wenn Ihre Bestellung zur Abholung bereit ist."
+    "mobileOrderOptInMessage": "Vielen Dank, dass Sie sich für SMS-Benachrichtigungen für Ihre Curbside-Bestellung angemeldet haben. Wir werden Sie benachrichtigen, wenn Ihre Bestellung zur Abholung bereit ist.",
+    "curbsidePickupReadyBlob": "<strong>Diese Bestellung enthält die folgenden Artikel:</strong>",    
+    "curbsidePickupReadyTitle": "IHRE BESTELLUNG IST BEREIT FÜR DIE ABHOLUNG!",
+    "curbsidePartialPickupTitle": "IHRE TEILBESTELLUNG IST BEREIT FÜR DIE ABHOLUNG!",
+    "curbsidePartialPickupBlob1": "Einige Artikel in Ihrer Bestellung sind nicht verfügbar. Details sind unten gezeigt.",
+    "curbsidePartialPickupBlob2": "Um <strong> Ihre Bestellung zu stornieren, </strong> rufen Sie bitte das Geschäft unter der unten angegebenen Nummer an"
 }

@@ -614,7 +614,11 @@
   "curbsideArriveTitle":"LET US KNOW WHEN YOU ARRIVE!",
   "Curbsidebtntxt": "I'm Curbside",
   "curbsideItemInfo": "This order include the following items(s):",
+  "curbsidePartialPickupTitle": "YOUR PARTIAL ORDER IS READY FOR PICKUP!",
+  "curbsidePartialPickupBlob1": "Some items in your order are unavailable. Details are shown below.",
+  "curbsidePartialPickupBlob2": "To <strong>Cancel your order,</strong> please call the store at the number listed below",
   "curbsidePartialpickuptxt": "To pickup your partial order, click the \"I'm on the way\" button below to inform the store you are on your way to pickup your order.",
+  "curbsidePickupReadyTitle": "YOUR ORDER IS READY FOR PICKUP!",
   "curbsidePickupOntheWayTxt": "Click the \"I'm on my way\" button below to inform the store you are on your way to pickup your order.",
   "curbsidePickupreadybtnTxt": "I'm on my way",
   "curbsideShipmentReadyGoodNewsText": " More Good News!",
@@ -637,5 +641,6 @@
   "qrDetails": "Thanks for providing your information! A store asscoiate will be with you shortly. Please show the below QR Code to store asscoiate so they can verify your order details.",
   "storeDetails": "Store Details",
   "vehicleModel": "Vechicle Color, Make, Model",
-  "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup ."
+  "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup .",
+  "curbsidePickupReadyBlob": "<strong>This order includes the following item(s):</strong>"
 }

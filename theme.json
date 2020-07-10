@@ -235,6 +235,18 @@
       "properties": {},
       "template": "email/customer-at-curbside",
       "title": "Customer At Curbside"
+    },
+    {
+      "id": "shipment.curbsideready",
+      "properties": {},
+      "template": "email/curbside-pickup-ready",
+      "title": "Curbside Order Pickup Ready"
+    },
+    {
+      "id": "shipment.partialcurbsideready",
+      "properties": {},
+      "template": "email/curbside-partial-pickup-ready",
+      "title": "Curbside Partial Pickup Ready"
     }
   ],
   "backOfficeTemplates": [
