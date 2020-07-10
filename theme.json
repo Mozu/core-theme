@@ -288,14 +288,14 @@
       "customEditor": "back-office@mozu"
     },
     {
-      "id": "crubside-arrive",
-      "title": "Crubside Arrive",
-      "template": "back-office/crubside-arrive",
+      "id": "curbside-arrive",
+      "title": "curbside Arrive",
+      "template": "back-office/curbside-arrive",
       "customEditor": "back-office@mozu"
     },
     {
-      "id": "crubside-seeyousoon",
-      "title": "Crubside SeeYouSoon",
+      "id": "curbside-seeyousoon",
+      "title": "Curbside SeeYouSoon",
       "template": "back-office/curbside-see-you-soon",
       "customEditor": "back-office@mozu"
     },
@@ -322,36 +322,37 @@
     }
   ],
   "mobileNotificationTemplates":[
-      {
-      
+      {      
         "id": "shipment.itemscanceled",
         "properties": {},
         "template": "mobile-notification/shipment-cancel",
         "title": "Item Canceled"
       },
-      {
-      
+      {      
         "id": "shipment.assigned",
         "properties": {},
         "template": "mobile-notification/shipment-assignment",
         "title": "Shipment Assignment"
       },
+      {      
+        "id": "order.smsoptin",
+        "properties": {},
+        "template": "mobile-notification/sms-optin",
+        "title": "Order Sms Opt In"
+      },
       {
-      
         "id": "shipment.intransitconfirmation",
         "properties": {},
         "template": "mobile-notification/curbside-confirmation",
         "title": "Shipment Confirmation"
       },
       {
-      
         "id": "shipment.customeratcurbside",
         "properties": {},
         "template": "mobile-notification/curbside-customer",
         "title": "Customer Curbside"
       },
       {
-      
         "id": "shipment.customerintransit",
         "properties": {},
         "template": "mobile-notification/curbside-intransit",

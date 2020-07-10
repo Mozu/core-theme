@@ -6,6 +6,6 @@
     {% preload_json model "curbside" %}
 
     <div id="mz-customer-at-curbside-content">
-        {% include "back-office/customer-at-curbside-content" isBackofficePreview=isBackofficePreview %}
+        {% include "back-office/customer-at-curbside-content" %}
     </div>
 {% endblock body-content %}

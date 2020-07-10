@@ -1,3 +1,6 @@
+<div class="header customer-at-curbside-header">
+    <h2> {{ labels.curbsideArriveTitle }} </h2>
+</div>
 <div class="curbside-page-content">
     <div>
         <p>{{labels.curbsideSeeYouSoon}}</p>
@@ -5,7 +8,7 @@
     </div>
 
     <div class="curbside-spacing">
-        <button class="mz-delivery-button mz-button mz-button-large" onclick="location.href = 'http://{{domainName}}/anonymous-notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}';"> {{ labels.CurbSidebtnText }}  </button>
+        <button class="mz-delivery-button mz-button mz-button-large" onclick="location.href = '//{{domainName}}/anonymous-notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}';"> {{ labels.curbsidebtnText }}  </button>
       
     </div>
 
@@ -20,7 +23,7 @@
 
     <div class="curbside-order-details">
         <div class="curbside-order-details-left">
-         <h2  style="color:white"> <b>{{labels.orderDetails}}</b></h2>
+         <h2  class="h2-curbside-order-color"> <b>{{labels.orderDetails}}</b></h2>
         </div>
         <div class="curbside-order-details-right" align="left">
         <p> <b>{{labels.orderNumber}}: <br> {{model.orderNumber}} </b></p>
