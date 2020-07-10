@@ -12,8 +12,7 @@
 </div>
 <br/>
 
-<strong>{{ labels.curbsidePickupOntheWayTxt }}</strong>
-<br><br>
+<p><strong>{{ labels.curbsidePickupOntheWayTxt }}</strong></p>
 <div> 
     <a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}"> 
         {{ labels.curbsidePickupreadybtnTxt }} </a>
@@ -51,26 +50,47 @@
 <!--- Item Details --->
 <p>{{ labels.curbsidePickupReadyBlob|safe }}</p>
 
-<table width="100%" cellpadding="1" cellspacing="1" width="50%">
+<table width="100%" cellpadding="1" cellspacing="1" width="50%" style="border:solid thin;">
     <thead>
         <tr>
             <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.item }}</font></td>
-            <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.subtotal }}</font></td>
+            <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.quantityFulfilled }}</font></td>
         </tr>
     </thead>
         
-    {% for item in model.items %}
-		<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-			<td>
+    {% for item in model.items %}        
+        <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+            <td>
                 {{ item.name }}
                 <dl>
-                    <dd>{{ item.productCode }}</dd>&nbsp;
+                    <dd>{{ item.productCode }}</dd>
+                    <dd>{{ labels.qty }}: {{ item.quantity }}</dd>&nbsp;
                 </dl>
             </td>
-        <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
-	</tr>
+            <td align="right">{{item.quantity}}</td>
+        </tr>       
 	{% endfor %}
+    <tr bgcolor="#666666">
+      <td></td>
+      <td style="text-align: right;">
+        <font color="#FFFFFF">
+            <span>{{ labels.tax }}:</span>
+            <span>{% filter currency %} {{ model.lineItemTaxTotal|add:model.shippingTaxTotal|add:model.handlingTaxTotal }} {% endfilter %}</span>
+        </font>
+      </td>
+    </tr>
+    <tr bgcolor="#666666">
+      <td></td>
+      <td style="text-align: right;"><font color="#FFFFFF">{{ labels.orderTotal }}: <span class="mz-item-price">{% filter currency %} {{ model.total }} {% endfilter %}</span></font></td>
+    </tr>
 </table>
+<br/><hr/><br/>
+
+{% if model.shopperNotes.comments %}
+  <h5>{{ labels.comments }}</h5>
+  <br><p>{{ model.shopperNotes.comments }}</p>
+  <hr/><br>
+{% endif %}
 
 <!--- Need Order Help Card --->
 <div class="mz-curbside-card">

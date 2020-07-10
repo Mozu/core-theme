@@ -642,5 +642,6 @@
   "storeDetails": "Store Details",
   "vehicleModel": "Vechicle Color, Make, Model",
   "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup .",
-  "curbsidePickupReadyBlob": "<strong>This order includes the following item(s):</strong>"
+  "curbsidePickupReadyBlob": "<strong>This order includes the following item(s):</strong>",
+  "quantityFulfilled": "Qty Fulfilled"
 }
