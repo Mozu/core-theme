@@ -135,7 +135,7 @@
   "curbsideSeeYouSoonText": "Thanks for letting us know you're on your way! you will recieve an email shortly with a procedure to follow once you arrive to the store.",
   "curbsideWhenYouArriveText": "When you arrive at the store please check in via the link provided in your next email.From there, you can provide the store associate details on how to deliver your items.",
   "curbsideSeeYouSoon": "See You Soon!",
-  "curbsideCustomer": "Customer {0} is curbside for Order #{1}. Please review  identification information for the customer within the Fulfiller screen",
+  "curbsideCustomer": "Customer {0} is curbside for Order #{1}. Please review identification information for the customer within the Fulfiller screen",
   "curbsideThanks": "Thank you for updating us. Once you arrive, please select the link below to provide our team with additional information ",
   "curbsideCustomerOnTheirWay": "Customer {0} is on their way to pickup order #{1}",
   "damaged": "Product, box or envelope are damaged",
@@ -649,5 +649,6 @@
   "mobileCurbsideOrderPickupReady": "Your order is ready for pickup. Review your order at {0}",
   "mobileCurbsideCanceledByFulfiller": "Unfortunately the items you ordered are no longer available and your order has been cancelled. Please reach out to customer service for additional information.",
   "mobileCurbsideCanceledByShopper": "Your order has been cancelled during delivery. Please contact the store with any additional questions you may have.",
-  "mobileOrderCompleteMessage": "Thank you, your order is now complete. Please contact the store with any additional questions you may have."
+  "mobileShipmentFulfilledMessage": "Thank you, your order is now complete. Please contact the store with any additional questions you may have.",
+  "mobileOrderConfirmationMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup."
 }
