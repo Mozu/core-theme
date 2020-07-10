@@ -1,5 +1,4 @@
-﻿using Kibo.Fulfillment.Contracts.Model;
-using KuttSharp;
+﻿using KuttSharp;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Expressions;
@@ -46,6 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string OrderConfirmation = "order.changed";
         public const string ShipmentConfirmation = "shipment.fulfilled";
         public const string OrderPickupReady = "shipment.pickupready";
+        public const string OrderSmsOptIn = "order.smsoptin";
     }
 
     public class ShipmentNotification : Shipment
@@ -134,6 +134,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     ModelType = typeof (ShipmentNotification),
                     Topic = Topics.ShipmentConfirmation
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (OrderNotification),
+                    Topic = Topics.OrderSmsOptIn
                 }
             };
         }
@@ -160,7 +165,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
             var queryStringParams = Request.GetQueryNameValuePairs();
 
-
             if (mobileNotificationTemplate == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find a MobileNotification template for the current Theme.");
@@ -175,41 +179,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var str = JsonConvert.SerializeObject(MergeNotificationParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
                     model = await Convert(str, mobileNotificationTypeInfo);
                 }
-
                 else
                 {
                     model = MergeNotificationParams(queryStringParams, model);
                 }
-            }
-
-            var shipment = model as Shipment;
-
-            ShipmentNotification notificationModel = new ShipmentNotification();
-            notificationModel.StoreId = shipment.FulfillmentLocationCode;
-
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
-            var kuttServerUrl = "http://" + _settings.AppSettings(KUTTIT_DEFAULT_DOMAIN_CONFIG);
-            var kuttApi = new KuttApiV2(_settings.AppSettings(KUTTIT_API_KEY_CONFIG), kuttServerUrl);
-            var kuttCustomDomain = _settings.AppSettings(KUTTIT_CUSTOM_DOMAIN_CONFIG);
-
-            if (shipment != null)
-            {
-                var domainName = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-                var fulfillerUrl = $"http://{domainName}/{FULFILLER_URL_FRAGMENT}/{shipment.ShipmentType}/{shipment.Number}";
-                var shipmentUrl = $"http://{domainName}/{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_URL_FRAGMENT}/{shipment.Number}/{shipment.OrderId}";
-
-                var shipmentLink = await kuttApi.CreateLinkAsync(shipmentUrl, reuse: true, domain: kuttCustomDomain);
-                var fullfillerLink = await kuttApi.CreateLinkAsync(fulfillerUrl, reuse: true, domain: kuttCustomDomain);
-
-                notificationModel.ShipmentUrl = shipmentLink.Link;
-                notificationModel.FulfillerUrl = fullfillerLink.Link;
-                notificationModel.ShipmentType = shipment.ShipmentType;
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, View(mobileNotificationTemplate.Template, notificationModel));
+            }           
+            return Request.CreateResponse(HttpStatusCode.OK, View(mobileNotificationTemplate.Template, model));
         }
 
         [HttpPost]
@@ -217,9 +192,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             User user = null;
             var mobileNotificationTypeInfo = _smsMobileNotificationTypeInfo.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
-            var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));
-
-            var shipment = JsonConvert.DeserializeObject<EntityModelOfShipment>(notification.Payload);
+            var mobileNotificationTemplate = SiteContext.Theme.MobileNotificationTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));            
 
             if (mobileNotificationTemplate == null)
             {
@@ -230,43 +203,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
 
-            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);          
+            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
+
+            var model = await Convert(notification.Payload, mobileNotificationTypeInfo);
 
             try
             {
-                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), shipment);
+                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), model);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-
-            ShipmentNotification notificationModel = new ShipmentNotification();
-            
-            var kuttServerUrl = "http://" + _settings.AppSettings(KUTTIT_DEFAULT_DOMAIN_CONFIG);
-            var kuttApi = new KuttApiV2(_settings.AppSettings(KUTTIT_API_KEY_CONFIG), kuttServerUrl);
-            var kuttCustomDomain = _settings.AppSettings(KUTTIT_CUSTOM_DOMAIN_CONFIG);
-            
-            if (shipment != null)
-            {
-                var domainName = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-                var fulfillerUrl = $"http://{domainName}/{FULFILLER_URL_FRAGMENT}/{shipment.ShipmentType}/{shipment.ShipmentNumber}";
-                var shipmentUrl = $"http://{domainName}/{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_URL_FRAGMENT}/{shipment.ShipmentNumber}/{shipment.OrderId}";
-
-                var shipmentLink = await kuttApi.CreateLinkAsync(shipmentUrl, reuse: true, domain: kuttCustomDomain);
-                var fullfillerLink = await kuttApi.CreateLinkAsync(fulfillerUrl, reuse: true, domain: kuttCustomDomain);
-
-                notificationModel.ShipmentUrl = shipmentLink.Link;
-                notificationModel.FulfillerUrl = fullfillerLink.Link;
-                notificationModel.StoreId = shipment.FulfillmentLocationCode;
-                notificationModel.ShipmentType = shipment.ShipmentType;
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
-
-            var renderedTemplate = await GetRenderedTemplate(notification, mobileNotificationTemplate, notificationModel, user, site);
+          
+            var renderedTemplate = await GetRenderedTemplate(notification, mobileNotificationTemplate, model, user, site);          
             if (renderedTemplate.IsNullOrEmpty())
             {
                 return null;
@@ -314,9 +264,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return stringWriter.ToString();
         }
 
-        private async Task<object> Convert(string str, MobileNotificationTypeInfo mobileNotificationTypeInfo)
+        private async Task<object> Convert(string json, MobileNotificationTypeInfo mnti)
         {
-            var obj = JsonConvert.DeserializeObject(str, mobileNotificationTypeInfo.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
+            if (mnti == null || mnti.ModelType == null)
+            {
+                return JsonConvert.DeserializeObject(json, CaseInsensitiveJsonSerializerSettings.Default);
+            }
+            var obj = JsonConvert.DeserializeObject(json, mnti.ModelType, CaseInsensitiveJsonSerializerSettings.Default);           
+
+            if (obj is ShipmentNotification shipmentModel)
+            {
+                shipmentModel.StoreId = shipmentModel.FulfillmentLocationCode;
+
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                var kuttServerUrl = "http://" + _settings.AppSettings(KUTTIT_DEFAULT_DOMAIN_CONFIG);
+                var kuttApi = new KuttApiV2(_settings.AppSettings(KUTTIT_API_KEY_CONFIG), kuttServerUrl);
+                var kuttCustomDomain = _settings.AppSettings(KUTTIT_CUSTOM_DOMAIN_CONFIG);
+
+                var domainName = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+                var fulfillerUrl = $"http://{domainName}/{FULFILLER_URL_FRAGMENT}/{shipmentModel.ShipmentType}/{shipmentModel.Number}";
+                var shipmentUrl = $"http://{domainName}/{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_URL_FRAGMENT}/{shipmentModel.Number}/{shipmentModel.OrderId}";
+
+                var shipmentLink = await kuttApi.CreateLinkAsync(shipmentUrl, reuse: true, domain: kuttCustomDomain);
+                var fullfillerLink = await kuttApi.CreateLinkAsync(fulfillerUrl, reuse: true, domain: kuttCustomDomain);
+
+                shipmentModel.ShipmentUrl = shipmentLink.Link;
+                shipmentModel.FulfillerUrl = fullfillerLink.Link;
+            }           
+
             return obj;
         }
 
