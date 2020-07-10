@@ -49,7 +49,7 @@
 <br/>
 
 <!--- Item Details --->
-<p>{{labels.curbsidePickupReadyBlob}}</p>
+<p>{{ labels.curbsidePickupReadyBlob|safe }}</p>
 
 <table width="100%" cellpadding="1" cellspacing="1" width="50%">
     <thead>
