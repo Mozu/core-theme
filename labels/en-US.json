@@ -618,7 +618,7 @@
   "curbsidePickupOntheWayTxt": "Click the \"I'm on my way\" button below to inform the store you are on your way to pickup your order.",
   "curbsidePickupreadybtnTxt": "I'm on my way",
   "curbsideShipmentReadyGoodNewsText": " More Good News!",
-  "curbsideShipmentReadyText": "Your order is available and ready for you to pick up. please click the 'I am on my way' button to inform the store you are on your way to pick up your order.",
+  "curbsideShipmentReadyText": "Your order is available and ready for you to pick up. Please click the \"I'm on my way\" button to inform the store you are on your way to pick up your order.",
   "curbsideShipmentReadyThanksText": "Thank you for your purchase!",
   "curbsideShipmentType": "Curbside",
   "customerAtCurbsideBlob1": "LET US KNOW WHEN YOU ARRIVE!",
@@ -626,7 +626,7 @@
   "customerAtCurbsideBlob3": "Please note...<br/><ul><li>Please bring your ID that matches the name on your order (unless otherwise specified).</li><li>If your package is not picked up within 5 business days, your order will be cancelled and you will be refunded.</li><li>When you arrive at the store please click on the \"I'm Curbside\" button shown above. From there, you will be brought to a landing page where you can provide delivery information.</li></ul>",
   "customerAtCurbsideLetUsKnow": "LET US KNOW HOW TO DELIVER YOUR ITEMS!",
   "customerAtCurbsideWithYouShortly": "WE WILL BE WITH YOU SHORTLY!",
-  "deliverYourItem": "Thanks for letting us know you're here! please fill out the questions below, and a store associate will be right out with your items.",
+  "deliverYourItem": "Thanks for letting us know you're here! Please fill out the questions below, and a store associate will be right out with your items.",
   "methodDelivery": "Method of Delivery",
   "orderCompleteBlob2": "Your order has been successfully picked up curbside. <br/>Thank you for shopping with us!",
   "orderCompleteBlob3": "Need Order Help?",
@@ -637,5 +637,9 @@
   "qrDetails": "Thanks for providing your information! A store asscoiate will be with you shortly. Please show the below QR Code to store asscoiate so they can verify your order details.",
   "storeDetails": "Store Details",
   "vehicleModel": "Vehicle Color, Make, Model",
-  "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup."
+  "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
+  "mobileCurbsidePartialPickupReady": "Some items for your order are no longer available. Your remaining order is ready for pickup. Review your order at {0}",
+  "mobileCurbsideOrderPickupReady": "Your order is ready for pickup. Review your order at {0}",
+  "mobileCurbsideCanceledByFulfiller": "Unfortunately the items you ordered are no longer available and your order has been cancelled. Please reach out to customer service for additional information.",
+  "mobileCurbsideCanceledByShopper": "Your order has been cancelled during delivery. Please contact the store with any additional questions you may have."
 }
