@@ -323,10 +323,10 @@
   ],
   "mobileNotificationTemplates":[
       {      
-        "id": "shipment.itemscanceled",
+        "id": "shipment.itemscanceled.store",
         "properties": {},
-        "template": "mobile-notification/shipment-cancel",
-        "title": "Item Canceled"
+        "template": "mobile-notification/shipment-cancel-store",
+        "title": "Item Canceled Store"
       },
       {      
         "id": "shipment.assigned",
@@ -371,10 +371,10 @@
         "title": "Partial Curbside Ready"
       },
       {
-        "id": "shipment.shopper.itemscancelled",
+        "id": "shipment.itemscanceled",
         "properties": {},
-        "template": "mobile-notification/shipment-shopper-cancel",
-        "title": "Shipment Shopper Canceled"
+        "template": "mobile-notification/shipment-cancel",
+        "title": "Shipment Canceled"
       }
 
     ],
