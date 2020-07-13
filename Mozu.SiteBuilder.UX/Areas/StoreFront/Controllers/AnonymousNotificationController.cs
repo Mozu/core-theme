@@ -173,6 +173,35 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return curbsideInfo;
         }
 
+        [HttpGet]
+        public async Task<HttpResponseMessage> CurbSideShipmentReadyView(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (shipment.OrderId != orderId)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-shipment-ready"));
+
+            var location = await GetLocation(shipment.FulfillmentLocationCode);
+
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find curbside-shipment-ready template for the current Theme.");
+            }
+
+            ViewData["location"] = location;
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+
+            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
+        }
         private async Task<Location.Contracts.Location> GetLocation(string locationCode)
         {
             if (!string.IsNullOrEmpty(locationCode))

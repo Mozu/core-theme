@@ -1,6 +1,7 @@
 using Kibo.Fulfillment.Contracts.Model;
 using KuttSharp;
 using KuttSharp.Models.V2;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Expressions;
@@ -45,9 +46,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string CustomerAtCurbside = "shipment.customeratcurbside";
         public const string IntransitConfirmation = "shipment.intransitconfirmation";
         public const string OrderConfirmation = "order.changed";
-        public const string ShipmentConfirmation = "shipment.fulfilled";
-        public const string OrderPickupReady = "shipment.pickupready";
-        public const string OrderSmsOptIn = "order.smsoptin";
+        public const string ShipmentFulfilled = "shipment.fulfilled";
+        public const string CurbsideReady = "shipment.curbsideready";
+        public const string PartialCurbsideReady = "shipment.partialcurbsideready";
+        public const string StoreItemsCanceled = "shipment.itemscanceled.store";
     }
 
     public class ShipmentNotification : EntityModelOfShipment
@@ -55,6 +57,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public string StoreId { get; set; }
         public string ShipmentUrl { get; set; }
         public string FulfillerUrl { get; set; }
+
+        public bool IsShopperCanceled { get; set; }
     }
 
     public class OrderNotification : Order
@@ -87,12 +91,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string ANNONYMOUS_NOTIFICATION_URL_FRAGMENT = "anonymous-notification";
         public const string SHIPMENT_URL_FRAGMENT = "shipment";
         public const string CURBSIDEARRIVE = "curbsideArrive";
+        public const string CURBSIDESHIPMENTREADY = "curbsideShipmentReady";
 
         private static readonly List<MobileNotificationTypeInfo> _smsMobileNotificationTypeInfo;
 
         private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ILogger _logger;
         private readonly ISettings _settings;
+        private readonly IOrderWebApiClient _orderWebApiClient;
 
         static MobileNotificationController()
         {
@@ -131,17 +137,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 new MobileNotificationTypeInfo
                 {
                     ModelType = typeof (ShipmentNotification),
-                    Topic = Topics.OrderPickupReady
+                    Topic = Topics.CurbsideReady
                 },
                 new MobileNotificationTypeInfo
                 {
                     ModelType = typeof (ShipmentNotification),
-                    Topic = Topics.ShipmentConfirmation
+                    Topic = Topics.ShipmentFulfilled
                 },
                 new MobileNotificationTypeInfo
                 {
-                    ModelType = typeof (OrderNotification),
-                    Topic = Topics.OrderSmsOptIn
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.PartialCurbsideReady
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.StoreItemsCanceled
                 }
             };
         }
@@ -154,12 +165,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICustomRouteHandler customRouteHandler,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> pageRuleEvaluator)
+            Lazy<IExpressionEvaluator> pageRuleEvaluator,
+            IOrderWebApiClient orderWebApiClient)
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
             _settings = settings;
+            _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
         }
 
         [HttpGet]
@@ -285,13 +298,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 switch (mnti.Topic)
                 {
-                    case Topics.ShipmentItemCanceled:
+                    case Topics.StoreItemsCanceled:
                     case Topics.ShipmentAssigned:
                         shipmentModel.StoreId = shipmentModel.FulfillmentLocationCode;
                         var shipmentLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_URL_FRAGMENT}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
                         var fullfillerLink = await CreateTinyUrl($"{FULFILLER_URL_FRAGMENT}/{shipmentModel.ShipmentType}/{shipmentModel.ShipmentNumber}");
                         shipmentModel.ShipmentUrl = shipmentLink.Link;
-                        shipmentModel.FulfillerUrl = fullfillerLink.Link;                       
+                        shipmentModel.FulfillerUrl = fullfillerLink.Link;     
                         break;
                     case Topics.IntransitConfirmation:
                         var landingPage = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{CURBSIDEARRIVE}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
@@ -300,6 +313,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     case Topics.CustomerAtCurbside:
                     case Topics.CustomerIntransit:
                         ViewData["customerName"] = $"{shipmentModel.Destination?.DestinationContact?.FirstName} {shipmentModel.Destination?.DestinationContact?.LastNameOrSurname}";
+                        break;
+                    case Topics.CurbsideReady:
+                    case Topics.PartialCurbsideReady:
+                        var shipmentReadyLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{CURBSIDESHIPMENTREADY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
+                        shipmentModel.ShipmentUrl = shipmentReadyLink.Link;
+                        break;
+                    case Topics.ShipmentItemCanceled:
+                        shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                         break;
                     default:
                         break;

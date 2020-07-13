@@ -31,6 +31,7 @@
       "lng": -97.76199
     },
     "supportsInventory": true,
+    "phone": "(512) 555-8925",
     "fulfillmentTypes": [
       {
         "code": "DS",

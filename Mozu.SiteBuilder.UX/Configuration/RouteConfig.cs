@@ -281,6 +281,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
               new { controller = "AnonymousNotification", action = "RenderCurbsideArriveView" });
 
             routes.MapHttpRoute(
+              "Anonymous Curbside Shipment Ready View",
+              "anonymous-notification/curbsideShipmentReady/{shipmentNumber}/{orderId}",
+              new { controller = "AnonymousNotification", action = "CurbSideShipmentReadyView" });
+
+            routes.MapHttpRoute(
                "Anonymous Shipment View",
                "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
                new { controller = "AnonymousNotification", action = "RenderShipmentView" });
