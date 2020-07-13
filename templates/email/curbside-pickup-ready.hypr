@@ -1,0 +1,105 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<!--- Header --->
+<div class="mz-curbside-email-header">  
+  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <div class="mz-curbside-header-body">
+    <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+    <h3>{{ labels.curbsidePickupReadyTitle }}</h3>
+  </div>
+</div>
+<br/>
+
+<p><strong>{{ labels.curbsidePickupOntheWayTxt }}</strong></p>
+<div> 
+    <a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}"> 
+        {{ labels.curbsidePickupreadybtnTxt }} </a>
+</div>
+<p>{{ labels.alreadyCurbsidePickupTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br>
+
+<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div><br/>
+
+<!--- Order Details Header--->
+<div class="mz-multiship-email" style="width: 100%;">
+	<div class="mz-table-header" style="padding:15px">
+		<span style="font-size:25px">{{ labels.orderDetails }}</span>
+		<div style="font-size:14px;float:right;">
+			<div> {{ labels.orderNumber }}: </div>
+			<div style="float:right;"> {{ model.orderNumber }} </div>
+		</div>
+	</div>
+</div>
+
+<!--- Store Details --->
+<div class="mz-store-details">
+	<div>
+		<strong>{{ labels.storeDetails }}</strong>
+	</div>
+	<div>
+        <div> {{ labels.storeLocation }} : {{ model.storeLocation.name }}</div>
+        <div> {{ model.storeLocation.address.address1 }} </div>
+        <div> {{ model.storeLocation.address.cityOrTown }}, {{ model.storeLocation.address.stateOrProvince }}, {{ model.storeLocation.address.postalOrZipCode }} </div>
+        <div> {{ model.storeLocation.phone }}</div>
+    </div>
+</div>
+<hr/>
+<br/>
+
+<!--- Item Details --->
+<p>{{ labels.curbsidePickupReadyBlob|safe }}</p>
+
+<table width="100%" cellpadding="1" cellspacing="1" width="50%" style="border:solid thin;">
+    <thead>
+        <tr>
+            <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.item }}</font></td>
+            <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.quantityFulfilled }}</font></td>
+        </tr>
+    </thead>
+        
+    {% for item in model.items %}        
+        <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+            <td>
+                {{ item.name }}
+                <dl>
+                    <dd>{{ labels.part }} #: {{ item.partNumber }}</dd>
+                    <dd>{{ labels.qty }}: {{ item.quantity }}</dd>&nbsp;
+                </dl>
+            </td>
+            <td align="right">{{item.quantity}}</td>
+        </tr>       
+	{% endfor %}
+    <tr bgcolor="#666666">
+      <td></td>
+      <td style="text-align: right;">
+        <font color="#FFFFFF">
+            <span>{{ labels.tax }}:</span>
+            <span>{% filter currency %} {{ model.lineItemTaxTotal|add:model.shippingTaxTotal|add:model.handlingTaxTotal }} {% endfilter %}</span>
+        </font>
+      </td>
+    </tr>
+    <tr bgcolor="#666666">
+      <td></td>
+      <td style="text-align: right;"><font color="#FFFFFF">{{ labels.orderTotal }}: <span class="mz-item-price">{% filter currency %} {{ model.total }} {% endfilter %}</span></font></td>
+    </tr>
+</table>
+<br/><hr/><br/>
+
+{% if model.shopperNotes.comments %}
+  <h5>{{ labels.comments }}</h5>
+  <br><p>{{ model.shopperNotes.comments }}</p>
+  <hr/><br>
+{% endif %}
+
+<!--- Need Order Help Card --->
+<div class="mz-curbside-card">
+    <div class="mz-curbside-card-header">{{ labels.orderCompleteBlob3 }}</div>
+    <div class="mz-curbside-card-body">
+        <p>{{ labels.orderCompleteBlob4|string_format(domainName)|safe }}</p>
+    </div>
+</div>
+<br/>
+
+<p>{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+{% endblock body-content %}
