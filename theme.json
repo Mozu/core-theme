@@ -323,10 +323,10 @@
   ],
   "mobileNotificationTemplates":[
       {      
-        "id": "shipment.itemscanceled",
+        "id": "shipment.itemscanceled.store",
         "properties": {},
-        "template": "mobile-notification/shipment-cancel",
-        "title": "Item Canceled"
+        "template": "mobile-notification/shipment-cancel-store",
+        "title": "Item Canceled Store"
       },
       {      
         "id": "shipment.assigned",
@@ -357,7 +357,26 @@
         "properties": {},
         "template": "mobile-notification/curbside-intransit",
         "title": "Shipment Intransit"
+      },
+      {
+        "id": "shipment.curbsideready",
+        "properties": {},
+        "template": "mobile-notification/order-curbside-ready",
+        "title": "Order Curbside Ready"
+      },
+      {
+        "id": "shipment.partialcurbsideready",
+        "properties": {},
+        "template": "mobile-notification/partial-curbside-ready",
+        "title": "Partial Curbside Ready"
+      },
+      {
+        "id": "shipment.itemscanceled",
+        "properties": {},
+        "template": "mobile-notification/shipment-cancel",
+        "title": "Shipment Canceled"
       }
+
     ],
   "pageTypes": [
     {

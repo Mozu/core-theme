@@ -1,0 +1,2 @@
+{% comment %} message length should not exceed 160 characters {% endcomment %}
+{{ labels.mobileCurbsideOrderPickupReady|string_format(model.shipmenturl)|safe }}

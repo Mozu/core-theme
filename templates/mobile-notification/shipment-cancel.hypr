@@ -1,2 +1,9 @@
 {% comment %} message length should not exceed 160 characters {% endcomment %}
-{{ labels.mobileShipmentCancelMessage|string_format(model.storeId, model.shipmenturl, model.fulfillerurl)|safe }}
+
+{% if model.isShopperCanceled == true %}
+    {{ labels.mobileCurbsideCanceledByShopper}}
+{% endif %}
+
+{% if model.isShopperCanceled == false %} 
+    {{ labels.mobileCurbsideCanceledByFulfiller}}
+{% endif %}
