@@ -480,5 +480,9 @@
     "curbsidePartialPickupBlob1": "Einige Artikel in Ihrer Bestellung sind nicht verfügbar. Details sind unten gezeigt.",
     "curbsidePartialPickupBlob2": "Um <strong> Ihre Bestellung zu stornieren, </strong> rufen Sie bitte das Geschäft unter der unten angegebenen Nummer an",
     "quantityFulfilled": "Menge erfüllt",
-    "part": "Teil"
+    "part": "Teil",
+    "mobileCurbsidePartialPickupReady": "Certains articles de votre commande ne sont plus disponibles. Votre commande restante est prête à être récupérée. Vérifiez votre commande sur {0}",
+    "mobileCurbsideOrderPickupReady": "Votre commande est prête à être retirée. Vérifiez votre commande sur {0}",
+    "mobileCurbsideCanceledByFulfiller": "Malheureusement, les articles que vous avez commandés ne sont plus disponibles et votre commande a été annulée. Veuillez contacter le service client pour plus d'informations.",
+    "mobileCurbsideCanceledByShopper": "Votre commande a été annulée lors de la livraison. Veuillez contacter le magasin pour toute question supplémentaire que vous pourriez avoir."
 }
