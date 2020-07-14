@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
@@ -59,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             var ec = value as ErrorCollection;
             var ex = value is SiteBuilderErrorCollection collection ? collection.Exception : null;
 
-            var model = ec;
+           
             var showYSOD = context.HttpContext.RequestServices.Resolve<ISettings>().AppSettings("YSOD_ERRORS") == "true";
             object obj = null;
 
@@ -73,14 +74,20 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 }
             }
 
-            var viewDataDictionary = new ViewDataDictionary<ErrorCollection>(null, model);
+            var viewDataDictionary = new ViewDataDictionary<ErrorCollection>(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+            viewDataDictionary.Model = ec;
 
             var viewEngine = context.HttpContext.RequestServices.GetService<HyprViewEngine>();
 
             var sw = new StreamWriter(context.HttpContext.Response.Body);
             try
             {
-                var view = viewEngine.FindPageView("error");
+                var view = default(HyprView);
+                if (context.HttpContext.Response.StatusCode == 404)
+                {
+                    view = viewEngine.FindPageView("404");
+                }
+                view ??= viewEngine.FindPageView("error");
 
                 return view.AsyncRender(new HyprViewContext(context.HttpContext, viewDataDictionary, null), sw).ContinueWith(_ =>
                 {
@@ -98,7 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                         StringEscapeHandling = StringEscapeHandling.EscapeHtml, Formatting = Formatting.Indented
                     };
                     var ser = new JsonSerializer();
-                    ser.Serialize(jtw, model);
+                    ser.Serialize(jtw, ec);
                     jtw.Flush();
 
                     tcs.SetResult(true);
@@ -121,7 +128,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 };
                 context.HttpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue("text/json");
                 var ser = new JsonSerializer();
-                ser.Serialize(jtw, model);
+                ser.Serialize(jtw, ec);
                 jtw.Flush();
 
                 tcs.SetResult(true);

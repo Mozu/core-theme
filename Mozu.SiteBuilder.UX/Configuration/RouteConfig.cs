@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using IInlineConstraintResolver = Microsoft.AspNetCore.Routing.IInlineConstraintResolver;
 using System.Threading.Tasks;
 
+
 namespace Mozu.SiteBuilder.UX.Configuration
 {
     public class RouteConfig : IRouteConfig
@@ -37,6 +38,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
         public static void Register(IRouteBuilder builder)
         {
             GetSystemRoutes(builder);
+            var r = GetStandardRoutes();
+            for (var i=0;i< r.Count;i++)
+            {
+                builder.Routes.Add(r[i]);
+            }
             _defaultRrouter = builder.DefaultHandler;
         }
         public static IList<IRouter> GetSystemRoutes(IRouteBuilder builder)
@@ -46,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             _defaultHandler ??= builder.DefaultHandler;
             _constraintResolver ??= builder.ServiceProvider.Resolve<IInlineConstraintResolver>();
 
+          
             routes.MapRoute(_defaultHandler, 
                 "favicon", 
                 "favicon.ico", 
@@ -530,23 +537,23 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "Localization", action = "collections"}, 
                 _constraintResolver);
 
-            routes.MapRoute(_defaultHandler,
-                "vlegacy_product",
-                "{slug}-p/{productCode}.htm",
-                 new { controller = "Catalog", action = "ProductDetail" },
-                _constraintResolver);
-
-            routes.MapRoute(_defaultHandler,
-               "vlegacy_product_asp",
-               "ProductDetails.asp",
-                new { controller = "Catalog", action = "ProductDetail" },
-               _constraintResolver);
-
-            routes.MapRoute(_defaultHandler,
-                "vlegacy_category",
-                "{slug}-s/{categoryId}.htm",
-                 new { controller = "Catalog", action = "Category" }, 
-                _constraintResolver);
+            // routes.MapRoute(_defaultHandler,
+            //     "vlegacy_product",
+            //     "{slug}-p/{productCode}.htm",
+            //      new { controller = "Catalog", action = "ProductDetail" },
+            //     _constraintResolver);
+            //
+            // routes.MapRoute(_defaultHandler,
+            //    "vlegacy_product_asp",
+            //    "ProductDetails.asp",
+            //     new { controller = "Catalog", action = "ProductDetail" },
+            //    _constraintResolver);
+            //
+            // routes.MapRoute(_defaultHandler,
+            //     "vlegacy_category",
+            //     "{slug}-s/{categoryId}.htm",
+            //      new { controller = "Catalog", action = "Category" }, 
+            //     _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "StoreFront_Prefixed_default",
@@ -608,28 +615,28 @@ namespace Mozu.SiteBuilder.UX.Configuration
         //    DoReRoute(context, SystemRoutes);
         //}
 
-        public void RouteIncomingDefaultRouteRequest(RouteContext context)
-        {
-            DoReRoute(context, DefaultRoutes);
-        }
+        // public void RouteIncomingDefaultRouteRequest(RouteContext context)
+        // {
+        //     DoReRoute(context, DefaultRoutes);
+        // }
 
         public Task RouteAsync(RouteContext context)
         {
             return DefaultRoutes.RouteAsync(context);
         }
 
-        private static void DoReRoute(RouteContext context, RouteCollection routeCollection )
-        {
-            if (!routeCollection.TryMatchRoute(context.HttpContext, out var routeData)) return;
-            
-            //context.Items[HttpPropertyKeys.HttpRouteDataKey] = 
-
-            if (routeData.Routers.Last() is CustomRoute cr)
-            {
-                cr.RewriteRouteData(context, routeData.Values);
-            }
-
-            context.RouteData = routeData;
-        }
+        // private static void DoReRoute(RouteContext context, RouteCollection routeCollection )
+        // {
+        //     if (!routeCollection.TryMatchRoute(context.HttpContext, out var routeData)) return;
+        //     
+        //     //context.Items[HttpPropertyKeys.HttpRouteDataKey] = 
+        //
+        //     if (routeData.Routers.Last() is CustomRoute cr)
+        //     {
+        //         cr.RewriteRouteData(context, routeData.Values);
+        //     }
+        //
+        //     context.RouteData = routeData;
+        // }
     }
 }

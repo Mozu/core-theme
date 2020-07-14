@@ -11,6 +11,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Extensible.Contracts;
 using System;
 using Mozu.Core.Configuration;
+using Mozu.SiteBuilder.Mvc.Middleware;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
@@ -41,9 +42,10 @@ namespace Mozu.SiteBuilder.UX.Controllers
         
 
     }
-
+ 
     [RefreshStoreFrontUserAuthTicketFilter]
     [RequiresSiteContextRedirectFilter]
+    [FourHundredHandlerFilter]
     public class BaseApiController : ApiControllerBase
     {
 

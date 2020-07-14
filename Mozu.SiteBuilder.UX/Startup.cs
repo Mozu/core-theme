@@ -1,10 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using FiftyOne.DeviceDetection;
+
+using FiftyOne.Pipeline.Engines;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -87,7 +90,7 @@ namespace Mozu.SiteBuilder.UX
                 {
                     opt.Conventions.Add(new AcceptHeaderConvention());
                     opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
-                    opt.OutputFormatters.Add(new HtmlErrorMediaTypeHyperFormatter());
+                    opt.OutputFormatters.Insert(1, new HtmlErrorMediaTypeHyperFormatter());
                     opt.OutputFormatters.Insert(0, new JsonpOutputFormatter(opt));
                     var duration = Configuration.GetValue("mozu:appsettings:clientCacheHeaderLength:default", "1209700");
                     opt.CacheProfiles.Add("default", new CacheProfile()
@@ -147,9 +150,13 @@ namespace Mozu.SiteBuilder.UX
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
                
                 ;
-            //  .UseMiddleware<PageContextCookieMiddleware>();
-            
           
+                //  .UseMiddleware<PageContextCookieMiddleware>();
+                
+             
+               
+                
+
         }
 
         

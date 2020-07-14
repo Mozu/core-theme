@@ -21,6 +21,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.Core.Api.Contracts;
+using Mozu.Core.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -124,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             await GetContextInitializationTasks();
 
             if (PageContext.CmsContext.Page.Document == null)
-                return NotFound("page not found");
+                return NotFound("page not found");// new ErrorCollection(){Message="page not found"});
 
             var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage,
                 () => ToRouteDictionary(PageContext.CmsContext.Page.Document));

@@ -55,40 +55,47 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             }
 
 
+           
+            
+            
+            // try redirects
+            var redirect = Redirecter.GetRedirectForRequestUri(services.Resolve<IRedirectRepository>(), requestUri);
+            if (redirect != null)
+            {
+
+
+                // we short-circuit the rewrite if this request has already been rewritten this go around.
+                if (redirect.IsRewrite.GetValueOrDefault(false) && context.HttpContext.Items.ContainsKey(IsSeoRewrite))
+                {
+                    return;
+                }
+
+                if (redirect.IsRewrite.GetValueOrDefault(false))
+                {
+                    RewriteCurrentRequest(context.HttpContext, redirect.Destination);
+                    //services.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(context.HttpContext);
+                    return;
+                }
+
+                if (!apiContext.IsEditMode)
+                {
+                    RedirectTo(
+                        redirect.Destination,
+                        redirect.IsTemporary.GetValueOrDefault(false),
+                        siteContext?.GeneralSettings?.EnforceSitewideSSL.GetValueOrDefault(false) == true,
+                        pageContext.IsSecure,
+                        pageContext.SecureHost,
+                        context
+                    );
+                }
+            }
             if (RewriteHomePage(requestUri, apiContext ,navContext, out string homepage))
             {
                 RewriteCurrentRequest(context.HttpContext, homepage);
                 return;
             }
-            
-            
-            // try redirects
-            var redirect = Redirecter.GetRedirectForRequestUri(services.Resolve<IRedirectRepository>(), requestUri);
-            if (redirect == null) return;
-            // we short-circuit the rewrite if this request has already been rewritten this go around.
-            if (redirect.IsRewrite.GetValueOrDefault(false) && context.HttpContext.Items.ContainsKey(IsSeoRewrite))
-            {
-                return;
-            }
 
-            if (redirect.IsRewrite.GetValueOrDefault(false))
-            {
-                RewriteCurrentRequest(context.HttpContext, redirect.Destination);
-                //services.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(context.HttpContext);
-                return;
-            }
 
-            if (!apiContext.IsEditMode)
-            {
-                RedirectTo(
-                    redirect.Destination,
-                    redirect.IsTemporary.GetValueOrDefault(false),
-                    siteContext?.GeneralSettings?.EnforceSitewideSSL.GetValueOrDefault(false) == true,
-                    pageContext.IsSecure,
-                    pageContext.SecureHost,
-                    context
-                );
-            }
         }
 
 

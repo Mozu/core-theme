@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         RouteCollection DefaultRoutes { get; }
         IRouter DefaultHandler { get; }
-        void RouteIncomingDefaultRouteRequest(RouteContext context);
+        //void RouteIncomingDefaultRouteRequest(RouteContext context);
         Task RouteAsync(RouteContext context);
 
         //void RouteIncomingSystemRouteRequest(RouteContext context);
@@ -79,31 +79,31 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         //    return routeCollection == null;
         //}
 
-        public IRouter RouteIncomingRequest(RouteContext routeContext)
-        {
-            var path = _originalUri.AbsolutePath;
-            if (path.Contains( "=") || path.Contains("?"))
-            {
-                return null;
-            }
-            var routeCollection = GetRouteCollection();
-            if (routeCollection == null)
-            {
-                return null;
-            }
-
-            
-            if (!routeCollection.TryMatchRoute(_context, out var routeData)) return null;
-
-            if (routeData.Routers[0] is CustomRoute cr)
-            {
-               
-                cr.RewriteRouteData(routeContext, routeData.Values);
-            }
-
-            routeContext.RouteData = routeData;
-            return routeData.Routers[0];
-        }
+        // public IRouter RouteIncomingRequest(RouteContext routeContext)
+        // {
+        //     var path = _originalUri.AbsolutePath;
+        //     if (path.Contains( "=") || path.Contains("?"))
+        //     {
+        //         return null;
+        //     }
+        //     var routeCollection = GetRouteCollection();
+        //     if (routeCollection == null)
+        //     {
+        //         return null;
+        //     }
+        //
+        //     
+        //     if (!routeCollection.TryMatchRoute(_context, out var routeData)) return null;
+        //
+        //     if (routeData.Routers[0] is CustomRoute cr)
+        //     {
+        //        
+        //         cr.RewriteRouteData(routeContext, routeData.Values);
+        //     }
+        //
+        //     routeContext.RouteData = routeData;
+        //     return routeData.Routers[0];
+        // }
         
         RouteCollection GetRouteCollection()
         {
@@ -198,10 +198,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         _context.GetRequestUri().GetComponents(UriComponents.Path, UriFormat.Unescaped),
                         StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!IsValidForExistingContext(request , uri, RouteCollection, _routeconfig.DefaultRoutes))
+
+                        var httpCtx = new DefaultHttpContext();
+                        httpCtx.Request.Path = uri.LocalPath;
+                        var rc = new RouteContext(httpCtx);
+                        route.RouteAsync(rc);
+                        if (rc.RouteData.Routers?.Count!=1)
                         {
                             return null;
                         }
+                        // if (!IsValidForExistingContext(request , uri, RouteCollection, _routeconfig.DefaultRoutes))
+                        // {
+                        //     return null;
+                        // }
 
                         var preStrippedRequest = request.HttpContext.Items.ContainsKey(UrlRewritingMiddleware.MzPreCleanedUri) ?
                         (Uri)request.HttpContext.Items[UrlRewritingMiddleware.MzPreCleanedUri] :
@@ -229,32 +238,34 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return null;
         }
 
-        private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, RouteCollection siteCollection, RouteCollection defaultCollection)
-        {
-            CustomRoute reverseResolvedRoute = null;
-
-            if (siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) ||
-               defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
-            {
-                reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
-            }
-
-            if (reverseResolvedRoute == null)
-            {
-                return false;
-            }
-            return !(currentRequest.HttpContext.GetRouteData().Routers.Last() is CustomRoute resolvedRoute) || resolvedRoute.InternalRoute == reverseResolvedRoute.InternalRoute;
-        }
+        // private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, RouteCollection siteCollection, RouteCollection defaultCollection)
+        // {
+        //     siteCollection.RouteAsync()
+        //     CustomRoute reverseResolvedRoute = null;
+        //
+        //     if (siteCollection.TryMatchRoute(candidateUri, out var outRouteData) ||
+        //        defaultCollection.TryMatchRoute(candidateUri, out outRouteData))
+        //     {
+        //         reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
+        //     }
+        //
+        //     if (reverseResolvedRoute == null)
+        //     {
+        //         return false;
+        //     }
+        //     return !(currentRequest.HttpContext.GetRouteData().Routers.Last() is CustomRoute resolvedRoute) || resolvedRoute.InternalRoute == reverseResolvedRoute.InternalRoute;
+        // }
 
         private static bool IsValidForExistingContext(HttpRequest currentRequest, Uri candidateUri, RouteCollection siteCollection, IList<IRouter> defaultCollection)
         {
             CustomRoute reverseResolvedRoute = null;
             
-            if (siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) || 
-               defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
-            {
-                reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
-            }
+            //PANTS
+            // if (siteCollection.TryMatchRoute(currentRequest.HttpContext, out var outRouteData) || 
+            //    defaultCollection.TryMatchRoute(currentRequest.HttpContext, out outRouteData))
+            // {
+            //     reverseResolvedRoute = outRouteData.Routers[0] as CustomRoute;
+            // }
 
             if (reverseResolvedRoute == null)
             {
@@ -332,12 +343,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
            return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
         }
 
-        public RouteData GetRouteData()
-        {
-            var routeCollection = GetRouteCollection();
-            if (routeCollection == null) return null;
-
-            return routeCollection.TryMatchRoute(_context, out var routeData) ? routeData : null;
-        }
+        // public RouteData GetRouteData()
+        // {
+        //     var routeCollection = GetRouteCollection();
+        //     if (routeCollection == null) return null;
+        //
+        //     return routeCollection.TryMatchRoute(_context, out var routeData) ? routeData : null;
+        // }
     }
 }

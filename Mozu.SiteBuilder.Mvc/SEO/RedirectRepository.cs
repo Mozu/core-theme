@@ -29,11 +29,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public interface ICustomRouteHandler
     {
-        IRouter RouteIncomingRequest(RouteContext routeContext);
+      //  IRouter RouteIncomingRequest(RouteContext routeContext);
 
        // Task<bool> Init();
 
-        RouteData GetRouteData();
+       // RouteData GetRouteData();
 
         /// <summary>
         /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that relative url, with potentially new viewdata that can be injected.

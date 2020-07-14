@@ -818,7 +818,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             subber.Provide<ICustomRouteHandler>(customRouteRepo);
             var urlHelper = subber.ResolveAndSubstituteFor<Mozu.SiteBuilder.Mvc.Helpers.UrlHelper>();
 
-            customRouteRepo.RouteIncomingRequest(new RouteContext(httpCtx));
+            //customRouteRepo.RouteIncomingRequest(new RouteContext(httpCtx));
 
             customRouteRepo.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true);
 

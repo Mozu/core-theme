@@ -485,7 +485,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
-            FourHundredMiddleware.BypassErrorHandler(HttpContext);
+            FourHundredHandlerFilterAttribute.BypassErrorHandler(HttpContext);
             return StatusCode(401, new { message = errorMsg }); 
             //Request.CreateResponse(HttpStatusCode.Unauthorized,
             //    View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));

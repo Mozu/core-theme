@@ -194,7 +194,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 return;
             }
 
-            await services.Resolve<IRouteConfig>().RouteAsync(context);
+           // await services.Resolve<IRouteConfig>().RouteAsync(context);
 
         }
 
