@@ -11,7 +11,11 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 RUN apt-get update && \
     apt-get install -y gnupg  &&\
     curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
-    apt-get install -y nodejs
+    apt-get install -y nodejs &&\
+    dotnet tool install -g dotnet-gcdump &&\
+    dotnet tool install -g dotnet-dump &&\
+    dotnet tool install -g dotnet-trace &&\
+    dotnet tool install -g dotnet-counters
  
 
 
@@ -45,6 +49,7 @@ COPY --from=build /app /approot/sb/ux
 COPY --from=build /src/Mozu.CoreTheme /approot/Mozu.CoreTheme
 COPY --from=build /src/Mozu.SiteBuilder.UX/BuiltinScripts /approot/sb/ux/BuiltinScripts
 COPY --from=build /buildoutput /buildoutput
+COPY --from=build /root/.dotnet/tools/ /root/.dotnet/tools
 
 ENTRYPOINT ["dotnet"]
 CMD [ "Mozu.SiteBuilder.UX.dll"]

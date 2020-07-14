@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX
                     RouteConfig.Register(builder);
 
                 })
-                .UseMiddleware<FourHundredMiddleware>()
+               // .UseMiddleware<FourHundredMiddleware>()
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
                
                 ;

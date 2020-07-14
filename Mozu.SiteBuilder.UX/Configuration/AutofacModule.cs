@@ -112,6 +112,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // todo:cole revisit for mobile detection No Op wont due 
             //builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
             configure.AddScoped<IMobileDetectionProvider, NoOpMobileDetectionProvider>();
+            configure.AddScoped<IMobileDetectionProvider, FiftyOneDegreesMobileDetectionProvider>();
+            
             configure.AddScoped<IPermissionsRepository, PermissionsRepository>();
             //builder.RegisterClassesMatchingInterfaceName(typeof(IEntityListsWebApiClient).Assembly);
             //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();

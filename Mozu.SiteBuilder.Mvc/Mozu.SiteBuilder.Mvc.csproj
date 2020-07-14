@@ -15,8 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="51Degrees.mobi-core" Version="3.2.21.1" />
-    <PackageReference Include="51Degrees.mobi-data" Version="3.2.18.11" />
+
+ 
+    <PackageReference Include="DeviceDetector.NET.NetCore" Version="3.9.2.2" />
+
+ 
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
     <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2021.0-master.19" />
     <PackageReference Include="KuttSharp" Version="0.4.1" />
