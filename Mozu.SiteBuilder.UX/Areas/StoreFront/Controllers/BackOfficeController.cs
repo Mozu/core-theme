@@ -25,8 +25,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
-using Mozu.Tenant.Contracts;
-using Mozu.Tenant.Contracts.Clients;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 

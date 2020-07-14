@@ -1,470 +1,331 @@
 {
-  "_links": {
-    "self": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952"
-    },
-    "shipments": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments"
-    },
-    "tasks": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/tasks"
-    },
-    "workflowInstanceImage": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/workflow-instance-image"
-    },
-    "backorder": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/backordered"
-    },
-    "backorderItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/backorderedItems"
-    },
-    "pickupItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/pickedUpItems"
-    },
-    "transfer": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/transferred"
-    },
-    "transferItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/transferredItems"
-    },
-    "reject": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/rejected"
-    },
-    "rejectItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/rejectedItems"
-    },
-    "cancel": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/canceled"
-    },
-    "fulfill": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/fulfilled"
-    },
-    "reassign": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/reassigned"
-    },
-    "reassignItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/reassignedItems"
-    },
-    "cancelItems": {
-      "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/canceledItems"
-    }
-  },
-  "auditInfo": {
-    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-    "createDate": "2020-06-06T09:42:50.475Z",
-    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-    "updateDate": "2020-06-06T09:51:14.045Z"
-  },
-  "canceledItems": [
-    {
-      "actualPrice": 500.0,
-      "allowsBackOrder": false,
-      "auditInfo": {
-        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "createDate": "2020-06-06T09:51:13.207Z",
-        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "updateDate": "2020-06-06T09:51:14.046Z"
-      },
-      "canceledReason": {
-        "reasonCode": "PurchaseNeverPickedUp"
-      },
-      "duty": 0.0,
-      "handling": 0.0,
-      "handlingDiscount": 0.0,
-      "handlingTax": 0.0,
-      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/0c345b61-7d47-4c30-9024-b0d0efa09bd7",
-      "isTaxable": true,
-      "itemDiscount": 0.0,
-      "itemTax": 82.5,
-      "lineId": 1,
-      "lineItemCost": 1000.0,
-      "name": "IPhone",
-      "options": [
-
-      ],
-      "originalOrderItemId": "c851c9d6ec7e44a59101abd2009f6e3e",
-      "productCode": "4044155044140",
-      "quantity": 1,
-      "shipping": 0.0,
-      "shippingDiscount": 0.0,
-      "shippingTax": 0.0,
-      "taxableHandling": 0.0,
-      "taxableLineItemCost": 1000.0,
-      "taxableShipping": 0.0,
-      "unitPrice": 600.0,
-      "upc": "4044155044140",
-      "weight": 1.0,
-      "weightUnit": "lbs",
-      "weightedDutyAdjustment": 0.0,
-      "weightedHandlingAdjustment": 0.0,
-      "weightedHandlingTaxAdjustment": 0.0,
-      "weightedLineItemTaxAdjustment": 0.0,
-      "weightedShipmentAdjustment": 0.0,
-      "weightedShippingAdjustment": 0.0,
-      "weightedShippingTaxAdjustment": 0.0
-    }
-  ],
-  "changeMessages": [
-    {
-      "changeMessageId": "5edb6711bb61a4000166f4eb",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:13.222Z",
-      "message": "'quantity' value changed from '2' to '1'",
-      "metadata": "ItemDidNotMatchWebsite",
-      "newValue": "1",
-      "oldValue": "2",
-      "subject": "quantity",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6711bb61a4000166f4ec",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:13.222Z",
-      "message": "'canceledItems' collection changes :\n  0. 'CanceledItem/5edb651abb61a4000166df77' added",
-      "metadata": "ItemDidNotMatchWebsite",
-      "subject": "canceledItems",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f1",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'lineItemSubtotal' value changed from '1023.0' to '523.0'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "523.0",
-      "oldValue": "1023.0",
-      "subject": "lineItemSubtotal",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f2",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'lineItemTaxTotal' value changed from '84.4' to '43.15'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "43.15",
-      "oldValue": "84.4",
-      "subject": "lineItemTaxTotal",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f3",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'lineItemTotal' value changed from '1107.4' to '566.15'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "566.15",
-      "oldValue": "1107.4",
-      "subject": "lineItemTotal",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f4",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'total' value changed from '1107.4' to '566.15'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "566.15",
-      "oldValue": "1107.4",
-      "subject": "total",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f5",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'lineItemCost' value changed from '1000.0' to '500.0'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "500.0",
-      "oldValue": "1000.0",
-      "subject": "lineItemCost",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f6",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'itemTax' value changed from '82.5' to '41.25'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "41.25",
-      "oldValue": "82.5",
-      "subject": "itemTax",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    },
-    {
-      "changeMessageId": "5edb6712bb61a4000166f4f7",
-      "correlationId": "fc4285383caf4e44b20bac39fc986da2",
-      "createdDate": "2020-06-06T09:51:14.042Z",
-      "message": "'taxableLineItemCost' value changed from '1000.0' to '500.0'",
-      "metadata": "Repriced after canceling items",
-      "newValue": "500.0",
-      "oldValue": "1000.0",
-      "subject": "taxableLineItemCost",
-      "userDisplayName": "Kibo admin",
-      "userId": "355060a60a5e48eeb7f2fb8d92af2ba5"
-    }
-  ],
-  "currencyCode": "USD",
-  "customerAccountId": 1000,
-  "destination": {
-    "destinationContact": {
-      "address": {
-        "address1": "1817 W BRAKER LN",
-        "address2": "",
-        "address3": "",
-        "address4": "",
-        "addressType": "Residential",
-        "cityOrTown": "AUSTIN",
-        "countryCode": "US",
-        "isValidated": true,
-        "postalOrZipCode": "78758-3624",
-        "stateOrProvince": "TX"
-      },
-      "companyOrOrganization": "",
-      "email": "Storefrontcustomer1@volusion.com",
-      "firstName": "Moses",
-      "id": 1191,
-      "lastNameOrSurname": "Mitchell",
-      "middleNameOrInitial": "",
-      "phoneNumbers": {
-        "home": "(469) 466-5500",
-        "mobile": "(469) 466-5500",
-        "work": "(469) 466-5500"
-      }
-    },
-    "isDestinationCommercial": false
-  },
+  "shipmentNumber": 944,
+  "orderId": "0e69ba3e34ee670001515a160000433f",
+  "orderNumber": 947,
+  "orderSubmitDate": "2019-08-30T17:26:44.391Z",
+  "customerAccountId": 1005,
+  "tenantId": 17215,
+  "siteId": 21153,
+  "fulfillmentDate": "2019-08-30T18:02:35.931Z",
+  "shipmentType": "Curbside",
+  "shipmentStatus": "FULFILLED",
+  "fulfillmentStatus": "Fulfilled",
+  "fulfillmentLocationCode": "sp_1",
+  "cost": 0.0,
+  "shipmentAdjustment": 0.0,
+  "lineItemSubtotal": 50.00,
+  "lineItemTaxAdjustment": 0.0,
+  "lineItemTaxTotal": 0.00,
+  "lineItemTotal": 50.00,
+  "shippingAdjustment": 0.0,
+  "shippingSubtotal": 0.00,
+  "shippingTaxAdjustment": 0.0,
+  "shippingTaxTotal": 0.00,
+  "shippingTotal": 0.00,
+  "handlingAdjustment": 0.0,
+  "handlingSubtotal": 0.00,
+  "handlingTaxAdjustment": 0.0,
+  "handlingTaxTotal": 0.00,
+  "handlingTotal": 0.00,
   "dutyAdjustment": 0.0,
   "dutyTotal": 0.0,
-  "email": "Storefrontcustomer1@volusion.com",
-  "fulfillmentLocationCode": "Austin_Both",
-  "handlingAdjustment": 0.0,
-  "handlingSubtotal": 0.0,
-  "handlingTaxAdjustment": 0.0,
-  "handlingTaxTotal": 0.0,
-  "handlingTotal": 0.0,
+  "total": 50.00,
+  "currencyCode": "USD",
+  "destination": {},
+  "destinationContact": {},
+  "originContact": {},
+  "trackingNumbers": [],
   "items": [
     {
-      "actualPrice": 500.0,
-      "allowsBackOrder": false,
-      "auditInfo": {
-        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "createDate": "2020-06-06T09:42:50.347Z",
-        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "updateDate": "2020-06-06T09:51:14.046Z"
-      },
-      "duty": 0.0,
-      "handling": 0.0,
-      "handlingDiscount": 0.0,
-      "handlingTax": 0.0,
-      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/0c345b61-7d47-4c30-9024-b0d0efa09bd7",
-      "isTaxable": true,
-      "itemDiscount": 0.0,
-      "itemTax": 41.25,
       "lineId": 1,
-      "lineItemCost": 500.0,
-      "name": "IPhone",
-      "options": [
-
-      ],
-      "originalOrderItemId": "c851c9d6ec7e44a59101abd2009f6e3e",
-      "productCode": "4044155044140",
+      "originalOrderItemId": "b6675d1058ef4f6aa034aab9011f79c4",
+      "productCode": "sp_01",
       "quantity": 1,
-      "shipping": 0.0,
-      "shippingDiscount": 0.0,
-      "shippingTax": 0.0,
-      "taxableHandling": 0.0,
-      "taxableLineItemCost": 500.0,
-      "taxableShipping": 0.0,
-      "transferQuantity": 0,
-      "unitPrice": 600.0,
-      "upc": "4044155044140",
-      "weight": 1.0,
-      "weightUnit": "lbs",
-      "weightedDutyAdjustment": 0.0,
-      "weightedHandlingAdjustment": 0.0,
-      "weightedHandlingTaxAdjustment": 0.0,
-      "weightedLineItemTaxAdjustment": 0.0,
-      "weightedShipmentAdjustment": 0.0,
-      "weightedShippingAdjustment": 0.0,
-      "weightedShippingTaxAdjustment": 0.0
-    },
-    {
-      "actualPrice": 23.0,
-      "allowsBackOrder": true,
-      "auditInfo": {
-        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "createDate": "2020-06-06T09:42:50.347Z",
-        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-        "updateDate": "2020-06-06T09:51:14.046Z"
-      },
+      "name": "Standard Product - 1",
+      "partNumber": "sp_01",
+      "upc": "sp_01",
+      "unitPrice": 50.0,
+      "isTaxable": false,
+      "actualPrice": 50.0,
+      "itemDiscount": 0.00,
+      "lineItemCost": 50.0,
+      "itemTax": 0.00,
+      "shipping": 0.00,
+      "shippingDiscount": 0.00,
+      "shippingTax": 0.00,
+      "handling": 0.00,
+      "handlingDiscount": 0.00,
+      "handlingTax": 0.00,
       "duty": 0.0,
-      "handling": 0.0,
-      "handlingDiscount": 0.0,
-      "handlingTax": 0.0,
-      "imageUrl": "//d2ybw0k096aut6.cloudfront.net/17215-21153/cms/21153/files/49b45f74-f601-4dd8-862a-6bb826935971",
-      "isTaxable": true,
-      "itemDiscount": 0.0,
-      "itemTax": 1.9,
-      "lineId": 2,
-      "lineItemCost": 23.0,
-      "name": "FIGHT MILK",
-      "options": [
-
-      ],
-      "originalOrderItemId": "4c47aebac6fc4a1cb823abd2009fff1e",
-      "productCode": "FIGHTMULK",
-      "quantity": 1,
-      "shipping": 0.0,
-      "shippingDiscount": 0.0,
-      "shippingTax": 0.0,
-      "taxableHandling": 0.0,
-      "taxableLineItemCost": 23.0,
-      "taxableShipping": 0.0,
-      "transferQuantity": 0,
-      "unitPrice": 23.0,
-      "upc": "FIGHTMULK",
-      "weight": 1.0,
-      "weightUnit": "lbs",
-      "weightedDutyAdjustment": 0.0,
-      "weightedHandlingAdjustment": 0.0,
-      "weightedHandlingTaxAdjustment": 0.0,
-      "weightedLineItemTaxAdjustment": 0.0,
-      "weightedShipmentAdjustment": 0.0,
-      "weightedShippingAdjustment": 0.0,
-      "weightedShippingTaxAdjustment": 0.0
+      "weight": 0.0,
+      "auditInfo": {
+        "createDate": "2019-08-30T17:26:44.556Z"
+      },
+      "options": []
     }
   ],
-  "lineItemSubtotal": 523.0,
-  "lineItemTaxAdjustment": 0.0,
-  "lineItemTaxTotal": 43.15,
-  "lineItemTotal": 566.15,
-  "orderId": "0fdbc25d39fd7f0001db73830000433f",
-  "orderNumber": 3797,
-  "orderSubmitDate": "2020-06-06T09:42:49.935Z",
-  "packages": [
-    {
-      "packageId": "5edb651abb61a4000166df76",
-      "trackingNumbers": [
-
-      ]
-    }
-  ],
-  "reassignedItems": [
-
-  ],
-  "rejectedItems": [
-
-  ],
-  "shipmentAdjustment": 0.0,
-  "shipmentNumber": 15952,
-  "shipmentStatus": "READY",
-  "shipmentType": "BOPIS",
-  "shippingAdjustment": 0.0,
-  "shippingSubtotal": 0.0,
-  "shippingTaxAdjustment": 0.0,
-  "shippingTaxTotal": 0.0,
-  "shippingTotal": 0.0,
-  "siteId": 21153,
-  "tenantId": 17215,
-  "total": 566.15,
-  "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+  "canceledItems": [],
+  "packages": [],
   "workflowState": {
-    "auditInfo": {
-      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-      "createDate": "2020-06-06T09:42:50.475Z",
-      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-      "updateDate": "2020-06-06T09:51:14.045Z"
-    },
-    "processInstanceId": "120357",
-    "shipmentState": "PRE_ACCEPT_SHIPMENT",
+    "shipmentState": "COMPLETED",
     "taskList": [
       {
-        "_links": {
-          "execute": {
-            "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/15952/tasks/Accept%20Shipment/completed"
-          }
-        },
-        "active": true,
-        "completed": false,
-        "description": "Accept shipment",
+        "attributes": {},
+        "name": "Accept Shipment",
+        "subject": "",
         "inputs": [
           {
             "name": "shipmentAccepted",
             "type": "BOOLEAN"
           }
         ],
-        "name": "Accept Shipment",
-        "skippable": false,
-        "subject": "",
-        "taskId": "151373"
+        "active": false,
+        "completed": true,
+        "completedDate": "2019-08-30T18:02:35.913Z"
       },
       {
-        "_links": {
-
-        },
-        "active": false,
-        "completed": false,
-        "inputs": [
-
-        ],
+        "attributes": {},
         "name": "Print Pick List",
-        "subject": ""
+        "subject": "",
+        "inputs": [],
+        "active": false,
+        "completed": true,
+        "completedDate": "2019-08-30T18:02:35.913Z"
       },
       {
-        "_links": {
-
-        },
-        "active": false,
-        "completed": false,
+        "attributes": {},
+        "name": "Validate Items In Stock",
+        "subject": "",
         "inputs": [
-          {
-            "name": "createTransfer",
-            "type": "BOOLEAN"
-          },
           {
             "name": "stockLevel",
             "type": "STRING"
           }
         ],
-        "name": "Validate Items In Stock",
-        "subject": ""
+        "active": false,
+        "completed": true,
+        "completedDate": "2019-08-30T18:02:35.913Z"
       },
       {
-        "_links": {
-
-        },
-        "active": false,
-        "completed": false,
-        "inputs": [
-
-        ],
-        "name": "Wait for Transfer",
-        "subject": ""
-      },
-      {
-        "_links": {
-
-        },
-        "active": false,
-        "completed": false,
+        "attributes": {},
+        "name": "Customer Pickup",
+        "subject": "",
         "inputs": [
           {
             "name": "customerAccepted",
             "type": "BOOLEAN"
           }
         ],
-        "name": "Customer Pickup",
-        "subject": ""
+        "active": false,
+        "completed": true,
+        "completedDate": "2019-08-30T18:02:35.913Z"
       }
-    ]
+    ],
+    "processInstanceId": "2516",
+    "auditInfo": {
+      "updateDate": "2019-08-30T18:02:35.952Z",
+      "createDate": "2019-08-30T17:26:44.583Z"
+    }
+  },
+  "changeMessages": [
+    {
+      "changeMessageId": "5d695c7b3b35f80001c58fb7",
+      "createdDate": "2019-08-30T17:27:23.382Z",
+      "correlationId": "7c47542b5ac542e69ef4c60b153a576e",
+      "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+      "oldValue": "PRE_ACCEPT_SHIPMENT",
+      "newValue": "ACCEPTED_SHIPMENT",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d695c803b35f80001c58fbe",
+      "createdDate": "2019-08-30T17:27:28.350Z",
+      "correlationId": "93b858c11cf740119426af7b67cd7397",
+      "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
+      "oldValue": "ACCEPTED_SHIPMENT",
+      "newValue": "PROCESSING_PICK_LIST",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d695ca33b35f80001c58fcb",
+      "createdDate": "2019-08-30T17:28:03.308Z",
+      "correlationId": "9ead76d824a94c98884219f483c1c36c",
+      "message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
+      "oldValue": "PROCESSING_PICK_LIST",
+      "newValue": "READY_FOR_PICKUP",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f126",
+      "createdDate": "2019-08-30T18:02:35.926Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
+      "oldValue": "READY_FOR_PICKUP",
+      "newValue": "COMPLETED",
+      "subject": "shipmentState",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12c",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
+      "oldValue": "null",
+      "newValue": "2019-08-30T18:02:35.931701Z",
+      "subject": "fulfillmentDate",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12d",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
+      "oldValue": "READY",
+      "newValue": "FULFILLED",
+      "subject": "shipmentStatus",
+      "userId": "12345"
+    },
+    {
+      "changeMessageId": "5d6964bb3b35f80001c5f12e",
+      "createdDate": "2019-08-30T18:02:35.934Z",
+      "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+      "message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
+      "oldValue": "null",
+      "newValue": "Fulfilled",
+      "subject": "fulfillmentStatus",
+      "userId": "12345"
+    }
+  ],
+  "email": "jack_wu@mailtrap.com",
+  "readyForPickup": false,
+  "auditInfo": {
+    "updateDate": "2019-08-30T18:02:35.952Z",
+    "createDate": "2019-08-30T17:26:44.583Z"
+  },
+  "_links": {
+    "self": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944"
+    },
+    "shipments": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
+    },
+    "process": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/processes/shipmentType/BOPIS"
+    },
+    "reject": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",      
+      "method": "PUT"
+    },
+    "cancel": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+      "method": "PUT"
+    },
+    "fulfill": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+      "method": "PUT"
+    },
+    "reassign": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+      "method": "PUT"
+    },
+    "reassignItems": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+      "method": "PUT"
+    },
+    "cancelItems": {
+      "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+      "method": "PUT"
+    }
+  },
+  "storeLocation": {
+    "code": "storelocation1",
+    "locationTypes": [
+      {
+        "code": "storelocationtype1",
+        "name": "Store Location Type1",
+        "auditInfo": {
+          "updateDate": "2016-05-04T20:07:18.859Z",
+          "createDate": "2016-05-04T20:07:18.859Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
+      }
+    ],
+    "name": "Store Location 1",
+    "description": "",
+    "address": {
+      "address1": "1835 Kramer Ln",
+      "address2": "",
+      "address3": "",
+      "address4": "",
+      "cityOrTown": "Austin",
+      "stateOrProvince": "TX",
+      "postalOrZipCode": "78758",
+      "countryCode": "US",
+      "isValidated": false
+    },
+    "geo": {
+      "lat": 30.3871389,
+      "lng": -97.7100097
+    },
+    "phone": "(512) 555-8925",
+    "fax": "",
+    "supportsInventory": true,
+    "fulfillmentTypes": [
+      {
+        "code": "SP",
+        "name": "In Store Pickup"
+      }
+    ],
+    "regularHours": {
+      "sunday": {
+        "label": "9AM-4PM"
+      },
+      "monday": {
+        "label": "9AM-6PM"
+      },
+      "tuesday": {
+        "label": "9AM-6PM"
+      },
+      "wednesday": {
+        "label": "9AM-6PM"
+      },
+      "thursday": {
+        "label": "9AM-6PM"
+      },
+      "friday": {
+        "label": "9AM-6PM"
+      },
+      "saturday": {
+        "label": "9AM-9PM"
+      }
+    },
+    "shippingOriginContact": {
+      "firstName": "a",
+      "middleNameOrInitial": "",
+      "lastNameOrSurname": "b",
+      "companyOrOrganization": "Volusion",
+      "phoneNumber": "6662227878",
+      "email": "ab@volusion.com"
+    },
+    "note": "",
+    "tags": [],
+    "attributes": [],
+    "auditInfo": {
+      "updateDate": "2019-09-03T16:58:16.279Z",
+      "createDate": "2016-05-04T20:27:23.589Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    "allowFulfillmentWithNoStock": false,
+    "isDisabled": false,
+    "express": false,
+    "transferEnabled": false,
+    "includeInInventoryAggregrate": true,
+    "includeInLocationExport": false,
+    "warehouseEnabled": false
   }
 }

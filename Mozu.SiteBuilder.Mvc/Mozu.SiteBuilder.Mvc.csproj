@@ -427,13 +427,14 @@
     <EmbeddedResource Include="TestData\order.smsoptin\Order2.json" />
     <EmbeddedResource Include="TestData\backoffice\Return1.json" />
     <None Include="TestData\refund.created\Refund1.json" />
+    <EmbeddedResource Include="TestData\shipment.curbsideready\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.customeratcurbside\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.customerintransit\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.shopper.itemscancelled\Shipment1.json" />
-    <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Location1.json" />
     <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.curbsideready\Location1.json" />
-    <EmbeddedResource Include="TestData\shipment.curbsideready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Location1.json" />
+    
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />
