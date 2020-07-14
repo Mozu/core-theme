@@ -13,10 +13,10 @@
 <br/>
 
 <p> {{ labels.customerAtCurbsideBlob2|safe }} </p>
-<p> <button class="mz-button mz-button-large mz-btn-curbside" 
-    onclick="location.href = 'http://{{ domainName }}/notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}';"> 
-    {{ labels.Curbsidebtntxt }} </button> </p>
-<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div>
+<p><a class="mz-button mz-btn-curbside" href="//{{ domainName }}/anonymous-notification/curbsideInfo/{{model.shipmentNumber}}/{{model.orderId}}"> 
+        {{ labels.Curbsidebtntxt }} </a>
+      </p>
+    <div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div>
 <br/>
 
 <!--- Order Details --->

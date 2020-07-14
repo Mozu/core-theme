@@ -1,9 +1,6 @@
-{% comment %} message length should not exceed 160 characters {% endcomment %}
-
 {% if model.isShopperCanceled == true %}
-    {{ labels.mobileCurbsideCanceledByShopper}}
+{{labels.mobileCurbsideCanceledByShopper}}
 {% endif %}
-
 {% if model.isShopperCanceled == false %} 
-    {{ labels.mobileCurbsideCanceledByFulfiller}}
+{{labels.mobileCurbsideCanceledByFulfiller}}
 {% endif %}

@@ -1,2 +1,2 @@
 {% comment %} message length should not exceed 160 characters {% endcomment %}
-{{ labels.mobileOrderOptInMessage|safe }}
+{{ labels.mobileShipmentFulfilledMessage|safe }}

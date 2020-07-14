@@ -16,7 +16,7 @@
 <p>{{ labels.curbsidePartialpickuptxt }}</p>
 
 <div> 
-    <a class="mz-button mz-btn-curbside" href="http://{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}"> 
+    <a class="mz-button mz-btn-curbside" href="//{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}"> 
         {{ labels.curbsidePickupreadybtnTxt }} </a>
 </div>
 

@@ -483,5 +483,10 @@
   "mobileCurbsidePartialPickupReady": "Certains articles de votre commande ne sont plus disponibles. Votre commande restante est prête à être récupérée. Vérifiez votre commande sur {0}",
   "mobileCurbsideOrderPickupReady": "Votre commande est prête à être retirée. Vérifiez votre commande sur {0}",
   "mobileCurbsideCanceledByFulfiller": "Malheureusement, les articles que vous avez commandés ne sont plus disponibles et votre commande a été annulée. Veuillez contacter le service client pour plus d'informations.",
-  "mobileCurbsideCanceledByShopper": "Votre commande a été annulée lors de la livraison. Veuillez contacter le magasin pour toute question supplémentaire que vous pourriez avoir."
+  "mobileCurbsideCanceledByShopper": "Votre commande a été annulée lors de la livraison. Veuillez contacter le magasin pour toute question supplémentaire que vous pourriez avoir.",
+  "mobileShipmentFulfilledMessage": "Vielen Dank, Ihre Bestellung ist jetzt abgeschlossen. Bitte kontaktieren Sie den Shop bei weiteren Fragen.",
+  "mobileOrderConfirmationMessage": "Vielen Dank, dass Sie sich für SMS-Benachrichtigungen für Ihre Curbside-Bestellung angemeldet haben. Wir werden Sie benachrichtigen, wenn Ihre Bestellung zur Abholung bereit ist.",
+  "curbsideCustomer": "Le client {0} est en bordure de rue pour la commande n #{1}. Veuillez consulter les informations d'identification du client dans l'écran Fulfiller",
+  "curbsideThanks": "Merci de nous avoir mis à jour. Une fois arrivé, veuillez sélectionner le lien ci-dessous pour fournir à notre équipe des informations supplémentaires",
+  "curbsideCustomerOnTheirWay": "Le client {0} est sur le point de retirer la commande n #{1}"
 }
