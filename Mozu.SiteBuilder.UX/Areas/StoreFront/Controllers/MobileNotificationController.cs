@@ -247,7 +247,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var response = new MobileNotificationResponse
             {
                 Subject = (mobileNotificationTemplate.Title ?? notification.Topic),
-                Body = renderedTemplate
+                Body = renderedTemplate.Trim()
             };
 
             return Request.CreateResponse(HttpStatusCode.OK, response);
