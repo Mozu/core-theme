@@ -67,6 +67,10 @@
         <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
         {% endif %}
 
+        {% if themeSettings.monetateEnabled %}
+            <script async src="//se.monetate.net/js/2/{{themeSettings.monetateAccountNumber}}/{{themeSettings.monetateInstance}}/{{themeSettings.monetateDomain}}/entry.js"></script>
+        {% endif %}
+
         {% if themeSettings.enableRecaptcha %}
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         {% endif %}
