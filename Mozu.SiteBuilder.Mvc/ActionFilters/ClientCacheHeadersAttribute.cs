@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,6 +23,27 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     using System.Text;
 
     using System.Web;
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class AccessAllowOriginFilterAttribute : Attribute, IAsyncActionFilter
+    {
+        public  Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            context.HttpContext.Response.OnStarting(state =>
+            {
+                var ctx = (HttpContext) state;
+                var finder = ctx.RequestServices.GetService<IRequestUrlFinderOuter>();
+                if (finder.IsCdnRequest())
+                {
+                    ctx.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                }
+                return Task.CompletedTask;
+            }, context.HttpContext);
+            return  next();
+        }
+
+    }
+
 
     /// <summary>
     /// TODO: Update summary.

@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     [ForceCDNUseFilter]
     [NoCookieFilter]
+    [AccessAllowOriginFilter]
     public class ResourceController : BaseApiController
     {
         readonly Lazy<IMozuVirtualPathProvider> _pathProvider;

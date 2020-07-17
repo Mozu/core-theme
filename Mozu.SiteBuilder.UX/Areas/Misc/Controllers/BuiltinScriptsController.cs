@@ -8,6 +8,7 @@ using System.IO;
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
 
+    [AccessAllowOriginFilter]
     public class BuiltinScriptsController : BaseApiController
     {
         public BuiltinScriptsController()
