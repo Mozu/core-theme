@@ -450,3 +450,12 @@ table {
 .h2-curbside-order-color {
   color:white;
 }
+
+.location-hours-info {
+  font-weight: bold;
+    padding-bottom: 6px;
+    padding-top: 16px;
+}
+
+
+

@@ -49,6 +49,10 @@
 </div>
 <hr/>
 <br/>
+<div class="location-hours-info">{{labels.locationHoursText }} </div>
+    {% block location-hours %}
+            {% include "email/location-hours" location=model.storeLocation.regularHours %}
+    {% endblock location-hours %}
 
 <!--- Item Details --->
 <p>{{ labels.curbsidePickupReadyBlob|safe }}</p>

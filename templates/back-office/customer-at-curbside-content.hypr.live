@@ -80,4 +80,9 @@
 		<div> {{ model.location.address.cityOrTown }}, {{ model.location.address.stateOrProvince }} {{ model.location.address.postalOrZipCode }} </div>
 		<div> {{ model.location.phone }}</div>
     </div>
+
+    <div class="location-hours-info">{{labels.locationHoursText }} </div>
+    {% block location-hours %}
+            {% include "back-office/location-hours" location=model.location.regularHours %}
+    {% endblock location-hours %}
 </div>
