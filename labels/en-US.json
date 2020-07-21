@@ -655,5 +655,9 @@
   "locationHoursClosed": "Closed",
   "locationWeekDays": "Week Days",
   "locationOpenTime": "Open Time",
-  "locationCloseTime": "Close Time"
+  "locationCloseTime": "Close Time",
+  "curbsideItemCanclledBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. <br/><br/><strong> Unfortunately, the items you ordered are currently OUT OF STOCK. Therefore, the order was  cancelled.</strong> <br/> <br/> Please check back at a future date for item availability.",
+  "curbsideItemCanceldedHeaderBlob": "SORRY! YOUR ITEMS ARE OUT OF STOCK",
+  "curbsideorderConfiramtionBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your order was received and is being prepared. If you would like to view or manage your order, please visit <a href=\"//{1}/myaccount\">My Account</a>.",
+  "curbsideOrderConfirmationtxt": "THANK YOU FOR YOUR ORDER!"
 }
