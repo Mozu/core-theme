@@ -488,5 +488,6 @@
   "mobileOrderConfirmationMessage": "Vielen Dank, dass Sie sich für SMS-Benachrichtigungen für Ihre Curbside-Bestellung angemeldet haben. Wir werden Sie benachrichtigen, wenn Ihre Bestellung zur Abholung bereit ist.",
   "curbsideCustomer": "Le client {0} est en bordure de rue pour la commande n #{1}. Veuillez consulter les informations d'identification du client dans l'écran Fulfiller",
   "curbsideThanks": "Merci de nous avoir mis à jour. Une fois arrivé, veuillez sélectionner le lien ci-dessous pour fournir à notre équipe des informations supplémentaires",
-  "curbsideCustomerOnTheirWay": "Le client {0} est sur le point de retirer la commande n #{1}"
+  "curbsideCustomerOnTheirWay": "Le client {0} est sur le point de retirer la commande n #{1}",
+  "orderCompleteBlob": "IHRE BESTELLUNG IST ABGESCHLOSSEN!"
 }

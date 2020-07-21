@@ -650,5 +650,6 @@
   "mobileCurbsideCanceledByFulfiller": "Unfortunately the items you ordered are no longer available and your order has been cancelled. Please reach out to customer service for additional information.",
   "mobileCurbsideCanceledByShopper": "Your order has been cancelled during delivery. Please contact the store with any additional questions you may have.",
   "mobileShipmentFulfilledMessage": "Thank you, your order is now complete. Please contact the store with any additional questions you may have.",
-  "mobileOrderConfirmationMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup."
+  "mobileOrderConfirmationMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order if ready for pickup.",
+  "orderCompleteBlob": "YOUR ORDER IS COMPLETE!"
 }
