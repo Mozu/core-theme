@@ -4,7 +4,7 @@
 
 <!--- Header --->
 <div class="mz-curbside-email-header">  
-  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
   <div class="mz-curbside-header-body">
     <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
     <h3>{{ labels.curbsidePartialPickupTitle }}</h3>
