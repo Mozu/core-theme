@@ -2,7 +2,7 @@
 
 {% block body-content %}
     <br>
-    {% if model.items.0.fulfillmentMethod|lower == "curbside" %}
+    {% if model.isCurbside == true %}
                     <!--- Header --->
             <div class="mz-curbside-email-header">  
             <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
@@ -31,17 +31,17 @@
                     <strong>{{ labels.storeDetails }}</strong>
                 </div>
                 <div>
-                    <div> {{ labels.storeLocation }} : {{ model.storeLocation.name }}</div>
-                    <div> {{ model.storeLocation.address.address1 }} </div>
-                    <div> {{ model.storeLocation.address.cityOrTown }}, {{ model.storeLocation.address.stateOrProvince }}, {{ model.storeLocation.address.postalOrZipCode }} </div>
-                    <div> {{ model.storeLocation.phone }}</div>
+                    <div> {{ labels.storeLocation }} : {{ model.locations.0.name }}</div>
+                    <div> {{ model.locations.0.address.address1 }} </div>
+                    <div> {{ model.locations.0.address.cityOrTown }}, {{ model.locations.0.address.stateOrProvince }}, {{ model.locations.0.address.postalOrZipCode }} </div>
+                    <div> {{ model.locations.0.phone }}</div>
                 </div>
             </div>
             <hr/>
             <br/>
             <div class="location-hours-info">{{labels.locationHoursText }} </div>
                 {% block location-hours %}
-                        {% include "email/location-hours" location=model.storeLocation.regularHours %}
+                        {% include "email/location-hours" location=model.locations.0.regularHours %}
                 {% endblock location-hours %}
 
             <!--- Item Details --->
@@ -78,7 +78,7 @@
                 </tr>
                 <tr bgcolor="#666666">
                 <td></td>
-                <td style="text-align: right;"><font color="#FFFFFF">{{ labels.orderTotal }} : <span class="mz-item-price">{% filter currency %} {{ model.subtotal|add(model.taxTotal) }} {% endfilter %}</span></font></td>
+                <td style="text-align: right;"><font color="#FFFFFF">{{ labels.orderTotal }} : <span class="mz-item-price">{% filter currency %} {{ model.total }} {% endfilter %}</span></font></td>
                 </tr>
             </tbody>
             </table>
