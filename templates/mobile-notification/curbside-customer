@@ -1,1 +1,0 @@
-{{ labels.curbsideCustomerOntheirWay|string_format(customerName, model.orderNumber)|safe  }}
