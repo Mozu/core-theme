@@ -1,0 +1,125 @@
+<table class="mz-ordersummary">
+        <thead>
+            <tr>
+                 <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.locationWeekDays }}</td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.locationOpenTime }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.locationCloseTime }}</font></td>
+            </tr>
+        </thead>
+		<tbody>
+            <tr>
+                <td> {{ labels.sunday }}:</td>
+                <td>{% if location.sunday.isClosed==false %} 
+                {{ location.sunday.openTime }} 
+                {% endif %}
+                {% if location.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.sunday.isClosed==false %} 
+                {{ location.sunday.closeTime }} 
+                {% endif %}
+                {% if location.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+            </tr>
+            <tr>
+                <td> {{ labels.monday }}:</td>
+                <td>{% if location.monday.isClosed==false %} 
+                {{ location.monday.openTime }} 
+                {% endif %}
+                {% if location.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.monday.isClosed==false %} 
+                {{ location.monday.closeTime }} 
+                {% endif %}
+                {% if location.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+            </tr>
+            <tr>
+                <td> {{ labels.tuesday }}:</td>
+                <td>{% if location.tuesday.isClosed==false %} 
+                {{ location.tuesday.openTime }} 
+                {% endif %}
+                {% if location.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.tuesday.isClosed==false %} 
+                {{ location.tuesday.closeTime }} 
+                {% endif %}
+                {% if location.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.wednesday }}:</td>
+                <td>{% if location.wednesday.isClosed==false %} 
+                {{ location.wednesday.openTime }} 
+                {% endif %}
+                {% if location.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.wednesday.isClosed==false %} 
+                {{ location.wednesday.closeTime }} 
+                {% endif %}
+                {% if location.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.thursday }}:</td>
+                <td>{% if location.thursday.isClosed==false %} 
+                {{ location.thursday.openTime }} 
+                {% endif %}
+                {% if location.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.thursday.isClosed==false %} 
+                {{ location.thursday.closeTime }} 
+                {% endif %}
+                {% if location.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.friday }}:</td>
+                <td>{% if location.friday.isClosed==false %} 
+                {{ location.friday.openTime }} 
+                {% endif %}
+                {% if location.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.friday.isClosed==false %} 
+                {{ location.friday.closeTime }} 
+                {% endif %}
+                {% if location.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.saturday }}:</td>
+                <td>{% if location.saturday.isClosed==false %} 
+                {{ location.saturday.openTime }} 
+                {% endif %}
+                {% if location.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.saturday.isClosed==false %} 
+                {{ location.saturday.closeTime }} 
+                {% endif %}
+                {% if location.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>    
+		</tbody>
+    </table>

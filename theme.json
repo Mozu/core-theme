@@ -231,10 +231,10 @@
       "title": "Shipment Assignment"
     },
     {
-      "id": "shipment.customeratcurbside",
+      "id": "shipment.intransitconfirmation",
       "properties": {},
-      "template": "email/customer-at-curbside",
-      "title": "Customer At Curbside"
+      "template": "email/curbside-confirmation",
+      "title": "Customer In Transit Confirmation"
     },
     {
       "id": "shipment.curbsideready",

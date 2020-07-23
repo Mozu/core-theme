@@ -40,7 +40,14 @@
 		<div> {{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }} {{ location.address.postalOrZipCode }} </div>
 		<div> {{ location.phone }}</div>
     </div>
+<div>
+<div class="location-hours-info">{{labels.locationHoursText }} </div>
+{% block location-hours %}
+            {% include "back-office/location-hours" location=location.regularHours %}
+{% endblock location-hours %}
 </div>
+</div>
+
 
 <tbody><tr><td colspan="4">
     <div class="shipment-item-info">{{ labels.curbsideItemInfo }}</div>

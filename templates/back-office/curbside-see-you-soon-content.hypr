@@ -33,7 +33,9 @@
     </div>
 
     <hr>
-
-    
+<div class="location-hours-info">{{labels.locationHoursText }} </div>
+    {% block location-hours %}
+            {% include "back-office/location-hours" location=location.regularHours %}
+    {% endblock location-hours %}  
 </div>
 
