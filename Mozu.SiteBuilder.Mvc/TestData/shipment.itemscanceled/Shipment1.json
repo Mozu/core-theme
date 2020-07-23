@@ -7,7 +7,7 @@
 	"tenantId": 17215,
 	"siteId": 21153,
 	"fulfillmentDate": "2019-08-30T18:02:35.931Z",
-	"shipmentType": "BOPIS",
+	"shipmentType": "Curbside",
 	"shipmentStatus": "FULFILLED",
 	"fulfillmentStatus": "Fulfilled",
 	"fulfillmentLocationCode": "sp_1",
@@ -278,7 +278,7 @@
 			"lat": 30.3871389,
 			"lng": -97.7100097
 		},
-		"phone": "",
+		"phone": "(512) 555-8925",
 		"fax": "",
 		"supportsInventory": true,
 		"fulfillmentTypes": [
@@ -289,25 +289,47 @@
 		],
 		"regularHours": {
 			"sunday": {
-				"label": "9AM-4PM"
+
+				"label": "9AM-4PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": true
 			},
 			"monday": {
-				"label": "9AM-6PM"
+				"label": "9AM-6PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": false
 			},
 			"tuesday": {
-				"label": "9AM-6PM"
+				"label": "9AM-6PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": false
 			},
 			"wednesday": {
-				"label": "9AM-6PM"
+				"label": "9AM-6PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": false
 			},
 			"thursday": {
-				"label": "9AM-6PM"
+				"label": "9AM-6PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": false
 			},
 			"friday": {
-				"label": "9AM-6PM"
+				"label": "9AM-6PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": false
 			},
 			"saturday": {
-				"label": "9AM-9PM"
+				"label": "9AM-9PM",
+				"closeTime": "10:00",
+				"openTime": "03:30",
+				"isClosed": true
 			}
 		},
 		"shippingOriginContact": {

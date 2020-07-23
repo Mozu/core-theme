@@ -64,6 +64,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     
     public class OrderEmail : Order {
         public List<Location.Contracts.Location> Locations { get; set; }
+        public bool IsCurbside { get; set; }
+
     }
 
     [ContextInitialization]
@@ -544,7 +546,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                
             if (obj is OrderEmail orderEmail)
             {
-                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
+                orderEmail.IsCurbside = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode)).All(a => string.Equals(a.FulfillmentMethod, CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE, StringComparison.OrdinalIgnoreCase));
+                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod.In(CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP, CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE)).Select(x => $"code eq {x.FulfillmentLocationCode}");
                 if (locations.SafeAny())
                 {
                     var filter = locations.Aggregate((x, y) => x + " or " + y);

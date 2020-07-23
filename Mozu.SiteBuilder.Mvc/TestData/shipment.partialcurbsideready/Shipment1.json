@@ -301,25 +301,47 @@
     ],
     "regularHours": {
       "sunday": {
-        "label": "9AM-4PM"
+
+        "label": "9AM-4PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": true
       },
       "monday": {
-        "label": "9AM-6PM"
+        "label": "9AM-6PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": false
       },
       "tuesday": {
-        "label": "9AM-6PM"
+        "label": "9AM-6PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": false
       },
       "wednesday": {
-        "label": "9AM-6PM"
+        "label": "9AM-6PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": false
       },
       "thursday": {
-        "label": "9AM-6PM"
+        "label": "9AM-6PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": false
       },
       "friday": {
-        "label": "9AM-6PM"
+        "label": "9AM-6PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": false
       },
       "saturday": {
-        "label": "9AM-9PM"
+        "label": "9AM-9PM",
+        "closeTime": "10:00",
+        "openTime": "03:30",
+        "isClosed": true
       }
     },
     "shippingOriginContact": {
