@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpPost]
         [AcceptHeader("application/json", true)]
-        public async Task<ActionResult<CurbsideInfo>> SaveCurbsideInfo(CurbsideInfo curbsideInfo)
+        public async Task<ActionResult<CurbsideInfo>> SaveCurbsideInfo([FromBody]CurbsideInfo curbsideInfo)
         {
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(curbsideInfo.ShipmentNumber)).ReadAsSync();
 

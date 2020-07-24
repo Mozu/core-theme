@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Render(SmsNotification notification)
+        public async Task<IActionResult> Render([FromBody]SmsNotification notification)
         {
             
             User user = null;
@@ -272,13 +272,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return String.Empty;
             }
 
-
-
-            ViewData["model"] = model;
+            ViewData.Model = model;
             ViewData["User"] = user;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
-        
+           // ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
             var context = new HyprViewContext(HttpContext, ViewData);
             return await Render(view, context);

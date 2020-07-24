@@ -61,7 +61,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class ShipmentEmail : Shipment
     {
-        public int? ShipmentNumber { get; set; }
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
     }
@@ -318,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Render(EmailNotification notification)
+        public async Task<IActionResult> Render([FromBody]EmailNotification notification)
         {
             User user = null;
             var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
@@ -417,20 +416,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return string.Empty;
             }
 
+            ViewData.Model = model;
+            ViewData["content"] = cmdContent;
+            ViewData["User"] = user;
+            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
-
-            var vdd = new ViewDataDictionary(null)
-            {
-                ["model"] = model,
-                ["content"] = cmdContent,
-                ["User"] = user,
-                ["rmaLocation"] = await GetDefaultReturnLocation(),
-                ["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(),
-
-                ["storefrontOrderAttributes"] = await GetShopperOrderAttributes()
-            };
-
-            var context = new HyprViewContext(Request.HttpContext, vdd);
+            var context = new HyprViewContext(Request.HttpContext, ViewData);
             return await Render(view, context);
         }
 
