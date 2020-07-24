@@ -71,16 +71,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-<<<<<<< HEAD
         public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger<BackOfficeController> logger,
-            Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient shipmentControllerApiClient,
-=======
-        /// 
-        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger,
-            IFulfillmentProxyWebApiClient fulfillmentProxyClient,
->>>>>>> feature/sitebuilder-storefront
+            IShipmentControllerApiClient shipmentControllerApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
-            Kibo.Fulfillment.Contracts.Api.IPickWaveControllerApiClient  pickWaveControllerApiClient,
+            IPickWaveControllerApiClient pickWaveControllerApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
             IReturnWebApiClient returnWebApiClient,
@@ -390,8 +384,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> OrderPickSheets(int pickWaveNumber)
         {
-            var fulfillmentProxyClient = _pickWaveControllerApiClient.CloneWithoutUserClaims();
-            var pickWave = (await fulfillmentProxyClient.GetPickWaveUsingGET(pickWaveNumber)).ReadAsAsync().Result;
+            var pickWaveControllerApiClient = _pickWaveControllerApiClient.CloneWithoutUserClaims();
+            var pickWave = (await pickWaveControllerApiClient.GetPickWaveUsingGET(pickWaveNumber)).ReadAsAsync().Result;
             ViewData["pickwave"] = pickWave;
 
             var shipments = new List<DCShipment>();
@@ -453,7 +447,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> ReturnReceipt(string orderId , string returnId, [FromUri(Name = "t")]string token = null)
+        public async Task<IActionResult> ReturnReceipt(string orderId , string returnId, [FromQuery(Name = "t")]string token = null)
         {
             DCReturns.Return returnObject = (await this._returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
             if (returnObject.Status != DCReturns.Return.ReturnStatusConst.CLOSED &&
@@ -461,12 +455,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 (returnObject.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.PARTIALLY_RECEIVED && returnObject.RefundStatus != DCReturns.Return.RefundStatusConst.PARTIALLY_REFUNDED))
                 )
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Return Receipt can not be generated for a return which is not processed");
+                return NotFound("Return Receipt can not be generated for a return which is not processed");
             }
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("return-receipt"));
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find return receipt template for the current Theme.");
+                return NotFound("Could not find return receipt template for the current Theme.");
             }
             return await RenderWithContext(template, returnObject);
         }

@@ -206,38 +206,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-<<<<<<< HEAD
-            var shipment = model as Shipment;
-
-            ShipmentNotification notificationModel = new ShipmentNotification();
-            notificationModel.StoreId = shipment.FulfillmentLocationCode;
-
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
-            var kuttServerUrl = "http://" + _settings.AppSettings(KUTTIT_DEFAULT_DOMAIN_CONFIG);
-            var kuttApi = new KuttApiV2(_settings.AppSettings(KUTTIT_API_KEY_CONFIG), kuttServerUrl);
-            var kuttCustomDomain = _settings.AppSettings(KUTTIT_CUSTOM_DOMAIN_CONFIG);
-
-            if (shipment != null)
-            {
-                var domainName = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-                var fulfillerUrl = $"http://{domainName}/{FULFILLER_URL_FRAGMENT}/{shipment.ShipmentType}/{shipment.Number}";
-                var shipmentUrl = $"http://{domainName}/{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_URL_FRAGMENT}/{shipment.Number}/{shipment.OrderId}";
-
-                var shipmentLink = await kuttApi.CreateLinkAsync(shipmentUrl, reuse: true, domain: kuttCustomDomain);
-                var fullfillerLink = await kuttApi.CreateLinkAsync(fulfillerUrl, reuse: true, domain: kuttCustomDomain);
-
-                notificationModel.ShipmentUrl = shipmentLink.Link;
-                notificationModel.FulfillerUrl = fullfillerLink.Link;
-                notificationModel.ShipmentType = shipment.ShipmentType;
-            }
-            else
-            {
-                return StatusCode(501);
-            }
-            return  View(mobileNotificationTemplate.Template, notificationModel);
-=======
-            return Request.CreateResponse(HttpStatusCode.OK, View(mobileNotificationTemplate.Template, model));
->>>>>>> feature/sitebuilder-storefront
+            return View(mobileNotificationTemplate.Template, model);
         }
 
         [HttpPost]

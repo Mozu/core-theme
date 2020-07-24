@@ -21,29 +21,23 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Kibo.Fulfillment.Contracts.Api;
 using Microsoft.AspNetCore.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionConstraints;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class AnonymousNotificationController : BaseApiController
     {
-<<<<<<< HEAD
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
-
-        public AnonymousNotificationController( Kibo.Fulfillment.Contracts.Api.IShipmentControllerApiClient  shipmentControllerApiClient)
-        {
-            _shipmentControllerApiClient = shipmentControllerApiClient;
-=======
-        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ISitesWebApiClient _sitesWebApiClient;
-        public AnonymousNotificationController(IFulfillmentProxyWebApiClient fulfillmentProxyClient,
+
+        public AnonymousNotificationController(IShipmentControllerApiClient shipmentControllerApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ISitesWebApiClient sitesWebApiClient)
         {
-            _fulfillmentProxyClient = fulfillmentProxyClient;
+            _shipmentControllerApiClient = shipmentControllerApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient;
             _sitesWebApiClient = sitesWebApiClient;
->>>>>>> feature/sitebuilder-storefront
         }
 
         [HttpGet]
@@ -69,19 +63,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> RenderCurbsideArriveView(int shipmentNumber, string orderId)
+        public async Task<IActionResult> RenderCurbsideArriveView(int shipmentNumber, string orderId)
         {
-            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
             var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
 
             if (shipment == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (shipment.OrderId != orderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-arrive"));
 
@@ -89,29 +83,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find curbside-arrive template for the current Theme.");
+                return NotFound("Could not find curbside-arrive template for the current Theme.");
             }
 
             ViewData["location"] = location;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(); 
 
-            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
+            return View(template.Template, shipment);
         }
 
 
         [HttpGet]
-        public async Task<HttpResponseMessage> GetCurbsideInfo(int shipmentNumber, string orderId)
+        public async Task<IActionResult> GetCurbsideInfo(int shipmentNumber, string orderId)
         {
-            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (shipment == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (shipment.OrderId != orderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
 
             CurbsideInfo curbsideInfo = new CurbsideInfo
@@ -140,24 +134,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("customer-at-curbside"));
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find customer-at-curbside template for the current Theme.");
+                return NotFound("Could not find customer-at-curbside template for the current Theme.");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, curbsideInfo));
+            return View(template.Template, curbsideInfo);
         }
 
         [HttpPost]
-        public async Task<CurbsideInfo> SaveCurbsideInfo(CurbsideInfo curbsideInfo)
+        [AcceptHeader("application/json", true)]
+        public async Task<ActionResult<CurbsideInfo>> SaveCurbsideInfo(CurbsideInfo curbsideInfo)
         {
-            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(curbsideInfo.ShipmentNumber)).ReadAsSync();
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(curbsideInfo.ShipmentNumber)).ReadAsSync();
 
             if (shipment == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (shipment.OrderId != curbsideInfo.OrderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
 
             //Get store info
@@ -173,29 +168,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             curbsideInfo.QRCode = GetQRCode(qrCodeinfo.ToString());
 
             //Update curbside info on shipment model and Publish Curbside Event
-            var jObject = JObject.FromObject(curbsideInfo.CurbsideFormData.ToDictionary(k => k.Key, v => v.Value));
-            (await _fulfillmentProxyClient.CloneWithoutUserClaims().CustomerAtCurbside(curbsideInfo.ShipmentNumber, jObject)).ReadAsSync();
+            var curbsideDict = curbsideInfo.CurbsideFormData.ToDictionary(k => k.Key, v => (object)v.Value);
+            (await _shipmentControllerApiClient.CloneWithoutUserClaims().CustomerAtCurbsideUsingPUT(curbsideDict, curbsideInfo.ShipmentNumber)).ReadAsSync();
 
             return curbsideInfo;
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> CustomerInTransit(int shipmentNumber, string orderId)
+        public async Task<IActionResult> CustomerInTransit(int shipmentNumber, string orderId)
         {
-            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (shipment == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (shipment.OrderId != orderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
 
             //publish fulfillment customer intrasit and intransit confirmation curside event
-            await _fulfillmentProxyClient.CloneWithoutUserClaims().CustomerInTransit(shipmentNumber);
+            await _shipmentControllerApiClient.CloneWithoutUserClaims().CustomerInTransitUsingPUT(shipmentNumber);
 
             var location = await GetLocation(shipment.FulfillmentLocationCode);
 
@@ -203,27 +198,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find see you soon curside template for the current Theme.");
+                return NotFound("Could not find see you soon curside template for the current Theme.");
             }
 
             ViewData["location"] = location;
-            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
+            return View(template.Template, shipment);
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> CurbSideShipmentReadyView(int shipmentNumber, string orderId)
+        public async Task<IActionResult> CurbSideShipmentReadyView(int shipmentNumber, string orderId)
         {
-            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
             var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
 
             if (shipment == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             if (shipment.OrderId != orderId)
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
+                return StatusCode(401);
             }
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-shipment-ready"));
 
@@ -231,13 +226,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (template == null)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find curbside-shipment-ready template for the current Theme.");
+                return NotFound("Could not find curbside-shipment-ready template for the current Theme.");
             }
 
             ViewData["location"] = location;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
-            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, shipment));
+            return View(template.Template, shipment);
         }
         private async Task<Location.Contracts.Location> GetLocation(string locationCode)
         {

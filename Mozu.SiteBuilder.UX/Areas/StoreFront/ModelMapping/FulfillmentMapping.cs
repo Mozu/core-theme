@@ -11,13 +11,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
     {
         public FulfillmentMapping()
         {
-<<<<<<< HEAD
-            CreateMap<F.ResourceOfShipment, CR.Shipment>()
-                .ForMember(dest => dest.Number, op => op.MapFrom(src => src.ShipmentNumber))
-=======
             CreateMap<F.EntityModelOfShipment, CR.Shipment>()
-                .ForMember(dest => dest.Number, op => op.ResolveUsing(src => src.ShipmentNumber))
->>>>>>> feature/sitebuilder-storefront
+                .ForMember(dest => dest.Number, op => op.MapFrom(src => src.ShipmentNumber))
                 .ForMember(dest => dest.Data, op =>
                 {
                     op.PreCondition(src => src.Data != null);
