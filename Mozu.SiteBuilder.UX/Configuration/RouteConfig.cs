@@ -205,8 +205,17 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "TransferPackingSlip" },
                 _constraintResolver);
 
+<<<<<<< HEAD
             routes.MapRoute(_defaultHandler,
                "pick wave (back office)",
+=======
+            routes.MapHttpRoute(
+                "Return Receipt (back office)",
+                "back-office/return-receipt/{orderId}/{returnId}",
+                new { controller = "BackOffice", action = "ReturnReceipt" });
+            routes.MapHttpRoute(
+                "pick wave (back office)",
+>>>>>>> feature/sitebuilder-storefront
                 "back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}",
                 new { controller = "BackOffice", action = "PickWave" },
                 _constraintResolver);
@@ -306,13 +315,55 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "MyAnonymousAccount", action = "Index" },
 				_constraintResolver);
 
+<<<<<<< HEAD
             routes.MapRoute(_defaultHandler,
+=======
+            routes.MapHttpRoute(
+              "Anonymous Curbside View",
+              "anonymous-notification/curbsideArrive/{shipmentNumber}/{orderId}",
+              new { controller = "AnonymousNotification", action = "RenderCurbsideArriveView" });
+
+            routes.MapHttpRoute(
+              "Anonymous Curbside Shipment Ready View",
+              "anonymous-notification/curbsideShipmentReady/{shipmentNumber}/{orderId}",
+              new { controller = "AnonymousNotification", action = "CurbSideShipmentReadyView" });
+
+            routes.MapHttpRoute(
+>>>>>>> feature/sitebuilder-storefront
                "Anonymous Shipment View",
                "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
                new { controller = "AnonymousNotification", action = "RenderShipmentView" },
                _constraintResolver);
 
+<<<<<<< HEAD
             routes.MapRoute(_defaultHandler,
+=======
+            
+
+            routes.MapHttpRoute(
+               "Anonymous Publish Curbside Event",
+               "user/publish-curbside-event",
+               new { controller = "AnonymousNotification", action = "PublishCurbsideEvent" },
+               new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+                "Anonymous CurbsideInfo View",
+                "anonymous-notification/curbsideInfo/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "GetCurbsideInfo" });
+
+            routes.MapHttpRoute(
+              "Anonymous Save Curbside Info",
+              "user/save-curbside-info",
+              new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
+              new { acceptConstraint = new AcceptConstraint("application/json", true) });
+
+            routes.MapHttpRoute(
+               "Anonymous I am on My Way Endpoint",
+               "anonymous-notification/customerintransit/{shipmentNumber}/{orderId}",
+               new { controller = "AnonymousNotification", action = "CustomerInTransit" });
+
+            routes.MapHttpRoute(
+>>>>>>> feature/sitebuilder-storefront
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" },

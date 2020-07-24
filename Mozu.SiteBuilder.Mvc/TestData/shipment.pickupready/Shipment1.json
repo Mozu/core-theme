@@ -1,337 +1,337 @@
 {
-	  "shipmentNumber": 944,
-	  "orderId": "0e69ba3e34ee670001515a160000433f",
-	  "orderNumber": 947,
-	  "orderSubmitDate": "2019-08-30T17:26:44.391Z",
-	  "customerAccountId": 1005,
-	  "tenantId": 17215,
-	  "siteId": 21153,
-	  "fulfillmentDate": "2019-08-30T18:02:35.931Z",
-	  "shipmentType": "BOPIS",
-	  "shipmentStatus": "FULFILLED",
-	  "fulfillmentStatus": "Fulfilled",
-	  "fulfillmentLocationCode": "sp_1",
-	  "cost": 0.0,
-	  "shipmentAdjustment": 0.0,
-	  "lineItemSubtotal": 50.00,
-	  "lineItemTaxAdjustment": 0.0,
-	  "lineItemTaxTotal": 0.00,
-	  "lineItemTotal": 50.00,
-	  "shippingAdjustment": 0.0,
-	  "shippingSubtotal": 0.00,
-	  "shippingTaxAdjustment": 0.0,
-	  "shippingTaxTotal": 0.00,
-	  "shippingTotal": 0.00,
-	  "handlingAdjustment": 0.0,
-	  "handlingSubtotal": 0.00,
-	  "handlingTaxAdjustment": 0.0,
-	  "handlingTaxTotal": 0.00,
-	  "handlingTotal": 0.00,
-	  "dutyAdjustment": 0.0,
-	  "dutyTotal": 0.0,
-	  "total": 50.00,
-	  "currencyCode": "USD",
-	  "destination": {},
-	  "destinationContact": {},
-	  "originContact": {},
-	  "trackingNumbers": [],
-	  "items": [
-	      {
-	          "lineId": 1,
-	          "originalOrderItemId": "b6675d1058ef4f6aa034aab9011f79c4",
-	          "productCode": "sp_01",
-	          "quantity": 1,
-	          "name": "Standard Product - 1",
-	          "partNumber": "sp_01",
-	          "upc": "sp_01",
-	          "unitPrice": 50.0,
-	          "isTaxable": false,
-	          "actualPrice": 50.0,
-	          "itemDiscount": 0.00,
-	          "lineItemCost": 50.0,
-	          "itemTax": 0.00,
-	          "shipping": 0.00,
-	          "shippingDiscount": 0.00,
-	          "shippingTax": 0.00,
-	          "handling": 0.00,
-	          "handlingDiscount": 0.00,
-	          "handlingTax": 0.00,
-	          "duty": 0.0,
-	          "weight": 0.0,
-	          "auditInfo": {
-	              "createDate": "2019-08-30T17:26:44.556Z"
-	          },
-	          "options": []
-	      }
-	  ],
-	  "canceledItems": [],
-	  "packages": [],
-	  "workflowState": {
-	      "shipmentState": "COMPLETED",
-	      "taskList": [
-	          {
-	              "attributes": {},
-	              "name": "Accept Shipment",
-	              "subject": "",
-	              "inputs": [
-	                  {
-	                      "name": "shipmentAccepted",
-	                      "type": "BOOLEAN"
-	                  }
-	              ],
-	              "active": false,
-	              "completed": true,
-	              "completedDate": "2019-08-30T18:02:35.913Z"
-	          },
-	          {
-	              "attributes": {},
-	              "name": "Print Pick List",
-	              "subject": "",
-	              "inputs": [],
-	              "active": false,
-	              "completed": true,
-	              "completedDate": "2019-08-30T18:02:35.913Z"
-	          },
-	          {
-	              "attributes": {},
-	              "name": "Validate Items In Stock",
-	              "subject": "",
-	              "inputs": [
-	                  {
-	                      "name": "stockLevel",
-	                      "type": "STRING"
-	                  }
-	              ],
-	              "active": false,
-	              "completed": true,
-	              "completedDate": "2019-08-30T18:02:35.913Z"
-	          },
-	          {
-	              "attributes": {},
-	              "name": "Customer Pickup",
-	              "subject": "",
-	              "inputs": [
-	                  {
-	                      "name": "customerAccepted",
-	                      "type": "BOOLEAN"
-	                  }
-	              ],
-	              "active": false,
-	              "completed": true,
-	              "completedDate": "2019-08-30T18:02:35.913Z"
-	          }
-	      ],
-	      "processInstanceId": "2516",
-	      "auditInfo": {
-	          "updateDate": "2019-08-30T18:02:35.952Z",
-	          "createDate": "2019-08-30T17:26:44.583Z"
-	      }
-	  },
-	  "changeMessages": [
-	      {
-	          "changeMessageId": "5d695c7b3b35f80001c58fb7",
-	          "createdDate": "2019-08-30T17:27:23.382Z",
-	          "correlationId": "7c47542b5ac542e69ef4c60b153a576e",
-	          "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
-	          "oldValue": "PRE_ACCEPT_SHIPMENT",
-	          "newValue": "ACCEPTED_SHIPMENT",
-	          "subject": "shipmentState",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d695c803b35f80001c58fbe",
-	          "createdDate": "2019-08-30T17:27:28.350Z",
-	          "correlationId": "93b858c11cf740119426af7b67cd7397",
-	          "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
-	          "oldValue": "ACCEPTED_SHIPMENT",
-	          "newValue": "PROCESSING_PICK_LIST",
-	          "subject": "shipmentState",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d695ca33b35f80001c58fcb",
-	          "createdDate": "2019-08-30T17:28:03.308Z",
-	          "correlationId": "9ead76d824a94c98884219f483c1c36c",
-	          "message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
-	          "oldValue": "PROCESSING_PICK_LIST",
-	          "newValue": "READY_FOR_PICKUP",
-	          "subject": "shipmentState",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d6964bb3b35f80001c5f126",
-	          "createdDate": "2019-08-30T18:02:35.926Z",
-	          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
-	          "message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
-	          "oldValue": "READY_FOR_PICKUP",
-	          "newValue": "COMPLETED",
-	          "subject": "shipmentState",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d6964bb3b35f80001c5f12c",
-	          "createdDate": "2019-08-30T18:02:35.934Z",
-	          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
-	          "message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
-	          "oldValue": "null",
-	          "newValue": "2019-08-30T18:02:35.931701Z",
-	          "subject": "fulfillmentDate",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d6964bb3b35f80001c5f12d",
-	          "createdDate": "2019-08-30T18:02:35.934Z",
-	          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
-	          "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
-	          "oldValue": "READY",
-	          "newValue": "FULFILLED",
-	          "subject": "shipmentStatus",
-	          "userId": "12345"
-	      },
-	      {
-	          "changeMessageId": "5d6964bb3b35f80001c5f12e",
-	          "createdDate": "2019-08-30T18:02:35.934Z",
-	          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
-	          "message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
-	          "oldValue": "null",
-	          "newValue": "Fulfilled",
-	          "subject": "fulfillmentStatus",
-	          "userId": "12345"
-	      }
-	  ],
-	  "email": "jack_wu@mailtrap.com",
-	  "readyForPickup": false,
-	  "auditInfo": {
-	      "updateDate": "2019-08-30T18:02:35.952Z",
-	      "createDate": "2019-08-30T17:26:44.583Z"
-	  },
-	  "_links": {
-	      "self": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944"
-	      },
-	      "shipments": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
-	      },
-	      "process": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/processes/shipmentType/BOPIS"
-	      },
-	      "reject": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
-	          "method": "PUT"
-	      },
-	      "cancel": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
-	          "method": "PUT"
-	      },
-	      "fulfill": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
-	          "method": "PUT"
-	      },
-	      "reassign": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
-	          "method": "PUT"
-	      },
-	      "reassignItems": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
-	          "method": "PUT"
-	      },
-	      "cancelItems": {
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
-	          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
-	          "method": "PUT"
-	      }
-	  },
-		"storeLocation":{
-		  "code": "storelocation1",
-		  "locationTypes": [
-		    {
-		      "code": "storelocationtype1",
-		      "name": "Store Location Type1",
-		      "auditInfo": {
-		        "updateDate": "2016-05-04T20:07:18.859Z",
-		        "createDate": "2016-05-04T20:07:18.859Z",
-		        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-		        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-		      }
-		    }
-		  ],
-		  "name": "Store Location 1",
-		  "description": "",
-		  "address": {
-		    "address1": "1835 Kramer Ln",
-		    "address2": "",
-		    "address3": "",
-		    "address4": "",
-		    "cityOrTown": "Austin",
-		    "stateOrProvince": "TX",
-		    "postalOrZipCode": "78758",
-		    "countryCode": "US",
-		    "isValidated": false
-		  },
-		  "geo": {
-		    "lat": 30.3871389,
-		    "lng": -97.7100097
-		  },
-		  "phone": "",
-		  "fax": "",
-		  "supportsInventory": true,
-		  "fulfillmentTypes": [
-		    {
-		      "code": "SP",
-		      "name": "In Store Pickup"
-		    }
-		  ],
-		  "regularHours": {
-		    "sunday": {
-		      "label": "9AM-4PM"
-		    },
-		    "monday": {
-		      "label": "9AM-6PM"
-		    },
-		    "tuesday": {
-		      "label": "9AM-6PM"
-		    },
-		    "wednesday": {
-		      "label": "9AM-6PM"
-		    },
-		    "thursday": {
-		      "label": "9AM-6PM"
-		    },
-		    "friday": {
-		      "label": "9AM-6PM"
-		    },
-		    "saturday": {
-		      "label": "9AM-9PM"
-		    }
-		  },
-		  "shippingOriginContact": {
-		    "firstName": "a",
-		    "middleNameOrInitial": "",
-		    "lastNameOrSurname": "b",
-		    "companyOrOrganization": "Volusion",
-		    "phoneNumber": "6662227878",
-		    "email": "ab@volusion.com"
-		  },
-		  "note": "",
-		  "tags": [],
-		  "attributes": [],
-		  "auditInfo": {
-		    "updateDate": "2019-09-03T16:58:16.279Z",
-		    "createDate": "2016-05-04T20:27:23.589Z",
-		    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-		    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-		  },
-		  "allowFulfillmentWithNoStock": false,
-		  "isDisabled": false,
-		  "express": false,
-		  "transferEnabled": false,
-		  "includeInInventoryAggregrate": true,
-		  "includeInLocationExport": false,
-		  "warehouseEnabled": false
+	"shipmentNumber": 944,
+	"orderId": "0e69ba3e34ee670001515a160000433f",
+	"orderNumber": 947,
+	"orderSubmitDate": "2019-08-30T17:26:44.391Z",
+	"customerAccountId": 1005,
+	"tenantId": 17215,
+	"siteId": 21153,
+	"fulfillmentDate": "2019-08-30T18:02:35.931Z",
+	"shipmentType": "BOPIS",
+	"shipmentStatus": "FULFILLED",
+	"fulfillmentStatus": "Fulfilled",
+	"fulfillmentLocationCode": "sp_1",
+	"cost": 0.0,
+	"shipmentAdjustment": 0.0,
+	"lineItemSubtotal": 50.00,
+	"lineItemTaxAdjustment": 0.0,
+	"lineItemTaxTotal": 0.00,
+	"lineItemTotal": 50.00,
+	"shippingAdjustment": 0.0,
+	"shippingSubtotal": 0.00,
+	"shippingTaxAdjustment": 0.0,
+	"shippingTaxTotal": 0.00,
+	"shippingTotal": 0.00,
+	"handlingAdjustment": 0.0,
+	"handlingSubtotal": 0.00,
+	"handlingTaxAdjustment": 0.0,
+	"handlingTaxTotal": 0.00,
+	"handlingTotal": 0.00,
+	"dutyAdjustment": 0.0,
+	"dutyTotal": 0.0,
+	"total": 50.00,
+	"currencyCode": "USD",
+	"destination": {},
+	"destinationContact": {},
+	"originContact": {},
+	"trackingNumbers": [],
+	"items": [
+		{
+			"lineId": 1,
+			"originalOrderItemId": "b6675d1058ef4f6aa034aab9011f79c4",
+			"productCode": "sp_01",
+			"quantity": 1,
+			"name": "Standard Product - 1",
+			"partNumber": "sp_01",
+			"upc": "sp_01",
+			"unitPrice": 50.0,
+			"isTaxable": false,
+			"actualPrice": 50.0,
+			"itemDiscount": 0.00,
+			"lineItemCost": 50.0,
+			"itemTax": 0.00,
+			"shipping": 0.00,
+			"shippingDiscount": 0.00,
+			"shippingTax": 0.00,
+			"handling": 0.00,
+			"handlingDiscount": 0.00,
+			"handlingTax": 0.00,
+			"duty": 0.0,
+			"weight": 0.0,
+			"auditInfo": {
+				"createDate": "2019-08-30T17:26:44.556Z"
+			},
+			"options": []
 		}
+	],
+	"canceledItems": [],
+	"packages": [],
+	"workflowState": {
+		"shipmentState": "COMPLETED",
+		"taskList": [
+			{
+				"attributes": {},
+				"name": "Accept Shipment",
+				"subject": "",
+				"inputs": [
+					{
+						"name": "shipmentAccepted",
+						"type": "BOOLEAN"
+					}
+				],
+				"active": false,
+				"completed": true,
+				"completedDate": "2019-08-30T18:02:35.913Z"
+			},
+			{
+				"attributes": {},
+				"name": "Print Pick List",
+				"subject": "",
+				"inputs": [],
+				"active": false,
+				"completed": true,
+				"completedDate": "2019-08-30T18:02:35.913Z"
+			},
+			{
+				"attributes": {},
+				"name": "Validate Items In Stock",
+				"subject": "",
+				"inputs": [
+					{
+						"name": "stockLevel",
+						"type": "STRING"
+					}
+				],
+				"active": false,
+				"completed": true,
+				"completedDate": "2019-08-30T18:02:35.913Z"
+			},
+			{
+				"attributes": {},
+				"name": "Customer Pickup",
+				"subject": "",
+				"inputs": [
+					{
+						"name": "customerAccepted",
+						"type": "BOOLEAN"
+					}
+				],
+				"active": false,
+				"completed": true,
+				"completedDate": "2019-08-30T18:02:35.913Z"
+			}
+		],
+		"processInstanceId": "2516",
+		"auditInfo": {
+			"updateDate": "2019-08-30T18:02:35.952Z",
+			"createDate": "2019-08-30T17:26:44.583Z"
+		}
+	},
+	"changeMessages": [
+		{
+			"changeMessageId": "5d695c7b3b35f80001c58fb7",
+			"createdDate": "2019-08-30T17:27:23.382Z",
+			"correlationId": "7c47542b5ac542e69ef4c60b153a576e",
+			"message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+			"oldValue": "PRE_ACCEPT_SHIPMENT",
+			"newValue": "ACCEPTED_SHIPMENT",
+			"subject": "shipmentState",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d695c803b35f80001c58fbe",
+			"createdDate": "2019-08-30T17:27:28.350Z",
+			"correlationId": "93b858c11cf740119426af7b67cd7397",
+			"message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
+			"oldValue": "ACCEPTED_SHIPMENT",
+			"newValue": "PROCESSING_PICK_LIST",
+			"subject": "shipmentState",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d695ca33b35f80001c58fcb",
+			"createdDate": "2019-08-30T17:28:03.308Z",
+			"correlationId": "9ead76d824a94c98884219f483c1c36c",
+			"message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
+			"oldValue": "PROCESSING_PICK_LIST",
+			"newValue": "READY_FOR_PICKUP",
+			"subject": "shipmentState",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d6964bb3b35f80001c5f126",
+			"createdDate": "2019-08-30T18:02:35.926Z",
+			"correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+			"message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
+			"oldValue": "READY_FOR_PICKUP",
+			"newValue": "COMPLETED",
+			"subject": "shipmentState",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d6964bb3b35f80001c5f12c",
+			"createdDate": "2019-08-30T18:02:35.934Z",
+			"correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+			"message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
+			"oldValue": "null",
+			"newValue": "2019-08-30T18:02:35.931701Z",
+			"subject": "fulfillmentDate",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d6964bb3b35f80001c5f12d",
+			"createdDate": "2019-08-30T18:02:35.934Z",
+			"correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+			"message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
+			"oldValue": "READY",
+			"newValue": "FULFILLED",
+			"subject": "shipmentStatus",
+			"userId": "12345"
+		},
+		{
+			"changeMessageId": "5d6964bb3b35f80001c5f12e",
+			"createdDate": "2019-08-30T18:02:35.934Z",
+			"correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+			"message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
+			"oldValue": "null",
+			"newValue": "Fulfilled",
+			"subject": "fulfillmentStatus",
+			"userId": "12345"
+		}
+	],
+	"email": "jack_wu@mailtrap.com",
+	"readyForPickup": false,
+	"auditInfo": {
+		"updateDate": "2019-08-30T18:02:35.952Z",
+		"createDate": "2019-08-30T17:26:44.583Z"
+	},
+	"_links": {
+		"self": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944"
+		},
+		"shipments": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
+		},
+		"process": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/processes/shipmentType/BOPIS"
+		},
+		"reject": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+			"method": "PUT"
+		},
+		"cancel": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+			"method": "PUT"
+		},
+		"fulfill": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+			"method": "PUT"
+		},
+		"reassign": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+			"method": "PUT"
+		},
+		"reassignItems": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+			"method": "PUT"
+		},
+		"cancelItems": {
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+			"href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+			"method": "PUT"
+		}
+	},
+	"storeLocation": {
+		"code": "storelocation1",
+		"locationTypes": [
+			{
+				"code": "storelocationtype1",
+				"name": "Store Location Type1",
+				"auditInfo": {
+					"updateDate": "2016-05-04T20:07:18.859Z",
+					"createDate": "2016-05-04T20:07:18.859Z",
+					"updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+					"createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+				}
+			}
+		],
+		"name": "Store Location 1",
+		"description": "",
+		"address": {
+			"address1": "1835 Kramer Ln",
+			"address2": "",
+			"address3": "",
+			"address4": "",
+			"cityOrTown": "Austin",
+			"stateOrProvince": "TX",
+			"postalOrZipCode": "78758",
+			"countryCode": "US",
+			"isValidated": false
+		},
+		"geo": {
+			"lat": 30.3871389,
+			"lng": -97.7100097
+		},
+		"phone": "",
+		"fax": "",
+		"supportsInventory": true,
+		"fulfillmentTypes": [
+			{
+				"code": "SP",
+				"name": "In Store Pickup"
+			}
+		],
+		"regularHours": {
+			"sunday": {
+				"label": "9AM-4PM"
+			},
+			"monday": {
+				"label": "9AM-6PM"
+			},
+			"tuesday": {
+				"label": "9AM-6PM"
+			},
+			"wednesday": {
+				"label": "9AM-6PM"
+			},
+			"thursday": {
+				"label": "9AM-6PM"
+			},
+			"friday": {
+				"label": "9AM-6PM"
+			},
+			"saturday": {
+				"label": "9AM-9PM"
+			}
+		},
+		"shippingOriginContact": {
+			"firstName": "a",
+			"middleNameOrInitial": "",
+			"lastNameOrSurname": "b",
+			"companyOrOrganization": "Volusion",
+			"phoneNumber": "6662227878",
+			"email": "ab@volusion.com"
+		},
+		"note": "",
+		"tags": [],
+		"attributes": [],
+		"auditInfo": {
+			"updateDate": "2019-09-03T16:58:16.279Z",
+			"createDate": "2016-05-04T20:27:23.589Z",
+			"updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+			"createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+		},
+		"allowFulfillmentWithNoStock": false,
+		"isDisabled": false,
+		"express": false,
+		"transferEnabled": false,
+		"includeInInventoryAggregrate": true,
+		"includeInLocationExport": false,
+		"warehouseEnabled": false
+	}
 }

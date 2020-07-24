@@ -11,8 +11,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
     {
         public FulfillmentMapping()
         {
+<<<<<<< HEAD
             CreateMap<F.ResourceOfShipment, CR.Shipment>()
                 .ForMember(dest => dest.Number, op => op.MapFrom(src => src.ShipmentNumber))
+=======
+            CreateMap<F.EntityModelOfShipment, CR.Shipment>()
+                .ForMember(dest => dest.Number, op => op.ResolveUsing(src => src.ShipmentNumber))
+>>>>>>> feature/sitebuilder-storefront
                 .ForMember(dest => dest.Data, op =>
                 {
                     op.PreCondition(src => src.Data != null);
@@ -54,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             CreateMap<F.CanceledReason, Mozu.CommerceRuntime.Contracts.Orders.CanceledReason>()
                 .ForMember(x => x.Description, opt => opt.Ignore());
 
-            CreateMap<CR.Shipment, F.ResourceOfShipment>()
+            CreateMap<CR.Shipment, F.EntityModelOfShipment>()
                 .ForMember(x => x.Data, opt => opt.Ignore()) // Mapping this would create a Dictionary<string, object>() where the values are JValue wrappers.
                 .ForMember(x => x.ShipmentNumber, opt => opt.MapFrom(dc => dc.Number));
 

@@ -23,6 +23,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         ShipmentItemCanceled,
         ShipmentAssigned,
+        CustomerAtCurbside,
+        CustomerIntransit,
+        IntransitConfirmation,
+        OrderConfirmation,
+        ShipmentConfirmation,
+        OrderPickupReady
     };
 }
 

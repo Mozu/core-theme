@@ -1,5 +1,5 @@
 {
-  "code": "Austin_Both",
+  "code": "storelocation1",
   "locationTypes": [
     {
       "code": "storelocationtype1",
@@ -12,11 +12,11 @@
       }
     }
   ],
-  "name": "Austin Store",
+  "name": "Store Location 1",
   "description": "",
   "address": {
-    "address1": "1817 W Braker Ln",
-    "address2": "#200",
+    "address1": "1835 Kramer Ln",
+    "address2": "",
     "address3": "",
     "address4": "",
     "cityOrTown": "Austin",
@@ -26,10 +26,10 @@
     "isValidated": false
   },
   "geo": {
-    "lat": 30.390701,
-    "lng": -97.706862
+    "lat": 30.3871389,
+    "lng": -97.7100097
   },
-  "phone": "(512) 555-8925",
+  "phone": "",
   "fax": "",
   "supportsInventory": true,
   "fulfillmentTypes": [
@@ -40,56 +40,34 @@
   ],
   "regularHours": {
     "sunday": {
-
-      "label": "9AM-4PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": true
+      "label": "9AM-4PM"
     },
     "monday": {
-      "label": "9AM-6PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": false
+      "label": "9AM-6PM"
     },
     "tuesday": {
-      "label": "9AM-6PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": false
+      "label": "9AM-6PM"
     },
     "wednesday": {
-      "label": "9AM-6PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": false
+      "label": "9AM-6PM"
     },
     "thursday": {
-      "label": "9AM-6PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": false
+      "label": "9AM-6PM"
     },
     "friday": {
-      "label": "9AM-6PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": false
+      "label": "9AM-6PM"
     },
     "saturday": {
-      "label": "9AM-9PM",
-      "closeTime": "10:00",
-      "openTime": "03:30",
-      "isClosed": true
+      "label": "9AM-9PM"
     }
   },
   "shippingOriginContact": {
-    "firstName": "John",
+    "firstName": "Alpha",
     "middleNameOrInitial": "",
-    "lastNameOrSurname": "Doe",
-    "companyOrOrganization": "Kibo Commerce",
-    "phoneNumber": "555-555-1212",
-    "email": "jdoe@kibocommerce.com"
+    "lastNameOrSurname": "Beta",
+    "companyOrOrganization": "Volusion",
+    "phoneNumber": "6662227878",
+    "email": "ab@volusion.com"
   },
   "note": "",
   "tags": [],

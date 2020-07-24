@@ -51,7 +51,65 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj" />
+=======
+    <None Include="app.config" />
+    <None Include="paket.references" />
+    <EmbeddedResource Include="TestData\order.shipped\Order1.json" />
+    <EmbeddedResource Include="TestData\order.changed\Order1.json" />
+    <EmbeddedResource Include="TestData\return.closed\Return1.json" />
+    <EmbeddedResource Include="TestData\return.changed\Return1.json" />
+    <EmbeddedResource Include="TestData\return.created\Return1.json" />
+    <EmbeddedResource Include="TestData\return.rejected\Return1.json" />
+    <EmbeddedResource Include="TestData\return.authorized\Return1.json" />
+    <EmbeddedResource Include="TestData\order.shipped\Order2.json" />
+    <EmbeddedResource Include="TestData\order.changed\Order2.json" />
+    <EmbeddedResource Include="TestData\product.instock\product1.json" />
+    <EmbeddedResource Include="TestData\user.created\user1.json" />
+    <EmbeddedResource Include="TestData\user.passwordreset\user1.json" />
+    <EmbeddedResource Include="TestData\giftcard.created\OrderCredit1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Order1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Orders1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Location1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Shipment1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Shipment2.json" />
+    <EmbeddedResource Include="TestData\backoffice\Shipments1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Pickwave1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Pickwave2.json" />
+    <EmbeddedResource Include="TestData\refund.created\Refund2.json" />
+    <EmbeddedResource Include="TestData\refund.created\Refund3.json" />
+    <EmbeddedResource Include="TestData\order.cancel\Order1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialpickupready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialpickupready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupreminder\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.fulfilled\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.backordered\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.backorderdatechanged\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.transferCreated\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.transferCreated\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.transferShipped\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.transferShipped\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.assigned\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.itemscanceled\Shipment1.json" />
+    <None Include="SEO\proto_routeTable" />
+    <EmbeddedResource Include="TestData\backoffice\Customeratcurbside.json" />
+    <EmbeddedResource Include="TestData\backoffice\Customer-at-curbside-qrcode.json" />
+    <EmbeddedResource Include="TestData\order.smsoptin\Order1.json" />
+    <EmbeddedResource Include="TestData\order.smsoptin\Order2.json" />
+    <EmbeddedResource Include="TestData\backoffice\Return1.json" />
+    <None Include="TestData\refund.created\Refund1.json" />
+    <EmbeddedResource Include="TestData\shipment.curbsideready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.intransitconfirmation\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.customerintransit\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.shopper.itemscancelled\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.curbsideready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.partialcurbsideready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.customeratcurbside\Shipment1.json" />
+>>>>>>> feature/sitebuilder-storefront
   </ItemGroup>
 
   <ItemGroup>
