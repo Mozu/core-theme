@@ -660,4 +660,5 @@
   "curbsideItemCanceldedHeaderBlob": "SORRY! YOUR ITEMS ARE OUT OF STOCK",
   "curbsideorderConfiramtionBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your order was received and is being prepared. If you would like to view or manage your order, please visit <a href=\"//{1}/myaccount\">My Account</a>.",
   "curbsideOrderConfirmationtxt": "THANK YOU FOR YOUR ORDER!"
+  "orderCompleteBlob": "YOUR ORDER IS COMPLETE!"
 }
