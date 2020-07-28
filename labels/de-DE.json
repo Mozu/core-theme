@@ -497,5 +497,6 @@
   "curbsideItemCanclledBlob": "Bonjour, <br/><br/> Merci de magasiner avec nous à {0}. <br/><br/><strong> Malheureusement, les articles que vous avez commandés sont actuellement EN RUPTURE DE STOCK. Par conséquent, la commande a été annulée.</strong> <br/> <br/> Veuillez vérifier à une date ultérieure pour la disponibilité des articles.",
   "curbsideItemCanceldedHeaderBlob": "DÉSOLÉ! VOS ARTICLES SONT EN RUPTURE DE STOCK",
   "curbsideorderConfiramtionBlob": "Bonjour, <br/><br/> Merci de magasiner avec nous à {0}. Votre commande a été reçue et est en cours de préparation. Si vous souhaitez consulter ou gérer votre commande, veuillez visiter <a href=\"//{1}/myaccount\">Mon compte</a>.",
-  "curbsideOrderConfirmationtxt": "NOUS VOUS REMERCIONS DE VOTRE COMMANDE!"
+  "curbsideOrderConfirmationtxt": "NOUS VOUS REMERCIONS DE VOTRE COMMANDE!",
+  "orderCompleteBlob": "IHRE BESTELLUNG IST ABGESCHLOSSEN!"
 }
