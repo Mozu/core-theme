@@ -127,7 +127,7 @@
                 {% block body-below-content %}
                 {% dropzone "body-bottom" scope="page" %}
                 {% endblock body-below-content %}
-
+                Helloo....
             </div>
 
             {% block page-footer %}
