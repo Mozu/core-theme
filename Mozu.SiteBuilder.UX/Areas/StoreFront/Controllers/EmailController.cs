@@ -218,17 +218,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                         new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
-                                               Topic = Topics.IntransitConfirmation 
+                                               Topic = Topics.IntransitConfirmation
                                            },
                                         new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
-                                               Topic = Topics.CurbsidePickupReady
+                                               Topic = Topics.CurbsideReady
                                            },
                                         new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
-                                               Topic = Topics.CurbsidePartialPickupReady
+                                               Topic = Topics.PartialCurbsideReady
                                            }
 
                 };
@@ -605,8 +605,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
             public const string IntransitConfirmation = "shipment.intransitconfirmation";
-            public const string CurbsidePickupReady = "shipment.curbsideready";
-            public const string CurbsidePartialPickupReady = "shipment.partialcurbsideready";
+            public const string CurbsideReady = "shipment.curbsideready"; 
+            public const string PartialCurbsideReady = "shipment.partialcurbsideready";  
         }
     }
 

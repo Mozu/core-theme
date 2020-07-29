@@ -41,8 +41,8 @@
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
     <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2013.2" />
-    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2029.0-pr-27.11" />
-    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2029.0-pr-27.11" />
+    <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2031.5" />
+    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2031.5" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2011.0-dotnetcore.60" />
     <PackageReference Include="NDjangoParser40" Version="1.2019.0-pr-1.1" />
     <PackageReference Include="NDjangoParserFilters40" Version="1.2019.0-pr-1.1" />

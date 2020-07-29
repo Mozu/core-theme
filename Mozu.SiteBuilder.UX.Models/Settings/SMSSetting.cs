@@ -27,8 +27,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         CustomerIntransit,
         IntransitConfirmation,
         OrderConfirmation,
-        ShipmentConfirmation,
-        OrderPickupReady
-    };
+        ShipmentFulfilled,
+        CurbsideReady,
+        StoreItemsCanceled
+    }; 
 }
 

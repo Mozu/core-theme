@@ -259,9 +259,18 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? PartialPickupReady { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? TransferShipmentCreatedByFulfiller { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? IntransitConfirmation { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? CurbsideReady { get; set; } 
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? PartialCurbsideReady { get; set; } 
     }
 
     public class SMSTransactionSettings
@@ -271,6 +280,27 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ShipmentAssigned { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? CustomerAtCurbside { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? CustomerIntransit { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? IntransitConfirmation { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderConfirmation { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentFulfilled { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? CurbsideReady { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? StoreItemsCanceled { get; set; } 
     }
 
     [DataContract]

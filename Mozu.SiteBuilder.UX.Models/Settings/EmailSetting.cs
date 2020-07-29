@@ -79,6 +79,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         TransferShipmentShipped,
         PartialPickupReady,
         TransferShipmentCreatedByFulfiller,
-        IntransitConfirmation 
+        IntransitConfirmation,
+        CurbsideReady,
+        PartialCurbsideReady
     };
 }
