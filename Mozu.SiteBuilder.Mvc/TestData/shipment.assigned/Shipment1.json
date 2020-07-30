@@ -2,6 +2,7 @@
 	"id": "03fd3d9121f66320803f4ace00000e7a",
 	"externalShipmentId": "NH000089",
 	"number": 245,
+	"shipmentNumber": 245,
 	"orderId": "0febf64d6607a9000171ba2f0000469d",
 	"orderNumber": 245,
 	"currencyCode": "usd",

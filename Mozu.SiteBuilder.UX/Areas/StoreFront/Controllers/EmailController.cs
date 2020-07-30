@@ -67,6 +67,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     
     public class OrderEmail : Order {
         public List<Location.Contracts.Location> Locations { get; set; }
+        public bool IsCurbside { get; set; }
+
     }
 
     [ContextInitialization]
@@ -197,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentItemCanceled
                                            },
-                                       new EmailTypeInfo
+                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentAssigned
@@ -211,8 +213,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.TransferShipmentCreatedByFulfiller 
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.IntransitConfirmation 
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CurbsidePickupReady
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CurbsidePartialPickupReady
                                            }
-
 
                 };
         }
@@ -301,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Render(EmailNotification notification)
+        public async Task<IActionResult> Render([FromBody]EmailNotification notification)
         {
             User user = null;
             var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
@@ -400,20 +416,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return string.Empty;
             }
 
+            ViewData.Model = model;
+            ViewData["content"] = cmdContent;
+            ViewData["User"] = user;
+            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
-
-            var vdd = new ViewDataDictionary(null)
-            {
-                ["model"] = model,
-                ["content"] = cmdContent,
-                ["User"] = user,
-                ["rmaLocation"] = await GetDefaultReturnLocation(),
-                ["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(),
-
-                ["storefrontOrderAttributes"] = await GetShopperOrderAttributes()
-            };
-
-            var context = new HyprViewContext(Request.HttpContext, vdd);
+            var context = new HyprViewContext(Request.HttpContext, ViewData);
             return await Render(view, context);
         }
 
@@ -531,7 +541,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                
             if (obj is OrderEmail orderEmail)
             {
-                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
+                orderEmail.IsCurbside = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode)).All(a => string.Equals(a.FulfillmentMethod, CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE, StringComparison.OrdinalIgnoreCase));
+                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod.In(CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP, CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE)).Select(x => $"code eq {x.FulfillmentLocationCode}");
                 if (locations.SafeAny())
                 {
                     var filter = locations.Aggregate((x, y) => x + " or " + y);
@@ -592,8 +603,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string TransferShipmentCreated = "shipment.transfercreated";
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
+            public const string IntransitConfirmation = "shipment.intransitconfirmation";
+            public const string CurbsidePickupReady = "shipment.curbsideready";
+            public const string CurbsidePartialPickupReady = "shipment.partialcurbsideready";
         }
-
     }
 
    

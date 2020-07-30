@@ -45,6 +45,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage ReturnReceipt(int siteId, string orderId, string returnId)
+        {
+            var claim = CreateLimitedUserClaimsForOrder(orderId);
+            string token = claim.ToAccessToken();
+            string urlEncodedToken = HttpUtility.UrlEncode(token);
+            string destinationUrl = $"/back-office/return-receipt/{orderId}/{returnId}?t={urlEncodedToken}";
+            var resp = Request.CreateResponse(HttpStatusCode.Found);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            return resp;
+        }
+        [HttpGet]
         public HttpResponseMessage PackingSlip(int siteId, string orderId, int shipmentNumber)
         {
             if (shipmentNumber <= 0) {

@@ -2,7 +2,9 @@
 RUN apt-get update && \
     apt-get install -y gnupg  &&\
     curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
-    apt-get install -y nodejs 
+    apt-get install -y nodejs && \
+    # Install System.Drawing dependencies for use by QRCoder
+    apt-get install -y libgdiplus libc6-dev
 
 WORKDIR /app
 EXPOSE 80

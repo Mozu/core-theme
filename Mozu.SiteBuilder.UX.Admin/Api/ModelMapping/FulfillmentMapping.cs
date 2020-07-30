@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         public FulfillmentMapping()
         {
-            CreateMap<F.ResourceOfShipment, CR.Shipment>()
+            CreateMap<F.EntityModelOfShipment, CR.Shipment>()
                 .ForMember(x => x.Number, opt => opt.ResolveUsing(dc => dc.ShipmentNumber))
                 .ForMember(x => x.Data, opt => opt.Ignore());
 
@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             CreateMap<F.CanceledReason, Mozu.CommerceRuntime.Contracts.Orders.CanceledReason>()
                 .ForMember(x => x.Description, opt => opt.Ignore());
 
-            CreateMap<CR.Shipment, F.ResourceOfShipment>()
+            CreateMap<CR.Shipment, F.EntityModelOfShipment>()
                 .ForMember(x => x.ShipmentNumber, opt => opt.ResolveUsing(dc => dc.Number));
         }
     }

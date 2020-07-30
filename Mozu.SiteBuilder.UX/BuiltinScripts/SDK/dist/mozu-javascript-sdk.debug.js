@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2019-12-10
+ * Mozu JavaScript SDK - v0.3.0 - 2020-07-03
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -3907,6 +3907,10 @@ module.exports=
     "order-status-login": {
       "verb": "POST",
       "template": "{+storefrontUserService}anonymous-login"
+    },
+    "order-curbside-event": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}save-curbside-info"
     },
     "update": {
       "verb": "PUT",

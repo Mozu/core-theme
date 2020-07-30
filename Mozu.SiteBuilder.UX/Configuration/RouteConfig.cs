@@ -218,6 +218,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Return Receipt (back office)",
+                "back-office/return-receipt/{orderId}/{returnId}",
+                new { controller = "BackOffice", action = "ReturnReceipt" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                "back office (admin view) - PREVIEW",
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" },
@@ -307,10 +313,40 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
-               "Anonymous Shipment View",
-               "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
-               new { controller = "AnonymousNotification", action = "RenderShipmentView" },
-               _constraintResolver);
+                "Anonymous Curbside View",
+                "anonymous-notification/curbsideArrive/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "RenderCurbsideArriveView" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Anonymous Curbside Shipment Ready View",
+                "anonymous-notification/curbsideShipmentReady/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "CurbSideShipmentReadyView" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Anonymous Shipment View",
+                "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "RenderShipmentView" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Anonymous CurbsideInfo View",
+                "anonymous-notification/curbsideInfo/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "GetCurbsideInfo" },
+				_constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Anonymous Save Curbside Info",
+                "user/save-curbside-info",
+                new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
+				_constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Anonymous I am on My Way Endpoint",
+                "anonymous-notification/customerintransit/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "CustomerInTransit" },
+				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "refresh tokens",
