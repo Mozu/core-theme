@@ -1,9 +1,0 @@
-﻿themes were moved to 2 repos 
-This project only exists to not break in flight octo deploys.
-
-
-
-Mozu.CoreLegacyTheme  - contains core4-core9  (bug fix only )
-
-Mozu.CoreTheme - the internal fork of the external core repo.  All future dev should be done on this.
-
