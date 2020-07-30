@@ -1,1 +1,0 @@
-.\jsduck-4.3.2.exe -o docs --title="Mozu Admin App Documentation v.-999" --ignore-global ext/ext-debug-w-comments.js ext/src app

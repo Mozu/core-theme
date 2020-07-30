@@ -1,1 +1,0 @@
-powershell .\switchiis.ps1 %1

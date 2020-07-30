@@ -1,5 +1,0 @@
-<div class="nav-flex-wrapper">
-    <div class="col-md-4 col-sm-3 hidden-xs"></div>
-    <a *ngFor="let eachTab of model.navigationTabs" class="col-md-1 tab-link" id="{{eachTab.tabName}}" (click)="tabSelectionChanged(eachTab)" [ngClass]="{'active': activeTab == eachTab}">{{eachTab.label}}</a>
-    <div class="col-md-4 col-sm-4 hidden-xs"></div>
-</div>

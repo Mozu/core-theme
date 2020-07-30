@@ -1,9 +1,0 @@
-﻿// Shipping origin
-{
-    address1: "123 Elm Street",
-    address2: "Apt. 56",
-    city: "Springfield",
-    state: "OR",
-    zip: "97475",
-    country: "US" // Not in mock up
-}

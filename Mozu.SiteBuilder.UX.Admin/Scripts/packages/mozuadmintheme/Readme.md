@@ -1,2 +1,0 @@
-# mozuadmintheme - Read Me
-
