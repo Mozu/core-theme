@@ -660,5 +660,8 @@
   "width": "Width",
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yourAccount": "Your Account",
-  "yourOrderNumber": "Your order number is <strong>{0}</strong>."
+  "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
+  "curbsideItemCancelledByShopperHeaderBlob": "Your curbside order has been cancelled",
+  "curbsideItemCancelledByShopperContentBlob": "Hello,<br/><br/>Thank you for shopping with us at {0}.<br/><br/>The following order# <strong>{1}</strong> has been cancelled by the store."
+
 }

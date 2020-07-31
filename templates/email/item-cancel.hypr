@@ -7,11 +7,20 @@
   <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
   <div class="mz-curbside-header-body">
     <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
-    <h3>{{ labels.curbsideItemCanceldedHeaderBlob }}</h3>
+    {% if model.isShopperCanceled == true %}
+         <h3>{{ labels.curbsideItemCancelledByShopperHeaderBlob }}</h3>
+    {% else %}
+        <h3>{{ labels.curbsideItemCanceldedHeaderBlob }}</h3>
+    {% endif %}
   </div>
 </div>
 <br/>
-<p>{{ labels.curbsideItemCanclledBlob|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+    {% if model.isShopperCanceled == true %}
+        <p>{{ labels.curbsideItemCancelledByShopperContentBlob|string_format(siteContext.generalSettings.websiteName,model.orderNumber)|safe }}</p>
+    {% else %}
+        <p>{{ labels.curbsideItemCanclledBlob|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+    {% endif %}
+
 
 <!--- Order Details Header--->
 <div class="mz-multiship-email" style="width: 100%;">
