@@ -1,2 +1,2 @@
 {% comment %} message length should not exceed 160 characters {% endcomment %}
-{{ labels.mobileOrderConfirmationMessage|safe }}
+{{ labels.mobileOrderConfirmationMessage|string_format(model.fulfillmentInfo.fulfillmentContact.firstName, model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname, model.siteId)|safe  }}
