@@ -89,6 +89,8 @@
   "curbsideItemCancelledByShopperContentBlob": "Bonjour,<br/><br/>Merci de magasiner avec nous à {0}.<br/><br/>L'ordre suivant # <strong>{1}</strong> a été annulé par le magasin.",
   "curbsideItemCancelledByShopperHeaderBlob": "Votre commande en bordure de rue a été annulée",
   "curbsideItemCanclledBlob": "Bonjour, <br/><br/> Merci de magasiner avec nous à {0}. <br/><br/><strong> Malheureusement, les articles que vous avez commandés sont actuellement EN RUPTURE DE STOCK. Par conséquent, la commande a été annulée.</strong> <br/> <br/> Veuillez vérifier à une date ultérieure pour la disponibilité des articles.",
+  "curbsideItemCancelledByShopperHeaderBlob": "Votre commande en bordure de rue a été annulée",
+  "curbsideItemCancelledByShopperContentBlob": "Bonjour,<br/><br/>Merci de magasiner avec nous à {0}.<br/><br/>L'ordre suivant # <strong>{1}</strong> a été annulé par le magasin.",
   "curbsideItemInfo": "Cette commande comprend les articles suivants:",
   "curbsideLandingText": "Lorsque vous arrivez au magasin, veuillez cliquer sur le bouton I'm Curbside illustré ci-dessus. De là, vous serez redirigé vers une page de destination où vous pourrez fournir vos informations de livraison",
   "curbsideNoteTitle": "Notez s'il vous plaît...",
