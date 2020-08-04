@@ -604,8 +604,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
                     FlattenCatTree(root).OrderBy(_ => _.CategoryId).ToList()?.ForEach(_ =>
                     {
-                        w.Write(_.CategoryId);
-                        w.Write(_.IsDisplayed);
+                        w.Write(_.CategoryId.GetValueOrDefault(-1));
+                        w.Write(_.IsDisplayed.GetValueOrDefault(false));
                         w.Write(_.Sequence.GetValueOrDefault(-1));
                         w.Write(_.ParentCategoryId.GetValueOrDefault(-1));
                         w.Write(_.Count > 0 ? 1 : 0);
@@ -1098,8 +1098,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             {
                 data.GetFlatCategoryList()?.OrderBy(_ => _.CategoryId).ToList()?.ForEach(_ =>
                 {
-                    w.Write(_.CategoryId);
-                    w.Write(_.IsDisplayed);
+                    w.Write(_.CategoryId.GetValueOrDefault(-1));
+                    w.Write(_.IsDisplayed.GetValueOrDefault(false));
                     w.Write(_.Sequence.GetValueOrDefault(-1));
                     w.Write(_.ParentCategoryId.GetValueOrDefault(-1));
                 });

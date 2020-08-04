@@ -26,6 +26,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using System.Net;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -143,6 +144,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 searchTuningRuleContext: _.searchTuningRuleContext,
                 sortBy: _.sortBy,
                 startIndex: _.startIndex,
+                mid: this.PageContext.MonetateId,
                 targetContextLevel: _.targetContextLevel))
                 .ResponseMessage
                 .Content
@@ -177,6 +179,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 searchTuningRuleContext: _.searchTuningRuleContext,
                 sortBy: _.sortBy,
                 startIndex: _.startIndex,
+                mid: this.PageContext.MonetateId,
                 targetContextLevel: _.targetContextLevel)).ReadAsSync();
 
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
@@ -243,21 +246,58 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         class AdvancdSearchParamterModelBinder : IModelBinder
         {
+            static Lazy<Action<ModelBindingContext>>  _propBinder = new Lazy<Action<ModelBindingContext>>(CreatePropBinder);
+            public static Action<ModelBindingContext> CreatePropBinder()
+            {
+                var binders =  typeof(AdvancedSearchParamaters).GetProperties().Select<PropertyInfo, Action<ModelBindingContext>>(prop =>
+                {
+                    if (prop.PropertyType == typeof(string))
+                    {
+                        return (ModelBindingContext ctx) =>
+                        {
+                            var propValRes = ctx.ValueProvider.GetValue(prop.Name);
+                            if (propValRes != ValueProviderResult.None && !string.IsNullOrEmpty(propValRes.FirstValue))
+                            {
+                                prop.SetValue(ctx.Model, propValRes.FirstValue);
+                            }
+                        };
+                    }
+                    else
+                    {
+                        return (ModelBindingContext ctx) =>
+                        {
+                            var propValRes = ctx.ValueProvider.GetValue(prop.Name);
+                            if (propValRes != ValueProviderResult.None && !string.IsNullOrEmpty(propValRes.FirstValue))
+                            {
+                                try
+                                {
+                                    var obj = Convert.ChangeType(propValRes.FirstValue, prop.PropertyType);
+                                    prop.SetValue(ctx.Model, obj);
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        };
+                    }
+                }).ToArray();
+                return (ModelBindingContext ctx) =>
+                {
+                    foreach (var binder in binders)
+                    {
+                        binder(ctx);
+                    }
+                };
+            }
             public Task BindModelAsync(ModelBindingContext bindingContext)
             {
                 var actionContext = bindingContext.ActionContext;
 
-                //null out action arguments so that we can detect if they were modified in arcjs
-
-                //actionContext.ActionArguments["categoryCode"] = null;
-                //actionContext.ActionArguments["page"] = null;
-                //actionContext.ActionArguments["w"] = null;
-                // commenting out till we can change blue fly actions
-                // actionContext.ActionArguments["query"] = null;
-                //  actionContext.ActionArguments["categoryId"] = null;
-
                 var avp = new AdvancedSearchParamaters();
+                bindingContext.Model = avp;
 
+                _propBinder.Value(bindingContext);
+                
                 var sc = bindingContext.HttpContext.RequestServices.Resolve<ISiteContext>();
                 var pc = bindingContext.HttpContext.RequestServices.Resolve<IPageContext>();
                 var includeFacets = ((bool?)sc.ThemeSettings["showCategoryFacets"]);

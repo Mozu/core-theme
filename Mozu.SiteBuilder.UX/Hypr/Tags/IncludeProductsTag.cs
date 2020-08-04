@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var themeSettings = siteContext.ThemeSettings;
             var searchContext = pageContext.Search;
             var sbAPIContext = context.SiteBuilderApiContext();
-            
+            var httpContext = context.HttpContext();
             
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
@@ -80,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 productCodes = null;
             }
-            var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true) && siteContext.CurrencyExchangeRate== null ;
+           
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
             var responseGroups = arguments.GetValueOrDefault<string>("responseGroups");
@@ -92,6 +93,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var suppressErrors = arguments.GetValueOrDefault<bool>("suppressErrors", MozuConfigurationManager.Settings.AppSettingsAsNullableBool("sitebuilder_includeproducttag_suppressErrors").GetValueOrDefault(false));
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
             var includeUserClaims = arguments.GetValueOrDefault<bool>("includeUserClaims", false);
+
+            var searchSettings =
+                arguments.GetValueOrDefault<string>("searchSettings", httpContext.Request.Query["searchSettings"]);
             GetCategoryCodes(arguments, context, pageContext, out var facetCategoryId, out var categoryId);
 
             var isVolumePricingBandsEnabled = ((bool?)themeSettings["listVolumePricing"]);
@@ -99,9 +103,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             
             var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
 
+            var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true) &&
+                               siteContext.CurrencyExchangeRate == null &&
+                               (arguments.GetValueOrDefault<bool>("personalize", false) &&!string.IsNullOrEmpty(pageContext.MonetateId)); 
             if (includeUserClaims == true && cacheResults == true)
             {
-                throw new NDjango.Interfaces.RenderingError("If includeUserClaims is true then cacheResults must be set to false", Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+                throw new NDjango.Interfaces.RenderingError("If includeUserClaims or personalize is true then cacheResults must be set to false", Microsoft.FSharp.Core.FSharpOption<Exception>.None);
             }
 
             string facetTemplate = null;
@@ -158,7 +165,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 responseOptions,
                 suppressErrors,
                 responseGroups,
-                includeUserClaims
+                includeUserClaims,
+                mid:pageContext.MonetateId,
+                searchSettings:searchSettings
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -209,7 +218,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string responseOptions,
             bool suppressErrors,
             string responseGroups,
-            bool includeUserClaims
+            bool includeUserClaims,
+            string mid,
+            string searchSettings
             )
         {
             string cacheKey = null;
@@ -248,6 +259,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(facetPrefix)
                     .Append(responseOptions)
                     .Append(responseGroups)
+                    .Append(searchSettings)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
@@ -273,6 +285,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         searchTuningRuleCode: searchTuningRuleCode,
                         enableSearchTuningRules: enableSearchTuningRules,
                         searchTuningRuleContext: searchTuningRuleContext,
+                        mid:mid,
+                        searchSettings: searchSettings,
                         defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
                     ).ConfigureAwait(false)
                     : await productSearchWebApiClient.CloneWithoutUserClaims().Search(
@@ -293,6 +307,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         searchTuningRuleCode: searchTuningRuleCode,
                         enableSearchTuningRules: enableSearchTuningRules,
                         searchTuningRuleContext: searchTuningRuleContext,
+                        mid:mid,
+                        searchSettings: searchSettings,
                         defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
                     ).ConfigureAwait(false);
 
@@ -467,7 +483,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var catTree = context.Resolve<ICategoryTreeProvider>().GetAllCategories();
                 if (!string.IsNullOrWhiteSpace(faceCategoryCode))
                 {
-                    var tempCat = catTree.AllCategories.Where(x => string.Equals(faceCategoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    var tempCat = catTree.FindByCode(faceCategoryCode);
                     if (tempCat != null)
                     {
                         facetCategoryId = tempCat.Id;
@@ -475,7 +491,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 if (!string.IsNullOrWhiteSpace(categoryCode))
                 {
-                    var tempCat = catTree.AllCategories.Where(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    var tempCat = catTree.FindByCode(categoryCode);
                     if (tempCat != null)
                     {
                         categoryId = tempCat.Id;

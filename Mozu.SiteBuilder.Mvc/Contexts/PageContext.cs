@@ -188,6 +188,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get;
         }
         DebugModeFlagValues DebugFlags { get; }
+
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        public string MonetateId
+        {
+            get;
+            set;
+        }
     }
 
     public class CrawlerInfo: ICrawlerInfo
@@ -276,6 +285,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             PurchaseLocation = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
+            try
+            {
+                var mid = string.Empty;
+                if (context?.Request?.Cookies?.TryGetValue("mt.v", out  mid)== true)
+                {
+                    this.MonetateId = mid?.Trim();
+                }
+
+            }
+            catch
+            {
+            }
         }
 
         bool _initCurrency = false;
@@ -442,6 +463,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public bool IsDebugMode => _apiContext.IsDebugMode;
 
         public DebugModeFlagValues DebugFlags => _apiContext.DebugFlags;
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string MonetateId { get; set; }
 
         public SortingParameters Sorting
         {

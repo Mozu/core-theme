@@ -233,7 +233,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             PageContext.PageType = "category";
             PageContext.CategoryId = -1;
-            cat.ChildrenCategories = catList.AllCategories.Where(x => x.ParentCategory == null).ToList();
+            cat.ChildrenCategories = catList.RootCategories;
             return await Task.Run(() => View("Category", cat));
         }
 
@@ -422,8 +422,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                             ? $"<br /><img src=\"{new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)}\" />"
                             : ""),
                         new Uri(feedUrl, "/product/" + item.ProductCode),
-                        $"{item.ProductCode}-{item.CreateDate.Ticks}",
-                        item.UpdateDate /* TODO: replace with ModifiedDate UPDATE:20200410:Cole:Done */
+                        $"{item.ProductCode}-{item.CreateDate.GetValueOrDefault(DateTime.MinValue).Ticks}",
+                        item.UpdateDate.GetValueOrDefault(DateTime.MinValue) /* TODO: replace with ModifiedDate UPDATE:20200410:Cole:Done */
                     );
                     item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
                     return si;

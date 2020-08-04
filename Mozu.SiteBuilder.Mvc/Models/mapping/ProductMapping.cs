@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 };
                 if (source.Categories != null && source.Categories.Count > 0)
                 {
-                    var cat = source.Categories.FirstOrDefault(x => x.IsDisplayed) ?? source.Categories.First();
+                    var cat = source.Categories.FirstOrDefault(x => x.IsDisplayed.GetValueOrDefault(false)) ?? source.Categories.First();
                     PopulateDictionary(cat, dic);
                 }
 
@@ -117,10 +117,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
         private static void PopulateDictionary( Category category, IDictionary<string, object> dic)
         {
             var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
-            for (var i = 0; category != null && category.IsDisplayed && i < 10; i++)
+            for (var i = 0; category != null && category.IsDisplayed.GetValueOrDefault(false) && i < 10; i++)
             {
                 token.IdType = CategoryToken.CategoryIdentifierType.Id;
-                dic[token.Raw] = category.CategoryId;
+                dic[token.Raw] = category.CategoryId.GetValueOrDefault(-1);
                 token.IdType = CategoryToken.CategoryIdentifierType.Code;
                 dic[token.Raw] = category.CategoryCode;
                 token.IdType = CategoryToken.CategoryIdentifierType.Slug;

@@ -299,7 +299,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         var invalidator = HttpContext.RequestServices.Resolve<IDirtyCacheInvalidator>();
                         invalidator.Invalidate();
                         viewMode = DataViewModeType.Pending;
-                        domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
+                        domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "staging-" + x.DomainName);
                         if (!string.IsNullOrEmpty(variationId))
                         {
                             var qstring = new NameValueCollection();
