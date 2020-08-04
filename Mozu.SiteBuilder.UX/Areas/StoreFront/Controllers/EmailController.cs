@@ -65,12 +65,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
+        public bool IsShopperCanceled { get; set; }
     }
     
     public class OrderEmail : Order {
         public List<Location.Contracts.Location> Locations { get; set; }
         public bool IsCurbside { get; set; }
-
     }
 
     [ContextInitialization]
@@ -532,6 +532,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (shipmentOrder.Shipments.SafeAny())
                 {
                     shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == shipmentEmail.ShipmentNumber).ToList();
+                }
+
+                if(!shipmentEmail.CanceledItems.IsNullOrEmpty())
+                {
+                    shipmentEmail.IsShopperCanceled = shipmentEmail.CanceledItems.All(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                 }
 
                 var locationCode = shipmentEmail.FulfillmentLocationCode;

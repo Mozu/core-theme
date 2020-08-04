@@ -324,7 +324,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         shipmentModel.ShipmentUrl = shipmentReadyLink.Link;
                         break;
                     case Topics.ShipmentItemCanceled:
-                        shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
+                        shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.All(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                         break;
                     default:
                         break;
