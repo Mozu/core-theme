@@ -132,6 +132,8 @@
   "curbsideIdText": "Please bring your ID that matches the name on your order (Unless otherwise specified).",
   "curbsideItemCanceldedHeaderBlob": "SORRY! YOUR ITEMS ARE OUT OF STOCK",
   "curbsideItemCanclledBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. <br/><br/><strong> Unfortunately, the items you ordered are currently OUT OF STOCK. Therefore, the order was  cancelled.</strong> <br/> <br/> Please check back at a future date for item availability.",
+  "curbsideItemCancelledByShopperHeaderBlob": "Your curbside order has been cancelled",
+  "curbsideItemCancelledByShopperContentBlob": "Hello,<br/><br/>Thank you for shopping with us at {0}.<br/><br/>The following order# <strong>{1}</strong> has been cancelled by the store.",
   "curbsideItemInfo": "This order include the following items(s):",
   "curbsideLandingText": "When you arrive at the store please click the I'm Curbside button shown above.From there, you will be brought to a landing page where you can provide your delivery information.",
   "curbsideNoteTitle": "Please note...",
