@@ -44,45 +44,42 @@
     ],
     "regularHours": {
       "sunday": {
-        "label": "",
-        "openTime": "",
-        "closeTime": "",
+
+        "label": "9AM-4PM",
         "isClosed": true
       },
       "monday": {
-        "label": "",
-        "openTime": "10:00",
-        "closeTime": "02:00",
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
         "isClosed": false
       },
       "tuesday": {
-        "label": "",
-        "openTime": "10:00",
-        "closeTime": "03:00",
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
         "isClosed": false
       },
       "wednesday": {
-        "label": "",
-        "openTime": "10:00",
-        "closeTime": "02:00",
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
         "isClosed": false
       },
       "thursday": {
-        "label": "",
-        "openTime": "10:00",
-        "closeTime": "02:00",
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
         "isClosed": false
       },
       "friday": {
-        "label": "",
-        "openTime": "10:00",
-        "closeTime": "02:00",
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
         "isClosed": false
       },
       "saturday": {
-        "label": "",
-        "openTime": "",
-        "closeTime": "",
+        "label": "9AM-9PM",
         "isClosed": true
       },
       "timeZone": "Hawaiian Standard Time"

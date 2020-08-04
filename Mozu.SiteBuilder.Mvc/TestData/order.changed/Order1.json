@@ -1427,44 +1427,40 @@
         "sunday": {
 
           "label": "9AM-4PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
           "isClosed": true
         },
         "monday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9:00 AM",
+          "openTime": "11:00 PM",
           "isClosed": false
         },
         "tuesday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9:00 AM",
+          "openTime": "11:00 PM",
           "isClosed": false
         },
         "wednesday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9:00 AM",
+          "openTime": "11:00 PM",
           "isClosed": false
         },
         "thursday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9:00 AM",
+          "openTime": "11:00 PM",
           "isClosed": false
         },
         "friday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9:00 AM",
+          "openTime": "11:00 PM",
           "isClosed": false
         },
         "saturday": {
           "label": "9AM-9PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
           "isClosed": true
         }
       },
@@ -1537,44 +1533,44 @@
         "sunday": {
 
           "label": "9AM-4PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "",
+          "openTime": "",
           "isClosed": true
         },
         "monday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9: 00 AM",
+          "openTime": "11: 00 PM",
           "isClosed": false
         },
         "tuesday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9: 00 AM",
+          "openTime": "11: 00 PM",
           "isClosed": false
         },
         "wednesday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9: 00 AM",
+          "openTime": "11: 00 PM",
           "isClosed": false
         },
         "thursday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9: 00 AM",
+          "openTime": "11: 00 PM",
           "isClosed": false
         },
         "friday": {
           "label": "9AM-6PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "9: 00 AM",
+          "openTime": "11: 00 PM",
           "isClosed": false
         },
         "saturday": {
           "label": "9AM-9PM",
-          "closeTime": "10:00",
-          "openTime": "03:30",
+          "closeTime": "",
+          "openTime": "",
           "isClosed": true
         }
       },

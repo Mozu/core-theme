@@ -45,6 +45,7 @@ using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Configuration;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
+using System.Globalization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -536,6 +537,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var locationCode = shipmentEmail.FulfillmentLocationCode;
                 if (!locationCode.IsNullOrEmpty()) {
                     var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                    FormatRegularHours(location);
                     shipmentEmail.StoreLocation = location;
                 }
             }
@@ -547,7 +549,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (locations.SafeAny())
                 {
                     var filter = locations.Aggregate((x, y) => x + " or " + y);
-                    orderEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                    var allLocations  = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                    foreach (Location.Contracts.Location item in allLocations)
+                    {
+                        FormatRegularHours(item);
+                    }
+                    orderEmail.Locations = allLocations;
                 }
             }
             
@@ -573,6 +580,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static string GetCmsPage(VM.PageTypeDefinition def)
         {
             return def.Id;
+        }
+
+        private void FormatRegularHours(Location.Contracts.Location location)
+        {
+            if (location.RegularHours == null || string.IsNullOrEmpty(location.RegularHours.TimeZone))
+                return;
+
+            void FormatHours(Location.Contracts.Hours hours)
+            {
+                //both openTime and close time always have hours, if isClosed is false.
+                if (string.IsNullOrEmpty(hours.OpenTime) && string.IsNullOrEmpty(hours.CloseTime))
+                    return;
+                
+                DateTime.TryParse(hours.OpenTime, out DateTime openTime);
+                DateTime.TryParse(hours.CloseTime, out DateTime closeTime);
+                hours.OpenTime = openTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+                hours.CloseTime = closeTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+            }
+
+            FormatHours(location.RegularHours.Sunday);
+            FormatHours(location.RegularHours.Monday);
+            FormatHours(location.RegularHours.Tuesday);
+            FormatHours(location.RegularHours.Wednesday);
+            FormatHours(location.RegularHours.Thursday);
+            FormatHours(location.RegularHours.Friday);
+            FormatHours(location.RegularHours.Saturday);
         }
 
         public class Topics

@@ -22,6 +22,7 @@ using System.Web.Http;
 using Kibo.Fulfillment.Contracts.Api;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionConstraints;
+using System.Globalization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -238,7 +239,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (!string.IsNullOrEmpty(locationCode))
             {
-                return (await _locationRuntimeWebApiClient.CloneWithoutUserClaims().GetLocation(locationCode)).ReadAsSync();
+                 var location= (await _locationRuntimeWebApiClient.CloneWithoutUserClaims().GetLocation(locationCode)).ReadAsSync();
+                 FormatRegularHours(location);
+                 return location;
             }
 
             return null;
@@ -251,6 +254,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             return $"data:image/bmp;base64,{qrCodeImage.ToBase64String(ImageFormat.Bmp)}";
+        }
+
+        private void FormatRegularHours(Location.Contracts.Location location)
+        {
+            if (location.RegularHours == null || string.IsNullOrEmpty(location.RegularHours.TimeZone))
+                return;
+
+            void FormatHours(Location.Contracts.Hours hours)
+            {
+                //both openTime and close time always have hours, if isClosed is false.
+                if (string.IsNullOrEmpty(hours.OpenTime) && string.IsNullOrEmpty(hours.CloseTime))
+                    return;
+                
+                DateTime.TryParse(hours.OpenTime, out DateTime openTime);
+                DateTime.TryParse(hours.CloseTime, out DateTime closeTime);
+                hours.OpenTime = openTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+                hours.CloseTime = closeTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
+            }
+
+            FormatHours(location.RegularHours.Sunday);
+            FormatHours(location.RegularHours.Monday);
+            FormatHours(location.RegularHours.Tuesday);
+            FormatHours(location.RegularHours.Wednesday);
+            FormatHours(location.RegularHours.Thursday);
+            FormatHours(location.RegularHours.Friday);
+            FormatHours(location.RegularHours.Saturday);
         }
     }
 
