@@ -1,6 +1,6 @@
 ﻿using Mozu.CommerceRuntime.Contracts.Checkouts;
 using Mozu.CommerceRuntime.Contracts.Clients;
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -44,6 +44,7 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Configuration;
+using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -59,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public List<Location.Contracts.Location> Locations { get; set; }
     }
 
-    public class ShipmentEmail : Shipment
+    public class ShipmentEmail : Fulfillment.EntityModelOfShipment
     {
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
@@ -82,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
-        private IOrderWebApiClient _orderWebApiClient;
+        private readonly IOrderWebApiClient _orderWebApiClient;
 
         static EmailController()
         {
@@ -529,7 +530,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 shipmentEmail.Order = shipmentOrder;
                 if (shipmentOrder.Shipments.SafeAny())
                 {
-                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == shipmentEmail.Number).ToList();
+                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == shipmentEmail.ShipmentNumber).ToList();
                 }
 
                 var locationCode = shipmentEmail.FulfillmentLocationCode;

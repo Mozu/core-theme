@@ -40,6 +40,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Shipment = Mozu.CommerceRuntime.Contracts.Fulfillment.Shipment;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -57,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string StoreItemsCanceled = "shipment.itemscanceled.store";
     }
 
-    public class ShipmentNotification : EntityModelOfShipment
+    public class ShipmentNotification : Fulfillment.EntityModelOfShipment
     {
         public string StoreId { get; set; }
         public string ShipmentUrl { get; set; }
