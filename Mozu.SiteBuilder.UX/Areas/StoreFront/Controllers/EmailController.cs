@@ -536,7 +536,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 if(!shipmentEmail.CanceledItems.IsNullOrEmpty())
                 {
-                    shipmentEmail.IsShopperCanceled = shipmentEmail.CanceledItems.All(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
+                    shipmentEmail.IsShopperCanceled = shipmentEmail.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                 }
 
                 var locationCode = shipmentEmail.FulfillmentLocationCode;
