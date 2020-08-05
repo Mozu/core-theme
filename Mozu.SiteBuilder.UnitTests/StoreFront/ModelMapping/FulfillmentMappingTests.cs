@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
@@ -19,6 +20,56 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
         {
             Mapper.Reset();
             Mapper.Initialize(cfg => { cfg.AddProfile<FulfillmentMapping>(); });
+        }
+
+        [Test]
+        public void Check_mapping_of_pickup_info_from_fulfillment_to_commerce_contracts()
+        {
+            var source = new F.EntityModelOfShipment
+            {
+                ShipmentNumber = 123,
+                PickupInfo = new Dictionary<string, object>
+                {
+                    { "Make and model", "Firetruck" },
+                    { "Parking spot", 15 },
+                    { "Coordinates", new Tuple<decimal, decimal>(30.390062m, -97.706812m) }
+                }
+            };
+
+            var mapped = source.Map<CR.Shipment>();
+
+            mapped.Number.ShouldEqual(123);
+            mapped.PickupInfo.ShouldNotBeEmpty();
+            mapped.PickupInfo["Make and model"].Value<string>().ShouldEqual("Firetruck");
+            mapped.PickupInfo["Parking spot"].Value<int>().ShouldEqual(15);
+            mapped.PickupInfo["Coordinates"]["Item1"].Value<decimal>().ShouldEqual(30.390062m);
+            mapped.PickupInfo["Coordinates"]["Item2"].Value<decimal>().ShouldEqual(-97.706812m);
+        }
+
+        [Test]
+        public void Check_mapping_of_pickup_info_from_commerce_to_fulfillment_contracts()
+        {
+            var source = new CR.Shipment
+            {
+                Number = 123,
+                PickupInfo = new JObject(
+                    new JProperty("Make and model", "Firetruck"),
+                    new JProperty("Parking spot", 15),
+                    new JProperty("Coordinates", new JObject(
+                        new JProperty("Item1", 30.390062m),
+                        new JProperty("Item2", -97.706812m)
+                    ))
+                )
+            };
+
+            var mapped = source.Map<F.EntityModelOfShipment>();
+
+            mapped.ShipmentNumber.ShouldEqual(123);
+            mapped.PickupInfo.ShouldNotBeEmpty();
+            ((JValue) mapped.PickupInfo["Make and model"]).Value<string>().ShouldEqual("Firetruck");
+            ((JValue) mapped.PickupInfo["Parking spot"]).Value<int>().ShouldEqual(15);
+            ((JObject) mapped.PickupInfo["Coordinates"])["Item1"].Value<decimal>().ShouldEqual(30.390062m);
+            ((JObject) mapped.PickupInfo["Coordinates"])["Item2"].Value<decimal>().ShouldEqual(-97.706812m);
         }
 
         [Test]
@@ -71,9 +122,9 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
                     new F.Item()
                 }
             };
-            
+
             var shipment = fulfillmentShipment.Map<CR.Shipment>();
-            
+
             shipment.Data.ShouldBeNull();
             shipment.Items.First().Data.ShouldBeNull();
         }
@@ -91,7 +142,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
             };
 
             var mapped = source.Map<F.EntityModelOfShipment>();
-            
+
             mapped.Data.ShouldBeNull();
         }
     }

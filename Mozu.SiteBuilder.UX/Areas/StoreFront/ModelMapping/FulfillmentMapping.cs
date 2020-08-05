@@ -24,7 +24,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(dest => dest.WorkflowProcessId, op => op.Ignore())
                 .ForMember(dest => dest.BackorderCreatedDate, op => op.Ignore())
                 .ForMember(dest => dest.Cost, op => op.MapFrom(_=>1m))
-                .ForMember(x => x.Packages, op => op.Ignore());
+                .ForMember(x => x.Packages, op => op.Ignore())
+                .ForMember(dest => dest.PickupInfo, op =>
+                {
+                    op.PreCondition(src => src.PickupInfo != null);
+                    op.MapFrom(src => JObject.FromObject(src.PickupInfo));
+                });
 
             CreateMap<F.Item, CR.ShipmentItem>()
                 .ForMember(dest => dest.Data, opt =>
