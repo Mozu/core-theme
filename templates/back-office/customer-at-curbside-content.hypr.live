@@ -33,6 +33,12 @@
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
+                            <label for="licenseplatelabel" name="licenseplatelabel" id="licenseplatelabel">{{ labels.licensePlateLabel }}</label>
+                            <input name="licenseplateText" value="" type="text" data-mz-licenseplate />
+                        </div>
+                    </div>
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
                             <label for="parkingspotlabel" name="parkingspotlabel" id="parkingspotlabel">{{ labels.parkingSpotNumber }}</label>
                             <input name="parkingspotText" value="" type="text" data-mz-vehiclemodel />
                         </div>

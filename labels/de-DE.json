@@ -500,5 +500,6 @@
   "width": "Breite",
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yourAccount": "Ihr Konto",
-  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>."
+  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>.",
+  "licensePlateLabel":"Nummernschild # (OPTIONAL)"
 }

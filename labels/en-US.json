@@ -662,5 +662,6 @@
   "width": "Width",
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yourAccount": "Your Account",
-  "yourOrderNumber": "Your order number is <strong>{0}</strong>."
+  "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
+  "licensePlateLabel":"License Plate # (OPTIONAL)"
 }
