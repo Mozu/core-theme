@@ -216,6 +216,7 @@
   "late": "Kam zu spät",
   "leaveOnWishlist": "Lassen Sie auf Wunschzettel",
   "length": "Länge",
+  "licensePlateLabel":"Nummernschild # (OPTIONAL)",
   "localStores": "Lokale Geschäfte",
   "locationCloseTime": "la période de fermeture",
   "locationHoursClosed": "Fermée",
@@ -500,6 +501,5 @@
   "width": "Breite",
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yourAccount": "Ihr Konto",
-  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>.",
-  "licensePlateLabel":"Nummernschild # (OPTIONAL)"
+  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>."
 }
