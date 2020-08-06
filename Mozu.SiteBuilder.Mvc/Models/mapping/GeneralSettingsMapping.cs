@@ -107,6 +107,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.MapFrom(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.IsMultishipEnabled, op => op.MapFrom(x => x.IsMultishipEnabled))
                 .ForMember(m => m.SupressedEmailTransactions, op => op.MapFrom(x => x.SupressedEmailTransactions))
+                .ForMember(m => m.SupressedSmsTransactions, op => op.MapFrom(x => x.SupressedSmsTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
                 .ForMember(m => m.TemplateSiteId, op => op.MapFrom(dc => dc.TemplateSiteId))
                  .ForMember(m => m.BccEmailAddress, op => op.MapFrom(dc => dc.BccEmailAddress))

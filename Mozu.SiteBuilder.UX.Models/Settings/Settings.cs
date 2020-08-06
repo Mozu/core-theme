@@ -431,7 +431,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public List<SMSTypeSettingVM> SmsTypes { get; set; }
 
         [DataMember(EmitDefaultValue = true)]
-        public SMSTransactionSettings SmsTransactions { get; set; }
+        public SMSTransactionSettings SupressedSmsTransactions { get; set; }
     }
 
     public class ViewModeToggles
