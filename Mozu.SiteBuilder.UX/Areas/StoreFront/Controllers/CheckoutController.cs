@@ -211,7 +211,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // TODO: Null checks needed between these two values?
             if (priceListChanged)
             {
-                var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
+                var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, string.Empty);
                 if (updateResponse.HasException)
                 {
                     // Changing pricelist could cause odd things to happen. For example:
