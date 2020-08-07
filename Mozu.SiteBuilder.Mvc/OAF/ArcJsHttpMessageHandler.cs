@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             if (res == null )
             {
                 context.HttpContext.Response.StatusCode = context.HttpContext.Response.StatusCode == 200
-                    ? 418
+                    ? 204
                     : context.HttpContext.Response.StatusCode;
                 return;
             }
