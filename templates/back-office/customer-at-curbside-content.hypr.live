@@ -42,10 +42,10 @@
                             <label for="deliverymethod" name="deliverymethodlabel" id="deliverymethodlabel">{{ labels.methodDelivery }}</label>
                                 <select data-mz-deliverymethod" id="selectdeliverymethod">
                                     <option value="Place Items In Trunk">Place Items In Trunk</option>
-                                    <option value="Place items in backseat">Place Items In Backseat</option>
-                                    <option value="Place items front passenger seat">Place Items In Front Passenger Seat</option>
-                                    <option value="deliver to drivers window">Deliver To Drivers Window</option>
-                                    <option value="leave item outside car">Leave Item Outside Car</option>
+                                    <option value="Place Items In Backseat">Place Items In Backseat</option>
+                                    <option value="Place Items In Front Passenger Seat">Place Items In Front Passenger Seat</option>
+                                    <option value="Deliver to Drivers Window">Deliver To Drivers Window</option>
+                                    <option value="Leave Item Outside Car">Leave Item Outside Car</option>
                                 </select>
                         </div>
                     </div>
