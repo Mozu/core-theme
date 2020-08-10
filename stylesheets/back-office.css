@@ -275,11 +275,22 @@ table {
 }
 
 .mz-curbsidedelivery-page {
-  margin: 38px;
+   margin-top: 38px;
+}
+
+/* Desktop and tablet */
+@media only screen and (min-width: 768px) {
+  .mz-curbsidedelivery-page {
+    margin: 38px;
+  }
+
+  .mz-l-formfieldgroup input[type="text"], .mz-l-formfieldgroup select {
+    width: 350px!important;
+  }
 }
 
 .mz-l-formfieldgroup input[type="text"], .mz-l-formfieldgroup select {
-  width: 350px!important;
+  width: 280px;
 }
 
 .mz-delevery-button {
@@ -308,7 +319,6 @@ table {
 
 .curbside-description p {
   margin-top: 20px;
-  margin-left: 20px;
 }
 
 .with-you-shortly img {
