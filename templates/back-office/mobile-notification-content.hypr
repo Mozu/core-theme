@@ -29,7 +29,7 @@
                 {% for item in model.items %}
                     <tr>
                         <td>
-                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                            <img class="product-image" src="{{ item.imageUrl }}">
                         </td>
                         <td>
                             <div class="product-name">
