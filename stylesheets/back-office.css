@@ -275,11 +275,36 @@ table {
 }
 
 .mz-curbsidedelivery-page {
-  margin: 38px;
+   margin-top: 38px;
+}
+
+/* Desktop and tablet */
+@media only screen and (min-width: 768px) {
+  .mz-curbsidedelivery-page {
+    margin: 38px;
+  }
+
+  .mz-l-formfieldgroup input[type="text"], .mz-l-formfieldgroup select {
+    width: 350px!important;
+  }
+
+  .location-hours-format td {
+    text-align: right;
+    padding: 12.5px 25px!important;
+  }
+
+  .mz-curbside-header img {
+    width: 20%!important;
+  }
+
+  .mz-curbside-header-body h3 {
+    font-weight: 600!important;
+  }
+
 }
 
 .mz-l-formfieldgroup input[type="text"], .mz-l-formfieldgroup select {
-  width: 350px!important;
+  width: 245px;
 }
 
 .mz-delevery-button {
@@ -308,7 +333,6 @@ table {
 
 .curbside-description p {
   margin-top: 20px;
-  margin-left: 20px;
 }
 
 .with-you-shortly img {
@@ -415,13 +439,14 @@ table {
 
 .mz-curbside-header-body {
   position: relative;
-  top: 25%;
+  top: 13%;
   left: 10px;
+  width: 94%;
 }
 
 .mz-curbside-header img {
   float: left;
-  width: 20%;
+  width: 32%;
   height: 100%;
   background: #330065;
 }
@@ -437,4 +462,16 @@ table {
 }
 
 
+.location-hours-format td {
+  text-align: right;
+  padding: 12.5px 8px;
+}
 
+
+.location-hours-format {
+  background: #eeeeee;
+}
+
+.mz-curbside-header-body h3 {
+  font-weight: 100;
+}

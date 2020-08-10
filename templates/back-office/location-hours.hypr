@@ -1,4 +1,4 @@
-<table class="mz-ordersummary">
+<table class="location-hours-format">
         <thead>
             <tr>
                 <td bgcolor="#666666"><font color="#FFFFFF">{{labels.locationWeekDays}}</td>
