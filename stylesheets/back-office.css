@@ -461,15 +461,37 @@ table {
     padding-top: 16px;
 }
 
-
 .location-hours-format td {
   text-align: right;
   padding: 12.5px 8px;
 }
 
-
 .location-hours-format {
   background: #eeeeee;
+}
+
+.mz-printable-shipment-mobilenotification .product-image {
+  height: 100px;
+}
+
+/* Portrait */
+@media only screen and (min-device-width: 320px) and (max-device-width: 680px) and (-webkit-min-device-pixel-ratio: 3) and (orientation: portrait) {
+  .mz-printable-shipment-mobilenotification .product-image {
+    height: 35px;
+  }
+
+  .mz-printable-shipment-mobilenotification grid td,
+  .mz-printable-shipment-mobilenotification .grid th {
+    padding: 4px 4px;
+  }
+
+  .mz-printable-shipment-mobilenotification {
+    font-size:13px;
+  }
+
+  .mz-printable-shipment-mobilenotification .mobile-shipment-info-table {
+    font-size:11px;
+  }
 }
 
 .mz-curbside-header-body h3 {
