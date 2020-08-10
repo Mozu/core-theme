@@ -200,6 +200,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     {
 
                         var httpCtx = new DefaultHttpContext();
+                        httpCtx.RequestServices = _context.RequestServices;
                         httpCtx.Request.Path = uri.LocalPath;
                         var rc = new RouteContext(httpCtx);
                         route.RouteAsync(rc);
