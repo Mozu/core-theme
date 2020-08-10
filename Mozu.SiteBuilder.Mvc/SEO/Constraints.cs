@@ -375,6 +375,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             }
             var slug = Convert.ToString(tmp);
            
+            
             var cats = catTree.Value.FindBySlug(slug).ToList();
             if (!cats.Any())
             {
