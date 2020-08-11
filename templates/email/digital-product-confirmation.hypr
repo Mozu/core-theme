@@ -1,0 +1,92 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+    <br>
+    <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!</p>
+    <br>
+    <p>{{ labels.orderConfirmationBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}</p>
+
+    <table width="100%" cellpadding="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666">
+                    <font color="#FFFFFF">{{ labels.orderDetails }}</font>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
+                    <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br><br>
+                    {% if model.fulfillmentInfo.shippingMethodName %}
+                    <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}<br>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% ifnotequal model.total 0 %}
+           <tr>
+                <td>
+                    {% if model.billingInformation.firstName or model.billingInformation.lastNameOrSurname %}
+                        <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
+                    {% endif %}
+                    {% for payment in model.payments %}
+                    {% if payment.status != "Voided" and payment.status != "Declined" %}
+                        {% if payment.billingInfo.paymentType == "CreditCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
+                        {% endif %}
+                        {% if payment.billingInfo.paymentType == "GiftCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
+                        {% endif %}
+                        {% if payment.billingInfo.paymentType == "StoreCredit" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.storeCreditCode }} {{ payment.billingInfo.storeCreditCode }}<br>
+                        {% endif %}
+                        {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>
+                            <b>{{ labels.purchaseOrderNumber }}</b>: {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}<br>
+                            {% if payment.billingInfo.purchaseOrder.customFields.length > 0 %}
+                                {% for field in payment.billingInfo.purchaseOrder.customFields %}
+                                    <b>{{ field.label }}</b>: {{ field.value }}<br>
+                                {% endfor %}
+                            {% endif %}
+                            <b>{{ labels.purchaseOrderPaymentTerms }}</b>: {{ payment.billingInfo.purchaseOrder.paymentTerm.description }}
+                        {% endif %}
+                        {% if  payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
+                        {% endif %}
+                        {%if payment.billingInfo.paymentType|lower == "paywithamazon" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
+                        {%endif%}
+                        {% if payment.paymentType|lower == "token" %}
+                            {%if payment.billingInfo.token.type|lower == "paywithamazon" %}
+                               <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
+                            {%endif%}
+                            {%if payment.billingInfo.token.type|lower == "applepay" %}
+                               <b>{{ labels.paymentMethod }}</b>: {{ labels.applePay }}
+                            {%endif%}
+                        {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+
+            {% endifnotequal %}
+        </tbody>
+    </table>
+
+    {% include "modules/common/email-order-summary" %}
+
+    {% if model.shopperNotes.comments %}
+        <h5>{{ labels.comments }}</h5>
+        <br><p>{{ model.shopperNotes.comments }}</p>
+    {% endif %}
+
+    {% if model.shopperNotes.giftMessage %}
+        <h5>{{ labels.giftMessage }}</h5>
+        <br><p>{{ model.shopperNotes.giftMessage }}</p>
+    {% endif %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+{% endblock body-content %}
