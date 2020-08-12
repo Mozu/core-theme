@@ -1,0 +1,12 @@
+
+<div class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}{% if themeSettings.allowFilterByLocationInventory %} mz-searchbox-my-store{% endif %}">
+
+    <span class="mz-searchbox-field">
+        <input id="mz-searchbox-input" class="mz-searchbox-input" type="text" autocomplete="off" placeholder="Search" />
+        <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+    </span>
+
+    <span id="mz-searchbox-field-dd">
+    </span>
+</div>
+

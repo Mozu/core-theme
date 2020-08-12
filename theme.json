@@ -525,6 +525,12 @@
     }
   ],
   "settings": {
+    "visualSearchEnabled": true,
+    "visualSearchAppid":"",
+    "visualSearchApiKey":"",
+    "visualSearchCatalogId":"",
+    "visualSearchScheme":"",
+    "visualSearchBaseURL": "//search.sandbox.kibocommerce.com",
     "enableRecaptcha": false,
     "recaptchaSiteKey": null,
     "__recaptchaSecrete": null,

@@ -1,0 +1,276 @@
+.tt-dropdown.tt-dropdown-custom {
+	z-index: 1000001;
+	right: 0;
+	left: 50%;
+	top: -1px;
+	outline: none;
+	box-sizing: inherit;
+	padding: 0px;
+	line-height: 1.5;
+	width: 738px;
+	transform: translate(-50%,0);
+	z-index: 999;
+	flex-flow: wrap;
+	font-family: Source Sans Pro, sans-serif;
+	border: 1px solid #a7a7a7;
+}
+
+.tt-dropdown-vertical.tt-dropdown-custom {
+
+}
+
+.tt-dropdown.tt-dropdown-custom a {}
+
+.tt-dropdown.tt-dropdown-custom a:visited {}
+
+.tt-close-button.tt-close-button-custom {
+	position: absolute;
+	color: #888;
+	right: 7px;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+.tt-close-button.tt-close-button-custom:hover {
+	color: #333;
+}
+
+.tt-suggestions.tt-suggestions-custom {
+	background-color: #888;
+	border: 0px;
+	padding: 10px;
+	flex: 1;
+}
+
+.tt-suggestions-vertical.tt-suggestions-custom {}
+
+.tt-suggestions-title.tt-suggestions-title-custom {
+	visibility: hidden;
+	position: relative;
+}
+
+.tt-suggestions-title.tt-suggestions-title-custom::after {
+	content: "Best Matches";
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid #fff;
+    visibility: initial;
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    text-align: left;
+    color: #fff;
+}
+
+.tt-suggestions-list.tt-suggestions-list-custom {
+	border: 0px;
+	padding: 0px !important;
+	/* client used multiple element id's (#) in CSS styles for padding, ditto margin */
+	margin: 0px !important;
+}
+
+.tt-suggestions-list.tt-suggestions-list-custom .tt-active {
+	/*background-color: white;*/
+}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom {
+	padding: 0;
+	display: block;
+	text-decoration: none;
+	border: none;
+	padding: 0px 5px;
+}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:last-child {}
+
+.tt-filter-suggestion {}
+
+.tt-filter-suggestion-prefix {}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:last-child {}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:last-child {}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:hover {
+	background-color: transparent;
+}
+
+.tt-suggestion-text.tt-suggestion-text-custom {
+	color: #fff;
+	width: auto;
+	height: auto;
+	margin: 0px;
+	line-height: 1.2;
+	font-weight: normal;
+	overflow: hidden;
+	font-size: 13px;
+	padding: 5px 0;
+}
+
+.tt-suggestion-text.tt-suggestion-text-custom {}
+
+.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:hover .tt-suggestion-text.tt-suggestion-text-custom {
+	color: #555;
+}
+
+.tt-suggestions-list.tt-suggestions-list-custom .tt-active .tt-suggestion-text.tt-suggestion-text-custom {
+	color: #555;
+}
+.tt-recommendations.tt-recommendations-custom {
+	background-color: #fff;
+	padding: 10px;
+	overflow: hidden;
+	flex: 4;
+	border: none;
+}
+
+.product .suggestion-group-title.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:first-child {
+	padding-top: 0px;
+}
+.suggestion-group-title.tt-suggestion-wrapper.tt-suggestion-wrapper-custom {
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.suggestion-group-title.tt-suggestion-wrapper.tt-suggestion-wrapper-custom:after {
+	content: '';
+    border-top: 1px solid #fff;
+    width: 100%;
+    display: block;
+}
+
+.tt-recommendations-vertical.tt-recommendations-custom {}
+
+.tt-recommendations-title.tt-recommendations-title-custom {
+	display: none;
+}
+
+.tt-recommendations-title-search-term {
+	color: #555;
+}
+
+.tt-recommendations-list.tt-recommendations-list-custom {
+	list-style: none;
+	border-top: none;
+	padding-left: 0px !important;
+}
+
+.tt-recommendations-list.tt-recommendations-list-custom .tt-active {}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom {
+	padding-top: 0px;
+	height: auto;
+	width: 46%;
+	border: none;
+	display: inline-block;
+	margin: 15px 1%;
+	vertical-align: top;
+}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom:first-child {}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom:last-child {}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom:hover {
+	background-color: white;
+}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom.tt-active {
+	background-color: white;
+	page-break-after: auto;
+}
+
+.tt-recommendation-detail-link.tt-recommendation-detail-link-custom {
+	height: auto;
+	display: inline-block;
+	line-height: 1.5;
+	text-decoration: none;
+	width: 100%;
+}
+
+.tt-recommendation-price.tt-recommendation-price-custom {
+	position: inherit;
+    font-size: 12px;
+}
+
+.tt-recommendation-image-wrapper.tt-recommendation-image-wrapper-custom {
+	width: 100%;
+	height: 149.7%;
+	margin: 0px 0px 10px 0px;
+	padding: 0px;
+	overflow: hidden;
+}
+
+.tt-recommendation-image.tt-recommendation-image-custom {
+	width: auto;
+	height: 120px;
+	margin: 0px auto;
+	border-radius: 0px;
+	max-width: 100%;
+	display: block;
+}
+
+.tt-recommendation-text.tt-recommendation-text-custom {
+	line-height: 1.5;
+	text-align: center;
+}
+
+.tt-recommendation-name.tt-recommendation-name-custom {
+	line-height: 1.2;
+	overflow: hidden;
+	font-size: 14px;
+	text-align: center;
+	max-height: 39px;
+}
+
+.tt-recommendation-wrapper.tt-recommendation-wrapper-custom.tt-active .tt-recommendation-name {
+	color: #555;
+	text-decoration: underline;
+}
+
+.tt-recommendation-category.tt-recommendation-category-custom {}
+
+.tt-recommendation-price-orig.tt-recommendation-price-orig-custom {
+	font-size: 1em;
+	font-style: italic;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 1.5;
+	margin-right: 5px;
+	width: unset;
+	display: inline-block;
+}
+
+.tt-recommendation-price-orig.tt-recommendation-price-orig-custom.tt-strikeout {
+	text-decoration: line-through;
+}
+
+.tt-recommendation-price-sale.tt-recommendation-price-sale-custom {
+	color: #555;
+	font-size: 1em;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 1.5;
+	width: unset;
+	display: inline-block;
+}
+
+@media screen and (max-width:768px) {
+	.tt-dropdown.tt-dropdown-custom {
+		width: 100% !important;
+		left: 0;
+		transform: none;
+	}
+	.tt-recommendation-image.tt-recommendation-image-custom {
+		height: 100px;
+	}
+	.tt-recommendation-wrapper.tt-recommendation-wrapper-custom {
+		width: 48%;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+}
