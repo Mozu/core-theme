@@ -318,7 +318,7 @@
   "mobileHandling": "Handling:",
   "mobileItemTotal": "Item Total:",
   "mobileLocationAssignedMessage": "Shipment assigned: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
-  "mobileOrderConfirmationMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
+  "mobileOrderConfirmationMessage": "{0} Order Alerts. We'll notify you when your order status changes. Msg&Data rates may apply. Reply {1} to opt out",
   "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
   "mobilePickLocation": "Pickup from/Ship from:",
   "mobileShipmentCanceledInfo": "Canceled Items",
