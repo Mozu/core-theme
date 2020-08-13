@@ -30,7 +30,7 @@
                     {% for item in model.items %}
                         <tr>
                             <td>
-                                {{ item.quantityRestocked }}
+                                {{ item.quantityReceived }}
                             </td>
                             <td>
                                 {{ item.product.mfgPartNumber }}
