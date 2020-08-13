@@ -516,7 +516,7 @@
   "returnOtherBlob1": "<p>Thank you for shopping at {0}. We wanted to let you know that your return status is now {1}.</p>",
   "returnOtherBlob2": "<p>You will receive another email when we have processed your return.</p>",
   "returnPrintLabelButton": "Print",
-  "returnReceiptBodyContent": "<p>For an accepted return, a refund will be applied within 10 business days to the credit card or other payment method used for the order. Depending on the financial institution, a credit should appear on your statement in one or two billing periods. Shipping and handling fees are not refunded.<p><br /><br /><p>If a return is rejected, the product will be returned to you. Returns are usually rejected because products were received in used condition or after the allowed time period. Please go to {0} to see our specific return policy.<p><br />Thank you for shopping with{1}",
+  "returnReceiptBodyContent": "<p>For an accepted return, a refund will be applied within 10 business days to the credit card or other payment method used for the order. Depending on the financial institution, a credit should appear on your statement in one or two billing periods. Shipping and handling fees are not refunded.<p><br /><br /><p>If a return is rejected, the product will be returned to you. Returns are usually rejected because products were received in used condition or after the allowed time period. Please go to {0} to see our specific return policy.<p><br />Thank you for shopping with {1}",
   "returnReceiptBodyHeader": "<p>Dear {0} {1},</p><br /><p>We have finished processing your return # {2} for {3} order #{4}.</p> <br /> The items you returned are described below:",
   "returnReceiptHeader": "Return complete for {0} Order # {1}",
   "returnReceiptItemNameColumn": "Name",
