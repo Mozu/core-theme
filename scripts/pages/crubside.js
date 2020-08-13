@@ -24,15 +24,18 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
 
             e.preventDefault();
             var isBackofficePreview = $('[data-mz-isBackofficePreview]').val();
-            var payload ={
+            var payload = {
                 orderNumber: self.model.get('orderNumber'),
                 orderId: self.model.get('orderId'),
                 shipmentNumber: self.model.get('shipmentNumber'),
                 CurbsideFormData: [
                     {
-                
                         key: $('#parkingspotlabel').text(),
                         value: $('[data-mz-parkingspotText]').val()
+                    },
+                    {
+                        key: $('#licenseplatelabel').text(),
+                        value: $('[data-mz-licenseplate]').val()
                     },
                     {
                         key: $('#vehiclemodelLabel').text(),
@@ -40,7 +43,7 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
                     },
                     {
                         key: $('#deliverymethodlabel').text(),
-                        value: $( "#selectdeliverymethod" ).val()
+                        value: $("#selectdeliverymethod").val()
                     }
                 ]
             };

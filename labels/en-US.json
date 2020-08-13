@@ -288,6 +288,7 @@
   "late": "Arrived too late",
   "leaveOnWishlist": "Leave On Wishlist",
   "length": "Length",
+  "licensePlateLabel":"License Plate # (OPTIONAL)",
   "localStores": "Local Stores",
   "locationCloseTime": "Close Time",
   "locationHoursClosed": "Closed",
