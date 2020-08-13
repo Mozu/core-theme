@@ -223,20 +223,20 @@ define([
                 // quantityReturned: 0
 
                 //Not needed. Just to avoid confusion 
-                delete comboItem.shipmentItemId
-                delete comboItem.shipmentNumber
-                delete comboItem .unitQuantity
+                delete comboItem.shipmentItemId;
+                delete comboItem.shipmentNumber;
+                delete comboItem .unitQuantity;
 
-                _.each(returnableItems, function(item, idx){
+                _.each(shipments, function(item, idx){
                     if (idx) {
                         comboItem.quantityFulfilled =+ item.quantityFulfilled;
                         comboItem.quantityOrdered =+ item.quantityOrdered;
                         comboItem.quantityReturnable =+ item.quantityReturnable;
                         comboItem.quantityReturned =+ item.quantityReturned;
                     }
-                })
+                });
 
-                comboItem.originalShipments = shipments
+                comboItem.originalShipments = shipments;
             },
             returnableItems: function(returnableItems) {
                 var self = this,
@@ -271,7 +271,7 @@ define([
                     var returnableShipment = returnableShipments[0];
 
                     if(returnableShipments.length > 1) {
-                        returnableShipment = combineReturnableShipments(returnableShipments);
+                        returnableShipment = self.combineReturnableShipments(returnableShipments);
                     }
             
 

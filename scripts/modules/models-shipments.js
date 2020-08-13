@@ -8,7 +8,7 @@ define([
 ], function (api, _, Backbone, Hypr, ProductModels, ReturnModels) {
 
     var Shipment = Backbone.MozuModel.extend({
-        mozuType: 'fulfillmentshipment',
+        mozuType: 'storefrontShipment',
         relations: {
             items: Backbone.Collection.extend({
                 model: ProductModels.Product
@@ -34,8 +34,8 @@ define([
         hasTrackingInfo: function(){
             var packages = this.get('packages');
             if(packages) {
-                return _.find(packages, function(package){
-                    return _.findKey(package, function(val, key){
+                return _.find(packages, function(trackingPackage){
+                    return _.findKey(trackingPackage, function(val, key){
                         return key === 'trackings';
                     });
                 });
@@ -44,7 +44,7 @@ define([
         }
     }),
     ShipmentCollection = Backbone.MozuPagedCollection.extend({
-        mozuType: 'fulfillmentshipments',
+        mozuType: 'storefrontShipments',
         defaults: {
             pageSize: 3,
             pageCount: 0,

@@ -249,12 +249,12 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 if(locationCode){
                     var locationView = new LocationViews.LocationInfoView({
                         el: $(this),
-                        model: new LocationModels.Location({code: locationCode})
+                        model: new LocationModels.Location({code: locationCode, handlesMessages: true})
                     });
                     //locationView .render();
                 }
                 
-            })
+            });
         },
         renderMessage: function(message) {
             var self = this;
