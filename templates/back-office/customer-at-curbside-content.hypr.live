@@ -28,7 +28,7 @@
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="vehiclemodel" name="vehiclemodellabel" id="vehiclemodelLabel" >{{ labels.vehicleModel }}</label>
-                            <input name="vehiclemodeltext" value="" type="text" data-mz-parkingspotText />
+                            <input name="vehiclemodeltext" value="" type="text" data-mz-vehiclemodel />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
@@ -40,7 +40,7 @@
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
                             <label for="parkingspotlabel" name="parkingspotlabel" id="parkingspotlabel">{{ labels.parkingSpotNumber }}</label>
-                            <input name="parkingspotText" value="" type="text" data-mz-vehiclemodel />
+                            <input name="parkingspotText" value="" type="text" data-mz-parkingspotText />
                         </div>
                     </div>
                     <div class="mz-l-formfieldgroup-row">
