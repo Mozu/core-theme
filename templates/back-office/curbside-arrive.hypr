@@ -1,4 +1,6 @@
 {% extends "back-office/curbside-base" %}
 {% block body-content %}
+<div class = "curbside-page-wrap">
 {% include "back-office/curbside-arrive-content" %}
+</div>
 {% endblock body-content %}

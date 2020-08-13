@@ -1,0 +1,12 @@
+
+{% extends "back-office/curbside-base" %}
+{% block body-content %}
+
+    {% require_script "pages/curbside-customer-survey" %}
+    <!-- https://www.mozu.com/docs/developer/themes/reference.htm#preload_json -->
+    {% preload_json model "curbsideCustomerSurvey" %}
+
+    <div id="mz-curbside-customer-survey-content" class="curbside-page-wrap">
+        {% include "back-office/curbside-customer-survey-content" %}
+    </div>
+{% endblock body-content %}

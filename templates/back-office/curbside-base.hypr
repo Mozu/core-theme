@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         {% include "modules/json-required-for-hyprlive" %}
         {% require_script "pages/crubside" %}
+        {% require_script "pages/curbside-customer-survey" %}
         {% include "modules/trailing-scripts" %}
     	    {% cms_resources %}
         {% block stylesheets %}
@@ -12,11 +13,15 @@
         {% endblock stylesheets %}
         <style type="text/css">{% inline_style "back-office.css" %}</style>
     </head>
-    <body>   
+    <body>
+    <div class="curbside-main-page-content">   
         {% block body-content %}
         {% endblock body-content %}
         {% block page-footer %}
-            {% include "modules/page-footer" %}
+        <div class="curbside-footer-position">
+        {% include "modules/page-footer" %}
+        </div>
         {% endblock page-footer %}
+    </div>
     </body>
 </html>
