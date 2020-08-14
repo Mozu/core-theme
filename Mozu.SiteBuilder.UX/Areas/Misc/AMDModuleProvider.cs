@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             }
             var deps = GetAMDDeps(shimRequire);
             var module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
-            return new OkObjectResult(new StringContent(module, Encoding.Unicode, "text/javascript"));
+            return new OkObjectResult(module);
         }
     }
 }
