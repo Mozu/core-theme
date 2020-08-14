@@ -13,6 +13,7 @@ ngProjectPipeline (
 	INGRESS_PATH_MATCH: '/',
 	INGRESS_REWRITE_TARGET: '/',
 	INGRESS_HOST_PREFIX :'sitebuilder',
+	KUBE_HEALTHCHECK_URL: '/_mzhealth',
     KUBE_SERVICE_NAME :'mozu-sitebuilder-ui',
     KUBE_TEMPLATE_FILE : 'com/kibo/kubernetes/ng-web-service.yml');
 
