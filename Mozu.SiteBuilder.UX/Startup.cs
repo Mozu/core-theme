@@ -21,6 +21,7 @@ using Microsoft.Extensions.FileProviders;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Health;
 using Mozu.Core.Caching;
 using Mozu.Core.Configuration;
 using Mozu.Core.Settings;
@@ -124,11 +125,19 @@ namespace Mozu.SiteBuilder.UX
                 c.MaxResponseContentBufferSize = int.MaxValue;
                 c.Timeout = new TimeSpan(0, 1, 3, 0);
             });
+            services
+                .AddRedisCheck()
+                .AddOOMCheck();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        {  
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/_mzhealth");
+            });
             
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -137,7 +146,7 @@ namespace Mozu.SiteBuilder.UX
                         "wwwroot"))
             });
             var rewriteOptions = new RewriteOptions().Add(UrlRewritingMiddleware.RewriteIncomingUrl);
-            app.UseMiddleware<RedisHealthCheckMiddleware>()
+            app
                 .UseMiddleware<SessionMiddleware>()
                 .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
                 .UseMiddleware<SiteContextInitializationMiddleware>()

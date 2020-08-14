@@ -27,6 +27,8 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mozu.Core.Api.Health;
+using Mozu.Core.Exceptions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
@@ -122,7 +124,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddHttpClient();
            // builder.AddScoped<IApiContextAccessor, SBAPiContextAccessor>();
 
-           
+           builder.AddSingleton<IOutOfMemoryExceptionsHandler, OutOfMemoryHandler>();
+
 
 
         }
