@@ -355,7 +355,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CmsContext ??= new CmsPageContext();
             PageContext.CmsContext.Page = new DocumentRequest
             {
-                Path = "category-" + categoryId,
+                Path = "category-" + cat.CategoryId.ToString(),
                 ListFQN = "catalogContent@mozu",
                 DocumentTypeFQN = "categoryContent@mozu",
                 IncludeInactiveDocument = PageContext.IsEditMode
