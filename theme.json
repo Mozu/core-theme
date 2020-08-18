@@ -399,6 +399,12 @@
       "properties": {},
       "template": "mobile-notification/order-curbside-ready",
       "title": "Curbside Ready"
+    },
+    {
+      "id": "order.optoutack",
+      "properties": {},
+      "template": "mobile-notification/opt-out-acknowledgement",
+      "title": "Opt Out Acknowledgement"
     }
   ],
   "pageTypes": [
