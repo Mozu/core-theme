@@ -23,7 +23,7 @@
             <div> <h5>{{ labels.alreadyCurbside }} <a href="//{{ domainName }}/anonymous-notification/curbsideArrive/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.bringMeOrder }}</a><br/><br/></h5> </div>
     </div>
     <div class="curbside-info-notes">
-        {{ labels.customerAtCurbsideBlob3|safe }}
+        {{ labels.customerAtCurbsideBlob4|safe }}
     </div>
     <div class="order-details-header">
         <div class="curbside-order-details-left">

@@ -1,6 +1,10 @@
-<div class="header customer-at-curbside-header">
-    <h2> {{ labels.curbsideArriveTitle }} </h2>
-</div>
+<div class="mz-curbside-header">  
+    <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+    <div class="mz-curbside-header-body">
+        <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+        <h3>{{ labels.curbsideArriveTitle }}</h3>
+    </div>
+</div>  
 <div class="curbside-page-content">
     <div>
         <p>{{labels.curbsideSeeYouSoon}}</p>

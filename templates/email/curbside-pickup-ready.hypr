@@ -19,7 +19,7 @@
 </div>
 <p>{{ labels.alreadyCurbsidePickupTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br>
 
-<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob3|safe }}</div><br/>
+<div class="mz-curbside-alert">{{ labels.customerAtCurbsideBlob4|safe }}</div><br/>
 
 <!--- Order Details Header--->
 <div class="mz-multiship-email" style="width: 100%;">
