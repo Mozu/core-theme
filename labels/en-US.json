@@ -489,7 +489,7 @@
   "purchaseOrderPaymentTerm": "Payment Term",
   "purchaseOrderPaymentTermMissing": "Payment term required",
   "purchaseOrderPaymentTerms": "Payment Terms",
-  "qrDetails": "Thanks for providing your information! A store associate will be with you shortly. Please show the below QR Code to store associate so they can verify your order details.",
+  "qrDetails": "Thanks for providing your information! A store associate will be with you shortly. Please show the below QR Code to the store associate so they can verify your order details.",
   "qty": "Qty",
   "quantity": "Qty",
   "quantityFulfilled": "Qty Fulfilled",
