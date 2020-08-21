@@ -271,7 +271,7 @@ define([
                     var returnableShipment = returnableShipments[0];
 
                     if(returnableShipments.length > 1) {
-                        returnableShipment = combineReturnableShipments(returnableShipments);
+                        returnableShipment = self.combineReturnableShipments(returnableShipments);
                     }
             
 
