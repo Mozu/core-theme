@@ -225,6 +225,12 @@
       "title": "Gift Card Created"
     },
     {
+      "id": "gatewaygiftcard.created",
+      "properties": {},
+      "template": "email/gateway-giftcard-created",
+      "title": "Gateway Gift Card Created"
+    },
+    {
       "id": "shipment.assigned",
       "properties": {},
       "template": "email/shipment-assignment",
