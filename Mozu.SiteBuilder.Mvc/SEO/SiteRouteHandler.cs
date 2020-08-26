@@ -44,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _siteBuilderApiContext = siteBuilderApiContext;
             _routeconfig = routeconfig;
             _forceSSL = new Lazy<bool>(() => context.RequestServices.Resolve<ISiteContext>().GeneralSettings?.EnforceSitewideSSL == true, LazyThreadSafetyMode.None);
-            _originalUri = context.GetRequestUri();
+            _originalUri = new Uri(requestUrlHelper.GetRequestUrl());
         }
 
         public void Reset ()
