@@ -1,7 +1,7 @@
 ﻿define(['shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'modules/api',
-      'hyprlivecontext'], function($, Hypr, api,
+    'hyprlivecontext'], function ($, Hypr, api,
         HyprLiveContext) {
-    
+
     // bundled typeahead saves a lot of space but exports bloodhound to the root object, let's lose it
     var Bloodhound = window.Bloodhound.noConflict();
 
@@ -10,23 +10,23 @@
 
     // create bloodhound instances for each type of suggestion
 
-    var Search = function() {
+    var Search = function () {
         return {
-            qs : '%QUERY',
-            eqs : function() {
+            qs: '%QUERY',
+            eqs: function () {
                 var self = this;
                 return window.encodeURIComponent(self.qs);
             },
-            suggestPriorSearchTerms: Hypr.getThemeSetting('suggestPriorSearchTerms'),
-            getApiUrl : function (groups) {
+            suggestShowCategories: Hypr.getThemeSetting('suggestShowCategories'),
+            getApiUrl: function (groups) {
                 var self = this;
                 return api.getActionConfig('suggest', 'get', { query: self.qs, groups: groups }).url;
             },
-            ajaxConfig : {
+            ajaxConfig: {
                 headers: api.getRequestHeaders()
             },
-            nonWordRe : /\W+/,
-            makeSuggestionGroupFilter : function (name) {
+            nonWordRe: /\W+/,
+            makeSuggestionGroupFilter: function (name) {
                 return function (res) {
                     var suggestionGroups = res.suggestionGroups,
                         thisGroup;
@@ -40,14 +40,14 @@
                 };
             },
 
-            makeTemplateFn : function (name) {
+            makeTemplateFn: function (name) {
                 var tpt = Hypr.getTemplate(name);
                 return function (obj) {
                     return tpt.render(obj);
                 };
             },
 
-            setDataSetConfigs : function() {
+            setDataSetConfigs: function () {
                 var self = this;
                 self.dataSetConfigs = [
                     {
@@ -64,7 +64,7 @@
                 ];
             },
 
-            datasets: function() {
+            datasets: function () {
                 var self = this;
                 return {
                     pages: new Bloodhound({
@@ -83,7 +83,7 @@
                 };
             },
 
-            datasetsTerms: function() {
+            datasetsTerms: function () {
                 var self = this;
                 return new Bloodhound({
                     datumTokenizer: function (datum) {
@@ -91,19 +91,19 @@
                     },
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     remote: {
-                        url: self.getApiUrl('terms'),
+                        url: self.getApiUrl('categories'),
                         wildcard: self.eqs(),
-                        filter: self.makeSuggestionGroupFilter("Terms"),
+                        filter: self.makeSuggestionGroupFilter("Categories"),
                         rateLimitWait: 100,
                         ajax: self.ajaxConfig
                     }
                 });
             },
 
-            initialize: function(config) {
+            initialize: function (config) {
                 var self = this;
                 config = config || {};
-                
+
                 self.AutocompleteManager = {
                     datasets: self.datasets()
                 };
@@ -114,27 +114,27 @@
 
                 self.setDataSetConfigs();
 
-                if (self.suggestPriorSearchTerms) {
-                    if(!config.doNotsuggestPriorSearchTerms) {
+                if (self.suggestShowCategories) {
+                    if (!config.doNotsuggestPriorSearchTerms) {
                         self.AutocompleteManager.datasets.terms = self.datasetsTerms();
                         self.AutocompleteManager.datasets.terms.initialize();
                         self.dataSetConfigs.push({
                             name: 'terms',
                             displayKey: function (datum) {
-                                return datum.suggestion.term;
+                                return datum.suggestion.content.name;
                             },
                             source: self.AutocompleteManager.datasets.terms.ttAdapter()
                         });
                     }
                 }
 
-                
+
             }
         };
     };
 
     $(document).ready(function () {
-        var $fields = $('[data-mz-role="searchquery"]').each(function(field){
+        var $fields = $('[data-mz-role="searchquery"]').each(function (field) {
             var search = new Search();
             search.initialize();
 
@@ -149,6 +149,6 @@
             });
         });
     });
-    
+
     return Search;
 });

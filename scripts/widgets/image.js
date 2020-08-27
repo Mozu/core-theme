@@ -9,8 +9,8 @@
             if (config && config.imageClickAction === 'lightbox') {
                 var cacheKey = HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey || '';
                 imageUrl = config.imageSource === 'file' ?
-                            '/cms/files/' + config.imageFileId + '?_mzCb=' + cacheKey :
-                            config.imageExternalUrl;
+                    '/cms/files/' + config.imageFileId + '?_mzCb=' + cacheKey :
+                    config.imageExternalUrl;
 
                 ci.on('click', function (event) {
                     event.preventDefault();
@@ -26,7 +26,7 @@
                             opacity: '0.7',
                             scalePhotos: true,
                             transition: 'none',
-                            onComplete: function() {
+                            onComplete: function () {
                                 $('#cboxClose').html('<span style="display: inline-block">X</span>');
                             }
                         });

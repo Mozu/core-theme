@@ -174,8 +174,8 @@
                 },
                 {
                     "xtype": "mz-input-checkbox",
-                    "name": "suggestPriorSearchTerms",
-                    "fieldLabel": "Show search terms others used on this site in search suggestions",
+                    "name": "suggestShowCategories",
+                    "fieldLabel": "Show Categories in  suggestions",
                     "enableIf": "useSearchAutocomplete"
                 }
             ]

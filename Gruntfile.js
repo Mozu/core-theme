@@ -34,7 +34,7 @@ module.exports = function (grunt) {
                 if (!depPkg.main) {
                   try {
                     depPkg = require(dep + '/bower.json');
-                  } catch (e) {}
+                  } catch (e) { }
                 }
                 return dep + (depPkg.main ? '/' + depPkg.main : '/**/*');
               }
@@ -226,6 +226,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'build',
-    'watch:sync'
-    ]);
+    'mozusync:upload'
+  ]);
 };
