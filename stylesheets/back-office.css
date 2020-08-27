@@ -333,6 +333,7 @@ table {
 
 .curbside-description p {
   margin-top: 20px;
+  background-size: cover;
 }
 
 .with-you-shortly img {
@@ -511,9 +512,7 @@ table {
 
 @media only screen and (min-width: 768px) {
   .curbside-customer-thankyou img {
-    margin-left: 20px!important;
-   height: 300px!important ;
-    width: 300px!important;
+    margin-left: 20px!important;   
   }
 
   .SurveyAdditionalFeedbackTextArea {
