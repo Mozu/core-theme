@@ -17,13 +17,13 @@
 	{% if model.ReturnId %}
 		{{labels.gatewayGiftCardRefundIntro|safe }}	
 	{% else %}
-		{{labels.gatewayGiftCardEmailIntro|string_format(model.order.Data.brand, model.Order.Data.SenderName)|safe }}</br></br></br>
-		<p><b>{{ labels.giftMessage }}</b> <span class="mz-price">{{order.Data.EmailMessage}}</span></p></br></br></br>		
+		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
+		<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.Order.Data.EmailMessage}}</span></p></br></br></br>		
 	{% endif %}	
 		
-	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.orderNumber}}</span></p>
-	<p><b>{{labels.giftCardNumber}}</b> <span class="mz-price">{{model.CardNumber|currency}}</span></p>
-	<p><b>{{ labels.giftCardEmailAmount }}</b> {{model.Amount}}</p></b>
+	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.OrderNumber}}</span></p>
+	<p><b>{{labels.giftCardNumber}}{{":"}}</b> {{model.CardNumber|currency}}</span></p>
+	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Amount}}</p></b>
 	
 
 	<b>{{labels.gatewayGiftCardDeleteEmail}}</b>{{labels.gatewayGiftCardNeedsCard}}
