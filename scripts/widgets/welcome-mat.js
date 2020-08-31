@@ -44,7 +44,8 @@ require([
           selectedCurrency: selectedCurrency,
           selectedCountryCode: selectedCountryCode,
           currency: hasCurrencies,
-          defaultCountry: appConfig.country
+          defaultCountry: appConfig.country,
+          appConfig: appConfig
         });
         window.view.render();
         if (self.$el.find(".welcome-mat-wrapper").hasClass("hidden")) {
@@ -69,7 +70,9 @@ require([
                       name: item.name,
                       currencyCode: item.currencyCode,
                       locale: item.locale,
-                      languageCode: item.languageCode
+                      languageCode: item.languageCode,
+                      countryCode: item.$.code,
+                      isShipToEnabled: item.isShipToEnabled
                     };
                   }
                 );
