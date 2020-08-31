@@ -320,7 +320,7 @@
   "mobileItemTotal": "Item Total:",
   "mobileLocationAssignedMessage": "Shipment assigned: Store {0} {1} Go to {2} for more information OR Manage Shipments at {3}",
   "mobileOptOutAck": "You have been successfully unsubscribed from text messages for your order. Instructions for your order will continue via the email address provided.",
-  "mobileOrderConfirmationMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
+  "mobileOrderConfirmationMessage": "{0} Order Alerts. We will text you when your order status changes. Msg freq may vary. Reply {1} to opt out. Msg&Data rates may apply",
   "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
   "mobilePickLocation": "Pickup from/Ship from:",
   "mobileShipmentCanceledInfo": "Canceled Items",
