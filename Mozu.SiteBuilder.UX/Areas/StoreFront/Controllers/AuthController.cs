@@ -155,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return ret;
             }
 
-            var (status,body) = (await LoginAndTrack(() => _customerAccountWebApiClient.CloneWithoutUserClaims().AddAccountAndLogin(accountInfo)));
+            var (status,body) = (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo)));
             return StatusCode(status, body);
 
 
