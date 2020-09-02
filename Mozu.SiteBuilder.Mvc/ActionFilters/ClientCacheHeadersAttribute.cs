@@ -62,17 +62,27 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         {
             ResponseCacheAttribute att;
             var settings = serviceProvider.GetService<ISettings>();
+            var lookupKey = ConfigKey + ForceRevalidate;
 
-            if (!_cache.TryGetValue(ConfigKey, out att))
+            if (!_cache.TryGetValue(lookupKey, out att))
             {
-                var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey) ?? settings.AppSettings("clientCacheHeaderLength:default");
-                var duration = int.Parse(val);
-                att = new ResponseCacheAttribute()
+                att = new ResponseCacheAttribute();
+                
+                if (ForceRevalidate)
                 {
-                    Duration = duration,
-                    Location = ResponseCacheLocation.Any,
-                };
-                _cache[ConfigKey] = att;
+                    att.Duration = 0;
+                    att.NoStore = true;
+                    att.Location = ResponseCacheLocation.None;
+                }
+                else
+                {
+                    var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey) ?? settings.AppSettings("clientCacheHeaderLength:default");
+                    var duration = int.Parse(val);
+                    att.Duration = duration;
+                    att.Location = ResponseCacheLocation.Any;
+                }
+                
+                _cache[lookupKey] = att;
             }
             return att.CreateInstance(serviceProvider);
 
