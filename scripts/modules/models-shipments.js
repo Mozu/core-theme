@@ -86,6 +86,9 @@ define([
         getMoreShipmentItems: function() {
             return this.nextPage();    
         },
+        backorderItems: function(){
+            return this.get("items").where({shipmentStatus: "BACKORDER"});
+        },
         initShipmentItems: function(){
             return this.firstPage();
         }

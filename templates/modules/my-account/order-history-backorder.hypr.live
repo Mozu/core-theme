@@ -1,0 +1,34 @@
+
+<div class="mz-l-shipment">
+    {% block shipment-header %} 
+
+    {% endblock shipment-header %}
+
+    {% block shipment-details %}
+
+    <div class="mz-shipment-items">
+        {% for item in model.items %}
+                <div data-mz-shipment-item class="mz-shipment-item" data-mz-shipment-item-id="{{item.lineId}}">
+                    {% include "modules/my-account/order-history-shipment-item" with model=item shipment=model %}
+                </div>
+        {% endfor %}
+    </div>
+
+    {% endblock shipment-details %}
+
+    {% block shipment-footer%}
+
+    {% endblock shipment-footer %}
+</div>
+
+
+
+{% block shipment-actions %}
+    <div data-mz-shipment-actions class="mz-shipment-actions mz-l-shipment-actions">
+
+        <h3 class="mz-shipment-status-heading">
+            {{labels.onBackorder }}
+        </h3>
+    </div>
+{% endblock shipment-actions %}
+
