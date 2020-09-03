@@ -1,5 +1,5 @@
 define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view', 'modules/models-location',
-'modules/views-location'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, LocationModels, LocationViews) {
+'modules/views-location', 'modules/models-shipments'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, LocationModels, LocationViews, ShipmentModels) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -142,7 +142,6 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         }
     });
 
-
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/order-history-list",
         initialize: function() {
@@ -163,22 +162,32 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             Backbone.MozuView.prototype.render.apply(this, arguments);
 
             $.each(this.$el.find('[data-mz-order-history-listing]'), function(index, val) {
-
+                var orderListingEl = this;
                 var orderId = $(this).data('mzOrderId');
                 var myOrder = self.model.get('items').get(orderId);
                // myOrder.initShipmentItems();
+
                 if(!myOrder.get('shipments').get('items').length) {
                     myOrder.get('shipments').lastRequest = {
                         pageSize: 3
                     };
-                    myOrder.initShipmentItems();
+                    myOrder.initShipmentItems().then(function(req){
+                        myOrder.set('shipments', new ShipmentModels.ShipmentCollection(req));
+                        var orderHistoryListingView = new OrderHistoryListingView({
+                            el: $(orderListingEl).find('.listing'),
+                            model: myOrder,
+                            messagesEl: $(orderListingEl).find('[data-order-message-bar]')
+                        });
+                        orderHistoryListingView.render();
+                    });
+                } else {
+                    var orderHistoryListingView = new OrderHistoryListingView({
+                        el: $(this).find('.listing'),
+                        model: myOrder,
+                        messagesEl: $(this).find('[data-order-message-bar]')
+                    });
+                    orderHistoryListingView.render();
                 }
-                var orderHistoryListingView = new OrderHistoryListingView({
-                    el: $(this).find('.listing'),
-                    model: myOrder,
-                    messagesEl: $(this).find('[data-order-message-bar]')
-                });
-                orderHistoryListingView.render();
             });
         },
         selectReturnItems: function() {

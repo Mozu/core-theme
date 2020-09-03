@@ -22,14 +22,9 @@
         </div>
     {% endif %}
 
-    {% if model.shipments && model.shipments.items.length > 0 && model.status != "Cancelled" %}
-        <h2 class="mz-orderlisting-heading">{{labels.shipments}}</h2>
-        <div class="data-mz-shipment">
-            {% include "modules/my-account/order-history-shipment-list" with model=model.shipments %}
-        </div>
-    {% endif %} 
-
-    
+    <div id="mzShipments" data-mz-shipments>
+        {% include "modules/my-account/order-history-shipments" %}
+    </div>    
 
 </div>
 {% endblock order-items %}

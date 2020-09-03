@@ -111,7 +111,7 @@ define([
                 rma: ReturnModels.RMA
             },
             handlesMessages: true,
-            helpers: ['getReturnableItems', 'hasFulfilledShipments'],
+            helpers: ['getReturnableItems', 'hasFulfilledShipments', 'hasShipments'],
             _nonShippedItems: {},
             initialize: function() {
                 var self = this;
@@ -131,6 +131,19 @@ define([
                     });
                 }
                 return hasfulfilledPackage;
+            },
+            hasShipments: function() {
+                var self = this,
+                    hasShipments = false,
+                    shipments = self.get('shipments').get('items');
+                if(shipments) {
+                    shipments.each(function(shipment) {
+                        if (shipment.get('shipmentStatus') !== "CANCELED" && shipment.get('shipmentStatus') !== 'BACKORDER') {
+                            hasShipments = true;
+                        }
+                    });
+                }
+                return hasShipments;
             },
             getReturnableItems: function() {
                 var filteredReturnItems = this.get('returnableItems').filter(function(item) {
