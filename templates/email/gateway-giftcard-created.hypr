@@ -22,8 +22,8 @@
 	{% endif %}	
 		
 	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.OrderNumber}}</span></p>
-	<p><b>{{labels.giftCardNumber}}{{":"}}</b> {{model.CardNumber|currency}}</span></p>
-	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Amount}}</p></b>
+	<p><b>{{labels.giftCardNumber}}{{":"}}</b> {{model.CardNumber}}</span></p>
+	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Amount|currency}}</p></b>
 	
 
 	<b>{{labels.gatewayGiftCardDeleteEmail}}</b>{{labels.gatewayGiftCardNeedsCard}}
