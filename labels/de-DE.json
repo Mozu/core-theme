@@ -410,7 +410,7 @@
   "returnReceiptBodyHeader": "<p> Sehr geehrte {0} {1}, </ p> <br /> <p> Wir haben die Bearbeitung Ihrer Rücksendung # {2} für {3} Bestellung # {4} abgeschlossen. </ p> <br /> Die Artikel, die Sie zurückgegeben werden nachfolgend beschrieben:",
   "returnReceiptHeader": "Rücksendung abgeschlossen für {0} Bestellnummer # {1}",
   "returnReceiptItemNameColumn": "Name",
-  "returnReceiptItemPartNoColumn": "PartNo",
+  "returnReceiptItemUPCColumn": "UPC",
   "returnReceiptItemQtyColumn": "Menge",
   "returnReceiptItemStatusColumn": "Status",
   "returnReceiptItemTotalColumn": "Gesamt",
