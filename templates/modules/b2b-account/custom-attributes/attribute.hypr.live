@@ -37,7 +37,7 @@
         <input type="radio" id="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}"
           name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-attribute="{{ attribute.attributeFQN }}"
           data-mz-value="attribute" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
-        <label for="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}">{{ option.value }}</label>
+        <label for="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}">{{ option.content.value }}</label>
       {% endfor %}
     {% else %}
       <span class="mz-accountsettings-attribute-value">{{ attribute.values|first|default("N/A") }}</span>
