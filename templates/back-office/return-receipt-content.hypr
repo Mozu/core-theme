@@ -20,7 +20,7 @@
                 <thead>
                     <tr>
                         <th>{{ labels.returnReceiptItemQtyColumn }}</th>
-                        <th>{{ labels.returnReceiptItemPartNoColumn }}</th>
+                        <th>{{ labels.returnReceiptItemUPCColumn }}</th>
                         <th>{{ labels.returnReceiptItemNameColumn }}</th>
                         <th>{{ labels.returnReceiptItemTotalColumn }}</th>
                         <th>{{ labels.returnReceiptItemStatusColumn }}</th>
@@ -33,13 +33,20 @@
                                 {{ item.quantityRestocked }}
                             </td>
                             <td>
-                                {{ item.product.mfgPartNumber }}
+                                {{ item.product.productCode }}
                             </td>
                             <td>
                                 {{ item.product.name }}
                             </td>
                             <td>
-                                {{ item.refundAmount }}
+                                {% if item.refundAmount %}
+                                    {{ item.refundAmount }}
+                                {% endif %}
+                                {% if not item.refundAmount and model.refundAmount > model.items.ProductLossAmount %}
+                                    {{ model.refundAmount|subtract(model.items.ProductLossAmount) }}
+                                {% else %}
+                                    {{ model.refundAmount }}
+                                {% endif %}
                             </td>
                             <td>
                                 {{ item.receiveStatus }}

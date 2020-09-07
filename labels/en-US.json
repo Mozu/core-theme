@@ -527,7 +527,7 @@
   "returnReceiptBodyHeader": "<p>Dear {0} {1},</p><br /><p>We have finished processing your return # {2} for {3} order #{4}.</p> <br /> The items you returned are described below:",
   "returnReceiptHeader": "Return complete for {0} Order # {1}",
   "returnReceiptItemNameColumn": "Name",
-  "returnReceiptItemPartNoColumn": "PartNo",
+  "returnReceiptItemUPCColumn": "UPC",
   "returnReceiptItemQtyColumn": "Qty",
   "returnReceiptItemStatusColumn": "Status",
   "returnReceiptItemTotalColumn": "Total",
