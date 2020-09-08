@@ -1,17 +1,12 @@
   <table>
     <tr>
         <td>
-		    {{ labels.returnReceiptHeader | string_format(customContent.companyName,model.originalOrderNumber)|safe }}
+		    <h2>{{ labels.returnReceiptHeader | string_format(customContent.companyName,model.originalOrderNumber)|safe }} </h2>
         </td>
     </tr>    
     <tr>
         <td>
             {{ labels.returnReceiptBodyHeader | string_format(model.contact.firstName,model.contact.lastNameOrSurname,model.returnNumber,customContent.companyName,model.originalOrderNumber) |safe}}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="company-name">{{ customContent.companyName }}</div>
         </td>
     </tr>
     <tr>
@@ -30,7 +25,7 @@
                     {% for item in model.items %}
                         <tr>
                             <td>
-                                {{ item.quantityRestocked }}
+                                {{ item.quantityReceived }}
                             </td>
                             <td>
                                 {{ item.product.productCode }}
