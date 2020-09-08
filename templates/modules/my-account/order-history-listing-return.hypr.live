@@ -7,7 +7,7 @@
         {% block order-packages %}
                 <div class="mz-order-returns">
                     {% for item in model.getReturnableItems %}
-                                <div data-mz-order-history-listing-return-item  data-mz-product-code="{{ item.product.variationProductCode|default(item.product.productCode) }}" data-mz-option-attribute-fqn="{{ item.orderItemOptionAttributeFQN}}" data-mz-shipment-item-id="{{ item.shipmentItemId }}">
+                                <div data-mz-order-history-listing-return-item  data-mz-product-code="{{ item.product.variationProductCode|default(item.product.productCode) }}" data-mz-option-attribute-fqn="{{ item.orderItemOptionAttributeFQN}}" data-mz-shipment-number="{{ item.shipmentNumber }}"data-mz-shipment-item-id="{{ item.shipmentItemId }}">
                                 {% include "modules/my-account/order-history-listing-return-item" with model=item %}
                             </div>
                     {% endfor %}

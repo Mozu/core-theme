@@ -55,7 +55,7 @@ define([
                 model: Shipment
             })
         },
-        helpers: ['getMoreShipmentItems'],
+        helpers: ['getMoreShipmentItems', 'hasBackorderItems'],
         mapEmbeddedShipments: function(obj){
             if(obj._embedded) {
                return{
@@ -86,8 +86,8 @@ define([
         getMoreShipmentItems: function() {
             return this.nextPage();    
         },
-        backorderItems: function(){
-            return this.get("items").where({shipmentStatus: "BACKORDER"});
+        hasBackorderItems: function(){
+            return this.get("items").findWhere({shipmentStatus: "BACKORDER"});
         },
         initShipmentItems: function(){
             return this.firstPage();

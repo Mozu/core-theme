@@ -49,7 +49,7 @@ define([
             checkForDuplicate: function() {
                 var self = this;
                 var duplicate = self.collection.find(function(item) {
-                    if (self.uniqueProductCode() === item.uniqueProductCode()) {
+                    if (self.uniqueProductCode() === item.uniqueProductCode() && self.orderLineId !== item.orderLineId) {
                         if (self.get('orderItemOptionAttributeFQN') === item.get('orderItemOptionAttributeFQN')) {
                             return true;
                         }
@@ -202,42 +202,6 @@ define([
                     self.isLoading(false);
                 });
             },
-            /**
-             * Used to create a list of returnable items from the return of apiGetReturnableItems and Order Items
-             * This is primarily used to get product detial information and ensure Product bundles are returned as a whole
-             * while product extras, bundle or otherwise, are returned separately. 
-             * 
-             * [returnableItems]
-             * @return {[Array]}
-             */
-            combineReturnableShipments: function(shipments){
-                var comboItem = JSON.parse(JSON.stringify(shipments[0]));
-                // fulfillmentStatus: "FULFILLED"
-                // orderItemId: "c1f962881d514952bde9ac000101054e"
-                // orderLineId: 1
-                // productCode: "CHICKENJEANS-1"
-                // productName: "DENIM CHICKEN"
-                // quantityFulfilled: 2
-                // quantityOrdered: 2
-                // quantityReturnable: 2
-                // quantityReturned: 0
-
-                //Not needed. Just to avoid confusion 
-                delete comboItem.shipmentItemId;
-                delete comboItem.shipmentNumber;
-                delete comboItem .unitQuantity;
-
-                _.each(shipments, function(item, idx){
-                    if (idx) {
-                        comboItem.quantityFulfilled =+ item.quantityFulfilled;
-                        comboItem.quantityOrdered =+ item.quantityOrdered;
-                        comboItem.quantityReturnable =+ item.quantityReturnable;
-                        comboItem.quantityReturned =+ item.quantityReturned;
-                    }
-                });
-
-                comboItem.originalShipments = shipments;
-            },
             returnableItems: function(returnableItems) {
                 var self = this,
                     returnItems = [],
@@ -250,19 +214,7 @@ define([
                 self.get('returnableItems').reset(null);
                 // First, group the returnable items by OrderItem.LineId
                 _.each(shipmentGroups, function(shipmentGroup) {
-                    // If an OrderItem has extras, there will be 2 entries for the parent, one with extras, one without.
-                    // Find the one without extras (standalone parent) if available.
 
-                    // var returnableParents = _.filter(grouping, function(item) {
-                    //     return !item.parentProductCode;
-                    // });
-
-                    // var returnableParent = returnableParents.length > 1 ?
-                    //     _.find(returnableParents, function(item) {
-                    //         return item.excludeProductExtras === true;
-                    //     }) :
-                    //     returnableParents[0];
-                    // returnableParent = returnableParent || returnableParents[0];
 
                     var returnableShipments = _.filter(shipmentGroup, function(shipment){
                         return shipment.quantityReturnable > 0;
@@ -270,70 +222,26 @@ define([
 
                     var returnableShipment = returnableShipments[0];
 
-                    if(returnableShipments.length > 1) {
-                        returnableShipment = self.combineReturnableShipments(returnableShipments);
-                    }
-            
 
                     if (returnableShipment && returnableShipment.quantityReturnable > 0) {
-                        // Clone does not deep copy, each individual node must be cloned to avoid overriding of the orignal orderitem
 
                         var originalOrderItem = self.get('items').find(function(item) {
                             return item.get('lineId') === returnableShipment.orderLineId;
                         });
 
+                        var originalShipment = self.get('shipments').get('items').find(function(item) {
+                            return item.get('shipmentNumber') === returnableShipment.shipmentNumber;
+                        });
+
                         var parentItem = JSON.parse(JSON.stringify(originalOrderItem));
                         returnableShipment.product = parentItem.product;
 
-                        
-
-                        // If we need to exclude extras, strip off bundle items with an OptionAttributeFQN and the corresponding Product.Options.
-                        // if (returnableParent.excludeProductExtras) {
-                        //     var children = parentItem.product.bundledProducts;
-                        //     var extraOptions = _.chain(children)
-                        //         .filter(function(child) {
-                        //             return child.optionAttributeFQN;
-                        //         })
-                        //         .map(function(extra) {
-                        //             return extra.optionAttributeFQN;
-                        //         })
-                        //         .value();
-                        //     var bundleItems = _.filter(children, function(child) {
-                        //         return !child.optionAttributeFQN;
-                        //     });
-
-                        //     var allOptions = parentItem.product.options;
-                        //     var nonExtraOptions = allOptions.filter(function(option) {
-                        //         return !_.contains(extraOptions, option.attributeFQN);
-                        //     });
-
-                        //     //Add any extra properites we wish the returnableItem to have
-                        //     returnableParent.product.bundledProducts = bundleItems;
-                        //     returnableParent.product.options = nonExtraOptions;
-                        // }
+                        var parentShipment = JSON.parse(JSON.stringify(originalShipment));
+                        returnableShipment.shipment = parentShipment;
 
                         self.get('returnableItems').add(returnableShipment);
 
                     }
-
-                    // var childProducts = originalOrderItem.get('product').get('bundledProducts');
-                    // // Now process extras.
-                    // var returnableChildren = _.filter(grouping, function(item) {
-                    //     return item.parentProductCode && item.orderItemOptionAttributeFQN && item.quantityReturnable > 0;
-                    // });
-                    // _.each(returnableChildren, function(returnableChild, key) {
-                    //     var childProductMatch = _.find(childProducts, function(childProduct) {
-                    //         var productCodeMatch = childProduct.productCode === returnableChild.productCode;
-                    //         var optionMatch = childProduct.optionAttributeFQN === returnableChild.orderItemOptionAttributeFQN;
-                    //         return productCodeMatch && optionMatch;
-                    //     });
-
-                    //     if (childProductMatch) {
-                    //         var childProduct = _.clone(childProductMatch);
-                    //         returnableChild.product = childProduct;
-                    //         self.get('returnableItems').add(returnableChild);
-                    //     }
-                    // });
                 });
                 return self.get('returnableItems');
             },

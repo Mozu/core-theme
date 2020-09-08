@@ -5,14 +5,12 @@
     {% endblock shipment-header %}
 
     {% block shipment-details %}
-
-    <div class="mz-shipment-items">
-        {% for item in model.items %}
-                <div data-mz-shipment-item class="mz-shipment-item" data-mz-shipment-item-id="{{item.lineId}}">
-                    {% include "modules/my-account/order-history-shipment-item" with model=item shipment=model %}
-                </div>
-        {% endfor %}
-    </div>
+    
+    {% for item in model.items %}
+        <div data-mz-shipment-item class="mz-shipment-item" data-mz-shipment-item-id="{{item.lineId}}">
+            {% include "modules/my-account/order-history-shipment-item" with model=item shipment=model %}
+        </div>
+    {% endfor %}
 
     {% endblock shipment-details %}
 

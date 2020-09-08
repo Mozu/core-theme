@@ -345,7 +345,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
                 $.each(self.$el.find('[data-mz-order-history-listing-return-item]'), function(index, val) {
                     var packageItem = returnableItems.find(function(model) {
-                        if($(val).data('mzShipmentItemId') == model.get('shipmentItemId')){
+                        if($(val).data('mzShipmentNumber') == model.get('shipmentNumber') && $(val).data('mzShipmentItemId') == model.get('shipmentItemId')){
                             if ($(val).data('mzOptionAttributeFqn')) {
                                 return (model.get('orderItemOptionAttributeFQN') == $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() == $(val).data('mzProductCode'));
                             }

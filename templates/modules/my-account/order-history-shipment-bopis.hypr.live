@@ -30,8 +30,9 @@
         <h3 class="mz-shipment-status-heading">
 
             {% if model.shipmentStatus === "CUSTOMER_CARE"%}
+                {{labels.customerCare}}
                 {% if model.shipmentStatusReason %}
-                    {{model.shipmentStatusReason.reasonCode}}
+                    - {{model.shipmentStatusReason.moreInfo}}
                 {% endif %}
             {% endif %}
 
