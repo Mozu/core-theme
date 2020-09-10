@@ -22,19 +22,17 @@
                             <div class="country-dropdown">
                                 <select name="country" id="country-select" class="form-control">
                                         {% for country in model.country %}
-                                            {% with country.locale|split("-") as code %}
-                                                {% with code|last as countryCode %}
+                                          {% if country.isShipToEnabled == "true" or country.countryCode == model.defaultCountry%}
                                                     {% if model.selectedCountry %}
-                                                        <option data-code="{{ countryCode }}" value="{{country.currencyCode|safe}}" {% if country.name == model.selectedCountry %}selected{% endif %}>
+                                                        <option data-code="{{ country.countryCode }}" value="{{country.currencyCode|safe}}" {% if country.name == model.selectedCountry %}selected{% endif %}>
                                                             {{country.name|safe}}
                                                         </option>
                                                     {% else %}
-                                                        <option data-code="{{ countryCode }}" value="{{country.currencyCode|safe}}" {% if countryCode == model.defaultCountry %}selected{% endif %}>
+                                                        <option data-code="{{ country.countryCode }}" value="{{country.currencyCode|safe}}" {% if country.countryCode == model.defaultCountry %}selected{% endif %}>
                                                             {{country.name|safe}}
                                                         </option>
-                                                    {% endif %}                                                    
-                                                {% endwith %}                                                
-                                            {% endwith %}
+                                                    {% endif %}                                
+                                                {% endif %}
                                         {% endfor %}
                                 </select>
                             </div>
