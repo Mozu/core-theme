@@ -40,6 +40,7 @@ namespace Mozu.SiteBuilder.Mvc
         //cmcmannus|02/19/2020
         //hard coded to shopper since not porting admin
         public UserScopeType ScopeType => UserScopeType.Shopper;
+        public bool IsReturnUser { get; set; } = true;
 
         public void SetDataMode(DataViewModeType dataViewMode)
         {
