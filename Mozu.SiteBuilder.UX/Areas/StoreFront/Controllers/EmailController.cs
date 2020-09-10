@@ -303,21 +303,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CmsContext.Page.DocumentTypeFQN = "emailTemplateContent@mozu";
             PageContext.PageType = "email";
 
+            Mvc.ActionResults.ViewResult vr = null;
             if (res is OkObjectResult objRes)
             {
-                if (!(objRes.Value is ViewResult vr))
+                vr = objRes.Value as Mvc.ActionResults.ViewResult;
+                if (vr == null)
                 {
                     return Conflict("could not fetch template content page.");
                 }
 
                 vr.ViewName = emailTemplate.Template;
-                var doc = (DC.Document)vr.Model;
+                var doc = (DC.Document)vr.ViewData.Model;
                 if (doc != null)
                 {
                     doc.Set("page_type_definition", id);
                 }
 
-                ViewData["content"] = vr.Model;
+                ViewData["content"] = vr.ViewData.Model;
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
@@ -349,20 +351,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
-            var v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
+            var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
             if (PageContext != null)
             {
                 PageContext.PageType = "email";
             }
             object cmdContent = null;
-            var vr = (v as OkObjectResult)?.Value as ViewResult;
-            if (vr != null)
-            {
-                ViewData["content"] = vr.Model;
-                cmdContent = vr.Model;
-            }
 
-            _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
+            Mvc.ActionResults.ViewResult vr = null;
+            if (res is OkObjectResult objRes)
+            {
+                vr = objRes.Value as Mvc.ActionResults.ViewResult;
+                if (vr != null)
+                {
+                    ViewData["content"] = vr.ViewData.Model;
+                    cmdContent = vr.ViewData.Model;
+                }
+            }
+                _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
 
             var model = await Convert(notification.Payload, emailTypeInfo);
 
@@ -381,7 +387,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return null;
             }
 
-            var subjectFromVrModel = (string)((Mozu.Content.Contracts.Document)vr?.Model)?.Properties["subject"];
+            var mozuDocument = (cmdContent != null) ? (Mozu.Content.Contracts.Document)cmdContent : null;
+            var subjectFromVrModel = (mozuDocument != null) ? (string)mozuDocument.Properties["subject"] : "";
 
             var response = new EmailResponse
             {
