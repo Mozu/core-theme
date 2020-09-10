@@ -1831,7 +1831,7 @@
                     if (!customer || (customer.type !== 'customer' && customer.type !== 'login')) return;
                     var newCustomer;
                     if (customer.type === 'customer') newCustomer = customer.data;
-                    if (customer.type === 'login') newCustomer = customer.data;
+                    if (customer.type === 'login') newCustomer = customer.data.customerAccount;
                     if (newCustomer && newCustomer.id) {
                         self.set('customer', newCustomer);
                         api.off('sync', captureCustomer);
