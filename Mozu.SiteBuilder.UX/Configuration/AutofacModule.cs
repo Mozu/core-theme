@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.UX.Messaging;
 using System;
 using Microsoft.AspNetCore.StaticFiles;
+using Mozu.SiteBuilder.Mvc.Middleware;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -84,6 +85,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         public void Configure(IServiceCollection configure)
         {
+            SiteBuilderSessionMessageHandler.ReplaceMozuCoreSessionManagerHandler(configure);
             configure.AddCoreExpressionEvaluation();
             configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
