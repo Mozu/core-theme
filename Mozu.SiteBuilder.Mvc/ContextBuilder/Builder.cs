@@ -258,8 +258,9 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             var erroredWork = fBuilder.And(
                 fBuilder.Lt(x => x.WorkStarted, DateTime.UtcNow.AddMinutes(-4)),
-                fBuilder.In(x => x.SiteId, sites)
-                );
+                fBuilder.In(x => x.SiteId, sites),
+                fBuilder.Eq(x => x.Version, SitebuilderContextCacheRepository.CacheVersion));
+                
 
             var filter = fBuilder.Or(
               newWork, erroredWork

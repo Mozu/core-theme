@@ -3,19 +3,121 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mozu.Core;
 using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Api.Session;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Handler;
 using Mozu.SiteBuilder.Mvc.Security;
 
 namespace Mozu.SiteBuilder.Mvc.Middleware
 {
+    public class SiteBuilderSessionMessageHandler : IMiddleware
+    {
+        public static IServiceCollection ReplaceMozuCoreSessionManagerHandler(IServiceCollection collection)
+        {
+            collection.AddScoped<IMiddlewareFactory, SiteBuilderMiddlewareFactory>();
+            collection.AddScoped<SiteBuilderSessionMessageHandler>();
+            return collection;
+        }
+
+        class SiteBuilderMiddlewareFactory : IMiddlewareFactory
+        {
+            // The default middleware factory is just an IServiceProvider proxy.
+            // This should be registered as a scoped service so that the middleware instances
+            // don't end up being singletons.
+            private readonly IServiceProvider _serviceProvider;
+            private readonly Type _type = typeof(Mozu.Core.Api.Handlers.Message.SessionMessageHandler);
+
+            public SiteBuilderMiddlewareFactory(IServiceProvider serviceProvider)
+            {
+                _serviceProvider = serviceProvider;
+            }
+
+            public IMiddleware Create(Type middlewareType)
+            {
+                if (middlewareType == _type)
+                {
+                    return (IMiddleware) _serviceProvider.GetService<SiteBuilderSessionMessageHandler>();
+                }
+                return _serviceProvider.GetRequiredService(middlewareType) as IMiddleware;
+            }
+
+            public void Release(IMiddleware middleware)
+            {
+            }
+        }
+
+        public const string ConfigSwitch = Mozu.Core.Constants.Session.INIT_CTX_FROM_SESSION_KEY;
+        public const string PristListCodeKey = Mozu.Core.Constants.Session.PRICELIST_CODE_KEY;
+        public const string PricePlanCodeKey = Mozu.Core.Constants.Session.PRICEPLAN_CODE_KEY;
+        public const string PurchaseLocationKey = Mozu.Core.Constants.Session.PURCHASE_LOCATION_KEY;
+        private readonly SiteBuilderApiContext apiContext;
+        private readonly ISettings settings;
+        private readonly Lazy<IMozuSession> session;
+        private readonly ILogger<SessionMessageHandler> _logger;
+
+        async Task IMiddleware.InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            await Process(apiContext, settings, session, context.RequestAborted, _logger);
+            await next(context);
+            return;
+        }
+
+        public SiteBuilderSessionMessageHandler(IApiContext apiContext, ISettings settings, Lazy<IMozuSession> session
+            , ILogger<SessionMessageHandler> logger)
+        {
+            this.apiContext = apiContext as SiteBuilderApiContext;
+            this.settings = settings;
+            this.session = session;
+            this._logger = logger;
+        }
+
+        static async Task Process(
+
+            SiteBuilderApiContext apiContext,
+            ISettings settings,
+            Lazy<IMozuSession> session,
+            CancellationToken cancellationToken,
+            ILogger<SessionMessageHandler> logger
+        )
+        {
+            
+            var hasSession = !apiContext.IsReturnUser  && 
+                             apiContext.UserClaims != null &&
+                             (apiContext.CallChain?.Length == 0 || apiContext?.UserClaims?.SessionInfo?.IsBot == false);
+            //(apiContext?.UserClaims?.SessionInfo?.IsPersisted == true || 
+            var allowLookup = settings.AppSettingsAsNullableBool(ConfigSwitch).GetValueOrDefault(true);
+
+            if (hasSession && allowLookup)
+            {
+                try
+                {
+                    var bucket = await session.Value.GetBucketAsync(token: cancellationToken).ConfigureAwait(false);
+                    if (bucket != null)
+                    {
+                        apiContext.PriceListCode = (string) bucket.GetValue(PristListCodeKey, apiContext.PriceListCode);
+                        apiContext.PricePlanCode = (string) bucket.GetValue(PricePlanCodeKey, apiContext.PricePlanCode);
+                        apiContext.PurchaseLocation =
+                            (string) bucket.GetValue(PurchaseLocationKey, apiContext.PurchaseLocation);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "error in session");
+                }
+            }
+
+        }
+    }
+
     public class SessionMiddleware
     {
         private const int MAX_TIME_IN_MINUTES = 30;

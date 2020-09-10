@@ -210,10 +210,12 @@ namespace Mozu.SiteBuilder.Mvc
 
         private void LoadDefaultAnonShopperClaims(SiteBuilderApiContext apiCtx)
         {
-            if (apiCtx.ScopeType != UserScopeType.Shopper || apiCtx.UserClaims != null)
+            apiCtx.IsReturnUser = apiCtx.UserClaims != null;
+            if (apiCtx.ScopeType != UserScopeType.Shopper || apiCtx.UserClaims != null) 
             {
                 return;
             }
+            
             var anonClaims = LightweightUserClaims.CreateForAnonymousShopper(apiCtx.TenantId, apiCtx.SiteId.GetValueOrDefault());
 
             apiCtx.SetUser(anonClaims);
