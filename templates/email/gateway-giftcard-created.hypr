@@ -1,0 +1,34 @@
+  {% extends "email/email" %}
+
+  {% block body-content %}
+    <br>
+
+	{{ labels.giftCardEmailBanner|string_format(domainName)|safe}}
+
+	<p>
+	{% if model.Order.billingInfo.billingContact.firstName %}
+		{{ labels.giftCardEmailGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+	</p>
+
+    <p>
+	{% if model.ReturnId %}
+		{{labels.gatewayGiftCardRefundIntro|safe }}	
+	{% else %}
+		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
+		<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.Order.Data.EmailMessage}}</span></p></br></br></br>		
+	{% endif %}	
+		
+	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.OrderNumber}}</span></p>
+	<p><b>{{labels.giftCardNumber}}{{":"}}</b> {{model.CardNumber}}</span></p>
+	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Amount|currency}}</p></b>
+	
+
+	<b>{{labels.gatewayGiftCardDeleteEmail}}</b>{{labels.gatewayGiftCardNeedsCard}}
+
+	{{ labels.giftCardEmailClosing|string_format(domainName)|safe }}
+
+    
+{% endblock body-content %}
