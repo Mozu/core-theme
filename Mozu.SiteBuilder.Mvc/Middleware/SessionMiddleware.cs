@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
         )
         {
             
-            var hasSession = !apiContext.IsReturnUser  && 
+            var hasSession = apiContext.IsReturnUser  && 
                              apiContext.UserClaims != null &&
                              (apiContext.CallChain?.Length == 0 || apiContext?.UserClaims?.SessionInfo?.IsBot == false);
             //(apiContext?.UserClaims?.SessionInfo?.IsPersisted == true || 
