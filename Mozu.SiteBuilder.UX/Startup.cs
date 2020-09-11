@@ -21,6 +21,7 @@ using Microsoft.Extensions.FileProviders;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Api.Health;
 using Mozu.Core.Caching;
 using Mozu.Core.Configuration;
@@ -150,6 +151,7 @@ namespace Mozu.SiteBuilder.UX
                 .UseMiddleware<SessionMiddleware>()
                 .UseMiddleware<MzUnderscoreRequestCleanerMiddleware>()
                 .UseMiddleware<SiteContextInitializationMiddleware>()
+                .UseMiddleware<EnforceSiteWideSsLMiddleware>()
                 .UseRewriter(rewriteOptions)
                 .UseMvc(builder => {
                     RouteConfig.Register(builder);
@@ -159,7 +161,9 @@ namespace Mozu.SiteBuilder.UX
                 .UseMiddleware<DeepPagingLimitingMiddleware>()
                
                 ;
-          
+            
+            app.ApplicationServices.Resolve<IDirtyCacheInvalidator>()?.Invalidate();
+            
                 //  .UseMiddleware<PageContextCookieMiddleware>();
                 
              

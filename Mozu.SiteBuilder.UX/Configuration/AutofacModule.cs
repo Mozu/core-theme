@@ -86,6 +86,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         public void Configure(IServiceCollection configure)
         {
             SiteBuilderSessionMessageHandler.ReplaceMozuCoreSessionManagerHandler(configure);
+            configure.AddScoped<EnforceSiteWideSsLMiddleware>();
             configure.AddCoreExpressionEvaluation();
             configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
