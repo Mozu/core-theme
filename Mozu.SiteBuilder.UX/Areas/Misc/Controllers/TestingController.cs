@@ -296,8 +296,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "admin-pending":
                 case "staging":
                     {
-                        var invalidator = HttpContext.RequestServices.Resolve<IDirtyCacheInvalidator>();
-                        invalidator.Invalidate();
                         viewMode = DataViewModeType.Pending;
                         domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "staging-" + x.DomainName);
                         if (!string.IsNullOrEmpty(variationId))
