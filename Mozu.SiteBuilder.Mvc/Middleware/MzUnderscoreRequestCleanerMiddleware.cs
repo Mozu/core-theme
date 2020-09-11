@@ -21,10 +21,10 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public  Task Invoke(HttpContext context)
         {
             CleanMzQuery(context);
-            await _next.Invoke(context);
+            return _next.Invoke(context);
         }
 
         private static void CleanMzQuery(HttpContext context)
