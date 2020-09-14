@@ -1,0 +1,110 @@
+{
+  "shipmentNumber": 16022,
+  "orderId": "0e7c657b06ed4400015ef8f70000433f",
+  "orderNumber": 3896,
+  "location": {
+    "code": "ds_sp_1",
+    "locationTypes": [
+      {
+        "code": "warehouselocationtype1",
+        "name": "Warehouse Location Type 1",
+        "auditInfo": {
+          "updateDate": "2016-05-04T20:06:53.353Z",
+          "createDate": "2016-05-04T20:06:53.353Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
+      }
+    ],
+    "name": "DirectShipPickUpLoc1",
+    "address": {
+      "address1": "4213 N CORAL SPRINGS DR",
+      "cityOrTown": "FORT WORTH",
+      "stateOrProvince": "TX",
+      "postalOrZipCode": "76123-1458",
+      "countryCode": "US",
+      "addressType": "Commercial",
+      "isValidated": false
+    },
+    "geo": {
+      "lat": 30.42465,
+      "lng": -97.76199
+    },
+    "phone": "(512) 555-8925",
+    "supportsInventory": true,
+    "fulfillmentTypes": [
+      {
+        "code": "DS",
+        "name": "Direct Ship"
+      },
+      {
+        "code": "SP",
+        "name": "In Store Pickup"
+      }
+    ],
+    "regularHours": {
+      "sunday": {
+
+        "label": "9AM-4PM",
+        "isClosed": true
+      },
+      "monday": {
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
+        "isClosed": false
+      },
+      "tuesday": {
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
+        "isClosed": false
+      },
+      "wednesday": {
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
+        "isClosed": false
+      },
+      "thursday": {
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
+        "isClosed": false
+      },
+      "friday": {
+        "label": "9AM-6PM",
+        "closeTime": "9:00 AM",
+        "openTime": "11:00 PM",
+        "isClosed": false
+      },
+      "saturday": {
+        "label": "9AM-9PM",
+        "isClosed": true
+      },
+      "timeZone": "Hawaiian Standard Time"
+    },
+    "shippingOriginContact": {
+      "companyOrOrganization": "Kibo",
+      "phoneNumber": "6662227878"
+    },
+    "note": "test",
+    "tags": [],
+    "attributes": [],
+    "auditInfo": {
+      "updateDate": "2020-06-18T07:19:23.293Z",
+      "createDate": "2019-07-23T15:07:33.881Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    "allowFulfillmentWithNoStock": false,
+    "isDisabled": false,
+    "express": false,
+    "transferEnabled": false,
+    "includeInInventoryAggregrate": true,
+    "includeInLocationExport": false,
+    "warehouseEnabled": false
+  },
+  "hasCurbsideSurveyData": false
+}
+

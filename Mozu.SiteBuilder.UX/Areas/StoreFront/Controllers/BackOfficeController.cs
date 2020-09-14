@@ -67,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME = "backoffice.customeratcurbside";
         private const string CUSTOMER_AT_CURBSIDE_QRCODE_PREVIEW_RESOURCE_NAME = "backoffice.customer-at-curbside-qrcode";
         private const string RETURN_PREVIEW_RESOURCE_NAME = "backoffice.return1";
+        private const string CURBSIDE_CUSTOMER_SURVEY_RESOURCE_NAME = "backoffice.curbside-customer-survey";
 
         /// <summary>
         /// Public constructor.
@@ -571,6 +572,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 			else if (templateid == "return-receipt")
             {
                 object model = TestDataBroker.GetFileContents(RETURN_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "curbside-customer-survey")
+            {
+                object model = TestDataBroker.GetFileContents(CURBSIDE_CUSTOMER_SURVEY_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
             }
             else
