@@ -25,15 +25,12 @@
     <PackageReference Include="KuttSharp" Version="0.4.1" />
     <PackageReference Include="QRCoder" Version="1.3.9" />
 
-    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2031.7" />
+    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2037.2" />
     <PackageReference Include="Mozu.Core.Prime" Version="1.2031.6" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">
-      <Project>{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}</Project>
-      <Name>Mozu.SiteBuilder.Mvc</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj" />
     <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj">
       <Project>{fe9da6f5-3477-48a3-8314-572ce5c308fb}</Project>
       <Name>Mozu.SiteBuilder.UX.Models</Name>

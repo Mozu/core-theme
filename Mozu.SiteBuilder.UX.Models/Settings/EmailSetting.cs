@@ -81,6 +81,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         TransferShipmentCreatedByFulfiller,
         IntransitConfirmation,
         CurbsideReady,
-        PartialCurbsideReady
-    };
+        PartialCurbsideReady,
+        GatewayGiftCardCreated
+    }
 }

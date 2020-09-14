@@ -72,6 +72,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public List<Location.Contracts.Location> Locations { get; set; }
         public bool IsCurbside { get; set; }
     }
+    
+    public class GatewayGiftCardEmail  : EmailGatewayGiftCard
+    {
+        public Order Order { get; set; }
+    }
 
     [ContextInitialization]
     [IgnoreDataViewMode]
@@ -230,6 +235,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.PartialCurbsideReady
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (GatewayGiftCardEmail),
+                                               Topic = Topics.GatewayGiftCardCreated
                                            }
 
                 };
@@ -562,7 +572,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     orderEmail.Locations = allLocations;
                 }
             }
-            
+            if (obj is GatewayGiftCardEmail giftCardEmail)
+            {
+                var giftCardOrder = (await _orderWebApiClient.GetOrder(giftCardEmail.OrderId)).ReadAsSync();
+
+                giftCardEmail.Order = giftCardOrder;
+            }
+
             return obj;
         }
 
@@ -644,7 +660,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string PartialPickupReady = "shipment.partialpickupready";
             public const string IntransitConfirmation = "shipment.intransitconfirmation";
             public const string CurbsideReady = "shipment.curbsideready"; 
-            public const string PartialCurbsideReady = "shipment.partialcurbsideready";  
+            public const string PartialCurbsideReady = "shipment.partialcurbsideready";
+            public const string GatewayGiftCardCreated = "gatewaygiftcard.created";
         }
     }
 

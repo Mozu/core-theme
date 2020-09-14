@@ -271,6 +271,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? PartialCurbsideReady { get; set; } 
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? GatewayGiftCardCreated { get; set; } 
     }
 
     public class SMSTransactionSettings
