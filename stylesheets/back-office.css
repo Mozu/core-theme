@@ -333,6 +333,7 @@ table {
 
 .curbside-description p {
   margin-top: 20px;
+  background-size: cover;
 }
 
 .with-you-shortly img {
@@ -496,4 +497,49 @@ table {
 
 .mz-curbside-header-body h3 {
   font-weight: 100;
+}
+
+.mz-curbside-survey-button {
+  background-color: #fa6400!important;
+  color: white!important;
+}
+
+
+.curbside-page-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+
+}
+
+@media only screen and (min-width: 768px) {
+  .curbside-customer-thankyou img {
+    margin-left: 20px!important;   
+  }
+
+  .SurveyAdditionalFeedbackTextArea {
+    width: 350px!important;
+  }
+
+  }
+
+  .curbside-customer-thankyou img {
+    display:block;
+    margin:auto;
+    height: 200px;
+    width: 200px;
+  }
+
+  .curbside-footer-position {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;            /* Footer height */
+  }
+
+.curbside-main-page-content{
+  position: relative;
+  min-height: 100vh;
+}
+
+.SurveyAdditionalFeedbackTextArea {
+  width: 245px;
 }

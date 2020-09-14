@@ -5,7 +5,7 @@
     <!-- https://www.mozu.com/docs/developer/themes/reference.htm#preload_json -->
     {% preload_json model "curbside" %}
 
-    <div id="mz-customer-at-curbside-content">
+    <div id="mz-customer-at-curbside-content" class = "curbside-page-wrap">
         {% include "back-office/customer-at-curbside-content" %}
     </div>
 {% endblock body-content %}

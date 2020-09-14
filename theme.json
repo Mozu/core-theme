@@ -336,6 +336,13 @@
       "template": "back-office/curbside-shipment-ready",
       "title": "Curbside Shipment Ready",
       "userCreatable": false
+    },
+    {
+      "entityType": "curbside-customer-survey",
+      "id": "curbside-customer-survey",
+      "template": "back-office/curbside-customer-survey",
+      "title": "Curbside Customer Survey",
+      "userCreatable": false
     }
   ],
   "mobileNotificationTemplates": [
