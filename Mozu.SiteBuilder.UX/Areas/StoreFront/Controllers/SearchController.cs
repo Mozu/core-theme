@@ -379,7 +379,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         avp.facetTemplate = "categoryId:" + categoryId;
                         avp.facetHierValue = "categoryId:" + categoryId;
                     }
-
+                    else
+                    {
+                        avp.facetTemplate = "categoryCode:_root";
+                        avp.facetHierValue = "categoryCode:_root";
+                    }
                 }
                 
                 bindingContext.Result = ModelBindingResult.Success(avp);
