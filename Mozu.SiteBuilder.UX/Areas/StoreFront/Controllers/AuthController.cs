@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var authTicket = response.ReadAsSync();
 
                 var cust = authTicket.CustomerAccount;
-                body = cust;
+                body = authTicket;
                 var profile = new UserProfile()
                 {
                     EmailAddress = cust.EmailAddress,
