@@ -1,0 +1,103 @@
+{% if model.hasCurbsideSurveyData==false %}     
+<div class="mz-curbside-header">  
+  <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+  <div class="mz-curbside-header-body">
+    <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+    <h3>{{ labels.curbsideCustomerSurveyHeaderBlob2 }}</h3>
+  </div>
+</div>   
+{% endif %}
+{% if model.hasCurbsideSurveyData==true %}
+    <div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+            <h3>{{ labels.curbsideCustomerSurveyHeaderBlob3 }}</h3>
+        </div>
+    </div>  
+{% endif %}
+<div class="pageContent">
+    {% if model.hasCurbsideSurveyData==false %}        
+        <div class="curbside-description">
+            <p>{{ labels.curbsideCustomerSurveyBlob1 }}</p>
+        </div>
+        <div class="mz-l-column">
+            <form method="post" class="mz-curbsideSurveyform mz-curbsidedelivery-page" name="mz-curbsideSurvey">
+                <div class="mz-l-formfieldgroup">
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="surveyQuestion1" name="surveyQuestion1label" id="surveyQuestion1" >{{ labels.curbsideCustomerSurveyQuestionBlob1|safe }}</label>
+                            <select data-mz-selectedSurveyQuestion1" id="selectedSurveyQuestion1">
+                                    <option value="" disabled selected hidden>{{ labels.curbsideCustomerPlaceHolder }} </option>
+                                    <option value="5. Strongly Agree">5. Strongly Agree </option>
+                                    <option value="4. Moderately Agree"> 4. Moderately Agree </option>
+                                    <option value="3. Neither Agree Nor Disagree">3. Neither Agree Nor Disagree </option>
+                                    <option value="2. Moderately Disagree">2. Moderately Disagree</option>
+                                    <option value="1. Strongly Disagree">1. Strongly Disagree</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="surveyQuestion2" name="surveyQuestion2label" id="surveyQuestion2" >{{ labels.curbsideCustomerSurveyQuestionBlob2|safe }}</label>
+                            <select data-mz-selectedSurveyQuestion2" id="selectedSurveyQuestion2">
+                                     <option value="" disabled selected hidden>{{ labels.curbsideCustomerPlaceHolder }} </option>
+                                    <option value="5. Strongly Agree">5. Strongly Agree </option>
+                                    <option value="4. Moderately Agree"> 4. Moderately Agree </option>
+                                    <option value="3. Neither Agree Nor Disagree">3. Neither Agree Nor Disagree </option>
+                                    <option value="2. Moderately Disagree">2. Moderately Disagree</option>
+                                    <option value="1. Strongly Disagree">1. Strongly Disagree</option>
+                                </select>
+                        </div>
+                    </div>
+                   <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="surveyQuestion3" name="surveyQuestion3label" id="surveyQuestion3" >{{ labels.curbsideCustomerSurveyQuestionBlob3|safe }}</label>
+                            <select data-mz-selectedSurveyQuestion3" id="selectedSurveyQuestion3">
+                                    <option value="" disabled selected hidden>{{ labels.curbsideCustomerPlaceHolder }} </option>
+                                    <option value="5. Strongly Agree">5. Strongly Agree </option>
+                                    <option value="4. Moderately Agree"> 4. Moderately Agree </option>
+                                    <option value="3. Neither Agree Nor Disagree">3. Neither Agree Nor Disagree </option>
+                                    <option value="2. Moderately Disagree">2. Moderately Disagree</option>
+                                    <option value="1. Strongly Disagree">1. Strongly Disagree</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="surveyQuestion4" name="surveyQuestion4label" id="surveyQuestion4" >{{ labels.curbsideCustomerSurveyQuestionBlob4|safe }}</label>
+                            <select data-mz-selectedSurveyQuestion4" id="selectedSurveyQuestion4">
+                                   <option value="" disabled selected hidden>{{ labels.curbsideCustomerPlaceHolder }} </option>
+                                    <option value="5. Strongly Agree">5. Strongly Agree </option>
+                                    <option value="4. Moderately Agree"> 4. Moderately Agree </option>
+                                    <option value="3. Neither Agree Nor Disagree">3. Neither Agree Nor Disagree </option>
+                                    <option value="2. Moderately Disagree">2. Moderately Disagree</option>
+                                    <option value="1. Strongly Disagree">1. Strongly Disagree</option>
+                                </select>
+                        </div>
+                    </div>
+                     <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <label for="SurveyAdditionalFeedback" name="SurveyAdditionalFeedback" id="SurveyAdditionalFeedback">{{ labels.curbsideCustomerSurveyAdditionalFeedback|safe }}</label>
+                            <textarea cols="60" rows="3" class="SurveyAdditionalFeedbackTextArea" name="SurveyAdditionalFeedback" value="" type="text" id="data-SurveyAdditionalFeedback" data-mz-SurveyAdditionalFeedback></textarea>
+                        </div>
+                    </div>
+                    <div class="mz-l-formfieldgroup-row">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <button class="mz-button mz-button-large mz-curbside-survey-button" data-mz-action="onCurbsideSurveySubmit">{{ labels.submit }}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+    {% if model.hasCurbsideSurveyData==true %}
+        <div class="curbside-customer-thankyou">
+            <div class="curbside-description"> <p>{{ labels.curbsideCustomerSurveyThankYouBlob1 }}</p>
+                <img src="//kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+             </div>
+        </div>
+    {% endif %}
+   <div class="curbside-description"> <P>{{ labels.curbsideCustomerSurveyThankTxt|string_format(siteContext.generalSettings.websiteName)|safe }} </p></div>
+   
+</div>
