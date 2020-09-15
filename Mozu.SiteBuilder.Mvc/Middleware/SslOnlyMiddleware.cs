@@ -17,12 +17,19 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
                 out var handledByProxy);
             TryParse(context ,Core.Api.Contracts.Constants.Headers.SSL_HANDLED,
                 out var isSSl);
-
+            
             if (!handledByProxy || isSSl)
             {
                 return next(context);
             }
-
+            
+            var isEmailRenderRequest = context.Request.Path.Value.Contains("render", StringComparison.OrdinalIgnoreCase);
+            if (isEmailRenderRequest)
+            {
+                return next(context);
+            }
+            
+            
             var rfo = context.RequestServices.GetService<IRequestUrlFinderOuter>();
             if (rfo.IsCdnRequest())
             {
@@ -31,6 +38,14 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             
             var apiContext = context.RequestServices.GetService<IApiContext>();
             if (!(apiContext?.SiteId).HasValue)
+            {
+                return next(context);
+            }
+
+            var appKey = (apiContext?.CallChain) ?? string.Empty;
+            
+            if (appKey.Contains("mozu", StringComparison.OrdinalIgnoreCase) ||
+                appKey.Contains("kibo", StringComparison.OrdinalIgnoreCase) )
             {
                 return next(context);
             }
