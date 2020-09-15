@@ -135,6 +135,12 @@
       "title": "Partial Pickup Ready"
     },
     {
+      "id": "shipment.transfercreatedbyfulfiller",
+      "properties": {},
+      "template": "email/transfer-shipment-created",
+      "title": "Transfer Created By Fulfiller"
+    },
+    {
       "id": "refund.created",
       "properties": {},
       "template": "email/order-refund-issued",
