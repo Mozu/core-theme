@@ -9,8 +9,17 @@
     {% for item in model.items %}
         <div data-mz-shipment-item class="mz-shipment-item" data-mz-shipment-item-id="{{item.lineId}}">
             {% include "modules/my-account/order-history-shipment-item" with model=item shipment=model %}
+
+            {% if item.backorderReleaseDate %}
+                <div class="mz-shipment-item-backorder">
+                    <h3 class="mz-shipment-status-heading">{{labels.backorderEst }}</h3>
+                    <div>{{ item.backorderReleaseDate|date("F j, Y") }}</div>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
+
+  
 
     {% endblock shipment-details %}
 
@@ -25,8 +34,9 @@
     <div data-mz-shipment-actions class="mz-shipment-actions mz-l-shipment-actions">
 
         <h3 class="mz-shipment-status-heading">
-            {{labels.onBackorder }}
+            {{labels.onBackorderEst }}
         </h3>
+        
     </div>
 {% endblock shipment-actions %}
 
