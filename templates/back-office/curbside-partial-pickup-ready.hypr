@@ -1,0 +1,86 @@
+{% extends "back-office/curbside-base" %}
+{% block body-content %}
+<div class = "curbside-page-wrap">
+<div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+            <h3>{{ labels.curbsidePartialPickupTitle }}</h3>
+        </div>
+    </div>  
+<div class="pageContent">
+    <div class="curbside-info">
+        <p><strong>{{ labels.curbsidePartialPickupBlob1 }}</strong></p>
+        <p>{{ labels.curbsidePartialpickuptxt }}</p>
+    </div>
+    <div class="curbside-onmyway-button">
+            <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-cell">
+                    <button class="mz-button mz-button-large mz-delevery-button"  onclick="location.href = '//{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
+                        <div class="mz-l-formfieldgroup-cell">
+                            <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                        </div>
+                </div>
+            </div>        
+    </div>
+    <p> {{ labels.alreadyCurbside }} <a href="//{{ domainName }}/anonymous-notification/curbsideArrive/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.bringMeOrder }}</a></p>
+    <p>{{ labels.curbsidePartialPickupBlob2|safe}}</p><br> 
+    <div class="curbside-info-notes">
+        {{ labels.customerAtCurbsideBlob4|safe }}
+    </div>
+    <div class="order-details-header">
+        <div class="curbside-order-details-left">
+            <h2  style="color:white"> <b>{{ labels.orderDetails }}</b></h2>
+        </div>
+        <div class="curbside-order-details-right" align="left">
+            <p> <b>{{ labels.orderNumber }} <br> {{ model.orderNumber }} </b></p>
+        </div>
+    </div>
+    <div class = "store-detail-info">
+        <span> <b> {{ labels.storeDetails }} </b><span> <br>
+        <div> {{ labels.storeLocation }} : {{ location.name }}</div>
+		<div> {{ location.address.address1 }} </div>
+		<div> {{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }} {{ location.address.postalOrZipCode }} </div>
+		<div> {{ location.phone }}</div>
+    </div>
+<div>
+<div class="location-hours-info">{{labels.locationHoursText }} </div>
+{% block location-hours %}
+            {% include "back-office/location-hours" location=location.regularHours %}
+{% endblock location-hours %}
+</div>
+</div>
+
+
+<tbody><tr><td colspan="4">
+    <div class="shipment-item-info">{{ labels.curbsideItemInfo }}</div>
+        <table class="grid">
+            <thead><tr>
+                <th>{{ labels.item }}</th>
+                <th> </th>
+                <th>{{ labels.subtotal }}</th>
+            </tr></thead>
+            <tbody>
+                {% for item in model.items %}
+                 {% if item.readyForPickupQuantity > 0 %}
+                    <tr>
+                        <td>
+                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                        </td>
+                        <td>
+                            <div class="product-name">
+                                <span><b>{{ item.name }}</b></span></br>
+                                <span class="label">{{ labels.ProductPart }} {{ item.productCode }}</span></br>
+                                <span class="label">{{ labels.qty }} {{ item.quantity }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}
+                        </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+            </tbody>
+    </table>
+</div>
+{% endblock body-content %}
