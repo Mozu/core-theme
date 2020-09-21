@@ -1,2 +1,2 @@
 {% comment %} message length should not exceed 160 characters {% endcomment %}
-{{ labels.mobileShipmentFulfilledMessage|safe }}
+{{ labels.mobileShipmentFulfilledMessage|string_format(model.shipmenturl)|safe }}

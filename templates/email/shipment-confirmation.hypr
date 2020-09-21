@@ -14,6 +14,9 @@
 
    <p>{{ labels.orderCompleteBlob2|safe }} </p>
     <br/>
+    <br/>
+    <p>{{ labels.curbsideSurveyFeedbackTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br>
+    <br/>
 
     <!--- Order Details --->
     <div class="mz-multiship-email" style="width: 100%;">

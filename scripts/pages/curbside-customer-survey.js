@@ -11,8 +11,7 @@ var CurbsideCustomerSurveyModel = Backbone.MozuModel.extend({
     mozuType: 'curbsideCustomerSurvey',
     onCurbsideSurveySubmit: function(payload){
         var self = this;
-        //TODO: Once API Changes done then we can uncomment this code to give call to API
-        //return api.action('customer', 'orderCurbsideSurveyEvent', payload);
+        return api.action('customer', 'orderCurbsideSurveyEvent', payload);
     }
 });
 
@@ -54,12 +53,10 @@ var CurbsideCustomerSurveyView = Backbone.MozuView.extend({
                 ]
             };
             
-            //TODO: Once API Changes done then we can uncomment this code to give call to API
-           // this.model.onCurbsideSurveySubmit(payload).then(function(respnse) {
-            //self.model.set('hasCurbsideData', respnse.data.hasCurbsideData);   
-            self.model.set('hasCurbsideSurveyData', true);
+           this.model.onCurbsideSurveySubmit(payload).then(function(respnse) {
+            self.model.set('hasCurbsideSurveyData', respnse.data.hasCurbsideSurveyData);   
             self.render();
-           // });
+            });
         },
 
     render: function(){
