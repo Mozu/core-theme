@@ -14,8 +14,7 @@
 
    <p>{{ labels.orderCompleteBlob2|safe }} </p>
     <br/>
-    <br/>
-    <p>{{ labels.curbsideSurveyFeedbackTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p><br>
+    <p>{{ labels.curbsideSurveyFeedbackTxt|string_format(domainName, model.shipmentNumber, model.orderId)|safe}}</p>
     <br/>
 
     <!--- Order Details --->
