@@ -4,7 +4,7 @@
         {% if model.borderFreeData.ooStatus == "CHECKOUT"%}
             <!-- Envoy Checkout URL in iFrame tag -->
             <div class="borderFree">
-            <iframe name="envoy" id="envoyId" src="{{model.borderFreeData.fullEnvoyUrl}}" frameBorder="0" scrolling="no" style="width: 100%;"></iframe>
+            <iframe name="envoy" id="envoyId" src="{{model.borderFreeData.fullEnvoyUrl}}" frameBorder="0" scrolling="no" style="width: 100%; height: 100vh;"></iframe>
             <!--Used to call Success, Failure or Pending URL -->
             <iframe id="__frame" width="0" height="0" frameborder="0" src="https://{{model.borderFreeData.checkoutDomain2}}.borderfree.com/utils/empty.jsp" ></iframe>
             <!-- Your custom footer here -->
