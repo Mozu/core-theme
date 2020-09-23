@@ -1,0 +1,2 @@
+{% comment %} message length should not exceed 160 characters {% endcomment %}
+{{ labels.mobilePickupReminder|string_format(model.OrderNumber, model.shipmenturl)|safe }}

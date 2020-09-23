@@ -338,6 +338,8 @@
   "mobileOrderConfirmationMessage": "{0} Order Alerts. We will text you when your order status changes. Msg freq may vary. Reply {1} to opt out. Msg&Data rates may apply",
   "mobileOrderOptInMessage": "Thank you for opting in to SMS alerts for your Curbside order. We will notify you when your order is ready for pickup.",
   "mobilePickLocation": "Pickup from/Ship from:",
+  "mobilePickupReminder":"Reminder - Items in your order {0} are ready for pickup. Review the order at {1}",
+  "mobileReadyForPickup":"Items in your order {0} are ready for pickup at {1}. Review the order at {2}",
   "mobileShipmentCanceledInfo": "Canceled Items",
   "mobileShipmentCancelMessage": "Item(s) canceled: Store {0} Go to {1} for more information OR Manage Shipments at {2}",
   "mobileShipmentFulfilledMessage": "Thank you, your order is now complete. Contact the store with any questions you have. Click {0} for a quick survey!",
