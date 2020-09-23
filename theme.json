@@ -135,6 +135,12 @@
       "title": "Partial Pickup Ready"
     },
     {
+      "id": "shipment.transfercreatedbyfulfiller",
+      "properties": {},
+      "template": "email/transfer-shipment-created-fulfiller",
+      "title": "Transfer Created By Fulfiller"
+    },
+    {
       "id": "refund.created",
       "properties": {},
       "template": "email/order-refund-issued",
@@ -170,11 +176,11 @@
       "template": "email/product-return-changed",
       "title": "Return Has Been Updated"
     },
-    {
-      "id": "shipment.transferCreated",
+	{
+      "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
-      "title": "Transfer Shipment Created"
+      "title": "Transfer Created"
     },
     {
       "id": "shipment.transferShipped",
