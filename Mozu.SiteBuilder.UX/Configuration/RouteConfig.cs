@@ -349,6 +349,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Curbside Partial Pickup Ready Endpoint",
+                "anonymous-notification/partialCurbsideReady/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "PartialCurbsideReadyView" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "refresh tokens",
                 "token/refresh",
                 new { controller = "testing", action = "RefreshAPiContextHeaders" },

@@ -62,6 +62,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string PICKWAVE2_PREVIEW_RESOURCE_NAME = "backoffice.pickwave2";
         private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
         private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
+        private const string SHIPMENT3_PREVIEW_RESOURCE_NAME = "backoffice.shipment3";
         private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
         private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
         private const string CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME = "backoffice.customeratcurbside";
@@ -559,6 +560,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+                ViewData["location"] = location;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "curbside-partial-pickup-ready")
+            {
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                object model = TestDataBroker.GetFileContents(SHIPMENT3_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
                 ViewData["location"] = location;

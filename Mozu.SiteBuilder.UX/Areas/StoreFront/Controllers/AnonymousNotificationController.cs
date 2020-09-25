@@ -235,7 +235,38 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return View(template.Template, shipment);
         }
-        private async Task<Location.Contracts.Location> GetLocation(string locationCode)
+
+        [HttpGet]
+        public async Task<IActionResult> PartialCurbsideReadyView(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                return NotFound();
+            }
+
+            if (shipment.OrderId != orderId)
+            {
+                return StatusCode(401);
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-partial-pickup-ready"));
+
+            var location = await GetLocation(shipment.FulfillmentLocationCode);
+
+            if (template == null)
+            {
+                return NotFound("Could not find curbside-partial-pickup-ready template for the current Theme.");
+            }
+
+            ViewData["location"] = location;
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+
+            return View(template.Template, shipment);
+        }
+
+            private async Task<Location.Contracts.Location> GetLocation(string locationCode)
         {
             if (!string.IsNullOrEmpty(locationCode))
             {

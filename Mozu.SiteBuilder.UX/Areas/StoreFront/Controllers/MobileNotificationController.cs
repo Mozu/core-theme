@@ -98,6 +98,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string SHIPMENT_URL_FRAGMENT = "shipment";
         public const string CURBSIDEARRIVE = "curbsideArrive";
         public const string CURBSIDESHIPMENTREADY = "curbsideShipmentReady";
+        public const string PARTIALCURBSIDEREADY = "partialCurbsideReady";
 
         private static readonly List<MobileNotificationTypeInfo> _smsMobileNotificationTypeInfo;
 
@@ -319,9 +320,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         ViewData["customerName"] = $"{shipmentModel.Destination?.DestinationContact?.FirstName} {shipmentModel.Destination?.DestinationContact?.LastNameOrSurname}";
                         break;
                     case Topics.CurbsideReady:
-                    case Topics.PartialCurbsideReady:
                         var shipmentReadyLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{CURBSIDESHIPMENTREADY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
                         shipmentModel.ShipmentUrl = shipmentReadyLink.Link;
+                        break;
+                    case Topics.PartialCurbsideReady:
+                        var partialReadyLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{PARTIALCURBSIDEREADY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
+                        shipmentModel.ShipmentUrl = partialReadyLink.Link;
                         break;
                     case Topics.ShipmentItemCanceled:
                         shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));

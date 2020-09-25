@@ -64,4 +64,8 @@
 
     <EmbeddedResource Include="TestData\**\*.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestData\backoffice\Shipment3.json" />
+  </ItemGroup>
 </Project>
