@@ -1,0 +1,240 @@
+<div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+            <h3>{{ labels.orderRedayForPickup }}</h3>
+        </div>
+    </div>  
+<div class="pageContent">
+    <div class="curbside-info">
+        <p> {{ labels.curbsideShipmentReadyGoodNewsText }} </p>
+            {{ labels.shopperNotificationText|safe }}
+    </div>
+    <div class="curbside-onmyway-button">
+            <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-cell">
+                    <button class="mz-button mz-button-large mz-shopper-notification-onmyway-button"  onclick="location.href = '//{{ domainName }}/anonymous-notification/customerintransit/{{model.shipmentNumber}}/{{model.orderId}}';">I'm on my way</button>
+                        <div class="mz-l-formfieldgroup-cell">
+                            <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                        </div>
+                </div>
+            </div>
+            <div> <h5><a href="//{{ domainName }}/anonymous-notification/CustomerAtStore/{{model.shipmentNumber}}/{{model.orderId}}">{{ labels.shopperNotificationIAmHere }}</a><br/><br/></h5> </div>
+    </div>
+
+    <div class="order-details-header">
+        <div class="curbside-order-details-left">
+            <h2  style="color:white"> <b>{{ labels.orderDetails }}</b></h2>
+        </div>
+        <div class="curbside-order-details-right" align="left">
+            <p> <b>{{ labels.orderNumber }} <br> {{ model.orderNumber }} </b></p>
+        </div>
+    </div>
+    <div class = "store-detail-info">
+        <span> <b> {{ labels.storeDetails }} </b><span> <br>
+        <div> {{ labels.storeLocation }} : {{ location.name }}</div>
+		<div> {{ location.address.address1 }} </div>
+		<div> {{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }} {{ location.address.postalOrZipCode }} </div>
+		<div> {{ location.phone }}</div>
+    </div>
+    <div class="location-hours-info">{{labels.locationHoursText }} </div>
+    <table class="location-hours-format">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{labels.locationWeekDays}}</td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{labels.locationOpenTime}}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{labels.locationCloseTime}}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.pickupDetails }}</font></td>
+            </tr>
+        </thead>
+		<tbody>
+            <tr>
+                <td> {{ labels.sunday }}:</td>
+                <td>{% if location.regularHours.sunday.isClosed==false %} 
+                {{ location.regularHours.sunday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.sunday.isClosed==false %} 
+                {{ location.regularHours.sunday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td rowspan="7">{{location.note}}</td>
+            </tr>
+            <tr>
+                <td> {{ labels.monday }}:</td>
+                <td>{% if location.regularHours.monday.isClosed==false %} 
+                {{ location.regularHours.monday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.monday.isClosed==false %} 
+                {{ location.regularHours.monday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+            </tr>
+            <tr>
+                <td> {{ labels.tuesday }}:</td>
+                <td>{% if location.regularHours.tuesday.isClosed==false %} 
+                {{ location.regularHours.tuesday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.tuesday.isClosed==false %} 
+                {{ location.regularHours.tuesday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.wednesday }}:</td>
+                <td>{% if location.regularHours.wednesday.isClosed==false %} 
+                {{ location.regularHours.wednesday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.wednesday.isClosed==false %} 
+                {{ location.regularHours.wednesday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.thursday }}:</td>
+                <td>{% if location.regularHours.thursday.isClosed==false %} 
+                {{ location.regularHours.thursday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.thursday.isClosed==false %} 
+                {{ location.regularHours.thursday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.friday }}:</td>
+                <td>{% if location.regularHours.friday.isClosed==false %} 
+                {{ location.regularHours.friday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.friday.isClosed==false %} 
+                {{ location.regularHours.friday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>
+            <tr>
+                <td> {{ labels.saturday }}:</td>
+                <td>{% if location.regularHours.saturday.isClosed==false %} 
+                {{ location.regularHours.saturday.openTime }} 
+                {% endif %}
+                {% if location.regularHours.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}     
+                </td>
+                <td>{% if location.regularHours.saturday.isClosed==false %} 
+                {{ location.regularHours.saturday.closeTime }} 
+                {% endif %}
+                {% if location.regularHours.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+                {% endif %}  
+            </tr>    
+		</tbody>
+    </table>
+
+        <div class="shopper-shipment-item-info">{{ labels.mobileShipmentFulfillInfo }}</div>
+            <table class="shopper-grid">
+                <thead><tr>
+                    <th>{{ labels.item }}</th>
+                    <th> </th>
+                    <th>{{ labels.price }}</th>
+                    <th>{{ labels.subtotal }}</th>
+                </tr></thead>
+                <tbody>
+                    {% for item in model.items %}
+                        <tr>
+                            <td>
+                                <img style="height: 80px;" src="{{ item.imageUrl }}">
+                            </td>
+                            <td>
+                                <div class="product-name">
+                                    <span><b>{{ item.name }}</b></span></br>
+                                    <span class="label">{{ labels.mobileDiscount }}{{ item.itemDiscount|currency }}</span></br>
+                                    <span class="label">{{ labels.mobileShipmentTax }}{{ item.itemTax|currency }}</span></br>
+                                    <span class="label">{{ labels.shopperItemsQty }}{{ item.quantity }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                {{ item.actualPrice|currency }}
+                            </td>
+                            <td >
+                                {{ item.lineItemCost|currency }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    <div class="store-notification-card">
+        <table class="grid shopper-notification-info-table">
+            <tr>
+                <th>{{ labels.mobileItemTotal }}<span>{{ model.lineItemTotal|currency }} </span></th>
+            </tr>
+            <tr>
+                <th>{{ labels.mobileShipping }}<span>{{ model.shippingTotal|currency }} </span></th>
+            </tr>
+            <tr>
+                <th>{{ labels.mobileHandling }}<span>{{ model.handlingTotal|currency }} </span></th>
+            </tr>
+            <tr>
+                <th>{{ labels.total }}<span>{{ model.total|currency }} </span></th>
+            </tr>
+        </table>
+    </div> 
+        <br/>
+        <br/>
+    {% if model.shopperNotes.comments %}
+    <div class="mz-shopper-notification-card">
+        <div class="mz-shopper-notification-card-header">{{ labels.comments }}</div>
+        <div class="mz-shopper-notification-card-body">
+            <p>{{ model.shopperNotes.comments }}</p>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    {% endif %}
+
+    <!--- Need Order Help Card --->
+    <div class="mz-shopper-notification-card">
+        <div class="mz-shopper-notification-card-header">{{ labels.orderCompleteBlob3 }}</div>
+        <div class="mz-shopper-notification-card-body">
+            <p>{{ labels.orderCompleteBlob4|string_format(domainName)|safe }}</p>
+        </div>
+    </div>
+    <br/>
+
+    <p>{{ labels.shopperClosingNotes|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+</div>

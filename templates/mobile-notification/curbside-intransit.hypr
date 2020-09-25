@@ -1,1 +1,5 @@
-{{ labels.curbsideCustomerOntheirWay|string_format(model.destination.destinationContact.fullName, model.orderNumber)|safe  }}
+ {% if model.shipmentType|lower == "curbside" %}
+    {{ labels.curbsideCustomerOntheirWay|string_format(model.destination.destinationContact.fullName, model.orderNumber)|safe  }}
+ {% else %}
+    {{ labels.shopperInTransitConfirmationSms|string_format(model.destination.destinationContact.fullName, model.orderNumber)|safe }}
+ {% endif %}

@@ -1,0 +1,6 @@
+{% extends "back-office/curbside-base" %}
+{% block body-content %}
+<div id="mz-shipment-ready" class = "curbside-page-wrap">
+        {% include "back-office/customer-on-way-confirmation-content" %}
+    </div>
+{% endblock body-content %}
