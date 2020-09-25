@@ -38,7 +38,7 @@
             <li class="mz-orderlisting-details-item">
                 <dl class="mz-propertylist mz-propertylist-order">
                     <dt>{{ labels.total }}</dt>
-                    <dd>{{ model.total|currency }}</dd>
+                    <dd>{{ model.getShipmentTotal|currency }}</dd>
                 </dl>
             </li>
             {% if model.amountRefunded > 0 %}
