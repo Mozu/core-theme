@@ -19,9 +19,8 @@ var CrubsideCustomerModel = Backbone.MozuModel.extend({
 var CrubsideCustomerView = Backbone.MozuView.extend({
     templateName: "back-office/customer-at-curbside-content",
     onDeliveryMethodSubmit: function(e) {
-        var self = this,
-            $target = $(e.currentTarget);
-
+            var self = this,
+            $target = $(e.currentTarget);            
             e.preventDefault();
             var isBackofficePreview = $('[data-mz-isBackofficePreview]').val();
             var payload = {
@@ -51,12 +50,11 @@ var CrubsideCustomerView = Backbone.MozuView.extend({
                 window.location.href = window.location.pathname + '-qrcode';
               }
               else {
-
+                $('#btnSubmitCurbsideInfo').prop('disabled', true);
                 this.model.onDeliveryMethodSubmit(payload).then(function(respnse){
                     self.model.set('hasCurbsideData', respnse.data.hasCurbsideData);
                     self.model.set('qrCode',respnse.data.qrCode);
                     self.render();
-
                 });
     }
     },
