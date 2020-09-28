@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2020-07-03
+ * Mozu JavaScript SDK - v0.3.0 - 2020-09-24
  *
- * Copyright (c) 2019 Volusion, Inc.
+ * Copyright (c) 2020 Volusion, Inc.
  *
  */
 
@@ -3912,6 +3912,10 @@ module.exports=
       "verb": "POST",
       "template": "{+storefrontUserService}save-curbside-info"
     },
+    "order-curbside-survey-event": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}save-curbside-survey"
+    },
     "update": {
       "verb": "PUT",
       "template": "{+customerService}{id}",
@@ -3931,7 +3935,7 @@ module.exports=
       "verb": "POST",
       "template": "{+customerService}{id}/change-password{?userId}",
       "includeSelf": true,
-      "shortcutParam":  "userId"
+      "shortcutParam": "userId"
     },
     "get-attributes": {
       "template": "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",

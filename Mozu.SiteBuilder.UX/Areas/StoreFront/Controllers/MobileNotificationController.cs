@@ -99,6 +99,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string CURBSIDEARRIVE = "curbsideArrive";
         public const string CURBSIDESHIPMENTREADY = "curbsideShipmentReady";
         public const string PARTIALCURBSIDEREADY = "partialCurbsideReady";
+        public const string CURBSIDESURVEY = "curbsideSurvey"; 
 
         private static readonly List<MobileNotificationTypeInfo> _smsMobileNotificationTypeInfo;
 
@@ -329,6 +330,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         break;
                     case Topics.ShipmentItemCanceled:
                         shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case Topics.ShipmentFulfilled:
+                        var surveyLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{CURBSIDESURVEY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
+                        shipmentModel.ShipmentUrl = surveyLink.Link;
                         break;
                     default:
                         break;

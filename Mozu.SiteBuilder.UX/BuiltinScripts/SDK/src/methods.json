@@ -372,9 +372,9 @@
       "verb": "POST",
       "template": "{+storefrontUserService}save-curbside-info"
     },
-    "order-curbside-details": {
+    "order-curbside-survey-event": {
       "verb": "POST",
-      "template": "{+storefrontUserService}curbside-pickup"
+      "template": "{+storefrontUserService}save-curbside-survey"
     },
     "update": {
       "verb": "PUT",

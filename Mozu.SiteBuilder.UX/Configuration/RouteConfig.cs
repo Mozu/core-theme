@@ -337,10 +337,22 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Anonymous Curbside Survey View",
+                "anonymous-notification/curbsidesurvey/{shipmentNumber}/{orderId}",
+                new { controller = "AnonymousNotification", action = "GetCurbsideSurvey" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "Anonymous Save Curbside Info",
                 "user/save-curbside-info",
                 new { controller = "AnonymousNotification", action = "SaveCurbsideInfo" },
 				_constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+              "Anonymous Save Curbside Survey",
+              "user/save-curbside-survey",
+              new { controller = "AnonymousNotification", action = "SaveCurbsideSurvey" },
+              _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "Anonymous I am on My Way Endpoint",

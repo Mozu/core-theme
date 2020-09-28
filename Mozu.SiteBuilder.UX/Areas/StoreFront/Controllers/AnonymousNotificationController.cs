@@ -23,6 +23,7 @@ using Kibo.Fulfillment.Contracts.Api;
 using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionConstraints;
 using System.Globalization;
+using Kibo.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -31,14 +32,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ISitesWebApiClient _sitesWebApiClient;
+        private readonly ICustomerSurveyControllerApiClient _customerSurveyControllerApiClient;
 
         public AnonymousNotificationController(IShipmentControllerApiClient shipmentControllerApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
-            ISitesWebApiClient sitesWebApiClient)
+            ISitesWebApiClient sitesWebApiClient,
+            ICustomerSurveyControllerApiClient customerSurveyControllerApiClient)
         {
             _shipmentControllerApiClient = shipmentControllerApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient;
             _sitesWebApiClient = sitesWebApiClient;
+            _customerSurveyControllerApiClient = customerSurveyControllerApiClient;
         }
 
         [HttpGet]
@@ -58,9 +62,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("mobile-notification"));
             if (template == null)
             {
-                return NotFound( "Could not find MobileNotification template for the current Theme.");
+                return NotFound("Could not find MobileNotification template for the current Theme.");
             }
-            return  View(template.Template, model);
+            return View(template.Template, model);
         }
 
         [HttpGet]
@@ -88,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ViewData["location"] = location;
-            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(); 
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
             return View(template.Template, shipment);
         }
@@ -270,9 +274,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (!string.IsNullOrEmpty(locationCode))
             {
-                 var location= (await _locationRuntimeWebApiClient.CloneWithoutUserClaims().GetLocation(locationCode)).ReadAsSync();
-                 FormatRegularHours(location);
-                 return location;
+                var location = (await _locationRuntimeWebApiClient.CloneWithoutUserClaims().GetLocation(locationCode)).ReadAsSync();
+                FormatRegularHours(location);
+                return location;
             }
 
             return null;
@@ -297,7 +301,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //both openTime and close time always have hours, if isClosed is false.
                 if (string.IsNullOrEmpty(hours.OpenTime) && string.IsNullOrEmpty(hours.CloseTime))
                     return;
-                
+
                 DateTime.TryParse(hours.OpenTime, out DateTime openTime);
                 DateTime.TryParse(hours.CloseTime, out DateTime closeTime);
                 hours.OpenTime = openTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
@@ -312,6 +316,81 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             FormatHours(location.RegularHours.Friday);
             FormatHours(location.RegularHours.Saturday);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCurbsideSurvey(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                return NotFound();
+            }
+
+            if (shipment.OrderId != orderId)
+            {
+                return StatusCode(401);
+            }
+
+            CurbsideSurveyInfo surveyInfo = new CurbsideSurveyInfo
+            {
+                ShipmentNumber = shipmentNumber,
+                OrderId = orderId,
+                OrderNumber = shipment.OrderNumber
+            };
+
+            var hasSurveyData = (await _customerSurveyControllerApiClient.CloneWithoutUserClaims().GetSurveysUsingGET(shipmentNumber)).ReadAsSync();
+            if (hasSurveyData.Embedded != null && hasSurveyData.Embedded.Count > 0)
+            {
+                surveyInfo.hasCurbsideSurveyData = true;
+            }
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-customer-survey"));
+            if (template == null)
+            {
+                return NotFound("Could not find curbside-customer-survey template for the current Theme.");
+            }
+            return View(template.Template, surveyInfo);
+        }
+
+        [HttpPost]
+        [AcceptHeader("application/json", true)]
+        public async Task<ActionResult<CurbsideSurveyInfo>> SaveCurbsideSurvey([FromBody]CurbsideSurveyInfo surveyInfo)
+        {
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(surveyInfo.ShipmentNumber)).ReadAsSync();
+
+            if (shipment == null)
+            {
+                return NotFound();
+            }
+
+            if (shipment.OrderId != surveyInfo.OrderId)
+            {
+                return StatusCode(401);
+            }
+
+            surveyInfo.OrderNumber = shipment.OrderNumber;
+            surveyInfo.hasCurbsideSurveyData = true;
+
+            List<CustomerSurveyEntry> entries = surveyInfo.CurbsideSurveyFormData.
+            Select(x => new CustomerSurveyEntry()
+            {
+                Question = x.Key,
+                Answer = x.Value
+            }).ToList();
+            CustomerSurvey customerSurvey = new CustomerSurvey()
+            {
+                Entries = entries,
+                SiteId = SbApiContext.SiteId,
+                TenantId = SbApiContext.TenantId,
+                ShipmentNumber = surveyInfo.ShipmentNumber
+            };
+
+            (await _customerSurveyControllerApiClient.CloneWithoutUserClaims().CreateSurveyUsingPOST(customerSurvey, surveyInfo.ShipmentNumber)).ReadAsSync();
+
+            return surveyInfo;
+        }
+
     }
 
     public class CurbsideFormData : KeyValuePairBase<string, string>
@@ -327,6 +406,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public ICollection<CurbsideFormData> CurbsideFormData { get; set; }
         public string QRCode { get; set; }
         public bool HasCurbsideData { get; set; }
+    }
+    public class CurbsideSurveyFormData : KeyValuePairBase<string, string>
+    {
+    }
+
+    public class CurbsideSurveyInfo
+    {
+        public int ShipmentNumber { get; set; }
+        public string OrderId { get; set; }
+        public int? OrderNumber { get; set; }
+        public ICollection<CurbsideFormData> CurbsideSurveyFormData { get; set; }
+        public bool hasCurbsideSurveyData { get; set; }
     }
 
     public static class ImageExtension
