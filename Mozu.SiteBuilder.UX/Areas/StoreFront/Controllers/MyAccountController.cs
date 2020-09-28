@@ -23,7 +23,13 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.OAF;
-using StorefrontModel = Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
+
+using Kibo.Fulfillment.Contracts.Api;
+
+using DCs = Mozu.CommerceRuntime.Contracts;
+using Newtonsoft.Json.Linq;
+using Mozu.Core.Extensions;
+using RabbitMQ.Client.Impl;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -47,8 +53,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IWishlistWebApiClient _wishlistApiClient;
         private readonly ICreditWebApiClient _creditApiClient;
         private readonly IReturnWebApiClient _returnApiClient;
+        private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IReturnWebApiClient returnApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext)
+        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IReturnWebApiClient returnApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext, IShipmentControllerApiClient shipmentControllerApiClient)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
@@ -60,8 +67,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _returnApiClient = returnApiClient;
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
+            _shipmentControllerApiClient = shipmentControllerApiClient;
         }
-
+        
 
         //private static List<string> OpenOrderStates = new List<string>{
         //    Order.OrderStatusConst.SUBMITTED,
@@ -78,6 +86,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+
             //var account = (await _customerAccountWebApiClient.GetAccounts(filter : "UserId eq \"" + CurrentUser.UserId + "\"")).ReadAsSync().Items.FirstOrDefault();
             // If there isn't an active user or account id for the user, then we are going to redirect to the user/login page.
             if (PageContext.User?.AccountId == null)
@@ -168,9 +177,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
             }
 
+            orderHistory.Items.ForEach(order => order.Shipments = null);
+            var orderHistoryObject = orderHistory.ToJObject();
+
+            orderHistoryObject.Value<JArray>("items").Each(order =>
+            {
+                var orderShipments = fetchOrderShipments(order.Value<String>("id")).Result;
+                order["shipments"] = orderShipments.ToJObject();
+            });
+
             var jAccount = account.ToJObject();
 
-            jAccount.Add("orderHistory", orderHistory.ToJObject());
+            jAccount.Add("orderHistory", orderHistoryObject);
             jAccount.Add("returnHistory", returnHistory.ToJObject());
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
@@ -212,6 +230,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    openOrdersSb.Append("\" and OrderNumber ne null");
         //    return openOrdersSb.ToString();
         //}
+
+        async Task<Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment> fetchOrderShipments(string orderId)
+        {
+            try
+            {
+                var SHIPMENT_FILTER = "orderId==" + orderId + ";shipmentStatus!=REASSIGNED;shipmentType!=Transfer";
+
+                var fulfillmentClient = _shipmentControllerApiClient.CloneWithoutUserClaims();
+                var response = (await fulfillmentClient.GetShipmentsUsingGET(SHIPMENT_FILTER)).ReadAsSync();
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return new Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment();
+            }
+        }
 
         private string BuildOrderHistoryFilter(int accountId)
         {

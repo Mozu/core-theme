@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2020-09-24
+ * Mozu JavaScript SDK - v0.3.0 - 2020-09-28
  *
  * Copyright (c) 2020 Volusion, Inc.
  *
@@ -2713,7 +2713,7 @@ module.exports = {
 
     }
 }
-},{"./utils":40}],14:[function(_dereq_,module,exports){
+},{"./utils":41}],14:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/collection.js
@@ -2841,7 +2841,7 @@ var ApiObject = _dereq_('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":30,"./utils":40}],15:[function(_dereq_,module,exports){
+},{"./object":23,"./types/locations":30,"./utils":41}],15:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/constants/default.js
@@ -3033,7 +3033,7 @@ module.exports = ApiContextConstructor;
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utilities":38,"./utils":40,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
+},{"./interface":21,"./reference":24,"./utilities":39,"./utils":41,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/errors.js
@@ -3085,7 +3085,7 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":40}],18:[function(_dereq_,module,exports){
+},{"./utils":41}],18:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/iframexhr.js
@@ -3252,7 +3252,7 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":40}],19:[function(_dereq_,module,exports){
+},{"./utils":41}],19:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init.js
@@ -3295,7 +3295,7 @@ _init.ApiObject.prototype.inspect = function () {
 _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utilities":38,"./utils":40}],21:[function(_dereq_,module,exports){
+},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utilities":39,"./utils":41}],21:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/interface.js
@@ -3533,7 +3533,7 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":40}],22:[function(_dereq_,module,exports){
+},{"./object":23,"./reference":24,"./utils":41}],22:[function(_dereq_,module,exports){
 module.exports=
 
 //# sourceUrl=src/methods.json
@@ -3672,14 +3672,14 @@ module.exports=
   },
   "purchaseOrderTransactions": {
     "template": "{+customerService}{id}PurchaseOrderTransaction",
-    "shortcutParam":  "id",
+    "shortcutParam": "id",
     "defaultParams": {
       "startIndex": 0,
       "pageSize": 20
     }
   },
   "product": {
-   "get": {
+    "get": {
       "template": "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
       "shortcutParam": "productCode",
       "defaultParams": {
@@ -4228,6 +4228,26 @@ module.exports=
       "includeSelf": true,
       "template": "{+orderService}{id}/returnableitems",
       "returnType": "json"
+    },
+    "get-shipments": {
+      "verb": "GET",
+      "includeSelf": false,
+      "template": "{+storefrontShipmentsService}?filter=orderId=={orderId}shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
+      "shortcutParam": "orderId",
+      "returnType": "storefrontShipments"
+    }
+  },
+  "storefrontShipment": {
+    "verb": "GET",
+    "template": "{+storefrontShipmentsService}{id}"
+  },
+
+  "storefrontShipments": {
+    "verb": "GET",
+    "template": "{+storefrontShipmentsService}{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
+    "collectionOf": "storefrontShipment",
+    "defaultParams": {
+      "filter": "shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED"
     }
   },
   "rma": {
@@ -4748,7 +4768,8 @@ ApiObjectConstructor.types = {
     shipment: _dereq_('./types/shipment'),
     user: _dereq_('./types/user'),
     wishlist: _dereq_('./types/wishlist'), 
-    token: _dereq_('./types/token')
+    token: _dereq_('./types/token'),
+    storefrontShipment: _dereq_('./types/storefrontShipment'),
 };
 ApiObjectConstructor.hydratedTypes = {};
 
@@ -4789,7 +4810,7 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/token":35,"./types/user":36,"./types/wishlist":37,"./utils":40}],24:[function(_dereq_,module,exports){
+},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/storefrontShipment":35,"./types/token":36,"./types/user":37,"./types/wishlist":38,"./utils":41}],24:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/reference.js
@@ -4974,7 +4995,7 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":40}],25:[function(_dereq_,module,exports){
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":41}],25:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cart.js
@@ -5034,7 +5055,7 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":40}],26:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":41}],26:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
@@ -5045,7 +5066,7 @@ module.exports = {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":40}],27:[function(_dereq_,module,exports){
+},{"../utils":41}],27:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/checkout.js
@@ -5408,7 +5429,7 @@ module.exports = (function () {
 
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":40}],28:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":41}],28:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/creditcard.js
@@ -5615,7 +5636,7 @@ module.exports = (function() {
     };
 
 }());
-},{"../errors":17,"../utils":40}],29:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":41}],29:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/customer.js
@@ -5694,7 +5715,7 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":40}],30:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":41}],30:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/locations.js
@@ -5811,7 +5832,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":40}],31:[function(_dereq_,module,exports){
+},{"../utils":41}],31:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/login.js
@@ -6124,7 +6145,7 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":40}],33:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":41}],33:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/product.js
@@ -6183,7 +6204,7 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":40}],34:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../utils":41}],34:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/shipment.js
@@ -6200,7 +6221,23 @@ module.exports = {
         });
     }
 };
-},{"../utils":40}],35:[function(_dereq_,module,exports){
+},{"../utils":41}],35:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=src/types/storefrontShipment.js
+
+﻿var utils = _dereq_('../utils');
+module.exports = {
+    getShipmentsForOrder: function (orderId) {
+        var self = this;
+        return this.api.action('order', 'get-shipments', {
+            orderId: orderId
+        }).then(function (data) {
+            return data.data;
+        });
+    }
+};
+},{"../utils":41}],36:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/token.js
@@ -6234,7 +6271,7 @@ module.exports = {
     }
 }
 
-},{"../errors":17,"../utils":40}],36:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":41}],37:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/user.js
@@ -6290,7 +6327,7 @@ module.exports = {
         return CONSTANTS.USER_BEHAVIORS_NAME[behaviorName];
     }
 };
-},{"../constants/default":15}],37:[function(_dereq_,module,exports){
+},{"../constants/default":15}],38:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/wishlist.js
@@ -6351,7 +6388,7 @@ module.exports = (function() {
             }
         };
 }());
-},{"../errors":17,"../utils":40}],38:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":41}],39:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/utilities.js
@@ -6367,7 +6404,7 @@ MozuUtilitiesConstructor.prototype = {
 }
 
 module.exports = MozuUtilitiesConstructor;
-},{"./utilities/behaviors":39}],39:[function(_dereq_,module,exports){
+},{"./utilities/behaviors":40}],40:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/utilities/behaviors.js
@@ -6450,7 +6487,7 @@ var behaviors = {
 }
 
 module.exports = behaviors;
-},{}],40:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 (function (process){
 
 

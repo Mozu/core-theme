@@ -9,9 +9,6 @@
     <Folder Include="wwwroot\Assets\">
 
     </Folder>
-    <Folder Include="BuiltinScripts">
-
-    </Folder>
   </ItemGroup>
 
   <ItemGroup>

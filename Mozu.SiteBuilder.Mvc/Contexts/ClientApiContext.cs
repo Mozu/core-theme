@@ -313,6 +313,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         Id = "DiscountService",
                         InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("DiscountRuntimeSecondaryWebApi"),
                         RequiresSsl = true
+                    },
+                    new ServiceInfo
+                    {
+                        Id = "StorefrontShipmentsService",
+                        InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("StorefrontShipmentsWebApi"),
+                        RequiresSsl = true
                     }
 
                 };

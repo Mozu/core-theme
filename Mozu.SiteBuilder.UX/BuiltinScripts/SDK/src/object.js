@@ -48,7 +48,8 @@ ApiObjectConstructor.types = {
     shipment: require('./types/shipment'),
     user: require('./types/user'),
     wishlist: require('./types/wishlist'), 
-    token: require('./types/token')
+    token: require('./types/token'),
+    storefrontShipment: require('./types/storefrontShipment'),
 };
 ApiObjectConstructor.hydratedTypes = {};
 
