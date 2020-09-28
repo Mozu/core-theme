@@ -88,6 +88,12 @@
                 return conf;
             },
 
+            firstPage: function() {
+                try {
+                    return this.apiModel.firstPage(this.lastRequest);
+                } catch (e) { }  
+            },
+
             previousPage: function() {
                 try {
                     return this.apiModel.prevPage(this.lastRequest);

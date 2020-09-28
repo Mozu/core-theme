@@ -22,12 +22,22 @@
     <div class="mz-itemlisting-quantity">
      {{labels.orderPackageQuantity}} : {%if packageItem %} {{ packageItem.quantity}} {% else %} {{ model.quantity}} {% endif %} 
     </div>  
+
+    {% if item.product.bundledProducts && item.product.bundledProducts.length > 0 %}
+      <div class="mz-itemlisting-bundled-items">
+        {% for bundledItem in item.product.bundledProducts %}
+          {% include "modules/my-account/my-account-product-bundle" with model=bundledItem %}
+        {% endfor %}
+      </div>
+    {% endif %}
 {% endblock item-details %}
+
 {% block item-listing-actions %}
    
 {% endblock item-listing-actions %}
+
 {% block item-listing-extras %}
-{% if returning == model.id %}
-<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
-{% endif %}
+  {% if returning == model.lineId %}
+    <p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+  {% endif %}
 {% endblock item-listing-extras %}

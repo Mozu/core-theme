@@ -1,4 +1,4 @@
-﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
+﻿<div id="mz-orderlisting-{{ model.id }}" class="mz-orderlisting" data-mz-id="{{ model.id }}">
     <div class="mz-orderlisting-detail">
     {% block order-details %}
         <ul class="mz-orderlisting-details-list">
@@ -38,7 +38,7 @@
             <li class="mz-orderlisting-details-item">
                 <dl class="mz-propertylist mz-propertylist-order">
                     <dt>{{ labels.total }}</dt>
-                    <dd>{{ model.total|currency }}</dd>
+                    <dd>{{ model.getShipmentTotal|currency }}</dd>
                 </dl>
             </li>
             {% if model.amountRefunded > 0 %}
@@ -49,18 +49,6 @@
                     </dl>
                 </li>
             {% endif %}
-
-            {% if model.fulfillmentInfo.fulfillmentContact %}
-                <li class="mz-orderlisting-details-item">
-                    <dl class="mz-propertylist mz-propertylist-order">
-                        {% block order-shipped-to %}
-                            <dt>{{ labels.shippedTo }}</dt>
-                            <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
-                        {% endblock order-shipped-to %}
-                    </dl>
-                </li>
-            {% endif %}
-
         </ul>
     {% block attributes %}
         {% for attribute in model.attributes %}

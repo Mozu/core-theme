@@ -1,4 +1,5 @@
-define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view', 'modules/models-location',
+'modules/views-location', 'modules/models-shipments'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, LocationModels, LocationViews, ShipmentModels) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -141,7 +142,6 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         }
     });
 
-
     var OrderHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/order-history-list",
         initialize: function() {
@@ -162,15 +162,32 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             Backbone.MozuView.prototype.render.apply(this, arguments);
 
             $.each(this.$el.find('[data-mz-order-history-listing]'), function(index, val) {
-
+                var orderListingEl = this;
                 var orderId = $(this).data('mzOrderId');
                 var myOrder = self.model.get('items').get(orderId);
-                var orderHistoryListingView = new OrderHistoryListingView({
-                    el: $(this).find('.listing'),
-                    model: myOrder,
-                    messagesEl: $(this).find('[data-order-message-bar]')
-                });
-                orderHistoryListingView.render();
+               // myOrder.initShipmentItems();
+
+                if(!myOrder.get('shipments').get('items').length) {
+                    myOrder.get('shipments').lastRequest = {
+                        pageSize: 3
+                    };
+                    myOrder.initShipmentItems().then(function(req){
+                        myOrder.set('shipments', new ShipmentModels.ShipmentCollection(req));
+                        var orderHistoryListingView = new OrderHistoryListingView({
+                            el: $(orderListingEl).find('.listing'),
+                            model: myOrder,
+                            messagesEl: $(orderListingEl).find('[data-order-message-bar]')
+                        });
+                        orderHistoryListingView.render();
+                    });
+                } else {
+                    var orderHistoryListingView = new OrderHistoryListingView({
+                        el: $(this).find('.listing'),
+                        model: myOrder,
+                        messagesEl: $(this).find('[data-order-message-bar]')
+                    });
+                    orderHistoryListingView.render();
+                }
             });
         },
         selectReturnItems: function() {
@@ -235,6 +252,18 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 this.views().returnView.on('returnSuccess', this.returnSuccess, this);
                 this.views().returnView.on('returnFailure', this.returnFailure, this);
             }
+
+            $.each(this.$el.find('[data-mz-storeLocation]'), function(index, val) {
+                var locationCode = $(this).data('mzStorelocation');
+                if(locationCode){
+                    var locationView = new LocationViews.LocationInfoView({
+                        el: $(this),
+                        model: new LocationModels.Location({code: locationCode})
+                    });
+                    //locationView .render();
+                }
+                
+            });
         },
         renderMessage: function(message) {
             var self = this;
@@ -289,6 +318,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         },
         startOrderReturn: function(e) {
             this.model.clearReturn();
+            this.model._activeReturnShipmentNumber = e.currentTarget.getAttribute('data-mz-shipment-number');
             this.views().returnView.render();
         }
     });
@@ -310,6 +340,9 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
             self.model.fetchReturnableItems().then(function(data) {
                 var returnableItems = self.model.returnableItems(data.items);
+
+                returnableItems = returnableItems;
+
                 if (self.model.getReturnableItems().length < 1) {
                     self.trigger('renderMessage', {
                         messageType: 'noReturnableItems'
@@ -321,7 +354,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
                 $.each(self.$el.find('[data-mz-order-history-listing-return-item]'), function(index, val) {
                     var packageItem = returnableItems.find(function(model) {
-                        if($(val).data('mzOrderLineId') == model.get('orderLineId')){
+                        if($(val).data('mzShipmentNumber') == model.get('shipmentNumber') && $(val).data('mzShipmentItemId') == model.get('shipmentItemId')){
                             if ($(val).data('mzOptionAttributeFqn')) {
                                 return (model.get('orderItemOptionAttributeFQN') == $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() == $(val).data('mzProductCode'));
                             }
@@ -337,8 +370,14 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 });
 
                 _.invoke(returnItemViews, 'render');
+                
+                $('html, body').animate({
+                    scrollTop: $('#mz-orderlisting-' + self.model.get('id')).offset().top - 20 
+                }, 'slow');
 
             });
+
+            
 
         },
         clearOrderReturn: function() {
@@ -726,9 +765,16 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             messagesEl: $messagesEl
         });
 
+       // accountViews.orderHistory.initialize();
+        
+
         // TODO: upgrade server-side models enough that there's no delta between server output and this render,
         // thus making an up-front render unnecessary.
         _.invoke(window.accountViews, 'render');
+
+        // accountViews.orderHistory.model.firstPage().then(function(){
+        //     accountViews.orderHistory.render();
+        // });
 
     });
 
