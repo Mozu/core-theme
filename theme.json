@@ -463,6 +463,12 @@
       "properties": {},
       "template": "mobile-notification/partial-ready-for-pickup",
       "title": "Partial Pickup Ready"
+    },
+    {
+      "id": "shipment.customeratstore",
+      "properties": {},
+      "template": "mobile-notification/curbside-customer-at-store",
+      "title": "Customer At Store"
     }
   ],
   "pageTypes": [
