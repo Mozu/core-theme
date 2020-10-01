@@ -95,6 +95,7 @@
         </tr></thead>
         <tbody>
         {% for item in model.items %} <!-- model represents the shipment -->
+          {{ item }}
            <tr>
                 <td>
                     {{ item.productCode }}
@@ -106,7 +107,7 @@
                     {{ item.quantity }}
                 </td>
                 <td>
-                    {{ item.weight }} {{ item.weightUnit }}
+                  {{ item.measurements.weight }} {{ item.measurements.unit }}
                 </td>
             </tr>
         {% endfor %}
