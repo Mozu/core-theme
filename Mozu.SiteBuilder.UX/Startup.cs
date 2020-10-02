@@ -44,6 +44,7 @@ using Mozu.SiteBuilder.UX.Providers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.Core.Actions;
 
 namespace Mozu.SiteBuilder.UX
 {
@@ -60,6 +61,10 @@ namespace Mozu.SiteBuilder.UX
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
+                .ConfigureArcJs(settings =>
+                {
+                     settings.AddPipelineScript(typeof(Mozu.SiteBuilder.Mvc.OAF.ArcJsHttpRouter), "/ArcJsExtensions/Content/dist/webpack.bundle.js");
+               })
                 .AddTransient<IStartupFilter,SbStartupFilter>()
                 .AddMozuMvc(useLegacyNewtonsoftInputFormatter:true, useLegacyNewtonsoftOutputFormatter:true)
                 .AddMozuMapping()

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -28,7 +28,7 @@
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2031.6" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2035.10" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2030.0-develop.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />
@@ -63,6 +63,10 @@
     <Folder Remove="TestData" />
 
     <EmbeddedResource Include="TestData\**\*.json" />
+
+    <None Remove="ArcJsExtensions\Content\dist\webpack.bundle.js" />
+
+    <EmbeddedResource Include="ArcJsExtensions\Content\dist\webpack.bundle.js" />
   </ItemGroup>
 
   <ItemGroup>
