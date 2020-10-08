@@ -71,6 +71,7 @@
   "billingPhoneNumber": "Billing Phone Number",
   "billingPostalCode": "Billing Zip Code",
   "bogaModalHeading": "Your Free BOGA Item",
+  "bopisCurbsideShipmentType": "BOPIS_Curbside",
   "bringMeOrder": "Bring me my order.",
   "bulkAddToCartErrors": "<h4>Issues adding the following to cart</h4> {0}",
   "bulkReorderErrors": "Issue with Reordering {0}",
