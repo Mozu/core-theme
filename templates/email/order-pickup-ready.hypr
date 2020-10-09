@@ -20,6 +20,105 @@
         <tr>
         <td>{{ model.storeLocation.name }}</td>
         <td class="mz-ordersummary-regular-hours">
+        {% if model.storeLocation.regularHours.timeZone %}            
+            {{ labels.sunday }}:
+            {% if model.storeLocation.regularHours.sunday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.sunday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}   
+            {% if model.storeLocation.regularHours.sunday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.sunday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.sunday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}  
+            <br>
+            {{ labels.monday }}:
+            {% if model.storeLocation.regularHours.monday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.monday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}   
+            {% if model.storeLocation.regularHours.monday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.monday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.monday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}                    
+            <br>
+             {{ labels.tuesday }}:
+            {% if model.storeLocation.regularHours.tuesday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.tuesday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}  
+            {% if model.storeLocation.regularHours.tuesday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.tuesday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.tuesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}           
+            <br>
+              {{ labels.wednesday }}:
+            {% if model.storeLocation.regularHours.wednesday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.wednesday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}     
+            {% if model.storeLocation.regularHours.wednesday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.wednesday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.wednesday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}  
+            <br>
+                {{ labels.thursday }}:
+            {% if model.storeLocation.regularHours.thursday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.thursday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}     
+            {% if model.storeLocation.regularHours.thursday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.thursday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.thursday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}  
+            <br>
+                {{ labels.friday }}:
+            {% if model.storeLocation.regularHours.friday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.friday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}     
+            {% if model.storeLocation.regularHours.friday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.friday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.friday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}  
+            <br>
+                {{ labels.saturday }}:
+            {% if model.storeLocation.regularHours.saturday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.saturday.openTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}     
+            {% if model.storeLocation.regularHours.saturday.isClosed==false %} 
+                {{ model.storeLocation.regularHours.saturday.closeTime }} 
+            {% endif %}
+            {% if model.storeLocation.regularHours.saturday.isClosed==true %} 
+                {{ labels.locationHoursClosed }} 
+            {% endif %}     
+        {% else %}
             {{ labels.sunday }}: 
             {% if model.storeLocation.regularHours.sunday %}
                 {{ model.storeLocation.regularHours.sunday.label }}
@@ -69,6 +168,7 @@
                 {{ labels.noHours }}
             {% endif %}
             <br>
+            {% endif %}
         </td>
         <td>{{ model.storeLocation.note }}</td>
         </tr>
