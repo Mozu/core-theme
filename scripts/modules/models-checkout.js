@@ -2035,7 +2035,14 @@
 
                 return validationResults.length > 0;
             },
+            setNewCustomerEmailAddress : function(){
+                var self = this;
 
+                if(!self.get('emailAddress')){
+                    self.set('emailAddress', this.get('billingInfo.billingContact.email'));
+                }
+
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -2099,6 +2106,7 @@
 
                 this.ensureEmailIsSet();
                 this.setFulfillmentContactEmail();
+                this.setNewCustomerEmailAddress();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
                 if ( ((nonStoreCreditOrGiftCardTotal > 0 && this.validate() && !hasTokenPayment) || this.validateReviewCheckoutFields()) && ( !this.isNonMozuCheckout() || this.validate().agreeToTerms)) {
