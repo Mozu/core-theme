@@ -140,7 +140,11 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         Task IFunctionCallbackHandler.OnExe<T>(string key, object[] value, T context)
         {
-            return context.ExecDelegates[key](value);
+            if (context.ExecDelegates != null && context.ExecDelegates.TryGetValue(key, out var fn))
+            {
+                return fn(value);
+            }
+            return Task.CompletedTask;
         }
 
         FunctionContinuationBehavior IFunctionCallbackHandler.OnResult(object result, CustomFunctionBase function,
@@ -252,7 +256,11 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
             Task IFunctionCallbackHandler.OnExe<T>(string key, object[] value, T context)
             {
-                return context.ExecDelegates[key](value);
+                if (context.ExecDelegates!=null &&  context.ExecDelegates.TryGetValue(key, out var fn))
+                {
+                   return  fn(value);
+                }
+                return Task.CompletedTask;
             }
 
             FunctionContinuationBehavior IFunctionCallbackHandler.OnResult(object result, CustomFunctionBase function,
