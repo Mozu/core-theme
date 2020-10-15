@@ -180,10 +180,10 @@
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
-      "title": "Transfer Created"
+      "title": "Transfer Shipment Created"
     },
     {
-      "id": "shipment.transferShipped",
+      "id": "shipment.transfershipped",
       "properties": {},
       "template": "email/transfer-shipment-shipped",
       "title": "Transfer Shipment Shipped"
