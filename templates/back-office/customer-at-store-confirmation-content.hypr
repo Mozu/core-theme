@@ -7,10 +7,10 @@
 
 <div class="pageContent">
     <div class="curbside-info">   
-        {% if model.sentCustomerAtStoreNotification === false %}
-            <h3>{{ labels.shopperInStoreConfirmation|safe }} </h3>
-        {% else %}
+        {% if model.sentCustomerAtStoreNotification %}
             <h3> {{labels.shopperAtStoreNotified |safe }} </h3>
+        {% else %}           
+             <h3>{{ labels.shopperInStoreConfirmation|safe }} </h3>
         {% endif %} 
     </div>
 </div>
