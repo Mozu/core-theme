@@ -21,7 +21,7 @@
 	<div class="mz-order-package-items">
 		{% block order-package-items %}
 			{% for packageItem in model.items %}
-				{% include "modules/my-account/order-history-package-item" with model=packageItem %}
+				{% include "modules/my-account/packages/order-history-package-item" with model=packageItem %}
 			{% endfor %}
 		{% endblock order-package-items %}
 	</div>

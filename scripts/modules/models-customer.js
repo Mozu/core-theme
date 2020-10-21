@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account', 'modules/models-orders-shipments'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, OrderModelsShipments) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -342,6 +342,13 @@
         isCvvOptional: true
     }),
 
+    getOrderModel = function(){
+        if(true) {
+            return OrderModelsShipments;
+        }
+        return OrderModels;
+    },
+
     EditableCustomer = Customer.extend({
 
         handlesMessages: true,
@@ -349,7 +356,7 @@
             editingCard: CustomerCardWithContact,
             editingContact: CustomerContact,
             wishlist: Wishlist,
-            orderHistory: OrderModels.OrderCollection,
+            orderHistory: getOrderModel().OrderCollection,
             returnHistory: ReturnModels.RMACollection
         }, Customer.prototype.relations),
         validation: {

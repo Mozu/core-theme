@@ -4,11 +4,10 @@
 <h3 class="mz-l-stack-sectiontitle">{{ labels.order }}</h3>
 {% endif %}
 <div class="mz-orderhistory-section mz-l-paginatedlist">
-    {% if model.items %}
     <div data-mz-orderlist class="mz-l-paginatedlist-list">
       {% include "modules/my-account/order-history-list" %}
     </div>
-    {% if showPaging %}
+    {% if showPaging && model.items %}
     <div data-mz-pagenumbers class="mz-pagenumbers">
         {% include "modules/common/page-numbers" %}
     </div>
@@ -16,7 +15,4 @@
         {% include "modules/common/paging-controls" %}
     </div>
     {% endif %}
-  {% else %}
-    {{ labels.accountNoOrders }}
-  {% endif %}
 </div>

@@ -100,6 +100,12 @@
                 } catch (e) { }
             },
 
+            firstPage: function() {
+                try {
+                    return this.apiModel.firstPage(this.lastRequest);
+                } catch (e) { }  
+            },
+
             syncIndex: function (currentUriFragment) {
                 try {
                     var uriStartIndex = parseInt(($.deparam(currentUriFragment).startIndex || 0), 10);

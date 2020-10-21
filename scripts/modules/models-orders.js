@@ -102,7 +102,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return "";
             }
         }),
-
         OrderPackageList = Backbone.Collection.extend({
             model: OrderPackage
         }),
@@ -290,7 +289,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     rmas.get('items').remove(this);
             }
         }),
-
         ReturnableItems = Backbone.Collection.extend({
             model: ReturnableItem
         }),
@@ -324,7 +322,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 var self = this,
                     hasfulfilledPackage = false;
 
-                self.get('packages').each(function(myPackage) {
+                _.each(self.get('packages'), function(myPackage) {
                     if (myPackage.get('status') === "Fulfilled") {
                         hasfulfilledPackage = true;
                     }
@@ -335,7 +333,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 var self = this,
                     hasfulfilledPackage = false;
 
-                self.get('pickups').each(function(myPickup) {
+                _.each(self.get('pickups'), function(myPickup) {
                     if (myPickup.get('status') === "Fulfilled") {
                         hasfulfilledPackage = true;
                     }
@@ -346,7 +344,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 var self = this,
                     hasfulfilledPackage = false;
 
-                self.get('digitalPackages').each(function(myDigital) {
+                _.each(self.get('digitalPackages'), function(myDigital) {
                     if (myDigital.get('status') === "Fulfilled") {
                         hasfulfilledPackage = true;
                     }

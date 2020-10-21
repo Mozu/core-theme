@@ -7,7 +7,7 @@
 			{% if model.getProductDetails.Type == "BundleItem" %}
 				{% include "modules/my-account/my-account-product-bundle" with model=model.getProductDetails packageItem=model %}
 			{% else %}
-				{% include "modules/my-account/order-history-listing-item" with model=model.getProductDetails packageItem=model %}
+				{% include "modules/my-account/packages/order-history-listing-item" with model=model.getProductDetails packageItem=model %}
 			{% endif %}
 
 		{% endblock order-package-item %}	

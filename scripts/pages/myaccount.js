@@ -1,4 +1,5 @@
-define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view','modules/models-location',
+'modules/views-location'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, LocationModels, LocationViews) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -165,6 +166,18 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
                 var orderId = $(this).data('mzOrderId');
                 var myOrder = self.model.get('items').get(orderId);
+
+                //TO_DO
+                //ADD UPC FLAG and SYNTH TAG
+                if(myOrder.get('shipments')) {
+                    if(!myOrder.get('shipments').get('items').length) {
+                        myOrder.get('shipments').lastRequest = {
+                            pageSize: 3
+                        };
+                        myOrder.initShipmentItems();
+                    }
+                }
+
                 var orderHistoryListingView = new OrderHistoryListingView({
                     el: $(this).find('.listing'),
                     model: myOrder,
@@ -235,6 +248,17 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 this.views().returnView.on('returnSuccess', this.returnSuccess, this);
                 this.views().returnView.on('returnFailure', this.returnFailure, this);
             }
+
+
+            $.each(this.$el.find('[data-mz-storeLocation]'), function(index, val) {
+                var locationCode = $(this).data('mzStorelocation');
+                if(locationCode){
+                    var locationView = new LocationViews.LocationInfoView({
+                        el: $(this),
+                        model: new LocationModels.Location({code: locationCode})
+                    });
+                 }
+            });
         },
         renderMessage: function(message) {
             var self = this;
@@ -289,6 +313,8 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         },
         startOrderReturn: function(e) {
             this.model.clearReturn();
+            this.model._activeReturnShipmentNumber = e.currentTarget.getAttribute('data-mz-shipment-number');
+
             this.views().returnView.render();
         }
     });
@@ -319,9 +345,17 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 }
                 Backbone.MozuView.prototype.render.apply(self, arguments);
 
+                function isMatchingDomElement(val, model) {
+                    if($(val).data('mzShipmentNumber')) {
+                        return $(val).data('mzShipmentNumber') == model.get('shipmentNumber') && $(val).data('mzShipmentItemId') == model.get('shipmentItemId');
+                    }
+                    
+                    return $(val).data('mzOrderLineId');
+                }
+
                 $.each(self.$el.find('[data-mz-order-history-listing-return-item]'), function(index, val) {
                     var packageItem = returnableItems.find(function(model) {
-                        if($(val).data('mzOrderLineId') == model.get('orderLineId')){
+                        if(isMatchingDomElement(val, model)){
                             if ($(val).data('mzOptionAttributeFqn')) {
                                 return (model.get('orderItemOptionAttributeFQN') == $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() == $(val).data('mzProductCode'));
                             }

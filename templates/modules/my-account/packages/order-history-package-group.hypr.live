@@ -3,7 +3,7 @@
 {% for package in packages %}
 	{% if package.status == "Fulfilled" %}
 	<div data-mz-order-package class="mz-order-package">
-    	{% include "modules/my-account/order-history-package" with model=package order=model %}
+    	{% include "modules/my-account/packages/order-history-package" with model=package order=model %}
     </div>
     {% endif %}
 {% endfor %}

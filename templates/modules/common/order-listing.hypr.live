@@ -50,6 +50,7 @@
                 </li>
             {% endif %}
 
+            <!-- 
             {% if model.fulfillmentInfo.fulfillmentContact %}
                 <li class="mz-orderlisting-details-item">
                     <dl class="mz-propertylist mz-propertylist-order">
@@ -60,6 +61,7 @@
                     </dl>
                 </li>
             {% endif %}
+            -->
 
         </ul>
     {% block attributes %}

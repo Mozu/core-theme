@@ -1,10 +1,14 @@
-﻿  <ul class="mz-orderlist">
+﻿{% if model.items %}
+  <ul class="mz-orderlist">
     {% for order in model.items %}
     <li data-mz-order-id="{{order.id}}" data-mz-order-history-listing>
     	<div data-order-message-bar class="order-message-bar"></div>
     	<div class="listing">
-    	{% include "modules/my-account/order-history-listing" with model=order %}
+          {% include "modules/my-account/order-history-listing" with model=order %}
     	</div>
     </li>
     {% endfor %}
   </ul>
+{% else %}
+  {{ labels.accountNoOrders }}
+{% endif %} 

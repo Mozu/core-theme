@@ -1,0 +1,27 @@
+<div class="order-history-listing">
+    {% if model.hasFulfilledShipments %}
+        <div class="mz-orderlisting-prompt is-warning" data-mz-message-for="noReturnableItems"></div>
+            <div class="mz-orderlisting-header">
+                {% if themeSettings.allowCustomerInitiatedReturns and not model.limitPlaceReturns %}
+                    <div class="mz-orderlisting-return">
+                        <span class="mz-itemlisting-action">
+                            <button type="submit" class="mz-button" data-mz-order-id="{{ model.id }}" data-mz-action="startOrderReturn" >{{ labels.returnOrReplace }}</button>
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+    {% endif %}
+
+    {% if model.items.length > 0 %}
+        <div class="mz-orderlisting-nonShipped">
+        {% for item in model.items %}
+                {% include "modules/my-account/shipments/order-history-listing-item" with model=item %}
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    <div id="mzShipments" data-mz-shipments>
+        {% include "modules/my-account/order-history-shipments" %}
+    </div>    
+
+</div>

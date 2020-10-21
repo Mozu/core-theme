@@ -3,7 +3,7 @@
 
 <div class="order-history-listing-return">
 <div class="mz-orderlisting-heading mz-order-history-return-status"><h3>{{labels.orderCreateReturn}}</h3></div>
-    {% if model.hasFulfilledPackages or model.hasFulfilledPickups %}
+    {% if model.getReturnableItems.length > 0 %}
         {% block order-packages %}
                 <div class="mz-order-returns">
                     {% for item in model.getReturnableItems %}
