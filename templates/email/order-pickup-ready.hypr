@@ -195,6 +195,25 @@
         </tr>
 		</tbody>
     </table>
+	
+   {% if smsEnabled == "True" or smsEnabled == "true" %}	
+		<!--- Order Details --->
+		<br>
+		<div class="mz-multiship-email" style="width: 100%;">
+			<div class="mz-table-header" style="padding:15px">
+				<span style="font-size:25px">{{ labels.orderDetails }}</span>
+				<div style="font-size:14px;float:right;">
+					<div> {{ labels.orderNumber }}: {{ model.orderNumber }}</div>
+				</div>
+			</div>
+		</div>
+		
+		<hr/>
+		<br>
+		<div>		
+			<span style="font-size:16px">{{ labels.itemsToFulfill }}</span>
+		</div>		
+   {% endif %}
 
     <br>
     <table width="100%" cellpadding="1" cellspacing="1" width="50%">
