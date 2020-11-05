@@ -274,6 +274,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> Preview(string id)
         {
+            var locationCode = string.Empty;
+
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
             var queryStringParams = Request.Query;
             if (emailTemplate == null)
@@ -289,11 +291,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
                     model = await Convert(str, emailTypeInfo);
+                    locationCode = (model is OrderEmail orderEmail) ? orderEmail.LocationCode : string.Empty;
                 }
 
                 else
                 {
                     model = MergeEmailParams(queryStringParams, model);
+                    var locationModel = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(model, emailTypeInfo.ModelType, CaseInsensitiveJsonSerializerSettings.Default), emailTypeInfo.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
+                    locationCode = (locationModel is ReturnEmail returnEmail) ? returnEmail.LocationCode : string.Empty;
                 }
             }
 
@@ -323,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
+            ViewData["rmaLocation"] = locationCode.IsNullOrEmpty() ? await GetDefaultReturnLocation() : await GetStorageLocation(locationCode);
 
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
@@ -435,10 +440,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return string.Empty;
             }
 
+            var locationCode = (model is ReturnEmail returnEmail) ? returnEmail.LocationCode : string.Empty;
+
             ViewData.Model = model;
             ViewData["content"] = cmdContent;
             ViewData["User"] = user;
-            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
+            ViewData["rmaLocation"] = locationCode.IsNullOrEmpty() ? await GetDefaultReturnLocation() : await GetStorageLocation(locationCode);
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
@@ -523,7 +530,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 else
                 {
-                    returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
+                    returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();                   
                 }
 
             }
@@ -600,6 +607,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             returnObj.Merge(emailParams);
             return returnObj;
         }
+
+        private async Task<Location.Contracts.Location> GetStorageLocation(string locationCode)
+        {
+            if (!locationCode.IsNullOrEmpty())
+            {
+                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                FormatRegularHours(location);
+                return location;
+            }
+            return null;
+        }
+
         public class MyPackageItem : PackageItem
         {
             public object Product { get; set; }
