@@ -53,6 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public bool IsMock { get; set; }
         public Order Order { get; set; }
+        public Location.Contracts.Location StoreLocation { get; set; }
     }
 
     public class CheckoutEmail : Checkout
@@ -530,7 +531,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 else
                 {
-                    returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();                   
+                    returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
+                    var locationCode = returnEmail.LocationCode;
+                    if (!locationCode.IsNullOrEmpty())
+                    {
+                        var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                        FormatRegularHours(location);
+                        returnEmail.StoreLocation = location;
+                    }
                 }
 
             }
