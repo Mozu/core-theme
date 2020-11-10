@@ -57,7 +57,7 @@
                     </div>
                     <div class="mz-l-formfieldgroup-row">
                         <div class="mz-l-formfieldgroup-cell">
-                            <button class="mz-button mz-button-large mz-delevery-button" data-mz-action="onDeliveryMethodSubmit">{{ labels.submit }}</button>
+                            <button id="btnSubmitCurbsideInfo" class="mz-button mz-button-large mz-delevery-button" data-mz-action="onDeliveryMethodSubmit">{{ labels.submit }}</button>
                         </div>
                     </div>
                 </div>

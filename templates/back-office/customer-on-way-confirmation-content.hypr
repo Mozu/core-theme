@@ -1,0 +1,12 @@
+<div class="mz-curbside-header">  
+        <img src="/resources/images/kibo-logo-sidebar.png" alt="logo">
+        <div class="mz-curbside-header-body">
+            <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+        </div>
+</div>
+
+<div class="pageContent">
+    <div class="curbside-info">
+          <h4>  {{ labels.shopperOnMyWayConfirmationText|safe }} </h4>
+    </div>
+</div>
