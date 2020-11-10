@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly Lazy<string> _getter;
 
         private readonly Lazy<bool> _cdnGetter;
-        const string AkamiHeader = "Akamai-Origin-Hop";
+     
         public RequestUrlFinderOuter(HttpContext context, ISettings settings)
         {
             _getter = new Lazy<string>(() => GetRequestUrl(context));
@@ -45,9 +45,8 @@ namespace Mozu.SiteBuilder.Mvc
             var cdnHost = settings.AppSettings("CdnHost");
             var cdnOriginHost = settings.AppSettings("CdnOriginHost") ?? "";
             var uri = new Uri(urlGetter.Value);
-            var hasAkamiOriginHop = context.Request.Headers.Any(x => string.Equals(x.Key, AkamiHeader, StringComparison.OrdinalIgnoreCase));
-
-            return hasAkamiOriginHop || cdnHost.EqualsIgnoreCase(uri.Host) || cdnOriginHost.EqualsIgnoreCase(uri.Host);
+           
+            return  cdnHost.EqualsIgnoreCase(uri.Host) || cdnOriginHost.EqualsIgnoreCase(uri.Host);
         }
        
         public static string GetRequestUrl(HttpContext context)
