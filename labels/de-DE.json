@@ -266,6 +266,8 @@
   "mobileOrderConfirmationMessage": "{0} Bestellbenachrichtigungen. Wir werden Ihnen eine SMS senden, wenn sich Ihr Bestellstatus ändert. Die Meldungsfrequenz kann variieren. Antworte {1}, um dich abzumelden. Es können Nachrichten- und Datentarife gelten",
   "mobileOrderOptInMessage": "Vielen Dank, dass Sie sich für SMS-Benachrichtigungen für Ihre Curbside-Bestellung angemeldet haben. Wir werden Sie benachrichtigen, wenn Ihre Bestellung zur Abholung bereit ist.",
   "mobilePickLocation": "Ramasser / Expédier de:",
+  "mobilePickupReminder":"Erinnerung - Artikel in Ihrer Bestellung {0} können abgeholt werden. Überprüfen Sie die Bestellung unter {1}",
+  "mobileReadyForPickup":"Artikel in Ihrer Bestellung {0} können um {1} abgeholt werden. Überprüfen Sie die Bestellung unter {2}",
   "mobileShipmentCanceledInfo": "Articles annulés",
   "mobileShipmentCancelMessage": "IArticle (s) annulé (s): Boutique {0} Allez à {1} pour plus d'informations OU Gérez les envois à {2}",
   "mobileShipmentFulfilledMessage": "Vielen Dank, Ihre Bestellung ist jetzt abgeschlossen. Wenden Sie sich bei Fragen an das Geschäft. Klicken Sie auf {0}, um eine schnelle Umfrage zu erhalten!",

@@ -424,6 +424,24 @@
       "properties": {},
       "template": "mobile-notification/opt-out-acknowledgement",
       "title": "Opt Out Acknowledgement"
+    },
+    {
+      "id": "shipment.pickupreminder",
+      "properties": {},
+      "template": "mobile-notification/pickup-reminder",
+      "title": "Pickup Reminder"
+    },
+    {
+      "id": "shipment.pickupready",
+      "properties": {},
+      "template": "mobile-notification/ready-for-pickup",
+      "title": "Pickup Ready"
+    },
+    {
+      "id": "shipment.partialpickupready",
+      "properties": {},
+      "template": "mobile-notification/partial-ready-for-pickup",
+      "title": "Partial Pickup Ready"
     }
   ],
   "pageTypes": [
