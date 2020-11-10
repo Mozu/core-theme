@@ -56,6 +56,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string CurbsideReady = "shipment.curbsideready";
         public const string PartialCurbsideReady = "shipment.partialcurbsideready";
         public const string StoreItemsCanceled = "shipment.itemscanceled.store";
+        public const string OrderPickupReady = "shipment.pickupready";
+        public const string OrderPartialPickupReady = "shipment.partialpickupready";
+        public const string OrderPickupReminder = "shipment.pickupreminder";
     }
 
     public class ShipmentNotification : Fulfillment.EntityModelOfShipment
@@ -63,7 +66,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public string StoreId { get; set; }
         public string ShipmentUrl { get; set; }
         public string FulfillerUrl { get; set; }
-
+        public Order Order { get; set; }
+        public Location.Contracts.Location StoreLocation { get; set; }
         public bool IsShopperCanceled { get; set; }
     }
 
@@ -100,6 +104,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string CURBSIDESHIPMENTREADY = "curbsideShipmentReady";
         public const string PARTIALCURBSIDEREADY = "partialCurbsideReady";
         public const string CURBSIDESURVEY = "curbsideSurvey"; 
+        public const string SHIPMENT_PICKUP_READY = "shipmentPickupReady";
 
         private static readonly List<MobileNotificationTypeInfo> _smsMobileNotificationTypeInfo;
 
@@ -161,6 +166,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     ModelType = typeof (ShipmentNotification),
                     Topic = Topics.StoreItemsCanceled
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.OrderPickupReady
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.OrderPartialPickupReady
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.OrderPickupReminder
                 }
             };
         }
@@ -193,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return NotFound("Could not find a MobileNotification template for the current Theme.");
             }
-
+            id = GetIdForTopic(id);
             var model = TestDataBroker.GetFileContents(id).FirstOrDefault() ?? new object();
             if (model != null)
             {
@@ -210,6 +230,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             return View(mobileNotificationTemplate.Template, model);
+        }
+
+        /// <summary>
+        /// same topics are used for email and mobile and we want different testdata,
+        /// so we are using test data (json) orderPickupReminder for previewing all other templates.
+        /// this is only for preview renderer works as is.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private string GetIdForTopic(string id)
+        {
+            switch (id)
+            {
+                case Topics.OrderPickupReady:
+                case Topics.OrderPartialPickupReady:
+                case Topics.OrderPickupReminder:
+                    id = Topics.OrderPickupReminder;
+                    break;
+            }
+            return id; 
         }
 
         [HttpPost]
@@ -331,6 +371,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     case Topics.ShipmentItemCanceled:
                         shipmentModel.IsShopperCanceled = shipmentModel.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                         break;
+                    case Topics.OrderPickupReady:
+                    case Topics.OrderPartialPickupReady:
+                    case Topics.OrderPickupReminder:
+                        shipmentModel.StoreId = shipmentModel.FulfillmentLocationCode;
+                        var shipmentPickupLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_PICKUP_READY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
+                        shipmentModel.ShipmentUrl = shipmentPickupLink.Link;
+                        break;                    
                     case Topics.ShipmentFulfilled:
                         var surveyLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{CURBSIDESURVEY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
                         shipmentModel.ShipmentUrl = surveyLink.Link;
