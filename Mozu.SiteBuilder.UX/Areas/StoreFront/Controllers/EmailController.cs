@@ -91,6 +91,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
         static EmailController()
         {
@@ -255,6 +256,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            ITenantsWebApiClient tenantsWebApiClient,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
             Lazy<IExpressionEvaluator> pageRuleEvaluator
@@ -268,6 +270,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -332,6 +335,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["rmaLocation"] = locationCode.IsNullOrEmpty() ? await GetDefaultReturnLocation() : await GetStorageLocation(locationCode);
 
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
+            ViewData["smsEnabled"] = IsSmsEnabled();
 
             return Ok(View(emailTemplate.Template, model));
         }
@@ -374,7 +378,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     cmdContent = vr.ViewData.Model;
                 }
             }
-                _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
+            _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
+            
+            ViewData["smsEnabled"] = IsSmsEnabled();
 
             var model = await Convert(notification.Payload, emailTypeInfo);
 
@@ -661,6 +667,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             FormatHours(location.RegularHours.Thursday);
             FormatHours(location.RegularHours.Friday);
             FormatHours(location.RegularHours.Saturday);
+        }
+
+        private bool IsSmsEnabled()
+        {
+            var tenant = GetTenant();            
+            var smsEnabled = System.Convert.ToBoolean(tenant?.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("SmsEnabled"))?.Value);
+
+            return smsEnabled;
+        }
+
+        private Tenant.Contracts.Tenant GetTenant()
+        {
+            var tenant = _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)
+                .ContinueWith(t =>
+                {
+                    if (t.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        return t.Result.ReadAsSync();
+                    }
+
+                    return null;
+                });
+            return tenant.Result;
         }
 
         public class Topics
