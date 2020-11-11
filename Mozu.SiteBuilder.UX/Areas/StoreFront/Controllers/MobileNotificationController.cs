@@ -59,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string OrderPickupReady = "shipment.pickupready";
         public const string OrderPartialPickupReady = "shipment.partialpickupready";
         public const string OrderPickupReminder = "shipment.pickupreminder";
+        public const string CustomerAtStore = "shipment.customeratstore";
     }
 
     public class ShipmentNotification : Fulfillment.EntityModelOfShipment
@@ -181,6 +182,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     ModelType = typeof (ShipmentNotification),
                     Topic = Topics.OrderPickupReminder
+                },
+                new MobileNotificationTypeInfo
+                {
+                    ModelType = typeof (ShipmentNotification),
+                    Topic = Topics.CustomerAtStore
                 }
             };
         }
