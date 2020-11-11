@@ -330,6 +330,7 @@
   "mobileCurbsideCanceledByShopper": "Your order has been cancelled during delivery. Please contact the store with any additional questions you may have.",
   "mobileCurbsideOrderPickupReady": "Your order is ready for pickup. Review your order at {0}",
   "mobileCurbsidePartialPickupReady": "Some items for your order are no longer available. Your remaining order is ready for pickup. Review your order at {0}",
+  "mobileCustomerAtStore": "Customer {0} is here to pickup order number {1}",
   "mobileDiscount": "Discount:",
   "mobileHandling": "Handling:",
   "mobileItemTotal": "Item Total:",

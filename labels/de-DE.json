@@ -258,6 +258,7 @@
   "mobileCurbsideCanceledByShopper": "Votre commande a été annulée lors de la livraison. Veuillez contacter le magasin pour toute question supplémentaire que vous pourriez avoir.",
   "mobileCurbsideOrderPickupReady": "Votre commande est prête à être retirée. Vérifiez votre commande sur {0}",
   "mobileCurbsidePartialPickupReady": "Certains articles de votre commande ne sont plus disponibles. Votre commande restante est prête à être récupérée. Vérifiez votre commande sur {0}",
+  "mobileCustomerAtStore": "Der Kunde {0} ist hier, um die Bestellnummer {1} abzuholen",
   "mobileDiscount": "Rabatt",
   "mobileHandling": "Manipulation:",
   "mobileItemTotal": "Objet total:",

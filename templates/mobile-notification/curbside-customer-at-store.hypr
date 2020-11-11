@@ -1,0 +1,2 @@
+{% comment %} message length should not exceed 160 characters {% endcomment %}
+{{ labels.mobileCustomerAtStore|string_format(model.destination.destinationContact.fullName, model.orderNumber)|safe  }}
