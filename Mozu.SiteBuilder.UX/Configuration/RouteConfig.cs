@@ -325,6 +325,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+               "Anonymous Shipment Pickup Ready View",
+               "anonymous-notification/ShipmentPickupReady/{shipmentNumber}/{orderId}",
+               new { controller = "AnonymousNotification", action = "ShipmentPickupReady" },
+               _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+              "Anonymous Customer At Store View",
+              "anonymous-notification/CustomerAtStore/{shipmentNumber}/{orderId}",
+              new { controller = "AnonymousNotification", action = "CustomerAtStore" },
+              _constraintResolver);
+
+
+            routes.MapRoute(_defaultHandler,
                 "Anonymous Shipment View",
                 "anonymous-notification/shipment/{shipmentNumber}/{orderId}",
                 new { controller = "AnonymousNotification", action = "RenderShipmentView" },

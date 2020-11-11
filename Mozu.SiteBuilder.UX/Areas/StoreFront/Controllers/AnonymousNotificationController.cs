@@ -199,7 +199,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var location = await GetLocation(shipment.FulfillmentLocationCode);
 
-            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-seeyousoon"));
+            var template = new Mvc.Models.CMS.PageTypeDefinition();
+            if (shipment.ShipmentType.EqualsIgnoreCase("curbside") || shipment.ShipmentType.EqualsIgnoreCase("bopis_curbside"))
+            {
+                template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("curbside-seeyousoon"));
+            }
+            else
+            {
+                template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("customer-on-way-confirmation"));
+            }
 
             if (template == null)
             {
@@ -237,6 +245,54 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["location"] = location;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
+            return View(template.Template, shipment);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShipmentPickupReady(int shipmentNumber, string orderId)
+        {
+            var model = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            var location = await GetLocation(model.FulfillmentLocationCode);
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            if (model.OrderId != orderId)
+            {
+                return StatusCode(401);
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("shipment-pickup-ready"));
+            if (template == null)
+            {
+                return NotFound("Could not find shipment-pickup-ready template for the current Theme.");
+            }
+            ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["location"] = location;
+            return View(template.Template, model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CustomerAtStore(int shipmentNumber, string orderId)
+        {
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            if (shipment == null)
+            {
+                return NotFound();
+            }
+            if (shipment.OrderId != orderId)
+            {
+                return StatusCode(401);
+            }
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("customer-at-store-confirmation"));
+            if (template == null)
+            {
+                return NotFound("Could not find customer-at-store-confirmation template for the current Theme.");
+            }
+             
+            await  _shipmentControllerApiClient.CloneWithoutUserClaims().CustomerAtStoreUsingPUT(shipmentNumber);
             return View(template.Template, shipment);
         }
 

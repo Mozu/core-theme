@@ -556,7 +556,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["isBackofficePreview"] = true;
                 return await RenderWithContext(template, model);
             }
-            else if (templateid == "curbside-shipment-ready")
+            else if (templateid == "curbside-shipment-ready" || templateid == "shipment-pickup-ready" || templateid == "customer-on-way-confirmation")
             {
                 var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
@@ -574,7 +574,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
-            else if (templateid == "mobile-notification") 
+            else if (templateid == "mobile-notification" || templateid == "customer-at-store-confirmation")
             {
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
