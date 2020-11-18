@@ -16,9 +16,10 @@ define([
     'modules/b2b-account/shipping-information',
     "modules/b2b-account/account-info",
     'modules/b2b-account/custom-attributes',
-    'modules/b2b-account/quick-order'
+    'modules/b2b-account/quick-order',
+    'modules/b2b-account/quotes'
 ],
-    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder) {
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder, Quotes) {
 
     var paneSwitcherModel = new PaneSwitcher.PaneSwitcherModel({});
     var hash = false;
@@ -47,6 +48,12 @@ define([
                 view: new Orders.OrdersView({
                     model: Orders.OrdersModel.fromCurrent()
                 })
+        },
+        {
+            name: 'Quotes',
+            view: new Quotes.QuoteEditView({
+                model: new Quotes.QuoteModel({})
+            })
         },
             {
                 name: 'Returns',
