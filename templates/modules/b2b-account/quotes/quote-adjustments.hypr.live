@@ -1,0 +1,212 @@
+<table class="quote-adjustments">
+  <tbody>
+    <tr>
+      <td>
+        <div class="mz-carttable-checkout-couponcode" id="coupon-code-field">
+          <div class="mz-l-formfieldgroup-cell">
+            <label for="coupon-code">{{labels.couponCode}}: </label>
+          </div>
+          <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="coupon-code" value="" data-mz-value="couponCode" />
+            <button type="button" id="cart-coupon-code" class="mz-button" data-mz-action="">{{labels.apply}}</button>
+          </div>
+        </div>
+      </td>
+      <td>
+        <table class="quote-adjustments-table">
+          <tbody>
+            <tr>
+              <td>
+                <img id="itemTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.itemTotal}}: <br/>
+                <div class="adjustments itemTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-1">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize" data-mz-value="">
+                            <option value="Subtract">Subtract from Item Subtotal</option>
+                            <option value="Add">Add to Item Subtotal</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" name="itemAdjustmentRadio" checked="" />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" name="itemAdjustmentRadio" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          <i>{{labels.subtracted}} {{labels.from}} {{labels.subtotal}}:</i>
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals danger">{{50 | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.itemSubtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{360 | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.itemTax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{20 | currency}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b> {{330 | currency}}</b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img id="shippingTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.shippingInformation}} <br/>
+                <div class="adjustments shippingTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-1">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize" data-mz-value="">
+                            <option value="Subtract">Subtract from Shipping Subtotal</option>
+                            <option value="Add">Add to Shipping Subtotal</option>
+                            <option value="Free Shipping">Free Shipping</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" name="shippingAdjustmentRadio" checked="" />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" name="shippingAdjustmentRadio" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.shippingInformation}} {{labels.subtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{40 | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.shippingInformation}} {{labels.tax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{10 | currency}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b> {{50 | currency}}</b>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img id="handlingTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td >
+                {{labels.handling}} <br/>
+                <div class="adjustments handlingTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-1">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize" data-mz-value="">
+                            <option value="Subtract">Subtract from {{labels.handling}} Subtotal</option>
+                            <option value="Add">Add to {{labels.handling}} Subtotal</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" name="handlingAdjustmentRadio" checked="" />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" name="handlingAdjustmentRadio" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.handling}} {{labels.subtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{30 | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.handling}} {{labels.tax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{10 | currency}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b> {{40 | currency}}</b>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                {{labels.duty}}
+              </td>
+              <td>
+                <b> {{20 | currency}}</b>
+              </td>
+            </tr>
+            <tr class="grand-total">
+              <td></td>
+              <td>
+                {{labels.total}}
+              </td>
+              <td>
+                <b> {{440 | currency}}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,48 @@
+﻿﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.quoteDetails}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body quote-details-section">
+        <div class="mz-contact-actions">
+          <button class="mz-button mz-contact-save" data-mz-action="finishEditContact">{{labels.quotePrint}}</button>
+        </div>
+        <div>
+          <dl>
+            <dt>
+              <b>{{labels.accountName}}:</b>
+            </dt>
+            <dd>Jelly Belly</dd>
+            <dt>
+              <b>{{labels.quoteName}}:</b>
+            </dt>
+            <dd>
+              QuoteTest 1234
+              <span>
+                <img src="/resources/images/edit.png" data-mz-action="startEditingQuoteName" />
+              </span>
+            </dd>
+            <dt>
+              <b>{{labels.createdDate}}:</b>
+            </dt>
+            <dd>10/30/2020</dd>
+            <dt>
+              <b>{{labels.createdBy}}:</b>
+            </dt>
+            <dd>Jim Shoe</dd>
+            <dt>
+              <b>{{labels.expirationDate}}:</b>
+            </dt>
+            <dd>11/05/2020</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
