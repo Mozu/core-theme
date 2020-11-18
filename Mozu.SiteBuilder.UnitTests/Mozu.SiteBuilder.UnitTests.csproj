@@ -26,6 +26,7 @@
     <EmbeddedResource Include="Mvc\SEO\JSON\IProductSearchWebApiClient.Search.tenant~colorgroup.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DeviceDetector.NET" Version="4.2.0" />
     <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Mozu.Core.Api.Test" Version="1.2044.5" />
