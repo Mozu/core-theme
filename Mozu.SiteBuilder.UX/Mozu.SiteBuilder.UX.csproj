@@ -14,7 +14,7 @@
   <ItemGroup>
     <!-- use latest known package of mozu.core.prime -->
 
-    <PackageReference Include="DeviceDetector.NET.NetCore" Version="3.9.2.2" />
+    <PackageReference Include="DeviceDetector.NET" Version="4.2.0" />
 
     <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
     <PackageReference Include="FiftyOne.DeviceDetection" Version="4.1.7" />
