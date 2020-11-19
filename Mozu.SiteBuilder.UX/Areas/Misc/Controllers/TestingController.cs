@@ -121,8 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var u = new Uri(x);
                     var idx = u.LocalPath.IndexOf('/', 2);
                     var test = u.LocalPath.Substring(idx + 1).TrimEnd('/').TrimStart('/');
-                    return url.StartsWith(test, StringComparison.OrdinalIgnoreCase);
-
+                    return !test.IsNullOrEmpty() && url.StartsWith(test, StringComparison.OrdinalIgnoreCase);
                 }).Select(_ =>
                 {
                     var uri = new Uri(_);
