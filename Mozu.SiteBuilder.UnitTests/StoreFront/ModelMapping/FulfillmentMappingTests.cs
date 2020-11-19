@@ -145,5 +145,130 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
 
             mapped.Data.ShouldBeNull();
         }
+
+        [Test]
+        public void Should_be_able_to_map_fulfillment_destination_to_commerce()
+        {
+            var source = new F.EntityModelOfShipment
+            {
+                Destination = new F.Destination
+                {
+                    DestinationContact = new F.Contact
+                    {
+                        Address = new F.Address
+                        {
+                            Attributes = new Dictionary<string, object> { { "a-test", "123" } }, // Not supported
+                            Address1 = "1500 Baker St.",
+                            AddressType = "Residential",
+                            CityOrTown = "Austin",
+                            StateOrProvince = "TX",
+                            CountryCode = "US",
+                            PostalOrZipCode = "78727",
+                            Latitude = "30.01", // Not supported
+                            Longitude = "-30.02" // Not supported
+                        },
+                        Attributes = new Dictionary<string, object> { { "c-test", "456" } }, // Not supported
+                        Email = "foo@gmail.com",
+                        FirstName = "Testy",
+                        MiddleNameOrInitial = "M.",
+                        LastNameOrSurname = "McTest",
+                        FullName = "Testy M. McTest", // Not supported
+                        ShortFullName = "Testy", // Not supported
+                        PhoneNumbers = new F.Phone
+                        {
+                            Attributes = new Dictionary<string, object> { { "p-test", "789" } }, // Not supported
+                            Home = "5555555555"
+                        }
+                    },
+                    IsDestinationCommercial = false,
+                    LocationCode = "FOOBAR" // Not supported
+                }
+            };
+
+            var mapped = source.Map<CR.Shipment>();
+
+            mapped.Destination.ShouldNotBeNull();
+            mapped.Destination.Id.ShouldBeNull(); // Ignored in mapping
+            mapped.Destination.DestinationContact.ShouldNotBeNull();
+            mapped.Destination.DestinationContact.Address.ShouldNotBeNull();
+            //mapped.Destination.DestinationContact.Address.Attributes.ShouldNotBeNull(); // Not supported
+            mapped.Destination.DestinationContact.Address.Address1.ShouldEqual("1500 Baker St.");
+            mapped.Destination.DestinationContact.Address.AddressType.ShouldEqual("Residential");
+            mapped.Destination.DestinationContact.Address.CityOrTown.ShouldEqual("Austin");
+            mapped.Destination.DestinationContact.Address.StateOrProvince.ShouldEqual("TX");
+            mapped.Destination.DestinationContact.Address.CountryCode.ShouldEqual("US");
+            mapped.Destination.DestinationContact.Address.PostalOrZipCode.ShouldEqual("78727");
+            //mapped.Destination.DestinationContact.Address.Latitude.ShouldEqual("30.01"); // Not supported
+            //mapped.Destination.DestinationContact.Address.Longitude.ShouldEqual("-30.02"); // Not supported
+            //mapped.Destination.DestinationContact.Attributes.ShouldNotBeNull(); // Not supported
+            mapped.Destination.DestinationContact.Email.ShouldEqual("foo@gmail.com");
+            mapped.Destination.DestinationContact.FirstName.ShouldEqual("Testy");
+            mapped.Destination.DestinationContact.MiddleNameOrInitial.ShouldEqual("M.");
+            mapped.Destination.DestinationContact.LastNameOrSurname.ShouldEqual("McTest");
+            //mapped.Destination.DestinationContact.FullName.ShouldEqual("Testy M. McTest"); // Not supported
+            //mapped.Destination.DestinationContact.ShortFullName.ShouldEqual("Testy"); // Not supported
+            mapped.Destination.DestinationContact.PhoneNumbers.ShouldNotBeNull();
+            //mapped.Destination.DestinationContact.PhoneNumbers.Attributes.ShouldNotBeNull(); // Not supported
+            mapped.Destination.DestinationContact.PhoneNumbers.Home.ShouldEqual("5555555555");
+            mapped.Destination.IsDestinationCommercial.ShouldEqual(false);
+            //mapped.Destination.LocationCode.ShouldEqual("FOOBAR"); // Not supported
+        }
+
+        [Test]
+        public void Should_be_able_to_map_commerce_destination_to_fulfillment()
+        {
+            var source = new CR.Shipment
+            {
+                Destination = new CR.Destination
+                {
+                    Id = Guid.NewGuid().ToString(), // Not supported
+                    DestinationContact = new Core.Api.Contracts.Contact
+                    {
+                        Address = new Core.Api.Contracts.Address
+                        {
+                            Address1 = "1500 Baker St.",
+                            AddressType = "Residential",
+                            CityOrTown = "Austin",
+                            StateOrProvince = "TX",
+                            CountryCode = "US",
+                            PostalOrZipCode = "78727"
+                        },
+                        Email = "foo@gmail.com",
+                        FirstName = "Testy",
+                        MiddleNameOrInitial = "M.",
+                        LastNameOrSurname = "McTest",
+                        PhoneNumbers = new Core.Api.Contracts.Phone
+                        {
+                            Home = "5555555555"
+                        }
+                    },
+                    IsDestinationCommercial = false
+                }
+            };
+
+            var mapped = source.Map<F.EntityModelOfShipment>();
+
+            mapped.Destination.ShouldNotBeNull();
+            //mapped.Destination.Id.ShouldNotBeNull(); // Not supported
+            mapped.Destination.DestinationContact.ShouldNotBeNull();
+            mapped.Destination.DestinationContact.Address.ShouldNotBeNull();
+            mapped.Destination.DestinationContact.Address.Address1.ShouldEqual("1500 Baker St.");
+            mapped.Destination.DestinationContact.Address.AddressType.ShouldEqual("Residential");
+            mapped.Destination.DestinationContact.Address.CityOrTown.ShouldEqual("Austin");
+            mapped.Destination.DestinationContact.Address.StateOrProvince.ShouldEqual("TX");
+            mapped.Destination.DestinationContact.Address.CountryCode.ShouldEqual("US");
+            mapped.Destination.DestinationContact.Address.PostalOrZipCode.ShouldEqual("78727");
+            mapped.Destination.DestinationContact.Attributes.ShouldBeNull(); // Ignored in mapping
+            mapped.Destination.DestinationContact.Email.ShouldEqual("foo@gmail.com");
+            mapped.Destination.DestinationContact.FirstName.ShouldEqual("Testy");
+            mapped.Destination.DestinationContact.MiddleNameOrInitial.ShouldEqual("M.");
+            mapped.Destination.DestinationContact.LastNameOrSurname.ShouldEqual("McTest");
+            mapped.Destination.DestinationContact.FullName.ShouldBeNull(); // Ignored in mapping
+            mapped.Destination.DestinationContact.ShortFullName.ShouldBeNull(); // Ignored in mapping
+            mapped.Destination.DestinationContact.PhoneNumbers.ShouldNotBeNull();
+            mapped.Destination.DestinationContact.PhoneNumbers.Home.ShouldEqual("5555555555");
+            mapped.Destination.IsDestinationCommercial.ShouldEqual(false);
+            mapped.Destination.LocationCode.ShouldBeNull(); // Ignored in mapping
+        }
     }
 }

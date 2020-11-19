@@ -59,6 +59,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             CreateMap<F.CanceledReason, Mozu.CommerceRuntime.Contracts.Orders.CanceledReason>()
                 .ForMember(x => x.Description, opt => opt.Ignore());
 
+            CreateMap<F.Destination, CR.Destination>()
+                .ForMember(dest => dest.Id, op => op.Ignore());
+
+            CreateMap<CR.Destination, F.Destination>()
+                .ForMember(dest => dest.LocationCode, op => op.Ignore());
+
+            CreateMap<Core.Api.Contracts.Contact, F.Contact>()
+                .ForMember(dest => dest.Attributes, op => op.Ignore())
+                .ForMember(dest => dest.FullName, op => op.Ignore())
+                .ForMember(dest => dest.ShortFullName, op => op.Ignore());
+
+            CreateMap<Core.Api.Contracts.Address, F.Address>()
+                .ForMember(dest => dest.Attributes, op => op.Ignore())
+                .ForMember(dest => dest.Latitude, op => op.Ignore())
+                .ForMember(dest => dest.Longitude, op => op.Ignore());
+
+            CreateMap<Core.Api.Contracts.Phone, F.Phone>()
+                .ForMember(dest => dest.Attributes, op => op.Ignore());
+
             CreateMap<CR.Shipment, F.EntityModelOfShipment>()
                 .ForMember(x => x.Data, opt => opt.Ignore()) // Mapping this would create a Dictionary<string, object>() where the values are JValue wrappers.
                 .ForMember(x => x.ShipmentNumber, opt => opt.MapFrom(dc => dc.Number));
