@@ -1,0 +1,44 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+    <br>
+    <p>{{ labels.storeWelcomeBlob1 |string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+    <p>{{ labels.curbsideCustomerArrivedBlob1 }}</p>
+    <p>{{ labels.curbsideCustomerArrivedBlob2 |string_format(model.orderNumber, model.destination.destinationContact.fullName, model.shipmentNumber)|safe }}</p>
+
+    <table width="100%" cellpadding="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666">
+                    <font color="#FFFFFF">{{ labels.orderDetails }}</font>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="https://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
+					<b>{{ labels.externalOrderId }}</b>: {{ model.order.externalId }}<br/><br/>
+                    <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
+                    {% if model.shippingMethodName %}
+                    <b>{{ labels.shippingMethod }}</b>: {{ model.shippingMethodName }}<br><br>
+                    {% endif %}                    
+                </td>
+            </tr>
+
+            {% ifnotequal model.total 0 %}
+           <tr>
+                <td>
+                    {% if model.origin.firstName or model.origin.lastNameOrSurname %}
+                        <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.origin %}<br><br>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endifnotequal %}
+        </tbody>
+    </table>
+
+    {% include "modules/common/email-shipment-summary" %}    
+{% endblock body-content %}
