@@ -112,15 +112,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         {
             if (_list == null)
             {
-
-
                 var ctxData =  _contextProvider.GetContextData();
-                // get the list of categories
-                var categoryTree =  _categoryProvider.GetAllCategories();
-
-
-
-
                 var cacheKey = GetCacheKey(ctxData.Hash, _priceListCode);
                 _list = GetFromCache(cacheKey);
 
@@ -136,6 +128,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     {
                         return _list;
                     }
+                    var categoryTree =  _categoryProvider.GetAllCategories();
                     _list = ProccessNavData(ctxData, categoryTree);
                     _cache.Set(cacheKey,
                         _list,
