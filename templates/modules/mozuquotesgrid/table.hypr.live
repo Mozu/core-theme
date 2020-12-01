@@ -1,0 +1,60 @@
+<!--
+     dataGridItems
+
+     //A list of items that contain only columns and assocaited column values
+-->
+<div class="mz-grid-header">
+    <div class="mz-grid-row">
+        <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
+            {% for col in model.columns %}
+                <span class="mz-grid-column" data-mz-action="sort" data-mz-col-index="{{col.index}}">
+                    {{col.displayName}}
+                    {% if col.sortable %}
+                        <span>
+                            < >
+                        </span>
+                    {% endif %}
+                </span>
+            {% endfor %}
+        </div>
+        {% if model.rowActions %}
+        <div class="mz-grid-row-actions">
+            <span class="mz-grid-column">               
+            </span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="mz-grid-body">
+    {% if model.items.length > 0 %}
+        {% for row in model.gridItems %}
+            <div data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}">
+                <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
+                    {% for col in row %}
+                        <span class="mz-grid-column">
+                            {{col|safe}}
+                        </span>
+                    {% endfor %}
+                </div>
+                {% if model.rowActions %}
+                    <div class="mz-grid-row-actions">
+                        <div class="mz-grid-column mz-quotes-grid-dropdown">
+                             <button data-mz-action="toggleDropdown" class="dropbtn"></button>
+                            <div id="quotesDropdown{{forloop.index}}" class="dropdown-content">
+                            {% for action in model.rowActions %}
+                                {% if action.isHidden != true %}
+                                    <a href="#" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                {% endif %}
+                            {% endfor %}                                
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="mz-grid-body-empty">{{ labels.noResults }}</div>
+    {% endif %}
+</div>
