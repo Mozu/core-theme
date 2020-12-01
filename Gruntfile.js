@@ -70,7 +70,8 @@ module.exports = function (grunt) {
           JSON: true,
           define: true,
           require: true,
-          Modernizr: true
+          Modernizr: true,
+          Promise: true
         }
       }
     },
@@ -139,6 +140,8 @@ module.exports = function (grunt) {
       },
       javascript: {
         files: [
+          'scripts/**/*.js',
+          'scripts/**/**/*.js',
           'scripts/**/**/**/*.js'
         ],
         tasks: [
