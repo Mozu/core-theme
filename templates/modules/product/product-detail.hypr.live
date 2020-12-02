@@ -112,13 +112,14 @@
   <dl class="mz-propertylist mz-propertylist-justified">
     {% for property in model.properties %}
     {% if property.values and not property.isHidden %}
-      {% if property.propertyType != "VariantProperty" %}
-        <dt>{{property.attributeDetail.name}}</dt>
-        {% for v in property.values %}
-        <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
-        {% endfor %}
-      {% endif %}     
-      {% if property.propertyType == "VariantProperty" and model.variationProductCode %}  
+      {% if property.propertyType == "VariantProperty" %}
+        {% if model.variationProductCode %}
+          <dt>{{property.attributeDetail.name}}</dt>
+          {% for v in property.values %}
+          <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
+          {% endfor %}
+        {% endif %}   
+      {% else %}  
         <dt>{{property.attributeDetail.name}}</dt>
         {% for v in property.values %}
         <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
