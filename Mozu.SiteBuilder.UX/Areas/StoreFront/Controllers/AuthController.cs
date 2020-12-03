@@ -38,6 +38,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [ContextInitialization]
     [DataViewModeEnforcement]
     [AuthModelValidator]
     public class AuthController : BaseApiController
