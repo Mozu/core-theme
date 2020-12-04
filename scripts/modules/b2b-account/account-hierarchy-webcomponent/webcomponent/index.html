@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Account Hierarchy</title>
+</head>
+
+<body>
+  <account-hierarchy-webcomponent (selectAccount)=></account-hierarchy-webcomponent>
+  <script src="account-hierarchy-webcomponent.js"></script>
+</body>
+
+<script>
+  var accountHierarchyModel = [{
+    name: 'HEB Corporate',
+    accountId: 1,
+    children: [{
+        name: 'HEB Texas',
+        accountId: 11,
+        children: [{
+            name: 'HEB Austin',
+            accountId: 111,
+            children: [{
+                name: 'HEB N. Austin',
+                accountId: 1111
+              },
+              {
+                name: 'HEB S. Austin',
+                accountId: 1112
+              },
+              {
+                name: 'HEB Barton Creek',
+                accountId: 1113
+              }
+            ]
+          },
+          {
+            name: 'HEB Dallas',
+            accountId: 112,
+            children: [{
+                name: 'HEB N. Dallas',
+                accountId: 1121,
+              },
+              {
+                name: 'HEB S. Dallas',
+                accountId: 1122,
+              }
+            ]
+          },
+          {
+            name: 'HEB Houston',
+            accountId: 113,
+            children: [{
+                name: 'HEB N. Houston',
+                accountId: 1131
+              },
+              {
+                name: 'HEB S. Houston',
+                accountId: 1132
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'HEB Georgia',
+        accountId: 12,
+        children: [{
+            name: 'HEB Atlanta',
+            accountId: 121,
+            children: [{
+                name: 'HEB N. Atlanta',
+                accountId: 1211
+              },
+              {
+                name: 'HEB S. Atlanta',
+                accountId: 1212
+              }
+            ]
+          },
+          {
+            name: 'HEB Savannah',
+            accountId: 122,
+            children: [{
+                name: 'HEB N. Dallas',
+                accountId: 1221
+              },
+              {
+                name: 'HEB S. Dallas',
+                accountId: 1222
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'HEB Alabama',
+        accountId: 13,
+        children: [{
+            name: 'HEB Birmingham',
+            accountId: 131,
+            children: [{
+                name: 'HEB N. Birmingham',
+                accountId: 1311
+              },
+              {
+                name: 'HEB S. Birmingham',
+                accountId: 1312
+              }
+            ]
+          },
+          {
+            name: 'HEB Montgomery',
+            accountId: 132,
+            children: [{
+                name: 'HEB N. Montgomery',
+                accountId: 1321
+
+              },
+              {
+                name: 'HEB S. Montgomery',
+                accountId: 1322
+              }
+            ]
+          }
+        ]
+      },
+    ]
+  }];
+  var element = document.getElementsByTagName("account-hierarchy-webcomponent")[0];
+  if (element) {
+    element.setAttribute("account-hierarchy-model", JSON.stringify(accountHierarchyModel));
+    element.addEventListener('viewAccount', (event) => {
+      console.log('Recevied viewAccount event from account hierarchy web component with name : ' + event.detail.name + ' accountid : ' + event.detail.accountId);
+    });
+    element.addEventListener('changeParentAccount', (event) => {
+      console.log('Recevied changeParentAccount event from account hierarchy web component with name : ' + event.detail.name + ' accountid : ' + event.detail.accountId);
+    });
+  }
+
+
+
+</script>
+
+</html>

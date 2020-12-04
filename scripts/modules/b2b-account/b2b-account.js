@@ -16,9 +16,10 @@ define([
     'modules/b2b-account/shipping-information',
     "modules/b2b-account/account-info",
     'modules/b2b-account/custom-attributes',
-    'modules/b2b-account/quick-order'
+    'modules/b2b-account/quick-order',
+    'modules/b2b-account/account-hierarchy'
 ],
-    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder) {
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder, AccountHierarchy) {
 
     var paneSwitcherModel = new PaneSwitcher.PaneSwitcherModel({});
     var hash = false;
@@ -40,6 +41,12 @@ define([
                 view: new AccountInfo.InfoView({
                     model: CustomerModels.EditableCustomer.fromCurrent(),
                     messagesEl: $('#account-info-messages')
+                })
+            },
+            {
+                name: 'Account Hierarchy',
+                view: new AccountHierarchy.AccountHierarchyView({
+                    model: new AccountHierarchy.AccountHierarchyModel({})
                 })
             },
             {

@@ -1,0 +1,144 @@
+@import '~@circlon/angular-tree-component/css/angular-tree-component.css';
+div.tree div.tree-children::before,
+div.tree::before {
+  content: "";
+  position: absolute;
+  border-left: 1px solid #23527c;
+  height: 100%;
+  top: -14px;
+  left: 12px
+}
+div.tree {
+  padding-left: 0;
+  margin-left: -5px
+}
+div.tree div.tree-children {
+  position: relative;
+  padding-left: 0;
+  margin-left: 16px
+}
+div.tree div.tree-children::before {
+  left: 5px
+}
+div.tree tree-node>div>.node-wrapper {
+  margin-left: 24px
+}
+div.tree tree-node>div>.node-wrapper>.node-content-wrapper {
+  margin-left: 4px
+}
+div.tree tree-node>div.tree-node-leaf>.node-wrapper {
+  margin-left: 0
+}
+div.tree tree-node>div::before {
+  content: "";
+  position: absolute;
+  border-bottom: 1px solid #23527c;
+  width: 7px;
+  margin-top: 12px;
+  left: 7px
+}
+div.tree tree-node>div .toggle-children-wrapper {
+  width: 7px;
+  height: 5px;
+  border: 1px solid #23527c;
+  position: absolute;
+  left: 15px;
+  margin-top: 5px;
+  margin-left: 0;
+  display: inline-block;
+  z-index: 1;
+  border-radius: 100px;
+  background: #ccc;
+}
+div.tree tree-node>div .toggle-children-wrapper::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  border-top: 1px solid #23527c;
+  position: absolute;
+  top: 5px;
+  left: 2px
+}
+div.tree tree-node>div .toggle-children-wrapper.toggle-children-wrapper-collapsed::after {
+  content: "";
+  display: inline-block;
+  height: 7px;
+  border-left: 1px solid #23527c;
+  position: absolute;
+  top: 2px;
+  left: 5px
+}
+div.tree tree-node>div .toggle-children-wrapper .toggle-children {
+  display: none
+}
+div.tree tree-node>div .node-content-wrapper {
+  margin-left: 4px
+}
+div.tree>tree-node>div::before {
+  left: 14px
+}
+div.tree>tree-node>div>.node-wrapper>tree-node-expander>.toggle-children-wrapper {
+  left: 22px
+}
+.node-wrapper {
+  padding-left: 0 !important;
+}
+.node-content-wrapper {
+  border: 1px solid #ccc;
+  position: relative;
+  background: #fff;
+}
+.node-wrapper>tree-node-expander {
+  margin-right: 50px;
+}
+div.tree tree-node>div:before {
+  width: 57px;
+  left: 6px;
+}
+.menu {
+  background: #eee;
+  padding: 7px;
+  border-radius: 5px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  position: relative;
+  top: 0px !important;
+  z-index: 999;
+  left: 0px !important;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.spanNode {
+  vertical-align: middle;
+}
+.spanNode:after {
+  padding-left: 20px;
+  content: '\2807';
+  font-size: 15px;
+}
+div.tree tree-node>div .toggle-children-wrapper:after {
+  content: "|";
+  display: inline-block;
+  width: 7px;
+  position: absolute;
+  top: 9px;
+  left: 4px;
+}
+div.tree:before,
+div.tree div.tree-children:before {
+  top: -15px;
+}
+div.tree:before {
+  border-left: none;
+}
+.node-content-wrapper-active, .node-content-wrapper-active.node-content-wrapper-focused, .node-content-wrapper.node-content-wrapper-active:hover {
+  background: #fff;
+}

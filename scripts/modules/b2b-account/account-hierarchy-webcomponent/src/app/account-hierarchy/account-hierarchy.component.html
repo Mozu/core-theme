@@ -1,0 +1,24 @@
+<div *ngIf="isAccountHierarchyModelProvided">
+  <div style="margin-bottom: 1rem">
+    <button type="button" (click)="expandAll()" style="margin-right: .5rem">Expand all</button>
+    <button type="button" (click)="collapseAll()">Collapse all</button>
+  </div>
+  <div class="tree">
+    <tree-root #accountHierarchyTree [focused]="true" [options]="options" [nodes]="accountHierarchyModel"
+      (event)="onEvent($event)">
+      <ng-template #treeNodeTemplate let-node="node">
+        <div class="spanNode" (click)="openContextMenu($event,node)"><span>{{ node.data.name }}</span></div>
+        <div class="menu" *ngIf="(contextMenu && (contextMenu.node.data.accountId === node.data.accountId))" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+          <ul>
+            <li (click)="viewAccountDetails()"><a>View Account</a></li>
+            <hr>
+            <li (click)="changeParentAccountDetails()"><a>Change Parent Account</a>
+            </li>
+            <hr>
+            <li (click)="closeMenu()"><a>Close</a></li>
+          </ul>
+        </div>
+      </ng-template>
+    </tree-root>
+  </div>
+</div>
