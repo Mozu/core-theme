@@ -85,6 +85,10 @@
             <script type="text/javascript">var monetateT = new Date().getTime();</script>
             <script type="text/javascript" src="//se.monetate.net/js/2/{{themeSettings.monetateAccountNumber}}/{{themeSettings.monetateInstance}}/{{themeSettings.monetateDomain}}/entry.js"></script>
             {% endif %}
+            <script type="text/javascript">
+                window.monetateQ = window.monetateQ || [];
+                window.monetateQ.push(['addPollForElement', '#monetateLoaded']);
+            </script>
             <!-- End Monetate tag. -->
             {% require_script "modules/monetate" %}
         {% endif %}
