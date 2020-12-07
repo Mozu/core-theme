@@ -36,8 +36,8 @@
     <PackageReference Include="Mozu.MZDB.Contracts" Version="1.1928.0-dotnetcore.48" />
     <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
     <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2033.6" />
-    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2033.6" />
-    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2033.6" />
+    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2049.2" />
+    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2049.2" />
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2011.0-pr-13.7" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
