@@ -1,0 +1,41 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/selleraccount" %}
+
+{% preload_json model "customer" %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.yourAccount }}
+    </h1>
+
+    <div class="mz-l-sidebar mz-myaccount-nav">
+        {% include "modules/my-account/seller-account-nav" with navtarget="body" %}
+    </div>
+
+    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
+
+		{% dropzone "my-account-top" scope="template" %}
+
+        <div id="account-messages">
+            {% include "modules/common/message-bar" with model=model.messages %}
+        </div>
+        
+        <a id="quotes"></a>
+        {% comment %} Need to replace below code with quotes grid {% endcomment %}
+         <!--<div class="mz-l-stack-section mz-accountsettings" id="account-settings">
+            {% include "modules/my-account/my-account-settings" %}
+        </div>-->
+
+    </div>
+</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

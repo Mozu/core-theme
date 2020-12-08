@@ -661,6 +661,13 @@
     },
     {
       "entityType": "customer",
+      "id": "seller_account",
+      "template": "seller-account",
+      "title": "Seller Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
       "id": "b2b_account",
       "template": "b2b-account",
       "title": "B2B Account",
