@@ -259,6 +259,18 @@
       "properties": {},
       "template": "email/curbside-partial-pickup-ready",
       "title": "Curbside Partial Pickup Ready"
+    },
+    {
+      "id": "shipment.customeratcurbside",
+      "properties": {},
+      "template": "email/curbside-customer",
+      "title": "Customer At Curbside"
+    },
+    {
+      "id": "shipment.customerintransit",
+      "properties": {},
+      "template": "email/curbside-intransit",
+      "title": "Customer In Transit"
     }
   ],
   "backOfficeTemplates": [
