@@ -242,6 +242,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (GatewayGiftCardEmail),
                                                Topic = Topics.GatewayGiftCardCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CustomerAtCurbside
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.CustomerIntransit
                                            }
 
                 };
@@ -725,6 +735,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string CurbsideReady = "shipment.curbsideready"; 
             public const string PartialCurbsideReady = "shipment.partialcurbsideready";
             public const string GatewayGiftCardCreated = "gatewaygiftcard.created";
+            public const string CustomerIntransit = "shipment.customerintransit";
+            public const string CustomerAtCurbside = "shipment.customeratcurbside"; 
         }
     }
 
