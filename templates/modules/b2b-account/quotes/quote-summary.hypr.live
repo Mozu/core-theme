@@ -1,0 +1,18 @@
+﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.quoteSummary}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        {% include "modules/b2b-account/quotes/product-picker" %}
+        {% include "modules/b2b-account/quotes/quote-adjustments" %}
+      </div>      
+    </div>
+  </div>
+</div>

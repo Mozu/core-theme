@@ -1,0 +1,25 @@
+<div class="quotes-summary-product-picker">
+  <div class="product-picker-section productPicker">
+    <div class="product-picker-form-fields">
+      <span class="productpicker-label">{{labels.b2bProductPicker}}</span>
+      <div mz-wishlist-product-picker>{% include "modules/product-picker/product-picker" %}</div>
+    </div>
+    <div class="product-picker-form-fields">
+      <span class="productpicker-label">{{labels.b2bQuantity}}</span>
+      <br />
+      <input type="number" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}" />
+      <span class="mz-validationmessage" data-mz-validationmessage-for="pickerItemQuantity"></span>
+    </div>
+    <div class="product-picker-form-fields">
+      <button class="mz-button mz-button" data-mz-action="addWishlistItem" {% if productNotSelected %} disabled {% endif %}>{{labels.add}}</button>
+    </div>
+    <div mz-modal-product-dialog class="mz-product-modal">
+      <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        {% include "modules/product-picker/product-modal" %}
+      </div>
+    </div>
+  </div>
+  <div class="mz-b2b-wishlist-list">
+    {% include "modules/b2b-account/quotes/product-picker-table" with model=model %}
+  </div>
+</div>

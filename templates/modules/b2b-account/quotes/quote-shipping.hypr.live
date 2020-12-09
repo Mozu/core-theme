@@ -1,0 +1,50 @@
+﻿﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.shippingInformation}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        <table class="mz-quote-shipping">
+          <tr>
+            <td>
+              <div class="mz-accountaddressbook-actions">
+                <img src="/resources/images/trash.png" data-mz-action="finishDeleteShipping" />
+                <img src="/resources/images/edit.png" data-mz-action="finishEditShipping" />
+              </div>
+              <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
+                <span>Rajesh Datir</span>
+                <span>1817 Braker Lane,</span>
+                <span>ST 200,</span>
+                <span>
+                  Austin,
+                  TX
+                  78758
+                </span>
+                <span>US</span>
+
+                <span>4694665500</span>
+              </div>
+            </td>
+            <td>
+              <span>
+                <b>{{labels.shippingMethod}}</b>
+              </span>
+              <br />
+              <select class="mz-l-formfieldgroup-halfsize" data-mz-value="" >
+                <option selected="selected" value="">{{labels.chooseShippingMethod}}</option>
+                <option value="Fedex Ground">Fedex Ground</option>
+                <option value="USPS Ground">USPS Ground</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
