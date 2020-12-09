@@ -277,6 +277,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this.lastConfiguration = [];
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);
+            var standardProps = [];
+            _.each(this.get('properties'), function(prop) {
+                if (prop.propertyType === "StandardProperty" && prop.isHidden === false) {
+                    standardProps.push(prop);
+                }
+            });            
+            this.set('initialStandardProps', standardProps);
         },
         mainImage: function() {
             var productImages = this.get('content.productImages');
@@ -405,6 +412,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             return prodJSON;
         },
         toJSON: function(options) {
+            var me = this;
+            if (typeof me.apiModel.data.variationProductCode === "undefined" && me.get('variationProductCode')) {
+                me.unset('variationProductCode');
+            }
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
                 j.options = this.getConfiguredOptions({ unabridged: true });
@@ -413,7 +424,21 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
                 if (typeof j.upc == "string") j.upc = [j.upc];
                 if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
+
+                // merge in standard properties
+                if (j.properties && j.properties.length > 0) {                   
+                    _.each(me.get('initialStandardProps'), function(stdProp) {
+                        var exists = false;
+                        _.each(j.properties, function(prop)  {
+                            if (prop.attributeFQN === stdProp.attributeFQN) exists = true;
+                        });
+                        if (!exists) {
+                            j.properties.push(stdProp);
+                        }
+                    });
+                }
             }
+
             return j;
         }
     }, {
