@@ -231,6 +231,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    return openOrdersSb.ToString();
         //}
 
+        [HttpGet]
+        [Route("myaccount/quote/{quoteId}/edit")]
+        public async Task<IActionResult> EditQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "edit-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+            
+            return View("edit-quote");
+        }
+
         async Task<Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment> fetchOrderShipments(string orderId)
         {
             try
