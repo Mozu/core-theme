@@ -1,0 +1,277 @@
+.quote-name {
+    .mz-button {
+        float: right !important;
+        font-size: 14px !important;
+    }
+}
+
+.edit-quote-form {
+    .quote-details-section {
+        .mz-contact-actions {
+            float: right;
+        }
+    }
+
+    img {
+        cursor: pointer;
+    }
+
+    .mz-quote-grid {
+        width: 100%;
+        margin: 15px 0;
+        border: 1px solid #999;
+        background-color: #eee;
+
+        .mz-button {
+            background-color: #fafafa !important;
+        }
+
+        .mz-grid-table {
+            margin-top: -1px;
+            margin-right: -1px;
+        }
+
+        dl {
+            display: grid;
+            grid-template-columns: max-content auto;
+        }
+
+        dt {
+            margin-left: 20px;
+            grid-column-start: 1;
+
+            b {
+                float: right;
+            }
+        }
+
+        dd {
+            margin-left: 20px;
+            grid-column-start: 2;
+
+            span {
+                margin-left: 20px;
+
+                img {
+                    height: 12px;
+                }
+            }
+        }
+
+        .mz-quote-grid-header {
+            position: relative;
+            background-color: #666 !important;
+
+            h3 {
+                color: white !important;
+            }
+        }
+    }
+
+    .quotes-summary-product-picker {
+
+        .product-picker-section {
+            .product-picker-form-fields {
+                float: left;
+                margin-right: 15px;
+
+                button {
+                    margin-top: 17px;
+                }
+            }
+        }
+
+        .mz-b2b-wishlist-list {
+            padding-top: 80px;
+
+            .mz-product-picker-table {
+                width: 100%;
+
+                >tbody>tr>td{
+                    padding-bottom:20px;
+                }
+
+                .mz-l-formfieldgroup-halfsize {
+                    width: 120px !important;
+                    height: 28px !important;
+                }
+
+                td.product-name {
+                    width: 400px;
+                }
+
+                td.product-quantity {
+                    input {
+                        max-width: 80px;
+                    }
+                }
+
+                .img-action-button {
+                    margin-left: 10px;
+
+                    img {
+                        height: 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    .mz-quote-shipping {
+        td {
+            padding-right: 250px;
+        }
+
+        td:nth-child(2) {
+            padding-top: 60px;
+        }
+
+        td .mz-accountaddressbook-actions img {
+            padding-right: 10px;
+            height: 12px;
+            float: right;
+        }
+    }
+
+    .mz-quote-comments {
+        width: 100%;
+
+        .txtarea-comments {
+            width: 98%;
+            height: 60px;
+        }
+
+        .quote-comments-viewer {
+            width: 98%;
+            height: 150px;
+            overflow-y: scroll;
+            margin-top: 20px;
+            background-color: white;
+            border: 1px solid #a7a7a7;
+            padding: 10px;
+
+            .quote-comment {
+                margin-bottom: 12px;
+            }
+        }
+    }
+
+    .mz-quote-history {
+        width: 100%;
+
+        .quote-history-viewer {
+            width: 98%;
+            height: 250px;
+            overflow-y: scroll;
+            background-color: white;
+            border: 1px solid #a7a7a7;
+            padding: 10px;
+
+            .quote-histories {
+
+                .quote-history {
+                    margin-bottom: 20px;
+                    border-bottom: 1px solid gray;
+                    padding-bottom: 20px;
+
+                    table {
+                        tr td {
+                            padding-right: 100px;
+                        }
+                    }
+                }
+
+                .quote-history:last-child {
+                    border: none;
+                    padding-bottom: 0px;
+                }
+            }
+        }
+    }
+
+    .mz-grid-body {
+        padding: 20px !important;
+    }
+
+    h3 {
+        margin: 0px !important;
+    }
+
+    .mz-quote-actions button {
+        padding: 8.25px 30.5px !important;
+        margin-right: 20px;
+    }
+
+    .quote-adjustments {
+        width: 100%;
+        margin-top: 20px;
+
+        > tbody > tr > td {
+            width: 50%;
+        }
+
+        .mz-carttable-checkout-couponcode {
+            margin-top: 30px;
+        }
+
+        .quote-adjustments-table {
+            font-size: 15px;
+
+            > tbody > tr > td:nth-child(1) {
+                width: 20px;
+            }
+
+            > tbody > tr > td:nth-child(2) {
+                width: 420px;
+            }
+
+            .adjustments {
+                margin-left: 30px;
+                margin-bottom: 20px;
+
+                .adjustment-row-1 {
+                    input[type=number], select {
+                        float: left;
+                        margin-right: 10px;
+                        margin-top: 8px;
+                    }
+
+                    select {
+                        height: 28px;
+                    }
+
+                    input[type=number] {
+                        width: 50px;
+                    }
+
+                    label {
+                        float: left;
+                        padding: 0 5px;
+                        text-align: center;
+                    }
+                }
+
+                .adjustment-row-2 {
+                    .adjustment-subtotals {
+                    }
+
+                    .td {
+                        padding-top: 10px;
+                    }
+
+                    .danger {
+                        color: red;
+                    }
+                }
+            }
+
+            .grand-total {
+                font-size: 18px;
+
+                td {
+                    padding-top: 20px;
+                }
+            }
+        }
+    }
+}

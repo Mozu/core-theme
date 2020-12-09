@@ -47,7 +47,7 @@ define([
                 view: new Orders.OrdersView({
                     model: Orders.OrdersModel.fromCurrent()
                 })
-            },
+        },
             {
                 name: 'Returns',
                 view: new Returns.ReturnsView({

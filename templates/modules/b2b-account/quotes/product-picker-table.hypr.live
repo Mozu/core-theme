@@ -1,0 +1,91 @@
+<table class="mz-product-picker-table">
+  <thead>
+    <tr>
+      <th>
+        <b>{{labels.b2bProductPicker}}</b>
+      </th>
+      <th>
+        <b>{{labels.b2bQuantity}}</b>
+      </th>
+      <th>
+        <b>{{labels.fulfillmentType}}</b>
+      </th>
+      <th>
+        <b>{{labels.unitPrice}}</b>
+      </th>
+      <th>
+        <b>{{labels.mobileDiscount}}</b>
+      </th>
+      <th>
+        <b>{{labels.returnReceiptItemTotalColumn}}</b>
+      </th>
+      <th>
+        <b>{{labels.remove}}</b>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="product-name">
+        Product 1
+      </td>
+      <td class="product-quantity">
+        <input type="number" min="1" value="2" />
+      </td>
+      <td>
+        <select class="mz-l-formfieldgroup-halfsize" >
+          <option value="Direct Ship">Direct Ship</option>
+          <option value="Pickup">Pickup</option>
+        </select>
+      </td>
+      <td>
+        <span>{{ 100 | currency}}</span>
+        <span class="img-action-button">
+          <img src="/resources/images/edit.png" />
+        </span>
+      </td>
+      <td>
+        {{ 20 | currency}}
+      </td>
+      <td>
+        {{ 180 | currency}}
+      </td>
+      <td>
+        <span class="img-action-button">
+          <img src="/resources/images/trash.png" />
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td class="product-name">
+        Product 2
+      </td>
+      <td class="product-quantity">
+        <input type="number" min="1" value="2" />
+      </td>
+      <td>
+        <select class="mz-l-formfieldgroup-halfsize" >
+          <option value="Direct Ship">Direct Ship</option>
+          <option value="Pickup" >Pickup</option>
+        </select>
+      </td>
+      <td>
+        <span>{{ 100 | currency}}</span>
+        <span class="img-action-button">
+          <img src="/resources/images/edit.png" />
+        </span>
+      </td>
+      <td>
+        {{ 20 | currency}}
+      </td>
+      <td>
+        {{ 180 | currency}}
+      </td>
+      <td>
+        <span class="img-action-button">
+          <img src="/resources/images/trash.png" />
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>

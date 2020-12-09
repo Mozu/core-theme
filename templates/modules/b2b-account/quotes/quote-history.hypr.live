@@ -1,0 +1,138 @@
+﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.quoteHistory}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        <table class="mz-quote-history">
+          <tr>
+            <td>
+              <div class="quote-history-viewer">
+                <div class="quote-histories">
+                  <div class="quote-history">
+                    <p>
+                      <b>
+                        Updated By: Rutvee Shah (rshah@kibocommerce.com) - 11/06/20
+                      </b>
+                    </p>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>
+                            <b>{{labels.fieldChanged}}</b>
+                          </th>
+                          <th>
+                            <b>{{labels.changedFrom}}</b>
+                          </th>
+                          <th>
+                            <b>{{labels.changedTo}}</b>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            Item Subtotal
+                          </td>
+                          <td>
+                            $350
+                          </td>
+                          <td>
+                            $300
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Address Change
+                          </td>
+                          <td>
+                            <div class="address">
+                              Jim Shoe<br />
+                              1234 Test Dr.<br />
+                              Austin, TX 78701 <br />
+                              Home: (888) 555-1234
+                            </div>
+                          </td>
+                          <td>
+                            <div class="address">
+                              Jim Shoe<br />
+                              1234 Fake Dr.<br />
+                              Austin, TX 78701 <br />
+                              Home: (888) 555-1234
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="quote-history">
+                    <p>
+                      <b>
+                        Updated By: Mike Smith (msmith@kibocommerce.com) - 11/04/20
+                      </b>
+                    </p>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>
+                            <b>{{labels.fieldChanged}}</b>
+                          </th>
+                          <th>
+                            <b>{{labels.changedFrom}}</b>
+                          </th>
+                          <th>
+                            <b>{{labels.changedTo}}</b>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            Shipping Subtotal
+                          </td>
+                          <td>
+                            $50
+                          </td>
+                          <td>
+                            Free Shipping
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Address Change
+                          </td>
+                          <td>
+                            <div class="address">
+                              Jim Shoe<br />
+                              1234 Test Dr.<br />
+                              Austin, TX 78701 <br />
+                              Home: (888) 555-1234
+                            </div>
+                          </td>
+                          <td>
+                            <div class="address">
+                              Jim Shoe<br />
+                              1234 Fake Dr.<br />
+                              Austin, TX 78701 <br />
+                              Home: (888) 555-1234
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.comments}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        <table class="mz-quote-comments">
+          <tr>
+            <td>
+              <span>{{labels.comments}}:</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <textarea class="txtarea-comments"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button class="mz-button mz-contact-save" data-mz-action="finishEditContact">{{labels.submit}}</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="quote-comments-viewer">
+                <div class="quote-comments">
+                  <div class="quote-comment">
+                    <b>
+                      Commented By: Rutvee Shah - 11/07/20
+                    </b>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
+                    </p>
+                  </div>
+                  <div class="quote-comment">
+                    <b>
+                      Commented By: Rutvee Shah - 11/07/20
+                    </b>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
+                    </p>
+                  </div>
+                  <div class="quote-comment">
+                    <b>
+                      Commented By: Rutvee Shah - 11/07/20
+                    </b>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
+                    </p>
+                  </div>
+                  <div class="quote-comment">
+                    <b>
+                      Commented By: Rutvee Shah - 11/07/20
+                    </b>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

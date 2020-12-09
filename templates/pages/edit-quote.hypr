@@ -1,0 +1,18 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.b2bAccount %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount mz-b2baccount{% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "modules/b2b-account/edit-quote" %}
+
+<div class="mz-l-container">
+    <div id="mz-edit-quote-page">
+    </div>
+</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}
