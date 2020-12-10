@@ -21,12 +21,12 @@ define([
     CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
     ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
     PagingViews, EditableView, QuoteModels) {
-
+        var FILTERSTRING = "name cont    ";
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
             MozuGrid.prototype.render.apply(self, arguments);
-        }   
+        }
     });
 
     var QuotesView = Backbone.MozuView.extend({
@@ -37,7 +37,17 @@ define([
         render: function () {
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
-            var collection = new QuotesGridCollectionModel({ autoload: true });
+            var collection = new QuotesGridCollectionModel({ autoload: true });            
+            $('[data-mz-action="applyfilter"]').on('change', function(e) {
+                e.preventDefault();
+                FILTERSTRING = FILTERSTRING + $(this).val();
+                collection.filterBy(FILTERSTRING);
+                });
+             $('[data-mz-action="applyDatefilter"]').on('change', function(e) {
+                e.preventDefault();
+                FILTERSTRING = FILTERSTRING +"expirationdate eq" + $(this).val();
+                collection.filterBy(FILTERSTRING);
+                });
             this.initializeGrid(collection);
         },
 
@@ -47,7 +57,19 @@ define([
                 el: $('.mz-b2b-quotes-grid'),
                 model: collection
             });
-        }
+        },
+        registerRowActions: function () {
+            var self = this;
+            var rowActions = this.model.get('rowActions');
+            _.each(rowActions, function (action) {
+                self[action.action] = function (e) {
+                    var rowNumber = $(e.target).parents('.mz-grid-row').data('mzRowIndex');
+                    var row = self.model.get('items').at(rowNumber - 1);
+                    self.model[action.action](e, row);
+                };
+            });
+        }     
+       
     });
 
     var QuoteEditView = Backbone.MozuView.extend({
@@ -71,7 +93,8 @@ define([
             });
 
             productPickerView.render();
-        },
+        },      
+
         startEditingQuoteName: function () {
             var self = this;
 
