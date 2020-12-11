@@ -9,12 +9,12 @@ Add built-in support for the Monetate tag which includes the following API metho
 * Track purchases
 
 Files modified:
-* templates\page.hypr
-* theme.json
-* theme-ui.json
+* templates\page.hypr (Embed the script)
+* theme.json (Set default values)
+* theme-ui.json (Create UI for inputing necesary data)
 
 Files added:
-* scripts\modules\monetate.js
+* scripts\modules\monetate.js (Heavy lifter)
 
 ### March 29, 2017
 The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)
