@@ -1,0 +1,17 @@
+<div class="mz-account-hierarchy">
+  {% require_script "modules/b2b-account/account-hierarchy" %}
+  <h3 class="mz-l-stack-sectiontitle">{{ labels.accountHierarchy }}</h3>
+  <div class="account-hierarchy">
+    <ul class="account-hierarchy-menu">
+      <li {% if model.isUserAdmin==true %} data-mz-action="addChildAccount" {% else %} class="disabled" {% endif %}>{{ labels.addChildAccount }}</li>
+      <li data-mz-action="expandAll">{{ labels.expandAll }}</li>
+      <li data-mz-action="collapseAll">{{ labels.collapseAll }}</li>
+    </ul>
+    <div class="root-node-space"></div>
+    {% if model.hierarchy %}
+    <ul class="tree">
+      {% include "modules/b2b-account/account-hierarchy/hierarchy" with tree_list=model.hierarchy %}
+    </ul>
+    {% endif %}
+  </div>
+</div>

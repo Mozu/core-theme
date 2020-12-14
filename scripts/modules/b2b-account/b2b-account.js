@@ -16,9 +16,10 @@ define([
     'modules/b2b-account/shipping-information',
     "modules/b2b-account/account-info",
     'modules/b2b-account/custom-attributes',
-    'modules/b2b-account/quick-order'
+    'modules/b2b-account/quick-order',
+    'modules/b2b-account/account-hierarchy'
 ],
-    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder) {
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, B2BAccountModels, Lists, Users, Orders, Returns, PaymentInformation, PaneSwitcher, ShippingInformation, AccountInfo, CustomAttributes, QuickOrder, AccountHierarchy) {
 
     var paneSwitcherModel = new PaneSwitcher.PaneSwitcherModel({});
     var hash = false;
@@ -41,7 +42,13 @@ define([
                     model: CustomerModels.EditableCustomer.fromCurrent(),
                     messagesEl: $('#account-info-messages')
                 })
-            },
+        },
+        {
+            name: 'Account Hierarchy',
+            view: new AccountHierarchy.AccountHierarchyView({
+                model: AccountHierarchy.AccountHierarchyModel.fromCurrent()
+            })
+        },
             {
                 name: 'Orders',
                 view: new Orders.OrdersView({
@@ -111,8 +118,8 @@ define([
 
         paneSwitcherModel.set('panes', panes);
 
-    $(document).ready(function () {
-      // Orders, Returns, and Lists grids all have user IDs but need first and last names.
+        $(document).ready(function () {
+       // Orders, Returns, and Lists grids all have user IDs but need first and last names.
       // This call is gluttonous and should be replaced with a call to users with filter params for
       // the user IDs we need.
       var b2bAccount = new B2BAccountModels.b2bAccount({id: require.mozuData('user').accountId});
@@ -136,6 +143,7 @@ define([
           window.views = views;
           _.invoke(views, 'render');
       });
+
 
     });
 });
