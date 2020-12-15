@@ -554,6 +554,7 @@
   "returnReceiptItemQtyColumn": "Qty",
   "returnReceiptItemStatusColumn": "Status",
   "returnReceiptItemTotalColumn": "Item Total",
+  "returnReceiptReductionAmountColumn": "Return Reduction Amount",
   "returnReceiptUnitPriceColumn": "Unit Price",
   "returnReceivedBlob1": "<p>Thank you for shopping at {0}. We wanted to let you know that we have received the following returned items:</p>",
   "returnReceivedBlob2": "<p>You will receive another email when we have processed your return.</p>",

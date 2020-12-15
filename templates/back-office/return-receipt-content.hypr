@@ -54,7 +54,7 @@
           <tr>
             <td colspan="4"></td>
             <td class="align-center">
-              <b>Total</b>
+              <b>{{ labels.returnReceiptReductionAmountColumn }}</b>
             </td>
             <td class="align-center">{{ model.refundAmount }}</td>
           </tr>
