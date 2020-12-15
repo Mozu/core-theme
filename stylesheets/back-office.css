@@ -645,3 +645,7 @@ table {
   .shopper-notification-info-table span {
     float: right;
   }
+}
+.align-center {
+    text-align: center;
+}
