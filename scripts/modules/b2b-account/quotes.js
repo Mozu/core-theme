@@ -21,7 +21,9 @@ define([
     CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
     ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
     PagingViews, EditableView, QuoteModels) {
-        var FILTERSTRING = "name cont    ";
+        var NAMESTRING = "name cont ";
+        var DateString = "expirationdate ge ";
+        var FILTERSTRING = "";
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
@@ -38,19 +40,54 @@ define([
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
             var collection = new QuotesGridCollectionModel({ autoload: true });            
-            $('[data-mz-action="applyfilter"]').on('change', function(e) {
+            $('[data-mz-action="applyfilter"]').on('change input', function(e) {
                 e.preventDefault();
-                FILTERSTRING = FILTERSTRING + $(this).val();
-                collection.filterBy(FILTERSTRING);
+                FILTERSTRING = "";
+                var dateValue ="";
+                var nameValue = $(this).val();
+                if($("#expirationdate").val()!=="")
+                {                    
+                    dateValue  = $("#expirationdate").val();
+                }
+                self.filterGrid(nameValue, dateValue, collection);
+                
                 });
              $('[data-mz-action="applyDatefilter"]').on('change', function(e) {
                 e.preventDefault();
-                FILTERSTRING = FILTERSTRING +"expirationdate eq" + $(this).val();
-                collection.filterBy(FILTERSTRING);
+               
+                var nameValue ="";
+                if($("#searchName").val()!=="")
+                {
+                    nameValue  = $("#searchName").val()+" and ";
+                }
+
+                var dateValue =  $(this).val();                    
+                self.filterGrid(nameValue, dateValue, collection);             
+               
                 });
             this.initializeGrid(collection);
         },
 
+        filterGrid: function (nameValue, dateValue, collection)
+        {
+            FILTERSTRING = "";
+             if(nameValue!=="")
+             {
+                 nameValue = NAMESTRING + nameValue;
+                 FILTERSTRING = nameValue;
+                 if(dateValue!=="")
+                 {
+                     dateValue = DateString + dateValue+"T00:00:00z";
+                     FILTERSTRING = FILTERSTRING + " and "  + dateValue;
+                 }
+                 collection.filterBy(FILTERSTRING);
+             }
+          else if(dateValue!=="")
+             {
+                 FILTERSTRING = DateString + dateValue+"T00:00:00z";
+                 collection.filterBy(FILTERSTRING);
+             }
+        },
         initializeGrid: function (collection) {
             var self = this;
             self._quotesGridView = new QuotesMozuGrid({

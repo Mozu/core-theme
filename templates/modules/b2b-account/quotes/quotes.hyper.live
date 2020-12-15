@@ -9,7 +9,8 @@
         <div class="mz-quotes-grid-container">     
         <div>
             <input type="text" name="searchName" id="searchName" data-mz-action="applyfilter" placeholder="Search Name">
-            <input type="text" data-mz-is-datepicker style="color:transparent"   data-mz-action="applyDatefilter" data-format="mm/dd/yy" placeholder="Search Exp Date">
+             <Span class="mz-b2b-quotes-compare"> > </Span>
+            <input type="date"  data-mz-is-datepicker  id="expirationdate"  data-mz-action="applyDatefilter" data-format="yy/mm/dd" placeholder="Search Exp Date">               
         </div>      
         <div class="mz-b2b-quotes-grid">
             <div class="is-loading"></div>
