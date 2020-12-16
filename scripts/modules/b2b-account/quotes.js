@@ -21,8 +21,9 @@ define([
     CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
     ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
     PagingViews, EditableView, QuoteModels) {
-        var NAMESTRING = "name cont ";
-        var DateString = "expirationdate ge ";
+        var nameFilter = "name cont ";
+        var expirationDateFilter  = "expirationdate ge ";
+        var timeComponent = "T00:00:00z";
         var FILTERSTRING = "";
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
@@ -73,18 +74,18 @@ define([
             FILTERSTRING = "";
              if(nameValue!=="")
              {
-                 nameValue = NAMESTRING + nameValue;
+                 nameValue = nameFilter + nameValue;
                  FILTERSTRING = nameValue;
                  if(dateValue!=="")
                  {
-                     dateValue = DateString + dateValue+"T00:00:00z";
+                     dateValue = expirationDateFilter + dateValue + timeComponent;
                      FILTERSTRING = FILTERSTRING + " and "  + dateValue;
                  }
                  collection.filterBy(FILTERSTRING);
              }
           else if(dateValue!=="")
              {
-                 FILTERSTRING = DateString + dateValue+"T00:00:00z";
+                 FILTERSTRING = expirationDateFilter + dateValue + timeComponent;
                  collection.filterBy(FILTERSTRING);
              }
         },
