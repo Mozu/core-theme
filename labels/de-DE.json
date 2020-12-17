@@ -442,7 +442,7 @@
   "returnReceiptItemQtyColumn": "Menge",
   "returnReceiptItemStatusColumn": "Status",
   "returnReceiptItemTotalColumn": "Artikel Gesamt",
-  "returnReceiptReductionAmountColumn": "Rückgabereduzierung",
+  "returnReceiptReductionAmountColumn": "Rückerstattungsbetrag",
   "returnReceiptUnitPriceColumn": "Stückpreis",
   "returnReceivedBlob1": "<p> Danke für den Einkauf bei {0}. Wir wollten Sie wissen, dass wir die folgenden Rücksendungen empfangen zu lassen   : </ p>",
   "returnReceivedBlob2": "<p> Sie eine Email erhalten, wenn wir Ihre Rückkehr verarbeitet. </ p>",
