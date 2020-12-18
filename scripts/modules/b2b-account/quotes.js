@@ -28,7 +28,26 @@ define([
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
-            MozuGrid.prototype.render.apply(self, arguments);
+            this.populateWithB2BAccounts();
+        },
+        populateWithB2BAccounts: function () {
+            var self = this;
+            var callLength = self.model.get('items').length;
+            var count = 0;
+            self.model.get('items').models.forEach(function (quote) {
+                var accId = quote.get('customerAccountId');
+
+                var b2bAccount = new B2BAccountModels.b2bAccount({ id: accId });
+                b2bAccount.apiGet().then(function (account) {
+                    quote.set('accountName', account.data.companyOrOrganization);
+                    count++;
+                    if (callLength === count) {
+                        MozuGrid.prototype.render.apply(self, arguments);
+                    }
+                });
+            });
+
+            return self.model;
         }
     });
 
@@ -40,7 +59,14 @@ define([
         render: function () {
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
-            var collection = new QuotesGridCollectionModel({ autoload: true });            
+            var collection = new QuotesGridCollectionModel({ autoload: true }); 
+            if (!self.model.get("b2bAccounts")) {
+                var b2bAccount = new B2BAccountModels.b2bAccounts();
+                b2bAccount.apiGet().then(function (accounts) {
+                    self.model.set("b2bAccounts", accounts);
+                    self.render();
+                });
+            }
             $('[data-mz-action="applyfilter"]').on('change input', function(e) {
                 e.preventDefault();
                 FILTERSTRING = "";
@@ -232,6 +258,18 @@ define([
             this.set('emailQuoteView');
         }
     });
+
+    var isSalesRep = require.mozuData('user').isSalesRep;
+    if (isSalesRep) {
+        QuotesGridCollectionModel.prototype.columns.splice(0, 0, {
+            index: 'accountName',
+            displayName: 'Account Name',
+            sortable: false,
+            displayTemplate: function (accountName) {
+                return accountName || '';
+            }
+        });
+    }
 
     return {
         'QuotesView': QuotesView,
