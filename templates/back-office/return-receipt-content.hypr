@@ -41,7 +41,7 @@
               {{ item.product.price.price }}
             </td>
             <td class="align-center">
-              {{ item.productLossAmount }}
+              {{ item.product.price.price|multiply(item.quantityReceived) }}
             </td>
           </tr>
           {% endfor %}
