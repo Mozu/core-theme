@@ -393,9 +393,11 @@
                 pageSize: 5
             };
 
-            _.defer(function (cust) {
-                cust.getCards();
-            }, self);
+            if (window.location.pathname.toLowerCase().indexOf("selleraccount") < 0) {
+                _.defer(function (cust) {
+                    cust.getCards();
+                }, self);
+            }
         },
         isNonPurchaser: function() {
             return (require.mozuData('user').behaviors.length) ? false : true;
