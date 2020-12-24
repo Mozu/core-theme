@@ -69,25 +69,23 @@ define([
             this.initializeGrid(collection);
         },
 
-        filterGrid: function (nameValue, dateValue, collection)
-        {
+        filterGrid: function (nameValue, dateValue, collection) {
             FILTERSTRING = "";
-             if(nameValue!=="")
-             {
-                 nameValue = nameFilter + nameValue;
-                 FILTERSTRING = nameValue;
-                 if(dateValue!=="")
-                 {
-                     dateValue = expirationDateFilter + dateValue + timeComponent;
-                     FILTERSTRING = FILTERSTRING + " and "  + dateValue;
-                 }
-                 collection.filterBy(FILTERSTRING);
-             }
-          else if(dateValue!=="")
-             {
-                 FILTERSTRING = expirationDateFilter + dateValue + timeComponent;
-                 collection.filterBy(FILTERSTRING);
-             }
+            if (nameValue !== "") {
+                nameValue = nameFilter + nameValue;
+                FILTERSTRING = nameValue;
+                if (dateValue !== "") {
+                    dateValue = expirationDateFilter + dateValue + timeComponent;
+                    FILTERSTRING = FILTERSTRING + " and " + dateValue;
+                }
+                collection.filterBy(FILTERSTRING);
+            }
+            else if (dateValue !== "") {
+                FILTERSTRING = expirationDateFilter + dateValue + timeComponent;
+                collection.filterBy(FILTERSTRING);
+            } else if (nameValue === "") {
+                collection.filterBy("");
+            }
         },
         initializeGrid: function (collection) {
             var self = this;
