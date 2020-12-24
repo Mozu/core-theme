@@ -122,8 +122,8 @@ define([
       // Orders, Returns, and Lists grids all have user IDs but need first and last names.
       // This call is gluttonous and should be replaced with a call to users with filter params for
       // the user IDs we need.
-      var b2bAccount = new B2BAccountModels.b2bAccount({id: require.mozuData('user').accountId});     
-      return b2bAccount.apiGetUsers().then(function(users){
+      var b2bAccount = new B2BAccountModels.b2bAccount({ id: require.mozuData('user').accountId });
+      return b2bAccount.apiGetUsers().then(function (users) {
           var strippedDownUsers = _.map(users.data.items, function(user){
              return {
                  firstName: user.firstName,

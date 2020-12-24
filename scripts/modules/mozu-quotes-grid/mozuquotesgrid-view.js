@@ -15,13 +15,9 @@ define(["modules/jquery-mozu",
                         this.model.apiModel.setIndex = this.model.apiGridRead.bind(this.model);
                     }
 
-                    try {
-                        this.$el.addClass('is-loading');
-                        if (this.model.get('autoload')) {
-                            self.model.setIndex(0);
-                        }
-                    } catch (error) {
-
+                    this.$el.addClass('is-loading');
+                    if (this.model.get('autoload')) {
+                        self.model.setIndex(0);
                     }
                 }
             },
