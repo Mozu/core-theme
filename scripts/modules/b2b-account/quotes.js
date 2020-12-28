@@ -25,6 +25,8 @@ define([
         var expirationDateFilter  = "expirationdate ge ";
         var timeComponent = "T00:00:00z";
         var FILTERSTRING = "";
+        var timeout = null;
+
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
@@ -41,8 +43,9 @@ define([
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
             var collection = new QuotesGridCollectionModel({ autoload: true });            
-            $('[data-mz-action="applyfilter"]').on('change input', function(e) {
+            $('[data-mz-action="applyfilter"]').on('keyup input', function(e) {
                 e.preventDefault();
+                clearTimeout(timeout);
                 FILTERSTRING = "";
                 var dateValue ="";
                 var nameValue = $(this).val();
@@ -50,7 +53,9 @@ define([
                 {                    
                     dateValue  = $("#expirationdate").val();
                 }
-                self.filterGrid(nameValue, dateValue, collection);
+                timeout = setTimeout(function () {
+                    self.filterGrid(nameValue, dateValue, collection);
+                }, 1000);
                 
                 });
              $('[data-mz-action="applyDatefilter"]').on('change', function(e) {
