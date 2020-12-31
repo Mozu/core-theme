@@ -1,5 +1,8 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account', 'modules/models-quotes'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels) {
-
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders',
+    'modules/models-paymentmethods', 'modules/models-product',
+    'modules/models-returns', 'hyprlive', 'modules/models-b2b-account',
+    'modules/models-quotes','modules/models-b2bcontacts'],
+    function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels, B2bContactModels) {
 
     var pageContext = require.mozuData('pagecontext'),
         validShippingCountryCodes,
@@ -351,7 +354,8 @@
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
             returnHistory: ReturnModels.RMACollection,
-            quoteHistory: QuoteModels.QuoteCollection
+            quoteHistory: QuoteModels.QuoteCollection,
+            b2bContactHistory: B2bContactModels.B2bContactCollection
         }, Customer.prototype.relations),
         validation: {
             password: {
@@ -376,7 +380,8 @@
             var self = this,
                 orderHistory = this.get('orderHistory'),
                 returnHistory = this.get('returnHistory'),
-                quoteHistory = this.get('quoteHistory');
+                quoteHistory = this.get('quoteHistory'),
+                b2bContactHistory = this.get('b2bContactHistory');
             this.get('editingContact').set('accountId', this.get('id'));
             orderHistory.lastRequest = {
                 pageSize: 5
@@ -390,6 +395,9 @@
                 });
             });
             quoteHistory.lastRequest = {
+                pageSize: 5
+            };
+            b2bContactHistory.lastRequest = {
                 pageSize: 5
             };
 
