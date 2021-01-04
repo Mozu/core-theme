@@ -129,7 +129,7 @@
                 {% endblock body-content %}
 
                 {% block body-below-content %}
-                {% dropzone "body-bottom" scope="template" %}
+                {% dropzone "body-bottom" scope="page" %}
                 {% endblock body-below-content %}
 
             </div>
