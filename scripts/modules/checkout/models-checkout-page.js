@@ -51,7 +51,7 @@ define([
             var requiredAttributes = _.filter(storefrontOrderAttributes,
                 function(attr) { return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered' ;  });
             requiredAttributes.forEach(function(attr) {
-                if(attr.isRequired) {
+                if(attr.isRequired && !_.isUndefined(attr.content)) {
 
                     checkoutPageValidation['orderAttribute-' + attr.attributeFQN] =
                     {
