@@ -1,7 +1,7 @@
 # What's New
 
 ### December 7, 2020
-Add built-in support for the Monetate tag which includes the following API methods:
+Add built-in support for the Monetate tag which includes the following API methods - [Pull Request](https://github.com/Mozu/core-theme/pull/267)
 * Track page type
 * Track products shown on page
 * Track breadcrumbs
