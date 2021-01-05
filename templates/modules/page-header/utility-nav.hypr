@@ -6,30 +6,38 @@
         <li class="mz-utilitynav-item">
             <a href="{{siteContext.siteSubdirectory}}/user/order-status?returnUrl={{siteContext.siteSubdirectory}}/myaccount" data-mz-action="anon-order" class="mz-utilitynav-link">{{ labels.orderStatus }}</a>
         </li>
-        {% comment %}
-        The below require_script tag does not render anything in the place it's actually inserted; it instead adds the script to a list of scripts which are then included at the end of the page by RequireJS.
-        Use require_script to load AMD modules that are wrapped in define() or require() function calls.
-        {% endcomment %}
-        {% require_script "modules/login-links" %}
-        {% if not user.isAnonymous %}
-        <li class="mz-utilitynav-item">
-            <div id="mz-logged-in-notice">
-                Welcome, <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
-            </div>
-        </li>
-        <li class="mz-utilitynav-item">
-            <a href="{{siteContext.siteSubdirectory}}/myaccount#QuickOrder" data-mz-action="quickOrder" data-mz-role="quickOrderLink" data-placement="bottom" class="mz-utilitynav-link"></a>
-            {% require_script "modules/quick-order-helper" %}
-        </li>
-        {%else%}
-        <li class="mz-utilitynav-item">
-            <a href="{{siteContext.siteSubdirectory}}/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>
-        </li>
-        <li class="mz-utilitynav-item">
-            <a href="{{siteContext.siteSubdirectory}}/user/signup" data-mz-action="signup" data-placement="bottom" class="mz-utilitynav-link">{{ labels.signUp }}</a>
-        </li>
-        {% endif %}
-        <li class="mz-utilitynav-item">
+      {% comment %}
+      The below require_script tag does not render anything in the place it's actually inserted; it instead adds the script to a list of scripts which are then included at the end of the page by RequireJS.
+      Use require_script to load AMD modules that are wrapped in define() or require() function calls.
+      {% endcomment %}
+      {% require_script "modules/login-links" %}
+      {% if user.isSalesRep %}
+      <li class="mz-utilitynav-item">
+        <div id="mz-logged-in-notice">
+          Welcome, <a href="{{siteContext.siteSubdirectory}}/selleraccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout?returnurl=/user/login" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+        </div>
+      </li>
+      {%else%}
+      {% if not user.isAnonymous %}
+      <li class="mz-utilitynav-item">
+        <div id="mz-logged-in-notice">
+          Welcome, <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+        </div>
+      </li>
+      <li class="mz-utilitynav-item">
+        <a href="{{siteContext.siteSubdirectory}}/myaccount#QuickOrder" data-mz-action="quickOrder" data-mz-role="quickOrderLink" data-placement="bottom" class="mz-utilitynav-link"></a>
+        {% require_script "modules/quick-order-helper" %}
+      </li>
+      {%else%}
+      <li class="mz-utilitynav-item">
+        <a href="{{siteContext.siteSubdirectory}}/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>
+      </li>
+      <li class="mz-utilitynav-item">
+        <a href="{{siteContext.siteSubdirectory}}/user/signup" data-mz-action="signup" data-placement="bottom" class="mz-utilitynav-link">{{ labels.signUp }}</a>
+      </li>
+      {% endif %}
+      {% endif %}
+      <li class="mz-utilitynav-item">
             <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="{% make_url "cart" %}">
             {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
             {% require_script "modules/cart-monitor" %}
