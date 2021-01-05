@@ -252,6 +252,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+              "Storefront_SellerAccount",
+              "selleraccount",
+              new { controller = "SellerAccount", action = "Index" },
+              _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "StoreFront_ajax_Configure",
                 "product/configure",
                 new { controller = "Catalog", action = "Configure" },
