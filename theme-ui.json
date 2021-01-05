@@ -383,6 +383,11 @@
                     "fieldLabel": "Enable Monetate Personalization"
                 },
                 {
+                    "xtype": "mz-input-checkbox",
+                    "name": "monetateAsync",
+                    "fieldLabel": "Enable Async Monetate Tag"
+                },
+                {
                     "xtype": "mz-input-text",
                     "name": "monetateAccountNumber",
                     "fieldLabel": "Account Number"
