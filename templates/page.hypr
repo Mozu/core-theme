@@ -67,6 +67,32 @@
         <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
         {% endif %}
 
+        {% if themeSettings.monetateEnabled %}
+            {% if themeSettings.monetateAsync %}
+            <!-- Begin Monetate ExpressTag Async v6.1. Place at start of document head. DO NOT ALTER. -->
+            <script type="text/javascript">
+            var monetateT = new Date().getTime();
+            (function() {
+                var p = document.location.protocol;
+                if (p == "http:" || p == "https:") {
+                    var m = document.createElement('script'); m.type = 'text/javascript'; m.async = true; m.src = (p == "https:" ? "https://s" : "http://") + "e.monetate.net/js/2/{{themeSettings.monetateAccountNumber}}/{{themeSettings.monetateInstance}}/{{themeSettings.monetateDomain}}/custom.js";
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(m, s);
+                }
+            })();
+            </script>
+            {% else %}
+            <!-- Begin Monetate ExpressTag Sync v8.1. Place at start of document head. DO NOT ALTER. -->
+            <script type="text/javascript">var monetateT = new Date().getTime();</script>
+            <script type="text/javascript" src="//se.monetate.net/js/2/{{themeSettings.monetateAccountNumber}}/{{themeSettings.monetateInstance}}/{{themeSettings.monetateDomain}}/entry.js"></script>
+            {% endif %}
+            <script type="text/javascript">
+                window.monetateQ = window.monetateQ || [];
+                window.monetateQ.push(['addPollForElement', '#monetateLoaded']);
+            </script>
+            <!-- End Monetate tag. -->
+            {% require_script "modules/monetate" %}
+        {% endif %}
+
         {% if themeSettings.enableRecaptcha %}
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         {% endif %}

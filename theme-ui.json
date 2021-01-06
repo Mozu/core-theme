@@ -371,6 +371,46 @@
                     "fieldLabel": "Password for BorderFree"
                 }
             ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Personalization Configuration",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "monetateEnabled",
+                    "fieldLabel": "Enable Monetate Personalization"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "monetateAsync",
+                    "fieldLabel": "Enable Async Monetate Tag"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "monetateAccountNumber",
+                    "fieldLabel": "Account Number"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "monetateDomain",
+                    "fieldLabel": "Domain"
+                },
+                {
+                    "fieldLabel": "Instance Type",
+                    "xtype": "mz-input-dropdown",
+                    "name": "monetateInstance",
+                    "allowBlank": true,
+                    "forceSelection": true,
+                    "store": [
+                        ["d", "Development"],
+                        ["p", "Production"],
+                        ["s", "Sales"],
+                        ["t", "Testing"]
+                    ]
+                }
+            ]
         }
     ]
 }

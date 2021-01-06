@@ -1,5 +1,21 @@
 # What's New
 
+### December 7, 2020
+Add built-in support for the Monetate tag which includes the following API methods - [Pull Request](https://github.com/Mozu/core-theme/pull/267)
+* Track page type
+* Track products shown on page
+* Track breadcrumbs
+* Track items in cart
+* Track purchases
+
+Files modified:
+* templates\page.hypr (Embed the script)
+* theme.json (Set default values)
+* theme-ui.json (Create UI for inputing necesary data)
+
+Files added:
+* scripts\modules\monetate.js (Heavy lifter)
+
 ### March 29, 2017
 The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)
 
