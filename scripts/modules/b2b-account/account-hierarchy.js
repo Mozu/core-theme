@@ -24,6 +24,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
 
                 //open first node of the tree always
                 $(".account-hierarchy>ul.tree li").first().children(".nested").addClass("active");
+                $('.tree > li > .node > span').addClass('caret-down');
             });
         },
         toggleNodes: function (e) {
@@ -47,6 +48,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             $(".tree .caret").removeClass("caret-down");
             $(".nested").removeClass("active");
             $(".account-hierarchy>ul.tree li").first().children(".nested").addClass("active");
+            $('.tree > li > .node > span').addClass('caret-down');
         },
         viewAccount: function (e) {
             //todo: need to implement this method in future.
