@@ -7,13 +7,12 @@
     <div class="mz-grid-row">
         <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
             {% for col in model.columns %}
-                <span class="mz-grid-column" data-mz-action="sort" data-mz-col-index="{{col.index}}">
-                    {{col.displayName}}
-                    {% if col.sort %}
-                        <span>
-                            < >
-                        </span>
-                    {% endif %}
+                <span class="mz-grid-column" id="{{col.index}}" data-sortOrder="desc" data-mz-action="sort" data-mz-col-index="{{col.index}}">
+                  {{col.displayName}}
+                  {% if col.sortable %}
+                  <span class="mz-unsort">
+                  </span>
+                  {% endif %}
                 </span>
             {% endfor %}
         </div>

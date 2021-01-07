@@ -394,7 +394,8 @@
             };
 
             var isSalesRep = require.mozuData('user').isSalesRep;
-            if (!isSalesRep) {
+            var viewB2BAccount = self.attributes.viewB2BAccount;
+            if (!isSalesRep && !viewB2BAccount) {
                 _.defer(function (cust) {
                     cust.getCards();
                 }, self);

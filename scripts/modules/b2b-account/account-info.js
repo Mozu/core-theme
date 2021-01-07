@@ -24,13 +24,15 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
               address: new AddressModels.StreetAddress({})
           });
           this.model.set('editingContact', blankContact);
-
-          return this.model.getAttributes().then(function(customer) {
-              customer.get('attributes').each(function(attribute) {
-                  attribute.set('attributeDefinitionId', attribute.get('id'));
-              });
-              return customer;
-          });
+          var viewB2BAccount = self.model.get('viewB2BAccount');
+          if (!viewB2BAccount) {
+            return this.model.getAttributes().then(function (customer) {
+                customer.get('attributes').each(function (attribute) {
+                    attribute.set('attributeDefinitionId', attribute.get('id'));
+                });
+                return customer;
+            });
+          }
         },
         startEdit: function(e){
           e.preventDefault();
