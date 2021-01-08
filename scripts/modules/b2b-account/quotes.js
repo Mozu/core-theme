@@ -23,6 +23,8 @@ define([
         PagingViews, EditableView, QuoteModels) {
 
     var isSalesRep = require.mozuData('user').isSalesRep;
+    var accountDict = {};
+    var uniqueAccountId = [];
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
@@ -34,26 +36,72 @@ define([
             {
                 MozuGrid.prototype.render.apply(self, arguments);
             }
-            
         },
         populateWithB2BAccounts: function () {
             var self = this;
             var callLength = self.model.get('items').length;
+            var setterCount = 0;
             var count = 0;
+            var accIdsArray = [];
+
+            //Get all Account Ids
             self.model.get('items').models.forEach(function (quote) {
                 var accId = quote.get('customerAccountId');
-
-                var b2bAccount = new B2BAccountModels.b2bAccount({ id: accId });
-                b2bAccount.apiGet().then(function (account) {
-                    quote.set('accountName', account.data.companyOrOrganization);
-                    count++;
-                    if (callLength === count) {
-                        MozuGrid.prototype.render.apply(self, arguments);
-                    }
-                });
+                accIdsArray.push(accId);
             });
 
+            //Filter unique Account Id and push to uniqueAccountId array
+            this.unique(accIdsArray);
+
+            //Fetch Data for Unique Account Ids and set account name
+            uniqueAccountId.forEach(function (ele) {
+                var acctName = accountDict[ele];
+                if (acctName) {
+                    count++;
+                    if (uniqueAccountId.length === count) {
+                        self.model.get('items').models.forEach(function (quote) {
+                            var accountName = accountDict[quote.get('customerAccountId')];
+                            if (accountName) {
+                                quote.set('accountName', accountName);
+                            }
+                            setterCount++;
+                            if (callLength === setterCount) {
+                                MozuGrid.prototype.render.apply(self, arguments);
+                            }
+                        });
+                    }
+                }
+                else {
+                    var b2bAccount = new B2BAccountModels.b2bAccount({ id: ele });
+                    b2bAccount.apiGet().then(function (account) {
+                        count++;
+                        accountDict[ele] = account.data.companyOrOrganization;
+                        if (uniqueAccountId.length === count) {
+                            self.model.get('items').models.forEach(function (quote) {
+                                var accountName = accountDict[quote.get('customerAccountId')];
+                                if (accountName) {
+                                    quote.set('accountName', accountName);
+                                }
+                                setterCount++;
+                                if (callLength === setterCount) {
+                                    MozuGrid.prototype.render.apply(self, arguments);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            if (accIdsArray.length === 0) {
+                MozuGrid.prototype.render.apply(self, arguments);
+            }
             return self.model;
+        },
+        unique: function (array) {
+            array.forEach(function (i) {
+                if (uniqueAccountId.indexOf(i) === -1)
+                    uniqueAccountId.push(i);
+            });
         }
     });
 
