@@ -18,7 +18,9 @@
 		{{labels.gatewayGiftCardRefundIntro|safe }}	
 	{% else %}
 		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
-		<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.Order.Data.EmailMessage}}</span></p></br></br></br>		
+		{% if model.Order.Data.EmailMessage %}
+			<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.Order.Data.EmailMessage}}</span></p></br></br></br>
+		{% endif %}		
 	{% endif %}	
 		
 	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.OrderNumber}}</span></p>
