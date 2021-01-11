@@ -113,7 +113,7 @@
     {% for property in model.properties %}
     {% if property.values and not property.isHidden %}
       {% if property.propertyType == "VariantProperty" %}
-        {% if model.variationProductCode %}
+        {% if model.variationProductCode and model.isPurchasable %}
           <dt>{{property.attributeDetail.name}}</dt>
           {% for v in property.values %}
           <dd>{% if v.stringValue %}{{v.stringValue}}{% else %}{{v.value}}{% endif %}</dd>
