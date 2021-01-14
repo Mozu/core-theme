@@ -1,35 +1,67 @@
-.mz-grid{
+.mz-grid {
     width: 100%;
     margin: 15px 0;
     border: 1px solid #999;
+
     .mz-grid-table {
 
         .mz-grid-header {
             position: relative;
             background-color: #eeeeee;
+
             .mz-grid-row {
-                border-bottom:none;
+                border-bottom: none;
             }
+
             .mz-grid-column {
                 font-weight: bold;
                 font-size: 1em;
             }
+
             .mz-grid-row-actions {
                 .mz-grid-column {
                     visibility: hidden;
                     font-size: 1em;
                 }
             }
-			.mz-grid-sortIcon {
+
+            .mz-grid-sortIcon {
                 cursor: pointer;
-            }
-            .mz-grid-sortIcon:hover {
-                text-shadow: 1px 2px #ccc;
+
+                span {
+                    width: 20px;
+                    height: 18px;
+                    display: inline-block;
+                    background-position-x: 6px;
+                    position: absolute;
+                    margin-top: 1px;
+                }
+
+                .mz-unsort {
+                    background-image: url('../resources/images/sort-unsorted.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                    filter: opacity(0.4);
+                }
+
+                .mz-sort-up {
+                    background-image: url('../resources/images/sort-up.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                }
+
+                .mz-sort-down {
+                    background-image: url('../resources/images/sort-down.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                }
             }
         }
+
         .mz-grid-body {
             position: relative;
         }
+
         .mz-grid-body-empty {
             text-align: center;
             padding: 50px 10px;
@@ -37,9 +69,10 @@
         }
     }
 
-    .mz-grid-row-actions{
+    .mz-grid-row-actions {
         position: relative;
     }
+
     .mz-grid-cols {
         display: -webkit-box;
         display: -moz-box;
@@ -47,7 +80,8 @@
         display: -webkit-flex;
         display: flex;
         flex-direction: row;
-        flex-grow:1;
+        flex-grow: 1;
+
         .mz-grid-column {
             flex-grow: 1;
         }
@@ -55,7 +89,7 @@
 
     .mz-grid-row {
         padding: 10px;
-        margin:0px 10px;
+        margin: 0px 10px;
         border-bottom: 1px solid #ccc;
         display: -webkit-box;
         display: -moz-box;
@@ -65,9 +99,9 @@
         flex-direction: row;
     }
 
-     .mz-grid-row:last-child {
-        border-bottom:none;
-     }
+    .mz-grid-row:last-child {
+        border-bottom: none;
+    }
 
     .mz-grid-column {
         padding: 0px 15px;
@@ -77,6 +111,7 @@
         float: right;
         margin-left: @gutter;
     }
+
     .mz-pagenumbers {
         float: right;
         margin-top: 5px;
@@ -87,27 +122,33 @@
         &.mz-cols-2 .mz-grid-column {
             width: 50%;
         }
+
         &.mz-cols-3 .mz-grid-column {
             width: 33%;
         }
+
         &.mz-cols-4 .mz-grid-column {
             width: 25%;
         }
+
         &.mz-cols-5 .mz-grid-column {
             width: 20%;
         }
+
         &.mz-cols-6 .mz-grid-column {
             width: 16.5%;
         }
+
         &.mz-cols-7 .mz-grid-column {
             width: 14.25%;
         }
+
         &.mz-cols-8 .mz-grid-column {
             width: 15.5%;
         }
     }
 
     .mz-pagingcontrols-pagesize-label {
-        display:none;
+        display: none;
     }
 }

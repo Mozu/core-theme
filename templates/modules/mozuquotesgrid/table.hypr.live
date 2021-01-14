@@ -11,8 +11,9 @@
                 <span class="mz-grid-column" id="{{col.index}}" data-sortOrder="desc" data-mz-action="sort" data-mz-col-index="{{col.index}}">
                     {{col.displayName}}
                     {% if col.sortable %}
-                        <span>
-                            ▼
+                        <span class="mz-unsort">
+                          <!-- ▼ -->
+                          
                         </span>
                     {% endif %}
                 </span>
@@ -33,8 +34,8 @@
         {% for row in model.gridItems %}
             <div data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}">
                 <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
-                    {% for col in row %}
-                        <span class="mz-grid-column">
+                  {% for col in row %}
+                  <span class="mz-grid-column">
                             {{col|safe}}
                         </span>
                     {% endfor %}

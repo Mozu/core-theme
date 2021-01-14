@@ -2,8 +2,7 @@ define(["modules/jquery-mozu",
     "underscore",
     "modules/backbone-mozu",
     "modules/views-paging"],
-    function ($, _, Backbone, PagingViews) {
-        var sort_ID = []; 
+    function ($, _, Backbone, PagingViews) { 
         var mozuQuotesGridView = Backbone.MozuView.extend({
             templateName: 'modules/mozuquotesgrid/grid',
             initialize: function () {
@@ -38,7 +37,6 @@ define(["modules/jquery-mozu",
             sort: function (e) {
                 e.preventDefault();
                 var col = $(e.currentTarget).data('mzColIndex');
-                sort_ID = [e.target.id, e.target.dataset.sortorder];
                 return this.model.sort(col);
             },
             filter: function (e) {
@@ -68,12 +66,22 @@ define(["modules/jquery-mozu",
                             $('#' + item.index).addClass('mz-grid-sortIcon');
                         }
                     });
-                    if ($('#' + sort_ID[0] ).data('sortorder') === sort_ID[1]) {
-                        $('#' + sort_ID[0]).attr('data-sortOrder', this.model.lastRequest.sortBy.split(' ')[1]);
-                        $('#' + sort_ID[0] + ' > span').html('&#9650');
+                    var currentSort = this.model.currentSort();
+                    var currentIndex = null;
+                    var currentDirection = null;
+
+                    if (currentSort) {
+                        var split = currentSort.split(" ");
+                        currentIndex = split[0];
+                        currentDirection = split[1];
+                    }
+
+                    if (currentDirection === 'asc') {
+                        $('#' + currentIndex + ' > span').addClass('mz-sort-up');
+                    } else if (currentDirection === 'desc') {
+                        $('#' + currentIndex + ' > span').addClass('mz-sort-down');
                     } else {
-                        $('#' + sort_ID[0]).attr('data-sortOrder', this.model.lastRequest.sortBy.split(' ')[1]);
-                        $('#' + sort_ID[0] + ' > span').html('&#9660');
+                        $('#' + currentIndex + ' > span').addClass('mz-unsort');
                     }
                     
                 }
