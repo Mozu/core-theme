@@ -1,59 +1,6 @@
-<div class="header shipment-info-header">
-    <img class="sidebar-kibo-logo" src="/resources/images/kibo-logo-sidebar.png">
-</div>
-<div class="shipment-title"><b>Product Collection</div>
-<div class="shipment-title"><b>Macy's / Dining / Dinnerware</div>
-<table class="mz-printable-order mz-printable-shipment-mobilenotification">
-    <thead class="header">
-       <tr>
-          <th class="shipment-essentials">
-             <div class="order-number"><span class="label">Collection Items</div>
-          </th>
-          <th class="shipment-essentials">
-             <div class="order-number"><span class="label">Reviews</div>
-          </th>
-          <th class="shipment-essentials">
-             <div class="order-number"><span class="label">Product Q&A</div>
-          </th>
-          <th class="shipment-essentials">
-             <div class="order-number"><span class="label">Special Offers</div>
-          </th>
-          <th class="shipment-essentials">
-             <div class="order-number"><span class="label">Shipping & Returns</div>
-          </th>
-       </tr>
-    </thead>
-    <tbody>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-    </tbody>
-</table>
+<div class="mz-productdetail-shortdesc mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.shortDesc }}</h4>
+  <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
 
-<table class="grid mobile-shipment-info-table">   
-    <tr>
-        <th>Item Description: </th>
-    </tr>
-    <tr>
-        <th>Price: </th>
-    </tr>
-    <tr>
-        <th>Qty: </th>
-    </tr>
-    <tr>
-        <th>Total: </th>
-    </tr>
-    <tr>
-        <th>Color in this collection: </th>
-    </tr>    
-</table>
-<div class="mz-productdetail-conversion-buttons">
-    <button id="add-to-bag">Add To Bag</button>
+  <button class="mz-button mz-button-large mz-carttable-button-active">Shop the Collection</button>
 </div>
-<div>Customers Also Shopped</div>
-<div>Customers Also Loved</div>
-
-<div>More Offers</div>
-<div><button>Shop Collection</button></div>

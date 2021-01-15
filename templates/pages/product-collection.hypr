@@ -6,7 +6,7 @@
 
 {% block body-content %}
 
-{% require_script "pages/product" %}
+{% require_script "pages/product-collection" %}
 
 {% preload_json model "product" %}
 
