@@ -49,7 +49,10 @@ define(["modules/jquery-mozu",
                 var views = {};
                 self.registerRowActions();
                 Backbone.MozuView.prototype.render.apply(this, arguments);
-
+                var rowActions = this.model.get('rowActions');
+                if (rowActions.length === 0) {
+                    $('[data-mz-action="toggleDropdown"]').hide();
+                }
                 if (self.model.get('items').length) {
                     views = {
                         mozuGridPagingControls: new PagingViews.PagingControls({

@@ -27,9 +27,9 @@ define([
         var filterstring = "";
         var timeout = null;
 
-    var isSalesRep = require.mozuData('user').isSalesRep;
-    var accountDict = {};
-    var uniqueAccountId = [];
+        var isSalesRep = require.mozuData('user').isSalesRep;
+        var accountDict = {};
+        var uniqueAccountId = [];
     var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
@@ -118,7 +118,14 @@ define([
         render: function () {
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
-            var collection = new QuotesGridCollectionModel({ autoload: true });
+            var viewB2BAccount = self.model.attributes.viewB2BAccount;
+            var collection;
+            if (viewB2BAccount) {
+                collection = new B2BViewAccountQuotesGridCollectionModel({ autoload: true });
+            }
+            else {
+                collection = new QuotesGridCollectionModel({ autoload: true });
+            }
             if (isSalesRep) {
                 if (!self.model.get("b2bAccounts")) {
                     var b2bAccount = new B2BAccountModels.b2bAccounts({ pageSize: 200 });
@@ -331,6 +338,59 @@ define([
             }
         });
     }
+    var B2BViewAccountQuotesGridCollectionModel = MozuGridCollection.extend({
+            mozuType: 'quotes',
+            defaultSort: 'submittedDate desc',
+            columns: [
+                {
+                    index: 'name',
+                    displayName: 'Quote Name',
+                    sortable: false
+                },
+                {
+                    index: 'expirationDate',
+                    displayName: 'Expiration Date',
+                    sortable: true,
+                    displayTemplate: function (value) {
+                        var date = "";
+                        if (value) {
+                            date = new Date(value).toLocaleString();
+                        }
+                        return date;
+                    }
+                },
+                {
+                    index: 'submittedDate',
+                    displayName: 'Submitted Date',
+                    sortable: true,
+                    displayTemplate: function (value) {
+                        var date = "";
+                        if (value) {
+                            date = new Date(value).toLocaleString();
+                        }
+                        return date;
+                    }
+                },
+                {
+                    index: 'total',
+                    displayName: 'Total',
+                    sortable: false,
+                    displayTemplate: function (amount) {
+                        return '$' + amount.toFixed(2);
+                    }
+                },
+                {
+                    index: 'status',
+                    displayName: 'Status',
+                    sortable: false
+                }
+            ],
+            relations: {
+                items: Backbone.Collection.extend({
+                    model: QuoteModels.Quote
+                })
+            }
+        });
 
     return {
         'QuotesView': QuotesView,

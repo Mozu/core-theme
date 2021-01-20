@@ -21,7 +21,9 @@
 </div>
 <br />
 {% endif %}
+{% if model.viewB2BAccount == false %}
 <div style="padding-bottom: 10px;"><button class="mz-button">{{labels.createQuote}}</button></div>
+{% endif %}
 <div class="mz-l-stack-section mz-orderlist" style="clear:none">
     <h3 class="mz-l-stack-sectiontitle">{{ labels.quotes }}</h3>
     <div class="mz-b2b-quotes">
