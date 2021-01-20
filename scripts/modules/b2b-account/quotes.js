@@ -20,7 +20,12 @@ define([
     function ($, api, _, Hypr, Backbone, HyprLiveContext,
     CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
     ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
-        PagingViews, EditableView, QuoteModels) {
+    PagingViews, EditableView, QuoteModels) {
+        var nameFilter = "name cont ";
+        var expirationDateFilter  = "expirationdate ge ";
+        var timeComponent = "T00:00:00z";
+        var filterstring = "";
+        var timeout = null;
 
     var isSalesRep = require.mozuData('user').isSalesRep;
     var accountDict = {};
@@ -123,14 +128,67 @@ define([
                     });
                 }
             }
+
+            $('[data-mz-action="applyfilter"]').on('keyup input', function(e) {
+                e.preventDefault();
+                clearTimeout(timeout);
+                var dateValue = "";
+                var nameValue = $(this).val();
+                if ($("#expirationdate").val() !== "")
+                {
+                    dateValue  = $("#expirationdate").val();
+                }
+                timeout = setTimeout(function () {
+                    self.filterGrid(nameValue, dateValue, collection);
+                }, 400);
+            });
+            $('[data-mz-action="applyDatefilter"]').on('change', function(e) {
+                e.preventDefault();
+                var nameValue ="";
+                if ($("#searchName").val()!=="")
+                {
+                    nameValue  = $("#searchName").val();
+                }
+                var dateValue =  $(this).val();
+                self.filterGrid(nameValue, dateValue, collection);
+            });
+            
             this.initializeGrid(collection);
         },
-
+        filterGrid: function (nameValue, dateValue, collection) {
+            filterstring = "";
+            if (nameValue !== "") {
+                nameValue = nameFilter + nameValue;
+                filterstring = nameValue;
+                if (dateValue !== "") {
+                    dateValue = expirationDateFilter + dateValue + timeComponent;
+                    filterstring = filterstring + " and " + dateValue;
+                }
+                collection.filterBy(filterstring);
+            }
+            else if (dateValue !== "") {
+                filterstring = expirationDateFilter + dateValue + timeComponent;
+                collection.filterBy(filterstring);
+            } else if (nameValue === "") {
+                collection.filterBy("");
+            }
+        },
         initializeGrid: function (collection) {
             var self = this;
             self._quotesGridView = new QuotesMozuGrid({
                 el: $('.mz-b2b-quotes-grid'),
                 model: collection
+            });
+        },
+        registerRowActions: function () {
+            var self = this;
+            var rowActions = this.model.get('rowActions');
+            _.each(rowActions, function (action) {
+                self[action.action] = function (e) {
+                    var rowNumber = $(e.target).parents('.mz-grid-row').data('mzRowIndex');
+                    var row = self.model.get('items').at(rowNumber - 1);
+                    self.model[action.action](e, row);
+                };
             });
         }
     });
