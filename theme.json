@@ -677,7 +677,7 @@
       "entityType": "customer",
       "id": "view_b2baccount",
       "template": "view-b2baccount",
-      "title": "View b2baccount",
+      "title": "View B2B Account",
       "userCreatable": false
     },
     {
