@@ -1,0 +1,28 @@
+<li>
+  <div class="node">
+    <span 
+        {% if tree.children and tree.children.length > 0 %} class="caret" data-mz-action="toggleNodes" {% endif %}
+      >      
+    </span>
+    <div 
+    {% if tree.account.isActive==true %} class="node-content" {% else %}
+        class="node-content disabled" {% endif %}>
+      {{tree.account.companyOrOrganization}}
+      <span 
+      {% if (tree.canViewAccount or tree.canChangeParentAccount) and tree.account.isActive==true %} class="three-dots" data-mz-action="showThreeDotsMenu" {% else %}
+      class="three-dots disabled" {% endif %}
+      ></span>
+    </div>
+  </div>
+  {% if (tree.canViewAccount or tree.canChangeParentAccount) and tree.account.isActive==true %}
+        <div class="dropdown-content">
+           {% if tree.canViewAccount == true %} <a href="#" data-mz-value="{{tree.id}}" data-mz-action="viewAccount">View Account</a> {% endif %}
+           {% if tree.canChangeParentAccount == true %} <a href="#" data-mz-value="{{tree.id}}" data-mz-action="changeParentAccount" >Change Parent Account</a> {% endif %}
+        </div>
+    {% endif %}
+  {% if tree.children and tree.children.length > 0 %}
+  <ul class="nested">
+    {% include "modules/b2b-account/account-hierarchy/hierarchy" with tree_list=tree.children %}
+  </ul>
+  {% endif %}
+</li>
