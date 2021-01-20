@@ -275,3 +275,40 @@
         }
     }
 }
+
+/* Quotes Grid Dropdown Button */
+.mz-quotes-grid-dropdown {    
+    position: relative;
+    display: inline-block;
+}
+.dropbtn {  
+    color: white;    
+    padding: 11px 4px;
+    border: none;
+    cursor: pointer;
+    content: '\2807';
+    background-color: white;
+    background-image: radial-gradient(circle, grey 2px, transparent 1px);
+    background-size: 100% 33.33%;
+}
+.dropbtn:hover, .dropbtn:focus {
+    background-color: white;
+    border: none;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    right: 27px;
+    z-index: 1;
+}
+.dropdown-content a {
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover {background-color: #ddd}
+.show {display:block;}

@@ -1,0 +1,35 @@
+{% require_script "modules/b2b-account/quotes" %}
+<div id="quotes-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+{% if user.isSalesRep %}
+<div>
+    <span>
+        <b>{{labels.accountSearch}}</b>
+    </span>
+    <br />
+    <div>
+        <select class="mz-l-formfieldgroup-halfsize" style="width:300px" data-mz-value="">
+            <option selected="selected" value="">{{labels.accountSearchLabel}}</option>
+            {% for acc in model.b2bAccounts %}
+                {% if acc.data.id %}
+                <option value={{acc.data.id}}>{{acc.data.companyOrOrganization}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<br />
+{% endif %}
+<div style="padding-bottom: 10px;"><button class="mz-button">{{labels.createQuote}}</button></div>
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+    <h3 class="mz-l-stack-sectiontitle">{{ labels.quotes }}</h3>
+    <div class="mz-b2b-quotes">
+        <div class="mz-quotes-grid-container">
+            <div class="mz-b2b-quotes-grid">
+                <div class="is-loading"></div>
+                {% include "modules/b2b-account/quotes/quotes-grid" %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="mz-mozuDataGrid mz-grid">
+    <div data-mz-dataGrid class="mz-grid-table">
+        {% include "modules/mozuquotesgrid/table" %}
+    </div>
+    {% if model.items.length > 0 %}
+        <div data-mz-pagenumbers class="mz-pagenumbers">
+            {% include "modules/common/page-numbers" %}
+        </div>
+        <div data-mz-pagingcontrols class="mz-pagingcontrols">
+            {% include "modules/common/paging-controls" %}
+        </div>
+    {% endif %}
+</div>
