@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2020-09-28
+ * Mozu JavaScript SDK - v0.3.0 - 2020-12-17
  *
  * Copyright (c) 2020 Volusion, Inc.
  *
@@ -4711,7 +4711,14 @@ module.exports=
       "pageSize": 20
     },
     "collectionOf": "b2buser"
+  },
+  "b2bAccountHierarchy": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BAccountService}{id}/hierarchy"
+    }
   }
+
 }
 },{}],23:[function(_dereq_,module,exports){
 
@@ -4769,7 +4776,7 @@ ApiObjectConstructor.types = {
     user: _dereq_('./types/user'),
     wishlist: _dereq_('./types/wishlist'), 
     token: _dereq_('./types/token'),
-    storefrontShipment: _dereq_('./types/storefrontShipment'),
+    storefrontShipment: _dereq_('./types/storefrontShipment')
 };
 ApiObjectConstructor.hydratedTypes = {};
 
