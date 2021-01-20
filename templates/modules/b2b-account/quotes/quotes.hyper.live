@@ -26,6 +26,14 @@
     <h3 class="mz-l-stack-sectiontitle">{{ labels.quotes }}</h3>
     <div class="mz-b2b-quotes">
         <div class="mz-quotes-grid-container">
+            <div>
+                {% if user.isSalesRep %}
+                <div class="mz-b2b-space" ></div> 
+                {% endif %} 
+                <input type="text" name="searchName" id="searchName" data-mz-action="applyfilter" placeholder="Quote Name">
+                <Span class="mz-b2b-quotes-compare"> > </Span>
+                <input type="date" data-mz-is-datepicker id="expirationdate" data-mz-action="applyDatefilter" data-format="yy/mm/dd" placeholder="Search Exp Date">
+            </div>
             <div class="mz-b2b-quotes-grid">
                 <div class="is-loading"></div>
                 {% include "modules/b2b-account/quotes/quotes-grid" %}
