@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2020-12-17
+ * Mozu JavaScript SDK - v0.3.0 - 2021-01-20
  *
- * Copyright (c) 2020 Volusion, Inc.
+ * Copyright (c) 2021 Volusion, Inc.
  *
  */
 
@@ -2939,7 +2939,7 @@ var ApiContextConstructor = function(conf) {
         ApiContextConstructor.__debug__ = _dereq_('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode','preview-date'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'dataview-mode', 'preview-date',"scope-type"],
     immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
@@ -4717,8 +4717,22 @@ module.exports=
       "verb": "GET",
       "template": "{+b2BAccountService}{id}/hierarchy"
     }
+  },
+  "quote": {
+    "get": {
+      "verb": "GET",
+      "template": "{+quoteService}{id}"
+    }
+  },
+  "quotes": {
+    "template": "{+quoteService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "quote"
   }
-
 }
 },{}],23:[function(_dereq_,module,exports){
 

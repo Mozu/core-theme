@@ -54,8 +54,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICreditWebApiClient _creditApiClient;
         private readonly IReturnWebApiClient _returnApiClient;
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
+        private readonly IQuoteWebApiClient _quoteWebApiClient;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IReturnWebApiClient returnApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext, IShipmentControllerApiClient shipmentControllerApiClient)
+        public MyAccountController(ICustomerRepository customerRepository, 
+            ICustomerAccountWebApiClient customerAccountWebApiClient, 
+            IAccountContactRepository accountContactRepository,  
+            IOrderWebApiClient orderWebApiClient, 
+            IWishlistWebApiClient wishlistWebApiClient, 
+            ICreditWebApiClient creditWebApiClient, 
+            IReturnWebApiClient returnApiClient, 
+            IAuthenticationHelper authenticationHelper, 
+            ISiteBuilderApiContext apiContext, 
+            IShipmentControllerApiClient shipmentControllerApiClient,
+            IQuoteWebApiClient quoteWebApiClient)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
@@ -68,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
             _shipmentControllerApiClient = shipmentControllerApiClient;
+            _quoteWebApiClient = quoteWebApiClient;
         }
         
 
@@ -142,7 +154,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
+            var quoteHistoryTask = _quoteWebApiClient.GetQuotes(0, 5, null);
+
+            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask, quoteHistoryTask);
 
             PageContext.ShippingCountries = shipTask.Result;
             PageContext.BillingCountries  = billTask.Result;
@@ -186,6 +200,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 order["shipments"] = orderShipments.ToJObject();
             });
 
+            var quoteHistory = quoteHistoryTask.Result.ReadAsSync();
+
             var jAccount = account.ToJObject();
 
             jAccount.Add("orderHistory", orderHistoryObject);
@@ -193,6 +209,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", cards.Items.ToJArray());
+            jAccount.Add("quoteHistory", quoteHistory.ToJObject());
 
             if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && purchaseOrderAccount != null)
             {

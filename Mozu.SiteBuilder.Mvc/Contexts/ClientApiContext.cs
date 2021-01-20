@@ -124,6 +124,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 [APIConstants.Headers.TENANT] = apiContext.TenantId.ToString()
             };
 
+            if (_pageContext.UserScopeType.HasValue)
+            {
+                header[APIConstants.Headers.USER_SCOPE_TYPE] = _pageContext.UserScopeType.ToString();
+            }
+
             //food/
             if (OmitUserFields)
             {
@@ -319,8 +324,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         Id = "StorefrontShipmentsService",
                         InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("StorefrontShipmentsWebApi"),
                         RequiresSsl = true
+                    }, 
+                    new ServiceInfo
+                    {
+                        Id = "QuoteService",
+                        InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("QuoteWebApi"),
+                        RequiresSsl = true
                     }
-
                 };
             foreach (var si in sis)
             {

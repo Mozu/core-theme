@@ -41,47 +41,50 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class SellerAccountController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiContext;
+        private readonly IQuoteWebApiClient _quoteWebApiClient;
 
-        public SellerAccountController(ISiteBuilderApiContext apiContext)
+        public SellerAccountController(ISiteBuilderApiContext apiContext, IQuoteWebApiClient quoteWebApiClient)
         {
             _apiContext = apiContext;
+            _quoteWebApiClient = quoteWebApiClient.CloneWithoutUserClaims();
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var pagePath = "seller-account";
 
-            if (_apiContext.IsSalesRep())
+            if (!_apiContext.IsSalesRep())
             {
-                PageContext.User = CreateUserFromAdminUserClaim(_apiContext.AdminUserClaim);
-
-                var obj = new { };// TODO: need to fill jobject with quote info
-
-                var jSellerAccount = obj.ToJObject();
-
-                return Ok(View(pagePath, jSellerAccount));
+                var uri = new Uri(SiteContext.SiteSubdirectory + "/user/login", UriKind.Relative);
+                return new RedirectResult(uri.ToString());
             }
 
-            var uri = new Uri(SiteContext.SiteSubdirectory + "/user/login", UriKind.Relative);
-            return new RedirectResult(uri.ToString());
+            CreateUserFromAdminUserClaim(_apiContext.AdminUserClaim);
+
+            var obj = new { };
+
+            var quoteHistoryTask = _quoteWebApiClient.GetQuotes(0, 5, null);
+
+            await Task.WhenAll(quoteHistoryTask); // multiple API call here
+
+            var quoteHistory = quoteHistoryTask.Result.ReadAsSync();
+
+            var jSellerAccount = obj.ToJObject();
+            jSellerAccount.Add("quoteHistory", quoteHistory.ToJObject());
+
+            // Set the user scope type header so API calls from the SDK through
+            // Reverse Proxy use the admin claims instead of the user claims
+            PageContext.UserScopeType = UserScopeType.Tenant;
+
+            return View(pagePath, jSellerAccount);
         }
 
         [NonAction]
-        private User CreateUserFromAdminUserClaim(LightweightUserClaims userClaims)
+        private void CreateUserFromAdminUserClaim(LightweightUserClaims userClaims)
         {
-            return new User
-            {
-                FirstName = userClaims.UserFirstName,
-                LastName = userClaims.UserLastName,
-                UserId = userClaims.UserId,
-                IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
-                IsAnonymous = userClaims.IsAnonymous,
-                Behaviors = userClaims.BehaviorIds.ToList(),
-
-                //To indicate user is navigatd to seller account
-                IsSalesRep = true
-            };
+            PageContext.User.FirstName = userClaims?.UserFirstName;
+            PageContext.User.LastName = userClaims?.UserLastName;
         }
     }
 }

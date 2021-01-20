@@ -283,7 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             DataViewMode = apiContext.DataViewMode;
             _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
             PurchaseLocation = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
-            _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
+            _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile, _apiContext.IsSalesRep()));
             IpAddress = ipAddressFinderOuter.IpAddress;
             try
             {
@@ -297,6 +297,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             catch
             {
             }
+            UserScopeType = null;
         }
 
         bool _initCurrency = false;
@@ -375,7 +376,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return prof;
         }
 
-        static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile)
+        static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile, bool isSalesRep)
         {
             var accountId = -1;
 
@@ -418,7 +419,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
                 IsAnonymous = userClaims.IsAnonymous,
                 Segments = segments,
-                Behaviors = behaviors
+                Behaviors = behaviors,
+                IsSalesRep = isSalesRep
             };
         }
 
@@ -645,6 +647,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set => _currencyRateInfo = value;
         }
+        
+        [JsonPreloadFilter]
+        public UserScopeType? UserScopeType { get; set; }
       
     }
     public class LocationInfo

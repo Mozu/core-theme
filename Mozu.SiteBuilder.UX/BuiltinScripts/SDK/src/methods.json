@@ -1177,6 +1177,20 @@
       "verb": "GET",
       "template": "{+b2BAccountService}{id}/hierarchy"
     }
+  },
+  "quote": {
+    "get": {
+      "verb": "GET",
+      "template": "{+quoteService}{id}"
+    }
+  },
+  "quotes": {
+    "template": "{+quoteService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "quote"
   }
-
 }
