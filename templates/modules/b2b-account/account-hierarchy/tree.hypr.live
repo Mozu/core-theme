@@ -16,7 +16,7 @@
   </div>
   {% if (tree.canViewAccount or tree.canChangeParentAccount) and tree.account.isActive==true %}
         <div class="dropdown-content">
-           {% if tree.canViewAccount == true %} <a href="#" data-mz-value="{{tree.id}}" data-mz-action="viewAccount">View Account</a> {% endif %}
+           {% if tree.canViewAccount == true %} <a href="/b2baccount/{{tree.id}}" data-mz-value="{{tree.id}}" data-mz-action="viewAccount">View Account</a> {% endif %}
            {% if tree.canChangeParentAccount == true %} <a href="#" data-mz-value="{{tree.id}}" data-mz-action="changeParentAccount" >Change Parent Account</a> {% endif %}
         </div>
     {% endif %}

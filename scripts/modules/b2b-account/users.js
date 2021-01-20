@@ -1,5 +1,6 @@
-define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/mozu-grid/mozugrid-view', 'modules/mozu-grid/mozugrid-pagedCollection', "modules/views-paging", "modules/models-product", "modules/models-b2b-account", "modules/search-autocomplete", "modules/models-cart", "modules/product-picker/product-picker-view", "modules/backbone-pane-switcher", "modules/models-dialog", "modules/views-modal-dialog", "modules/mozu-utilities"], function (MozuUtils, $, api, _, Hypr, Backbone, HyprLiveContext, MozuGrid, MozuGridCollection, PagingViews, ProductModels, B2BAccountModels, SearchAutoComplete, CartModels, ProductPicker, PaneSwitcher, DialogModels, ModalDialogView, MozuUtilities) {
-
+define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/mozu-grid/mozugrid-view', 'modules/mozu-grid/mozugrid-pagedCollection', "modules/views-paging", "modules/models-product", "modules/models-b2b-account", "modules/search-autocomplete", "modules/models-cart", "modules/product-picker/product-picker-view", "modules/backbone-pane-switcher", "modules/models-dialog", "modules/views-modal-dialog", "modules/mozu-utilities", "modules/models-customer"], function (MozuUtils, $, api, _, Hypr, Backbone, HyprLiveContext, MozuGrid, MozuGridCollection, PagingViews, ProductModels, B2BAccountModels, SearchAutoComplete, CartModels, ProductPicker, PaneSwitcher, DialogModels, ModalDialogView, MozuUtilities, CustomerModels)
+{
+    var customerModel;
     var UsersEditModel = Backbone.MozuModel.extend({
         relations: {
             user: B2BAccountModels.b2bUser
@@ -223,6 +224,54 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         }
     });
 
+    var B2BUsersGridCollectionModel = MozuGridCollection.extend({
+        mozuType: 'b2busers',
+        baseRequestParams: {
+            accountId: require.mozuData('user').accountId
+        },
+        filter: "isRemoved eq false",
+        autoload: true,
+        columns: [
+            {
+                index: 'emailAddress',
+                displayName: 'Email Address',
+                sortable: false
+            },
+            {
+                index: 'firstName',
+                displayName: 'First Name',
+                sortable: true
+            },
+            {
+                index: 'lastName',
+                displayName: 'Last Name',
+                sortable: true
+            },
+            {
+                index: 'roles',
+                displayName: 'User Role',
+                displayTemplate: function (value) {
+                    return (value.length > 0 ? value[0].roleName : '');
+                },
+                sortable: true
+            },
+            {
+                index: 'isActive',
+                displayName: 'User Status',
+                displayTemplate: function (value) {
+                    value = (value) ? 'Active' : 'Inactive';
+                    return '<span class="status-pill' + value + '">' + value + '<span>';
+                },
+                sortable: true
+            }
+        ],
+        relations: {
+            items: Backbone.Collection.extend({
+                model: B2BAccountModels.b2bUser
+            })
+        }
+    });
+
     var UsersModel = Backbone.MozuModel.extend({
         requiredBehaviors: [
             MozuUtilities.Behaviors.Manage_Users
@@ -235,10 +284,24 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             window.userModalView.loadUserEditView();
             window.userModalView.handleDialogOpen();
         },
+        initialize: function () {
+            if (!customerModel) {
+                customerModel = CustomerModels.EditableCustomer.fromCurrent();
+                this.model.set('viewB2BAccount', customerModel.attributes.viewB2BAccount);
+            }
+        },
         render: function () {
             Backbone.MozuView.prototype.render.apply(this, arguments);
             var self = this;
-            var collection = new UsersGridCollectionModel({});
+            var collection;
+            var viewB2BAccount = self.model.attributes.viewB2BAccount;
+            if (viewB2BAccount) {
+                collection = new B2BUsersGridCollectionModel({});
+            }
+            else {
+                collection = new UsersGridCollectionModel({});
+            }
+           
 
             var usersGrid = new MozuGrid({
                 el: self.el.find('.mz-b2baccount-users'),

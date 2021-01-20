@@ -62,6 +62,29 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "modules/v
                         model: self.model
                     })
                 };
+
+                _.each(self.model.columns, function (item) {
+                    if (item.sortable) {
+                        $('#' + item.index).addClass('mz-grid-sortIcon');
+                    }
+                });
+                var currentSort = this.model.currentSort();
+                var currentIndex = null;
+                var currentDirection = null;
+
+                if (currentSort) {
+                    var split = currentSort.split(" ");
+                    currentIndex = split[0];
+                    currentDirection = split[1];
+                }
+
+                if (currentDirection === 'asc') {
+                    $('#' + currentIndex + ' > span').addClass('mz-sort-up');
+                } else if (currentDirection === 'desc') {
+                    $('#' + currentIndex + ' > span').addClass('mz-sort-down');
+                } else {
+                    $('#' + currentIndex + ' > span').addClass('mz-unsort');
+                }
             }
 
 
