@@ -258,6 +258,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
               _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+             "Storefront_B2BAccount",
+             "b2baccount/{accountId}",
+             new { controller = "B2BAccount", action = "GetB2BAccount", accountId = "" },
+             _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "StoreFront_ajax_Configure",
                 "product/configure",
                 new { controller = "Catalog", action = "Configure" },
