@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account', 'modules/models-quotes'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -350,7 +350,8 @@
             editingContact: CustomerContact,
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
-            returnHistory: ReturnModels.RMACollection
+            returnHistory: ReturnModels.RMACollection,
+            quoteHistory: QuoteModels.QuoteCollection
         }, Customer.prototype.relations),
         validation: {
             password: {
@@ -374,7 +375,8 @@
         initialize: function() {
             var self = this,
                 orderHistory = this.get('orderHistory'),
-                returnHistory = this.get('returnHistory');
+                returnHistory = this.get('returnHistory'),
+                quoteHistory = this.get('quoteHistory');
             this.get('editingContact').set('accountId', this.get('id'));
             orderHistory.lastRequest = {
                 pageSize: 5
@@ -387,10 +389,16 @@
                     returnHistory.trigger('returndisplayed', id);
                 });
             });
+            quoteHistory.lastRequest = {
+                pageSize: 5
+            };
 
-            _.defer(function (cust) {
-                cust.getCards();
-            }, self);
+            var isSalesRep = require.mozuData('user').isSalesRep;
+            if (!isSalesRep) {
+                _.defer(function (cust) {
+                    cust.getCards();
+                }, self);
+            }
         },
         isNonPurchaser: function() {
             return (require.mozuData('user').behaviors.length) ? false : true;
