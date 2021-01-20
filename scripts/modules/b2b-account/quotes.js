@@ -127,15 +127,15 @@ define([
                         self.render();
                     });
                 }
-            }           
-            
+            }
+
             $('[data-mz-action="applyfilter"]').on('keyup input', function(e) {
                 e.preventDefault();
-                clearTimeout(timeout);                
+                clearTimeout(timeout);
                 var dateValue = "";
                 var nameValue = $(this).val();
                 if ($("#expirationdate").val() !== "")
-                {                    
+                {
                     dateValue  = $("#expirationdate").val();
                 }
                 timeout = setTimeout(function () {
@@ -149,13 +149,12 @@ define([
                 {
                     nameValue  = $("#searchName").val();
                 }
-                var dateValue =  $(this).val();                    
+                var dateValue =  $(this).val();
                 self.filterGrid(nameValue, dateValue, collection);
             });
             
             this.initializeGrid(collection);
         },
-
         filterGrid: function (nameValue, dateValue, collection) {
             filterstring = "";
             if (nameValue !== "") {
@@ -191,8 +190,7 @@ define([
                     self.model[action.action](e, row);
                 };
             });
-        }     
-       
+        }
     });
 
     var QuoteEditView = Backbone.MozuView.extend({
@@ -216,8 +214,7 @@ define([
             });
 
             productPickerView.render();
-        },      
-
+        },
         startEditingQuoteName: function () {
             var self = this;
 
