@@ -1,0 +1,121 @@
+{% extends "back-office/base" %}
+{% block body-content %}
+    <table cellpadding="0" cellspacing="0" border="0" class="b2b-backgroundTable">
+        <tr>
+            <td valign="top">
+                <div class ="quote-name">{{labels.quoteName}} {{model.name}} </div>
+                <br/>
+                <table class ="quote-details-table" width="100%" cellpadding="1" cellspacing="1" width="50%">
+                <thead>
+                    <tr>
+                        <td colspan = 3 bgcolor="#B3B3B3"><font class ="quoteSummary-font" color="#000000"><b>{{labels.quoteDetails}}</b></font></td>
+                    </tr>
+                </thead>
+			    <tr>
+                    <td class= "quote-account-details">
+                        <table class = "quote-account-details-table">
+                            <tr>
+                                <th>{{labels.quoteAccountName}}:</th>
+                                <td>{{account.companyOrOrganization}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteName}}:</th>
+                                <td>{{model.name}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteSubmittedDate}}:</th>
+                                <td>{{model.submittedDate|date("m/d/y")}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteSubmittedBy}}:</th>
+                                <td>{{userAccount.items.0.firstName}}  {{userAccount.items.0.lastName}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteExpirationDate}}:</th>
+                                <td>{{model.expirationDate|date("m/d/y")}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                     <td>
+                        <table>
+                            <tr>
+                                <td><b>{{labels.quoteShippingAddress}}:</b></td>
+                            </tr>
+                            <tr>
+                                <td class = "quote-shipping-child-table">
+                                    <span>{{model.destinations.0.destinationContact.firstName}} {{model.destinations.0.destinationContact.lastNameOrSurname}}  </span></br>
+                                    <span> {{model.destinations.0.destinationContact.address.address1}} </span></br>
+                                    <span>{{model.destinations.0.destinationContact.address.cityOrTown}} {{model.destinations.0.destinationContact.address.stateOrProvince}} {{model.destinations.0.destinationContact.address.postalOrZipCode}} </span></br>
+                                    <span>{{labels.quoteHomePhoneNumber}}: {{model.destinations.0.destinationContact.phoneNumbers.home}} </span></br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class = "quote-shipping-method">
+                        <table>
+                            <tr>
+                                <td><b>{{labels.shippingMethod}}</b></td>
+                            </tr>
+                            <tr>
+                                <td class = "quote-shipping-child-table">{{model.shippingMethodName}}</td>
+                            </tr>
+                        </table>
+                    </td>
+	            </tr>
+            </table>
+            <br/>
+            <br/>
+            <table class ="quote-details-table" width="100%" cellpadding="1" cellspacing="1">
+                <thead>
+                    <tr>
+                        <td colspan = 6 bgcolor="#B3B3B3"><font class ="quoteSummary-font" color="#000000"><b>{{labels.quoteDetails}}</b></font></td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><font><b>{{labels.b2bProductPicker}}</b></font></td>
+                    <td><font><b>{{labels.b2bQuantity}}</b></font></td>
+                    <td><font><b>{{labels.fulfillmentType}}</b></font></td>
+                    <td><font><b>{{labels.unitPrice}}</b></font></td>
+                    <td><font><b>{{labels.quoteDiscount}}</b></font></td>
+                    <td><font><b>{{labels.total}}</b></font></td>
+                </tr>
+                   
+                {% for item in model.items %}
+			    <tr>
+				    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.fulfillmentMethod }}</td>
+                    <td>{{ item.unitPrice.extendedAmount|currency  }}</td>
+                    <td>{{ item.discountTotal|currency  }}</td>
+                    <td>{{ item.total|currency  }}</td>
+                </tr>
+		        {% endfor %}
+                <tr class= "quote-shipping-summary">
+                        <td colspan=4>
+                        </td>
+                        <td>
+                            {% if model.adjustment and model.adjustment.amount != 0 %}
+                            <p>{{labels.quoteAdjustments}}: </p>
+                            {% endif %}
+                           <p>{{labels.itemTotal}}: </p>
+                           <p>{{labels.shippingInformation}}: </p>
+                           <p>{{labels.handling}}: </p>
+                           <p>{{labels.duty}}: </p>
+                           <p  class ="quote-total-summary-font">{{labels.total}}: </p>
+                        </td>
+                        <td>
+                            {% if model.adjustment and model.adjustment.amount != 0 %}
+                            <p><b>{{model.adjustment.amount |currency }}</b> </p>
+                            {% endif %}
+                            <p><b> {{model.itemTotal |currency }} </b></p>
+                            <p><b> {{model.shippingTotal |currency }} </b></p>
+                            <p><b> {{model.handlingTotal |currency }}</b> </p>
+                            <p><b> {{model.dutyTotal |currency }}</b> </p>
+                            <p><b> {{model.total |currency }}</b> </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+{% endblock body-content %}

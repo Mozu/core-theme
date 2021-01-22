@@ -271,6 +271,12 @@
       "properties": {},
       "template": "email/curbside-intransit",
       "title": "Customer In Transit"
+    },
+    {
+      "id": "quote.summary",
+      "properties": {},
+      "template": "email/b2b-quotes-summary",
+      "title": "Quote Summary"
     }
   ],
   "backOfficeTemplates": [
@@ -388,6 +394,13 @@
       "id": "curbside-partial-pickup-ready",
       "template": "back-office/curbside-partial-pickup-ready",
       "title": "Curbside Partial Pickup Ready",
+      "userCreatable": false
+    },
+    {
+      "entityType": "quote.summary",
+      "id": "quote.summary",
+      "template": "back-office/b2b-quotes-details",
+      "title": "Quote Summary",
       "userCreatable": false
     }
   ],
