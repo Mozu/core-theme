@@ -1,0 +1,42 @@
+<div class="mz-productdetail-shortdesc mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{labels.productName}}</h4>
+    <span itemscope="description">{{ model.content.productName }}</span>  
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.productDetails }}</h4>
+    <span itemscope="description">{{ model.content.productShortDescription|safe }}</span>
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
+{% include "modules/product/price-stack" %}
+
+<div class="mz-price-container">
+    <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
+	    {% if themeSettings.showProductDetailMfgPartNumber and model.mfgPartNumber.length == 1 %}
+	    <dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
+	    <dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ model.mfgPartNumber|first }}</dd>
+	    {% endif %}
+	    {% if themeSettings.showProductDetailUPC and model.upc.length == 1 %}
+	    <dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
+	    <dd class="mz-productcodes-upc" itemprop="mpn">{{ model.upc|first }}</dd>
+	    {% endif %}		
+        <dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
+	    <dd class="mz-productcodes-productcode" itemprop="sku">{{ model.variationProductCode|default(model.productCode) }}</dd>
+    </dl>
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.salePrice }}</h4>
+    <span itemscope="description">{{ model.content.salePrice|safe }}</span>  
+    <div class="mz-productdetail-conversion-controls">
+        <span class="mz-qty-label">{{ labels.qty }}</span>
+        <input class="mz-productdetail-qty" type="number" value="1" min="1" disabled="disabled" data-mz-value="quantity" />
+        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
+    </div>  
+    <div>
+        <button id="add-to-cart" disabled="disabled" class="mz-productdetail-addtocart mz-button data-mz-action" >
+            {{ labels.addToCart }}
+        </button>        
+    </div>
+    <br/>
+    <div>
+        <button id="add-to-wishlist" disabled="disabled" class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
+            {{ labels.addToWishlist }}
+        </button>  
+    </div>
+</div>
+</div>
