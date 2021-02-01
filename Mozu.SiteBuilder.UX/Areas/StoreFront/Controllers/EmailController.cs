@@ -632,18 +632,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return returnObj;
         }
 
-        private async Task<Location.Contracts.Location> GetStorageLocation(string locationCode)
-        {
-            if (!locationCode.IsNullOrEmpty())
+      private async Task<Location.Contracts.Location> GetStorageLocation(string locationCode)
+      {
+         if (!locationCode.IsNullOrEmpty())
+         {
+            var result = await _locationRuntimeWebApiClient.GetLocation(locationCode);
+            if (!result.HasException)
             {
-                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
-                FormatRegularHours(location);
-                return location;
+               var location = result.ReadAsSync();
+               FormatRegularHours(location);
+               return location;
             }
-            return null;
-        }
+         }
+         return null;
+      }
 
-        public class MyPackageItem : PackageItem
+      public class MyPackageItem : PackageItem
         {
             public object Product { get; set; }
         }
