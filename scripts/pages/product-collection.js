@@ -16,13 +16,21 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         getMembersData: function () {
             var self = this;
             var array = self.model.get('productMembers');
-            var count = array.length;
-            self.model.set('count', count);
-            var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);
-            var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);
-            Promise.all([member1, member2]).
+            if(array === null || array.length < 1)
+                return;
+
+            var pageSize = "pagesize=35";
+            var filter = "&filter=productCode IN ["+array.join(",")+"]";
+            var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),purchasableState,price,pricingBehavior,isTaxable,inventoryInfo,options,variations,productCollections)";
+            var multipleProducts = api.request('GET', "/api/commerce/catalog/storefront/products?"+pageSize+filter+responseFields);
+
+            Promise.resolve(multipleProducts).
                 then(function (response) {
-                    self.model.set('productMembersdata', response);
+                    var count = response.items.length;
+                    self.model.set('count', count);
+                    //TODO: if 0, then show something else
+                    var memberResults = response.items;
+                    self.model.set('productMembersdata', memberResults);
                     self.render();
                 });
         },
