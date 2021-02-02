@@ -20,23 +20,17 @@
 
     <div class="mz-productdetail-wrap">
         {% include "modules/common/message-bar" %}
-        <div id="product-detail" class="mz-productdetail mz-l-stack">
+        <div class="mz-productdetail mz-l-stack">
             {% include "modules/product-collection/product-collection" %}
         </div>
     </div>
 
 </div>
-<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">	
-    <div data-mz-productimages class="mz-productimages mz-l-sidebar mz-l-stack-sectiontitle">
-        <h1 class="mz-pagetitle" itemprop="name">{{ labels.memberProducts }}</h1>
-    </div>
-
-    <div class="mz-productdetail-wrap">
-        {% include "modules/common/message-bar" %}
-        <div id="product-detail" class="mz-productdetail mz-l-stack">
+<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">	                    
+    <div style="display:flex;">        
+        <div id="product-detail">
             {% include "modules/product-collection/product-collection-detail" %}
         </div>
     </div>
-
 </div>
 {% endblock body-content %}
