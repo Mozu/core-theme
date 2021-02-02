@@ -23,7 +23,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             Promise.all([member1, member2]).
                 then(function (response) {
                     self.model.set('productMembersdata', response);
-                    console.log(self.model.get("productMembersdata"));
                     self.render();
                 });
         },
