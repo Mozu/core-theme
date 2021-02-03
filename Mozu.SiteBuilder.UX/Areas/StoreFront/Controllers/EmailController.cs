@@ -311,7 +311,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 else
                 {
                     model = MergeEmailParams(queryStringParams, model);
-                    var locationModel = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(model, emailTypeInfo.ModelType, CaseInsensitiveJsonSerializerSettings.Default), emailTypeInfo.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
+                    var locationModel = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(model, emailTypeInfo?.ModelType, CaseInsensitiveJsonSerializerSettings.Default), emailTypeInfo?.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
                     locationCode = (locationModel is ReturnEmail returnEmail) ? returnEmail.LocationCode : string.Empty;
                 }
             }
