@@ -1,0 +1,45 @@
+<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.count > 0 %}<span>({{model.count}})</span>{% endif %}</h1>
+{% for data in model.productMembersdata %}	
+<div style="display:flex;">
+	<div style="width:15vw">
+		<img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=80 as_parameters %}" {% if model.mainImage.altText %} title="{{ model.mainImage.altText }}" alt="{{ model.mainImage.altText }}"{% endif %} />
+    </div>
+	<div style="width:15vw">
+		<h4>{{labels.productName}}</h4>
+		<span itemscope="description">{{ data.content.productName }}</span>  
+		<h4>{{ labels.price }}</h4>
+		
+		{% include "modules/product/price-stack" %}
+		<div>
+			<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
+				{% if themeSettings.showProductDetailMfgPartNumber and data.mfgPartNumber.length == 1 %}
+				<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
+				<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ data.mfgPartNumber|first }}</dd>
+				{% endif %}
+				{% if themeSettings.showProductDetailUPC and data.upc.length == 1 %}
+				<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
+				<dd class="mz-productcodes-upc" itemprop="mpn">{{ data.upc|first }}</dd>
+				{% endif %}		
+			</dl>
+			<h4>{{ labels.salePrice }}</h4>
+			<span itemscope="description">{{ data.content.salePrice|safe }}</span>  
+		</div>
+	</div>
+	<div style="width:50vw">
+		<h4>{{ labels.productDetails }}</h4>
+		<span>{{ data.content.productShortDescription|safe }}</span>
+	</div>
+	<div style="width:15vw">
+		<span>{{ labels.qty }}</span>
+        <input class="mz-productdetail-qty" type="number" value="1" min="1" disabled="disabled" data-mz-value="quantity" />
+        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
+		<button id="add-to-cart" disabled="disabled" class="mz-productdetail-addtocart mz-button data-mz-action" >
+            {{ labels.addToCart }}
+        </button>
+		</br></br>
+		<button id="add-to-wishlist" disabled="disabled" class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
+            {{ labels.addToWishlist }}
+        </button>  
+	</div>
+</div>
+{% endfor %}

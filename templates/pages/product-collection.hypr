@@ -1,0 +1,36 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.content.productName %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/product-collection" %}
+
+{% preload_json model "product" %}
+
+<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
+
+	<h1 class="mz-pagetitle" itemprop="name">{{ model.content.productName }}</h1>
+	
+    <div data-mz-productimages class="mz-productimages mz-l-sidebar">
+        {% include "modules/product/product-images" %}
+    </div>
+
+    <div class="mz-productdetail-wrap">
+        {% include "modules/common/message-bar" %}
+        <div class="mz-productdetail mz-l-stack">
+            {% include "modules/product-collection/product-collection" %}
+        </div>
+    </div>
+
+</div>
+<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">	                    
+    <div style="display:flex;">        
+        <div id="product-detail">
+            {% include "modules/product-collection/product-collection-detail" %}
+        </div>
+    </div>
+</div>
+{% endblock body-content %}
