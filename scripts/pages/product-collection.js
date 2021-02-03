@@ -17,14 +17,24 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var self = this;
             var array = self.model.get('productMembers');
             var count = array.length;
+            if (array === null || array.length < 1)
+                return;
+
             self.model.set('count', count);
-            var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);
-            var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);
-            Promise.all([member1, member2]).
-                then(function (response) {
-                    self.model.set('productMembersdata', response);
-                    self.render();
-                });
+            var productFilter = this.buildProductFilter(array);
+            //var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);            
+            //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
+            var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
+            member1.then(function (response) {
+                self.model.set('productMembersdata', response.items);
+                self.render();
+            });
+        },
+        buildProductFilter: function(productMembers) {
+            var products = "?filter=productCode in [" + productMembers.join(",") + "]";
+            var pageSize = "&pagesize=35";
+            var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),purchasableState,price,pricingBehavior,isTaxable,inventoryInfo,options,variations,productCollections)";
+            return products + pageSize + responseFields;
         },
         getProductMembers: function () {
             var productMembers = this.model.get('productCollectionMembers'), members = [];
