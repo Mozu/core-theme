@@ -2,15 +2,8 @@
 {% for data in model.productMembersdata %}	
 <div style="display:flex;">
 	<div style="width:15vw">
-		<img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
-			{% with data.content.productImages|first as image %}
-				src="{{ image.imageUrl}}?max=100"
-				{% if image.altText %}
-					title="{{ image.altText }}" alt="{{ image.altText }}" TODO="show the missing image img"
-				{% endif %}
-			{% endwith %}
-		/>
-    </div>
+		{% include "modules/product-collection/member-image" %}
+	</div>
 	<div style="width:15vw">
 		<h4>{{labels.productName}}</h4>
 		<span itemscope="description">{{ data.content.productName }}</span>  

@@ -1,0 +1,25 @@
+<div style="width:15vw">
+	<a href="{% make_url "product" data %}">
+	{% with data.content.productImages|first as image %}
+		{% if image %}	
+			<img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
+				src="{% make_url "image" image with max=100 as_parameters %}"
+				{% if image.altText %}
+					title="{{ image.altText }}" alt="{{ image.altText }}" TODO="show the missing image img"
+				{% endif %}
+			/>
+		{% else %}
+			<span>{{ labels.productImagePlaceholder }}</span>
+		{% endif %}
+	{% endwith %}
+	</a>
+</div>
+
+{% comment %}
+	
+	TODO: 
+	* Probably need a new CSS class for the image above
+	* Center image with text
+	* Should we use the hardcoded style ? 
+
+{% endcomment %}
