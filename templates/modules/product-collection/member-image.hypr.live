@@ -1,8 +1,8 @@
 <div style="width:15vw">
-	<a href="{% make_url "product" data %}">
-	{% with data.content.productImages|first as image %}
-		{% if image %}	
-			<img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
+	<a href="{% make_url "product" data.attributes %}">
+    {% with data.attributes.content.attributes.productImages|first as image %}
+    {% if image %}
+    <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
 				src="{% make_url "image" image with max=100 as_parameters %}"
 				{% if image.altText %}
 					title="{{ image.altText }}" alt="{{ image.altText }}" TODO="show the missing image img"

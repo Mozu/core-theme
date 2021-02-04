@@ -4,7 +4,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         requiredBehaviors: [1014],
         templateName: 'modules/product-collection/product-collection-detail',
         additionalEvents: {            
-            "click [data-mz-action='getMembersData']": "getMembersData"
+            "click [data-mz-action='getMembersData']": "getMembersData",
+            "change [data-mz-value='quantity']": "onMemberQuantityChange",
+            "keyup input[data-mz-value='quantity']": "onMemberQuantityChange"
         },
         render: function () {
             var me = this;
@@ -26,8 +28,14 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
             var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
             member1.then(function (response) {
-                self.model.set('count', response.items.length);
-                self.model.set('productMembersdata', response.items);
+                var members = [];
+                for (var memberProduct in response.items) {
+                    var mp = new ProductModels.Product(response.items[memberProduct]);
+                    mp.set('memberindex', memberProduct);
+                    members.push(mp);                
+                }
+                self.model.set('collectionMembers', members);
+                //OLD self.model.set('productMembersdata', response.items);
                 self.render();
             });
         },
@@ -35,7 +43,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var products = "?filter=productCode in [" + productMembers.join(",") + "]";
             var pageSize = "&pagesize=35";
             var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),purchasableState,price,pricingBehavior,isTaxable,inventoryInfo,options,variations,productCollections)";
-            return products + pageSize + responseFields;
+            return products + pageSize; // + responseFields;
         },
         getProductMembers: function () {
             var productMembers = this.model.get('productCollectionMembers'), members = [];
@@ -68,11 +76,49 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
             });
             this.getProductMembers();
-        }
+        },
+        addToCart: function (e) {
+            //this.model.addToCart();            
+            var memberIndex = $(e.currentTarget).data("memberindex");
+            this.model.addMemberToCart(memberIndex, false);
+        },
+        addToWishlist: function () {
+            this.model.addToWishlist();
+        },
+        onMemberQuantityChange: _.debounce(function (e) {
+            var $qField = $(e.currentTarget),
+              newQuantity = parseInt($qField.val(), 10),
+              memberIndex = $(e.currentTarget).data("memberindex");
+            if (!isNaN(newQuantity)) {
+                var me = this;
+                // determine which member model to call this one
+                var members = me.model.get('collectionMembers');
+                var memberProduct = members[memberIndex];
+                memberProduct.updateQuantity(newQuantity);
+                me.model.updateQuantity(newQuantity);
+            }
+        },500)
     });
 
     $(document).ready(function () {
         var product = ProductModels.Product.fromCurrent();               
+
+        product.on('addedtocart', function (cartitem, stopRedirect) {
+            if (cartitem && cartitem.prop('id')) {
+                //product.isLoading(true);
+                CartMonitor.addToCount(product.get('quantity'));
+                if(!stopRedirect) {
+                    window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
+                }
+                
+            } else {
+                product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
+            }
+        });
+
+        product.on('addedtowishlist', function (cartitem) {
+            $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+        });
 
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),

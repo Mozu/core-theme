@@ -329,6 +329,30 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 }
             });
         },
+        addMemberToCart: function (memberIndex, stopRedirect) {
+            var me = this;
+            // generate new Product from the member, then add to cart
+            var members = me.get('collectionMembers');
+            var memberProduct = members[memberIndex];
+
+            return memberProduct.whenReady(function () {
+                if (!memberProduct.validate()) {
+                    var fulfillMethod = memberProduct.get('fulfillmentMethod');
+                    if (!fulfillMethod) {
+                        fulfillMethod = (memberProduct.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
+                    }
+                    var payload = {
+                        options: memberProduct.getConfiguredOptions(),
+                        fulfillmentMethod: fulfillMethod,
+                        quantity: memberProduct.get("quantity")
+                    };
+                    return memberProduct.apiAddToCart(payload).then(function (item) {
+                        memberProduct.trigger('addedtocart', item, stopRedirect);
+                        me.trigger('addedtocart', item, stopRedirect);
+                    });
+                }
+            });
+        },        
         addToWishlist: function() {
             var me = this;
             this.whenReady(function() {

@@ -1,4 +1,54 @@
-<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.productMembersdata.length > 0 %}<span> ({{model.productMembersdata.length}})</span>{% endif %}</h1>
+<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.count > 0 %}<span>({{model.count}})</span>{% endif %}</h1>
+{% for data in model.collectionMembers %}	
+<div style="display:flex;">
+	<div style="width:15vw">
+    {% include "modules/product-collection/member-image" %}
+  </div>
+	<div style="width:15vw">
+		<h4>{{labels.productName}}</h4>
+		<span itemscope="description">{{ data.attributes.content.attributes.productName }}</span>  
+		<h4>{{ labels.price }}</h4>
+		
+		{% include "modules/product/price-stack" %}
+		<div>
+			<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
+				{% if themeSettings.showProductDetailMfgPartNumber and data.attributes.mfgPartNumber.length == 1 %}
+				<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
+				<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ data.attributes.mfgPartNumber|first }}</dd>
+				{% endif %}
+				{% if themeSettings.showProductDetailUPC and data.attributes.upc.length == 1 %}
+				<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
+				<dd class="mz-productcodes-upc" itemprop="mpn">{{ data.attributes.upc|first }}</dd>
+				{% endif %}		
+			</dl>
+			<h4>{{ labels.salePrice }}</h4>
+			<span itemscope="description">{{ data.attributes.content.salePrice|safe }}</span>  
+		</div>
+	</div>
+	<div style="width:50vw">
+		<h4>{{ labels.productDetails }}</h4>
+		<span>{{ data.attributes.content.productShortDescription|safe }}</span>
+	</div>
+	<div style="width:15vw">
+		<span>{{ labels.qty }}</span>
+        <input class="mz-productdetail-qty" type="number" value="1" min="1" data-mz-value="quantity" data-memberindex="{{data.attributes.memberindex}}" />
+        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>		
+  		<button id="add-to-cart" class="mz-productdetail-addtocart mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" data-memberindex="{{data.attributes.memberindex}}" >
+      		{{ labels.addToCart }}
+  		</button>		
+		</br></br>
+		{% if model.hasRequiredBehavior %}
+			{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
+			<button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
+				{{ labels.addToWishlist }}
+			</button>
+			{% endif %}
+		{% endif %}		
+	</div>
+</div>
+{% endfor %}
+
+
 {% for data in model.productMembersdata %}	
 <div style="display:flex;">
 	<div style="width:15vw">
@@ -31,15 +81,19 @@
 	</div>
 	<div style="width:15vw">
 		<span>{{ labels.qty }}</span>
-        <input class="mz-productdetail-qty" type="number" value="1" min="1" disabled="disabled" data-mz-value="quantity" />
-        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
-		<button id="add-to-cart" disabled="disabled" class="mz-productdetail-addtocart mz-button data-mz-action" >
-            {{ labels.addToCart }}
-        </button>
+        <input class="mz-productdetail-qty" type="number" value="1" min="1" data-mz-value="quantity" />
+        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>		
+  		<button id="add-to-cart" class="mz-productdetail-addtocart mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+      		{{ labels.addToCart }}
+  		</button>		
 		</br></br>
-		<button id="add-to-wishlist" disabled="disabled" class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
-            {{ labels.addToWishlist }}
-        </button>  
+		{% if model.hasRequiredBehavior %}
+			{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
+			<button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
+				{{ labels.addToWishlist }}
+			</button>
+			{% endif %}
+		{% endif %}		
 	</div>
 </div>
 {% endfor %}
