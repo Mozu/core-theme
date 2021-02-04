@@ -26,6 +26,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
             var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
             member1.then(function (response) {
+                self.model.set('count', response.items.length);
                 self.model.set('productMembersdata', response.items);
                 self.render();
             });
