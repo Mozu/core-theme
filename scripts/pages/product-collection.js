@@ -18,11 +18,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         getMembersData: function () {
             var self = this;
             var array = self.model.get('productMembers');
-            var count = array.length;
             if (array === null || array.length < 1)
                 return;
 
-            self.model.set('count', count);
             var productFilter = this.buildProductFilter(array);
             //var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);            
             //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
@@ -35,6 +33,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     members.push(mp);                
                 }
                 self.model.set('collectionMembers', members);
+                self.model.set('count', members.length);
                 //OLD self.model.set('productMembersdata', response.items);
                 self.render();
             });

@@ -1,4 +1,4 @@
-<div style="width:15vw">
+<div class="mz-img-section">
 	<a href="{% make_url "product" data.attributes %}">
     {% with data.attributes.content.attributes.productImages|first as image %}
     {% if image %}
@@ -14,12 +14,3 @@
 	{% endwith %}
 	</a>
 </div>
-
-{% comment %}
-	
-	TODO: 
-	* Probably need a new CSS class for the image above
-	* Center image with text
-	* Should we use the hardcoded style ? 
-
-{% endcomment %}
