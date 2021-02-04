@@ -1,4 +1,4 @@
-<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.count > 0 %}<span>({{model.count}})</span>{% endif %}</h1>
+<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.productMembersdata.length > 0 %}<span> ({{model.productMembersdata.length}})</span>{% endif %}</h1>
 {% for data in model.productMembersdata %}	
 <div style="display:flex;">
 	<div style="width:15vw">
