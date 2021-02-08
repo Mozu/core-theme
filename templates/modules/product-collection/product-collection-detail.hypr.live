@@ -5,7 +5,7 @@
 <div class="mz-repeating-container">
 	<div class="mz-img-section">
     {% include "modules/product-collection/member-image" %}
-  </div>
+	</div>
 	<div style="width:15vw">
 		<h4>{{labels.productName}}</h4>
     <span itemscope="description">{{ data.productName }}</span>
