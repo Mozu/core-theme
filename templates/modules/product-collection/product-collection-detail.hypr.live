@@ -1,16 +1,26 @@
 <h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.count > 0 %}<span>({{model.count}})</span>{% endif %}</h1>
-{% for data in model.collectionMembers %}	
-<div style="display:flex;">
-	<div style="width:15vw">
+
+{% for data in model.collectionMembers %}
+
+<div class="mz-repeating-container">
+	<div class="mz-img-section">
     {% include "modules/product-collection/member-image" %}
   </div>
 	<div style="width:15vw">
 		<h4>{{labels.productName}}</h4>
-		<span itemscope="description">{{ data.attributes.content.attributes.productName }}</span>  
+    <span itemscope="description">{{ data.productName }}</span>
+    <span itemscope="description">{{ data.attributes.content.attributes.productName }}</span> 
+		{% if data.attributes.options and data.attributes.options.length > 0 %}
+    <div class="mz-productdetail-options mz-l-stack-section">
+      <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
+      {% include "modules/product-collection/member-options" %}
+    </div>
+    {% endif %}
 		<h4>{{ labels.price }}</h4>
-		
-		{% include "modules/product/price-stack" %}
-		<div>
+
+    {% include "modules/product/price-stack" with model=data.apiModel.data %}
+
+    <div>
 			<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
 				{% if themeSettings.showProductDetailMfgPartNumber and data.attributes.mfgPartNumber.length == 1 %}
 				<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
@@ -28,7 +38,7 @@
 	<div style="width:50vw">
 		<h4>{{ labels.productDetails }}</h4>
 		<span>{{ data.attributes.content.productShortDescription|safe }}</span>
-	</div>
+  </div>  
 	<div style="width:15vw">
 		<span>{{ labels.qty }}</span>
         <input class="mz-productdetail-qty" type="number" value="1" min="1" data-mz-value="quantity" data-memberindex="{{data.attributes.memberindex}}" />
@@ -36,64 +46,15 @@
   		<button id="add-to-cart" class="mz-productdetail-addtocart mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" data-memberindex="{{data.attributes.memberindex}}" >
       		{{ labels.addToCart }}
   		</button>		
-		</br></br>
-		{% if model.hasRequiredBehavior %}
-			{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
-			<button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
-				{{ labels.addToWishlist }}
-			</button>
+		<br></br>
+    {% if model.hasRequiredBehavior %}
+				{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
+				<button id="add-to-wishlist" {% if data.notDoneConfiguring or not data.isPurchasable %} disabled="disabled" {% else %} {% if data.attributes.inventoryInfo.outOfStockBehavior == 'HideProduct' and not data.attributes.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not data.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist" data-memberindex="{{data.attributes.memberindex}}">
+						{{ labels.addToWishlist }}
+				</button>
 			{% endif %}
-		{% endif %}		
-	</div>
+    {% endif %}
+  </div>
 </div>
 {% endfor %}
 
-
-{% for data in model.productMembersdata %}	
-<div style="display:flex;">
-	<div style="width:15vw">
-		{% include "modules/product-collection/member-image" %}
-	</div>
-	<div style="width:15vw">
-		<h4>{{labels.productName}}</h4>
-		<span itemscope="description">{{ data.content.productName }}</span>  
-		<h4>{{ labels.price }}</h4>
-		
-		{% include "modules/product/price-stack" %}
-		<div>
-			<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
-				{% if themeSettings.showProductDetailMfgPartNumber and data.mfgPartNumber.length == 1 %}
-				<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
-				<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ data.mfgPartNumber|first }}</dd>
-				{% endif %}
-				{% if themeSettings.showProductDetailUPC and data.upc.length == 1 %}
-				<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
-				<dd class="mz-productcodes-upc" itemprop="mpn">{{ data.upc|first }}</dd>
-				{% endif %}		
-			</dl>
-			<h4>{{ labels.salePrice }}</h4>
-			<span itemscope="description">{{ data.content.salePrice|safe }}</span>  
-		</div>
-	</div>
-	<div style="width:50vw">
-		<h4>{{ labels.productDetails }}</h4>
-		<span>{{ data.content.productShortDescription|safe }}</span>
-	</div>
-	<div style="width:15vw">
-		<span>{{ labels.qty }}</span>
-        <input class="mz-productdetail-qty" type="number" value="1" min="1" data-mz-value="quantity" />
-        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>		
-  		<button id="add-to-cart" class="mz-productdetail-addtocart mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
-      		{{ labels.addToCart }}
-  		</button>		
-		</br></br>
-		{% if model.hasRequiredBehavior %}
-			{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
-			<button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
-				{{ labels.addToWishlist }}
-			</button>
-			{% endif %}
-		{% endif %}		
-	</div>
-</div>
-{% endfor %}

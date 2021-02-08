@@ -208,6 +208,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             priceRange: PriceModels.ProductPriceRange,
             options: Backbone.Collection.extend({
                 model: ProductOption
+            }),
+            // for collection products 
+            memberProducts: Backbone.Collection.extend({
+                model: Product
             })
         },
         getBundledProductProperties: function(opts) {
@@ -363,6 +367,23 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         options: me.getConfiguredOptions()
                     }).then(function(item) {
                         me.trigger('addedtowishlist', item);
+                    });
+                }
+            });
+        },
+        addMemberToWishlist: function (memberIndex) {
+            var me = this;
+            // generate new Product from the member, then add to cart
+            var members = me.get('collectionMembers');
+            var memberProduct = members[memberIndex];
+            memberProduct.whenReady(function () {
+                if (!memberProduct.validate()) {
+                    memberProduct.apiAddToWishlist({
+                        customerAccountId: require.mozuData('user').accountId,
+                        quantity: memberProduct.get("quantity"),
+                        options: memberProduct.getConfiguredOptions()
+                    }).then(function (item) {
+                        memberProduct.trigger('addedtowishlist', item);
                     });
                 }
             });

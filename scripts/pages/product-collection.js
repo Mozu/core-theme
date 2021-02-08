@@ -6,7 +6,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         additionalEvents: {            
             "click [data-mz-action='getMembersData']": "getMembersData",
             "change [data-mz-value='quantity']": "onMemberQuantityChange",
-            "keyup input[data-mz-value='quantity']": "onMemberQuantityChange"
+            "keyup input[data-mz-value='quantity']": "onMemberQuantityChange",
+            "change [data-mz-product-option]": "onMemberOptionChange",
+            "blur [data-mz-product-option]": "onMemberOptionChange"
         },
         render: function () {
             var me = this;
@@ -35,6 +37,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     members.push(mp);                
                 }
                 self.model.set('collectionMembers', members);
+                //self.model.set('memberProducts', members);
                 //OLD self.model.set('productMembersdata', response.items);
                 self.render();
             });
@@ -80,10 +83,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         addToCart: function (e) {
             //this.model.addToCart();            
             var memberIndex = $(e.currentTarget).data("memberindex");
-            this.model.addMemberToCart(memberIndex, false);
+            this.model.addMemberToCart(memberIndex, true);
         },
-        addToWishlist: function () {
-            this.model.addToWishlist();
+        addToWishlist: function (e) {
+            //this.model.addToWishlist();
+            var memberIndex = $(e.currentTarget).data("memberindex");
+            this.model.addMemberToWishlist(memberIndex);
         },
         onMemberQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -97,7 +102,34 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 memberProduct.updateQuantity(newQuantity);
                 me.model.updateQuantity(newQuantity);
             }
-        },500)
+        }, 500),
+        onMemberOptionChange: function (e) {
+            return this.configure($(e.currentTarget));
+        },
+        configure: function ($optionEl) {
+            var me = this;
+            var newValue = $optionEl.val(),
+                oldValue,
+                id = $optionEl.data('mz-product-option'),
+                optionEl = $optionEl[0],
+                isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked;
+
+            var memberIndex = $($optionEl).parent().parent().parent().data('memberindex');
+            var members = me.model.get('collectionMembers');
+            var memberProduct = members[memberIndex];
+
+            var option = memberProduct.get('options').findWhere({ 'attributeFQN': id });
+            if (option) {
+                if (option.get('attributeDetail').inputType === "YesNo") {
+                    option.set("value", isPicked);
+                } else if (isPicked) {
+                    oldValue = option.get('value');
+                    if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
+                        option.set('value', newValue);
+                    }
+                }
+            }
+        }
     });
 
     $(document).ready(function () {
