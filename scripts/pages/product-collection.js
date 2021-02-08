@@ -35,7 +35,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     members.push(mp);                
                 }
                 self.model.set('collectionMembers', members);
-                self.model.set('count', array.length);
+                self.model.set('count', members.length);
                 //self.model.set('memberProducts', members);
                 //OLD self.model.set('productMembersdata', response.items);
                 self.render();
