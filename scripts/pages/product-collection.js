@@ -20,7 +20,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         getMembersData: function () {
             var self = this;
             var array = self.model.get('productMembers');
-            var count = array.length;
             if (array === null || array.length < 1)
                 return;
 
@@ -36,7 +35,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     members.push(mp);                
                 }
                 self.model.set('collectionMembers', members);
-                self.model.set('count', count);
+                self.model.set('count', array.length);
                 //self.model.set('memberProducts', members);
                 //OLD self.model.set('productMembersdata', response.items);
                 self.render();
