@@ -39,6 +39,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 //self.model.set('collectionMembers', members);
                 var mpo = self.model.get('memberProducts');
                 mpo.add(members);
+                self.model.set('count', members.length);
                 //self.model.set('memberProducts', members);
                 //OLD self.model.set('productMembersdata', response.items);
                 //self.render();
@@ -164,10 +165,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             model: product
         });
 
-
-
-
-
+        product.on('optionsupdated', function () {
+            console.log('optionsupdated');
+            productView.render();
+        });
 
         var productView = new ProductView({
             el: $('#product-detail'),
@@ -179,11 +180,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         productView.getProductMembers().then(function () {
             productView.render();
         });
-
-        product.on('optionsUpdated', function () {
-            console.log('optionsUpdated');
-        });
-
 
     });
 });
