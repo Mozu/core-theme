@@ -165,11 +165,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             model: product
         });
 
-        product.on('optionsupdated', function () {
-            console.log('optionsupdated');
-            productView.render();
-        });
-
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
