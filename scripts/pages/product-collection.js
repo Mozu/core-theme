@@ -3,7 +3,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
     var ProductView = Backbone.MozuView.extend({
         requiredBehaviors: [1014],
         templateName: 'modules/product-collection/product-collection-detail',
-        additionalEvents: {            
+        additionalEvents: {
             "click [data-mz-action='getMembersData']": "getMembersData",
             "change [data-mz-value='quantity']": "onMemberQuantityChange",
             "keyup input[data-mz-value='quantity']": "onMemberQuantityChange",
@@ -18,31 +18,37 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             });
         },
         getMembersData: function () {
+
+
             var self = this;
             var array = self.model.get('productMembers');
             var count = array.length;
             if (array === null || array.length < 1)
-                return;
+                return Promise.resolve();
 
             self.model.set('count', count);
             var productFilter = this.buildProductFilter(array);
             //var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);            
             //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
             var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
-            member1.then(function (response) {
+            return member1.then(function (response) {
                 var members = [];
                 for (var memberProduct in response.items) {
                     var mp = new ProductModels.Product(response.items[memberProduct]);
                     mp.set('memberindex', memberProduct);
-                    members.push(mp);                
+                    members.push(mp);
                 }
-                self.model.set('collectionMembers', members);
+                //self.model.set('collectionMembers', members);
+                var mpo = self.model.get('memberProducts');
+                mpo.add(members);
                 //self.model.set('memberProducts', members);
                 //OLD self.model.set('productMembersdata', response.items);
-                self.render();
-            });
+                //self.render();
+                return members;
+            })
+
         },
-        buildProductFilter: function(productMembers) {
+        buildProductFilter: function (productMembers) {
             var products = "?filter=productCode in [" + productMembers.join(",") + "]";
             var pageSize = "&pagesize=35";
             var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),purchasableState,price,pricingBehavior,isTaxable,inventoryInfo,options,variations,productCollections)";
@@ -56,8 +62,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                 this.model.set('productMembers', members);
             }
-            this.getMembersData();
-        },                
+            return this.getMembersData();
+        },
         initialize: function () {
             // handle preset selects, etc
             var me = this;
@@ -78,7 +84,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }
             });
-            this.getProductMembers();
+            //this.getProductMembers();
         },
         addToCart: function (e) {
             //this.model.addToCart();            
@@ -92,8 +98,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         onMemberQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
-              newQuantity = parseInt($qField.val(), 10),
-              memberIndex = $(e.currentTarget).data("memberindex");
+                newQuantity = parseInt($qField.val(), 10),
+                memberIndex = $(e.currentTarget).data("memberindex");
             if (!isNaN(newQuantity)) {
                 var me = this;
                 // determine which member model to call this one
@@ -132,17 +138,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         }
     });
 
+
+
+
     $(document).ready(function () {
-        var product = ProductModels.Product.fromCurrent();               
+        var product = ProductModels.Product.fromCurrent();
 
         product.on('addedtocart', function (cartitem, stopRedirect) {
             if (cartitem && cartitem.prop('id')) {
                 //product.isLoading(true);
                 CartMonitor.addToCount(product.get('quantity'));
-                if(!stopRedirect) {
+                if (!stopRedirect) {
                     window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
                 }
-                
+
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }
@@ -157,6 +166,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             model: product
         });
 
+
+
+
+
+
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
@@ -164,6 +178,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         });
 
         window.productView = productView;
-        productView.render();
+        productView.getProductMembers().then(function () {
+            productView.render();
+        });
+
     });
 });
