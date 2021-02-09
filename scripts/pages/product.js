@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages",  "hyprlivecontext"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews, HyprLiveContext) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages",  "hyprlivecontext", "modules/api", "vendor/es6-promise/dist/es6-promise"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews, HyprLiveContext,api,Promise) {
 
     var ProductView = Backbone.MozuView.extend({
         requiredBehaviors: [1014],
@@ -21,7 +21,7 @@
         },
         onQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
-              newQuantity = parseInt($qField.val(), 10);
+                newQuantity = parseInt($qField.val(), 10);
             if (!isNaN(newQuantity)) {
                 this.model.updateQuantity(newQuantity);
             }
@@ -63,6 +63,34 @@
             });
 
         },
+        getProductCollectionsData: function(){
+            var self = this;
+            var collections = self.model.get('productCollections');
+            if(collections === null || collections.length <1)
+            {
+                return;
+            }
+            var pageSize = "pagesize=35";
+            var filter = "&filter=productCode IN ["+collections.map( function(c){ return c.productCode;}).join(",")+"]";
+            var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),inventoryInfo,options,variations,ProductCollectionMembers)";
+            var multipleProducts = api.request('GET', "/api/commerce/catalog/storefront/products?"+pageSize+filter+responseFields);
+
+            Promise.resolve(multipleProducts).then(function (response) {
+
+                collections.forEach(function(collection){
+                    var mappedData = response.items.find(function(i){
+                        return i.productCode == collection.productCode;
+                    });
+
+                    collection.data= mappedData;
+
+                });
+                self.model.set('productCollections', collections);
+                self.render();
+            });
+
+        },
+
         initialize: function () {
             // handle preset selects, etc
             var me = this;
@@ -83,6 +111,7 @@
                     }
                 }
             });
+            this.getProductCollectionsData();
         }
     });
 
