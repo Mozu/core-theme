@@ -1,5 +1,5 @@
-﻿<div class="mz-productoptions" data-memberindex="{{data.attributes.memberindex}}">
-  {% for option in data.apiModel.data.options %}
+﻿<div class="mz-productoptions" data-memberindex="{{data.memberindex}}">
+  {% for option in data.options %}
   <div class="mz-productoptions-optioncontainer">
     {% if option.isRequired %}
     <strong class="is-required">*</strong>

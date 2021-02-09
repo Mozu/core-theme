@@ -1,6 +1,6 @@
 <div class="mz-img-section">
-	<a href="{% make_url "product" data.attributes %}">
-    {% with data.attributes.content.attributes.productImages|first as image %}
+	<a href="{% make_url "product" data %}">
+    {% with data.content.productImages|first as image %}
     {% if image %}
     <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
 				src="{% make_url "image" image with max=100 as_parameters %}"
