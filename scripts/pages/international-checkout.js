@@ -37,7 +37,7 @@ require([
     //check page and response type
     if(qs.ooStatus == "CHECKOUT"){
       borderFreeData = {
-        fullEnvoyUrl: atob(qs.fullEnvoyUrl),
+        fullEnvoyUrl: decodeURIComponent(atob(qs.fullEnvoyUrl)),
         checkoutDomain1: qs.checkoutDomain1,
         checkoutDomain2: qs.checkoutDomain2,
         ooStatus: qs.ooStatus
