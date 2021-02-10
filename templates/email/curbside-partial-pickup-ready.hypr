@@ -72,7 +72,7 @@
               {{ item.name }}
               <dl>
                 <dd>{{ labels.part }} #: {{ item.partNumber }}</dd>
-                <dd>{{ labels.qty }}: {{ item.quantity }}</dd>&nbsp;
+                <dd>{{ labels.qty }}: {{ item.readyForPickupQuantity }}</dd>&nbsp;
               </dl>
           </td>
           <td align="right">{{item.readyForPickupQuantity}}</td>
