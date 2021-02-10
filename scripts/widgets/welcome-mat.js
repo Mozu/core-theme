@@ -129,7 +129,7 @@ require([
             var selectedCountryName = $(selectedCountry).find(
               "option:selected"
             );
-
+            var exchangeRates = (!_.isEmpty(resp) && typeof(resp) === "string") ? JSON.parse(resp) : resp;
             self.setCookies(
               "currency_code_override",
               selectedCurrency.val(),
@@ -145,7 +145,7 @@ require([
               selectedCountryName.attr("data-code"),
               1
             );
-            self.setCookies("currency_QuoteId", resp.referenceData, 1);
+            self.setCookies("currency_QuoteId", exchangeRates.referenceData, 1);
             window.location.reload();
           },
           function(e) {}
