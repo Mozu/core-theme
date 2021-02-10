@@ -34,6 +34,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 for (var memberProduct in response.items) {
                     var mp = new ProductModels.Product(response.items[memberProduct]);
                     mp.set('memberindex', memberProduct);
+                    mp.on('optionsUpdated', self.onMemberOptionUpdate);
                     members.push(mp);
                 }
                 //self.model.set('collectionMembers', members);
@@ -105,11 +106,16 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 var members = me.model.get('memberProducts');
                 var memberProduct = members.models[memberIndex];
                 memberProduct.updateQuantity(newQuantity);
-                me.model.updateQuantity(newQuantity);
+
             }
         }, 500),
-        onMemberOptionChange: function (e) {
+        onMemberOptionChange: function (e) {            
             return this.configure($(e.currentTarget));
+        },
+        onMemberOptionUpdate: function () {
+            var me = this;
+            // force re-render of main view
+            window.productView.render();            
         },
         configure: function ($optionEl) {
             var me = this;
@@ -119,7 +125,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked;
 
-            var memberIndex = $($optionEl).parent().parent().parent().data('memberindex');
+            var memberIndex = $($optionEl).parent().data('memberindex');
             var members = me.model.get('memberProducts');
             var memberProduct = members.models[memberIndex];
 
@@ -157,9 +163,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         });
 
         product.on('addedtowishlist', function (cartitem) {
+
             $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
         });
-
+       
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product

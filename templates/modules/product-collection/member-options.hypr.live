@@ -1,11 +1,11 @@
-﻿<div class="mz-productoptions" data-memberindex="{{data.memberindex}}">
+﻿<div class="mz-productoptions">
   {% for option in data.options %}
   <div class="mz-productoptions-optioncontainer">
     {% if option.isRequired %}
     <strong class="is-required">*</strong>
     {% endif %}
     <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}</label>
-    <div class="mz-productoptions-valuecontainer">
+    <div class="mz-productoptions-valuecontainer" data-memberindex="{{data.memberindex}}">
       {% if option.attributeDetail.inputType == "List" %}
       <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
         {% if not option.isMultiValue %}<option></option>{% endif %}

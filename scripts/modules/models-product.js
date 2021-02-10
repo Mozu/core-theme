@@ -384,6 +384,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                             options: memberProduct.getConfiguredOptions()
                         }).then(function (item) {
                             memberProduct.trigger('addedtowishlist', item);
+                            me.trigger('addedtowishlist', item);
                         });
                     }
                 });
@@ -401,9 +402,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     });
                 });
             },
-            onOptionChange: function () {
+            onOptionChange: function (e) {
                 this.isLoading(true);
-                this.updateConfiguration();
+                this.updateConfiguration(e);
             },
             updateQuantity: function (newQty) {
                 var me = this;
@@ -443,7 +444,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                             if (me._hasVolumePricing) {
                                 return me.handleMixedVolumePricingTransitions(apiModel.data);
                             }
-                            me.trigger('optionsUpdated');
+                            me.trigger('optionsUpdated');                            
                         });
                 } else {
                     me.trigger('optionsUpdated');
@@ -484,7 +485,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     }
                     if (j.memberProducts) {
                         _.each(j.memberProducts, function (member, i) {
-                            //        j.collectionMembers[i] = member.toJSON({ helpers: true });
+                            //j.memberProducts[i] = member.toJSON({ helpers: true });
                         });
                     }
                 }
