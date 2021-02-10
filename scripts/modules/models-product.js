@@ -333,8 +333,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     }
                 });
             },
-            addMemberToCart: function (memberIndex, stopRedirect) {
+            addMemberToCart: function (e, stopRedirect) {
                 var me = this;
+                var memberIndex = $(e.currentTarget).data("memberindex");         
                 // generate new Product from the member, then add to cart
                 var members = me.get('memberProducts');
                 var memberProduct = members.models[memberIndex];
@@ -371,8 +372,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     }
                 });
             },
-            addMemberToWishlist: function (memberIndex) {
+            addMemberToWishlist: function (e) {
                 var me = this;
+                var memberIndex = $(e.currentTarget).data("memberindex");                
                 // generate new Product from the member, then add to cart
                 var members = me.get('memberProducts');
                 var memberProduct = members.models[memberIndex];
@@ -383,8 +385,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                             quantity: memberProduct.get("quantity"),
                             options: memberProduct.getConfiguredOptions()
                         }).then(function (item) {
-                            memberProduct.trigger('addedtowishlist', item);
-                            me.trigger('addedtowishlist', item);
+                            memberProduct.trigger('addedtowishlist', item, e);
+                            me.trigger('addedtowishlist', item, e);
                         });
                     }
                 });

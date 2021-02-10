@@ -18,32 +18,28 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             });
         },
         getMembersData: function () {
-
-
             var self = this;
             var array = self.model.get('productMembers');
             if (array === null || array.length < 1)
                 return Promise.resolve();
 
             var productFilter = this.buildProductFilter(array);
-            //var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[0]);            
-            //var member2 = api.request('GET', "/api/commerce/catalog/storefront/products/"+array[1]);            
             var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
             return member1.then(function (response) {
                 var members = [];
                 for (var memberProduct in response.items) {
                     var mp = new ProductModels.Product(response.items[memberProduct]);
+                    // initialize
                     mp.set('memberindex', memberProduct);
                     mp.on('optionsUpdated', self.onMemberOptionUpdate);
+                    if (mp.get('productUsage') === 'Configurable') {
+                        mp.lastConfiguration = mp.getConfiguredOptions();
+                    }
                     members.push(mp);
                 }
-                //self.model.set('collectionMembers', members);
                 var mpo = self.model.get('memberProducts');
                 mpo.add(members);
                 self.model.set('count', members.length);
-                //self.model.set('memberProducts', members);
-                //OLD self.model.set('productMembersdata', response.items);
-                //self.render();
                 return members;
             });
 
@@ -87,14 +83,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //this.getProductMembers();
         },
         addToCart: function (e) {
-            //this.model.addToCart();            
-            var memberIndex = $(e.currentTarget).data("memberindex");
-            this.model.addMemberToCart(memberIndex, true);
+            this.model.addMemberToCart(e, true);
         },
         addToWishlist: function (e) {
-            //this.model.addToWishlist();
-            var memberIndex = $(e.currentTarget).data("memberindex");
-            this.model.addMemberToWishlist(memberIndex);
+            this.model.addMemberToWishlist(e);
         },
         onMemberQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -162,9 +154,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
         });
 
-        product.on('addedtowishlist', function (cartitem) {
-
-            $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+        product.on('addedtowishlist', function (cartitem, e) {
+            $(e.currentTarget).prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+            //$('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
         });
        
         var productImagesView = new ProductImageViews.ProductPageImagesView({
