@@ -424,8 +424,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
                 if (typeof j.upc == "string") j.upc = [j.upc];
                 if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
+            
 
-                // merge in standard properties
+                //the tojson does funky things to properties
+                //doesn't apply the updates retrieved from the configure api call, so manually set that here.
+                j.properties = this.apiModel.data.properties;
+
+                 // merge in standard properties
                 if (j.properties && j.properties.length > 0) {                   
                     _.each(me.get('initialStandardProps'), function(stdProp) {
                         var exists = false;
@@ -437,9 +442,16 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         }
                     });
                 }
+                else
+                {
+                    j.properties = [];
+                    _.each(me.get('initialStandardProps'), function(stdProp) {
+                        j.properties.push(stdProp);
+                    });
+                }
             }
-
             return j;
+            
         }
     }, {
         Constants: {
