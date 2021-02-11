@@ -18,50 +18,28 @@
           </tr>
           <tr>
             <td>
-              <textarea class="txtarea-comments"></textarea>
+              <textarea id="quote-comment" class="txtarea-comments"></textarea>
             </td>
           </tr>
           <tr>
             <td>
-              <button class="mz-button mz-contact-save" data-mz-action="finishEditContact">{{labels.submit}}</button>
+              <button class="mz-button mz-contact-save" data-mz-action="addComment">{{labels.submit}}</button>
             </td>
           </tr>
           <tr>
             <td>
               <div class="quote-comments-viewer">
                 <div class="quote-comments">
+                  {% for comment in model.comments|dictsortreversed("createDate") %}
                   <div class="quote-comment">
-                    <b>
-                      Commented By: Rutvee Shah - 11/07/20
-                    </b>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
-                    </p>
-                  </div>
-                  <div class="quote-comment">
-                    <b>
-                      Commented By: Rutvee Shah - 11/07/20
-                    </b>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
-                    </p>
-                  </div>
-                  <div class="quote-comment">
-                    <b>
-                      Commented By: Rutvee Shah - 11/07/20
-                    </b>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
-                    </p>
-                  </div>
-                  <div class="quote-comment">
-                    <b>
-                      Commented By: Rutvee Shah - 11/07/20
-                    </b>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu justo elementum, tincidunt metus eu, sollicitudin odio. Nam consectetur mauris sed nunc elementum, pretium sagittis mauris molestie. Morbi elementum ac lectus ac vehicula. Nam consectetur ornare hendrerit. Sed convallis eros quis vulputate laoreet. Pellentesque eu aliquet massa. Sed sit amet felis ornare, feugiat ipsum quis, suscipit arcu.
-                    </p>
-                  </div>
+                      <b>
+                        Commented By: {{comment.auditInfo.createByName || comment.auditInfo.createBy}} - {{ comment.auditInfo.createDate|date("m/d/Y") }}
+                      </b>
+                      <p>
+                        {{comment.text}}
+                      </p>
+                    </div>
+                  {% endfor %}
                 </div>
               </div>
             </td>

@@ -20,6 +20,10 @@
             </dt>
             <dd>{{model.accountName}}</dd>
             <dt>
+              <b>{{labels.quoteNumber}}:</b>
+            </dt>
+            <dd>{{model.number}}</dd>
+            <dt>
               <b>{{labels.quoteName}}:</b>
             </dt>
             <dd>
@@ -46,7 +50,7 @@
               {% endif %}
             </dd>
             <dt>
-              <b>{{labels.submittedBy}}:</b>
+              <b>{{labels.createdBy}}:</b>
             </dt>
             <dd>
               {% if model.isEditSubmittedBy==true and model.isSalesRep==true and model.status=="Pending" %}

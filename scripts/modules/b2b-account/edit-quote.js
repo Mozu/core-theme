@@ -11,9 +11,11 @@ define([
     "modules/models-quotes",
     'modules/models-b2b-account',
     'modules/models-location',
-    'modules/modal-dialog'
+    'modules/modal-dialog',
+    'modules/models-customer',
+    'modules/b2b-account/add-new-address'
 ], function ($, api, _, Hypr, Backbone, HyprLiveContext, ProductModalViews,
-    ProductPicker, ProductModels, QuoteModels, B2BAccountModels, LocationModels, modalDialog) {
+    ProductPicker, ProductModels, QuoteModels, B2BAccountModels, LocationModels, modalDialog, CustomerModels, Address) {
     var timeout = null;
     var adjustmentSubtract = "Subtract";
     var adjustmentAdd = "Add";
@@ -21,6 +23,7 @@ define([
     var applyToDraft = 'ApplyToDraft';
     var applyAndCommit = 'ApplyAndCommit';
     var currentCurrencySymbol = require.mozuData('pagecontext').currencyInfo.symbol;
+    var addNewAddressViewPopup = new Address.AddNewAddressView({ model: new QuoteModels.Quote(require.mozuData("quote") || {}) });
 
     var QuoteEditView = Backbone.MozuView.extend({
         templateName: 'modules/b2b-account/quotes/edit-quote',
@@ -36,10 +39,18 @@ define([
             //populate user details on model
             self.populateWithUsers();
 
+            self.addUserInfoOnModel();
+
+            self.model.set('isShippable', self.isShippable());
+
+            self.model.set("isUserAdmin", require.mozuData('user').behaviors.includes(1000));
+            self.model.set('isSalesRep', require.mozuData('user').isSalesRep);
+
+            self.setModifiedContact();
+
             //render product picker
             self.renderProductPicker();
 
-            self.model.set('isSalesRep', require.mozuData('user').isSalesRep);
             //wire up all the events on controls
             self.onQuoteAdjustmentChange('#quoteAdjustmentSection', 'adjustment', self.model.apiModel.data.subTotal);
             self.onQuoteAdjustmentChange('#shippingAdjustmentSection', 'shippingAdjustment', self.model.apiModel.data.shippingSubTotal);
@@ -47,6 +58,7 @@ define([
             self.onQuantityChange();
             self.onPriceChange();
             self.onFulfillmentMethodChnage();
+            self.shippingAddressChnage();
 
             //initialize the store picker model
             self.pickerDialog = this.initializeStorePickerDialog();
@@ -57,9 +69,11 @@ define([
                 var userId = self.model.get('userId');
                 var b2bAccount = new B2BAccountModels.b2bAccount({ id: self.model.get('customerAccountId') });
                 b2bAccount.apiGet().then(function (account) {
+                    self.model.set('allContacts', account.data.contacts);
                     self.model.set('accountName', account.data.companyOrOrganization);
                     return b2bAccount.apiGetUsers().then(function (users) {
                         if (users && users.data.items) {
+                            self.model.set('allB2bUsers', users.data.items);
                             users.data.items.forEach(function (user) {
                                 if (user.userId == userId) {
                                     self.model.set('fullName', user.firstName + ' ' + user.lastName);
@@ -71,6 +85,8 @@ define([
                         self.showMessageBar(error);
                     });
                 }, function (error) {
+                    self.model.set('fullName', ' ');
+                    self.model.set('accountName', ' ');
                     self.showMessageBar(error);
                 });
             }
@@ -138,7 +154,7 @@ define([
 
                     clearTimeout(timeout);
                     timeout = setTimeout(function () {
-                        $(this).trigger('blur'); 
+                        $(this).trigger('blur');
                         if (itemId && price > 0) {
                             self.updateItemPrice(itemId, price);
                         }
@@ -157,7 +173,7 @@ define([
                 var value = $(this).val();
                 if (value && !value.includes(currentCurrencySymbol)) {
                     $(this).val(currentCurrencySymbol + value);
-                    $(this).trigger('blur'); 
+                    $(this).trigger('blur');
                 }
             });
         },
@@ -553,6 +569,7 @@ define([
                 self.model.set("isEditQuoteName", false);
                 self.model.set("isEditExpirationDate", false);
                 self.model.set("isEditSubmittedBy", false);
+                self.model.set('allAdminUsers', null);
                 self.model.syncApiModel();
                 self.render();
             }, function (error) {
@@ -574,6 +591,17 @@ define([
         commitDraft: function () {
             var self = this;
             self.updateQuote(applyAndCommit);
+        },
+        submitForApproval: function () {
+            var items = this.model.get('items');
+            if (items.length > 0) {
+                this.commitDraft();
+            }
+            else {
+                this.showMessageBar({
+                    message: 'At least one item must be added to submit a quote for approval.'
+                });
+            }
         },
         refreshQuote: function () {
             var self = this;
@@ -730,8 +758,354 @@ define([
             self.model.isLoading(false);
             self.model.set(data);
             self.model.set('error', null);
+            self.model.set('allAdminUsers', null);
             self.model.syncApiModel();
             self.render();
+        },
+
+        addComment: function () {
+            var self = this;
+            var quoteId = self.model.get('id');
+            var comment = $("#quote-comment").val();
+            if (quoteId && comment) {
+                var payload = {
+                    quoteId: quoteId,
+                    text: comment,
+                    updatemode: applyToDraft
+                };
+
+                self.model.isLoading(true);
+                self.model.apiModel.createQuoteComment(payload).then(function (response) {
+                    self.model.set('id', quoteId);
+                    self.refreshQuote();
+                }, function (error) {
+                    self.showMessageBar(error);
+                });
+            }
+        },
+        shippingAddressChnage: function () {
+            var self = this;
+
+            $('#selectShippingAddress').change(function () {
+                var contactId = $(this).val();
+                self.onAddressChange(contactId);
+            });
+
+            $('#selectShippingAddressModal').change(function () {
+                var contactId = $(this).val();
+                self.selectedAddressChangeOnModal(parseInt(contactId, 10));
+            });
+
+            $('#saveEditedAddress').click(function () {
+                self.saveEditedContact();
+            });
+
+            $('#country').change(function () {
+                var country = $(this).val();
+                if (country === "US") {
+                    $('.state-usa').show();
+                    $('.state-not-usa').hide();
+                }
+                else {
+                    $('.state-usa').hide();
+                    $('.state-not-usa').show();
+                }
+            });
+
+            $('#clearSelectedAddress').click(function () {
+                self.clearSelectedContact();
+            });
+        },
+        addUserInfoOnModel: function () {
+            var self = this;
+
+            var adminUserIds = [];
+            self.setUserNameOnComment(self.model.get('comments'), adminUserIds);
+            self.setUserInfoOnAuditHistory(self.model.get('auditHistory'), adminUserIds);
+            if (adminUserIds.length > 0) {
+                self.getAdminUsers(adminUserIds);
+            }
+        },
+        setUserNameOnComment: function (comments, adminUserIds) {
+            var allB2bUsers = this.model.get('allB2bUsers');
+            if (comments && comments.length > 0 &&
+                allB2bUsers && allB2bUsers.length > 0) {
+
+                for (var c = 0; c < comments.length; c++) {
+                    for (var u = 0; u < allB2bUsers.length; u++) {
+                        if (comments[c].auditInfo.createBy === allB2bUsers[u].userId) {
+                            comments[c].auditInfo.createByName = allB2bUsers[u].firstName + ' ' + allB2bUsers[u].lastName;
+                        }
+                        else if (!this.isAlreadyExists(adminUserIds, comments[c].auditInfo.createBy)) {
+                            adminUserIds.push(comments[c].auditInfo.createBy);
+                        }
+                    }
+                    //Need this for hypr filters. Hypr filter not working on complex/nested objects.
+                    comments[c].createDate = comments[c].auditInfo.createDate;
+                }
+                this.model.set('comments', comments);
+            }
+        },
+        setUserInfoOnAuditHistory: function (auditHistory, adminUserIds) {
+            var allB2bUsers = this.model.get('allB2bUsers');
+
+            if (auditHistory && auditHistory.length > 0 &&
+                allB2bUsers && allB2bUsers.length > 0) {
+
+                for (var a = 0; a < auditHistory.length; a++) {
+                    for (var u = 0; u < allB2bUsers.length; u++) {
+                        if (auditHistory[a].auditInfo.createBy === allB2bUsers[u].userId) {
+                            auditHistory[a].auditInfo.createByName = allB2bUsers[u].firstName + ' ' + allB2bUsers[u].lastName;
+                            auditHistory[a].auditInfo.createByEmail = allB2bUsers[u].emailAddress;
+                        }
+                        else if (!this.isAlreadyExists(adminUserIds, auditHistory[a].auditInfo.createBy)) {
+                            adminUserIds.push(auditHistory[a].auditInfo.createBy);
+                        }
+                    }
+                    //Need this for hypr filters. Hypr filter not working on complex/nested objects.
+                    auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
+                }
+                this.model.set('auditHistory', auditHistory);
+            }
+        },
+
+        onAddressChange: function (contactId) {
+            var self = this;
+            var destinations = self.model.get("destinations");
+
+            if (contactId === "-1") {
+                //trying to reset the destination                
+                if (destinations && destinations.length > 0) {
+                    self.model.set("destinations", null);
+                    self.updateQuote();
+                }
+            }
+            else {
+                //setting new destination
+                var contact = self.getContactById(contactId);
+                if (contact) {
+                    destinations = [{
+                        destinationContact: contact
+                    }];
+                    self.model.set("destinations", destinations);
+                    self.updateQuote();
+                }
+            }
+        },
+        getContactById: function (contactId) {
+            var self = this;
+            var allContacts = self.model.get('allContacts');
+            if (allContacts) {
+                for (var i = 0; i < allContacts.length; i++) {
+                    if (allContacts[i].id == contactId) {
+                        return allContacts[i];
+                    }
+                }
+            }
+        },
+        setModifiedContact: function () {
+            var contacts = this.getOnlyShippingAddress(this.model.get('allContacts'));
+            if (this.model.apiModel.data &&
+                this.model.apiModel.data.destinations &&
+                this.model.apiModel.data.destinations.length > 0) {
+                var destination = this.model.apiModel.data.destinations[0];
+                if (destination && contacts) {
+                    var isUpdated = false;
+                    for (var i = 0; i < contacts.length; i++) {
+                        if (contacts[i].id == destination.destinationContact.id) {
+                            contacts[i] = destination.destinationContact;
+                            isUpdated = true;
+                        }
+                    }
+                    //Add newly created address
+                    if (!isUpdated) {
+                        //this 'id' is only going to use for UI purposes.
+                        destination.destinationContact.id = 0;
+                        contacts.push(destination.destinationContact);
+                        this.model.set('destinations', [destination]);
+                    }
+                }
+            }
+            this.model.set('allContacts', contacts);
+        },
+
+        getOnlyShippingAddress: function (contacts) {
+            var filteredContacts = [];
+            if (contacts) {
+                for (var i = 0; i < contacts.length; i++) {
+                    var types = contacts[i].types;
+                    if (types && types.length > 0) {
+                        for (var j = 0; j < types.length; j++) {
+                            if (types[j].name === "Shipping") {
+                                filteredContacts.push(contacts[i]);
+                            }
+                        }
+                    }
+                }
+            }
+            return filteredContacts;
+        },
+        isShippable: function () {
+            var items = this.model.apiModel.data.items;
+            var result = false;
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].fulfillmentMethod === "Ship") {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        },
+        addNewAddress: function () {
+            var self = this;
+            if (this.model.get('destinations').length > 0)
+                this.model.set('selectedDestination', this.model.apiModel.data.destinations[0]);
+            else {
+                this.model.set('selectedDestination', { destinationContact: self.getEmptyContact() });
+            }
+
+            addNewAddressViewPopup.model = this.model;
+            addNewAddressViewPopup.renderView();
+            this.reRenderModal();
+        },
+
+        selectedAddressChangeOnModal: function (contactId) {
+            var self = this;
+            var contact = self.getContactById(contactId);
+            if (contact) {
+                var destination = {
+                    destinationContact: contact
+                };
+                self.model.set("selectedDestination", destination);
+                self.reRenderModal();
+            }
+        },
+        saveEditedContact: function () {
+            var self = this;
+            var contact = this.getAndValidateEditedContact();
+            if (contact) {
+                var destinations = [contact];
+                self.model.set("destinations", destinations);
+                self.updateQuote();
+                addNewAddressViewPopup.closeModal();
+            }
+        },
+        getAndValidateEditedContact: function () {
+            var self = this;
+            var firstName = self.requiredFieldValidator('firstname', 'firstNameMissing');
+            var lastName = self.requiredFieldValidator('lastNameOrSurname', 'lastNameMissing');
+            var address1 = self.requiredFieldValidator('address-line-1', 'streetMissing');
+            var address2 = self.requiredFieldValidator('address-line-2', '', true);
+            var country = self.requiredFieldValidator('country', 'countryMissing');
+            var city = self.requiredFieldValidator('city', 'cityMissing');
+            var state = country === "US" ?
+                self.requiredFieldValidator('state', 'stateProvMissing') :
+                self.requiredFieldValidator('stateOrProvince', 'stateProvMissing');
+            var postalCode = self.requiredFieldValidator('postal-code', 'postalCodeMissing');
+            var home = self.requiredFieldValidator('phonenumber', 'phoneMissing');
+            var addressType = self.requiredFieldValidator('addressType', '', true);
+            var isDestinationCommercial = addressType === "Commercial";
+            var selectedContactId = $('#selectShippingAddressModal').val();
+            //If contact is validated
+            if ($('.editableAddress .mz-validationmessage:visible').length <= 0) {
+                return {
+                    isDestinationCommercial: isDestinationCommercial,
+                    destinationContact: {
+                        id: selectedContactId == "-1" ? null : selectedContactId,
+                        firstName: firstName,
+                        lastNameOrSurname: lastName,
+                        companyOrOrganization: self.model.get('accountName'),
+                        phoneNumbers: {
+                            home: home
+                        },
+                        address: {
+                            address1: address1,
+                            address2: address2,
+                            cityOrTown: city,
+                            stateOrProvince: state,
+                            postalOrZipCode: postalCode,
+                            countryCode: country,
+                            addressType: addressType
+                        }
+                    }
+                };
+            }
+        },
+
+        clearSelectedContact: function () {
+            var self = this;
+            self.model.set("selectedDestination", {
+                isDestinationCommercial: null,
+                destinationContact: self.getEmptyContact()
+            });
+            self.reRenderModal();
+        },
+        requiredFieldValidator: function (controlSelector, validationMessageKey, skipValidation) {
+            var selector = '.editableAddress';
+            var value = $(selector + ' #' + controlSelector).val();
+            if (!skipValidation) {
+                var controlValidatorSelector = selector + ' span[data-mz-validationmessage-for=' + controlSelector + ']';
+                if (!value && value === "") {
+                    $(controlValidatorSelector).text(Hypr.getLabel(validationMessageKey)).show();
+                }
+                else {
+                    $(controlValidatorSelector).text('').hide();
+                }
+            }
+            return value;
+        },
+        getEmptyContact: function () {
+            return {
+                phoneNumbers: {},
+                address: {}
+            };
+        },
+        reRenderModal: function () {
+            addNewAddressViewPopup.render();
+            this.shippingAddressChnage();
+        },
+
+        getAdminUsers: function (userIds) {
+            var self = this;
+
+            var allB2bUsers = this.model.get('allB2bUsers') || [];
+            var allAdminUsers = self.model.get('allAdminUsers');
+
+            if (userIds && userIds.length > 0 && !allAdminUsers && allB2bUsers) {
+                $.ajax({
+                    type: "POST",
+                    url: '/adminusers/summaries',
+                    data: JSON.stringify(userIds),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        self.model.set('allAdminUsers', response);
+                        if (response) {
+                            for (var i = 0; i < response.length; i++) {
+                                response[i].userId = response[i].id;
+                                allB2bUsers.push(response[i]);
+                            }
+                            self.model.set('allB2bUsers', allB2bUsers);
+                            self.render();
+                        }
+                    },
+                    error: function (error) {
+                        self.model.set('allAdminUsers', []);
+                    }
+                });
+            }
+        },
+
+        isAlreadyExists: function (array, key) {
+            if (array) {
+                for (var i = 0; i < array.length; i++) {
+                    if (key === array[i]) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     });
 

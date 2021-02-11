@@ -32,7 +32,7 @@
                 <img id="itemTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
               </td>
               <td>
-                {{labels.itemTotal}}: <br/>
+                {{labels.itemTotal}} <br/>
                 <div class="adjustments itemTotalAdjustment">
                   <table>
                     <tbody>
