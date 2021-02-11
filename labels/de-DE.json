@@ -354,6 +354,7 @@
   "parkingSpotNumber": "Numéro de place de stationnement",
   "part": "Teil",
   "partialPickupReadyBlob": "Vielen Dank für Ihren Einkauf bei {0}. Ein Teil Ihrer Bestellung steht zur Abholung bereit.",
+  "partOfCollection": "Cet article fait partie de la",
   "password": "Passwort",
   "passwordChanged": "Passwort wurde erfolgreich geändert.",
   "passwordMissing": "Bitte geben Sie ein Passwort",

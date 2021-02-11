@@ -451,6 +451,7 @@
   "parkingSpotNumber": "Parking Spot Number",
   "part": "Part",
   "partialPickupReadyBlob": "Thank you for shopping at {0}. Part of your order is ready for pickup.",
+  "partOfCollection": "This item is part of the",
   "password": "Password",
   "passwordChanged": "Password successfully changed",
   "passwordMissing": "Please enter a password",

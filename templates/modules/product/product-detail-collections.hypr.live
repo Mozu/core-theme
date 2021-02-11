@@ -1,0 +1,17 @@
+{% for collection in model.productCollections %}
+    {% if collection.data && collection.isPrimary === true  %}
+        <div class="mz-productdetail-collection">
+            <a href="{% make_url "product" collection %}">
+                <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main f
+                    {% with collection.data.content.productImages|first as image %}
+                        src="{{ image.imageUrl}}?max=100"
+                        {% if image.altText %}
+                            title="{{ image.altText }}" alt="{{ image.altText }}" TODO="show the missing image img"
+                        {% endif %}
+                    {% endwith %}/></a>
+            <span class="mz-productdetail-collection-text">
+                {{ labels.partOfCollection }} <a href="{% make_url "product" collection %}">{{ collection.data.content.productName }}</a>
+            </span>
+        </div>
+    {% endif %}
+{% endfor %}
