@@ -27,8 +27,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
             return member1.then(function (response) {
                 var members = [];
-                for (var memberProduct in response.items) {
-                    var mp = new ProductModels.Product(response.items[memberProduct]);
+                //Sort based on collection member ranking
+                var sortedResults =  response.items.sort(function(a, b){  
+                    if (array.indexOf(a.productCode) < 0 ) return 1;
+                    return array.indexOf(a.productCode) - array.indexOf(b.productCode);
+                });
+                for (var memberProduct in sortedResults) {
+                    var mp = new ProductModels.Product(sortedResults[memberProduct]);
                     // initialize
                     mp.set('memberindex', memberProduct);
                     mp.on('optionsUpdated', self.onMemberOptionUpdate);
