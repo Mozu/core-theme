@@ -175,5 +175,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             productView.render();
         });
 
+        $('.mz-carttable-button-active').on('click', function () {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#product-detail").offset().top
+            }, 1000);
+        });
+
     });
 });
