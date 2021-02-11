@@ -66,24 +66,19 @@
         getProductCollectionsData: function(){
             var self = this;
             var collections = self.model.get('productCollections');
-            if(collections === null || collections.length <1)
-            {
-                return;
-            }
-            var pageSize = "pagesize=35";
-            var filter = "&filter=productCode IN ["+collections.map( function(c){ return c.productCode;}).join(",")+"]";
-            var responseFields = "&responseFields=items(productCode,content(productName,productShortDescription,seoFriendlyUrl,productImages),inventoryInfo,options,variations,ProductCollectionMembers)";
-            var multipleProducts = api.request('GET', "/api/commerce/catalog/storefront/products?"+pageSize+filter+responseFields);
+            if(collections === null || collections.length < 1) { return; }
+            var primary = collections.filter(function(prod) {
+                return prod.isPrimary == 1;
+            });
+            if(primary === null || primary.length < 1) { return; }
+            var responseFields = "?responseFields=productCode,content(productName,seoFriendlyUrl,productImages)";
+            var primaryProduct = api.request('GET', "/api/commerce/catalog/storefront/products/"+primary[0].productCode+responseFields);
 
-            Promise.resolve(multipleProducts).then(function (response) {
-
+            Promise.resolve(primaryProduct).then(function (response) {
                 collections.forEach(function(collection){
-                    var mappedData = response.items.find(function(i){
-                        return i.productCode == collection.productCode;
-                    });
-
-                    collection.data= mappedData;
-
+                    if(response.productCode == collection.productCode) {
+                        collection.data = response;
+                    }
                 });
                 self.model.set('productCollections', collections);
                 self.render();
