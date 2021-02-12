@@ -544,7 +544,5 @@
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yourAccount": "Ihr Konto",
   "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>.",
-  "memberProducts": "Produits des membres(1)",
-  "productName": "Nom du produit",
-  "productDetails": "Détails du produit (description courte)"
+  "memberProducts": "Produits des membres(1)"
 }

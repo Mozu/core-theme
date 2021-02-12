@@ -28,7 +28,7 @@
 </div>
 <div itemscope itemtype="http://schema.org/Product" class="mz-l-container">	                    
     <div style="display:flex;">        
-        <div id="product-detail">
+        <div id="product-detail" style="width:94vw;">
             {% include "modules/product-collection/product-collection-detail" %}
         </div>
     </div>

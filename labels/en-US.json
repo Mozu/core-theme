@@ -705,7 +705,5 @@
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yourAccount": "Your Account",
   "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
-  "memberProducts": "Member Products",
-  "productName": "Product Name",
-  "productDetails": "Product Details(Short Description)"
+  "memberProducts": "Member Products"
 }
