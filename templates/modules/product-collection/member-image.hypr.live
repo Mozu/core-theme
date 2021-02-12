@@ -5,7 +5,7 @@
     <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main 
 				src="{% make_url "image" image with max=100 as_parameters %}"
 				{% if image.altText %}
-					title="{{ image.altText }}" alt="{{ image.altText }}" TODO="show the missing image img"
+					title="{{ image.altText }}" alt="{{ image.altText }}"
 				{% endif %}
 			/>
 		{% else %}
@@ -14,12 +14,3 @@
 	{% endwith %}
 	</a>
 </div>
-
-{% comment %}
-
-TODO:
-* Probably need a new CSS class for the image above
-* Center image with text
-* Should we use the hardcoded style ?
-
-{% endcomment %}

@@ -6,10 +6,11 @@
 	<div class="mz-img-section">
 		{% include "modules/product-collection/member-image" %}
 	</div>
-	<div class="mz-prod-div-details">
-		<span itemscope="description">{{ data.productName }}</span>
-		<span itemscope="description">{{ data.content.productName }}</span> 
-			{% if data.options and data.options.length > 0 %}
+	<div class="mz-prod-div-details mz-productdetail-collection-text">
+		<a href="{% make_url "product" data %}">
+			<span itemscope="description">{{ data.content.productName }}</span> 
+		</a>
+		{% if data.options and data.options.length > 0 %}
 		<div class="mz-productdetail-options mz-l-stack-section">
 		  <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
 		  {% include "modules/product-collection/member-options" %}
