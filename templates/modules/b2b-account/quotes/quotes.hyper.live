@@ -4,7 +4,8 @@
     {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
 </div>
 {% if user.isSalesRep %}
-<div>
+<div class="mz-l-stack-section">
+    <h3 class="mz-l-stack-sectiontitle">{{ labels.createQuote }}</h3>
     <span>
         <b>{{labels.accountSearch}}</b>
     </span>
@@ -26,9 +27,19 @@
         <div class="mz-quotes-grid-container">
             <div class="filter-container">
                 {% if user.isSalesRep %}
-                <div id="selectb2bAccountGrid">
-                    <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
-                    <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
+                <div>
+                    <select class="account-select" data-mz-action="selectionChanged" id="accountNameDropdown" data-mz-value="">
+                        <option selected="selected" value="">
+                            {{labels.accountSearchLabel}}
+                        </option>
+                        {% for acc in model.b2bAccounts %}
+                            {% if acc.data.id %}
+                            <option value="{{acc.data.id}}">
+                                {{acc.data.companyOrOrganization}}
+                            </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                 </div>
                 {% endif %}
                 <div>

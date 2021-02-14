@@ -24,9 +24,11 @@ define([
         ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
         PagingViews, EditableView, QuoteModels, B2bContactsModal, mozuPaginatedSearchableGrid) {
         var nameFilter = "name cont ";
+        var quoteNumberFilter = "number eq ";
         var expirationDateFilter  = "expirationdate ge ";
+        var statusFilter = "status cont ";
+        var accountNameFilter = "customerAccountId eq ";
         var timeComponent = "T00:00:00z";
-        var filterstring = "";
         var timeout = null;
 
         var isSalesRep = require.mozuData('user').isSalesRep;
@@ -163,7 +165,10 @@ define([
                     });
                 }
 
+                $(".quotesTextSearch").addClass("adjust-width");
+                $(".status-select").addClass("adjust-margin");
             }
+
             $(document).ready(function () {
                 $(document).on('click', '#selectb2bAccount .mozu-dropdown', function () {
                     $("#createQuoteHompageBtn").prop("disabled", false);
@@ -175,30 +180,20 @@ define([
                 });
             });
             
-            $('[data-mz-action="applyfilter"]').on('keyup input', function(e) {
+            $('[data-mz-action="selectionChanged"]').on('change', function(e) {
+                self.filter(collection);
+            });
+            $('[data-mz-action="inputChanged"]').on('keyup input', function(e) {
                 e.preventDefault();
                 clearTimeout(timeout);
-                var dateValue = "";
-                var nameValue = $(this).val();
-                if ($("#expirationdate").val() !== "")
-                {
-                    dateValue  = $("#expirationdate").val();
-                }
                 timeout = setTimeout(function () {
-                    self.filterGrid(nameValue, dateValue, collection);
+                    self.filter(collection);
                 }, 400);
             });
-            $('[data-mz-action="applyDatefilter"]').on('change', function(e) {
+            $('[data-mz-action="dateChanged"]').on('change', function(e) {
                 e.preventDefault();
-                var nameValue ="";
-                if ($("#searchName").val()!=="")
-                {
-                    nameValue  = $("#searchName").val();
-                }
-                var dateValue =  $(this).val();
-                self.filterGrid(nameValue, dateValue, collection);
+                self.filter(collection);
             });
-            
             $('[data-mz-action="search-address"]').click(function() {
                 ModalView.renderView();
                 ModalView.render();
@@ -246,45 +241,44 @@ define([
             self.model.syncApiModel();
             self.render();
         },
-        filterGrid: function (nameValue, dateValue, collection) {
-            var filterstring = "";
-            var self = this;
-            var viewB2BAccount = self.model.attributes.viewB2BAccount;
-            if (viewB2BAccount) {
-                filterstring = "customerAccountId eq " + self.model.attributes.accountToView;
+        filter: function(collection) {
+            var filterStr = "";
+            var qName = $("#searchName").val();
+            var qNumber = $("#searchQuoteNumber").val();
+            var status = $("#statusDropdown").val();
+            var expDate = $("#expirationdate").val();
+            var accountId = $("#accountNameDropdown").val();
+
+            if (accountId) {
+                filterStr += accountNameFilter + accountId;
             }
-           
-            if (nameValue !== "") {
-                nameValue = nameFilter + nameValue;
-                if (filterstring === "") {
-                    filterstring = nameValue;
+
+            if (qName) {
+                if (filterStr) {
+                    filterStr += " and ";
                 }
-                else {
-                    filterstring = filterstring + " and " + nameValue;
-                }
-               
-                if (dateValue !== "") {
-                    dateValue = expirationDateFilter + dateValue + timeComponent;
-                    filterstring = filterstring + " and " + dateValue;
-                }
-                collection.filterBy(filterstring);
+                filterStr += nameFilter + '"'+ qName+'"';
             }
-            else if (dateValue !== "") {
-                if (filterstring === "") {
-                    filterstring = expirationDateFilter + dateValue + timeComponent;
+            if (qNumber) {
+                if (filterStr) {
+                    filterStr += " and ";
                 }
-                else {
-                    filterstring = filterstring + " and " + expirationDateFilter + dateValue + timeComponent;
-                }
-                collection.filterBy(filterstring);
-            } else if (nameValue === "") {
-                if (filterstring === "") {
-                    collection.filterBy("");
-                }
-                else {
-                    collection.filterBy(filterstring);
-                }
+                filterStr += quoteNumberFilter + qNumber;
             }
+            if (status) {
+                if (filterStr) {
+                    filterStr += " and ";
+                }
+                filterStr += statusFilter + status;
+            }
+            if (expDate) {
+                if (filterStr) {
+                    filterStr += " and ";
+                }
+                filterStr += expirationDateFilter + expDate + timeComponent;
+            }
+
+            collection.filterBy(filterStr);
         },
         initializeGrid: function (collection) {
             var self = this;
@@ -351,8 +345,13 @@ define([
 
     var QuotesGridCollectionModel = MozuGridCollection.extend({
         mozuType: 'quotes',
-        defaultSort: 'submittedDate desc',
+        defaultSort: 'number desc',
         columns: [
+            {
+                index: 'number',
+                displayName: 'Quote Number',
+                sortable: true
+            },
             {
                 index: 'name',
                 displayName: 'Quote Name',
@@ -365,19 +364,19 @@ define([
                 displayTemplate: function (value) {
                     var date = "";
                     if (value) {
-                        date = new Date(value).toLocaleString();
+                        date = new Date(value).toLocaleDateString();
                     }
                     return date;
                 }
             },
             {
-                index: 'submittedDate',
-                displayName: 'Submitted Date',
-                sortable: true,
-                displayTemplate: function (value) {
+                index: 'auditInfo',
+                displayName: 'Created Date',
+                sortable: false,
+                displayTemplate: function(auditInfo){
                     var date = "";
-                    if (value) {
-                        date = new Date(value).toLocaleString();
+                    if (auditInfo && auditInfo.createDate) {
+                        date = new Date(auditInfo.createDate).toLocaleDateString();
                     }
                     return date;
                 }
@@ -451,8 +450,13 @@ define([
     }
     var B2BViewAccountQuotesGridCollectionModel = MozuGridCollection.extend({
             mozuType: 'quotes',
-            defaultSort: 'submittedDate desc',
+            defaultSort: 'number desc',
             columns: [
+                {
+                    index: 'number',
+                    displayName: 'Quote Number',
+                    sortable: true
+                },
                 {
                     index: 'name',
                     displayName: 'Quote Name',
@@ -465,19 +469,19 @@ define([
                     displayTemplate: function (value) {
                         var date = "";
                         if (value) {
-                            date = new Date(value).toLocaleString();
+                            date = new Date(value).toLocaleDateString();
                         }
                         return date;
                     }
                 },
                 {
-                    index: 'submittedDate',
-                    displayName: 'Submitted Date',
-                    sortable: true,
-                    displayTemplate: function (value) {
+                    index: 'auditInfo',
+                    displayName: 'Created Date',
+                    sortable: false,
+                    displayTemplate: function(auditInfo){
                         var date = "";
-                        if (value) {
-                            date = new Date(value).toLocaleString();
+                        if (auditInfo && auditInfo.createDate) {
+                            date = new Date(auditInfo.createDate).toLocaleDateString();
                         }
                         return date;
                     }

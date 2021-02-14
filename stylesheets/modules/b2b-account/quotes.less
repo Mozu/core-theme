@@ -714,20 +714,61 @@
 .dropdown-content a:hover {background-color: #ddd}
 .show {display:block;}
 
-#searchName {
-    width: 110px !important;
-    background: #eee url('../resources/images/search-regular.svg');
+.quotesTextSearch {
+    width: 7.4rem !important;
+    background: #eee url(../resources/images/search-regular.svg);
     background-repeat: no-repeat;
-    background-size: 14px 14px;
-    background-position-x: 118px;
-    background-position-y: 6px;
-    padding-right: 20px !important;
+    background-size: 1rem 1rem;
+    background-position-x: 8rem;
+    background-position-y: 0.35rem;
+    padding-right: 1.5rem !important;
+    margin-right: 1.5rem;
+    &.adjust-width {
+        width: 5.5rem !important;
+        background-position-x: 6rem;
+        margin-right: 1rem;
+    }
 }
 
-#expirationdate
+.adjust-text-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} 
+
+.expirationdate-filter
 {
     background-color: #eee;
-    width: 130px !important;
+    width: 8.5rem;
+    margin-bottom: 12px;
+}
+
+.filter-container {
+    display: flex;
+    margin: 0 10px;
+}
+
+.exp-date-filter-container {
+    display: flex;;
+}
+
+.account-select {
+    background-color: #eee;
+    width: 8rem;
+    margin-right: 1rem;
+}
+
+.status-select {
+    width: 8rem;
+    background-color: #eee;
+    margin-right: 6rem;
+    &.adjust-margin {
+        margin-right: 4rem;
+    }
+}
+
+.fill-remaining-space {
+    flex: 1 1 auto;
 }
 
 .mz-b2b-quotes-compare   
