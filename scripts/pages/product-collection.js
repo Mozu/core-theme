@@ -149,7 +149,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         product.on('addedtocart', function (cartitem, stopRedirect) {
             if (cartitem && cartitem.prop('id')) {
                 //product.isLoading(true);
-                CartMonitor.addToCount(product.get('quantity'));
+                CartMonitor.addToCount(cartitem.data.quantity);
                 if (!stopRedirect) {
                     window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
                 }
