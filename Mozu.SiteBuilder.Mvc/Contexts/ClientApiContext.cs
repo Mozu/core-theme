@@ -330,6 +330,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         Id = "QuoteService",
                         InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("QuoteWebApi"),
                         RequiresSsl = true
+                    },
+                     new ServiceInfo
+                    {
+                        Id = "B2BContactService",
+                        InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("B2BContactWebApi"),
+                        RequiresSsl = true
                     }
                 };
             foreach (var si in sis)

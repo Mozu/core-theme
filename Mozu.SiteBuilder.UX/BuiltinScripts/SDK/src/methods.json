@@ -1192,5 +1192,20 @@
       "pageSize": 5
     },
     "collectionOf": "quote"
+  },
+  "b2bcontact": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BContactService}{id}"
+    }
+  },
+  "b2bcontacts": {
+    "template": "{+b2BContactService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "b2bcontact"
   }
 }

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-01-20
+ * Mozu JavaScript SDK - v0.3.0 - 2021-01-21
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -2939,7 +2939,7 @@ var ApiContextConstructor = function(conf) {
         ApiContextConstructor.__debug__ = _dereq_('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'dataview-mode', 'preview-date',"scope-type"],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'dataview-mode', 'preview-date', 'scope-type'],
     immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
@@ -4732,6 +4732,21 @@ module.exports=
       "pageSize": 5
     },
     "collectionOf": "quote"
+  },
+  "b2bcontact": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BContactService}{id}"
+    }
+  },
+  "b2bcontacts": {
+    "template": "{+b2BContactService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "b2bcontact"
   }
 }
 },{}],23:[function(_dereq_,module,exports){
