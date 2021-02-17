@@ -16,11 +16,13 @@ define([
     'modules/mozu-grid/mozugrid-pagedCollection',
     "modules/views-paging",
     'modules/editable-view',
-    "modules/models-quotes"], 
+    "modules/models-quotes",
+    "modules/b2b-account/account-address-search"], 
     function ($, api, _, Hypr, Backbone, HyprLiveContext,
-    CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
-    ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
-    PagingViews, EditableView, QuoteModels) {
+        CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
+        ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
+        PagingViews, EditableView, QuoteModels, B2bContactsModal) {
+
         var nameFilter = "name cont ";
         var expirationDateFilter  = "expirationdate ge ";
         var timeComponent = "T00:00:00z";
@@ -110,6 +112,8 @@ define([
         }
     });
 
+    var ModalView = new B2bContactsModal.B2bContactsView({model: CustomerModels.EditableCustomer.fromCurrent() });
+    
     var QuotesView = Backbone.MozuView.extend({
         templateName: "modules/b2b-account/quotes/quotes",
         initialize: function () {
@@ -158,6 +162,11 @@ define([
                 }
                 var dateValue =  $(this).val();
                 self.filterGrid(nameValue, dateValue, collection);
+            });
+            
+            $('[data-mz-action="search-address"]').click(function() {
+                ModalView.renderView();
+                ModalView.render();
             });
             
             this.initializeGrid(collection);

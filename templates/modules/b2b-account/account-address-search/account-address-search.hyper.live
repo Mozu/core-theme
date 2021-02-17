@@ -1,0 +1,56 @@
+{% require_script "modules/b2b-account/b2b-contacts" %}
+
+{% extends "modules/common/modal-dialog" %}
+ <div class="modal-header">
+      {% block modal-header %}
+        <button type="button" class="close" aria-hidden="true"  data-dismiss="modal">×</button>
+        <h4 class="modal-title">{{labels.searchByAddress}}</h4>
+      {% endblock modal-header %}
+      </div>
+{% block modal-body %}
+<div id="quotes-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+    
+    <div class="mz-b2b-quotes">
+        <div class="mz-quotes-grid-container">  
+          </div>
+        <div><button class="mz-button" data-mz-action="clearSearch" >{{labels.clearSearch}}</button></div>
+    </div>   
+    </br>
+        <div>
+             <span class="mz-grid-column" id="email" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="email">                 
+	              <input type="text" name="searchEmail" class="searchIcon" id="searchEmail" data-mz-action="addEmailfilter" placeholder="Email">
+	           </span>               
+             <span class="mz-grid-column" id="address" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="address">
+                <input type="text" name="searchAddress" class="searchIcon mz-text-margin" id="searchAddress" data-mz-action="addAddressfilter" placeholder="Address">          
+              </span>            
+              <span class="mz-grid-column" id="address" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="address">
+                <input type="text" name="searchCity" class="searchIcon mz-text-margin" id="searchCity" data-mz-action="addCityfilter" placeholder="City">                                     
+              </span>            
+              <span class="mz-grid-column" id="address" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="address">
+                  <input type="text" name="searchState" class="searchIcon mz-text-margin" id="searchState" data-mz-action="addStatefilter" placeholder="State">                                   
+              </span>            
+              <span class="mz-grid-column" id="address" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="address">
+                  <input type="text" name="searchCountry" class="searchIcon mz-text-margin" id="searchCountry" data-mz-action="addCountryfilter" placeholder="Country">                               
+              </span>            
+              <span class="mz-grid-column" id="address" data-sortorder="desc" data-mz-action="sort" data-mz-col-index="address">
+                 <input type="text" name="searchZipCode" class="searchIcon mz-text-margin" id="searchZipCode" data-mz-action="addZipCodefilter" placeholder="Zip Code">                                
+              </span>
+        </div>      
+        <div class="mz-b2b-contacts-grid">
+            <div class="is-loading"></div>
+            {% include "modules/b2b-account/account-address-search/account-address-search-grid" %}
+        </div>
+      
+</div>
+{% endblock modal-body %} 
+ <div class="modal-footer">
+        {% block modal-footer %}
+        <div  class="mz-button-footer">
+          <button type="button" class="mz-button mz-button-width" data-dismiss="modal">Close</button>
+          <button type="button" class="mz-button mz-button-width" data-mz-action="handleDialogSave">Create quote</button>
+        </div>
+        {% endblock modal-footer %}
+  </div>

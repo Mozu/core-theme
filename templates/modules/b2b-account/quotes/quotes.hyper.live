@@ -17,6 +17,7 @@
                 {% endif %}
             {% endfor %}
         </select>
+        <button class="mz-button" data-mz-action="search-address" >{{labels.searchByAddress}}</button>       
     </div>
 </div>
 <br />
