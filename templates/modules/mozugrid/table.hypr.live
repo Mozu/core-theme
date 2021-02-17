@@ -34,8 +34,8 @@
 <div class="mz-grid-body">
     {% if model.items.length > 0 %}
         {% for row in model.gridItems %}
-            <div data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}">
-                <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
+            <div data-mz-row-index="{{forloop.index}}" data-mz-action="selectRow"  class="mz-grid-row mz-cols-{{model.columns.length}}">
+            <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
                     {% for col in row %}
                         <span class="mz-grid-column">
                             {{col|safe}}
