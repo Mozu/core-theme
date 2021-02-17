@@ -1182,6 +1182,10 @@
     "get": {
       "verb": "GET",
       "template": "{+quoteService}{id}"
+    },
+    "create": {
+      "verb": "POST",
+      "template": "{+quoteService}"
     }
   },
   "quotes": {
