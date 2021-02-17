@@ -168,8 +168,46 @@ define([
                 ModalView.renderView();
                 ModalView.render();
             });
+            $('[data-mz-action="create-quote"]').click(function (e) {
+                var createQuoteOnAccnt;
+                var accountType = "myaccount";
+                if (isSalesRep) {
+                    //seller account
+                    accountType = 'selleraccount';
+                    createQuoteOnAccnt = $("#selectb2bAccount").val();
+                } else {
+                    // buyer account
+                    createQuoteOnAccnt = require.mozuData("user").accountId;
+                }
+
+                var quote = new QuoteModels.Quote({
+                    "customerAccountId": createQuoteOnAccnt
+                });
+                return quote.apiModel.create().then(function (res) {
+                    window.location =
+                        "/" + accountType + "/quote/" + res.data.id + "/edit";
+                }, function (error) {
+                    self.showMessageBar(error);
+                });
+            });
+        
+            $(document).ready(function () {
+                $("#selectb2bAccount").change(function () {
+                    if ($("#selectb2bAccount").val() === "") {
+                        $("#createQuoteHompageBtn").prop("disabled", true);
+                    } else {
+                        $("#createQuoteHompageBtn").prop("disabled", false);
+                    }
+                });
+            });
             
             this.initializeGrid(collection);
+        },
+        showMessageBar: function (error) {
+            var self = this;
+            self.model.set("error", error);
+            self.model.syncApiModel();
+            self.render();
         },
         filterGrid: function (nameValue, dateValue, collection) {
             filterstring = "";
