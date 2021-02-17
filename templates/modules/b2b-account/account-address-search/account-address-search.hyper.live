@@ -10,6 +10,7 @@
 {% block modal-body %}
 <div id="quotes-messages">
     {% include "modules/common/message-bar" with model=model.messages %}
+    {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
 </div>
 <div class="mz-l-stack-section mz-orderlist" style="clear:none">
     
@@ -50,7 +51,7 @@
         {% block modal-footer %}
         <div  class="mz-button-footer">
           <button type="button" class="mz-button mz-button-width" data-dismiss="modal">Close</button>
-          <button type="button" class="mz-button mz-button-width" data-mz-action="handleDialogSave">Create quote</button>
+          <button type="button" disabled="true" id="createQuoteAfterSelect" class="mz-button" data-mz-action="createQuote">Create quote</button>
         </div>
         {% endblock modal-footer %}
   </div>
