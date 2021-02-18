@@ -9,17 +9,11 @@
         <b>{{labels.accountSearch}}</b>
     </span>
     <br />
-    <div>
-        <select class="mz-l-formfieldgroup-halfsize" id="selectb2bAccount" style="width:300px" data-mz-value="">
-            <option selected="selected" value="">{{labels.accountSearchLabel}}</option>
-            {% for acc in model.b2bAccounts %}
-                {% if acc.data.id %}
-                <option value={{acc.data.id}}>{{acc.data.companyOrOrganization}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <button class="mz-button" data-mz-action="search-address" >{{labels.searchByAddress}}</button>       
-    </div>
+    <div id="selectb2bAccount">
+        <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
+        <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
+    </div> 
+   <button class="mz-button" data-mz-action="search-address" >{{labels.searchByAddress}}</button> 
 </div>
 <br />
 {% endif %}
@@ -42,6 +36,7 @@
                 <div class="is-loading"></div>
                 {% include "modules/b2b-account/quotes/quotes-grid" %}
             </div>
+            
         </div>
     </div>
 </div>

@@ -470,7 +470,7 @@
   "orderPickupBlob": "Good News!<br/>Your order is available and ready for pick up. Please click the \"I'm on my way\" button below to inform the store you are on your way to pick up your order. Thank you so much for your purchase! we're happy we can help you get what you're looking for.",
   "orderPickupReadyBlob1": "Thank you for shopping at {0}. Your order #{1}, external order #{2} is ready for pickup.",
   "orderPickupReadyBlob2": "Important notes about your order: This order can only be picked up by the owner of the credit card used to make the purchase or the pickup party designated in checkout. Bring a government-issued ID with your picture on it (such as a driver's license or passport). You may continue to receive email reminders until you get your order.",
-  "orderPickupReminderTitle": "REMINDER: YOUR ORDER IS READY FOR PICK-UP!",  
+  "orderPickupReminderTitle": "REMINDER: YOUR ORDER IS READY FOR PICK-UP!",
   "orderPickupReminderBlob": "Your order #{0}, external order #{1} is still ready for pickup.",
   "orderPlaced": "Order Placed",
   "orderReceived": "Your order has been received",
@@ -784,5 +784,6 @@
   "width": "Width",
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yourAccount": "Your Account",
-  "yourOrderNumber": "Your order number is <strong>{0}</strong>."
+  "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
+  "noRecordsfound": "No Records Found"
 }

@@ -379,7 +379,7 @@
   "orderNo": "Order #",
   "orderNumber": "Bestellnummer",
   "orderPickupBlob": "Bonne nouvelle! <br/> Votre commande est disponible et prête à être récupérée. Veuillez cliquer sur le bouton «Je suis en route» ci-dessous pour informer le magasin que vous êtes sur le point de récupérer votre commande. Merci beaucoup pour votre achat! nous sommes heureux de pouvoir vous aider à obtenir ce que vous recherchez.",
-  "orderPickupReminderTitle": "RAPPEL: VOTRE COMMANDE EST PRÊT POUR LE RETRAIT!", 
+  "orderPickupReminderTitle": "RAPPEL: VOTRE COMMANDE EST PRÊT POUR LE RETRAIT!",
   "orderRedayForPickup": "VOTRE COMMANDE EST PRÊTE POUR LE RAMASSAGE!",
   "orderShipmentBlob1": "<p> Danke für den Einkauf bei {0}. Ihre Bestellung wurde mit {2} ausgeliefert. Sobald eine Bestellung versendet wurde, kann sie nicht mehr aktualisiert werden. Falls Sie ein Element aus diesem Auftrag zurückzugeben oder auf andere Aufträge zu überprüfen, besuchen Sie bitte <a href = \"",
   "orderShipmentBlob2": "<p> Daten über Tracking kann nicht zeigen, bis auf Ihrem Konto für mindestens 24 Stunden vom Versanddatum. </ p>",
@@ -624,5 +624,6 @@
   "width": "Breite",
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yourAccount": "Ihr Konto",
-  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>."
+  "yourOrderNumber": "Ihre Auftragsnummer ist <strong> {0} </ strong>.", 
+  "noRecordsfound": "Aucun enregistrement trouvé"
 }
