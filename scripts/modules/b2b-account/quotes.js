@@ -362,7 +362,12 @@ define([
         },
         editQuote: function (e, row) {
             var quoteId = row.get('id');
-            window.location = '/myaccount/quote/' + quoteId + '/edit';
+            var isSalesRep = require.mozuData('user').isSalesRep;
+            if (isSalesRep) {
+                window.location = '/selleraccount/quote/' + quoteId + '/edit';
+            } else {
+                window.location = '/myaccount/quote/' + quoteId + '/edit';
+            }
         },
         deleteQuote: function () {
             this.trigger('deleteQuoteView');

@@ -7,11 +7,11 @@
     <div class="product-picker-form-fields">
       <span class="productpicker-label">{{labels.b2bQuantity}}</span>
       <br />
-      <input type="number" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}" />
+      <input type="number" min="1" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}" />
       <span class="mz-validationmessage" data-mz-validationmessage-for="pickerItemQuantity"></span>
     </div>
     <div class="product-picker-form-fields">
-      <button class="mz-button mz-button" data-mz-action="addWishlistItem" {% if productNotSelected %} disabled {% endif %}>{{labels.add}}</button>
+      <button class="mz-button mz-button" data-mz-action="addProduct" {% if productNotSelected %} disabled {% endif %}>{{labels.add}}</button>
     </div>
     <div mz-modal-product-dialog class="mz-product-modal">
       <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">

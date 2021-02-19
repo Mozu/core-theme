@@ -1,4 +1,4 @@
-﻿﻿<div class="mz-b2b-orders-grid">
+﻿<div class="mz-b2b-orders-grid">
   <div class="is-loading"></div>
   <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
     <div data-mz-datagrid="" class="mz-grid-table">
