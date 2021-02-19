@@ -1,8 +1,9 @@
-define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer', 'modules/b2b-account/child-account'],
-    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, ChildAccountModal) {
+define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer', 'modules/b2b-account/child-account', 'modules/b2b-account/parent-account'],
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, ChildAccountModal, ParentAccountModal) {
 
     var childAccountModal =  new ChildAccountModal.childAccountModalView({model:CustomerModels.EditableCustomer.fromCurrent()});
     var supportedParentAccounts = [];
+    var changeParentAccountModal = new ParentAccountModal.changeParentAccountModalView({ model: CustomerModels.EditableCustomer.fromCurrent() });
 
     var AccountHierarchyView = Backbone.MozuView.extend({
         templateName: "modules/b2b-account/account-hierarchy/account-hierarchy",
@@ -61,8 +62,47 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             childAccountModal.render(supportedParentAccounts);
         },
         changeParentAccount: function (e) {
-            //todo: need to implement this method in future.
             var accountId = e.currentTarget.dataset.mzValue;
+            var self = this;
+            var currentAccount = this.model.getAccount(accountId, supportedParentAccounts);
+            var parentAccount = this.model.getAccount(currentAccount.parentAccountId, supportedParentAccounts);
+            var filteredParentAccounts = this.getSupportedParentAccounts(currentAccount, parentAccount, supportedParentAccounts);
+            changeParentAccountModal.renderView();
+            changeParentAccountModal.render(currentAccount, parentAccount, filteredParentAccounts);
+        },
+        getSupportedParentAccounts: function (currentAccount, parentAccount, supportedParentAccounts) {
+            var invalidParentAccounts = [];
+
+            //Exclude the current account, it's parent account, and any child or descendant accounts
+            invalidParentAccounts.push(currentAccount);
+            if (parentAccount) {
+                invalidParentAccounts.push(parentAccount);
+            }
+            this.getInvalidParentAccounts(currentAccount.id, supportedParentAccounts, invalidParentAccounts);
+
+            var filteredParentAccounts = supportedParentAccounts.slice(); //Clone the array
+
+            for (var i = 0; i < invalidParentAccounts.length; i++) {
+                filteredParentAccounts = this.filterAccounts(invalidParentAccounts[i].id, filteredParentAccounts);
+            }
+
+            return filteredParentAccounts;
+        },
+        getInvalidParentAccounts: function (currentAccountId, accounts, invalidParentAccounts) {
+            if (accounts) {
+                for (var i = 0; i < accounts.length; i++) {
+                    if (accounts[i].parentAccountId == currentAccountId) {
+                        invalidParentAccounts.push(accounts[i]);
+                        this.getInvalidParentAccounts(accounts[i].id, accounts, invalidParentAccounts);
+                    }
+                }
+            }
+        },
+        filterAccounts: function (accountId, filteredParentAccounts) {
+            filteredParentAccounts = filteredParentAccounts.filter(function (account) {
+                return account.id != accountId;
+            });
+            return filteredParentAccounts;
         }
     });
 
