@@ -4648,6 +4648,11 @@ module.exports=
       "template": "{+b2BAccountService}{id}/user",
       "returnType": "b2buser"
     },
+    "change-parent": {
+      "verb": "POST",
+      "template": "{+b2BAccountService}{id}/changeparent/{parentAccountId}",
+      "returnType": "b2buser"
+    },
     "remove-user": {
       "verb": "PUT",
       "template": "{+b2BAccountService}{id}/user/{userId}/remove",
