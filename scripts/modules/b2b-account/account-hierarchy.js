@@ -1,4 +1,8 @@
-define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer'], function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels) {
+define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer', 'modules/b2b-account/child-account'],
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, ChildAccountModal) {
+
+    var childAccountModal =  new ChildAccountModal.childAccountModalView({model:CustomerModels.EditableCustomer.fromCurrent()});
+    var supportedParentAccounts = [];
 
     var AccountHierarchyView = Backbone.MozuView.extend({
         templateName: "modules/b2b-account/account-hierarchy/account-hierarchy",
@@ -37,9 +41,6 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             //show menu
             $(e.currentTarget).closest('li').children('.dropdown-content').toggleClass("active");
         },
-        addChildAccount: function (e) {
-            //todo: need to implement this method in future.
-        },
         expandAll: function (e) {
             $(".tree .caret").addClass("caret-down");
             $(".nested").addClass("active");
@@ -53,6 +54,11 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         viewAccount: function (e) {
             //todo: need to implement this method in future.
             var accountId = e.currentTarget.dataset.mzValue;
+        },
+        addChildAccount: function (e) {
+            var self = this;
+            childAccountModal.renderView();
+            childAccountModal.render(supportedParentAccounts);
         },
         changeParentAccount: function (e) {
             //todo: need to implement this method in future.
@@ -112,7 +118,12 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                 item.canChangeParentAccount = self.isUserAdmin();
             }
 
-            item.account = self.getAccount(item.id, accounts);
+            //All accounts that this account can view (self + descendants) are supported as parent accounts when adding a new child account
+            if (item.canViewAccount === true)
+            {
+                var account = self.getAccount(item.id, accounts);
+                supportedParentAccounts.push(account);
+            }
 
             if (item.children) {
                 //loop over descendants.
