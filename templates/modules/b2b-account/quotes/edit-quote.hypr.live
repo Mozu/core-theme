@@ -1,8 +1,15 @@
-﻿<h2 class="quote-name">
-  QuoteTest 1234
-  <button class="mz-button">{{labels.exitQuote}}</button>
+<div>
+<h2 class="quote-name">
+  {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
+  <button class="mz-button" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
 </h2>
+<div class="modal fade" id="mz-location-selector">
+  {% include "modules/cart/cart-location-select" %}
+</div>
 <ul class="mz-orderlist edit-quote-form">
+  <li>
+    {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
+  </li>
   <li>
     {% include "modules/b2b-account/quotes/quote-details" with model=model %}
   </li>
@@ -20,9 +27,15 @@
   </li>
   <li>
     <div class="mz-quote-actions">
-      <button class="mz-button" >{{labels.acceptChanges}}</button>
-      <button class="mz-button" >{{labels.submitDraft}}</button>
-      <button class="mz-button" >{{labels.discardDraft}}</button>
+      {% if model.isSalesRep==true %}
+        <button class="mz-button" >{{labels.approveQuote}}</button>
+        <button class="mz-button" data-mz-action="commitDraft" {% if model.isDraft==false %} disabled {% endif %}>{{labels.denyAndSubmitEdits}}</button>
+      {% else %}
+          <button class="mz-button" >{{labels.acceptChanges}}</button>
+          <button class="mz-button" data-mz-action="commitDraft" {% if model.isDraft==false %} disabled {% endif %}>{{labels.submitDraft}}</button>        
+      {% endif %}    
+    <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardDraft}}</button>
     </div>
   </li>
 </ul>
+</div>

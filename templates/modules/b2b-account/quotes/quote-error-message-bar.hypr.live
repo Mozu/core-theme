@@ -1,0 +1,8 @@
+{% if model.error %}
+<div class="mz-messagebar" data-mz-mozu-message-bar>
+  <ul class="is-showing mz-errors">
+    <li class="mz-message-item">{{model.error.message}}</li>
+  </ul>
+  <span class="dismiss-message" data-mz-action="dismissMessage">X</span>
+</div>
+{% endif %}

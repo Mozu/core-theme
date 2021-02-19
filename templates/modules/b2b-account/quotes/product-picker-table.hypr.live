@@ -25,67 +25,70 @@
     </tr>
   </thead>
   <tbody>
+    {% for item in model.items %}
     <tr>
       <td class="product-name">
-        Product 1
-      </td>
-      <td class="product-quantity">
-        <input type="number" min="1" value="2" />
-      </td>
-      <td>
-        <select class="mz-l-formfieldgroup-halfsize" >
-          <option value="Direct Ship">Direct Ship</option>
-          <option value="Pickup">Pickup</option>
-        </select>
-      </td>
-      <td>
-        <span>{{ 100 | currency}}</span>
-        <span class="img-action-button">
-          <img src="/resources/images/edit.png" />
+        <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
+        {% if item.product.options %}
+        <dl class="mz-propertylist">
+          {% for option in item.product.options %}
+          <dt>{{ option.name }}</dt>&nbsp;
+          <dd>
+            {% if option.value %}
+            {{ option.value }}
+            {% else %}
+            {{ option.shopperEnteredValue }}
+            {% endif %}
+          </dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+
+        {% if item.product.productUsage == 'Bundle' %}
+        <dl class="mz-propertylist">
+          {% for bundledProduct in item.product.bundledProducts %}
+          <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+          <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>          
+          {% endfor %}
+        </dl>
+        {% endif %}
+        <span class="mz-carttable-item-code">
+          {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>
       </td>
-      <td>
-        {{ 20 | currency}}
+      <td class="product-quantity input-inner-spin-button">
+        <input type="number" min="1" data-mz-quote-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />
       </td>
       <td>
-        {{ 180 | currency}}
+        {% if item.fulfillmentMethod != "Digital" %}
+          <select class="mz-l-formfieldgroup-halfsize" data-mz-value="fulfillmentMethod" data-mz-quote-item="{{ item.id }}" >
+            <option {% if item.fulfillmentMethod=="Ship" %} selected {% endif %} value="Ship">Direct Ship</option>
+            <option {% if item.fulfillmentMethod=="Pickup" %} selected {% endif %} value="Pickup">Pickup</option>
+          </select>
+        {% if item.fulfillmentMethod=="Pickup" %}
+          <div>Location: <b>{{item.fulfillmentLocationCode}}</b></div>
+        {% endif %}
+        {% else %}
+        <div class='mz-fulfillment-options' style="padding: 0 0 0 40px">
+          <p>{{ labels.digitalDeliveryOnly }}</p>
+        </div>
+        {% endif %}
+      </td>
+      <td class="unit-price input-inner-spin-button">
+        <input type="text" name="unitPrice" class="txt-unit-price" data-mz-quote-item="{{ item.id }}" data-mz-value="unitPrice" value="{{ item.unitPrice.extendedAmount | currency }}" />
+      </td>
+      <td>
+        {{ item.discountTotal | currency}}
+      </td>
+      <td>
+        {{ item.discountedTotal | currency}}
       </td>
       <td>
         <span class="img-action-button">
-          <img src="/resources/images/trash.png" />
+          <img src="/resources/images/trash.png" class="action-icon" data-mz-quote-item="{{ item.id }}" data-mz-action="removeQuoteItem" />
         </span>
       </td>
     </tr>
-    <tr>
-      <td class="product-name">
-        Product 2
-      </td>
-      <td class="product-quantity">
-        <input type="number" min="1" value="2" />
-      </td>
-      <td>
-        <select class="mz-l-formfieldgroup-halfsize" >
-          <option value="Direct Ship">Direct Ship</option>
-          <option value="Pickup" >Pickup</option>
-        </select>
-      </td>
-      <td>
-        <span>{{ 100 | currency}}</span>
-        <span class="img-action-button">
-          <img src="/resources/images/edit.png" />
-        </span>
-      </td>
-      <td>
-        {{ 20 | currency}}
-      </td>
-      <td>
-        {{ 180 | currency}}
-      </td>
-      <td>
-        <span class="img-action-button">
-          <img src="/resources/images/trash.png" />
-        </span>
-      </td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>

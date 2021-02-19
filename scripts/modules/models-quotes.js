@@ -1,4 +1,5 @@
-define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product"], function (api, _, Backbone, Hypr, ProductModels, ReturnModels) {
+define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product",
+    'modules/models-location'], function (api, _, Backbone, Hypr, ProductModels, LocationModels) {
 
     var QuoteItem = Backbone.MozuModel.extend({
         relations: {
@@ -28,15 +29,40 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             model: QuoteItem
         }),
 
+        StoreLocationsCache = Backbone.Collection.extend({
+            addLocation: function (location) {
+                this.add(new LocationModels.Location(location), { merge: true });
+            },
+            getLocations: function () {
+                return this.toJSON();
+            },
+            getLocationByCode: function (code) {
+                if (this.get(code)) {
+                    return this.get(code).toJSON();
+                }
+            }
+        }),
+
         Quote = Backbone.MozuModel.extend({
             mozuType: 'quote',
             idAttribute: 'id',
             relations: {
-                items: QuoteItemsList
+                items: QuoteItemsList,
+                storeLocationsCache: StoreLocationsCache
             },
             handlesMessages: true,
             initialize: function () {
                 var self = this;
+
+                this.get("items").each(function (item, el) {
+                    if (item.get('fulfillmentLocationCode') && item.get('fulfillmentLocationName')) {
+                        self.get('storeLocationsCache').addLocation({
+                            code: item.get('fulfillmentLocationCode'),
+                            name: item.get('fulfillmentLocationName')
+                        });
+                    }
+                });
+
             },
             toJSON: function () {
                 var self = this,
@@ -49,6 +75,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return j;
             }
         }),
+
         QuoteCollection = Backbone.MozuPagedCollection.extend({
             mozuType: 'quotes',
             defaults: {
