@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-02-17
+ * Mozu JavaScript SDK - v0.3.0 - 2021-02-19
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -4721,11 +4721,56 @@ module.exports=
   "quote": {
     "get": {
       "verb": "GET",
-      "template": "{+quoteService}{id}"
+      "template": "{+quoteService}{id}?draft={draft}"
     },
     "create": {
       "verb": "POST",
       "template": "{+quoteService}"
+    },
+    "update": {
+      "verb": "PUT",
+      "template": "{+quoteService}{id}?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "delete": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{id}?draft={draft}"
+    },
+    "update-quote-adjustment": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/adjustments?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "add-item-to-quote": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/items?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "delete-quote-item": {
+      "verb": "DELETE",
+      "includeSelf": true,
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}?updatemode={updatemode}"
+    },
+    "update-item-quantity": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/quantity/{quantity}?updatemode={updatemode}",
+      "noBody": true,
+      "returnType": "quote"
+    },
+    "update-item-product-price": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/price/{price}?updatemode={updatemode}",
+      "noBody": true,
+      "returnType": "quote"
+    },
+    "update-item-fulfillment": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/fulfillment?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
     }
   },
   "quotes": {

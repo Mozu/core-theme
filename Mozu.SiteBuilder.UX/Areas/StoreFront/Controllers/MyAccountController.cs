@@ -30,6 +30,7 @@ using DCs = Mozu.CommerceRuntime.Contracts;
 using Newtonsoft.Json.Linq;
 using Mozu.Core.Extensions;
 using RabbitMQ.Client.Impl;
+using Mozu.Core.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -253,6 +254,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> EditQuote(string quoteId)
         {
             var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if (quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId, true)).ReadAsSync();
+
+            if (quote.Status == "Completed")
+                throw new VaeValidationConflictException("Can't edit the completed quote.");
+
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
@@ -262,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
             
-            return View("edit-quote");
+            return View("edit-quote", quote);
         }
 
         async Task<Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment> fetchOrderShipments(string orderId)

@@ -30,6 +30,7 @@ using DCs = Mozu.CommerceRuntime.Contracts;
 using Newtonsoft.Json.Linq;
 using Mozu.Core.Extensions;
 using RabbitMQ.Client.Impl;
+using Mozu.Core.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -78,6 +79,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.UserScopeType = UserScopeType.Tenant;
 
             return View(pagePath, jSellerAccount);
+        }
+
+        [HttpGet]
+        [Route("selleraccount/quote/{quoteId}/edit")]
+        public async Task<IActionResult> EditQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if(quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId,true)).ReadAsSync();
+
+            if (quote.Status== "Completed")
+                throw new VaeValidationConflictException("Can't edit the completed quote.");
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "edit-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            // Set the user scope type header so API calls from the SDK through
+            // Reverse Proxy use the admin claims instead of the user claims
+            PageContext.UserScopeType = UserScopeType.Tenant;
+
+            return View("edit-quote", quote);
         }
 
         [NonAction]
