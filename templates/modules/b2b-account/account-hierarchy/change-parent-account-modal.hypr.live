@@ -1,0 +1,46 @@
+{% require_script "modules/b2b-account/parent-account" %}
+
+{% extends "modules/common/modal-dialog" %}
+<div class="modal-header">
+    {% block modal-header %}
+    <button type="button" class="close" aria-hidden="true" data-dismiss="modal"
+        data-mz-action="handleDialogCancel">×</button>
+    <h1 class="modal-title parent-account-modal-label">Change Parent Account</h1>
+    {% endblock modal-header %}
+</div>
+{% block modal-body %}
+
+<div id="errorMessage">
+    {% include "modules/common/single-error-message-bar" with model=model %}
+</div>
+<div class="mz-l-stack-section mz-orderlist parent-account-modal-div">
+    <div>
+        <h4>Current Parent Account:</h4>
+        <div>
+            {{model.parentAccountName}}
+        </div>
+        <br />
+        <h4>New Parent Account: *</h4>
+        <div>
+            <select class="mz-l-formfieldgroup-halfsize" style="width:100%" data-mz-value="">
+                <option selected="selected" value="">{{labels.accountSearchLabel}}</option>
+                {% for acc in model.b2bAccounts %}
+                {% if acc.id %}
+                <option value={{acc.id}}>{{acc.companyOrOrganization}}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+{% endblock modal-body %}
+
+<div class="modal-footer">
+    {% block modal-footer %}
+    <div class="parent-account-modal-label">
+        <button type="button" id="updateParentbtn" class="mz-button parent-account-modal-updateParentbtn"
+            data-mz-action="updateParentAccount">Update Account</button>
+        <button type="button" class="mz-button" data-dismiss="modal" data-mz-action="handleDialogCancel">Cancel</button>
+    </div>
+    {% endblock modal-footer %}
+</div>
