@@ -87,8 +87,8 @@
             .mz-product-picker-table {
                 width: 100%;
 
-                >tbody>tr>td{
-                    padding-bottom:20px;
+                > tbody > tr > td {
+                    padding-bottom: 20px;
                 }
 
                 .mz-l-formfieldgroup-halfsize {
@@ -112,6 +112,29 @@
                     img {
                         height: 12px;
                     }
+                }
+
+                .mz-propertylist {
+                    display: inline;
+                    margin: 0px;
+                }
+
+                .mz-propertylist dt {
+                    margin-left: 0px;
+                }
+
+                .unit-price {
+                    .mz-button {
+                        padding: 3.25px 5px;
+                    }
+
+                    .txt-unit-price {
+                        width: 70px;
+                    }
+                }
+
+                .action-icon {
+                    height: 14px;
                 }
             }
         }
@@ -273,6 +296,11 @@
                 }
             }
         }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end
+        }        
     }
 }
 
@@ -343,4 +371,14 @@
 {
     display:inline-block;
     margin-left: 13%;    
+}
+
+.input-inner-spin-button {
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
 }

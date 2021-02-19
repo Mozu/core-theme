@@ -7,6 +7,7 @@
 {% block body-content %}
 
 {% require_script "modules/b2b-account/edit-quote" %}
+{% preload_json model "quote" %}
 
 <div class="mz-l-container">
     <div id="mz-edit-quote-page">

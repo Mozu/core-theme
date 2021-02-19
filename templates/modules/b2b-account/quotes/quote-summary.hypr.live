@@ -10,8 +10,8 @@
         </div>
       </div>
       <div class="mz-grid-body">
-        {% include "modules/b2b-account/quotes/product-picker" %}
-        {% include "modules/b2b-account/quotes/quote-adjustments" %}
+        {% include "modules/b2b-account/quotes/product-picker" with model=model  %}
+        {% include "modules/b2b-account/quotes/quote-adjustments" with model=model  %}
       </div>      
     </div>
   </div>

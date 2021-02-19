@@ -1,4 +1,4 @@
-﻿﻿<div class="mz-b2b-orders-grid">
+﻿<div class="mz-b2b-orders-grid">
   <div class="is-loading"></div>
   <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
     <div data-mz-datagrid="" class="mz-grid-table">
@@ -11,35 +11,89 @@
       </div>
       <div class="mz-grid-body quote-details-section">
         <div class="mz-contact-actions">
-          <button class="mz-button mz-contact-save" data-mz-action="finishEditContact">{{labels.quotePrint}}</button>
+          <button class="mz-button mz-contact-save" data-mz-action="printQuote">{{labels.quotePrint}}</button>
         </div>
         <div>
           <dl>
             <dt>
               <b>{{labels.accountName}}:</b>
             </dt>
-            <dd>Jelly Belly</dd>
+            <dd>{{model.accountName}}</dd>
             <dt>
               <b>{{labels.quoteName}}:</b>
             </dt>
             <dd>
-              QuoteTest 1234
-              <span>
-                <img src="/resources/images/edit.png" data-mz-action="startEditingQuoteName" />
-              </span>
+            {% if model.isEditQuoteName==true %}
+                <input type="text" id="quoteName" />
+                <span>
+                    <button class="mz-button mz-button" data-mz-action="updateQuoteName">{{labels.save}}</button> &nbsp;&nbsp;&nbsp;
+                    <button class="mz-button mz-button" data-mz-action="cancelQuoteNameUpdate">{{labels.cancel}}</button>
+                </span>
+            {% else %}
+                {{model.name}}
+                <span>
+                    <img src="/resources/images/edit.png" data-mz-action="startEditingQuoteName" />
+                </span>
+            {% endif %}
+
             </dd>
             <dt>
               <b>{{labels.createdDate}}:</b>
             </dt>
-            <dd>10/30/2020</dd>
+            <dd>
+              {% if model.auditInfo.createDate %}
+                {{ model.auditInfo.createDate|date("m/d/Y") }}
+              {% endif %}
+            </dd>
             <dt>
-              <b>{{labels.createdBy}}:</b>
+              <b>{{labels.submittedBy}}:</b>
             </dt>
-            <dd>Jim Shoe</dd>
+            <dd>
+              {% if model.isEditSubmittedBy==true and model.isSalesRep==true and model.status=="Pending" %}
+              <select id="submittedBy">
+                {% for user in model.b2bUsers %}
+                  <option value="{{user.userId}}" {% if user.userId==model.userId %} selected {% endif %}>{{user.firstName}} {{user.lastName}}</option>
+                {% endfor %}
+              </select>
+              <span>
+                <button class="mz-button mz-button" data-mz-action="updateSubmittedBy">{{labels.save}}</button> &nbsp;&nbsp;&nbsp;
+                <button class="mz-button mz-button" data-mz-action="cancelSubmittedByUpdate">{{labels.cancel}}</button>
+              </span>
+              {% else %}
+              {{ model.fullName }}
+              {% if model.isSalesRep==true and model.status=="Pending" %}
+              <span>
+                <img src="/resources/images/edit.png" data-mz-action="startEditingSubmittedBy" />
+              </span>
+              {% endif %}
+
+              {% endif %}
+            </dd>
+            
             <dt>
               <b>{{labels.expirationDate}}:</b>
             </dt>
-            <dd>11/05/2020</dd>
+            <dd>
+            {% if model.isEditExpirationDate==true and model.isSalesRep==true  %}
+              <input type="date" id="expirationDate" min="{{ now|date('Y-m-d') }}" value="{{ model.expirationDate|date('Y-m-d') }}" />
+              <span>
+                <button class="mz-button mz-button" data-mz-action="updateExpirationDate">{{labels.save}}</button> &nbsp;&nbsp;&nbsp;
+                <button class="mz-button mz-button" data-mz-action="cancelExpirationDateUpdate">{{labels.cancel}}</button>
+              </span>
+              {% else %}
+
+              {% if model.expirationDate %}
+              {{ model.expirationDate|date("m/d/Y") }}
+              {% endif %}
+
+              {% if model.isSalesRep==true %}
+              <span>
+                <img src="/resources/images/edit.png" data-mz-action="startEditingExpirationDate" />
+              </span>
+              {% endif %}
+            
+            {% endif %}
+          </dd>
           </dl>
         </div>
       </div>
