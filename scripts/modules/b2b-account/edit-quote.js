@@ -563,15 +563,20 @@ define([
             self.model.set('updatemode', updateMode);
             self.model.isLoading(true);
             return this.model.apiUpdate().then(function (response) {
-                self.model.isLoading(false);
-                self.model.set(response.data);
-                self.model.set("error", null);
-                self.model.set("isEditQuoteName", false);
-                self.model.set("isEditExpirationDate", false);
-                self.model.set("isEditSubmittedBy", false);
-                self.model.set('allAdminUsers', null);
-                self.model.syncApiModel();
-                self.render();
+                if (updateMode === applyToDraft) {
+                    self.model.isLoading(false);
+                    self.model.set(response.data);
+                    self.model.set("error", null);
+                    self.model.set("isEditQuoteName", false);
+                    self.model.set("isEditExpirationDate", false);
+                    self.model.set("isEditSubmittedBy", false);
+                    self.model.set('allAdminUsers', null);
+                    self.model.syncApiModel();
+                    self.render();
+                }
+                else {
+                    self.exitQuote();
+                }
             }, function (error) {
                 self.showMessageBar(error);
             });
