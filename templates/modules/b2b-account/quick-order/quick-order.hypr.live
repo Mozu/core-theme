@@ -1,5 +1,8 @@
 <div class="mz-b2b-quickorder mz-l-stack-section" style="clear:none">
 <h2 class="mz-l-stack-sectiontitle">{{ labels.quickOrder }}</h2>
+    <div class="mz-validationmessage">
+            <section data-mz-role="popover-message" class="mz-popover-message"></section>
+    </div>
     <div class="quickorder-form">
       <div class="quickorder-form-section productPicker">
           <div>
@@ -8,11 +11,11 @@
           </div>
           <div>
               <span class="productpicker-label">{{labels.b2bQuantity}}</span>
-              <input type="number" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}">
+              <input type="number" min="1" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}">
+              
               <span class="mz-validationmessage" data-mz-validationmessage-for="pickerItemQuantity"></span>
-              <button class="mz-button mz-button" data-mz-action="addItemToOrder" {% if productNotSelected %} disabled {% endif %}>{{ labels.add }}</button>
+              <button class="mz-button mz-button" data-mz-action="addItemToOrder" {% if productNotSelected %} disabled {% endif %}>{{ labels.addToCart }}</button>
           </div>
-
       </div>
       <div mz-modal-product-dialog class="mz-product-modal">
           <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
@@ -21,6 +24,30 @@
       </div>
     </div>
 </div>
-<table class="mz-table mz-table-cart">
-  {% include "modules/b2b-account/quick-order/quick-order-table" %}
-</table>
+<div class="modal fade" id="mz-location-selector">
+	{% include "modules/cart/cart-location-select" %}
+</div>
+<div class="mz-l-container">
+	<div id="mz-discount-threshold-messages">
+		{% include "modules/cart/cart-discount-threshold-messages" with model=model %}
+	</div>
+	<form method="post" action="/cart/checkout" id="cartform">
+		{% dropzone "cart-top" scope="template" %}
+
+		<div id="mz-backorder-messages">
+			{% include "modules/cart/cart-backorder-messages" with model=model  %}
+		</div>
+
+		<table class="mz-table mz-table-cart" id="cart1">
+            {% include "modules/cart/cart-table" %}
+		</table>
+		
+		 {% block modal-dialog %}
+			<div mz-modal-discount-dialog class="mz-discount-modal">
+				<div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+					{% include "modules/cart/discount-modal/discount-modal" %} 
+				</div>
+			</div>
+		{% endblock modal-dialog %}
+	</form>
+</div>
