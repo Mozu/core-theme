@@ -681,6 +681,13 @@
       "userCreatable": false
     },
     {
+      "entityType": "customer",
+      "id": "b2b_account_request",
+      "template": "b2b-account-request",
+      "title": "B2B Account Request",
+      "userCreatable": false
+    },
+    {
       "entityType": "login",
       "id": "login",
       "template": "login",
