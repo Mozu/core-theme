@@ -1,4 +1,4 @@
-<div>
+﻿<div>
 <h2 class="quote-name">
   {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
   <button class="mz-button" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
@@ -11,18 +11,18 @@
     {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
   </li>
   <li>
-    {% include "modules/b2b-account/quotes/quote-details" with model=model %}
+    {% include "modules/b2b-account/quotes/edit-quote/quote-details" with model=model %}
   </li>
   <li>
-    {% include "modules/b2b-account/quotes/quote-summary" with model=model %}
+    {% include "modules/b2b-account/quotes/edit-quote/quote-summary" with model=model %}
   </li>
   {% if model.isShippable %}
   <li>
-    {% include "modules/b2b-account/quotes/quote-shipping" with model=model %}
+    {% include "modules/b2b-account/quotes/edit-quote/quote-shipping" with model=model %}
   </li>
   {% endif %}
   <li>
-    {% include "modules/b2b-account/quotes/quote-comments" with model=model %}
+    {% include "modules/b2b-account/quotes/edit-quote/quote-comments" with model=model %}
   </li>
   <li>
     {% include "modules/b2b-account/quotes/quote-history" with model=model %}
