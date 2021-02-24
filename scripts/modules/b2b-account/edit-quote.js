@@ -348,7 +348,7 @@ define([
             if (isSalesRep) {
                 window.location.href = "/selleraccount";
             } else {
-                window.location.href = "/myaccount";
+                window.location.href = "/myaccount#Quotes";
             }
         },
         printQuote: function () {
