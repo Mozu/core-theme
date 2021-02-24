@@ -22,7 +22,7 @@
 
     <form id="account-request">
       <div class="mz-b2b-form-field-group">
-        <label for="companyName"><strong>{{ labels.companyName }}:*</strong></label>
+        <label for="companyName"><strong>{{ labels.companyName }}:<span class="is-required"> *</span></strong></label>
         <input type="text" id="companyName" name="companyName">
         <span class="mz-validationmessage" data-mz-validationmessage-for="companyName"></span>
       </div>
@@ -33,19 +33,19 @@
       </div>
 
       <div class="mz-b2b-form-field-group">
-        <label for="userFirstName"><strong>{{ labels.userFirstName }}:*</strong></label>
+        <label for="userFirstName"><strong>{{ labels.userFirstName }}:<span class="is-required"> *</span></strong></label>
         <input type="text" id="userFirstName" name="userFirstName">
         <span class="mz-validationmessage" data-mz-validationmessage-for="userFirstName"></span>
       </div>
 
       <div class="mz-b2b-form-field-group">
-        <label for="userLastName"><strong>{{ labels.userLastName }}:*</strong></label>
+        <label for="userLastName"><strong>{{ labels.userLastName }}:<span class="is-required"> *</span></strong></label>
         <input type="text" id="userLastName" name="userLastName">
         <span class="mz-validationmessage" data-mz-validationmessage-for="userLastName"></span>
       </div>
 
       <div class="mz-b2b-form-field-group">
-        <label for="userEmail"><strong>{{ labels.userEmail }}:*</strong></label>
+        <label for="userEmail"><strong>{{ labels.userEmail }}:<span class="is-required"> *</span></strong></label>
         <input type="text" id="userEmail" name="userEmail">
         <span class="mz-validationmessage" data-mz-validationmessage-for="userEmail"></span>
       </div>

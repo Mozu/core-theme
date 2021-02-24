@@ -1,11 +1,10 @@
-define(["modules/jquery-mozu", "hyprlive", "modules/models-b2b-account", 'hyprlivecontext'], function ($, Hypr, B2BAccountModels, HyprLiveContext) {
+define(["modules/jquery-mozu", "hyprlive", "modules/models-b2b-account", 'modules/backbone-mozu'], function ($, Hypr, B2BAccountModels, Backbone) {
 
   $(document).ready(function () {
     var isFormValid;
 
     function isEmailValid(email) {
-      var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-      return emailReg.test(email);
+      return email.match(Backbone.Validation.patterns.email);
     }
 
     function validateInput() {
