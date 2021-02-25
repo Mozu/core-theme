@@ -764,6 +764,7 @@ define([
             self.model.set(data);
             self.model.set('error', null);
             self.model.set('allAdminUsers', null);
+            self.model.set('expirationDate', data.expirationDate);
             self.model.syncApiModel();
             self.render();
         },
