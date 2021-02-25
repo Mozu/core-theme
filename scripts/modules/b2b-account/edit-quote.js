@@ -57,8 +57,8 @@ define([
             self.onQuoteAdjustmentChange('#handlingAdjustmentSection', 'handlingAdjustment', self.model.apiModel.data.handlingSubTotal);
             self.onQuantityChange();
             self.onPriceChange();
-            self.onFulfillmentMethodChnage();
-            self.shippingAddressChnage();
+            self.onFulfillmentMethodChange();
+            self.shippingAddressChange();
 
             //initialize the store picker model
             self.pickerDialog = this.initializeStorePickerDialog();
@@ -120,6 +120,10 @@ define([
                 clearTimeout(timeout);
                 timeout = setTimeout(function () {
                     self.calculateQuoteAdjustment(elementId, field, subTotal);
+                    // set focus back to input and move it to the end of input
+                    var input = $(elementId + ' input[type=number]');
+                    var adjustmentValue = input.val();
+                    input.focus().val('').val(adjustmentValue);
                 }, 800);
             });
         },
@@ -178,7 +182,7 @@ define([
             });
         },
 
-        onFulfillmentMethodChnage: function () {
+        onFulfillmentMethodChange: function () {
             var self = this;
             $('.mz-product-picker-table select[data-mz-value=fulfillmentMethod]').change(function () {
                 var itemId = $(this).attr('data-mz-quote-item');
@@ -444,17 +448,22 @@ define([
             var type = $(elementId + " input[name=" + field + "]:checked").first().val();
             var quoteUpdatedAdjustments = self.model.apiModel.data.quoteUpdatedAdjustments;
 
-            if (actualValue !== quoteUpdatedAdjustments[field] || type !== quoteUpdatedAdjustments[field + 'Type']) {
+            if (actualValue !== quoteUpdatedAdjustments[field] || 
+                type !== quoteUpdatedAdjustments[field + 'Type'] ||
+                action !== quoteUpdatedAdjustments[field + 'Action']) {
 
                 var value = (action === "Add" ? actualValue : -actualValue) || 0;
 
                 if (type === "%") {
-                    value = ((subTotal * value) / 100).toFixed(2);
+                    value = parseFloat(((subTotal * value) / 100).toFixed(2));
                 }
+
+                var newSubtotal = subTotal + value;
 
                 quoteUpdatedAdjustments[field] = value;
                 quoteUpdatedAdjustments[field + 'Abs'] = Math.abs(value);
                 quoteUpdatedAdjustments[field + 'Actual'] = actualValue;
+                quoteUpdatedAdjustments[field + 'NewSubtotal'] = newSubtotal;
                 quoteUpdatedAdjustments[field + 'Action'] = action;
                 quoteUpdatedAdjustments[field + 'Type'] = type;
                 self.model.set("quoteUpdatedAdjustments", quoteUpdatedAdjustments);
@@ -524,21 +533,27 @@ define([
                 var adjustment = quote.adjustment ? quote.adjustment.amount : null;
                 var shippingAdjustment = quote.shippingAdjustment ? quote.shippingAdjustment.amount : null;
                 var handlingAdjustment = quote.handlingAdjustment ? quote.handlingAdjustment.amount : null;
+                var taxAndDutyTotal = quote.itemTaxTotal + quote.shippingTaxTotal + quote.handlingTaxTotal + quote.dutyTotal;
                 return {
                     "adjustment": adjustment,
                     "adjustmentAbs": adjustment ? Math.abs(adjustment) : null,
                     "adjustmentType": defaultAdjustmentType,
                     "adjustmentAction": adjustment > 0 ? adjustmentAdd : adjustmentSubtract,
+                    "adjustmentNewSubtotal": quote.subTotal + adjustment,
 
                     "shippingAdjustment": shippingAdjustment,
                     "shippingAdjustmentAbs": shippingAdjustment ? Math.abs(shippingAdjustment) : null,
                     "shippingAdjustmentType": defaultAdjustmentType,
                     "shippingAdjustmentAction": shippingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
+                    "shippingAdjustmentNewSubtotal": quote.shippingSubTotal + shippingAdjustment, 
 
                     "handlingAdjustment": handlingAdjustment,
                     "handlingAdjustmentAbs": handlingAdjustment ? Math.abs(handlingAdjustment) : null,
                     "handlingAdjustmentType": defaultAdjustmentType,
-                    "handlingAdjustmentAction": handlingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract
+                    "handlingAdjustmentAction": handlingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
+                    "handlingAdjustmentNewSubtotal": quote.handlingSubTotal + handlingAdjustment,
+
+                    "taxAndDutyTotal": taxAndDutyTotal
                 };
             }
             else {
@@ -766,6 +781,7 @@ define([
             self.model.set('allAdminUsers', null);
             self.model.set('expirationDate', data.expirationDate);
             self.model.syncApiModel();
+            self.model.set("quoteUpdatedAdjustments", self.getQuoteAdjustment(true));
             self.render();
         },
 
@@ -789,7 +805,7 @@ define([
                 });
             }
         },
-        shippingAddressChnage: function () {
+        shippingAddressChange: function () {
             var self = this;
 
             $('#selectShippingAddress').change(function () {
@@ -1070,7 +1086,7 @@ define([
         },
         reRenderModal: function () {
             addNewAddressViewPopup.render();
-            this.shippingAddressChnage();
+            this.shippingAddressChange();
         },
 
         getAdminUsers: function (userIds) {
