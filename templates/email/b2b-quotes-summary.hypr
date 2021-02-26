@@ -1,7 +1,7 @@
 {% extends "email/email" %}
 
 {% block body-content %}
-    <div class ="quote-name">{{labels.quoteName}} {{model.name}} </div>
+    <div class ="quote-name">{{model.name}}</div>
     <br/>
     <table class ="quote-details-table" width="100%" cellpadding="1" cellspacing="1" width="50%">
         <thead>
@@ -17,16 +17,25 @@
                         <td>{{model.b2BAccount.companyOrOrganization}}</td>
                     </tr>
                     <tr>
+                        <th>{{labels.quoteNumber}}:</th>
+                        <td>{{model.number}}</td>
+                    </tr>
+                    <tr>
                         <th>{{labels.quoteName}}:</th>
                         <td>{{model.name}}</td>
                     </tr>
                     <tr>
-                        <th>{{labels.quoteSubmittedDate}}:</th>
-                        <td>{{model.submittedDate|date("m/d/y")}}</td>
+                        <th>{{labels.quoteCreatedDate}}:</th>
+                         <td>{{model.auditInfo.createDate|date("m/d/y")}}</td>
                     </tr>
                     <tr>
-                        <th>{{labels.quoteSubmittedBy}}:</th>
-                        <td>{{model.b2bUsers.items.0.firstName}} {{model.b2bUsers.items.0.lastName}}</td>
+                        <th>{{labels.quoteCreatedBy}}:</th>
+                        {% for item in model.b2bUsers.items %}
+                            {% if item.userId == model.userId  %}
+                                <td>{{item.firstName}} {{item.lastName}}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td></td>
                     </tr>
                     <tr>
                         <th>{{labels.quoteExpirationDate}}:</th>
@@ -52,7 +61,7 @@
             <td>
                  <table>
                     <tr>
-                        <td><b>{{labels.shippingMethod}}</b></td>
+                        <td><b>{{labels.shippingMethod}}:</b></td>
                     </tr>
                     <tr>
                         <td class = "quote-shipping-child-table">{{model.shippingMethodName}}</td>
