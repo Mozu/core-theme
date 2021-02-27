@@ -430,11 +430,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             //}
             SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode: isAdminMode);
 
-            var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);
+            var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect, site);
             return new RedirectResult(uri);
         }
 
-        public static string CreateRedirectUrl(string redir, string newHostname, bool doHostnameRedirect)
+        public static string CreateRedirectUrl(string redir, string newHostname, bool doHostnameRedirect, Tenant.Contracts.Site site)
         {
             if (redir.IsNullOrEmpty()) return doHostnameRedirect ? "http://" + newHostname : "~/";
 
@@ -443,7 +443,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 "/" + redir;
             var redirUri = new Uri(redir, UriKind.RelativeOrAbsolute);
 
-            if (!redirUri.IsAbsoluteUri && !doHostnameRedirect) return "~" + redirUri.OriginalString;
+            if (!redirUri.IsAbsoluteUri && !doHostnameRedirect)
+            {
+                return "~" + SiteBuilderApiContextBuilder.AppendSiteContextToRedirect(redirUri.OriginalString, site);
+            }
             // for an absolute url (think custom route that specifies a http schema) we must always use the resolved hostname.
             var scheme = redirUri.IsAbsoluteUri ? redirUri.Scheme : "http";
             var qmarkpos = redirUri.OriginalString.IndexOf('?');
