@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using Mozu.Core;
 using Mozu.Core.Api;
@@ -25,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly IEditModeFinderOuter _editModeGetter;
         private static readonly ConcurrentDictionary<string, Mozu.Tenant.Contracts.Site> g_domainSiteLookup = new ConcurrentDictionary<string, Mozu.Tenant.Contracts.Site>(StringComparer.OrdinalIgnoreCase);
         private static readonly ConcurrentDictionary<int, Mozu.Tenant.Contracts.Site> g_SiteIdSiteLookup = new ConcurrentDictionary<int, Mozu.Tenant.Contracts.Site>();
-
+        const string SiteQueryKey = "__api__ctx";
         public SiteBuilderApiContextBuilder(
             HttpContext context, 
             IJwtService jwtServcie,
@@ -43,6 +44,31 @@ namespace Mozu.SiteBuilder.Mvc
             _editModeGetter = editModeGetter;
         }
         
+        public static string AppendSiteContextToRedirect(string query, Tenant.Contracts.Site site)
+        {
+            return $"{query}&{SiteQueryKey}={site.Id}";
+        }
+        public  bool InitFromQS(SiteBuilderApiContext apiCtx, IQueryCollection query)
+        {
+            if (!query.ContainsKey(SiteQueryKey))
+            {
+                return false;
+            }
+            var site = LookupSiteById(int.Parse(query[SiteQueryKey]));
+            
+            if (site == null || (apiCtx.TenantId > 0 && apiCtx.TenantId != site.TenantId))
+            {
+                return false;
+            }
+            apiCtx.TenantId = site.TenantId;
+            apiCtx.SiteId = site.Id;
+            apiCtx.CatalogId = site.CatalogId;
+            apiCtx.MasterCatalogId = site.MasterCatalogId;
+            apiCtx.LocaleCode = site.DefaultLocaleCode;
+            apiCtx.CurrencyCode = site.DefaultCurrencyCode;
+            
+            return true;
+        }
         public override IApiContext CreateContext()
         {
             var sbApiContext = new SiteBuilderApiContext();
@@ -87,7 +113,8 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void Load(SiteBuilderApiContext apiCtx)
         {
-           if ( !_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.TENANT, out _)&&
+            InitFromQS(apiCtx, _context.Request.Query);
+            if ( !_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.TENANT, out _)&&
                     !_context.Request.Headers.TryGetValue(Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out _) 
                     && !_settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
             {
