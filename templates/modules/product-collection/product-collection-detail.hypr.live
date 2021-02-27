@@ -1,0 +1,57 @@
+<h1 class="mz-l-stack-sectiontitle">{{ labels.memberProducts }}{% if model.count > 0 %}<span>({{model.count}})</span>{% endif %}</h1>
+
+{% for data in model.memberProducts %}
+
+<div class="mz-repeating-container">
+	<div class="mz-img-section">
+		{% include "modules/product-collection/member-image" %}
+	</div>
+	<div class="mz-prod-div-details mz-productdetail-collection-text">
+		<a href="{% make_url "product" data %}">
+			<span itemscope="description">{{ data.content.productName }}</span> 
+		</a>
+		{% if data.options and data.options.length > 0 %}
+		<div class="mz-productdetail-options mz-l-stack-section">
+		  <h4 class="mz-l-stack-sectiontitle">{{ labels.options }}</h4>
+		  {% include "modules/product-collection/member-options" %}
+		</div>
+		{% endif %}
+
+			{% include "modules/product/price-stack" with model=data %}
+
+			<div>
+				<dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">	    
+					{% if themeSettings.showProductDetailMfgPartNumber and data.mfgPartNumber.length == 1 %}
+					<dt class="mz-productcodes-mfgpartnumber-label">{{ labels.mfgPartNumber }}</dt>
+					<dd class="mz-productcodes-mfgpartnumber" itemprop="mpn">{{ data.mfgPartNumber|first }}</dd>
+					{% endif %}
+					{% if themeSettings.showProductDetailUPC and data.upc.length == 1 %}
+					<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
+					<dd class="mz-productcodes-upc" itemprop="mpn">{{ data.upc|first }}</dd>
+					{% endif %}		
+				</dl>
+				<span itemscope="description">{{ data.content.salePrice|safe }}</span>  
+			</div>
+	</div>
+	<div style="width:50vw">
+		<span>{{ data.content.productShortDescription|safe }}</span>
+	</div>  
+	<div class="mz-div-details">
+		<span>{{ labels.qty }}</span>
+        <input class="mz-productdetail-qty" style="width:55px" type="number" {% if data.quantity %} value="{{ data.quantity }}" {% else %} value="1" {% endif %}    min="1" data-mz-value="quantity" data-memberindex="{{data.memberindex}}" />
+        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>		
+  		<button id="add-to-cart" class="mz-productdetail-addtocart mz-button {% if not data.isPurchasable %}is-disabled{% endif %}" {% if not data.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" data-memberindex="{{data.memberindex}}" >
+      		{{ labels.addToCart }}
+  		</button>		
+		<br></br>
+		{% if data.hasRequiredBehavior %}
+			{% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
+				<button id="add-to-wishlist" {% if data.notDoneConfiguring or not data.isPurchasable %} disabled="disabled" {% else %} {% if data.inventoryInfo.outOfStockBehavior == 'HideProduct' and not data.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not data.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist" data-memberindex="{{data.memberindex}}">
+					{{ labels.addToWishlist }}
+				</button>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>
+{% endfor %}
+

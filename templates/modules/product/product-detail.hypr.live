@@ -84,6 +84,12 @@
 </div>
 {% endif %}
 
+{% if model.productCollections %}
+<div class="mz-productdetail-collections mz-l-stack-section">
+  {% include "modules/product/product-detail-collections" %}
+</div>
+{% endif %}
+
 <div class="mz-productdetail-fulldesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.fullDesc }}</h4>
   {{ model.content.productFullDescription|safe }}
