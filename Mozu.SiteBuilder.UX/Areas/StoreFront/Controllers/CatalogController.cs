@@ -45,11 +45,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CatalogController : BaseApiController
     {
-      
+
         readonly ICategoryTreeProvider _categoryTreeProvider;
         readonly IProductWebApiClient _productClient;
         readonly IProductSearchWebApiClient _searchClient;
-       
+
         readonly ICustomRouteHandler _customRouteHandler;
         private readonly IStorefrontCache _storeFrontCache;
         private readonly UrlHelper _urlhelper;
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetail(string productCode, string vpc = null, string sliceValue = null)
         {
-            var productResponse = await _productClient.GetProduct(productCode, vpc, 
+            var productResponse = await _productClient.GetProduct(productCode, vpc,
                 "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true, sliceValue:sliceValue).ConfigureAwait(false);
 
             if (!productResponse.ResponseMessage.IsSuccessStatusCode)
@@ -119,7 +119,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Ok();
             }
 
-            PageContext.PageType = "product";
+            if (product.ProductUsage == "Collection")
+            {
+                PageContext.PageType = "product-collection";
+            }
+            else
+            {
+                PageContext.PageType = "product";
+            }
             PageContext.ProductCode = productCode;
             PageContext.MetaDescription = prod.Content.MetaTagDescription;
             PageContext.MetaTitle = prod.Content.MetaTagTitle;
@@ -132,32 +139,53 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 DocumentTypeFQN = "productContent@mozu",
                 IncludeInactiveDocument = PageContext.IsEditMode
             };
-            PageContext.CmsContext.Template = new DocumentRequest
+            if (product.ProductUsage == "Collection")
             {
-                Path = "product",
-                ListFQN = "pageTemplateContent@mozu",
-                IncludeInactiveDocument = PageContext.IsEditMode
-            };
+                PageContext.CmsContext.Template = new DocumentRequest
+                {
+                    Path = "product-collection",
+                    ListFQN = "pageTemplateContent@mozu",
+                    IncludeInactiveDocument = PageContext.IsEditMode
+                };
+            }
+            else
+            {
+                PageContext.CmsContext.Template = new DocumentRequest
+                {
+                    Path = "product",
+                    ListFQN = "pageTemplateContent@mozu",
+                    IncludeInactiveDocument = PageContext.IsEditMode
+                };
+            }
 
             await GetContextInitializationTasks();
 
-            PageContext.CmsContext.Template = new DocumentRequest
-            {
-                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "product"),
-                IncludeInactiveDocument = PageContext.IsEditMode
-            };
-
-
             PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
-       
 
-            var template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
-
-            
             SetCatalogContext(product);
             var dynamicProd = JObject.FromObject(product, ProductSerializer).ToObject<ExpandoObject>(ProductSerializer);
-            var result = View(template, dynamicProd);
-            return Ok(result);
+            if (product.ProductUsage == "Collection")
+            {
+                PageContext.CmsContext.Template = new DocumentRequest
+                {
+                    Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "product-collection"),
+                    IncludeInactiveDocument = PageContext.IsEditMode
+                };
+                var template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product-collection");
+                var result = View(template, dynamicProd);
+                return Ok(result);
+            }
+            else
+            {
+                PageContext.CmsContext.Template = new DocumentRequest
+                {
+                    Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "product"),
+                    IncludeInactiveDocument = PageContext.IsEditMode
+                };
+                var template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
+                var result = View(template, dynamicProd);
+                return Ok(result);
+            }
         }
 
         [HttpGet]
@@ -249,20 +277,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var defaultPageSize = SiteContext.ThemeSettings.GetInt("defaultPageSize");
 
             if (PageContext.Search.PageSize.HasValue && defaultPageSize.GetValueOrDefault(0) != PageContext.Search.PageSize.Value)
-            { 
+            {
                 return false;
             }
 
             var defaultSortOrder = ((string)SiteContext.ThemeSettings["defaultSort"]);
             if (!string.IsNullOrEmpty(PageContext.Search.SortBy) && !string.Equals(defaultSortOrder, PageContext.Search.SortBy))
-            { 
+            {
                 return false;
             }
 
             return true;
         }
-        
-      
+
+
         async Task<Category> AddCrawlerLinks(Category category)
         {
             //var catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
@@ -300,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     _logger.Warn(ex.Message);
                     _storeFrontCache.Set(key, 0);
                 }
-                   
+
             }
 
             if (currentIdx + defaultPageSize >= totCount.GetValueOrDefault(0) ||

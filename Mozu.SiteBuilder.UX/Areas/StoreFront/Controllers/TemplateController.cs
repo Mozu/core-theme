@@ -96,6 +96,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                                    };
             ;
+            var productCollection = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product()
+            {
+                Options = new List<ProductRuntime.Contracts.ProductOption>(),
+                ProductTypeId = product.ProductTypeId,
+                ProductUsage = product.ProductUsage,
+                ProductCode = product.ProductCode,
+                Properties = new List<ProductProperty>(),
+                Content = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductContent()
+                {
+                    ProductName = product.ProductName,
+                    ProductFullDescription = "test Full Description for product collection",
+                    ProductShortDescription = "test Short Description for product collection",
+                    ProductImages = new ProductImageCollection()
+                },
+            };
+            ;
             switch (template.EntityType)
             {
                 case "cart":
@@ -123,6 +139,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 case "product":
                     {
                         return product;
+                    }
+                case "product-collection":
+                    {
+                        return productCollection;
                     }
                 default:
                     {
