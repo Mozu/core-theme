@@ -126,7 +126,7 @@ define(["jquery", "underscore"], function ($, _) {
                         dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: 'isActive eq true' });
                         filteredVal = false;
                     }
-
+                    $('.' + options.pageSelector + '-mz-listData').scrollTop(0);
                     timeout = setTimeout(function () {
                         $('.' + options.pageSelector + '-mz-pagination-url > .mz-dd-loading').show();
                         dataSet.apiGet().then(function (accounts) {
