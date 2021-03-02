@@ -32,7 +32,16 @@
 				</dl>
 				<span itemscope="description">{{ data.content.salePrice|safe }}</span>  
 			</div>
-	</div>
+
+    {% if not data.isPurchasable and not data.notDoneConfiguring %}
+			<p class="mz-productdetail-notpurchasable">
+      {{ labels.notPurchasable }}:
+      {% for message in data.purchasableState.messages %}
+      <span>{{ message.message }}</span>
+      {% endfor %}
+			</p>
+    {% endif %}
+  </div>
 	<div style="width:50vw">
 		<span>{{ data.content.productShortDescription|safe }}</span>
 	</div>  
