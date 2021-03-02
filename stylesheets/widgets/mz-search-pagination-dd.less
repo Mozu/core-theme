@@ -1,5 +1,5 @@
 .mz-dd-search {
-	width: 92%;
+	width: 90%;
 	border: 1px solid #ccc;
 	padding: 5px 2px;
 	background: #fff url(../resources/images/search-gray.svg);
@@ -18,7 +18,7 @@
 	background: #fff;
 	box-shadow: 0 7px 6px #ccc;
 	width: 99.5%;
-	margin-top: 1px;
+	margin: 2px 0 0 -1px;
 	z-index: 9999;
 	border: 1px solid #666;
 	border-top: none;
@@ -30,7 +30,7 @@
 	color: #fff !important;
 }
 
-.mz-listData {
+.mz-data-list {
 	margin: 0;
 	padding: 0;
 	max-height: 250px;
@@ -38,20 +38,21 @@
 	outline: none;
 }
 
-.mz-listData > a {
+.mz-data-list > a {
 	padding: 5px;
 	text-decoration: none;
 	outline: none;
 }
 
-.mz-listData > a:hover {
+.mz-data-list > a:hover {
 	background: #eee;
 	color: #000;
 	cursor: pointer;
 }
 
-.mz-listData > a {
+.mz-data-list > a {
 	display: block;
+	word-break: break-all;
 }
 
 .pagination_btn {
@@ -87,10 +88,10 @@
 }
 
 .mz-pagination-url > a {
-  padding: 0 10px;
+	padding: 0 2%;
 }
 
-.mz-dd-open, .mz-dd-close {
+.mz-dd-arrow {
 	text-decoration: none;
 }
 
@@ -100,5 +101,11 @@
 	width: 300px;
 	border: 1px solid #666;
 	float: left;
+	height: 26px;
+}
+
+.filter-container > .mz-dd-block {
+	width: 150px !important;
+	margin-top: 0;
 }
 

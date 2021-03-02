@@ -131,7 +131,18 @@ define([
                 collection = new QuotesGridCollectionModel({ autoload: true });
             }
             if (isSalesRep) {
-                $(document).ready(function () {
+                if (!self.model.get("b2bAccounts")) {
+                    // Custom configurable Dropdown with search and pagination.
+                    $("#selectb2bAccountGrid").mozuPaginatedSearchableGrid({
+                        model: B2BAccountModels.b2bAccounts,
+                        pageSize: 10,
+                        textField: 'companyOrOrganization',
+                        valueField: 'id',
+                        placeHolder: $('#selectb2bAccountGrid > .mz-dd-placeholder').text(),
+                        filterOption: 'cont',
+                        noRecords: $('#selectb2bAccountGrid > .mz-dd-no-records').text(),
+                        pageSelector: 'selectb2bAccountGrid'
+                    });
                     $("#selectb2bAccount").mozuPaginatedSearchableGrid({
                         model: B2BAccountModels.b2bAccounts,
                         pageSize: 20,
@@ -139,14 +150,8 @@ define([
                         valueField: 'id',
                         placeHolder: $('#selectb2bAccount > .mz-dd-placeholder').text(),
                         filterOption: 'cont',
-                        noRecords: $('.mz-dd-no-records').text()
-                    });
-                });
-                if (!self.model.get("b2bAccounts")) {
-                    var b2bAccount = new B2BAccountModels.b2bAccounts({ pageSize: 200 });
-                    b2bAccount.apiGet().then(function (accounts) {
-                        self.model.set("b2bAccounts", accounts);
-                        self.render();
+                        noRecords: $('#selectb2bAccount > .mz-dd-no-records').text(),
+                        pageSelector: 'selectb2bAccount'
                     });
                 }
 
