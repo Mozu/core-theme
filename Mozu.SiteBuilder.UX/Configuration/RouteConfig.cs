@@ -152,6 +152,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "_gosite/{siteId}",
                 new { action = "GoSite", controller = "Testing" },
                 _constraintResolver);
+            routes.MapRoute(_defaultHandler,
+                "Set Tenant Context",
+                "_gotenant/{tenantId}",
+                new { action = "GoTenant", controller = "Testing" },
+                _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "testing controller",

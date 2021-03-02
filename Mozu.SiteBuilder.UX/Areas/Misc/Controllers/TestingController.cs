@@ -29,7 +29,8 @@ using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Headers = Mozu.Core.Api.Contracts.Constants.Headers;
 using Mozu.SiteBuilder.Mvc.Context;
-
+using Microsoft.Extensions.DependencyInjection;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -80,7 +81,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Tablet
         }
 
-        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config, IHttpClientFactory clientFactory)
+        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config, IHttpClientFactory clientFactory,
+            ITenantsWebApiClient tenantsWebApiClient)
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
             _cookies = cookies;
@@ -88,6 +90,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _authenticationHelper = authenticationHelper;
             _config = config;
             _clientFactory = clientFactory;
+            _tenantsWebApiClient = tenantsWebApiClient;
             //SuppressMissingContextRedirect = true;
         }
 
@@ -108,8 +111,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _authenticationHelper.SaveStoreFrontRefreshToken(null, DateTime.Now.AddDays(-1));
             return Ok("Cool.");
         }
+        
+        
 
         private readonly IHttpClientFactory _clientFactory;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private static HttpClient _client;
 
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
@@ -273,6 +279,41 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Content = sb.ToString(),
                 ContentType = "text/html"
             };
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoTenant(int tenantId, string redir = null, string environment = "production",
+            string transfer = null, string variationId = "")
+        {
+            var tenant = (await _tenantsWebApiClient.CloneWithoutUserClaims().GetTenant(tenantId)).ReadAsSync();
+            if (tenant == null || (tenant?.Sites?.Count).GetValueOrDefault(0)==0)
+            {
+                return this.NotFound();
+            }
+
+            if (tenant.Sites.Count == 1)
+            {
+                return this.RedirectToAction("gosite", new {siteId = tenant.Sites.FirstOrDefault().Id, redir =redir, environment=environment, transfer=transfer, variationId=variationId});
+            }
+            var sb = new StringBuilder();
+            foreach (var site in tenant.Sites)
+            {
+                var link = this.Url.ActionLink(action: "gosite",
+                    values: new
+                    {
+                        siteId = tenant.Sites.FirstOrDefault().Id, redir = redir, environment = environment,
+                        transfer = transfer, variationId = variationId
+                    });
+                sb.Append($"<a href=\"{link}\">{site.Name}:({site.Id})</a></br>");
+            }
+
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                Content = sb.ToString()
+            };
+
+
         }
 
         /// <summary>
