@@ -22,6 +22,9 @@ define(["modules/jquery-mozu",
             },
             registerRowActions: function () {
                 var self = this;
+                this.model.set("accountId",require.mozuData("user").accountId);
+                var behaviors = require.mozuData('user').behaviors;
+                this.model.set("isAdmin", behaviors.includes(1000) || behaviors.includes(1005));
                 var rowActions = this.model.get('rowActions');
                 _.each(rowActions, function (action) {
                     self[action.action] = function (e) {
@@ -38,6 +41,13 @@ define(["modules/jquery-mozu",
                 e.preventDefault();
                 var col = $(e.currentTarget).data('mzColIndex');
                 return this.model.sort(col);
+            },
+            selectQuoteRow:function(e)
+            {
+              var self = this;
+                var rowNumber = $(e.target).parents('.mz-grid-row').data('mzRowIndex');
+                var row = self.model.get('items').at(rowNumber-1);   
+                this.model.trigger('custom:eventOnRowClick', row);
             },
             filter: function (e) {
                 e.preventDefault();
@@ -91,10 +101,12 @@ define(["modules/jquery-mozu",
                 _.invoke(views, 'render');
             },
             toggleDropdown: function (e) {
+            e.stopPropagation();
                 var currentId = 'quotesDropdown' + $(e.target).parents('.mz-grid-row').data('mzRowIndex');
                 $.each($('.dropdown-content'), function (index, item) {
                     var toggle = (item.id === currentId) ? $('#' + currentId).toggleClass('show') : $('#' + item.id).removeClass('show');
                 });
+
             }
         });
         $(document).ready(function () {
