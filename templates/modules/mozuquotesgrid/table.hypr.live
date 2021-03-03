@@ -3,12 +3,11 @@
 
      //A list of items that contain only columns and assocaited column values
 -->
-
 <div class="mz-grid-header">
     <div class="mz-grid-row">
         <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
             {% for col in model.columns %}
-                <span class="mz-grid-column" id="{{col.index}}" data-sortOrder="desc" data-mz-action="sort" data-mz-col-index="{{col.index}}">
+                <span class="mz-grid-column" id="{{col.index}}" data-sortOrder="desc" data-mz-action="sort"  data-mz-col-index="{{col.index}}">
                     {{col.displayName}}
                     {% if col.sortable %}
                         <span class="mz-unsort">
@@ -32,7 +31,7 @@
 <div class="mz-grid-body">
     {% if model.items.length > 0 %}
         {% for row in model.gridItems %}
-            <div data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}">
+            <div data-mz-action="selectQuoteRow" data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}" id="quotesgrid-cursor">
                 <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
                   {% for col in row %}
                   <span class="mz-grid-column">
@@ -40,16 +39,73 @@
                         </span>
                     {% endfor %}
                 </div>
-              {% if model.rowActions %}
+            
+              {% if model.rowActions  %}
+              {% set loopIndex=forloop.index0 %}
               <div class="mz-grid-row-actions">
                         <div class="mz-grid-column mz-quotes-grid-dropdown">
-                          <button data-mz-action="toggleDropdown" class="dropbtn"></button>
+                            {% if user.isSalesRep != true %}
+                            {% if model.items[forloop.index0].customerAccountId === model.accountId and model.isAdmin == true %}
+                                 <button data-mz-action="toggleDropdown" class="dropbtn"></button>
                             <div id="quotesDropdown{{forloop.index}}" class="dropdown-content">
                             {% for action in model.rowActions %}
-                                {% if action.isHidden != true %}
-                                    <a href="#" data-mz-action="{{action.action}}">{{action.displayName}}</a>
-                                {% endif %}
-                            {% endfor %}                                
+                                      {% if action.action == "editQuote" %}
+                                       {% if model.items[loopIndex].status =="InReview" or model.items[loopIndex].status == "Expired" or model.items[loopIndex].status == "Completed" %}{% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% endif %}
+                                       
+                                       {% elif action.action == "copyQuote"  %}
+                                       {% if  model.items[loopIndex].status == "Completed" %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% else %}
+                                       {% endif %}
+
+                                       {% elif action.action == "emailQuote"  %}
+                                       {% if  model.items[loopIndex].status == "Completed" or model.items[loopIndex].status == "Pending" %}{% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% endif %}
+
+                                       {% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+
+	                                  {% endif %}
+                            {% endfor %}
+                            {% else %}
+                                <button data-mz-action="toggleDropdown" class="dropbtn"></button>
+                            <div id="quotesDropdown{{forloop.index}}" class="dropdown-content">
+                            {% for action in model.rowActions %}
+                              {% if action.action == "viewQuote" %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                              {% endif %}
+                              {% endfor %}
+                               {% endif %}
+                               {% else %}
+                                     <button data-mz-action="toggleDropdown" class="dropbtn"></button>
+                                  <div id="quotesDropdown{{forloop.index}}" class="dropdown-content">
+                                 {% for action in model.rowActions %}
+                                    {% if action.action == "editQuote" %}
+                                       {% if model.items[loopIndex].status == "ReadyForCheckout" or model.items[loopIndex].status == "Completed" %}
+                                       {% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% endif %}
+     
+	                                   {% elif action.action == "copyQuote" %}
+                                       {% if  model.items[loopIndex].status == "Completed" %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% else %}
+                                       {% endif %}
+                                       
+                                       {% elif action.action == "emailQuote" %}
+                                       {% if  model.items[loopIndex].status == "Completed" or model.items[loopIndex].status == "Pending" %}
+                                       {% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+                                       {% endif %}
+
+                                       {% else %}
+                                       <a href="#" class="" data-mz-action="{{action.action}}">{{action.displayName}}</a>
+	                             {% endif %}
+                            {% endfor %}
+                               {% endif %}                           
                             </div>
                         </div>
                     </div>
