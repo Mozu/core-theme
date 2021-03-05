@@ -323,6 +323,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             if (token.Depth == 0)
             {
                 values[token.SubCode + "-categoryObject"] = cat;
+                values["categoryId"] = cat.CategoryId;
+                values["categoryCode"] = cat.CategoryCode;
             }
 
             return true;
