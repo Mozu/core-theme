@@ -17,7 +17,6 @@ define(["jquery", "underscore"], function ($, _) {
             "\"": "^\"",
             "[": "^[",
             "]": "^]",
-            " ": "^ ",
             "(": "^(",
             ")": "^)"
         };
@@ -116,12 +115,13 @@ define(["jquery", "underscore"], function ($, _) {
                 $(self.selector + '> .' + options.pageSelector +'-mz-dd-search').removeAttr("data-mz-value");
                 if (e.which !== KEY_DOWN && e.which !== KEY_UP) {
                     var inputValue = $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val();
-                    inputValue = inputValue.replace(/['^(")}{ ]/g, function (m) {
-                        return specialCharactersObj[m];
+                    inputValue = inputValue.replace(/['^(")}{ ]/g, function (match) {
+                        return specialCharactersObj[match];
                     });
+                    inputValue = inputValue.replace(/undefined/g, ' ');
                     $('.' + options.pageSelector +'> .mz-dropdown-data').show();
                     clearTimeout(timeout);
-                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " " + inputValue + "", pageSize: options.pageSize });
+                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + "'", pageSize: options.pageSize });
                     if (inputValue === "") {
                         dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: 'isActive eq true' });
                         filteredVal = false;
