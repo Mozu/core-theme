@@ -53,6 +53,46 @@
         <span class="mz-carttable-item-code">
           {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>
+
+        {% if model.hasPricelist %}
+        {% if item.product.price.priceListEntryMode.toLowerCase() === 'bulk' %}
+        <dl class="mz-propertylist">
+          <div class="product-volume-price-list">
+            <span>
+              <img src="/resources/images/icon-volume-15x15.png"/> {{ labels.volumePriceList }}
+            </span>
+          </div>
+        </dl>
+        {% else %}
+        <dl class="mz-propertylist">
+          <div class="product-no-price-list">
+            <span>
+              <img src="/resources/images/icon-no-15x15.png"/> {{ labels.noPriceList }}
+            </span>
+          </div>
+        </dl>
+        {% endif %}
+        {% endif %}
+        {% if item.productDiscounts.length > 0 %}
+        <dl class="mz-propertylist">
+          {% for product in item.productDiscounts %}
+          <div>
+            <span class="mz-discount-name">{{ product.discount.name }}:</span>
+            <span class="mz-discount-amt"> -{{ product.impact|currency }}</span>
+          </div>
+          {% endfor %}
+        </dl>
+        {% endif %}
+        {% if item.shippingDiscounts.length > 0 %}
+        <dl class="mz-propertylist">
+          {% for product in item.shippingDiscounts %}
+          <div>
+            <span class="mz-discount-name">{{ product.discount.discount.name }}:</span>
+            <span class="mz-discount-amt"> -{{ product.discount.impact|currency }}</span>
+          </div>
+          {% endfor %}
+        </dl>
+        {% endif %}
       </td>
       <td>
           {{ item.quantity }}

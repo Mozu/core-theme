@@ -47,7 +47,9 @@
                               {% if change.path %}
                               <tr class="space-before">
                                     <td>
+                                      {% if change.path != 'CouponCodes'%}
                                       {% if change.type =='Add' %} {{labels.added}} {% elif change.type =='Remove' %} {{labels.removed}} {% else %} {{labels.updated}} {% endif %}
+
                                       {{ labels.item }} #{{changePath[1]}}
                                       {% set name=change.fields|findwhere("name", "Name") %}
                                       {% set productCode=change.fields|findwhere("name", "ProductCode") %}
@@ -55,7 +57,9 @@
 
                                       {{name.newValue || name.oldValue}}
 
-                                      ({% if variationProductCode.newValue or variationProductCode.oldValue %}{{variationProductCode.newValue || variationProductCode.oldValue}}{% else %}{{productCode.newValue || productCode.oldValue}}{% endif %})
+                                      ({% if variationProductCode.newValue or variationProductCode.oldValue %}{{variationProductCode.newValue || variationProductCode.oldValue}}{% else %}{{productCode.newValue || productCode.oldValue}}
+                                      {% endif %})
+                                      {% endif %}
                                     </td>
                                   </tr>
                               {% endif %}
@@ -65,7 +69,12 @@
                               {% else %}
                               <tr>
                                   <td>
+                                    {% if change.path == 'CouponCodes'%}
+                                    {% if change.type =='Add' %} {{labels.added}} {% else %} {{labels.removed}} {% endif %} {{labels.couponCode}}
+                                    {% else %}
                                     {{field.name}}
+                                    {% endif %}
+
                                   </td>
                                 <td>
                                     {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.oldValue %}

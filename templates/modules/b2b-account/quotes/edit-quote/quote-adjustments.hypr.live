@@ -8,8 +8,11 @@
           </div>
           <div class="mz-l-formfieldgroup-cell">
             <input type="text" name="coupon-code" value="" data-mz-value="couponCode" />
-            <button type="button" id="cart-coupon-code" class="mz-button" data-mz-action="">{{labels.apply}}</button>
+            <button type="button" id="cart-coupon-code" class="mz-button" data-mz-action="applyCoupon">{{labels.apply}}</button>
           </div>
+          {% if model.info %}
+          <div><span>{{model.info.message}}</span></div>
+          {% endif %}
         </div>
       </td>
       <td>
@@ -41,9 +44,28 @@
                           {{labels.itemSubtotal}}:
                         </td>
                         <td>
-                          <span class="adjustment-subtotals">{{model.subTotal | currency}}</span>
+                          <span class="adjustment-subtotals">{{(model.subTotal-model.itemLevelProductDiscountTotal) | currency}}</span>
                         </td>
                       </tr>
+
+                      {% if model.orderDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.orderDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                      
                       <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
                         <td>
                           <select class="mz-l-formfieldgroup-halfsize">
@@ -105,9 +127,28 @@
                           {{labels.shippingSubtotal}}:
                         </td>
                         <td>
-                          <span class="adjustment-subtotals">{{model.shippingSubTotal | currency}}</span>
+                          <span class="adjustment-subtotals">{{(model.shippingSubTotal - model.itemLevelShippingDiscountTotal) | currency}}</span>
                         </td>
                       </tr>
+
+                      {% if model.shippingDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.shippingDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.discount.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+
                       <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
                         <td>
                           <select class="mz-l-formfieldgroup-halfsize">
@@ -169,9 +210,28 @@
                           {{labels.handlingSubtotal}}:
                         </td>
                         <td>
-                          <span class="adjustment-subtotals">{{model.handlingSubTotal | currency}}</span>
+                          <span class="adjustment-subtotals">{{(model.handlingSubTotal - model.itemLevelHandlingDiscountTotal) | currency}}</span>
                         </td>
                       </tr>
+
+                      {% if model.handlingDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.handlingDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+
                       <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
                         <td>
                           <select class="mz-l-formfieldgroup-halfsize">
