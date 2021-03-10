@@ -40,7 +40,7 @@ define(["jquery", "underscore"], function ($, _) {
                 var inputValue = $('.' + options.pageSelector + '-mz-dd-search').val().replace(/'/g, "^'");
                 var dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: 'isActive eq true', sortBy: options.textField + ' ' + 'asc' });
                 if (filteredVal) {
-                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '"', sortBy: options.textField + ' ' + 'asc' });
+                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '" and isActive eq true', sortBy: options.textField + ' ' + 'asc' });
                 }
                 dataSet.apiGet().then(function (accounts) {
                     $('.' + options.pageSelector + '-mz-listData').text('');
@@ -115,13 +115,13 @@ define(["jquery", "underscore"], function ($, _) {
                 $(self.selector + '> .' + options.pageSelector +'-mz-dd-search').removeAttr("data-mz-value");
                 if (e.which !== KEY_DOWN && e.which !== KEY_UP) {
                     var inputValue = $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val();
-                    inputValue = inputValue.replace(/['^(")}{ ]/g, function (match) {
+                    inputValue = inputValue.replace(/['^(")}{[\]]/g, function (match) {
                         return specialCharactersObj[match];
                     });
                     inputValue = inputValue.replace(/undefined/g, ' ');
                     $('.' + options.pageSelector +'> .mz-dropdown-data').show();
                     clearTimeout(timeout);
-                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + "'", pageSize: options.pageSize });
+                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + "' and isActive eq true", pageSize: options.pageSize });
                     if (inputValue === "") {
                         dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: 'isActive eq true' });
                         filteredVal = false;
