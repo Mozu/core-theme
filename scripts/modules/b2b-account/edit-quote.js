@@ -941,7 +941,8 @@ define([
        },
         updateFulfillmentInfo: function (updateMode) {
             var self = this;
-            updateMode = updateMode || applyToDraft;          
+            updateMode = updateMode || applyToDraft;     
+            self.getAvailableShippingMethods();     
             self.model.set('updatemode', updateMode);
             self.model.isLoading(true);
             var fulfillmentInfo = self.model.get("fulfillmentInfo");
@@ -1031,8 +1032,12 @@ define([
                         }
                     }
                     //Add newly created address
-                    if (!isUpdated) {                    
-                        contacts.push(fulfillmentInfo.fulfillmentContact);
+                    if (!isUpdated) {             
+                        if(typeof fulfillmentInfo.fulfillmentContact.types === undefined)
+                        {  
+                         fulfillmentInfo.fulfillmentContact = Object.assign({}, fulfillmentInfo.fulfillmentContact, {types:[{name: "Shipping", isPrimary: false}]});     
+                        }
+                        contacts.push(fulfillmentInfo.fulfillmentContact);                        
                         this.model.set('fulfillmentInfo', fulfillmentInfo);
                     }
                 }
@@ -1043,7 +1048,7 @@ define([
         getOnlyShippingAddress: function (contacts) {
             var filteredContacts = [];
             if (contacts) {
-                for (var i = 0; i <= contacts.length; i++) {
+                for (var i = 0; i < contacts.length; i++) {
                     var types = contacts[i].types;
                     if (types && types.length > 0) {
                         for (var j = 0; j < types.length; j++) {
@@ -1052,6 +1057,8 @@ define([
                             }
                         }
                     }
+                    if(types === undefined)
+                    filteredContacts.push(contacts[i]);
                 }
             }
             return filteredContacts;
