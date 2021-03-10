@@ -1,0 +1,22 @@
+﻿{% extends "email/email" %}
+{% block body-content %}
+    <!--- Header --->
+<div class="mz-b2b-email-header">  
+  <div class="header-logo">
+    <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+  </div>  
+  <div class="header-text">
+    <div class="store-name">{{ siteContext.generalSettings.websiteName }}</div>
+  </div>
+</div>
+<br />
+<div>
+    <br /><br />
+    {{ labels.quoteReadyForCheckout|string_format(model.name, model.number)|safe }} 
+     <a href="//{{ domainName }}/myaccount/quote/{{model.id}}">{{labels.hereLink}}</a>.
+    <br /><br />
+</div>
+<div>
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}.
+</div>
+{% endblock body-content %}
