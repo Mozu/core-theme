@@ -13,7 +13,7 @@
 <option value="-1">{{labels.shippingDestinationSelect}}</option>
     {% for contact in model.allContacts %}
         <option value="{{contact.id}}"  
-                {% if model.selectedDestination and model.selectedDestination.destinationContact.id == contact.id %} selected {% endif %} >
+                {% if model.selectedFulfillmentInfo and model.selectedFulfillmentInfo.fulfillmentContact.id == contact.id %} selected {% endif %} >
         {% include "modules/common/address-list" with model=contact %}
         </option>
     {% endfor %}
@@ -31,7 +31,7 @@
             <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="firstname" type="text" name="firstname" data-mz-value="model.selectedDestination.destinationContact.firstName" value="{{ model.selectedDestination.destinationContact.firstName }}" maxlength="200">
+            <input id="firstname" type="text" name="firstname" data-mz-value="model.selectedFulfillmentInfo.fulfillmentContact.firstName" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.firstName }}" maxlength="200">
             <span class="mz-validationmessage" data-mz-validationmessage-for="firstname"></span>
         </div>
     </div>
@@ -40,7 +40,7 @@
             <label for="lastname">{{ labels.lastName }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="lastNameOrSurname" type="text" name="lastname" value="{{ model.selectedDestination.destinationContact.lastNameOrSurname }}" maxlength="200">
+            <input id="lastNameOrSurname" type="text" name="lastname" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.lastNameOrSurname }}" maxlength="200">
             <span class="mz-validationmessage" data-mz-validationmessage-for="lastNameOrSurname"></span>
         </div>
     </div>
@@ -49,14 +49,14 @@
             <label for="address-line1">{{ labels.address }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" id="address-line-1" name="address-line1" value="{{ model.selectedDestination.destinationContact.address.address1 }}" maxlength="200" autocomplete="address-line1">
+            <input type="text" id="address-line-1" name="address-line1" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.address.address1 }}" maxlength="200" autocomplete="address-line1">
             <span class="mz-validationmessage" data-mz-validationmessage-for="address-line-1"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-addressform-address2">
         <div class="mz-l-formfieldgroup-cell"></div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="address-line-2" type="text" name="address-line2" data-mz-value="address.address2" value="{{ model.selectedDestination.destinationContact.address.address2 }}" maxlength="200" autocomplete="address-line2">
+            <input id="address-line-2" type="text" name="address-line2" data-mz-value="address.address2" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.address.address2 }}" maxlength="200" autocomplete="address-line2">
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-addressform-country">
@@ -68,11 +68,11 @@
                 <option></option>
                 {% if countries && countries.length > 0 %}
                     {% for country in countries %}
-                        <option {% if model.selectedDestination.destinationContact.address.countryCode == country.value %}selected="selected" {% endif %}value="{{ country.value }}">{{ country.key }}</option>
+                        <option {% if model.selectedFulfillmentInfo.fulfillmentContact.address.countryCode == country.value %}selected="selected" {% endif %}value="{{ country.value }}">{{ country.key }}</option>
                     {% endfor %}
                 {% else %}
                     {% for country in pageContext.billingCountries %}
-                        <option {% if model.selectedDestination.destinationContact.address.countryCode == country.value %}selected="selected" {% endif %} value="{{ country.value }}">{{ country.key }}</option>
+                        <option {% if model.selectedFulfillmentInfo.fulfillmentContact.address.countryCode == country.value %}selected="selected" {% endif %} value="{{ country.value }}">{{ country.key }}</option>
                     {% endfor %}
                 {% endif %}
             </select>
@@ -84,20 +84,20 @@
             <label for="city">{{ labels.city }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="city" type="text" name="city" value="{{ model.selectedDestination.destinationContact.address.cityOrTown }}" maxlength="100">
+            <input id="city" type="text" name="city" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.address.cityOrTown }}" maxlength="100">
             <span class="mz-validationmessage" data-mz-validationmessage-for="city"></span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row mz-addressform-state state-not-usa" {% if model.selectedDestination.destinationContact.address.countryCode == "US" %} style="display: none"{% endif %}>
+    <div class="mz-l-formfieldgroup-row mz-addressform-state state-not-usa" {% if model.selectedFulfillmentInfo.fulfillmentContact.address.countryCode == "US" %} style="display: none"{% endif %}>
         <div class="mz-l-formfieldgroup-cell">
             <label for="stateOrProvince">{{ labels.stateOrProvince }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="stateOrProvince" type="text" name="stateOrProvince" value="{{ model.selectedDestination.destinationContact.address.stateOrProvince }}">
+            <input id="stateOrProvince" type="text" name="stateOrProvince" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.address.stateOrProvince }}">
             <span class="mz-validationmessage" data-mz-validationmessage-for="stateOrProvince"></span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row mz-addressform-state state-usa" {% if model.selectedDestination.destinationContact.address.countryCode != "US" %}style="display: none"{% endif %}>
+    <div class="mz-l-formfieldgroup-row mz-addressform-state state-usa" {% if model.selectedFulfillmentInfo.fulfillmentContact.address.countryCode != "US" %}style="display: none"{% endif %}>
         <div class="mz-l-formfieldgroup-cell">
             <label for="stateprov">{{ labels.state }}<span class="is-required"> *</span>:</label>
         </div>
@@ -107,11 +107,11 @@
 
                 {% if states && states.length > 0 %}
                 {% for state in states %}
-                    <option {% if model.selectedDestination.destinationContact.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
+                    <option {% if model.selectedFulfillmentInfo.fulfillmentContact.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
                 {% endfor %}
                 {% else %}
                 {% for state in pageContext.billingStates %}
-                    <option {% if model.selectedDestination.destinationContact.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
+                    <option {% if model.selectedFulfillmentInfo.fulfillmentContact.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
                 {% endfor %}
                 {% endif %}
 
@@ -122,7 +122,7 @@
     <div class="mz-l-formfieldgroup-row mz-addressform-zip">
         <div class="mz-l-formfieldgroup-cell">
             <label for="postal-code">
-            {% if model.selectedDestination.destinationContact.address.CountryCode == "UK" %}
+            {% if model.selectedFulfillmentInfo.fulfillmentContact.address.CountryCode == "UK" %}
                 {{ labels.postalTown }}
             {% else %}
                 {{ labels.postalCode }}
@@ -130,7 +130,7 @@
             <span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="postal-code" type="text" name="postal-code" data-mz-value="address.postalOrZipCode" value="{{ model.selectedDestination.destinationContact.address.postalOrZipCode }}" maxlength="100">
+            <input id="postal-code" type="text" name="postal-code" data-mz-value="address.postalOrZipCode" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}" maxlength="100">
             <span class="mz-validationmessage" data-mz-validationmessage-for="postal-code"></span>
         </div>
     </div>
@@ -139,7 +139,7 @@
             <label for="shippingphone">{{ labels.phone }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input id="phonenumber" type="text" name="shippingphone" value="{{ model.selectedDestination.destinationContact.phoneNumbers.home }}" maxlength="20">
+            <input id="phonenumber" type="text" name="shippingphone" value="{{ model.selectedFulfillmentInfo.fulfillmentContact.phoneNumbers.home }}" maxlength="20">
             <span class="mz-validationmessage" data-mz-validationmessage-for="phonenumber"></span>
         </div>
     </div>
@@ -150,8 +150,8 @@
         </div>
         <div class="mz-l-formfieldgroup-cell">
             <select id="addressType" data-mz-value="address.addressType">
-                <option value="Residential" {% if model.selectedDestination.isDestinationCommercial==false %}selected="selected"{% endif %} >{{ labels.residential }}</option>
-                <option value="Commercial" {% if model.selectedDestination.isDestinationCommercial == true %}selected="selected"{% endif %} >{{ labels.commercial }}</option>
+                <option value="Residential" {% if model.selectedFulfillmentInfo.isDestinationCommercial==false %}selected="selected"{% endif %} >{{ labels.residential }}</option>
+                <option value="Commercial" {% if model.selectedFulfillmentInfo.isDestinationCommercial == true %}selected="selected"{% endif %} >{{ labels.commercial }}</option>
             </select>
         </div>
     </div>
@@ -164,7 +164,7 @@
         {% block modal-footer %}
         <div  class="mz-button-footer">
           <button type="button" class="mz-button mz-button-width" data-dismiss="modal">{{labels.printWindowCancelButton}}</button>
-          <button type="button" id="saveEditedAddress" class="mz-button">{{labels.save}}</button>
+          <button type="button" id="saveEditedAddress"  class="mz-button">{{labels.save}}</button>
         </div>
         {% endblock modal-footer %}
   </div>
