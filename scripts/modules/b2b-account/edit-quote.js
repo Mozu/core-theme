@@ -238,7 +238,7 @@ define([
             updateMode = updateMode || applyToDraft;
             product.name = product.content.productName;
             var images = product.content.productImages.length > 0 ? product.content.productImages : product.productImages;
-
+            var fulfillMethod = (product.goodsType === 'Physical') ? 'Ship' : 'Digital';
             if (images && images.length > 0) {
                 product.imageUrl = images[0].imageUrl;
             }
@@ -252,6 +252,7 @@ define([
                 id: quoteId,
                 product: product,
                 quantity: quantity,
+                fulfillmentMethod:fulfillMethod,
                 updatemode: updateMode
             };
             self.model.isLoading(true);
