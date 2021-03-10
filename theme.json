@@ -176,7 +176,7 @@
       "template": "email/product-return-changed",
       "title": "Return Has Been Updated"
     },
-	{
+    {
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
@@ -295,6 +295,24 @@
       "properties": {},
       "template": "email/quote-summary",
       "title": "Quote Summary"
+    },
+    {
+      "id": "quote.inreview",
+      "properties": {},
+      "template": "email/quote-in-review",
+      "title": "Quote In Review"
+    },
+    {
+      "id": "quote.readyforcheckout",
+      "properties": {},
+      "template": "email/quote-ready-for-checkout",
+      "title": "Quote Ready for Checkout"
+    },
+    {
+      "id": "quote.expired",
+      "properties": {},
+      "template": "email/quote-expired",
+      "title": "Quote Expired"
     }
   ],
   "backOfficeTemplates": [
