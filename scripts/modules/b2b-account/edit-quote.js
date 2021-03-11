@@ -486,6 +486,14 @@ define([
                     (quoteAdjustmentBefore.shippingAdjustment !== quoteAdjustmentAfter.shippingAdjustment) ||
                     (quoteAdjustmentBefore.handlingAdjustment !== quoteAdjustmentAfter.handlingAdjustment);
                 if (isChanged) {
+
+                    if(quoteAdjustmentAfter.adjustmentNewSubtotal < 0 || quoteAdjustmentAfter.shippingAdjustmentNewSubtotal < 0 || quoteAdjustmentAfter.handlingAdjustmentNewSubtotal < 0){
+                        this.showMessageBar({
+                            message: 'Adjustment totals cannot be negative.'
+                        });
+                        return;
+                    }
+
                     quoteAdjustmentAfter.id = self.model.get('id');
                     quoteAdjustmentAfter.updatemode = applyToDraft;
 
