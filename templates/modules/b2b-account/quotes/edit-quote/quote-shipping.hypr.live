@@ -51,9 +51,9 @@
               <div>
                 <b>{{labels.shippingMethod}}</b>
               </div>
-              <select class="mz-l-formfieldgroup-halfsize" id="selectShippingMethod"  data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">
+              <select class="mz-l-formfieldgroup-halfsize" id="selectShippingMethod"  data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">              
                 {% for method in model.shippingMethods %}
-                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.fulfillmentMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
+                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.fulfillmentInfo.shippingMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
                 {% endfor %}               
               </select>
             </td>

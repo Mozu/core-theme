@@ -1039,6 +1039,10 @@ define([
                         }
                         contacts.push(fulfillmentInfo.fulfillmentContact);                        
                         this.model.set('fulfillmentInfo', fulfillmentInfo);
+                        if(fulfillmentInfo.shippingMethodCode)
+                        {
+                            this.getAvailableShippingMethods();
+                        }
                     }
                 }
             }
