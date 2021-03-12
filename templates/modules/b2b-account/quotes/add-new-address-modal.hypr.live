@@ -164,7 +164,7 @@
         {% block modal-footer %}
         <div  class="mz-button-footer">
           <button type="button" class="mz-button mz-button-width" data-dismiss="modal">{{labels.printWindowCancelButton}}</button>
-          <button type="button" id="saveEditedAddress"  class="mz-button">{{labels.save}}</button>
+          <button type="button" class="mz-button mz-button-width" id="saveEditedAddress"  class="mz-button">{{labels.save}}</button>
         </div>
         {% endblock modal-footer %}
   </div>

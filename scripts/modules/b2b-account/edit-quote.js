@@ -938,6 +938,7 @@ define([
             self.model.set('selectedShippingMethodCode', $("#selectShippingMethod").val());
             self.model.set('selectedShippingMethod', $("#selectShippingMethod :selected").text());
             self.updateFulfillmentInfo();
+            self.refreshQuote();
        },
         updateFulfillmentInfo: function (updateMode) {
             var self = this;
@@ -970,8 +971,7 @@ define([
                     self.model.set("isEditExpirationDate", false);
                     self.model.set("isEditSubmittedBy", false);
                     self.model.set('allAdminUsers', null);
-                    self.model.syncApiModel();
-                    
+                    self.model.syncApiModel();                  
                 }
                 else {
                     self.exitQuote();
@@ -1002,7 +1002,7 @@ define([
                     fulfillmentInfo = {fulfillmentContact:contact };
                     self.model.set("fulfillmentInfo", fulfillmentInfo);        
                     self.updateFulfillmentInfo();
-                    self.getAvailableShippingMethods();
+                    self.getAvailableShippingMethods();                   
                 }
             }
         },
