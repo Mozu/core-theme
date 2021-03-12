@@ -44,6 +44,8 @@ define([
             self.model.set('isShippable', self.isShippable());
 
             self.model.set("isUserAdmin", require.mozuData('user').behaviors.includes(1000));
+            self.model.set("isUserPurchaser", require.mozuData('user').behaviors.includes(1005));
+
             self.model.set('isSalesRep', require.mozuData('user').isSalesRep);
 
             self.setModifiedContact();
