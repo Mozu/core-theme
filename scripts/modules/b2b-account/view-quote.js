@@ -38,6 +38,8 @@ define([
             self.model.set('isShippable', self.isShippable());
             self.model.set("isUserAdmin", require.mozuData('user').behaviors.includes(1000));
             self.model.set('isSalesRep', require.mozuData('user').isSalesRep);
+            self.model.set('hasPricelist', self.hasPricelist());
+            self.model.set("isUserPurchaser", require.mozuData('user').behaviors.includes(1005));
             self.setModifiedContact();
             //render product picker
             self.renderProductPicker();
@@ -175,6 +177,10 @@ define([
         getQuoteAdjustment: function (isOverride) {
             var quote = this.model.apiModel.data;
             if (!quote.quoteUpdatedAdjustments || isOverride) {
+                var productDiscounts = quote.orderLevelProductDiscountTotal + quote.itemLevelProductDiscountTotal;
+                var shippingDiscounts = quote.orderLevelShippingDiscountTotal + quote.itemLevelShippingDiscountTotal;
+                var handlingDiscounts = quote.orderLevelHandlingDiscountTotal + quote.itemLevelHandlingDiscountTotal;
+
                 var adjustment = quote.adjustment ? quote.adjustment.amount : null;
                 var shippingAdjustment = quote.shippingAdjustment ? quote.shippingAdjustment.amount : null;
                 var handlingAdjustment = quote.handlingAdjustment ? quote.handlingAdjustment.amount : null;
@@ -184,17 +190,20 @@ define([
                     "adjustmentAbs": adjustment ? Math.abs(adjustment) : null,
                     "adjustmentType": defaultAdjustmentType,
                     "adjustmentAction": adjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "adjustmentNewSubtotal": quote.subTotal + adjustment,
+                    "adjustmentNewSubtotal": quote.subTotal + adjustment - productDiscounts,
+
                     "shippingAdjustment": shippingAdjustment,
                     "shippingAdjustmentAbs": shippingAdjustment ? Math.abs(shippingAdjustment) : null,
                     "shippingAdjustmentType": defaultAdjustmentType,
                     "shippingAdjustmentAction": shippingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "shippingAdjustmentNewSubtotal": quote.shippingSubTotal + shippingAdjustment,
+                    "shippingAdjustmentNewSubtotal": quote.shippingSubTotal + shippingAdjustment - shippingDiscounts, 
+
                     "handlingAdjustment": handlingAdjustment,
                     "handlingAdjustmentAbs": handlingAdjustment ? Math.abs(handlingAdjustment) : null,
                     "handlingAdjustmentType": defaultAdjustmentType,
                     "handlingAdjustmentAction": handlingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "handlingAdjustmentNewSubtotal": quote.handlingSubTotal + handlingAdjustment,
+                    "handlingAdjustmentNewSubtotal": quote.handlingSubTotal + handlingAdjustment - handlingDiscounts,
+
                     "taxAndDutyTotal": taxAndDutyTotal
                 };
             }
@@ -561,6 +570,19 @@ define([
                 }
             }
             return false;
+        },
+        hasPricelist: function () {
+            var items = this.model.apiModel.data.items;
+            var result = false;
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].product.price.priceListCode) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
         }
     });
     $(document).ready(function () {

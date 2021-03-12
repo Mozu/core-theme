@@ -1,5 +1,4 @@
-﻿
-<div>
+﻿<div>
   <h2 class="quote-name">
     {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
     <button class="mz-button" style="margin-left: 10px;" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
@@ -39,6 +38,21 @@
     </li>
     <li>
       {% include "modules/b2b-account/quotes/quote-history" with model=model %}
+    </li>
+    <li>
+      <div class="mz-quote-actions">
+        {% if model.isUserAdmin or model.isUserPurchaser %}
+          {% set validUser=true %}
+        {% else %}
+          {% set validUser=false %}
+        {% endif %}
+        {% if model.status=="ReadyForCheckout" and validUser %}
+        <form method="post" action="/checkout/quoteOrder/{{model.id}}" id="quoteCheckoutform">
+          <button class="mz-button" {% if model.hasDraft==true %} disabled {% endif
+            %}>{{labels.continueToCheckout}}</button>
+        </form>
+        {% endif %}
+      </div>
     </li>
   </ul>
 </div>
