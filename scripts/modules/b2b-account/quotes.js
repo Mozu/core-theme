@@ -140,8 +140,12 @@ define([
                         valueField: 'id',
                         placeHolder: $('#selectb2bAccountGrid > .mz-dd-placeholder').text(),
                         filterOption: 'cont',
+                        filterOption1: 'eq',
                         noRecords: $('#selectb2bAccountGrid > .mz-dd-no-records').text(),
-                        pageSelector: 'selectb2bAccountGrid'
+                        pageSelector: 'selectb2bAccountGrid',
+                        optionalFilter: 'and',
+                        filterKey: 'isActive',
+                        filterValue: 'true'
                     });
                     $("#selectb2bAccount").mozuPaginatedSearchableGrid({
                         model: B2BAccountModels.b2bAccounts,
@@ -150,8 +154,12 @@ define([
                         valueField: 'id',
                         placeHolder: $('#selectb2bAccount > .mz-dd-placeholder').text(),
                         filterOption: 'cont',
+                        filterOption1: 'eq',
                         noRecords: $('#selectb2bAccount > .mz-dd-no-records').text(),
-                        pageSelector: 'selectb2bAccount'
+                        pageSelector: 'selectb2bAccount',
+                        optionalFilter: 'and',
+                        filterKey: 'isActive',
+                        filterValue: 'true'
                     });
                 }
 
