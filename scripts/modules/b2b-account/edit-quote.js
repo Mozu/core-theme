@@ -635,14 +635,13 @@ define([
             self.updateQuote(applyAndCommit);
         },
         submitForApproval: function () {
-            var items = this.model.get('items');
-            if (items.length > 0) {
+            if (this.validateQuoteBeforeSubmit()) {
                 this.commitDraft();
             }
-            else {
-                this.showMessageBar({
-                    message: 'At least one item must be added to submit a quote for approval.'
-                });
+        },
+        approveQuote: function () {
+            if (this.validateQuoteBeforeSubmit()) {
+                this.commitDraft();
             }
         },
         refreshQuote: function () {
@@ -1297,6 +1296,58 @@ define([
                 }
             }
             return result;
+        },
+        validateQuoteBeforeSubmit: function () {
+            var name = this.model.get('name');
+            if (!name) {
+                this.showMessageBar({
+                    message: 'Quote name is required.'
+                });
+                return false;
+            }
+
+            var userId = this.model.get('userId');
+            if (!userId) {
+                this.showMessageBar({
+                    message: 'Created By is required.'
+                });
+                return false;
+            }
+
+            var items = this.model.get('items');
+            if (items.length <= 0) {
+                this.showMessageBar({
+                    message: 'At least one item must be added to a quote.'
+                });
+                return false;
+            }
+
+            //validate fulfillment address and shipping method code is populated, If direct ship items are present.
+            if (!this.validateFulfillmentInfo()) {
+                this.showMessageBar({
+                    message: 'Shipping address and shipping method is required.'
+                });
+                return false;
+            }
+
+            return true;
+        },
+        validateFulfillmentInfo: function () {
+            if (this.isShippable()) {
+                var fulfillmentInfo = this.model.get('fulfillmentInfo');
+                if (!fulfillmentInfo || !fulfillmentInfo.fulfillmentContact ||
+                    !fulfillmentInfo.fulfillmentContact.address ||
+                    !fulfillmentInfo.shippingMethodCode
+                ) {
+                    return false;
+                }
+                return true;
+            }
+            else {
+                return true;
+            }
+
+            return false;
         }
     });
 
