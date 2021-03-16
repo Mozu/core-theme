@@ -200,7 +200,9 @@ define([
                     }
                 });
             });
-            
+            if (viewB2BAccount) {
+                collection.filterBy("customerAccountId eq " + self.model.attributes.accountToView);
+            }
             this.initializeGrid(collection);
         },
         showMessageBar: function (error) {
@@ -210,10 +212,22 @@ define([
             self.render();
         },
         filterGrid: function (nameValue, dateValue, collection) {
-            filterstring = "";
+            var filterstring = "";
+            var self = this;
+            var viewB2BAccount = self.model.attributes.viewB2BAccount;
+            if (viewB2BAccount) {
+                filterstring = "customerAccountId eq " + self.model.attributes.accountToView;
+            }
+           
             if (nameValue !== "") {
                 nameValue = nameFilter + nameValue;
-                filterstring = nameValue;
+                if (filterstring === "") {
+                    filterstring = nameValue;
+                }
+                else {
+                    filterstring = filterstring + " and " + nameValue;
+                }
+               
                 if (dateValue !== "") {
                     dateValue = expirationDateFilter + dateValue + timeComponent;
                     filterstring = filterstring + " and " + dateValue;
@@ -221,10 +235,20 @@ define([
                 collection.filterBy(filterstring);
             }
             else if (dateValue !== "") {
-                filterstring = expirationDateFilter + dateValue + timeComponent;
+                if (filterstring === "") {
+                    filterstring = expirationDateFilter + dateValue + timeComponent;
+                }
+                else {
+                    filterstring = filterstring + " and " + expirationDateFilter + dateValue + timeComponent;
+                }
                 collection.filterBy(filterstring);
             } else if (nameValue === "") {
-                collection.filterBy("");
+                if (filterstring === "") {
+                    collection.filterBy("");
+                }
+                else {
+                    collection.filterBy(filterstring);
+                }
             }
         },
         initializeGrid: function (collection) {
