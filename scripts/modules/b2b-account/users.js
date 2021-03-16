@@ -224,6 +224,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         }
     });
 
+    // Instead of using baseRequestParams the accountId is set dynamically on render
     var B2BUsersGridCollectionModel = MozuGridCollection.extend({
         mozuType: 'b2busers',
         filter: "isRemoved eq false",
@@ -295,7 +296,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             var viewB2BAccount = self.model.attributes.viewB2BAccount;
             if (viewB2BAccount) {
                 collection = new B2BUsersGridCollectionModel({});
-                //Update route paramter
+                // Set route parameter dynamically instead of using baseRequestParams
                 collection.lastRequest.accountId = self.model.attributes.accountToView;
             }
             else {
