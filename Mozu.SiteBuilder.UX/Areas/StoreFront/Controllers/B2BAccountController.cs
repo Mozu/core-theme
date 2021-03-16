@@ -43,6 +43,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var jsonObject = account.ToJObject();
             jsonObject.Add("viewB2BAccount", true);
+            jsonObject.Add("accountToView", accId);
 
             if (PageContext.User.AccountId != accId)
             {
