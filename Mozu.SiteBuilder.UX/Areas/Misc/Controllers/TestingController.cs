@@ -150,9 +150,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 reqMessage.Method = new HttpMethod(vals);
             }
 
+            // Support sellers (admin users) using storefront for B2B purposes.
+            // Set the user claims based on the user scope type header.
+            Request.Headers.TryGetValue(Headers.USER_SCOPE_TYPE, out var userScopeType);
+            bool useAdminUserClaims = userScopeType == UserScopeType.Tenant.ToString();
+
             if (!Request.Headers.TryGetValue(Headers.USER_CLAIMS, out var values))
             {
-                reqMessage.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
+                var userClaims = useAdminUserClaims
+                    ? SbApiContext.AdminUserClaim.ToAccessToken()
+                    : SbApiContext.UserClaims.ToAccessToken();
+                
+                reqMessage.Headers.Add(Headers.USER_CLAIMS, userClaims);
             }
 
             if (!Request.Headers.TryGetValue(Headers.APP_CLAIMS, out values))

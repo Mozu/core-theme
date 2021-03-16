@@ -86,6 +86,10 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.UserClaims = user;
         }
+        public void SetUserClaim(LightweightUserClaims user)
+        {
+            this.AdminUserClaim = user;
+        }
     }
     //public class SiteBuilderApiContext2 : MozuServiceApiContext, ISiteBuilderApiContext
     //{
