@@ -206,6 +206,9 @@ define([
         filter: function(collection) {
             var filterStr = "";
             var qName = $("#searchName").val();
+            if (typeof String.prototype.mzCheckSpacialChar === 'function') {
+                qName = $("#searchName").val().mzCheckSpacialChar();
+            }
             var qNumber = $("#searchQuoteNumber").val();
             var status = $("#statusDropdown").val();
             var expDate = $("#expirationdate").val();
