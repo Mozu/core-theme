@@ -58,9 +58,12 @@ define(["jquery", "underscore"], function ($, _) {
                 dataSet.apiGet().then(function (accounts) {
                     $('.' + options.pageSelector + '-mz-listData').text('');
                     _.each(accounts, function (data) {
-                        if (!_.isUndefined(data.data[options.textField])) {
-                            $('.' + options.pageSelector + '-mz-listData').append('<a class="mozu-dropdown" data-mz-value="' + data.data[options.valueField] + '" tabindex="-1" href="javascript:void(0)">' + data.data[options.textField] + '</a>');
+                        var filterDisplay = " ";
+                        if (data.data[options.textField]) {
+                            filterDisplay = data.data[options.textField];
                         }
+                        
+                        $('.' + options.pageSelector + '-mz-listData').append('<a class="mozu-dropdown" data-mz-value="' + data.data[options.valueField] + '" tabindex="-1" href="javascript:void(0)">' + filterDisplay + '</a>');
                     });
                     $('.' + options.pageSelector + '-mz-pagination-url > .mz-dd-loading').hide();
                 });
