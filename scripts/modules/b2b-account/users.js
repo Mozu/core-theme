@@ -224,11 +224,9 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         }
     });
 
+    // Instead of using baseRequestParams the accountId is set dynamically on render
     var B2BUsersGridCollectionModel = MozuGridCollection.extend({
         mozuType: 'b2busers',
-        baseRequestParams: {
-            accountId: require.mozuData('user').accountId
-        },
         filter: "isRemoved eq false",
         autoload: true,
         columns: [
@@ -288,6 +286,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             if (!customerModel) {
                 customerModel = CustomerModels.EditableCustomer.fromCurrent();
                 this.model.set('viewB2BAccount', customerModel.attributes.viewB2BAccount);
+                this.model.set('accountToView', customerModel.attributes.accountToView);
             }
         },
         render: function () {
@@ -297,11 +296,12 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             var viewB2BAccount = self.model.attributes.viewB2BAccount;
             if (viewB2BAccount) {
                 collection = new B2BUsersGridCollectionModel({});
+                // Set route parameter dynamically instead of using baseRequestParams
+                collection.lastRequest.accountId = self.model.attributes.accountToView;
             }
             else {
                 collection = new UsersGridCollectionModel({});
             }
-           
 
             var usersGrid = new MozuGrid({
                 el: self.el.find('.mz-b2baccount-users'),
