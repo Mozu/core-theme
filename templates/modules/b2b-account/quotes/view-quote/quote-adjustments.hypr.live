@@ -225,7 +225,7 @@
                 </div>
               </td>
               <td>
-                <b>{{model.taxAndDutyTotal | currency}}</b>
+                <b>{{model.quoteUpdatedAdjustments.taxAndDutyTotal | currency}}</b>
               </td>
             </tr>
             <tr class="grand-total">
