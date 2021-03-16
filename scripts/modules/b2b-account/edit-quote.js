@@ -927,6 +927,18 @@ define([
                 }));
             return self.model.apiModel.getAvailableShippingMethods(json).then(function (response) {
                 self.model.set('shippingMethods', response);
+                var allShippingMethods = self.model.get('shippingMethods');
+                var fulfillmentInfo = self.model.apiModel.data.fulfillmentInfo;
+                var selectedShippingMethod =  self.model.get('selectedShippingMethodCode');
+                if (allShippingMethods && fulfillmentInfo && !selectedShippingMethod) {
+                    for (var methodIndex = 0; methodIndex < allShippingMethods.length; methodIndex++) {
+                        if (allShippingMethods[methodIndex].shippingMethodCode == fulfillmentInfo.shippingMethodCode) {
+                             self.model.set('selectedShippingMethodCode', fulfillmentInfo.shippingMethodCode);
+                             self.model.set('selectedShippingMethod', fulfillmentInfo.shippingMethodName);
+                        }
+                    }
+                }
+                
                 self.render();
             }, function (error) {
                 self.showMessageBar(error);
@@ -971,6 +983,7 @@ define([
                         self.model.set("isEditSubmittedBy", false);
                         self.model.set('allAdminUsers', null);
                         self.model.syncApiModel();
+                        self.refreshQuote();
                     }
                     else {
                         self.exitQuote();
@@ -1028,7 +1041,7 @@ define([
                         if (contacts[i].id == fulfillmentInfo.fulfillmentContact.id) {
                             contacts[i] = fulfillmentInfo.fulfillmentContact;
                             isUpdated = true;
-                        }
+                        }                       
                     }
                     //Add newly created address
                     if (!isUpdated) {
@@ -1038,7 +1051,11 @@ define([
                         contacts.push(fulfillmentInfo.fulfillmentContact);
                         this.model.set('fulfillmentInfo', fulfillmentInfo);
                         if (fulfillmentInfo.shippingMethodCode) {
-                            this.getAvailableShippingMethods();
+                            this.getAvailableShippingMethods();                          
+                        }
+                        else
+                        {
+                            $('#selectShippingMethod').val('-1');
                         }
                     }
                 }
