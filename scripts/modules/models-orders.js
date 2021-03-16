@@ -4,7 +4,11 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             relations: {
                 product: ProductModels.Product
             },
-            helpers: ['uniqueProductCode'],
+            idAttribute: 'lineId',
+            helpers: ['uniqueProductCode', 'uniqueItemCode'],
+            uniqueItemCode: function() {
+                return this.get('id') + '-' + this.get('lineId');
+            },
             uniqueProductCode: function() {
                 //Takes into account product variation code
                 var self = this,
@@ -47,7 +51,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             getOrderItem: function() {
                 var self = this;
                 if (this.collection.parent) {
-                    return this.collection.parent.getOrder().get('explodedItems').find(function(model) {
+                    return this.collection.parent.getOrder().get('items').find(function(model) {
                         if (model.get('productCode')) {
                             return self.get('productCode') === model.get('productCode');
                         }
@@ -102,7 +106,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return "";
             }
         }),
-
         OrderPackageList = Backbone.Collection.extend({
             model: OrderPackage
         }),
@@ -154,10 +157,10 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     };
 
                 var productExtras = self.filter(function(item) {
-                        return item.has('optionAttributeFQN');
+                        return false;
                     }),
                     standardProducts = self.filter(function(item) {
-                        return !item.has('optionAttributeFQN');
+                        return true;
                     }),
                     standardProductsGroup = _.groupBy(standardProducts, function(item) {
                         return item.uniqueProductCode();
@@ -204,16 +207,16 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             },
             explodeOrderItems: function(item) {
                 var self = this;
-                if (item && item.product.bundledProducts) {
-                    if (item.product.bundledProducts.length > 0) {
-                        //We do not want to include the orignal bundle in our expoled Items
-                        if (item.product.productUsage !== "Bundle") {
-                            self.add(new OrderItemBit(item));
-                        }
-                        self.explodeProductBundle(item);
-                        return;
-                    }
-                }
+                // if (item && item.product.bundledProducts) {
+                //     if (item.product.bundledProducts.length > 0) {
+                //         //We do not want to include the orignal bundle in our expoled Items
+                //         if (item.product.productUsage !== "Bundle") {
+                //             self.add(new OrderItemBit(item));
+                //         }
+                //         self.explodeProductBundle(item);
+                //         return;
+                //     }
+                // }
                 self.add(new OrderItemBit(item));
             },
             explodeProductBundle: function(item) {
@@ -242,11 +245,17 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             checkForDuplicate: function() {
                 var self = this;
                 var duplicate = self.collection.find(function(item) {
-                    if (self.uniqueProductCode() === item.uniqueProductCode()) {
-                        if (self.get('orderItemOptionAttributeFQN') === item.get('orderItemOptionAttributeFQN')) {
-                            return true;
-                        }
+                    if(self.get('_uniqueShipmentId') === item.get('_uniqueShipmentId')) {
+                        return true;
                     }
+                    //
+                    //Shipments could have different pricing and such so grouping by product code at FQN is no longer safe assumption.
+                    //
+                    // if (self.uniqueProductCode() === item.uniqueProductCode()) {
+                    //     if (self.get('orderItemOptionAttributeFQN') === item.get('orderItemOptionAttributeFQN')) {
+                    //         return true;
+                    //     }
+                    // }
                     return false;
                 });
                 return duplicate;
@@ -270,9 +279,9 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             getOrderItem: function() {
                 var self = this;
                 var productCode = self.uniqueProductCode();
-
+ 
                 var orderItem = self.collection.parent.get('items').find(function(item) {
-                    return item.get('lineId') === self.get('orderLineId');
+                    return item.get('data').synthesizedSource.shipmentNumber === self.get('shipmentNumber') && item.get('data').synthesizedSource.shipmentItemId === self.get('shipmentItemId');
                 });
                 return orderItem;
             },
@@ -290,10 +299,10 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     rmas.get('items').remove(this);
             }
         }),
-
         ReturnableItems = Backbone.Collection.extend({
             model: ReturnableItem
         }),
+
 
         Order = Backbone.MozuModel.extend({
             mozuType: 'order',
@@ -474,27 +483,36 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     returnItems = [],
                     parentBundles = [];
 
-                var lineItemGroups = _.groupBy(returnableItems, function(item) {
-                    return item.orderLineId;
+
+                //We No Longer want to group by line Item
+                //MAYBE shipment ID    
+                var shipmentItemGroups = _.groupBy(returnableItems, function(item) {
+                    return item.shipmentNumber;
                 });
 
                 self.get('returnableItems').reset(null);
                 // First, group the returnable items by OrderItem.LineId
-                _.each(lineItemGroups, function(grouping) {
+                _.each(returnableItems, function(grouping) {
+                    grouping._uniqueShipmentId = grouping.shipmentNumber + '-' + grouping.shipmentItemId;
                     // If an OrderItem has extras, there will be 2 entries for the parent, one with extras, one without.
                     // Find the one without extras (standalone parent) if available.
-                    var returnableParents = _.filter(grouping, function(item) {
-                        return !item.parentProductCode;
-                    });
 
-                    var returnableParent = returnableParents.length > 1 ?
-                        _.find(returnableParents, function(item) {
-                            return item.excludeProductExtras === true;
-                        }) :
-                        returnableParents[0];
+                    //Should be for bundles so we probabaly dont need this anymore
+
+                    // var returnableParents = _.filter(grouping, function(item) {
+                    //     return !item.parentProductCode;
+                    // });
+
+                    // var returnableParent = returnableParents.length > 1 ?
+                    //     _.find(returnableParents, function(item) {
+                    //         return item.excludeProductExtras === true;
+                    //     }) :
+                    //     returnableParents[0];
+
+                    var returnableParent = grouping;
 
                     var originalOrderItem = self.get('items').find(function(item) {
-                        return item.get('lineId') === returnableParent.orderLineId;
+                        return item.get('data').synthesizedSource.shipmentNumber === returnableParent.shipmentNumber && item.get('data').synthesizedSource.shipmentItemId === returnableParent.shipmentItemId;
                     });
 
                     if (returnableParent.quantityReturnable > 0) {
@@ -503,52 +521,52 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         returnableParent.product = parentItem.product;
 
                         // If we need to exclude extras, strip off bundle items with an OptionAttributeFQN and the corresponding Product.Options.
-                        if (returnableParent.excludeProductExtras) {
-                            var children = parentItem.product.bundledProducts;
-                            var extraOptions = _.chain(children)
-                                .filter(function(child) {
-                                    return child.optionAttributeFQN;
-                                })
-                                .map(function(extra) {
-                                    return extra.optionAttributeFQN;
-                                })
-                                .value();
-                            var bundleItems = _.filter(children, function(child) {
-                                return !child.optionAttributeFQN;
-                            });
+                        // if (returnableParent.excludeProductExtras) {
+                        //     var children = parentItem.product.bundledProducts;
+                        //     var extraOptions = _.chain(children)
+                        //         .filter(function(child) {
+                        //             return child.optionAttributeFQN;
+                        //         })
+                        //         .map(function(extra) {
+                        //             return extra.optionAttributeFQN;
+                        //         })
+                        //         .value();
+                        //     var bundleItems = _.filter(children, function(child) {
+                        //         return !child.optionAttributeFQN;
+                        //     });
 
-                            var allOptions = parentItem.product.options;
-                            var nonExtraOptions = allOptions.filter(function(option) {
-                                return !_.contains(extraOptions, option.attributeFQN);
-                            });
+                        //     var allOptions = parentItem.product.options;
+                        //     var nonExtraOptions = allOptions.filter(function(option) {
+                        //         return !_.contains(extraOptions, option.attributeFQN);
+                        //     });
 
-                            //Add any extra properites we wish the returnableItem to have
-                            returnableParent.product.bundledProducts = bundleItems;
-                            returnableParent.product.options = nonExtraOptions;
-                        }
+                        //     //Add any extra properites we wish the returnableItem to have
+                        //     returnableParent.product.bundledProducts = bundleItems;
+                        //     returnableParent.product.options = nonExtraOptions;
+                        // }
 
                         self.get('returnableItems').add(returnableParent);
 
                     }
 
-                    var childProducts = originalOrderItem.get('product').get('bundledProducts');
+                    //var childProducts = originalOrderItem.get('product').get('bundledProducts');
                     // Now process extras.
-                    var returnableChildren = _.filter(grouping, function(item) {
-                        return item.parentProductCode && item.orderItemOptionAttributeFQN && item.quantityReturnable > 0;
-                    });
-                    _.each(returnableChildren, function(returnableChild, key) {
-                        var childProductMatch = _.find(childProducts, function(childProduct) {
-                            var productCodeMatch = childProduct.productCode === returnableChild.productCode;
-                            var optionMatch = childProduct.optionAttributeFQN === returnableChild.orderItemOptionAttributeFQN;
-                            return productCodeMatch && optionMatch;
-                        });
+                    //var returnableChildren = _.filter(grouping, function(item) {
+                    //    return item.parentProductCode && item.orderItemOptionAttributeFQN && item.quantityReturnable > 0;
+                    //});
+                    // _.each(returnableChildren, function(returnableChild, key) {
+                    //     var childProductMatch = _.find(childProducts, function(childProduct) {
+                    //         var productCodeMatch = childProduct.productCode === returnableChild.productCode;
+                    //         var optionMatch = childProduct.optionAttributeFQN === returnableChild.orderItemOptionAttributeFQN;
+                    //         return productCodeMatch && optionMatch;
+                    //     });
 
-                        if (childProductMatch) {
-                            var childProduct = _.clone(childProductMatch);
-                            returnableChild.product = childProduct;
-                            self.get('returnableItems').add(returnableChild);
-                        }
-                    });
+                    //     if (childProductMatch) {
+                    //         var childProduct = _.clone(childProductMatch);
+                    //         returnableChild.product = childProduct;
+                    //         self.get('returnableItems').add(returnableChild);
+                    //     }
+                    // });
                 });
                 return self.get('returnableItems');
             },
@@ -580,7 +598,8 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
         OrderCollection = Backbone.MozuPagedCollection.extend({
             mozuType: 'orders',
             defaults: {
-                pageSize: 5
+                pageSize: 5,
+                mode: "synthesized"
             },
             relations: {
                 items: Backbone.Collection.extend({

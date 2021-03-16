@@ -1,7 +1,7 @@
 {% extends "modules/common/order-listing" %}
 {% block order-items %}
 <div class="order-history-listing">
-    {% if model.hasFulfilledPackages or model.hasFulfilledPickups %}
+    {% if model.isUnified and model.hasFulfilledPackages or model.hasFulfilledPickups %}
         <div class="mz-orderlisting-prompt is-warning" data-mz-message-for="noReturnableItems"></div>
             <div class="mz-orderlisting-header">
                 {% if themeSettings.allowCustomerInitiatedReturns and not model.limitPlaceReturns %}

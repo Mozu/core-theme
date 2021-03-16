@@ -7,35 +7,35 @@
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
             sorts = [
-            {
-                "text": Hypr.getLabel('default'),
-                "value": defaultSort
-            },
-            {
-                "text": Hypr.getLabel('sortByPriceAsc'),
-                "value": "price asc"
-            },
-            {
-                "text": Hypr.getLabel('sortByPriceDesc'),
-                "value": "price desc"
-            },
-            {
-                "text": Hypr.getLabel('sortByNameAsc'),
-                "value": "productName asc"
-            },
-            {
-                "text": Hypr.getLabel('sortByNameDesc'),
-                "value": "productName desc"
-            },
-            {
-                "text": Hypr.getLabel('sortByDateDesc'),
-                "value": "createDate desc"
-            },
-            {
-                "text": Hypr.getLabel('sortByDateAsc'),
-                "value": "createDate asc"
-            }
-        ];
+                {
+                    "text": Hypr.getLabel('default'),
+                    "value": defaultSort
+                },
+                {
+                    "text": Hypr.getLabel('sortByPriceAsc'),
+                    "value": "price asc"
+                },
+                {
+                    "text": Hypr.getLabel('sortByPriceDesc'),
+                    "value": "price desc"
+                },
+                {
+                    "text": Hypr.getLabel('sortByNameAsc'),
+                    "value": "productName asc"
+                },
+                {
+                    "text": Hypr.getLabel('sortByNameDesc'),
+                    "value": "productName desc"
+                },
+                {
+                    "text": Hypr.getLabel('sortByDateDesc'),
+                    "value": "createDate desc"
+                },
+                {
+                    "text": Hypr.getLabel('sortByDateAsc'),
+                    "value": "createDate asc"
+                }
+            ];
 
         var PagedCollection = Backbone.MozuPagedCollection = Backbone.MozuModel.extend({
             helpers: ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'],
@@ -55,9 +55,9 @@
 
             _isPaged: true,
 
-            getQueryParams: function() {
+            getQueryParams: function () {
                 var self = this, lrClone = _.clone(this.lastRequest);
-                _.each(lrClone, function(v, p) {
+                _.each(lrClone, function (v, p) {
                     if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
                 });
                 if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
@@ -67,14 +67,14 @@
                 return lrClone;
             },
 
-            getQueryString: function() {
+            getQueryString: function () {
                 var params = this.getQueryParams();
                 if (!params || _.isEmpty(params)) return "";
                 return "?" + $.param(params)
-                              .replace(/\+/g, ' ');
+                    .replace(/\+/g, ' ');
             },
 
-            buildRequest: function() {
+            buildRequest: function () {
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                     pageSize = this.get("pageSize"),
                     startIndex = this.get("startIndex"),
@@ -88,13 +88,13 @@
                 return conf;
             },
 
-            previousPage: function() {
+            previousPage: function () {
                 try {
                     return this.apiModel.prevPage(this.lastRequest);
                 } catch (e) { }
             },
 
-            nextPage: function() {
+            nextPage: function () {
                 try {
                     return this.apiModel.nextPage(this.lastRequest);
                 } catch (e) { }
@@ -109,8 +109,8 @@
                     }
                 } catch (e) { }
             },
-            
-            setIndex: function(num, config){
+
+            setIndex: function (num, config) {
                 try {
                     num = parseInt(num, 10);
                     if (typeof num === 'number') {
@@ -119,36 +119,36 @@
                 } catch (e) { }
             },
 
-            setPage: function(num) {
+            setPage: function (num) {
                 num = parseInt(num, 10);
                 if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
             },
 
-            changePageSize: function() {
+            changePageSize: function () {
                 return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
             },
 
-            firstIndex: function() {
+            firstIndex: function () {
                 return this.get("startIndex") + 1;
             },
 
-            lastIndex: function() {
+            lastIndex: function () {
                 return this.get("startIndex") + this.get("items").length;
             },
 
-            hasPreviousPage: function() {
+            hasPreviousPage: function () {
                 return this.get("startIndex") > 0;
             },
 
-            hasNextPage: function() {
+            hasNextPage: function () {
                 return this.lastIndex() < this.get("totalCount");
             },
 
-            currentPage: function() {
+            currentPage: function () {
                 return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1));
             },
 
-            middlePageNumbers: function() {
+            middlePageNumbers: function () {
                 var current = this.currentPage(),
                     ret = [],
                     pageCount = this.get('pageCount'),
@@ -158,11 +158,11 @@
                 return ret;
             },
 
-            sorts: function() {
+            sorts: function () {
                 return sorts;
             },
 
-            currentSort: function() {
+            currentSort: function () {
                 return (this.lastRequest && this.lastRequest.sortBy && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' ')) || '';
             },
 
@@ -170,7 +170,7 @@
                 return (this.lastRequest && this.lastRequest.filter && decodeURIComponent(this.lastRequest.filter).replace(/\+/g, ' ')) || '';
             },
 
-            sortBy: function(sortString) {
+            sortBy: function (sortString) {
                 return this.apiGet($.extend(this.lastRequest, { sortBy: sortString }));
             },
 
@@ -178,11 +178,15 @@
                 return this.apiGet($.extend(this.lastRequest, { filter: filterString }));
             },
 
-            initialize: function() {
+            reload: function () {
+                return this.apiGet(this.lastRequest);
+            },
+
+            initialize: function () {
                 this.lastRequest = this.buildRequest();
             }
         });
 
 
         return Backbone;
-});
+    });

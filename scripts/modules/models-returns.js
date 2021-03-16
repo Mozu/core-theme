@@ -3,6 +3,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
         relations: { 
         },
         _returnableItems: [],
+        idAttribute: "_uniqueShipmentId",
         getReturnableItems: function(){
             return _.filter(this._returnableItems, function(item) { 
                 var method = (item.fulfillmentMethod) ? item.fulfillmentMethod : item.parent.fulfillmentMethod;

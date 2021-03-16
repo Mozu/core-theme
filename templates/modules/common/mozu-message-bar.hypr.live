@@ -1,5 +1,4 @@
 ﻿<div class="mz-messagebar" data-mz-mozu-message-bar>
-    {%dump model%}
     {% if model.length > 0 %}
         {% for msg in model %}
             {% if msg.messageType %}

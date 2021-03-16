@@ -5,29 +5,29 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "modules/v
         initialize: function () {
             var self = this;
             var allowedToGetData = (this.model.hasRequiredBehavior() || !this.model.requireBehaviorsToRender);
-            if (allowedToGetData){
-              if (typeof this.model.apiGridRead === 'function') {
-                  this.model.apiModel.get = this.model.apiGridRead.bind(this.model);
-                  this.model.apiModel.setIndex = this.model.apiGridRead.bind(this.model);
-              }
+            if (allowedToGetData) {
+                if (typeof this.model.apiGridRead === 'function') {
+                    this.model.apiModel.get = this.model.apiGridRead.bind(this.model);
+                    this.model.apiModel.setIndex = this.model.apiGridRead.bind(this.model);
+                }
 
-              try {
-                  this.$el.addClass('is-loading');
-                  if (this.model.get('autoload')){
-                      self.model.setIndex(0);
-                  }
-              } catch (error) {
+                try {
+                    this.$el.addClass('is-loading');
+                    if (this.model.get('autoload')) {
+                        self.model.setIndex(0);
+                    }
+                } catch (error) {
 
-              }
-          }
+                }
+            }
         },
-        registerRowActions: function(){
+        registerRowActions: function () {
             var self = this;
             var rowActions = this.model.get('rowActions');
-            _.each(rowActions, function(action){
-                self[action.action] = function(e){
+            _.each(rowActions, function (action) {
+                self[action.action] = function (e) {
                     var rowNumber = $(e.target).parents('.mz-grid-row').data('mzRowIndex');
-                    var row = self.model.get('items').at(rowNumber-1);
+                    var row = self.model.get('items').at(rowNumber - 1);
                     self.model[action.action](e, row);
                 };
             });
