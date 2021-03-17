@@ -397,10 +397,21 @@ define([
         updateExpirationDate: function () {
             var self = this;
             var expirationDate = $('#expirationDate').val();
+
             if (expirationDate) {
-                self.model.set('expirationDate', new Date(expirationDate));
-                self.model.set("isEditExpirationDate", false);
-                self.updateQuote();
+                var today = new Date();                
+                expirationDate = new Date(expirationDate);
+
+                if (expirationDate > today) {
+                    self.model.set('expirationDate', expirationDate);
+                    self.model.set("isEditExpirationDate", false);
+                    self.updateQuote();
+                }
+                else {
+                    self.showMessageBar({
+                        message: 'Expiration Date should be greater than today.'
+                    });
+                }
             }
         },
         cancelExpirationDateUpdate: function () {
