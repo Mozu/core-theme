@@ -13,7 +13,7 @@
       {% if model.status=="Pending" or model.status=="InReview" %}
     <button class="mz-button" data-mz-action="editQuote">{{labels.editQuote}}</button>
       {% endif %}
-      {% if model.status=="ReadyForCheckout" or model.status=="Completed" %}
+      {% if model.status=="ReadyForCheckout" or model.status=="Completed" or model.status=="Expired" %}
     <button class="mz-button" data-mz-action="editQuote" disabled>{{labels.editQuote}}</button>
       {% endif %}
     {% endif %}
@@ -42,11 +42,11 @@
     <li>
       <div class="mz-quote-actions">
         {% if model.isUserAdmin or model.isUserPurchaser %}
-          {% set validUser=true %}
+          {% set canPurchase=true %}
         {% else %}
-          {% set validUser=false %}
+          {% set canPurchase=false %}
         {% endif %}
-        {% if model.status=="ReadyForCheckout" and validUser %}
+        {% if model.status=="ReadyForCheckout" and canPurchase %}
         <form method="post" action="/checkout/quoteOrder/{{model.id}}" id="quoteCheckoutform">
           <button class="mz-button" {% if model.hasDraft==true %} disabled {% endif
             %}>{{labels.continueToCheckout}}</button>

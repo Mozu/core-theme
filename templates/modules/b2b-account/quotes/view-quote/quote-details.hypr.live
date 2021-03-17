@@ -48,24 +48,8 @@
               <b>{{labels.expirationDate}}:</b>
             </dt>
             <dd>
-              {% if model.isEditExpirationDate==true and model.isSalesRep==true and model.status =="Expired" %}
-                <input type="date" id="expirationDate" min="{{ now|date('Y-m-d') }}" value="{{ model.expirationDate|date('Y-m-d') }}" />
-                <span>
-                  <button class="mz-button mz-button" data-mz-action="updateExpirationDate">{{labels.save}}</button> &nbsp;&nbsp;&nbsp;
-                  <button class="mz-button mz-button" data-mz-action="cancelExpirationDateUpdate">{{labels.cancel}}</button>
-                </span>
-              {% else %}
-
               {% if model.expirationDate %}
               {{ model.expirationDate|date("m/d/Y") }}
-              {% endif %}
-
-              {% if model.isSalesRep==true and model.status =="Expired" %}
-              <span>
-                <img src="/resources/images/edit.png" data-mz-action="startEditingExpirationDate" />
-              </span>
-              {% endif %}
-              
               {% endif %}
             </dd>
           </dl>
