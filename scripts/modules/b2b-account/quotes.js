@@ -164,9 +164,6 @@ define([
                         filterValue: 'true'
                     });
                 }
-
-                $(".quotesTextSearch").addClass("adjust-width");
-                $(".status-select").addClass("adjust-margin");
             }
 
             $(document).ready(function () {
