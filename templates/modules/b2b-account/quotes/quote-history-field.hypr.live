@@ -1,0 +1,11 @@
+{% if value %}
+	{% if name=='Adjustment.Amount' or name=='ShippingAdjustment.Amount' or name=='HandlingAdjustment.Amount' or  name=='UnitPrice' %}
+		{{ value | currency }}
+	{% elif name=='ExpirationDate' %}
+		{{ value|date("m/d/Y") }}
+	{% else %}
+		{{ value || "-" }}
+	{% endif %}
+{% else %}
+-
+{% endif %}

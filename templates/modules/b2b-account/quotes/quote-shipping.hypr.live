@@ -13,29 +13,46 @@
         <table class="mz-quote-shipping">
           <tr>
             <td>
-              <div class="mz-accountaddressbook-actions">
-                <img src="/resources/images/trash.png" data-mz-action="finishDeleteShipping" />
-                <img src="/resources/images/edit.png" data-mz-action="finishEditShipping" />
+              <div>
+                <b>{{labels.chooseAddress}}</b>
               </div>
+              
+              <select id="selectShippingAddress" class="mz-l-formfieldgroup-halfsize address-dropdown">
+                <option value="-1">{{labels.shippingDestinationSelect}}</option>
+                {% for contact in model.allContacts %}
+                  <option value="{{contact.id}}"  
+                          {% if model.destinations and model.destinations.length >
+                    0 and model.destinations[0].destinationContact and model.destinations[0].destinationContact.id == contact.id %} selected {% endif %} >
+                    {% include "modules/common/address-list" with model=contact %}
+                  </option>
+                {% endfor %}
+              </select>
+              {% if model.destinations and model.destinations.length >
+                0 and model.destinations[0].destinationContact %}
               <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
-                <span>Rajesh Datir</span>
-                <span>1817 Braker Lane,</span>
-                <span>ST 200,</span>
-                <span>
-                  Austin,
-                  TX
-                  78758
-                </span>
-                <span>US</span>
+                  <span>{{model.destinations[0].destinationContact.firstName}} {{model.destinations[0].destinationContact.lastNameOrSurname}}</span>
 
-                <span>4694665500</span>
+                {% if model.destinations[0].destinationContact.address.address1 %}<span>{{model.destinations[0].destinationContact.address.address1}}</span>{% endif %}
+                {% if model.destinations[0].destinationContact.address.address2 %}<span>{{model.destinations[0].destinationContact.address.address2}}</span>{% endif %}
+                {% if model.destinations[0].destinationContact.address.address3 %}<span>{{model.destinations[0].destinationContact.address.address3}}</span>{% endif %}
+                {% if model.destinations[0].destinationContact.address.address4 %}<span>{{model.destinations[0].destinationContact.address.address4}}</span>{% endif %}
+                
+                <span>
+                  {{model.destinations[0].destinationContact.address.cityOrTown}}, {{model.destinations[0].destinationContact.address.stateOrProvince}}, {{model.destinations[0].destinationContact.address.countryCode}} {{model.destinations[0].destinationContact.address.postalOrZipCode}}
+                </span>
+                <span>{{labels.phone}}: {{model.destinations[0].destinationContact.phoneNumbers.home || model.destinations[0].destinationContact.phoneNumbers.mobile || model.destinations[0].destinationContact.phoneNumbers.work}}</span>
               </div>
+              {% endif %}
+              {% if model.isUserAdmin || model.isSalesRep %}
+              <div>
+              <button class="mz-button mz-contact-save create-new-address" data-mz-action="addNewAddress" data-backdrop="true">{{labels.createNewAddress}}</button>
+              </div>
+              {% endif %}
             </td>
             <td>
-              <span>
+              <div>
                 <b>{{labels.shippingMethod}}</b>
-              </span>
-              <br />
+              </div>
               <select class="mz-l-formfieldgroup-halfsize" data-mz-value="" >
                 <option selected="selected" value="">{{labels.chooseShippingMethod}}</option>
                 <option value="Fedex Ground">Fedex Ground</option>
