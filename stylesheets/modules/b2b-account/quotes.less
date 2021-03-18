@@ -342,14 +342,14 @@
 .show {display:block;}
 
 .quotesTextSearch {
-    width: 7.4rem !important;
+    width: 70% !important;
     background: #eee url(../resources/images/search-regular.svg);
     background-repeat: no-repeat;
     background-size: 1rem 1rem;
-    background-position-x: 8rem;
+    background-position-x: 97%;
     background-position-y: 0.35rem;
-    padding-right: 1.5rem !important;
-    margin-right: 1.5rem;
+    // padding-right: 1.5rem !important;
+    // margin-right: 1.5rem;
     &.adjust-width {
         width: 5.5rem !important;
         background-position-x: 6rem;
@@ -366,14 +366,14 @@
 .expirationdate-filter
 {
     background-color: #eee;
-    width: 8.5rem;
-    margin-bottom: 12px;
-    height: 1.25rem;
+    width: 65%;
+    //margin-bottom: 12px;
+    height: 1.2rem;
 }
 
 .filter-container {
     display: flex;
-    margin: 0 10px;
+    margin: 0 0.625rem;
 }
 
 .exp-date-filter-container {
@@ -387,12 +387,12 @@
 }
 
 .status-select {
-    width: 8rem;
+    width: 70%;
     background-color: #eee;
-    margin-right: 6rem;
-    &.adjust-margin {
-        margin-right: 4rem;
-    }
+    // margin-right: 6rem;
+    // &.adjust-margin {
+    //     margin-right: 4rem;
+    // }
 }
 
 .fill-remaining-space {
@@ -403,17 +403,23 @@
 {
     width: auto !important;    
     height:1rem;
-    border:1px solid black;
-    padding: 5.6px;
-    margin-left: 8%;
+    border:0.0625rem solid black;
     background-color: #eee;
-    padding: 0.4rem;
+    padding: 0.3rem 0 0.3rem 0.25rem;
 }
 
 .mz-b2b-space   
 {
     display:inline-block;
     margin-left: 13%;    
+}
+
+.filter-column{
+    flex-basis: 15%;
+}
+
+.status-filter-column{
+    flex-basis: 16%;
 }
 
 .input-inner-spin-button {
