@@ -1236,6 +1236,10 @@
       "template": "{+quoteService}{quoteId}/items/{quoteItemId}/fulfillment?updatemode={updatemode}",
       "includeSelf": true,
       "returnType": "quote"
+    },
+    "create-quote-comment": {
+      "verb": "POST",
+      "template": "{+quoteService}{quoteId}/comments?updatemode={updatemode}"
     }
   },
   "quotes": {

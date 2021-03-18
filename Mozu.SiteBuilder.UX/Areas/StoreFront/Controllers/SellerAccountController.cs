@@ -31,6 +31,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.Core.Extensions;
 using RabbitMQ.Client.Impl;
 using Mozu.Core.Exceptions;
+using static Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -90,8 +91,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if(quote.HasDraft)
                 quote = (await _quoteWebApiClient.GetQuote(quoteId,true)).ReadAsSync();
 
-            if (quote.Status== "Completed")
-                throw new VaeValidationConflictException("Can't edit the completed quote.");
+            if (quote.Status.In(QuoteStatusConst.COMPLETED, QuoteStatusConst.READYFORCHECKOUT))
+            {
+                throw new VaeUnAuthorizedException($"Can't edit the {quote.Status} quote.");
+            }
+
+            await SetCountryAndStates();
 
             pc.CmsContext = new CmsPageContext()
             {
@@ -114,6 +119,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             PageContext.User.FirstName = userClaims?.UserFirstName;
             PageContext.User.LastName = userClaims?.UserLastName;
+        }
+
+        private async Task SetCountryAndStates()
+        {
+            var shipTask = await GetShippableCountries();
+            var billTask = await GetBillingCountries();
+
+            var shipStateTask = await GetUSShippingStates();
+            var billStateTask = await GetUSBillingStates();
+
+            PageContext.ShippingCountries = shipTask;
+            PageContext.BillingCountries = billTask;
+
+            PageContext.BillingStates = billStateTask;
+            PageContext.ShippingStates = shipStateTask;
         }
     }
 }

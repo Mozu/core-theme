@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-02-19
+ * Mozu JavaScript SDK - v0.3.0 - 2021-03-18
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -4776,6 +4776,10 @@ module.exports=
       "template": "{+quoteService}{quoteId}/items/{quoteItemId}/fulfillment?updatemode={updatemode}",
       "includeSelf": true,
       "returnType": "quote"
+    },
+    "create-quote-comment": {
+      "verb": "POST",
+      "template": "{+quoteService}{quoteId}/comments?updatemode={updatemode}"
     }
   },
   "quotes": {
