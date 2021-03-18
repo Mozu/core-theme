@@ -11,8 +11,9 @@ define(['modules/api',
         'modules/xpress-paypal',
         'modules/models-location',
         'modules/amazonPay',
-        'modules/applepay'
-], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay) {
+        'modules/applepay',
+        'modules/mozu-utilities'
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, MozuUtilities) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -74,6 +75,11 @@ define(['modules/api',
             preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
+            
+            //Hide the InitiateQuote for B2C user and Display for all B2B users.
+            var userBehaviors = require.mozuData('user').behaviors || [];
+            var isB2BUser = !userBehaviors.includes(MozuUtilities.Behaviors.User_Has_Full_Access_To_Their_Account);
+            this.model.set("isB2BUser", isB2BUser);
             // normally we preserveElement on the apple pay button, but we hide it if a change to the cart 
             // has lead the total price to be $0. Apple doesn't like $0 orders
             if (ApplePay && ApplePay.scriptLoaded) ApplePay.hideOrShowButton();
