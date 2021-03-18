@@ -950,9 +950,14 @@ define([
                     }
                 }
                 
-                self.render();
-            }, function (error) {
+                self.model.syncApiModel();         
+                self.refreshQuote();  
+            }, function(error) {
+                self.model.set('shippingMethods', null);
+                $('#selectShippingMethod').val('-1');                        
+                $("#selectShippingMethod").prop("disabled", true);  
                 self.showMessageBar(error);
+                self.render();
             });
         },
         shippingMethodSelectionChanged: function () {
@@ -964,13 +969,13 @@ define([
         },
         updateFulfillmentInfo: function (updateMode) {
             var self = this;
-            updateMode = updateMode || applyToDraft;
-            self.getAvailableShippingMethods();
+            updateMode = updateMode || applyToDraft;           
             self.model.set('updatemode', updateMode);
             self.model.isLoading(true);
             var fulfillmentInfo = self.model.get("fulfillmentInfo");
+            var json = JSON.parse(JSON.stringify({ }));
             if (fulfillmentInfo) {
-                var json = JSON.parse(JSON.stringify(
+                json = JSON.parse(JSON.stringify(
                     {
                         "shippingMethodName": self.model.get('selectedShippingMethod'),
                         "shippingMethodCode": self.model.get('selectedShippingMethodCode'),
@@ -984,37 +989,41 @@ define([
                             "address": fulfillmentInfo.fulfillmentContact.address
                         }
                     }));
+                }
+               
                 return self.model.apiModel.updateFulfillmentInfo(json).then(function (response) {
-                    if (updateMode === applyToDraft) {
+                    if (updateMode === applyToDraft) {                             
                         self.model.isLoading(false);
                         self.model.set(response.data);
                         self.model.set("error", null);
                         self.model.set("isEditQuoteName", false);
                         self.model.set("isEditExpirationDate", false);
                         self.model.set("isEditSubmittedBy", false);
-                        self.model.set('allAdminUsers', null);
-                        self.model.syncApiModel();
-                        self.refreshQuote();
+                        self.model.set('allAdminUsers', null);                                   
+   
                     }
                     else {
                         self.exitQuote();
                     }
+                  
+                   self.getAvailableShippingMethods();    
+                
                 }, function (error) {
                     self.showMessageBar(error);
                 });
-
-
-            }
         },
+      
         onAddressChange: function (contactId) {
             var self = this;
             var fulfillmentInfo = self.model.get("fulfillmentInfo");
 
             if (contactId === "-1") {
+                    
+
                 //trying to reset the fulfillmentInfo                
                 if (fulfillmentInfo) {
                     self.model.set("fulfillmentInfo", null);
-                    self.updateFulfillmentInfo();
+                    self.updateFulfillmentInfo();                               
                 }
             }
             else {
@@ -1024,8 +1033,8 @@ define([
 
                     fulfillmentInfo = { fulfillmentContact: contact };
                     self.model.set("fulfillmentInfo", fulfillmentInfo);
-                    self.updateFulfillmentInfo();
-                    self.getAvailableShippingMethods();
+                    self.updateFulfillmentInfo();                
+                           
                 }
             }
         },
@@ -1045,6 +1054,8 @@ define([
             var contacts = this.getOnlyShippingAddress(this.model.get('allContacts'));
             if (this.model.apiModel.data &&
                 this.model.apiModel.data.fulfillmentInfo) {
+            if(this.model.apiModel.data.fulfillmentInfo.fulfillmentContact)
+            {
                 var fulfillmentInfo = this.model.apiModel.data.fulfillmentInfo;
                 if (fulfillmentInfo && contacts) {
                     var isUpdated = false;
@@ -1056,23 +1067,27 @@ define([
                     }
                     //Add newly created address
                     if (!isUpdated) {
+                        if(fulfillmentInfo.fulfillmentContact !== undefined)
+                        {
                         if (typeof fulfillmentInfo.fulfillmentContact.types === undefined) {
                             fulfillmentInfo.fulfillmentContact = Object.assign({}, fulfillmentInfo.fulfillmentContact, { types: [{ name: "Shipping", isPrimary: false }] });
                         }
                         contacts.push(fulfillmentInfo.fulfillmentContact);
                         this.model.set('fulfillmentInfo', fulfillmentInfo);
-                        if (fulfillmentInfo.shippingMethodCode) {
-                            this.getAvailableShippingMethods();                          
-                        }
-                        else
-                        {
+                       }   
+
+                                  
+                        
+                        if (!fulfillmentInfo.shippingMethodCode) {
                             $('#selectShippingMethod').val('-1');
+                            this.model.set('shippingMethods', null);
                         }
                     }
                 }
             }
+        }
             this.model.set('allContacts', contacts);
-        },
+    },
 
         getOnlyShippingAddress: function (contacts) {
             var filteredContacts = [];
@@ -1138,8 +1153,7 @@ define([
             if (contact) {
                 var fulfillmentInfo = contact;
                 self.model.set("fulfillmentInfo", fulfillmentInfo);
-                self.updateFulfillmentInfo();
-                self.getAvailableShippingMethods();
+                self.updateFulfillmentInfo();              
                 addNewAddressViewPopup.closeModal();
             }
         },
@@ -1388,6 +1402,7 @@ define([
         });
 
         quoteEditView.render();
+        quoteEditView.getAvailableShippingMethods();
     });
 
 });
