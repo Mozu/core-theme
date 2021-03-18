@@ -16,9 +16,11 @@
   <li>
     {% include "modules/b2b-account/quotes/quote-summary" with model=model %}
   </li>
+  {% if model.isShippable %}
   <li>
     {% include "modules/b2b-account/quotes/quote-shipping" with model=model %}
   </li>
+  {% endif %}
   <li>
     {% include "modules/b2b-account/quotes/quote-comments" with model=model %}
   </li>
@@ -27,14 +29,22 @@
   </li>
   <li>
     <div class="mz-quote-actions">
-      {% if model.isSalesRep==true %}
-        <button class="mz-button" >{{labels.approveQuote}}</button>
-        <button class="mz-button" data-mz-action="commitDraft" {% if model.isDraft==false %} disabled {% endif %}>{{labels.denyAndSubmitEdits}}</button>
-      {% else %}
-          <button class="mz-button" >{{labels.acceptChanges}}</button>
-          <button class="mz-button" data-mz-action="commitDraft" {% if model.isDraft==false %} disabled {% endif %}>{{labels.submitDraft}}</button>        
-      {% endif %}    
-    <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardDraft}}</button>
+      {% if model.status=="Pending" %}
+        <button class="mz-button" data-mz-action="submitForApproval"  >{{labels.submitForApproval}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardChanges}}</button>
+      
+      {% elif model.status=="InReview" %}
+        <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
+        <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitChanges}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
+      
+      {% elif model.status=="ReadyForCheckout" %}
+        <button class="mz-button" data-mz-action="" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.continueToCheckout}}</button>
+        <button class="mz-button" data-mz-action="submitForApproval" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitForApproval}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
+      
+      {% else %}      
+      {% endif %}
     </div>
   </li>
 </ul>

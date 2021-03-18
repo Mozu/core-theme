@@ -141,18 +141,24 @@
     }
 
     .mz-quote-shipping {
-        td {
-            padding-right: 250px;
-        }
+        width: 100%;
 
-        td:nth-child(2) {
-            padding-top: 60px;
+        td:nth-child(1) {
+            width:650px;
         }
 
         td .mz-accountaddressbook-actions img {
             padding-right: 10px;
             height: 12px;
             float: right;
+        }
+
+        .address-dropdown {
+            width: 500px !important;
+        }
+
+        .create-new-address {
+            margin-top: 20px;
         }
     }
 
@@ -198,8 +204,23 @@
                     padding-bottom: 20px;
 
                     table {
-                        tr td {
-                            padding-right: 100px;
+                        tr td:nth-child(1) {
+                            width: 500px;
+                            word-wrap: break-word;
+                        }
+
+                        tr td.space {
+                            padding-right: 50px;
+                        }
+
+                        tr td.address {
+                            span {
+                                display: block;
+                            }
+                        }
+
+                        tr.space-before td {
+                            padding-top: 15px;
                         }
                     }
                 }
@@ -300,7 +321,7 @@
         .actions {
             display: flex;
             justify-content: flex-end
-        }        
+        }
     }
 }
 
@@ -380,5 +401,28 @@
         -moz-appearance: none;
         appearance: none;
         margin: 0;
+    }
+}
+
+#mz-add-address-modal {
+    width: 35% !important;
+    left: 25% !important;
+    position: fixed;
+    top: 5px;
+    z-index: 9999;
+
+    .modal-body {
+        height: 500px;
+        /* overflow: scroll; */
+        overflow-y: scroll;
+
+        #selectShippingAddressModal {
+            border-width: 2px;
+            width: 420px;
+        }
+
+        .editableAddress {
+            margin-top: 20px;
+        }
     }
 }
