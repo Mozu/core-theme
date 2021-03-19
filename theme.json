@@ -275,7 +275,7 @@
     {
       "id": "quote.summary",
       "properties": {},
-      "template": "email/b2b-quotes-summary",
+      "template": "email/quote-summary",
       "title": "Quote Summary"
     }
   ],
@@ -399,7 +399,7 @@
     {
       "entityType": "quote.summary",
       "id": "quote.summary",
-      "template": "back-office/b2b-quotes-details",
+      "template": "back-office/quote-summary",
       "title": "Quote Summary",
       "userCreatable": false
     }
