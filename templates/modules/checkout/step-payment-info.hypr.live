@@ -9,7 +9,7 @@
 </h3>
 
 <div class="mz-formstep-body">
-    <div class="mz-formstep-summary mz-l-stack">
+  <div class="mz-formstep-summary mz-l-stack">
         {% if model.nonStoreCreditOrGiftCardTotal == 0%}
             <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
         {% endif %}
@@ -74,54 +74,57 @@
                 </div>
             </div>
         </div>
-        {% endif %}
+      {% endif %}
 
-        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower == "token"  || payment.paymentType|lower  == "paywithamazon"  %}
-            {% if model.nonStoreCreditOrGiftCardTotal > 0%}
-               {%if model.isExternalCheckoutFlowComplete%}
-                <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
-               {% endif %}
-               {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
-                    {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
-                {%endif%}
-               {%if payment.paymentType|lower == "token" %}
-                    {%if payment.billingInfo.token.type|lower  == "paywithamazon" %}
+      {% if model.originalQuoteId == "" %}
+      {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower == "token"  || payment.paymentType|lower  == "paywithamazon"  %}
+      {% if model.nonStoreCreditOrGiftCardTotal > 0%}
+      {%if model.isExternalCheckoutFlowComplete%}
+      <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
+                   {% endif %}
+                   {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
                         {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
                     {%endif%}
-                    {% if payment.billingInfo.token.type|lower == "applepay" %}
-                      <div class="mz-l-stack-section">
-                        <div class="mz-l-formfieldgroup-cell">
-                          <img width="100px" src="../../../resources/images/Apple_Pay_Mark.png"/>
-                        </div>
-                      </div>
-                    {% endif %}
-                {%endif%}
-                {% if payment.paymentWorkflow|lower  == "paypalexpress2" %}
-                <div class="mz-l-stack-section">
-                        <div class="mz-l-formfieldgroup-cell">
-                            <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
-                        </div>
-
-                    {%if model.billingContact.firstName %}
-                        <div class="mz-addresssummary">
-                            {% include "modules/common/address-summary" with model=model.billingContact %}
-                        </div>
+                   {%if payment.paymentType|lower == "token" %}
+                        {%if payment.billingInfo.token.type|lower  == "paywithamazon" %}
+                            {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                        {%endif%}
+                        {% if payment.billingInfo.token.type|lower == "applepay" %}
+                          <div class="mz-l-stack-section">
+                            <div class="mz-l-formfieldgroup-cell">
+                              <img width="100px" src="../../../resources/images/Apple_Pay_Mark.png"/>
+                            </div>
+                          </div>
+                        {% endif %}
                     {%endif%}
+                    {% if payment.paymentWorkflow|lower  == "paypalexpress2" %}
+                    <div class="mz-l-stack-section">
+                            <div class="mz-l-formfieldgroup-cell">
+                                <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
+                            </div>
 
-                    </div>
-                {%endif%}
-            {%endif%}
+                        {%if model.billingContact.firstName %}
+                            <div class="mz-addresssummary">
+                                {% include "modules/common/address-summary" with model=model.billingContact %}
+                            </div>
+                        {%endif%}
 
-        {% endif %}
-        {% endfor %}
+                        </div>
+          {%endif%}
+          {%endif%}
 
-        <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
+          {% endif %}
+      {% endif %}
+      
+      {% endfor %}
+
+      <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             <p>
                 {{ labels.billingContact }}: <strong>{{ model.billingContact.email }}</strong>
             </p>
         </div>
-        {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
-        <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
+      {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
+      <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
         {% endif %}
@@ -206,15 +209,15 @@
                 </div>
             </div>
         </div>
-        {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
-        <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
+      {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
+      <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
         {% endif %}
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
-    </div>
+      </div>
 
     <div class="mz-formstep-next">
         <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>

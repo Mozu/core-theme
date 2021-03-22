@@ -37,9 +37,13 @@
         <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
         <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitChanges}}</button>
         <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
-      
+
       {% elif model.status=="ReadyForCheckout" %}
-        <button class="mz-button" data-mz-action="" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.continueToCheckout}}</button>
+      {% if model.isUserPurchaser or model.isUserAdmin %}
+      <form method="post" action="/checkout/quoteOrder/{{model.id}}" id="quoteCheckoutform">
+      <button class="mz-button" {% if model.hasDraft ==true %} disabled {% endif %} >{{labels.continueToCheckout}}</button>
+      </form>
+      {% endif %}
         <button class="mz-button" data-mz-action="submitForApproval" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitForApproval}}</button>
         <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
       
