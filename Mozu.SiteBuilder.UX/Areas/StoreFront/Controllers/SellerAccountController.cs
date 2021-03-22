@@ -114,6 +114,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("edit-quote", quote);
         }
 
+        [HttpGet]
+        [Route("selleraccount/quote/{quoteId}")]
+        public async Task<IActionResult> ViewQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if (quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId, true)).ReadAsSync();
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "view-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            // Set the user scope type header so API calls from the SDK through
+            // Reverse Proxy use the admin claims instead of the user claims
+            PageContext.UserScopeType = UserScopeType.Tenant;
+
+            return View("view-quote", quote);
+        }
+
         [NonAction]
         private void CreateUserFromAdminUserClaim(LightweightUserClaims userClaims)
         {

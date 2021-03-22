@@ -293,6 +293,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.ShippingStates = shipStateTask;
         }
 
+        [HttpGet]
+        [Route("myaccount/quote/{quoteId}")]
+        public async Task<IActionResult> ViewQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if (quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId, true)).ReadAsSync();
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "view-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("view-quote", quote);
+        }
+
         async Task<Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment> fetchOrderShipments(string orderId)
         {
             try
