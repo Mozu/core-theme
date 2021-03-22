@@ -38,6 +38,9 @@
       {% endif %}
       {% endif %}
       <li class="mz-utilitynav-item">
+        <a href="{{siteContext.siteSubdirectory}}/b2baccount/b2b-account-request" data-placement="bottom" class="mz-utilitynav-link">{{ labels.b2bAccountRequest }}</a>
+      </li>
+      <li class="mz-utilitynav-item">
             <a class="mz-utilitynav-link mz-utilitynav-link-cart" href="{% make_url "cart" %}">
             {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
             {% require_script "modules/cart-monitor" %}
