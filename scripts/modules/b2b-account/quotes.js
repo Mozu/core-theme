@@ -17,12 +17,12 @@ define([
     "modules/views-paging",
     'modules/editable-view',
     "modules/models-quotes",
-    "modules/b2b-account/account-address-search"], 
+    "modules/b2b-account/account-address-search",
+    "widgets/mz-search-pagination-dd"], 
     function ($, api, _, Hypr, Backbone, HyprLiveContext,
         CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
         ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
-        PagingViews, EditableView, QuoteModels, B2bContactsModal) {
-
+        PagingViews, EditableView, QuoteModels, B2bContactsModal, mozuPaginatedSearchableGrid) {
         var nameFilter = "name cont ";
         var expirationDateFilter  = "expirationdate ge ";
         var timeComponent = "T00:00:00z";
@@ -132,14 +132,49 @@ define([
             }
             if (isSalesRep) {
                 if (!self.model.get("b2bAccounts")) {
-                    var b2bAccount = new B2BAccountModels.b2bAccounts({ pageSize: 200 });
-                    b2bAccount.apiGet().then(function (accounts) {
-                        self.model.set("b2bAccounts", accounts);
-                        self.render();
+                    // Custom configurable Dropdown with search and pagination.
+                    $("#selectb2bAccountGrid").mozuPaginatedSearchableGrid({
+                        model: B2BAccountModels.b2bAccounts,
+                        pageSize: 10,
+                        textField: 'companyOrOrganization',
+                        valueField: 'id',
+                        placeHolder: $('#selectb2bAccountGrid > .mz-dd-placeholder').text(),
+                        filterOption: 'cont',
+                        filterOption1: 'eq',
+                        noRecords: $('#selectb2bAccountGrid > .mz-dd-no-records').text(),
+                        pageSelector: 'selectb2bAccountGrid',
+                        optionalFilter: 'and',
+                        filterKey: 'isActive',
+                        filterValue: 'true'
+                    });
+                    $("#selectb2bAccount").mozuPaginatedSearchableGrid({
+                        model: B2BAccountModels.b2bAccounts,
+                        pageSize: 20,
+                        textField: 'companyOrOrganization',
+                        valueField: 'id',
+                        placeHolder: $('#selectb2bAccount > .mz-dd-placeholder').text(),
+                        filterOption: 'cont',
+                        filterOption1: 'eq',
+                        noRecords: $('#selectb2bAccount > .mz-dd-no-records').text(),
+                        pageSelector: 'selectb2bAccount',
+                        optionalFilter: 'and',
+                        filterKey: 'isActive',
+                        filterValue: 'true'
                     });
                 }
-            }
 
+            }
+            $(document).ready(function () {
+                $(document).on('click', '#selectb2bAccount .mozu-dropdown', function () {
+                    $("#createQuoteHompageBtn").prop("disabled", false);
+                });
+                $(document).on('change', '#selectb2bAccount > input', function () {
+                    if ($("#selectb2bAccount > input").val() === "") {
+                        $("#createQuoteHompageBtn").prop("disabled", true);
+                    } 
+                });
+            });
+            
             $('[data-mz-action="applyfilter"]').on('keyup input', function(e) {
                 e.preventDefault();
                 clearTimeout(timeout);
@@ -174,7 +209,7 @@ define([
                 if (isSalesRep) {
                     //seller account
                     accountType = 'selleraccount';
-                    createQuoteOnAccnt = $("#selectb2bAccount").val();
+                    createQuoteOnAccnt = $("#selectb2bAccount > input").data('mz-value');
                 } else {
                     // buyer account
                     createQuoteOnAccnt = require.mozuData("user").accountId;
