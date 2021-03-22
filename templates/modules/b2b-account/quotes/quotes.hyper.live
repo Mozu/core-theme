@@ -44,11 +44,11 @@
                 <div class="fill-remaining-space"></div>
                 <div>
                     <select class="status-select" data-mz-action="selectionChanged" id="statusDropdown" data-mz-value="">
-                    <option selected="selected" value="">{{ labels.filterStatus }}</option>           
+                    <option selected="selected" value="">{{ labels.filterStatus }}</option>
                     <option value="Pending">{{ labels.pending }}</option>
                     <option value="InReview">{{ labels.inReview }}</option>
                     <option value="ReadyForCheckout">{{ labels.readyForCheckout }}</option>
-                    <option value="Completed">{{ labels.completed }}</option>              
+                    <option value="Completed">{{ labels.completed }}</option>
                     <option value="Expired">{{ labels.expired }}</option>
                     </select>
                 </div>
@@ -57,7 +57,6 @@
                 <div class="is-loading"></div>
                 {% include "modules/b2b-account/quotes/quotes-grid" %}
             </div>
-            
         </div>
     </div>
 </div>
