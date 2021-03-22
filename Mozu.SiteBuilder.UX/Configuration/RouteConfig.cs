@@ -229,6 +229,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Print Quote (back office)",
+                "back-office/quote/{quoteId}/print",
+                new { controller = "BackOffice", action = "PrintQuoteSummary" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                "back office (admin view) - PREVIEW",
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" },

@@ -45,6 +45,8 @@ using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Configuration;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
+using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
+using Mozu.Customer.Contracts;
 using System.Globalization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -79,6 +81,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Order Order { get; set; }
     }
 
+    public class QuoteEmail : Quote
+    {
+        public Customer.Contracts.CustomerAccount B2BAccount { get; set; }
+        public Customer.Contracts.B2BUserCollection B2BUsers { get; set; }
+        public bool isShippable { get; set; }
+    }
+
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -92,6 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly IB2BAccountWebApiClient _b2bAccountWebApiClient;
 
         static EmailController()
         {
@@ -252,6 +262,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.CustomerIntransit
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (QuoteEmail),
+                                               Topic = Topics.QuoteSummary
                                            }
 
                 };
@@ -269,7 +284,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ITenantsWebApiClient tenantsWebApiClient,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> pageRuleEvaluator
+            Lazy<IExpressionEvaluator> pageRuleEvaluator,
+            IB2BAccountWebApiClient b2bAccountWebApiClient
             ) //why does this extend CMSPageController??  Ugh...
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
@@ -281,6 +297,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
+            _b2bAccountWebApiClient = b2bAccountWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -617,6 +634,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 giftCardEmail.Order = giftCardOrder;
             }
 
+            if (obj is QuoteEmail quoteEmail)
+            {
+                var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteEmail.CustomerAccountId)).ReadAsSync();                
+                var b2bUsers = (await _b2bAccountWebApiClient.CloneWithoutUserClaims().GetUsers(quoteEmail.CustomerAccountId)).ReadAsSync();
+                quoteEmail.B2BAccount = b2bAccount;
+                quoteEmail.B2BUsers = b2bUsers;
+                quoteEmail.isShippable = quoteEmail.Items.Any(a => a.FulfillmentMethod == "Ship");
+            }
+
             return obj;
         }
 
@@ -740,7 +766,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string PartialCurbsideReady = "shipment.partialcurbsideready";
             public const string GatewayGiftCardCreated = "gatewaygiftcard.created";
             public const string CustomerIntransit = "shipment.customerintransit";
-            public const string CustomerAtCurbside = "shipment.customeratcurbside"; 
+            public const string CustomerAtCurbside = "shipment.customeratcurbside";
+            public const string QuoteSummary = "quote.summary";
         }
     }
 

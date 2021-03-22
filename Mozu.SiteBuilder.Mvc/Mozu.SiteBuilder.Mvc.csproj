@@ -66,6 +66,10 @@
 
     <None Remove="ArcJsExtensions\Content\dist\webpack.bundle.js" />
 
+    <None Remove="TestData\backoffice\Account.json" />
+
+    <None Remove="TestData\backoffice\b2bUsers.json" />
+
     <EmbeddedResource Include="ArcJsExtensions\Content\dist\webpack.bundle.js" />
   </ItemGroup>
 
