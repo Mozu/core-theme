@@ -32,6 +32,7 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -362,7 +363,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipments = new List<DCShipment>();
             foreach (var shipmentNumber in pickWave.ShipmentNumbers)
             {
-                var dcShipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+                var dcShipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().CloneWithSiteId(null).GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
                 shipments.Add(dcShipment);
             }
             ViewData["shipments"] = shipments;
@@ -393,7 +394,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipments = new List<DCShipment>();
             foreach (var shipmentNumber in pickWave.ShipmentNumbers)
             {
-                var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+                var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().CloneWithSiteId(null).GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
                 shipments.Add(shipment);
             }
 
