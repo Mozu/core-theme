@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Mozu.Core;
 using Microsoft.Extensions.Logging;
+using Mozu.Tenant.Contracts;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -101,11 +102,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         }
     }
 
+    
 
     [Category("Context")]
     [TestFixture]
     public class SiteBuilderApiContextTests
     {
+
+        [Test]
+        [TestCase("/foo/bar?a=b", "/foo/bar?a=b&__api__ctx=123",TestName = "Can_append_sitecontext_with_existing_qs")]
+        [TestCase("/foo/bar", "/foo/bar?__api__ctx=123",TestName = "Can_append_sitecontext_without_existing_qs")]
+        public void SiteBuilderApiContext_AppendSiteContextToRedirect_WithQS(string uri, string expected)
+        {
+            Assert.AreEqual(expected, SiteBuilderApiContextBuilder.AppendSiteContextToRedirect(uri, new Site(){Id=123}));
+        }
 
         [Test]
         public void SiteBuilderApiContext_Can_Init_With_Token_Placeholders()

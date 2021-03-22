@@ -46,7 +46,8 @@ namespace Mozu.SiteBuilder.Mvc
         
         public static string AppendSiteContextToRedirect(string query, Tenant.Contracts.Site site)
         {
-            return $"{query}&{SiteQueryKey}={site.Id}";
+            var sep = query?.Contains("?") == true ? "&" : "?";
+            return $"{query}{sep}{SiteQueryKey}={site.Id}";
         }
         public  bool InitFromQS(SiteBuilderApiContext apiCtx, IQueryCollection query)
         {
