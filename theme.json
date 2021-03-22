@@ -207,6 +207,24 @@
       "title": "Password Reset"
     },
     {
+      "id": "b2baccount.created",
+      "properties": {},
+      "template": "email/b2b-account-created",
+      "title": "B2B Account Created"
+    },
+    {
+      "id": "b2baccount.accountinactive",
+      "properties": {},
+      "template": "email/b2b-account-inactive",
+      "title": "B2B Account Inactive"
+    },
+    {
+      "id": "b2baccount.accountdenied",
+      "properties": {},
+      "template": "email/b2b-account-denied",
+      "title": "B2B Account Denied"
+    },
+    {
       "id": "shipment.backordered",
       "properties": {},
       "template": "email/backorder",
