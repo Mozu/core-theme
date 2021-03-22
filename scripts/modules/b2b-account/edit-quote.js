@@ -47,6 +47,7 @@ define([
             self.model.set("isUserPurchaser", require.mozuData('user').behaviors.includes(1005));
 
             self.model.set('isSalesRep', require.mozuData('user').isSalesRep);
+            self.model.set('hasPricelist', self.hasPricelist());
 
             self.setModifiedContact();
 
@@ -54,9 +55,15 @@ define([
             self.renderProductPicker();
 
             //wire up all the events on controls
-            self.onQuoteAdjustmentChange('#quoteAdjustmentSection', 'adjustment', self.model.apiModel.data.subTotal);
-            self.onQuoteAdjustmentChange('#shippingAdjustmentSection', 'shippingAdjustment', self.model.apiModel.data.shippingSubTotal);
-            self.onQuoteAdjustmentChange('#handlingAdjustmentSection', 'handlingAdjustment', self.model.apiModel.data.handlingSubTotal);
+           
+            var newProductSubtotal = self.model.apiModel.data.subTotal - self.model.apiModel.data.orderLevelProductDiscountTotal - self.model.apiModel.data.itemLevelProductDiscountTotal;
+            self.onQuoteAdjustmentChange('#quoteAdjustmentSection', 'adjustment', newProductSubtotal);
+
+            var newShippingSubtotal = self.model.apiModel.data.shippingSubTotal - self.model.apiModel.data.orderLevelShippingDiscountTotal - self.model.apiModel.data.itemLevelShippingDiscountTotal;
+            self.onQuoteAdjustmentChange('#shippingAdjustmentSection', 'shippingAdjustment', newShippingSubtotal);
+
+            var newHandlingSubtotal = self.model.apiModel.data.handlingSubTotal - self.model.apiModel.data.orderLevelHandlingDiscountTotal - self.model.apiModel.data.itemLevelHandlingDiscountTotal;
+            self.onQuoteAdjustmentChange('#handlingAdjustmentSection', 'handlingAdjustment', newHandlingSubtotal);
             self.onQuantityChange();
             self.onPriceChange();
             self.onFulfillmentMethodChange();
@@ -541,6 +548,10 @@ define([
             var quote = this.model.apiModel.data;
 
             if (!quote.quoteUpdatedAdjustments || isOverride) {
+                var productDiscounts = quote.orderLevelProductDiscountTotal + quote.itemLevelProductDiscountTotal;
+                var shippingDiscounts = quote.orderLevelShippingDiscountTotal + quote.itemLevelShippingDiscountTotal;
+                var handlingDiscounts = quote.orderLevelHandlingDiscountTotal + quote.itemLevelHandlingDiscountTotal;
+
                 var adjustment = quote.adjustment ? quote.adjustment.amount : null;
                 var shippingAdjustment = quote.shippingAdjustment ? quote.shippingAdjustment.amount : null;
                 var handlingAdjustment = quote.handlingAdjustment ? quote.handlingAdjustment.amount : null;
@@ -550,19 +561,19 @@ define([
                     "adjustmentAbs": adjustment ? Math.abs(adjustment) : null,
                     "adjustmentType": defaultAdjustmentType,
                     "adjustmentAction": adjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "adjustmentNewSubtotal": quote.subTotal + adjustment,
+                    "adjustmentNewSubtotal": quote.subTotal + adjustment - productDiscounts,
 
                     "shippingAdjustment": shippingAdjustment,
                     "shippingAdjustmentAbs": shippingAdjustment ? Math.abs(shippingAdjustment) : null,
                     "shippingAdjustmentType": defaultAdjustmentType,
                     "shippingAdjustmentAction": shippingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "shippingAdjustmentNewSubtotal": quote.shippingSubTotal + shippingAdjustment, 
+                    "shippingAdjustmentNewSubtotal": quote.shippingSubTotal + shippingAdjustment - shippingDiscounts, 
 
                     "handlingAdjustment": handlingAdjustment,
                     "handlingAdjustmentAbs": handlingAdjustment ? Math.abs(handlingAdjustment) : null,
                     "handlingAdjustmentType": defaultAdjustmentType,
                     "handlingAdjustmentAction": handlingAdjustment > 0 ? adjustmentAdd : adjustmentSubtract,
-                    "handlingAdjustmentNewSubtotal": quote.handlingSubTotal + handlingAdjustment,
+                    "handlingAdjustmentNewSubtotal": quote.handlingSubTotal + handlingAdjustment - handlingDiscounts,
 
                     "taxAndDutyTotal": taxAndDutyTotal
                 };
@@ -1139,6 +1150,67 @@ define([
                 }
             }
             return false;
+        },
+        applyCoupon: function () {
+            var couponCode = $('input[data-mz-value=couponCode]').val();
+            if (couponCode) {
+                var self = this;
+                var data = {
+                    quoteId: self.model.get('id'),
+                    couponCode: couponCode,
+                    updateMode: applyToDraft
+                };
+                self.model.isLoading(true);
+                self.model.apiModel.applyCoupon(data).then(function (response) {
+                    self.resetModel(response.data);
+                    var couponIsNotApplied = _.find(response.data.invalidCoupons, function (d) {
+                        return d.couponCode && d.couponCode === couponCode;
+                    });
+
+                    if (couponIsNotApplied) {
+                        var error = { message: couponCode + " " + couponIsNotApplied.reason };
+                        self.showMessageBar(error);
+                    }
+
+                    var itemLevelProductDiscounts = _.flatten(_.pluck(response.data.items, 'productDiscounts'));
+                    var itemLevelShippingDiscounts = _.flatten(_.pluck(response.data.items, 'shippingDiscounts'));
+                    var orderDiscounts = response.data.orderDiscounts;
+                    var shippingDiscounts = response.data.shippingDiscounts;
+                    var allDiscounts = orderDiscounts.concat(shippingDiscounts).concat  (itemLevelProductDiscounts).concat(itemLevelShippingDiscounts);
+                    var couponExists = _.find(allDiscounts, function (code) {
+                        return code.couponCode === couponCode || code.discount.couponCode === couponCode;
+                    });
+
+                    if (!couponIsNotApplied && !couponExists) {
+                        var info = { message: Hypr.getLabel("note") + ": \"" + couponCode + "\" " + Hypr.getLabel("couponCodeMessage") };
+                        self.model.set("info", info);
+                        self.model.isLoading(false);
+                        self.model.syncApiModel();
+                        self.render();
+                    } else {
+                        self.model.set("info", "");
+                        self.model.isLoading(false);
+                        self.model.syncApiModel();
+                        self.render();
+                    }
+
+                }, function (error) {
+                    self.showMessageBar(error.items[0]);
+                });
+            }
+        },
+        hasPricelist: function () {
+            var items = this.model.apiModel.data.items;
+            var result = false;
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].product.price.priceListCode) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
         }
     });
 
