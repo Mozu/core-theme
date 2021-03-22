@@ -20,6 +20,6 @@
     </div>
   </div>
   <div class="mz-b2b-wishlist-list">
-    {% include "modules/b2b-account/quotes/product-picker-table" with model=model %}
+    {% include "modules/b2b-account/quotes/edit-quote/product-picker-table" with model=model %}
   </div>
 </div>
