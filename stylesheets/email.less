@@ -276,7 +276,48 @@ dl.mz-orderheader {
     margin: 0;
     padding-bottom: 0.4em;
   }
+
+  .mz-b2b-email-header {
+    display: flex;
+    justify-content: center;
+    height: 5rem;  
   
+    .header-logo {
+      flex-basis: 20%;
+
+      img {
+        width: 80%;
+        margin: 1rem;
+      }
+    }
+
+    .header-text {
+      color: black;
+      background-color: #f7f7f7;
+      flex-basis: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      
+      .subject {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-left: 1rem;
+      }
+  
+      .store-name {
+        font-size: 1.5rem;
+        margin-left: 1rem;
+      }
+    }
+  }
+  
+  .mz-b2b-email-body {
+    font-size: 1rem;
+    line-height: 1rem;
+    color: black;
+  }
+
   .mz-store-details {
     background-color: #f7f7f7;
     width: 100%;
@@ -450,5 +491,24 @@ dl.mz-orderheader {
 
   .quote-account-details-table tr {
     line-height: 15px !important; 
+  }
+
+  .mz-b2b-email-header {
+    .header-logo {
+      img {
+        margin: 2rem 0.5rem;
+      }
+    }
+
+    .header-text {
+      .subject {
+        font-size: 1.5rem;
+      }
+  
+      .store-name {
+        font-size: 1.25rem;
+      }
+    }
+  }
 }
-}
+  
