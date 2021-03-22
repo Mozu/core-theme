@@ -84,7 +84,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ISitesWebApiClient sitesWebApiClient)
         {
             _apiContext = apiContext;
-            _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _orderWebApiClient = orderWebApiClient
+                .CloneWithoutUserClaims()
+                .CloneWithSiteId(null);
             _shipmentControllerApiClient = shipmentControllerApiClient;
             _pickWaveControllerApiClient = pickWaveControllerApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
