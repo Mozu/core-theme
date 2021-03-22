@@ -4,7 +4,6 @@
  "userName": "dpuddy14@gmail.com",
  "firstName": "David",
  "lastName": "Puddy",
- "IsB2BAccount": true,
  "commerceSummary": {
   "totalOrderAmount": {},
   "visitsCount": 10
@@ -27,7 +26,7 @@
    "firstName": "David",
    "lastNameOrSurname": "Puddy",
    "phoneNumbers": {
-    "home": "617-635-3880"
+    "work": "917-635-3880"
    },
    "address": {
     "address1": "43 Hawkins St",

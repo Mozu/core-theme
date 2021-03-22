@@ -88,6 +88,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public bool isShippable { get; set; }
     }
 
+    public class PasswordResetEmail
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ValidationToken { get; set; }
+        public string UserId { get; set; }
+        public bool IsPasswordSetEmail { get; set; }
+    }
+
+    public class NewUserEmail
+    {
+        public string UserEmailAddress { get; set; }
+        public bool IsB2BAccount { get; set; }
+    }
+
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -267,8 +282,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (QuoteEmail),
                                                Topic = Topics.QuoteSummary
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (PasswordResetEmail),
+                                               Topic = Topics.PasswordReset
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (NewUserEmail),
+                                               Topic = Topics.NewUserCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Customer.Contracts.CustomerAccount),
+                                               Topic = Topics.B2BAccountCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Customer.Contracts.CustomerAccount),
+                                               Topic = Topics.B2BAccountDenied
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Customer.Contracts.CustomerAccount),
+                                               Topic = Topics.B2BAccountInactive
                                            }
-
                 };
         }
 
@@ -768,6 +807,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string CustomerIntransit = "shipment.customerintransit";
             public const string CustomerAtCurbside = "shipment.customeratcurbside";
             public const string QuoteSummary = "quote.summary";
+            public const string B2BAccountCreated = "b2baccount.created";
+            public const string B2BAccountInactive = "b2baccount.accountinactive";
+            public const string B2BAccountDenied = "b2baccount.accountdenied";
         }
     }
 
