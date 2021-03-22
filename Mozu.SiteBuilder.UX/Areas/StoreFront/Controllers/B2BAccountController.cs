@@ -3,11 +3,13 @@ using Mozu.Core.Actions;
 using Mozu.Core.Api.Client;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionConstraints;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System;
 using System.Threading.Tasks;
 
@@ -60,6 +62,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jsonObject.Add("currentUserAccountName", account.CompanyOrOrganization);
             }
             return View(pagePath, jsonObject);
+        }
+
+        [HttpGet("b2baccount/b2b-account-request")]
+        public IActionResult B2BAccountRequest(string returnUrl = null)
+        {
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "b2b-account-request",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("B2B-Account-Request", new { ReturnUrl = returnUrl });
         }
     }
 }
