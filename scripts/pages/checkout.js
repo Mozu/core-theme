@@ -70,6 +70,9 @@ require(["modules/jquery-mozu",
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
             EditableView.prototype.render.apply(this, arguments);
             this.resize();
+
+            var originalQuoteId = this.model.getOrder().get('originalQuoteId');
+            this.model.set('originalQuoteId', originalQuoteId);
         },
         resize: _.debounce(function () {
             this.$('.mz-panel-wrap').animate({'height': this.$('.mz-inner-panel').outerHeight() });
@@ -84,7 +87,14 @@ require(["modules/jquery-mozu",
         },
 
         editCart: function () {
-            window.location =  (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
+            var siteSubdirectory = (HyprLiveContext.locals.siteContext.siteSubdirectory || '');
+            var quoteId = this.model.get('originalQuoteId');
+            if (quoteId) {
+                window.location = siteSubdirectory + "/myaccount/quote/" + quoteId + "/edit";
+                return false;
+            } else {
+                window.location = siteSubdirectory + "/cart";
+            }
         },
 
         onOrderCreditChanged: function (order, scope) {
@@ -228,6 +238,18 @@ require(["modules/jquery-mozu",
                 this.render();
             }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
+
+            var originalQuoteId = this.model.getOrder().get('originalQuoteId');
+            this.model.set('originalQuoteId', originalQuoteId);
+
+            //safer side running following statements only for quote originated orders.
+            if (originalQuoteId) {
+                if (HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled &&
+                    !this.model.get('paymentType')) {
+                    this.model.setPurchaseOrderInfo();
+                    this.model.setDefaultPaymentType(this.model);
+                }
+            }
         },
         resetPaymentData: function (e) {
             if (e.target !== $('[data-mz-saved-credit-card]')[0]) {
@@ -238,6 +260,10 @@ require(["modules/jquery-mozu",
             if(HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled) {
                 this.model.resetPOInfo();
             }
+
+            var originalQuoteId = this.model.getOrder().get('originalQuoteId');
+            this.model.set('originalQuoteId', originalQuoteId);
+
         },
         updatePurchaseOrderPaymentTerm: function(e) {
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
@@ -261,12 +287,11 @@ require(["modules/jquery-mozu",
 
             if (this.$(".p-button").length > 0)
                 PayPal.loadScript();
-
         },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
-        updatePaymentType: function(e) {
+        updatePaymentType: function (e) {
             var newType = $(e.currentTarget).val();
             this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
             this.model.set('paymentType', newType);
@@ -693,8 +718,14 @@ require(["modules/jquery-mozu",
         _.invoke(checkoutViews.steps, 'initStepView');
 
         $checkoutView.noFlickerFadeIn();
-
+        
         if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(window.order.id, false);
+
+        //For quote originated order, skip shipping address and shipping method steps
+        if (checkoutData.originalQuoteId) {
+            checkoutViews.steps.shippingAddress.model.stepStatus('complete');
+            checkoutViews.steps.shippingInfo.model.stepStatus('complete');
+        }
     });
 });
