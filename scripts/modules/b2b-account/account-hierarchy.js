@@ -1,8 +1,9 @@
-define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer', 'modules/b2b-account/child-account', 'modules/b2b-account/parent-account'],
-    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, ChildAccountModal, ParentAccountModal) {
+define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/models-customer', 'modules/b2b-account/child-account', 'modules/b2b-account/parent-account', 'modules/models-b2b-account'],
+    function ($, api, _, Hypr, Backbone, HyprLiveContext, CustomerModels, ChildAccountModal, ParentAccountModal, B2BAccountModels) {
 
     var childAccountModal =  new ChildAccountModal.childAccountModalView({model:CustomerModels.EditableCustomer.fromCurrent()});
     var supportedParentAccounts = [];
+    var currentAccount;
     var changeParentAccountModal = new ParentAccountModal.changeParentAccountModalView({ model: CustomerModels.EditableCustomer.fromCurrent() });
 
     var AccountHierarchyView = Backbone.MozuView.extend({
@@ -59,7 +60,14 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         addChildAccount: function (e) {
             var self = this;
             childAccountModal.renderView();
-            childAccountModal.render(supportedParentAccounts);
+
+            //If current account doesn't have a rootAccountId then Account Hierarchy call will not made and supportedParentAccounts will be null, In that case, Add child account modal, current account should be shown.
+            if (supportedParentAccounts.length === 0 && currentAccount) {
+                childAccountModal.render([currentAccount]);
+            }
+            else {
+                childAccountModal.render(supportedParentAccounts);
+            }
         },
         changeParentAccount: function (e) {
             var accountId = e.currentTarget.dataset.mzValue;
@@ -111,10 +119,18 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         initialize: function () {
             var self = this;
             self.initApiModel();
-            self.apiGet({ id: require.mozuData('user').accountId }).then(function (response) {
-                self.set("hierarchy", self.processAccountHierarchy(response.data));
-                self.syncApiModel();
+            var b2bAccount = new B2BAccountModels.b2bAccount({ id: require.mozuData('user').accountId });
+            b2bAccount.apiGet().then(function (account) {
+                currentAccount = account.data;
+                if (account.data && account.data.rootAccountId) {
+                    self.apiGet({ id: require.mozuData('user').accountId }).then(function (response) {
+                        self.set("hierarchy", self.processAccountHierarchy(response.data));
+                        self.syncApiModel();
+                        self.trigger("render");
+                    });
+                }
             });
+            
             self.set("isUserAdmin", self.isUserAdmin());
         },
         userHasBehavior: function (behaviorId) {
