@@ -4,7 +4,8 @@
     {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
 </div>
 {% if user.isSalesRep %}
-<div>
+<div class="mz-l-stack-section">
+    <h3 class="mz-l-stack-sectiontitle">{{ labels.createQuote }}</h3>
     <span>
         <b>{{labels.accountSearch}}</b>
     </span>
@@ -12,7 +13,7 @@
     <div id="selectb2bAccount">
         <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
         <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
-    </div> 
+    </div>
    <button class="mz-button" data-mz-action="search-address" >{{labels.searchByAddress}}</button> 
 </div>
 <br />
@@ -26,30 +27,43 @@
         <div class="mz-quotes-grid-container">
             <div class="filter-container">
                 {% if user.isSalesRep %}
-                <div id="selectb2bAccountGrid">
-                    <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
-                    <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
+                <div>
+                    <select class="account-select" data-mz-action="selectionChanged" id="accountNameDropdown" data-mz-value="">
+                        <option selected="selected" value="">
+                            {{labels.accountSearchLabel}}
+                        </option>
+                        {% for acc in model.b2bAccounts %}
+                            {% if acc.data.id %}
+                            <option value="{{acc.data.id}}">
+                                {{acc.data.companyOrOrganization}}
+                            </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                 </div>
                 {% endif %}
-                <div>
-                    <input type="text" name="searchQuoteNumber" id="searchQuoteNumber" class="quotesTextSearch" data-mz-action="inputChanged" placeholder="{{ labels.number }}">
+                <div class="filter-column">
+                    <input type="text" name="searchQuoteNumber" id="searchQuoteNumber" class="quotesTextSearch"
+                        data-mz-action="inputChanged" placeholder="{{ labels.number }}">
                 </div>
-                <div>
-                    <input type="text" name="searchName" id="searchName" class="quotesTextSearch" data-mz-action="inputChanged" placeholder="{{ labels.name }}">
+                <div class="filter-column">
+                    <input type="text" name="searchName" id="searchName" class="quotesTextSearch" data-mz-action="inputChanged"
+                        placeholder="{{ labels.name }}">
                 </div>
-                <div class="exp-date-filter-container">
-                    <Span class="mz-b2b-quotes-compare"> > </Span>
-                    <input type="date" data-mz-is-datepicker id="expirationdate" class="expirationdate-filter" data-mz-action="dateChanged" data-format="yy/mm/dd" placeholder="{{ labels.searchExpirationDate }}">
+                <div class="filter-column">
+                    <span class="mz-b2b-quotes-compare"> > </span>
+                    <input type="date" data-mz-is-datepicker id="expirationdate" class="expirationdate-filter"
+                        data-mz-action="dateChanged" data-format="yy/mm/dd" placeholder="{{ labels.searchExpirationDate }}">
                 </div>
                 <div class="fill-remaining-space"></div>
-                <div>
+                <div class="status-filter-column">
                     <select class="status-select" data-mz-action="selectionChanged" id="statusDropdown" data-mz-value="">
-                    <option selected="selected" value="">{{ labels.filterStatus }}</option>
-                    <option value="Pending">{{ labels.pending }}</option>
-                    <option value="InReview">{{ labels.inReview }}</option>
-                    <option value="ReadyForCheckout">{{ labels.readyForCheckout }}</option>
-                    <option value="Completed">{{ labels.completed }}</option>
-                    <option value="Expired">{{ labels.expired }}</option>
+                        <option selected="selected" value="">{{ labels.filterStatus }}</option>
+                        <option value="Pending">{{ labels.pending }}</option>
+                        <option value="InReview">{{ labels.inReview }}</option>
+                        <option value="ReadyForCheckout">{{ labels.readyForCheckout }}</option>
+                        <option value="Completed">{{ labels.completed }}</option>
+                        <option value="Expired">{{ labels.expired }}</option>
                     </select>
                 </div>
             </div>
