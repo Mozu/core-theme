@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-03-22
+ * Mozu JavaScript SDK - v0.3.0 - 2021-03-23
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -4735,6 +4735,17 @@ module.exports=
     "update": {
       "verb": "PUT",
       "template": "{+quoteService}{id}?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "get-available-shipping-methods": {
+      "verb": "GET",
+      "template": "{+quoteService}{quoteId}/shippingMethods?draft={draft}",
+      "returnType": "json"
+    },
+    "update-fulfillment-info": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/fulfillmentInfo?updatemode={updatemode}",
       "includeSelf": true,
       "returnType": "quote"
     },

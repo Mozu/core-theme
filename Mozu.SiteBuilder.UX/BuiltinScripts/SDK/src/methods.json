@@ -1198,6 +1198,17 @@
       "includeSelf": true,
       "returnType": "quote"
     },
+    "get-available-shipping-methods": {
+      "verb": "GET",
+      "template": "{+quoteService}{quoteId}/shippingMethods?draft={draft}",
+      "returnType": "json"
+    },
+    "update-fulfillment-info": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/fulfillmentInfo?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
     "delete": {
       "verb": "DELETE",
       "template": "{+quoteService}{id}?draft={draft}"
