@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages",  "hyprlivecontext", "modules/api", "vendor/es6-promise/dist/es6-promise"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews, HyprLiveContext,api,Promise) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages",  "hyprlivecontext"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews, HyprLiveContext) {
 
     var ProductView = Backbone.MozuView.extend({
         requiredBehaviors: [1014],
@@ -21,7 +21,7 @@
         },
         onQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
-                newQuantity = parseInt($qField.val(), 10);
+              newQuantity = parseInt($qField.val(), 10);
             if (!isNaN(newQuantity)) {
                 this.model.updateQuantity(newQuantity);
             }
@@ -63,29 +63,6 @@
             });
 
         },
-        getProductCollectionsData: function(){
-            var self = this;
-            var collections = self.model.get('productCollections');
-            if(collections === null || collections.length < 1) { return; }
-            var primary = collections.filter(function(prod) {
-                return prod.isPrimary == 1;
-            });
-            if(primary === null || primary.length < 1) { return; }
-            var responseFields = "?responseFields=productCode,content(productName,seoFriendlyUrl,productImages)";
-            var primaryProduct = api.request('GET', "/api/commerce/catalog/storefront/products/"+primary[0].productCode+responseFields);
-
-            Promise.resolve(primaryProduct).then(function (response) {
-                collections.forEach(function(collection){
-                    if(response.productCode == collection.productCode) {
-                        collection.data = response;
-                    }
-                });
-                self.model.set('productCollections', collections);
-                self.render();
-            });
-
-        },
-
         initialize: function () {
             // handle preset selects, etc
             var me = this;
@@ -106,7 +83,6 @@
                     }
                 }
             });
-            this.getProductCollectionsData();
         }
     });
 

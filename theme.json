@@ -619,14 +619,6 @@
       "customEditor": "productContent@mozu"
     },
     {
-      "entityType": "product-collection",
-      "id": "product-collection",
-      "template": "product-collection",
-      "title": "Product Collection",
-      "userCreatable": false,
-      "customEditor": "productContent@mozu"
-    },
-    {
       "entityType": "searchresult",
       "id": "search-results",
       "template": "search-results",
