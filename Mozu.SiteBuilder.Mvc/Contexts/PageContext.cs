@@ -298,6 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
             }
             UserScopeType = null;
+            PriceListCode = null;
         }
 
         bool _initCurrency = false;
@@ -650,7 +651,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         
         [JsonPreloadFilter]
         public UserScopeType? UserScopeType { get; set; }
-      
+
+        public string PriceListCode { get; set; }
+
     }
     public class LocationInfo
     {

@@ -1240,6 +1240,18 @@
     "create-quote-comment": {
       "verb": "POST",
       "template": "{+quoteService}{quoteId}/comments?updatemode={updatemode}"
+    },
+    "apply-coupon": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/coupons/{couponCode}?updatemode={updateMode}"
+    },
+    "remove-coupon": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons/{couponcode}?updatemode={updateMode}"
+    },
+    "remove-coupons": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons?updatemode={updateMode}"
     }
   },
   "quotes": {

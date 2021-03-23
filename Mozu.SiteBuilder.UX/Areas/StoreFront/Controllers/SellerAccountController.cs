@@ -96,6 +96,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 throw new VaeUnAuthorizedException($"Can't edit the {quote.Status} quote.");
             }
 
+            if (!string.IsNullOrWhiteSpace(quote.PriceListCode))
+            {
+                PageContext.PriceListCode = quote.PriceListCode;
+            }
+
             await SetCountryAndStates();
 
             pc.CmsContext = new CmsPageContext()

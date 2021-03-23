@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-03-18
+ * Mozu JavaScript SDK - v0.3.0 - 2021-03-22
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -2939,7 +2939,7 @@ var ApiContextConstructor = function(conf) {
         ApiContextConstructor.__debug__ = _dereq_('when/monitor/console');
     }
 },
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'dataview-mode', 'preview-date', 'scope-type'],
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale', 'dataview-mode', 'preview-date', 'scope-type', 'pricelist'],
     immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
@@ -4780,6 +4780,18 @@ module.exports=
     "create-quote-comment": {
       "verb": "POST",
       "template": "{+quoteService}{quoteId}/comments?updatemode={updatemode}"
+    },
+    "apply-coupon": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/coupons/{couponCode}?updatemode={updateMode}"
+    },
+    "remove-coupon": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons/{couponcode}?updatemode={updateMode}"
+    },
+    "remove-coupons": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons?updatemode={updateMode}"
     }
   },
   "quotes": {

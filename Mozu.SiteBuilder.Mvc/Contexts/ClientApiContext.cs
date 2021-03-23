@@ -128,6 +128,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 header[APIConstants.Headers.USER_SCOPE_TYPE] = _pageContext.UserScopeType.ToString();
             }
+            if (!string.IsNullOrWhiteSpace(_pageContext.PriceListCode))
+            {
+                header[APIConstants.Headers.PRICE_LIST] = _pageContext.PriceListCode;
+            }
 
             //food/
             if (OmitUserFields)
