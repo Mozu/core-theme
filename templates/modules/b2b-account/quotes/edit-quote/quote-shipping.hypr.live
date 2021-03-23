@@ -21,26 +21,24 @@
                 <option value="-1">{{labels.shippingDestinationSelect}}</option>
                 {% for contact in model.allContacts %}
                   <option value="{{contact.id}}"  
-                          {% if model.destinations and model.destinations.length >
-                    0 and model.destinations[0].destinationContact and model.destinations[0].destinationContact.id == contact.id %} selected {% endif %} >
+                    {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact and model.fulfillmentInfo.fulfillmentContact.id == contact.id %} selected {% endif %} >
                     {% include "modules/common/address-list" with model=contact %}
                   </option>
                 {% endfor %}
               </select>
-              {% if model.destinations and model.destinations.length >
-                0 and model.destinations[0].destinationContact %}
+              {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact %}
               <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
-                  <span>{{model.destinations[0].destinationContact.firstName}} {{model.destinations[0].destinationContact.lastNameOrSurname}}</span>
+                  <span>{{model.fulfillmentInfo.fulfillmentContact.firstName}} {{model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname}}</span>
 
-                {% if model.destinations[0].destinationContact.address.address1 %}<span>{{model.destinations[0].destinationContact.address.address1}}</span>{% endif %}
-                {% if model.destinations[0].destinationContact.address.address2 %}<span>{{model.destinations[0].destinationContact.address.address2}}</span>{% endif %}
-                {% if model.destinations[0].destinationContact.address.address3 %}<span>{{model.destinations[0].destinationContact.address.address3}}</span>{% endif %}
-                {% if model.destinations[0].destinationContact.address.address4 %}<span>{{model.destinations[0].destinationContact.address.address4}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address1 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address1}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address2}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address3}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address4}}</span>{% endif %}
                 
                 <span>
-                  {{model.destinations[0].destinationContact.address.cityOrTown}}, {{model.destinations[0].destinationContact.address.stateOrProvince}}, {{model.destinations[0].destinationContact.address.countryCode}} {{model.destinations[0].destinationContact.address.postalOrZipCode}}
+                  {{model.fulfillmentInfo.fulfillmentContact.address.cityOrTown}}, {{model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince}}, {{model.fulfillmentInfo.fulfillmentContact.address.countryCode}} {{model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode}}
                 </span>
-                <span>{{labels.phone}}: {{model.destinations[0].destinationContact.phoneNumbers.home || model.destinations[0].destinationContact.phoneNumbers.mobile || model.destinations[0].destinationContact.phoneNumbers.work}}</span>
+                <span>{{labels.phone}}: {{model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home || model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile || model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work}}</span>
               </div>
               {% endif %}
               {% if model.isUserAdmin || model.isSalesRep %}
@@ -53,10 +51,11 @@
               <div>
                 <b>{{labels.shippingMethod}}</b>
               </div>
-              <select class="mz-l-formfieldgroup-halfsize" data-mz-value="" >
-                <option selected="selected" value="">{{labels.chooseShippingMethod}}</option>
-                <option value="Fedex Ground">Fedex Ground</option>
-                <option value="USPS Ground">USPS Ground</option>
+              <select class="mz-l-formfieldgroup-halfsize" id="selectShippingMethod"  data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">              
+               <option value="-1">{{labels.selectShippingMethod}}</option>
+                {% for method in model.shippingMethods %}
+                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.selectedShippingMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
+                {% endfor %}
               </select>
             </td>
           </tr>
