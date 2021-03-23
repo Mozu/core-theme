@@ -28,10 +28,7 @@
                     {% if model.availableShippingMethods.length %}
                         <select id="mz-shipping-method-selector" name="shippingMethodSelector" class="mz-shipping-method-selector-dd" data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">
                             {% for method in model.availableShippingMethods %}
-                                <option class="mz-shipping-method-selector-option" 
-                                value="{{ method.shippingMethodCode }}" 
-                                {% if model.fulfillmentMethodCode == method.shippingMethodCode %} 
-                                selected="selected" {% endif %}>{{ method.shippingMethodCode }} - {{ method.price|currency }}</option>
+                                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.fulfillmentMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodCode }} - {{ method.price|currency }}</option>
                             {% endfor %}
                         </select>
                         <span class="mz-validationmessage" data-mz-validationmessage-for="shippingMethodSelector"></span>

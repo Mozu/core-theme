@@ -21,7 +21,7 @@
                 <option value="-1">{{labels.shippingDestinationSelect}}</option>
                 {% for contact in model.allContacts %}
                   <option value="{{contact.id}}"  
-                          {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact and model.fulfillmentInfo.fulfillmentContact.id == contact.id %} selected {% endif %} >
+                    {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact and model.fulfillmentInfo.fulfillmentContact.id == contact.id %} selected {% endif %} >
                     {% include "modules/common/address-list" with model=contact %}
                   </option>
                 {% endfor %}
@@ -55,10 +55,10 @@
                <option value="-1">{{labels.selectShippingMethod}}</option>
                 {% for method in model.shippingMethods %}
                 <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.selectedShippingMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
-                {% endfor %}               
+                {% endfor %}
               </select>
             </td>
-           </tr>
+          </tr>
         </table>
       </div>
     </div>
