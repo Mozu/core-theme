@@ -1,0 +1,29 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/view-b2baccount" %}
+
+{% preload_json model "customer" %}
+
+<div class="mz-l-container">
+    <div> 
+        <h1 class="mz-pagetitle">
+             {{ model.companyOrOrganization }}
+        </h1>
+        <div class="returnToParentAccountLabel"> 
+         {{labels.returnTo}} <a href="{{siteContext.siteSubdirectory}}/myaccount#Account%20Hierarchy">{{model.currentUserAccountName}}</a>
+      </div>
+   </div>
+    <div class="mz-b2b-pane-switcher">
+            {% include "modules/b2b-account/pane-switcher" %}
+    </div>
+</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

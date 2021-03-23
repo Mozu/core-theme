@@ -1,0 +1,58 @@
+﻿<div>
+  <h2 class="quote-name">
+    {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
+    <button class="mz-button" style="margin-left: 10px;" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
+    {% if model.isSalesRep == false %}
+      {% if model.status=="Pending" or model.status=="ReadyForCheckout" %}
+    <button class="mz-button" data-mz-action="editQuote">{{labels.editQuote}}</button>
+      {% endif %}
+      {% if model.status=="Expired" or model.status=="InReview" or model.status=="Completed" %}
+    <button class="mz-button" data-mz-action="editQuote" disabled>{{labels.editQuote}}</button>
+      {% endif %}
+    {% else %}
+      {% if model.status=="Pending" or model.status=="InReview" %}
+    <button class="mz-button" data-mz-action="editQuote">{{labels.editQuote}}</button>
+      {% endif %}
+      {% if model.status=="ReadyForCheckout" or model.status=="Completed" or model.status=="Expired" %}
+    <button class="mz-button" data-mz-action="editQuote" disabled>{{labels.editQuote}}</button>
+      {% endif %}
+    {% endif %}
+  </h2>
+  <div class="modal fade" id="mz-location-selector">
+    {% include "modules/cart/cart-location-select" %}
+  </div>
+  <ul class="mz-orderlist view-quote-form">
+    <li>
+      {% include "modules/b2b-account/quotes/view-quote/quote-details" with model=model %}
+    </li>
+    <li>
+      {% include "modules/b2b-account/quotes/view-quote/quote-summary" with model=model %}
+    </li>
+    {% if model.isShippable %}
+    <li>
+      {% include "modules/b2b-account/quotes/view-quote/quote-shipping" with model=model %}
+    </li>
+    {% endif %}
+    <li>
+      {% include "modules/b2b-account/quotes/view-quote/quote-comments" with model=model %}
+    </li>
+    <li>
+      {% include "modules/b2b-account/quotes/quote-history" with model=model %}
+    </li>
+    <li>
+      <div class="mz-quote-actions">
+        {% if model.isUserAdmin or model.isUserPurchaser %}
+          {% set canPurchase=true %}
+        {% else %}
+          {% set canPurchase=false %}
+        {% endif %}
+        {% if model.status=="ReadyForCheckout" and canPurchase %}
+        <form method="post" action="/checkout/quoteOrder/{{model.id}}" id="quoteCheckoutform">
+          <button class="mz-button" {% if model.hasDraft==true %} disabled {% endif
+            %}>{{labels.continueToCheckout}}</button>
+        </form>
+        {% endif %}
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,10 @@
+﻿<nav class="mz-scrollnav" id="account-nav" data-mz-scrollnav="{{ navtarget }}">
+  <ul class="mz-scrollnav-list nav">
+    <li class="mz-scrollnav-item">
+      <a class="mz-scrollnav-link" href="#quotes">
+        {{ labels.quotes }}
+      </a>
+    </li>
+  </ul>
+</nav>
+{% require_script "modules/scroll-nav" %}

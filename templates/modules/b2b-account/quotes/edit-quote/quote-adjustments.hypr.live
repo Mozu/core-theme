@@ -1,0 +1,345 @@
+<table class="quote-adjustments">
+  <tbody>
+    <tr>
+      <td>
+        <div class="mz-carttable-checkout-couponcode" id="coupon-code-field">
+          <div class="mz-l-formfieldgroup-cell">
+            <label for="coupon-code">{{labels.couponCode}}: </label>
+          </div>
+          <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="coupon-code" value="" data-mz-value="couponCode" />
+            <button type="button" id="cart-coupon-code" class="mz-button" data-mz-action="applyCoupon">{{labels.apply}}</button>
+          </div>
+          {% if model.info %}
+          <div><span>{{model.info.message}}</span></div>
+          {% endif %}
+        </div>
+      </td>
+      <td>
+        <div class="actions">
+          {% if model.editAdjustments==false %}
+            <button class="mz-button mz-button" data-mz-action="editQuoteAdjustments">{{labels.edit}}</button> &nbsp;
+          {% else %}
+          <span>
+            &nbsp;
+            <button class="mz-button mz-button" data-mz-quote-item="{{ item.id }}" data-mz-action="saveQuoteAdjustments">{{labels.save}}</button> &nbsp;
+            <button class="mz-button mz-button" data-mz-quote-item="{{ item.id }}" data-mz-action="cancelQuoteAdjustmentsEdit">{{labels.cancel}}</button>
+          </span>
+          {% endif %}
+        </div>
+
+        <table class="quote-adjustments-table input-inner-spin-button">
+          <tbody>
+            <tr id="quoteAdjustmentSection">
+              <td>
+                <img id="itemTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.itemTotal}} <br/>
+                <div class="adjustments itemTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.itemSubtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{(model.subTotal-model.itemLevelProductDiscountTotal) | currency}}</span>
+                        </td>
+                      </tr>
+
+                      {% if model.orderDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.orderDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                      
+                      <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize">
+                            <option value="Subtract" 
+                                    {% if model.quoteUpdatedAdjustments.adjustmentAction and model.quoteUpdatedAdjustments.adjustmentAction=="Subtract" %} selected  {% endif %}
+                                    >{{labels.subtract}} {{labels.from}} {{labels.itemSubtotal}}</option>
+                            <option value="Add"
+                                    {% if model.quoteUpdatedAdjustments.adjustmentAction and model.quoteUpdatedAdjustments.adjustmentAction=="Add" %} selected  {% endif %}
+                                    >{{labels.add}} {{labels.to}} {{labels.itemSubtotal}}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number" step=".01" min="0" value="{{model.quoteUpdatedAdjustments.adjustmentActual}}"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" value="$" name="adjustment"   
+                                   {% if model.quoteUpdatedAdjustments.adjustmentType =="$" %} checked {% endif %} />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" value="%" name="adjustment"
+                                   {% if model.quoteUpdatedAdjustments.adjustmentType == "%" %} checked {% endif %} />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {% if model.quoteUpdatedAdjustments.adjustmentAction and model.quoteUpdatedAdjustments.adjustmentAction=="Subtract" %}
+                            <i>{{labels.subtracted}} {{labels.from}} {{labels.subtotal}}</i> 
+                          {% else %}
+                            <i>{{labels.addedTo}} {{labels.subtotal}}</i>
+                          {% endif %}
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals {% if model.quoteUpdatedAdjustments.adjustment and model.quoteUpdatedAdjustments.adjustment < 0 %} danger {% endif %}"><b>{{ model.quoteUpdatedAdjustments.adjustment | currency}}</b></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b>{{ model.quoteUpdatedAdjustments.adjustmentNewSubtotal | currency }}</b>
+              </td>
+            </tr>
+            <tr id="shippingAdjustmentSection">
+              <td>
+                <img id="shippingTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.shippingInformation}} <br/>
+                <div class="adjustments shippingTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.shippingSubtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{(model.shippingSubTotal - model.itemLevelShippingDiscountTotal) | currency}}</span>
+                        </td>
+                      </tr>
+
+                      {% if model.shippingDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.shippingDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.discount.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+
+                      <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize">
+                            <option value="Subtract" 
+                                    {% if model.quoteUpdatedAdjustments.shippingAdjustmentAction and model.quoteUpdatedAdjustments.shippingAdjustmentAction=="Subtract" %} selected  {% endif %}
+                                    >{{labels.subtract}} {{labels.from}} {{labels.shippingSubtotal}}</option>
+                            <option value="Add"
+                                    {% if model.quoteUpdatedAdjustments.shippingAdjustmentAction and model.quoteUpdatedAdjustments.shippingAdjustmentAction=="Add" %} selected  {% endif %}
+                                    >{{labels.add}} {{labels.to}} {{labels.shippingSubtotal}}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number" step=".01" min="0" value="{{model.quoteUpdatedAdjustments.shippingAdjustmentActual}}"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" value="$" name="shippingAdjustment"   
+                                   {% if model.quoteUpdatedAdjustments.shippingAdjustmentType =="$" %} checked {% endif %} />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" value="%" name="shippingAdjustment"
+                                   {% if model.quoteUpdatedAdjustments.shippingAdjustmentType == "%" %} checked {% endif %}/>
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {% if model.quoteUpdatedAdjustments.shippingAdjustmentAction and model.quoteUpdatedAdjustments.shippingAdjustmentAction == "Subtract" %}
+                            <i>{{labels.subtracted}} {{labels.from}} {{labels.shippingSubtotal}}</i>
+                          {% else %}
+                          <i>{{labels.addedTo}} {{labels.shippingSubtotal}}</i>
+                          {% endif %}
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals {% if model.quoteUpdatedAdjustments.shippingAdjustment and model.quoteUpdatedAdjustments.shippingAdjustment < 0 %} danger {% endif %}"><b>{{ model.quoteUpdatedAdjustments.shippingAdjustment | currency}}<b></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b>{{ model.quoteUpdatedAdjustments.shippingAdjustmentNewSubtotal | currency }}</b>
+              </td>
+            </tr>
+            <tr id="handlingAdjustmentSection">
+              <td>
+                <img id="handlingTotalAdjustment" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.handling}} <br/>
+                <div class="adjustments handlingTotalAdjustment">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.handlingSubtotal}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{(model.handlingSubTotal - model.itemLevelHandlingDiscountTotal) | currency}}</span>
+                        </td>
+                      </tr>
+
+                      {% if model.handlingDiscounts.length > 0 %}
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.discounts}}:
+                        </td>
+                      </tr>
+                      {% for dis in model.handlingDiscounts %}
+                      <tr class="adjustment-row-2">
+                        <td class="mz-discount-break">
+                          {{ dis.discount.name }}:
+                        </td>
+                        <td>
+                          <span class="mz-discount-amt"> -{{ dis.impact|currency }}</span>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+
+                      <tr class="adjustment-row-1 {% if model.editAdjustments==false %} hide-adjustment-row {% endif %}">
+                        <td>
+                          <select class="mz-l-formfieldgroup-halfsize">
+                            <option value="Subtract" 
+                                    {% if model.quoteUpdatedAdjustments.handlingAdjustmentAction and model.quoteUpdatedAdjustments.handlingAdjustmentAction=="Subtract" %} selected  {% endif %}
+                                    >{{labels.subtract}} {{labels.from}} {{labels.handlingSubtotal}}</option>
+                            <option value="Add"
+                                    {% if model.quoteUpdatedAdjustments.handlingAdjustmentAction and model.quoteUpdatedAdjustments.handlingAdjustmentAction=="Add" %} selected  {% endif %}
+                                    >{{labels.add}} {{labels.to}} {{labels.handlingSubtotal}}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input type="number" step=".01" min="0" value="{{model.quoteUpdatedAdjustments.handlingAdjustmentActual}}"></input>
+                        </td>
+                        <td>
+                          <label>
+                            $<br />
+                            <input type="radio" value="$" name="handlingAdjustment"   
+                                   {% if model.quoteUpdatedAdjustments.handlingAdjustmentType =="$" %} checked {% endif %} />
+                          </label>
+                          <label>
+                            %<br />
+                            <input type="radio" value="%" name="handlingAdjustment"
+                                   {% if model.quoteUpdatedAdjustments.handlingAdjustmentType == "%" %} checked {% endif %} />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {% if model.quoteUpdatedAdjustments.handlingAdjustmentAction and model.quoteUpdatedAdjustments.handlingAdjustmentAction == "Subtract" %}
+                            <i>{{labels.subtracted}} {{labels.from}} {{labels.handlingSubtotal}}</i>
+                          {% else %}
+                          <i>{{labels.addedTo}} {{labels.handlingSubtotal}}</i>
+                          {% endif %}
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals {% if model.quoteUpdatedAdjustments.handlingAdjustment and model.quoteUpdatedAdjustments.handlingAdjustment < 0 %} danger {% endif %}"><b>{{ model.quoteUpdatedAdjustments.handlingAdjustment | currency}}<b></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b>{{ model.quoteUpdatedAdjustments.handlingAdjustmentNewSubtotal | currency }}</b>
+              </td>
+            </tr>
+            <tr id="taxAndDutySection">
+              <td>
+                <img id="taxAndDuty" src="/resources/images/arrow-down.png" data-mz-action="toggleAdjustmentBlocks" />
+              </td>
+              <td>
+                {{labels.taxAndDuty}} <br/>
+                <div class="adjustments taxAndDuty">
+                  <table>
+                    <tbody>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.itemTax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{model.itemTaxTotal | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.shippingInformation}} {{labels.tax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{model.shippingTaxTotal | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.handling}} {{labels.tax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{model.handlingTaxTotal | currency}}</span>
+                        </td>
+                      </tr>
+                      <tr class="adjustment-row-2">
+                        <td>
+                          {{labels.duty}} {{labels.tax}}:
+                        </td>
+                        <td>
+                          <span class="adjustment-subtotals">{{model.dutyTotal | currency}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <td>
+                <b>{{model.quoteUpdatedAdjustments.taxAndDutyTotal | currency}}</b>
+              </td>
+            </tr>
+            <tr class="grand-total">
+              <td></td>
+              <td>
+                {{labels.total}}
+              </td>
+              <td>
+                <b> {{model.total | currency}}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

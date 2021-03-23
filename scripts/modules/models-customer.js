@@ -1,5 +1,8 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels) {
-
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders',
+    'modules/models-paymentmethods', 'modules/models-product',
+    'modules/models-returns', 'hyprlive', 'modules/models-b2b-account',
+    'modules/models-quotes','modules/models-b2bcontacts'],
+    function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels, QuoteModels, B2bContactModels) {
 
     var pageContext = require.mozuData('pagecontext'),
         validShippingCountryCodes,
@@ -350,7 +353,9 @@
             editingContact: CustomerContact,
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
-            returnHistory: ReturnModels.RMACollection
+            returnHistory: ReturnModels.RMACollection,
+            quoteHistory: QuoteModels.QuoteCollection,
+            b2bContactHistory: B2bContactModels.B2bContactCollection
         }, Customer.prototype.relations),
         validation: {
             password: {
@@ -374,7 +379,9 @@
         initialize: function() {
             var self = this,
                 orderHistory = this.get('orderHistory'),
-                returnHistory = this.get('returnHistory');
+                returnHistory = this.get('returnHistory'),
+                quoteHistory = this.get('quoteHistory'),
+                b2bContactHistory = this.get('b2bContactHistory');
             this.get('editingContact').set('accountId', this.get('id'));
             orderHistory.lastRequest = {
                 pageSize: 5
@@ -387,10 +394,20 @@
                     returnHistory.trigger('returndisplayed', id);
                 });
             });
+            quoteHistory.lastRequest = {
+                pageSize: 5
+            };
+            b2bContactHistory.lastRequest = {
+                pageSize: 5
+            };
 
-            _.defer(function (cust) {
-                cust.getCards();
-            }, self);
+            var isSalesRep = require.mozuData('user').isSalesRep;
+            var viewB2BAccount = self.attributes.viewB2BAccount;
+            if (!isSalesRep && !viewB2BAccount) {
+                _.defer(function (cust) {
+                    cust.getCards();
+                }, self);
+            }
         },
         isNonPurchaser: function() {
             return (require.mozuData('user').behaviors.length) ? false : true;

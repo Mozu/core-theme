@@ -1,17 +1,39 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
+    {% if model and model.IsB2BAccount %}
+      <!--- Header --->
+      <div class="mz-b2b-email-header">  
+        <div class="header-logo">
+          <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+        </div>  
+        <div class="header-text">
+          <div class="store-name">{{ siteContext.generalSettings.websiteName }}</div>
+          <div class="subject">{{ labels.b2bAccountWelcomeEmail }}</div>
+        </div>
+      </div>
+      <br/>
 
-	{% if user and user.firstName %}
-		{{ labels.emailOpening|string_format(user.firstName)|safe }}
-	{% else %}
-		{{ labels.emailOpeningAlternative|safe }}
-	{% endif %}
+      <div class="mz-b2b-email-body">
+        {{ labels.newUserEmailSalutation|string_format(siteContext.generalSettings.websiteName) }}!
+        <br/>
+        <br/>
+        {{ labels.b2bAccountWelcomeBlob|safe }}
+        <br/>
+        {{ labels.emailClosingWithSpace|string_format(siteContext.generalSettings.websiteName)|safe }}
+      </div>
 
-  <h1>{{ labels.newUserEmailSalutation|string_format(siteContext.generalSettings.websiteName) }}</h1>
+    {% else %}
+      {% if user and user.firstName %}
+        {{ labels.emailOpening|string_format(user.firstName)|safe }}
+      {% else %}
+        {{ labels.emailOpeningAlternative|safe }}
+      {% endif %}
 
-  <p>{{ labels.newUserEmailNotification|string_format(domainName, model.UserEmailAddress)|safe }}</p>
+      <h1>{{ labels.newUserEmailSalutation|string_format(siteContext.generalSettings.websiteName) }}</h1>
 
-  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+      <p>{{ labels.newUserEmailNotification|string_format(domainName, model.UserEmailAddress)|safe }}</p>
 
+      {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+  {% endif %}
 {% endblock body-content %}

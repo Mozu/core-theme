@@ -1,0 +1,60 @@
+﻿
+<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.quoteDetails}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body quote-details-section">
+        <div class="mz-contact-actions">
+          <button class="mz-button mz-contact-save" data-mz-action="printQuote">{{labels.quotePrint}}</button>
+        </div>
+        <div>
+          <dl>
+            <dt>
+              <b>{{labels.accountName}}:</b>
+            </dt>
+            <dd>{{model.accountName}}</dd>
+            <dt>
+              <b>{{labels.quoteNumber}}:</b>
+            </dt>
+            <dd>{{model.number}}</dd>
+            <dt>
+              <b>{{labels.quoteName}}:</b>
+            </dt>
+            <dd>
+              {{model.name}}
+            </dd>
+            <dt>
+              <b>{{labels.createdDate}}:</b>
+            </dt>
+            <dd>
+              {% if model.auditInfo.createDate %}
+              {{ model.auditInfo.createDate|date("m/d/Y") }}
+              {% endif %}
+            </dd>
+            <dt>
+              <b>{{labels.createdBy}}:</b>
+            </dt>
+            <dd>
+              {{ model.fullName }}
+            </dd>
+            <dt>
+              <b>{{labels.expirationDate}}:</b>
+            </dt>
+            <dd>
+              {% if model.expirationDate %}
+              {{ model.expirationDate|date("m/d/Y") }}
+              {% endif %}
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+﻿{% if model.error %}
+<div class="mz-messagebar">
+  <ul class="is-showing mz-errors">
+    <li class="mz-message-item">{{model.error.message}}</li>
+  </ul>
+</div>
+{% endif %}

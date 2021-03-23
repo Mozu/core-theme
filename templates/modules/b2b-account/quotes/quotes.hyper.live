@@ -1,0 +1,62 @@
+{% require_script "modules/b2b-account/quotes" %}
+<div id="quotes-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+    {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
+</div>
+{% if user.isSalesRep %}
+<div>
+    <span>
+        <b>{{labels.accountSearch}}</b>
+    </span>
+    <br />
+    <div id="selectb2bAccount">
+        <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
+        <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
+    </div> 
+   <button class="mz-button" data-mz-action="search-address" >{{labels.searchByAddress}}</button> 
+</div>
+<br />
+{% endif %}
+{% if model.viewB2BAccount == false %}
+<div style="padding-bottom: 10px;"><button class="mz-button" {% if user.isSalesRep %} disabled="true" {% endif %}  data-mz-action="create-quote" id="createQuoteHompageBtn" >{{labels.createQuote}}</button></div>
+{% endif %}
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+    <h3 class="mz-l-stack-sectiontitle">{{ labels.quotes }}</h3>
+    <div class="mz-b2b-quotes">
+        <div class="mz-quotes-grid-container">
+            <div class="filter-container">
+                {% if user.isSalesRep %}
+                <div id="selectb2bAccountGrid">
+                    <span class="mz-dd-placeholder">{{labels.accountSearchLabel}}</span>
+                    <span class="mz-dd-no-records">{{labels.noRecordsfound}}</span>
+                </div>
+                {% endif %}
+                <div>
+                    <input type="text" name="searchQuoteNumber" id="searchQuoteNumber" class="quotesTextSearch" data-mz-action="inputChanged" placeholder="{{ labels.number }}">
+                </div>
+                <div>
+                    <input type="text" name="searchName" id="searchName" class="quotesTextSearch" data-mz-action="inputChanged" placeholder="{{ labels.name }}">
+                </div>
+                <div class="exp-date-filter-container">
+                    <Span class="mz-b2b-quotes-compare"> > </Span>
+                    <input type="date" data-mz-is-datepicker id="expirationdate" class="expirationdate-filter" data-mz-action="dateChanged" data-format="yy/mm/dd" placeholder="{{ labels.searchExpirationDate }}">
+                </div>
+                <div class="fill-remaining-space"></div>
+                <div>
+                    <select class="status-select" data-mz-action="selectionChanged" id="statusDropdown" data-mz-value="">
+                    <option selected="selected" value="">{{ labels.filterStatus }}</option>
+                    <option value="Pending">{{ labels.pending }}</option>
+                    <option value="InReview">{{ labels.inReview }}</option>
+                    <option value="ReadyForCheckout">{{ labels.readyForCheckout }}</option>
+                    <option value="Completed">{{ labels.completed }}</option>
+                    <option value="Expired">{{ labels.expired }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mz-b2b-quotes-grid">
+                <div class="is-loading"></div>
+                {% include "modules/b2b-account/quotes/quotes-grid" %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,7 +12,7 @@
             }
             .mz-grid-column {
                 font-weight: bold;
-                font-size: .8em;
+                font-size: 1em;
             }
             .mz-grid-row-actions {
                 .mz-grid-column {
@@ -20,7 +20,40 @@
                     font-size: 1em;
                 }
             }
+
+            .mz-grid-sortIcon {
+                cursor: pointer;
+
+                span {
+                    width: 20px;
+                    height: 18px;
+                    display: inline-block;
+                    background-position-x: 6px;
+                    position: absolute;
+                    margin-top: 1px;
+                }
+
+                .mz-unsort {
+                    background-image: url('../resources/images/sort-unsorted.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                    filter: opacity(0.4);
+                }
+
+                .mz-sort-up {
+                    background-image: url('../resources/images/sort-up.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                }
+
+                .mz-sort-down {
+                    background-image: url('../resources/images/sort-down.svg');
+                    background-size: 15px 18px;
+                    background-repeat: no-repeat;
+                }
+            }
         }
+
         .mz-grid-body {
             position: relative;
         }
@@ -64,7 +97,7 @@
      }
 
     .mz-grid-column {
-        padding: 0px 15px;
+        margin: 2px;
     }
 
     .mz-pagingcontrols {
@@ -75,6 +108,11 @@
         float: right;
         margin-top: 5px;
         margin-left: @gutter;
+    }
+    .mz-grid-selectedRow
+    {
+        background: #999 !important;
+        color: #fff;
     }
 
     .mz-grid-cols {
@@ -104,5 +142,4 @@
     .mz-pagingcontrols-pagesize-label {
         display:none;
     }
-
 }
