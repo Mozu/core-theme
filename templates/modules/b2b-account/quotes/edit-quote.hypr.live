@@ -34,7 +34,7 @@
         <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardChanges}}</button>
       
       {% elif model.status=="InReview" %}
-        <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
+        <button class="mz-button" data-mz-action="approveQuote" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
         <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitChanges}}</button>
         <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
 

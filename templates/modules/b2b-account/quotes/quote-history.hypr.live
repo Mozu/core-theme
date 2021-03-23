@@ -42,7 +42,7 @@
                               {% for change in history.changes %}
                               {% set changePath=change.path|split("#") %}
 
-                              {% if changePath and changePath[0]!="Destination" %}
+                              {% if changePath and changePath[0]!="FulfillmentInfo" %}
 
                               {% if change.path %}
                               <tr class="space-before">
