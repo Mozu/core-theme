@@ -364,7 +364,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return null;
             }
             var code = Convert.ToString(tmp);
-         
+
             return catTree.Value.FindBySlug(code).FirstOrDefault();
 
         }
@@ -382,6 +382,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             if (!cats.Any())
             {
                 return null;
+            }
+            if( cats.Count > 1 && 
+                values.TryGetValue("-categoryObject", out var tmp1 ) && 
+                tmp1 is Category &&
+                cats.Any(x => x.Id == ((Category)tmp1).Id))
+            {
+                cats = new List<Category> {(Category)tmp1 };
             }
 
             Category matchedCat = null;

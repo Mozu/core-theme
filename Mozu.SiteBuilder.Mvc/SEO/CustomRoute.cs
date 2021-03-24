@@ -7,8 +7,10 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -56,6 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 null,
                 constraintResolver)
         {
+            Constraints = new ConstraintDictionary(this.Constraints ?? new Dictionary<string, IRouteConstraint>());
             Template = template;
             InternalRoute = internalRoute;
             IsCanonical = isCanonical;
@@ -88,6 +91,111 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 }
             }
         }
+
+
+        public class ConstraintDictionary : IDictionary<string, IRouteConstraint>
+        {
+            IDictionary<string, IRouteConstraint> _inner;
+            List<KeyValuePair<string, IRouteConstraint>> _list;
+            public ConstraintDictionary(IDictionary<string, IRouteConstraint> inner)
+            {
+                _inner = inner;
+                ResetEnumeratorCache();
+            }
+            void ResetEnumeratorCache()
+            {
+                _list = null;
+            }
+            public IRouteConstraint this[string key] { 
+                get => _inner[key]; set
+                {
+                    _inner[key] = value;
+                    ResetEnumeratorCache();
+                }                
+            }
+
+            public ICollection<string> Keys => _inner.Keys;
+
+            public ICollection<IRouteConstraint> Values => _inner.Values;
+
+            public int Count => _inner.Count;
+
+            public bool IsReadOnly => _inner.IsReadOnly;
+
+            public void Add(string key, IRouteConstraint value)
+            {
+                _inner.Add(key, value);
+                ResetEnumeratorCache();
+            }
+
+            public void Add(KeyValuePair<string, IRouteConstraint> item)
+            {
+                _inner.Add(item);
+                ResetEnumeratorCache();
+            }
+
+            public void Clear()
+            {
+                _inner.Clear();
+                ResetEnumeratorCache();
+            }
+
+            public bool Contains(KeyValuePair<string, IRouteConstraint> item)
+            {
+                return _inner.Contains(item);
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return _inner.ContainsKey(key);
+            }
+
+            public void CopyTo(KeyValuePair<string, IRouteConstraint>[] array, int arrayIndex)
+            {
+                _inner.CopyTo(array, arrayIndex);
+            }
+
+            public IEnumerator<KeyValuePair<string, IRouteConstraint>> GetEnumerator()
+            {
+                if (_list == null)
+                {
+                    _list = _inner.OrderBy(x =>
+                       {
+                           switch (x.Key.ToLowerInvariant())
+                           {
+                               case "categorycode":
+                               case "categoryid":
+                                   return 0;
+                           }
+                           return Math.Abs(x.Key.GetHashCode());
+                       }).ToList();
+                }
+                return _list.GetEnumerator();
+            }
+
+            public bool Remove(string key)
+            {
+                ResetEnumeratorCache();
+                return _inner.Remove(key);
+            }
+
+            public bool Remove(KeyValuePair<string, IRouteConstraint> item)
+            {
+                ResetEnumeratorCache();
+                return _inner.Remove(item);                
+            }
+
+            public bool TryGetValue(string key, [MaybeNullWhen(false)] out IRouteConstraint value)
+            {
+                return _inner.TryGetValue(key, out value);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _inner.GetEnumerator();
+            }
+        }
+
 
         //expensive.... leaving out
         /*public override Task RouteAsync(RouteContext context)
