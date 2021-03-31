@@ -79,7 +79,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
         QuoteCollection = Backbone.MozuPagedCollection.extend({
             mozuType: 'quotes',
             defaults: {
-                pageSize: 5
+                pageSize: 20
             },
             relations: {
                 items: Backbone.Collection.extend({

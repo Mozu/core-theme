@@ -358,6 +358,9 @@ define([
     var QuotesGridCollectionModel = MozuGridCollection.extend({
         mozuType: 'quotes',
         defaultSort: 'number desc',
+        defaults: {
+            pageSize: 20
+        },
         columns: [
             {
                 index: 'number',
@@ -512,6 +515,9 @@ define([
     var B2BViewAccountQuotesGridCollectionModel = MozuGridCollection.extend({
             mozuType: 'quotes',
             defaultSort: 'number desc',
+            defaults: {
+                pageSize: 20
+            },
             columns: [
                 {
                     index: 'number',
