@@ -1395,7 +1395,10 @@ define([
         });
 
         quoteEditView.render();
-        quoteEditView.getAvailableShippingMethods();
+
+        if (model.get('fulfillmentInfo') && model.get('fulfillmentInfo').fulfillmentContact) {
+            quoteEditView.getAvailableShippingMethods();
+        }
     });
 
 });
