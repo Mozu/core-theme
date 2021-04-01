@@ -921,7 +921,7 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    auditHistory[a].createDate = new Date(auditHistory[a].auditInfo).createDate.toLocaleDateString();
+                    auditHistory[a].createDate = new Date(auditHistory[a].auditInfo.createDate).toLocaleDateString();
                 }
                 this.model.set('auditHistory', auditHistory);
             }
