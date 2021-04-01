@@ -340,10 +340,8 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    if(comments[c].createDate !== undefined) {
+                    if(comments[c].auditInfo && comments[c].auditInfo.createDate) {
                         comments[c].createDate = comments[c].auditInfo.createDate.toLocaleDateString();
-                    } else {
-                        comments[c].createDate = comments[c].auditInfo.createDate;
                     }
                     
                 }
@@ -365,12 +363,9 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    if(auditHistory[a].createDate !== undefined) {
+                    if(auditHistory[a].auditInfo && auditHistory[a].auditInfo.createDate) {
                         auditHistory[a].createDate = auditHistory[a].auditInfo.createDate.toLocaleDateString();
-                    } else {
-                        auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
                     }
-                    
                 }
                 this.model.set('auditHistory', auditHistory);
             }
