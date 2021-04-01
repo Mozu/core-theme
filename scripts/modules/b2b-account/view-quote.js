@@ -154,7 +154,7 @@ define([
             var self = this;
             var expirationDate = $('#expirationDate').val();
             if (expirationDate) {
-                self.model.set('expirationDate', new Date(expirationDate).toLocaleDateString());
+                self.model.set('expirationDate', new Date(expirationDate));
                 self.model.set("isEditExpirationDate", false);
                 self.updateQuote();
             }
@@ -340,7 +340,12 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    comments[c].createDate = comments[c].auditInfo.createDate.toLocaleDateString();
+                    if(comments[c].createDate !== undefined) {
+                        comments[c].createDate = comments[c].auditInfo.createDate.toLocaleDateString();
+                    } else {
+                        comments[c].createDate = comments[c].auditInfo.createDate;
+                    }
+                    
                 }
                 this.model.set('comments', comments);
             }
@@ -360,7 +365,12 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    auditHistory[a].createDate = auditHistory[a].auditInfo.createDate.toLocaleDateString();
+                    if(auditHistory[a].createDate !== undefined) {
+                        auditHistory[a].createDate = auditHistory[a].auditInfo.createDate.toLocaleDateString();
+                    } else {
+                        auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
+                    }
+                    
                 }
                 this.model.set('auditHistory', auditHistory);
             }

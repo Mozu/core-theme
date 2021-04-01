@@ -400,7 +400,7 @@ define([
 
             if (expirationDate) {
                 var today = new Date();
-                expirationDate = new Date(expirationDate).toLocaleDateString();
+                expirationDate = new Date(expirationDate);
 
                 if (expirationDate > today) {
                     self.model.set('expirationDate', expirationDate);
@@ -899,7 +899,12 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    comments[c].createDate = comments[c].auditInfo.createDate.toLocaleDateString();
+                    if(comments[c].createDate !== undefined) {
+                        comments[c].createDate = comments[c].auditInfo.createDate.toLocaleDateString();
+                    } else {
+                        comments[c].createDate = comments[c].auditInfo.createDate;
+                    }
+                    
                 }
                 this.model.set('comments', comments);
             }
@@ -921,7 +926,12 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    auditHistory[a].createDate = auditHistory[a].auditInfo.createDate.toLocaleDateString();
+                    if(auditHistory[a].createDate !== undefined) {
+                        auditHistory[a].createDate = auditHistory[a].auditInfo.createDate.toLocaleDateString();
+                    } else {
+                        auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
+                    }
+                    
                 }
                 this.model.set('auditHistory', auditHistory);
             }
