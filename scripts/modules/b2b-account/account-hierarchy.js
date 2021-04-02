@@ -165,6 +165,8 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             if (!isDescendantOfAssociatedAccount) {
                 //Check whether this is a current logged in users associated account.
                 isDescendantOfAssociatedAccount = require.mozuData('user').accountId === item.id;
+                //Can't view an account unless it is a descendant of your own account
+                item.canViewAccount = false;
             }
             else {
                 //set menu's on all current associated accounts descendant accounts.
