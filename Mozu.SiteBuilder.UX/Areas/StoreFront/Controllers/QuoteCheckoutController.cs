@@ -101,6 +101,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 throw new VaeValidationConflictException($"Can't find the order with Order ID {orderId}.");
             }
+            if (!string.IsNullOrWhiteSpace(order.PriceListCode))
+            {
+                PageContext.PriceListCode = order.PriceListCode;
+            }
 
             var pc = PageContext;
             pc.CmsContext = new CmsPageContext()
