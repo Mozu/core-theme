@@ -235,8 +235,9 @@ define([
                     }
                 });
             });
-            if (viewB2BAccount) {
-                collection.filterBy("customerAccountId eq " + self.model.attributes.accountToView);
+            var accId = viewB2BAccount ? self.model.attributes.accountToView : require.mozuData("user").accountId;
+            if (!isSalesRep && accId) {
+                collection.filterBy("customerAccountId eq " + accId);
             }
             this.initializeGrid(collection);
         },
