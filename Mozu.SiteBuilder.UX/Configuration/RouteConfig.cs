@@ -397,6 +397,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
               _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+              "Cart",
+              "user/cart-details",
+              new { controller = "Cart", action = "GetCart" },
+              _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "Anonymous I am on My Way Endpoint",
                 "anonymous-notification/customerintransit/{shipmentNumber}/{orderId}",
                 new { controller = "AnonymousNotification", action = "CustomerInTransit" },

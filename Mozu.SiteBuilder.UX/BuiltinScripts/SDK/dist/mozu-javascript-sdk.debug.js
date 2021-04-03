@@ -3816,6 +3816,16 @@ module.exports=
     "reject-suggested-discount": {
       "verb": "POST",
       "template": "{+cartService}{id}/rejectautodiscount/{discountId}"
+    },
+    "cart-details": {
+      "verb": "GET",
+      "template": "{+storefrontUserService}cart-details"
+    },
+    "create-quote-from-cart": {
+      "verb": "POST",
+      "template": "{+quoteService}create/{cartId}?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
     }
   },
   "cartitem": {

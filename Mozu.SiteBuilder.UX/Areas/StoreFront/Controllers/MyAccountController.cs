@@ -31,6 +31,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.Core.Extensions;
 using RabbitMQ.Client.Impl;
 using Mozu.Core.Exceptions;
+using Mozu.Core.Settings;
 using static Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -57,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IReturnWebApiClient _returnApiClient;
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
         private readonly IQuoteWebApiClient _quoteWebApiClient;
+        private readonly ISettings _settings;
 
         public MyAccountController(ICustomerRepository customerRepository, 
             ICustomerAccountWebApiClient customerAccountWebApiClient, 
@@ -68,7 +70,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IAuthenticationHelper authenticationHelper, 
             ISiteBuilderApiContext apiContext, 
             IShipmentControllerApiClient shipmentControllerApiClient,
-            IQuoteWebApiClient quoteWebApiClient)
+            IQuoteWebApiClient quoteWebApiClient,
+            ISettings settings)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
@@ -82,6 +85,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext = apiContext;
             _shipmentControllerApiClient = shipmentControllerApiClient;
             _quoteWebApiClient = quoteWebApiClient;
+            _settings = settings;
         }
         
 
@@ -169,7 +173,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
 
             PageContext.StorefrontOrderAttributes = GetShopperOrderAttributes().Result;
-            
+            if (SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+                PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
+            }
+
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
                 if (wishlistTask.Result.ResponseMessage.IsSuccessStatusCode)
