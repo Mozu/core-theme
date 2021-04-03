@@ -176,7 +176,7 @@
       "template": "email/product-return-changed",
       "title": "Return Has Been Updated"
     },
-    {
+	{
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
