@@ -48,6 +48,7 @@ using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using Mozu.Customer.Contracts;
 using System.Globalization;
+using Mozu.CommerceRuntime.Contracts.Quotes;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -86,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Customer.Contracts.CustomerAccount B2BAccount { get; set; }
         public Customer.Contracts.B2BUserCollection B2BUsers { get; set; }
         public bool isShippable { get; set; }
+        public bool IsSeller { get; set; }
     }
 
     public class PasswordResetEmail
@@ -307,6 +309,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (Customer.Contracts.CustomerAccount),
                                                Topic = Topics.B2BAccountInactive
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (QuoteEmail),
+                                               Topic = Topics.QuoteInReview
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (QuoteEmail),
+                                               Topic = Topics.QuoteReadyForCheckout
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (QuoteEmail),
+                                               Topic = Topics.QuoteExpired
                                            }
                 };
         }
@@ -372,7 +389,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
+            var site = tenant.Sites.FirstOrDefault(x => x.Id == SbApiContext.SiteId);
             var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
 
             PageContext.CmsContext.Page.DocumentTypeFQN = "emailTemplateContent@mozu";
@@ -398,10 +416,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+            ViewData["adminDomainName"] = tenant.Domain.DomainName;
             ViewData["rmaLocation"] = locationCode.IsNullOrEmpty() ? await GetDefaultReturnLocation() : await GetStorageLocation(locationCode);
 
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
-            ViewData["smsEnabled"] = IsSmsEnabled();
+            ViewData["smsEnabled"] = IsSmsEnabled(tenant);
 
             return Ok(View(emailTemplate.Template, model));
         }
@@ -426,7 +445,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 PageContext.User = user;
             }
 
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
+            var site = tenant.Sites.FirstOrDefault(x => x.Id == SbApiContext.SiteId);
             var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
             if (PageContext != null)
             {
@@ -446,8 +466,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
             
-            ViewData["smsEnabled"] = IsSmsEnabled();
-
+            ViewData["smsEnabled"] = IsSmsEnabled(tenant);
+            ViewData["adminDomainName"] = tenant.Domain.DomainName;
             var model = await Convert(notification.Payload, emailTypeInfo);
 
             try
@@ -675,7 +695,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (obj is QuoteEmail quoteEmail)
             {
-                var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteEmail.CustomerAccountId)).ReadAsSync();                
+                var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteEmail.CustomerAccountId)).ReadAsSync();
                 var b2bUsers = (await _b2bAccountWebApiClient.CloneWithoutUserClaims().GetUsers(quoteEmail.CustomerAccountId)).ReadAsSync();
                 quoteEmail.B2BAccount = b2bAccount;
                 quoteEmail.B2BUsers = b2bUsers;
@@ -748,27 +768,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             FormatHours(location.RegularHours.Saturday);
         }
 
-        private bool IsSmsEnabled()
+        private bool IsSmsEnabled(Tenant.Contracts.Tenant tenant)
         {
-            var tenant = GetTenant();            
             var smsEnabled = System.Convert.ToBoolean(tenant?.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("SmsEnabled"))?.Value);
-
             return smsEnabled;
-        }
-
-        private Tenant.Contracts.Tenant GetTenant()
-        {
-            var tenant = _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)
-                .ContinueWith(t =>
-                {
-                    if (t.Result.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        return t.Result.ReadAsSync();
-                    }
-
-                    return null;
-                });
-            return tenant.Result;
         }
 
         public class Topics
@@ -810,6 +813,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string B2BAccountCreated = "b2baccount.created";
             public const string B2BAccountInactive = "b2baccount.accountinactive";
             public const string B2BAccountDenied = "b2baccount.accountdenied";
+            public const string QuoteInReview = "quote.inreview";
+            public const string QuoteReadyForCheckout = "quote.readyforcheckout";
+            public const string QuoteExpired = "quote.expired";
         }
     }
 
