@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-03-23
+ * Mozu JavaScript SDK - v0.3.0 - 2021-04-04
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -4813,6 +4813,15 @@ module.exports=
     "remove-coupons": {
       "verb": "DELETE",
       "template": "{+quoteService}{quoteId}/coupons?updatemode={updateMode}"
+    },
+    "copy": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/copy"
+    },
+    "email": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+quoteService}{id}/email"
     }
   },
   "quotes": {

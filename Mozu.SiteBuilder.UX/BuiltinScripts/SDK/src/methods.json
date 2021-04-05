@@ -1273,6 +1273,15 @@
     "remove-coupons": {
       "verb": "DELETE",
       "template": "{+quoteService}{quoteId}/coupons?updatemode={updateMode}"
+    },
+    "copy": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/copy"
+    },
+    "email": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+quoteService}{id}/email"
     }
   },
   "quotes": {
