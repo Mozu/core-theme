@@ -18,17 +18,19 @@ define([
     'modules/editable-view',
     "modules/models-quotes",
     "modules/b2b-account/account-address-search",
-    "widgets/mz-search-pagination-dd"], 
+    "widgets/mz-search-pagination-dd", 
+    "modules/b2b-account/email-quote",
+    "modules/b2b-account/delete-quote"], 
     function ($, api, _, Hypr, Backbone, HyprLiveContext,
         CustomerModels, CartModels, B2BAccountModels, ProductModalViews,
         ProductPicker, ProductModels, WishlistModels, MozuGrid, MozuGridCollection,
-        PagingViews, EditableView, QuoteModels, B2bContactsModal, mozuPaginatedSearchableGrid) {
+        PagingViews, EditableView, QuoteModels, B2bContactsModal, mozuPaginatedSearchableGrid, EmailQuoteModal, DeleteQuoteModal) {
+
         var nameFilter = "name cont ";
         var expirationDateFilter  = "expirationdate ge ";
         var timeComponent = "T00:00:00z";
         var filterstring = "";
         var timeout = null;
-
         var isSalesRep = require.mozuData('user').isSalesRep;
         var accountDict = {};
         var uniqueAccountId = [];
@@ -113,7 +115,8 @@ define([
     });
 
     var ModalView = new B2bContactsModal.B2bContactsView({model: CustomerModels.EditableCustomer.fromCurrent() });
-    
+    var emailQuoteView=new EmailQuoteModal.emailQuoteView({model:CustomerModels.EditableCustomer.fromCurrent()});
+    var deleteQuoteView = new DeleteQuoteModal.deleteQuoteView({ model: CustomerModels.EditableCustomer.fromCurrent()});
     var QuotesView = Backbone.MozuView.extend({
         templateName: "modules/b2b-account/quotes/quotes",
         initialize: function () {
@@ -129,6 +132,8 @@ define([
             }
             else {
                 collection = new QuotesGridCollectionModel({ autoload: true });
+                _.extend(collection, Backbone.Events);
+                collection.bind('custom:eventOnRowClick', this.quotesGridRowSelected, this);
             }
             if (isSalesRep) {
                 if (!self.model.get("b2bAccounts")) {
@@ -286,6 +291,13 @@ define([
                 }
             }
         },
+        quotesGridRowSelected:function(data){
+            if (isSalesRep) {
+                window.location = '/selleraccount/quote/' + data.id;
+            }else {
+                window.location = '/myaccount/quote/' + data.id;
+            }
+        },
         initializeGrid: function (collection) {
             var self = this;
             self._quotesGridView = new QuotesMozuGrid({
@@ -394,24 +406,29 @@ define([
                 index: 'status',
                 displayName: 'Status',
                 sortable: false
+               
             }
         ],
         rowActions: [
             {
-                displayName: 'Edit Quote',
+                displayName: Hypr.getLabel("viewQuoteName"),
+                action: 'viewQuote'
+            },
+            {
+                displayName: Hypr.getLabel("editQuoteName"),
                 action: 'editQuote'
             },
             {
-                displayName: 'Delete Quote',
-                action: 'deleteQuote'
-            },
-            {
-                displayName: 'Copy Quote',
+                displayName: Hypr.getLabel("copyQuoteName"),
                 action: 'copyQuote'
             },
             {
-                displayName: 'Email Quote',
+                displayName: Hypr.getLabel("emailQuoteName"),
                 action: 'emailQuote'
+            },  
+            {
+                displayName: Hypr.getLabel("deleteQuoteName"),
+                action: 'deleteQuote'
             }
         ],
         relations: {
@@ -420,6 +437,7 @@ define([
             })
         },
         editQuote: function (e, row) {
+            e.stopPropagation();
             var quoteId = row.get('id');
             var isSalesRep = require.mozuData('user').isSalesRep;
             if (isSalesRep) {
@@ -428,14 +446,57 @@ define([
                 window.location = '/myaccount/quote/' + quoteId + '/edit';
             }
         },
-        deleteQuote: function () {
-            this.trigger('deleteQuoteView');
+        deleteQuote: function (e, row) {
+           var self= this;
+            e.stopPropagation();
+            deleteQuoteView.renderView();
+            deleteQuoteView.render(row,self);
         },
-        copyQuote: function () {
-            this.set('copyQuoteView');
+        copyQuote: function (e, row) {
+
+            e.stopPropagation();
+            var self=this;
+            var quoteId = row.get('id');
+
+            var quote = new QuoteModels.Quote({
+               id:quoteId
+            });
+            return quote.apiModel.copy().then(function (res) {
+               var copiedId= res.data.id;
+                if (isSalesRep) {
+                    window.location = '/selleraccount/quote/' + copiedId + '/edit';
+                } else {
+                    window.location = '/myaccount/quote/' + copiedId + '/edit';
+                }
+            }, function (error) {
+                self.showMessageBar(error.message);
+            });
         },
-        emailQuote: function () {
-            this.set('emailQuoteView');
+        emailQuote: function (e, row) {
+            e.stopPropagation();
+            emailQuoteView.renderView();
+            emailQuoteView.render(row.id);
+        },
+        viewQuote: function (e, row) {
+            e.stopPropagation();
+            var quoteId = row.get('id');
+            if (isSalesRep) {
+                window.location = '/selleraccount/quote/' + quoteId;
+            }else {
+                window.location = '/myaccount/quote/' + quoteId;
+            }
+        },
+        showMessageBar: function (error) {
+            var self = this;
+            self.set("error", error);
+            $('.mz-messagebar').empty();
+            $('.mz-messagebar').first().append(
+                "<div class='.mz-messagebar' data-mz-mozu-message-bar>" +
+                "<ul class='is-showing mz-errors'>" + "<li class='mz-message-item'>" + error + "</li>" +
+                "</ul>" +
+               "<span class='dismiss-message' data-mz-action='dismissMessage'>X</span>" +
+                "</div>"
+           );
         }
     });
 
@@ -502,7 +563,7 @@ define([
                 })
             }
         });
-
+        
     return {
         'QuotesView': QuotesView,
         'QuoteEditView': QuoteEditView,

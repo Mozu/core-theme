@@ -1,0 +1,31 @@
+{% require_script "modules/b2b-account/b2b-contacts" %}
+
+{% extends "modules/common/modal-dialog" %}
+ <div class="modal-header">
+      {% block modal-header %}
+        <button type="button" class="close" aria-hidden="true"  data-dismiss="modal">×</button>
+        <h2 class="modal-title modal-title-text">{{labels.emailQuote}}</h2>
+      {% endblock modal-header %}
+      </div>
+{% block modal-body %}
+<div id="quotes-messages">
+{% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+   
+    </br>
+        <div> 
+               <label class="mz-email-label">{{labels.emailLabel}}</label>
+	              <textarea type="text" name="searchEmail" row="3"  id="sendEmailText" data-mz-action="checkEmail" placeholder="Email addresses"></textarea>
+        </div>      
+</div>
+{% endblock modal-body %} 
+ <div class="modal-footer">
+        {% block modal-footer %}
+        <div  class="mz-button-footer">
+          <button type="button" class="mz-button mz-email-button-width" id="closeModal" data-dismiss="modal">{{labels.cancel}}</button>
+          <button type="button" class="mz-button mz-email-button-width" data-mz-action="handleSendemail">{{labels.send}}</button>
+        </div>
+        {% endblock modal-footer %}
+  </div>

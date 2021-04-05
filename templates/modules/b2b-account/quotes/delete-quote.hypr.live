@@ -1,0 +1,31 @@
+{% require_script "modules/b2b-account/b2b-contacts" %}
+
+{% extends "modules/common/modal-dialog" %}
+ <div class="modal-header">
+      {% block modal-header %}
+        <button type="button" class="close" aria-hidden="true"  data-dismiss="modal">×</button>
+        <h2 class="modal-title modal-title-text">{{labels.deleteQuote}}</h2>
+      {% endblock modal-header %}
+      </div>
+{% block modal-body %}
+<div id="quotes-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+   
+    </br>
+    {% set quoteNameVar="quote" %}
+    {% if model.quoteName !=="" %}
+    {% set quoteNameVar=model.quoteName %}                        
+    {% endif %}
+       <div class="modal-title modal-delete-title-text">{{ labels.confirmDeleteQuote|string_format(quoteNameVar)|safe}}​​​</div>
+</div>
+{% endblock modal-body %} 
+ <div class="modal-footer">
+        {% block modal-footer %}
+        <div  class="mz-button-delete-footer">
+          <button type="button" class="mz-button mz-delete-button-width" data-mz-action="deleteQuoteHandler">{{labels.yes}}</button>
+          <button type="button" class="mz-button mz-delete-button-width" id="closeModal" data-dismiss="modal">{{labels.no}}</button>
+        </div>
+        {% endblock modal-footer %}
+  </div>
