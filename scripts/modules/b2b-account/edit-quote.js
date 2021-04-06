@@ -902,7 +902,7 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    comments[c].createDate = comments[c].auditInfo.createDate;
+                    comments[c].createDate = new Date(comments[c].auditInfo.createDate).toLocaleDateString();
                 }
                 this.model.set('comments', comments);
             }
@@ -924,7 +924,7 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
+                    auditHistory[a].createDate = new Date(auditHistory[a].auditInfo.createDate).toLocaleDateString();
                 }
                 this.model.set('auditHistory', auditHistory);
             }
