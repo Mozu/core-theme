@@ -131,6 +131,8 @@ define([
             var collection;
             if (viewB2BAccount) {
                 collection = new B2BViewAccountQuotesGridCollectionModel({ autoload: true });
+                _.extend(collection, Backbone.Events);
+                collection.bind('custom:eventOnRowClick', this.quotesGridRowSelected, this);
             }
             else {
                 collection = new QuotesGridCollectionModel({ autoload: true });
@@ -559,10 +561,25 @@ define([
                     sortable: false
                 }
             ],
+            rowActions: [
+                {
+                    displayName: Hypr.getLabel("viewQuoteName"),
+                    action: 'viewQuote'
+                }
+            ],
             relations: {
                 items: Backbone.Collection.extend({
                     model: QuoteModels.Quote
                 })
+            },
+            viewQuote: function (e, row) {
+                e.stopPropagation();
+                var quoteId = row.get('id');
+                if (isSalesRep) {
+                    window.location = '/selleraccount/quote/' + quoteId;
+                }else {
+                    window.location = '/myaccount/quote/' + quoteId;
+                }
             }
         });
         
