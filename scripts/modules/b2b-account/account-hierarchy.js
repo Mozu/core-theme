@@ -161,12 +161,14 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         },
         setAccountOnHierarchy: function (item, accounts, isDescendantOfAssociatedAccount) {
             var self = this;
+            var isOwnAccount = require.mozuData('user').accountId === item.id;
+
             // isDescendantOfAssociatedAccount - This parameter will be false until recursion finds the account associated with the current user. On further recursion it will enable descendant behaviors.
             if (!isDescendantOfAssociatedAccount) {
                 //Check whether this is a current logged in users associated account.
-                isDescendantOfAssociatedAccount = require.mozuData('user').accountId === item.id;
-                //set "View Account" menu on current account.
-                item.canViewAccount = isDescendantOfAssociatedAccount && (self.isUserAdmin() || self.isUserPurchaser());
+                isDescendantOfAssociatedAccount = isOwnAccount;
+                //Can't view an account unless it is a descendant of your own account
+                item.canViewAccount = false;
             }
             else {
                 //set menu's on all current associated accounts descendant accounts.
@@ -177,8 +179,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             item.account = self.getAccount(item.id, accounts);
 
             //All accounts that this account can view (self + descendants) are supported as parent accounts when adding a new child account
-            if (item.canViewAccount === true)
-            {
+            if (isOwnAccount || item.canViewAccount === true) {
                 supportedParentAccounts.push(item.account);
             }
 
