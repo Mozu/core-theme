@@ -251,14 +251,21 @@ define([
             self.model.syncApiModel();
             self.render();
         },
-        filter: function(collection) {
+        filter: function (collection) {
+            var self = this;
             var filterStr = "";
             var qName = $("#searchName").val();
             var qNumber = $("#searchQuoteNumber").val();
             var status = $("#statusDropdown").val();
             var expDate = $("#expirationdate").val();
-            var accountId = $("#selectb2bAccountGrid > input").data('mz-value');
+            var accountId = "";
 
+            if (isSalesRep) {
+                accountId = $("#selectb2bAccountGrid > input").data('mz-value');
+            } else {
+                var viewB2BAccount = self.model.attributes.viewB2BAccount;
+                accountId = viewB2BAccount ? self.model.attributes.accountToView : require.mozuData("user").accountId;
+            }
             if (accountId) {
                 filterStr += accountNameFilter + accountId;
             }
