@@ -33,10 +33,17 @@
         {% for row in model.gridItems %}
             <div data-mz-action="selectQuoteRow" data-mz-row-index="{{forloop.index}}" class="mz-grid-row mz-cols-{{model.columns.length}}" id="quotesgrid-cursor">
                 <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
-                  {% for col in row %}
-                  <span class="mz-grid-column">
-                            {{col|safe}}
-                        </span>
+                    {% for col in row %}
+                        {% if model.columns[forloop.index-1].index == "name" or model.columns[forloop.index-1].index == "accountName" %}
+                            <span title="{{col}}" class="mz-grid-column adjust-text-overflow">
+                                {{col|safe}}
+                            </span>      
+                        {% else %}
+                            <span class="mz-grid-column">
+                                {{col|safe}}
+                            </span>
+                        {% endif %}
+                        
                     {% endfor %}
                 </div>
             

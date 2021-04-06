@@ -37,9 +37,15 @@
             <div data-mz-row-index="{{forloop.index}}" data-mz-action="selectRow"  class="mz-grid-row mz-cols-{{model.columns.length}}">
             <div class="mz-grid-cols mz-cols-{{model.columns.length}}">
                     {% for col in row %}
+                        {% if model.columns[forloop.index-1].index == "accountName" or model.columns[forloop.index-1].index == "email" or model.columns[forloop.index-1].index == "address"%}
+                        <span title="{{col}}" class="mz-grid-column adjust-text-overflow">
+                            {{col|safe}}
+                        </span>
+                        {% else %}
                         <span class="mz-grid-column">
                             {{col|safe}}
                         </span>
+                        {% endif %}
 
                     {% endfor %}
                 </div>
