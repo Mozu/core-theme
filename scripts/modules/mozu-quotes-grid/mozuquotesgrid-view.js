@@ -24,7 +24,6 @@ define(["modules/jquery-mozu",
                 var self = this;
                 this.model.set("accountId",require.mozuData("user").accountId);
                 var behaviors = require.mozuData('user').behaviors;
-                this.model.set("isAdmin", behaviors.includes(1000) || behaviors.includes(1005));
                 var rowActions = this.model.get('rowActions');
                 _.each(rowActions, function (action) {
                     self[action.action] = function (e) {

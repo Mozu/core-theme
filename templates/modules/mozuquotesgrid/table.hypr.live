@@ -52,7 +52,7 @@
               <div class="mz-grid-row-actions">
                         <div class="mz-grid-column mz-quotes-grid-dropdown">
                             {% if user.isSalesRep != true %}
-                            {% if model.items[forloop.index0].customerAccountId === model.accountId and model.isAdmin == true %}
+                            {% if model.items[forloop.index0].customerAccountId === model.accountId %}
                                  <button data-mz-action="toggleDropdown" class="dropbtn"></button>
                             <div id="quotesDropdown{{forloop.index}}" class="dropdown-content">
                             {% for action in model.rowActions %}
