@@ -229,6 +229,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Print Quote (back office)",
+                "back-office/quote/{quoteId}/print",
+                new { controller = "BackOffice", action = "PrintQuoteSummary" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                "back office (admin view) - PREVIEW",
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" },
@@ -250,6 +256,24 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "myaccount",
                 new { controller = "MyAccount", action = "Index" },
 				_constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+              "Storefront_SellerAccount",
+              "selleraccount",
+              new { controller = "SellerAccount", action = "Index" },
+              _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+             "Storefront_B2BAccount",
+             "b2baccount/{accountId}",
+             new { controller = "B2BAccount", action = "GetB2BAccount", accountId = "" },
+             _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "B2B Account Request",
+                "b2baccount/b2b-account-request",
+                new { controller = "B2BAccount", action = "B2BAccountRequest" },
+                _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
                 "StoreFront_ajax_Configure",
@@ -370,6 +394,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
               "Anonymous Save Curbside Survey",
               "user/save-curbside-survey",
               new { controller = "AnonymousNotification", action = "SaveCurbsideSurvey" },
+              _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+              "Cart",
+              "user/cart-details",
+              new { controller = "Cart", action = "GetCart" },
               _constraintResolver);
 
             routes.MapRoute(_defaultHandler,

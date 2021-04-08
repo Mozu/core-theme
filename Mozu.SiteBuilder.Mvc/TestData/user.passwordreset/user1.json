@@ -4,6 +4,7 @@
  "userName": "dpuddy14@gmail.com",
  "firstName": "David",
  "lastName": "Puddy",
+ "IsPasswordSetEmail": true,
  "commerceSummary": {
   "totalOrderAmount": {},
   "visitsCount": 10

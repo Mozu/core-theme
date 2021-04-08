@@ -17,11 +17,13 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.Extensions.Primitives;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using MongoDB.Driver.Linq;
 
 namespace Mozu.SiteBuilder.Mvc
 {
     public class SiteBuilderApiContext : ApiContext, ISiteBuilderApiContext
     {
+        private const string TENANT = "Tenant";
         public SiteBuilderApiContext()
         {
             int f = 0;
@@ -36,15 +38,43 @@ namespace Mozu.SiteBuilder.Mvc
 
         public string CurrencyCodeOverride { get; set; }
 
-        public LightweightUserClaims AdminUserClaim{ get; set; }
+        public LightweightUserClaims AdminUserClaim { get; set; }
         //cmcmannus|02/19/2020
         //hard coded to shopper since not porting admin
         public UserScopeType ScopeType => UserScopeType.Shopper;
         public bool IsReturnUser { get; set; } = true;
 
+        public bool IsSalesRep()
+        {
+            bool isAdminUser = AdminUserClaim != null && AdminUserClaim.ScopeType == TENANT;
+            if (!isAdminUser)
+                return false;
+
+            // Check a subset of behaviors to see if this user is a Sales Rep
+            // or Admin who needs access to the B2B seller functionality
+            int[] requiredBehaviorIds = {
+                new CustomerReadBehavior().Id,    //41 
+                new ShopperReadBehavior().Id,     //33 
+                new OrderReadBehavior().Id,       //73
+                new PriceListReadBehavior().Id,   //239
+                new WishlistReadBehavior().Id,    //161
+                new B2BAccountCreateBehavior().Id,//266
+                new B2BAccountUpdateBehavior().Id,//267
+                new B2BAccountDeleteBehavior().Id,//268
+                new B2BAccountReadBehavior().Id,  //269
+                new QuoteCreateBehavior().Id,     //270
+                new QuoteUpdateBehavior().Id,     //271
+                new QuoteDeleteBehavior().Id,     //272
+                new QuoteReadBehavior().Id,       //273
+            };
+            var isSalesRep = AdminUserClaim.BehaviorIds.ContainsAll(requiredBehaviorIds);
+
+            return isSalesRep;
+        }
+
         public void SetDataMode(DataViewModeType dataViewMode)
         {
-             this.DataViewMode = DataViewMode;
+            this.DataViewMode = DataViewMode;
         }
 
         public void SetPriceListCode(string plCode)
@@ -55,6 +85,10 @@ namespace Mozu.SiteBuilder.Mvc
         public void SetUser(LightweightUserClaims user)
         {
             this.UserClaims = user;
+        }
+        public void SetUserClaim(LightweightUserClaims user)
+        {
+            this.AdminUserClaim = user;
         }
     }
     //public class SiteBuilderApiContext2 : MozuServiceApiContext, ISiteBuilderApiContext
@@ -122,7 +156,7 @@ namespace Mozu.SiteBuilder.Mvc
     //            {
     //                newCookie.Expires = DateTime.MinValue;
     //            }
-                
+
     //            _cookieProvider.SaveResponseCookie(Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f", newCookie, false);
     //        }
     //        IsDebugMode = isDebugMode;
@@ -228,7 +262,7 @@ namespace Mozu.SiteBuilder.Mvc
     //            {
     //                UserClaims = null;
     //                return false;
-             
+
     //            }
 
     //            UserClaims = LightweightUserClaims.CreateForAdminUser(
@@ -259,7 +293,7 @@ namespace Mozu.SiteBuilder.Mvc
     //            return;
     //        }
     //        var anonClaims = LightweightUserClaims.CreateForAnonymousShopper(TenantId, SiteId.GetValueOrDefault());
-            
+
     //        SetUser(anonClaims);
     //        _authenticationHelper.SaveStoreFrontAccessToken(anonClaims.ToAccessToken(), null);
     //        if (UserClaims != null && UserClaims.BehaviorIds == null)
@@ -476,12 +510,12 @@ namespace Mozu.SiteBuilder.Mvc
     //    {
     //        DataViewMode = dataViewMode;
     //    }
-     
+
     //    public void SetPriceListCode(string plCode)
     //    {
     //        PriceListCode = plCode;
     //    }
-       
+
     //    private void SetDebugModeFlags()
     //    {
     //        DebugFlags = DebugModeFlagValues.Default;
@@ -518,7 +552,7 @@ namespace Mozu.SiteBuilder.Mvc
     //    {
     //        get; set;
     //    }
-      
+
     //    public string CurrencyCodeOverride { get; set; }
     //}
 
@@ -527,7 +561,7 @@ namespace Mozu.SiteBuilder.Mvc
     {
         Default = 0,
         None = 2,
-       
+
         DisableCdn = 4,
         Unminified = 8,
         ShowErrors = 16
@@ -537,7 +571,7 @@ namespace Mozu.SiteBuilder.Mvc
         public const string DefaultTheme = "MozuCore";
         public const string COOKIENAME = "SBCONTEXT";
         public const string DEBUGCOOKIENAME = "SBD";
-		public const string NOWCOOKIENAME = "MZ_NOW";
+        public const string NOWCOOKIENAME = "MZ_NOW";
         public const string PRICELISTCOOKIENAME = "MZ_PRICELIST";
         public const string HEADER_ALTERNATIVE_VIEW = "x-vol-alternative-view";
         public const string HEADER_CANONICAL_URL = "x-vol-canonical-url";

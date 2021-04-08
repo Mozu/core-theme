@@ -124,6 +124,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 [APIConstants.Headers.TENANT] = apiContext.TenantId.ToString()
             };
 
+            if (_pageContext.UserScopeType.HasValue)
+            {
+                header[APIConstants.Headers.USER_SCOPE_TYPE] = _pageContext.UserScopeType.ToString();
+            }
+            if (!string.IsNullOrWhiteSpace(_pageContext.PriceListCode))
+            {
+                header[APIConstants.Headers.PRICE_LIST] = _pageContext.PriceListCode;
+            }
+
             //food/
             if (OmitUserFields)
             {
@@ -319,8 +328,19 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         Id = "StorefrontShipmentsService",
                         InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("StorefrontShipmentsWebApi"),
                         RequiresSsl = true
+                    }, 
+                    new ServiceInfo
+                    {
+                        Id = "QuoteService",
+                        InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("QuoteWebApi"),
+                        RequiresSsl = true
+                    },
+                     new ServiceInfo
+                    {
+                        Id = "B2BContactService",
+                        InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("B2BContactWebApi"),
+                        RequiresSsl = true
                     }
-
                 };
             foreach (var si in sis)
             {

@@ -39,7 +39,8 @@ namespace Mozu.SiteBuilder.UX.Controllers
         public const string MyAccountAfterAction = "http.storefront.pages.myAccount.request.after";
         public const string NotFoundBeforeAction = "http.storefront.pages.404.request.before";
         public const string NotFoundAfterAction = "http.storefront.pages.404.request.after";
-        
+        public const string QuoteCheckoutBeforeAction = "http.storefront.pages.quotecheckout.request.before";
+        public const string QuoteCheckoutAfterAction = "http.storefront.pages.quotecheckout.request.after";
 
     }
  

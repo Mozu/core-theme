@@ -101,6 +101,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private async Task<IActionResult> RenderCartViewWithMessage(Exception error)
         {
+            var jCart = await RenderCart(error);
+
+            if (!SiteContext.CheckoutSettings.VisaCheckout.IsEnabled) return View("cart", jCart);
+            HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+            PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
+
+            return View("cart", jCart);
+        }
+
+        private async Task<JObject> RenderCart(Exception error)
+        {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
             if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
@@ -114,8 +126,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (error != null)
             {
-                if (PageContext.IsDebugMode || PageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors) ) throw error;
-                messagesArray.Add(new {message = error.Message}.ToJObject(_cartSerializer.Value));
+                if (PageContext.IsDebugMode || PageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors)) throw error;
+                messagesArray.Add(new { message = error.Message }.ToJObject(_cartSerializer.Value));
             }
 
             if (cart.CartMessages != null)
@@ -135,11 +147,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 foreach (var cartMessage in messages)
                 {
                     messagesArray.Add(new
-                        {
-                            message =  cartMessage.Message,
-                            messageType = cartMessage.MessageType,
-                            productsRemoved = cartMessage.ProductsRemoved
-                        }.ToJObject(_cartSerializer.Value));
+                    {
+                        message = cartMessage.Message,
+                        messageType = cartMessage.MessageType,
+                        productsRemoved = cartMessage.ProductsRemoved
+                    }.ToJObject(_cartSerializer.Value));
                 }
             }
 
@@ -148,14 +160,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jCart.Add("messages", messagesArray);
             }
 
-            if (!SiteContext.CheckoutSettings.VisaCheckout.IsEnabled) return View("cart", jCart);
-            HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-            PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
-            PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
-
-            return View("cart", jCart);
+            return jCart;
         }
-
         private UX.Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
         {
             var cartbase = Mapper.Map<UX.Models.StoreFront.Commerce.Cart>(cart);
@@ -177,6 +183,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string DigitalWalletData { get; set; }
         }
 
+        [HttpGet]
+        public async Task<JObject> GetCart()
+        {
+            return await RenderCart(null);
+        }
 
         [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
         [HttpPost]

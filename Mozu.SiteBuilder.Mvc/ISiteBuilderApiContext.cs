@@ -16,5 +16,7 @@ namespace Mozu.SiteBuilder.Mvc
         void SetPriceListCode(string plCode);
         string CurrencyCodeOverride { get; }
         LightweightUserClaims AdminUserClaim { get; set; }
+        public bool IsSalesRep();
+        public void SetUserClaim(LightweightUserClaims user);
     }
 }

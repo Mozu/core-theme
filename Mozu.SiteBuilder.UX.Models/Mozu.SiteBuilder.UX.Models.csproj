@@ -8,14 +8,14 @@
   <ItemGroup>
     <PackageReference Include="DeviceDetector.NET" Version="4.2.0" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
-    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2031.2" />
+    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Messaging" Version="1.2031.2" />
     <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2031.2" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2109.2" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2113.2" />
 
-    <PackageReference Include="Mozu.Customer.Contracts" Version="1.2030.0-develop.2" />
+    <PackageReference Include="Mozu.Customer.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.1915.0-dotnetcore.4" />
     <PackageReference Include="Mozu.Location.Contracts" Version="1.2031.2" />

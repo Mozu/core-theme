@@ -33,6 +33,7 @@ using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.Customer.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -53,8 +54,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private readonly ISitesWebApiClient _sitesWebApiClient;
-
         private readonly IReturnWebApiClient _returnWebApiClient;
+        private readonly IQuoteWebApiClient _quoteWebApiClient;
+        private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private readonly IB2BAccountWebApiClient _b2bAccountWebApiClient;
+
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string ORDERS_PREVIEW_RESOURCE_NAME = "backoffice.orders1";
@@ -70,6 +74,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string CUSTOMER_AT_CURBSIDE_QRCODE_PREVIEW_RESOURCE_NAME = "backoffice.customer-at-curbside-qrcode";
         private const string RETURN_PREVIEW_RESOURCE_NAME = "backoffice.return1";
         private const string CURBSIDE_CUSTOMER_SURVEY_RESOURCE_NAME = "backoffice.curbside-customer-survey";
+        private const string QUOTE_PREVIEW_RESOURCE_NAME = "backoffice.quote";
+        private const string ACCOUNT_PREVIEW_RESOURCE_NAME = "backoffice.account";
+        private const string B2BUSER_PREVIEW_RESOURCE_NAME = "backoffice.b2bUsers";
 
         /// <summary>
         /// Public constructor.
@@ -81,7 +88,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ILocationAdminWebApiClient locationAdminWebApi,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
             IReturnWebApiClient returnWebApiClient,
-            ISitesWebApiClient sitesWebApiClient)
+            ISitesWebApiClient sitesWebApiClient,
+            IQuoteWebApiClient quoteWebApiClient,
+            ICustomerAccountWebApiClient customerAccountWebApiClient,
+            IB2BAccountWebApiClient b2bAccountWebApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient
@@ -93,8 +103,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
-
             _returnWebApiClient = returnWebApiClient;
+            _quoteWebApiClient = quoteWebApiClient;
+            _customerAccountWebApiClient = customerAccountWebApiClient;
+            _b2bAccountWebApiClient = b2bAccountWebApiClient;
         }
 
         /// <summary>
@@ -470,6 +482,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return await RenderWithContext(template, returnObject);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PrintQuoteSummary(string quoteId)
+        {
+            var quoteObject = (await _quoteWebApiClient.CloneWithoutUserClaims().GetQuote(quoteId)).ReadAsSync();
+            var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteObject.CustomerAccountId)).ReadAsSync();
+            var userAccount = (await _b2bAccountWebApiClient.CloneWithoutUserClaims().GetUsers(quoteObject.CustomerAccountId)).ReadAsSync();
+            ViewData["isShippable"] = quoteObject.Items.Any(a => a.FulfillmentMethod == "Ship");
+            ViewData["account"] = b2bAccount;
+            ViewData["userAccount"] = userAccount;
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("quote.summary"));
+
+            if (template == null)
+            {
+                return NotFound("Could not find quote summary template for the current Theme.");
+            }
+
+            return await RenderWithContext(template, quoteObject);
+        }
+
         /// <summary>
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
@@ -590,6 +622,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "curbside-customer-survey")
             {
                 object model = TestDataBroker.GetFileContents(CURBSIDE_CUSTOMER_SURVEY_RESOURCE_NAME).FirstOrDefault();
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "quote.summary")
+            {
+                object model = TestDataBroker.GetFileContents(QUOTE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object account = TestDataBroker.GetFileContents(ACCOUNT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object userAccount = TestDataBroker.GetFileContents(B2BUSER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["account"] = account;
+                ViewData["userAccount"] = userAccount;
                 return await RenderWithContext(template, model);
             }
             else

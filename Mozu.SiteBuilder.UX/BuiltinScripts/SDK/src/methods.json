@@ -276,6 +276,16 @@
     "reject-suggested-discount": {
       "verb": "POST",
       "template": "{+cartService}{id}/rejectautodiscount/{discountId}"
+    },
+    "cart-details": {
+      "verb": "GET",
+      "template": "{+storefrontUserService}cart-details"
+    },
+    "create-quote-from-cart": {
+      "verb": "POST",
+      "template": "{+quoteService}create/{cartId}?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
     }
   },
   "cartitem": {
@@ -1108,6 +1118,11 @@
       "template": "{+b2BAccountService}{id}/user",
       "returnType": "b2buser"
     },
+    "change-parent": {
+      "verb": "POST",
+      "template": "{+b2BAccountService}{id}/changeparent/{parentAccountId}",
+      "returnType": "b2buser"
+    },
     "remove-user": {
       "verb": "PUT",
       "template": "{+b2BAccountService}{id}/user/{userId}/remove",
@@ -1171,5 +1186,126 @@
       "pageSize": 20
     },
     "collectionOf": "b2buser"
+  },
+  "b2bAccountHierarchy": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BAccountService}{id}/hierarchy"
+    }
+  },
+  "quote": {
+    "get": {
+      "verb": "GET",
+      "template": "{+quoteService}{id}?draft={draft}"
+    },
+    "create": {
+      "verb": "POST",
+      "template": "{+quoteService}"
+    },
+    "update": {
+      "verb": "PUT",
+      "template": "{+quoteService}{id}?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "get-available-shipping-methods": {
+      "verb": "GET",
+      "template": "{+quoteService}{quoteId}/shippingMethods?draft={draft}",
+      "returnType": "json"
+    },
+    "update-fulfillment-info": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/fulfillmentInfo?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "delete": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{id}?draft={draft}"
+    },
+    "update-quote-adjustment": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/adjustments?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "add-item-to-quote": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/items?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "delete-quote-item": {
+      "verb": "DELETE",
+      "includeSelf": true,
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}?updatemode={updatemode}"
+    },
+    "update-item-quantity": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/quantity/{quantity}?updatemode={updatemode}",
+      "noBody": true,
+      "returnType": "quote"
+    },
+    "update-item-product-price": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/price/{price}?updatemode={updatemode}",
+      "noBody": true,
+      "returnType": "quote"
+    },
+    "update-item-fulfillment": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/items/{quoteItemId}/fulfillment?updatemode={updatemode}",
+      "includeSelf": true,
+      "returnType": "quote"
+    },
+    "create-quote-comment": {
+      "verb": "POST",
+      "template": "{+quoteService}{quoteId}/comments?updatemode={updatemode}"
+    },
+    "apply-coupon": {
+      "verb": "PUT",
+      "template": "{+quoteService}{quoteId}/coupons/{couponCode}?updatemode={updateMode}"
+    },
+    "remove-coupon": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons/{couponcode}?updatemode={updateMode}"
+    },
+    "remove-coupons": {
+      "verb": "DELETE",
+      "template": "{+quoteService}{quoteId}/coupons?updatemode={updateMode}"
+    },
+    "copy": {
+      "verb": "POST",
+      "template": "{+quoteService}{id}/copy"
+    },
+    "email": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+quoteService}{id}/email"
+    }
+  },
+  "quotes": {
+    "template": "{+quoteService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "quote"
+  },
+  "b2bcontact": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BContactService}{id}"
+    }
+  },
+  "b2bcontacts": {
+    "template": "{+b2BContactService}{?_*}",
+    "defaultParams": {
+      "filter": "",
+      "startIndex": 0,
+      "pageSize": 5
+    },
+    "collectionOf": "b2bcontact"
   }
 }

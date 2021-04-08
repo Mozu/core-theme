@@ -30,6 +30,9 @@ using DCs = Mozu.CommerceRuntime.Contracts;
 using Newtonsoft.Json.Linq;
 using Mozu.Core.Extensions;
 using RabbitMQ.Client.Impl;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Settings;
+using static Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -54,8 +57,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICreditWebApiClient _creditApiClient;
         private readonly IReturnWebApiClient _returnApiClient;
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
+        private readonly IQuoteWebApiClient _quoteWebApiClient;
+        private readonly ISettings _settings;
 
-        public MyAccountController(ICustomerRepository customerRepository, ICustomerAccountWebApiClient customerAccountWebApiClient, IAccountContactRepository accountContactRepository,  IOrderWebApiClient orderWebApiClient, IWishlistWebApiClient wishlistWebApiClient, ICreditWebApiClient creditWebApiClient, IReturnWebApiClient returnApiClient, IAuthenticationHelper authenticationHelper, ISiteBuilderApiContext apiContext, IShipmentControllerApiClient shipmentControllerApiClient)
+        public MyAccountController(ICustomerRepository customerRepository, 
+            ICustomerAccountWebApiClient customerAccountWebApiClient, 
+            IAccountContactRepository accountContactRepository,  
+            IOrderWebApiClient orderWebApiClient, 
+            IWishlistWebApiClient wishlistWebApiClient, 
+            ICreditWebApiClient creditWebApiClient, 
+            IReturnWebApiClient returnApiClient, 
+            IAuthenticationHelper authenticationHelper, 
+            ISiteBuilderApiContext apiContext, 
+            IShipmentControllerApiClient shipmentControllerApiClient,
+            IQuoteWebApiClient quoteWebApiClient,
+            ISettings settings)
         {
             _customerRepository = customerRepository;
             _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
@@ -68,6 +84,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _authenticationHelper = authenticationHelper;
             _apiContext = apiContext;
             _shipmentControllerApiClient = shipmentControllerApiClient;
+            _quoteWebApiClient = quoteWebApiClient;
+            _settings = settings;
         }
         
 
@@ -105,12 +123,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pageType = "my_account";
             var pagePath = "my-account";
 
-            if (account.AccountType == "B2B")
+            bool isB2BAccount = account.AccountType == "B2B";
+
+            if (isB2BAccount)
             {
                pageType = "b2b_account";
                pagePath = "b2b-account";
             }
-            
 
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -142,7 +161,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
+            // Only execute this if this is a B2B account
+            var quoteHistoryTask = isB2BAccount ? _quoteWebApiClient.GetQuotes(0, 5, null) : null;
+
+            if (isB2BAccount)
+                await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask, quoteHistoryTask);
+            else
+                await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
 
             PageContext.ShippingCountries = shipTask.Result;
             PageContext.BillingCountries  = billTask.Result;
@@ -153,7 +178,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
 
             PageContext.StorefrontOrderAttributes = GetShopperOrderAttributes().Result;
-            
+            if (SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
+            {
+                HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+                PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
+            }
+
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {
                 if (wishlistTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -186,6 +217,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 order["shipments"] = orderShipments.ToJObject();
             });
 
+            var quoteHistory = quoteHistoryTask != null ? quoteHistoryTask.Result.ReadAsSync() : new DCs.Quotes.QuoteCollection();
+
             var jAccount = account.ToJObject();
 
             jAccount.Add("orderHistory", orderHistoryObject);
@@ -193,6 +226,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
             jAccount.Add("cards", cards.Items.ToJArray());
+            jAccount.Add("quoteHistory", quoteHistory.ToJObject());
 
             if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && purchaseOrderAccount != null)
             {
@@ -230,6 +264,75 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    openOrdersSb.Append("\" and OrderNumber ne null");
         //    return openOrdersSb.ToString();
         //}
+
+        [HttpGet]
+        [Route("myaccount/quote/{quoteId}/edit")]
+        public async Task<IActionResult> EditQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if (quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId, true)).ReadAsSync();
+
+            if (quote.Status.In(QuoteStatusConst.COMPLETED, QuoteStatusConst.INREVIEW, QuoteStatusConst.EXPIRED))
+            {
+                throw new VaeUnAuthorizedException($"Can't edit the {quote.Status} quote.");
+            }
+
+            if(!string.IsNullOrWhiteSpace(quote.PriceListCode))
+            {
+                PageContext.PriceListCode = quote.PriceListCode;
+            }
+
+            await SetCountryAndStates();
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "edit-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+            
+            return View("edit-quote", quote);
+        }
+
+        private async Task SetCountryAndStates()
+        {
+            var shipTask = await GetShippableCountries();
+            var billTask = await GetBillingCountries();
+
+            var shipStateTask = await GetUSShippingStates();
+            var billStateTask = await GetUSBillingStates();
+
+            PageContext.ShippingCountries = shipTask;
+            PageContext.BillingCountries = billTask;
+
+            PageContext.BillingStates = billStateTask;
+            PageContext.ShippingStates = shipStateTask;
+        }
+
+        [HttpGet]
+        [Route("myaccount/quote/{quoteId}")]
+        public async Task<IActionResult> ViewQuote(string quoteId)
+        {
+            var pc = this.PageContext;
+            var quote = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            if (quote.HasDraft)
+                quote = (await _quoteWebApiClient.GetQuote(quoteId, true)).ReadAsSync();
+
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "view-quote",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("view-quote", quote);
+        }
 
         async Task<Kibo.Fulfillment.Contracts.Model.PagedModelOfEntityModelOfShipment> fetchOrderShipments(string orderId)
         {

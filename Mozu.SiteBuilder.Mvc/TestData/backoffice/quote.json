@@ -1,0 +1,552 @@
+{
+	"id": "11535c2e0306df0001131e5d000043c8",
+	"name": "Quote1803",
+	"siteId": 21429,
+	"tenantId": 17352,
+	"isShippable": true,
+	"number": 910,
+	"items": [
+		{
+			"id": "74147e7fb1de44a598d3acef0077e0f9",
+			"fulfillmentLocationCode": "W-1",
+			"fulfillmentMethod": "Ship",
+			"lineId": 1,
+			"product": {
+				"fulfillmentTypesSupported": [
+					"DirectShip",
+					"InStorePickup"
+				],
+				"options": [],
+				"properties": [],
+				"categories": [
+					{
+						"id": 3,
+						"parent": {
+							"id": 2
+						}
+					}
+				],
+				"price": {
+					"price": 80
+				},
+				"discountsRestricted": false,
+				"isTaxable": true,
+				"productType": "StandardProductType1",
+				"productUsage": "Standard",
+				"bundledProducts": [],
+				"productCode": "sp_01",
+				"name": "Standard Product - 1",
+				"goodsType": "Physical",
+				"isPackagedStandAlone": true,
+				"stock": {
+					"manageStock": true,
+					"isOnBackOrder": false
+				},
+				"measurements": {
+					"height": {
+						"unit": "in",
+						"value": 1
+					},
+					"width": {
+						"unit": "in",
+						"value": 1
+					},
+					"length": {
+						"unit": "in",
+						"value": 1
+					},
+					"weight": {
+						"unit": "lbs",
+						"value": 1
+					}
+				},
+				"fulfillmentStatus": "Pending"
+			},
+			"quantity": 2,
+			"subtotal": 160,
+			"extendedTotal": 160,
+			"taxableTotal": 156,
+			"discountTotal": 4,
+			"discountedTotal": 156,
+			"itemTaxTotal": 0,
+			"shippingTaxTotal": 0,
+			"shippingTotal": 15.6,
+			"handlingAmount": 20,
+			"feeTotal": 0,
+			"total": 171.6,
+			"unitPrice": {
+				"extendedAmount": 80,
+				"listAmount": 80
+			},
+			"productDiscount": {
+				"appliesToSalePrice": false,
+				"discountQuantity": 2,
+				"productQuantity": 2,
+				"impactPerUnit": 2,
+				"impact": 4,
+				"discount": {
+					"id": 38,
+					"name": "ItemLevelTest",
+					"hasMultipleTargetProducts": false
+				},
+				"excluded": false
+			},
+			"productDiscounts": [
+				{
+					"appliesToSalePrice": false,
+					"discountQuantity": 2,
+					"productQuantity": 2,
+					"impactPerUnit": 2,
+					"impact": 4,
+					"discount": {
+						"id": 38,
+						"name": "ItemLevelTest",
+						"hasMultipleTargetProducts": false
+					},
+					"excluded": false
+				}
+			],
+			"shippingDiscounts": [],
+			"auditInfo": {
+				"updateDate": "2021-03-18T07:16:48.918Z",
+				"createDate": "2021-03-18T07:16:48.918Z",
+				"updateBy": "00872df76e734b2c96ac75e6b31e2636",
+				"createBy": "00872df76e734b2c96ac75e6b31e2636"
+			},
+			"shippingAmountBeforeDiscountsAndAdjustments": 15.6,
+			"weightedOrderAdjustment": 0,
+			"weightedOrderDiscount": 0,
+			"weightedOrderShipping": 10,
+			"weightedOrderShippingDiscount": 0,
+			"weightedOrderHandlingFeeDiscount": 0,
+			"weightedOrderHandlingAdjustment": -6.67
+		},
+		{
+			"id": "34b802b62ab8424f867facef0077eea4",
+			"fulfillmentLocationCode": "W-1",
+			"fulfillmentMethod": "Ship",
+			"lineId": 2,
+			"product": {
+				"fulfillmentTypesSupported": [
+					"DirectShip",
+					"InStorePickup"
+				],
+				"options": [],
+				"properties": [],
+				"categories": [],
+				"price": {
+					"price": 100
+				},
+				"discountsRestricted": false,
+				"isTaxable": true,
+				"productType": "StandardProductType1",
+				"productUsage": "Standard",
+				"bundledProducts": [],
+				"productCode": "sp_2021",
+				"name": "sp_2021",
+				"goodsType": "Physical",
+				"isPackagedStandAlone": true,
+				"stock": {
+					"manageStock": true,
+					"isOnBackOrder": false
+				},
+				"measurements": {
+					"height": {
+						"unit": "in",
+						"value": 1
+					},
+					"width": {
+						"unit": "in",
+						"value": 1
+					},
+					"length": {
+						"unit": "in",
+						"value": 1
+					},
+					"weight": {
+						"unit": "lbs",
+						"value": 1
+					}
+				},
+				"fulfillmentStatus": "Pending"
+			},
+			"quantity": 1,
+			"subtotal": 100,
+			"extendedTotal": 100,
+			"taxableTotal": 100,
+			"discountTotal": 0,
+			"discountedTotal": 100,
+			"itemTaxTotal": 0,
+			"shippingTaxTotal": 0,
+			"shippingTotal": 7.8,
+			"handlingAmount": 10,
+			"feeTotal": 0,
+			"total": 107.8,
+			"unitPrice": {
+				"extendedAmount": 100,
+				"listAmount": 100
+			},
+			"productDiscounts": [],
+			"shippingDiscounts": [],
+			"auditInfo": {},
+			"shippingAmountBeforeDiscountsAndAdjustments": 7.8,
+			"weightedOrderAdjustment": 0,
+			"weightedOrderDiscount": 0,
+			"weightedOrderShipping": 5,
+			"weightedOrderShippingDiscount": 0,
+			"weightedOrderHandlingFeeDiscount": 0,
+			"weightedOrderHandlingAdjustment": -3.33
+		}
+	],
+	"auditHistory": [
+		{
+			"id": "6bc9828894f241308ef2acf000623f80",
+			"changes": [
+				{
+					"type": "Update",
+					"fields": [
+						{
+							"name": "Name",
+							"newValue": "Quote1803"
+						},
+						{
+							"name": "ShippingMethodName",
+							"newValue": "UPS Ground - $23.40"
+						},
+						{
+							"name": "ExpirationDate",
+							"newValue": "03/19/2021 00:00:00"
+						},
+						{
+							"name": "ShippingAdjustment.Amount",
+							"newValue": "15"
+						},
+						{
+							"name": "HandlingAdjustment.Amount",
+							"newValue": "-10"
+						}
+					]
+				},
+				{
+					"type": "Update",
+					"path": "FulfillmentInfo#",
+					"fields": [
+						{
+							"name": "FirstName",
+							"newValue": "anagha"
+						},
+						{
+							"name": "LastNameOrSurname",
+							"newValue": "deshmukh"
+						},
+						{
+							"name": "CompanyOrOrganization",
+							"newValue": "B2B-ViewQuote"
+						},
+						{
+							"name": "Address1",
+							"newValue": "717 N. Harwood St."
+						},
+						{
+							"name": "Address2",
+							"newValue": ""
+						},
+						{
+							"name": "CityOrTown",
+							"newValue": "Dallas"
+						},
+						{
+							"name": "StateOrProvince",
+							"newValue": "TX"
+						},
+						{
+							"name": "PostalOrZipCode",
+							"newValue": "75201"
+						},
+						{
+							"name": "CountryCode",
+							"newValue": "US"
+						},
+						{
+							"name": "Home",
+							"newValue": "5129991111"
+						}
+					]
+				},
+				{
+					"type": "Add",
+					"path": "Items#1",
+					"fields": [
+						{
+							"name": "ProductCode",
+							"newValue": "sp_01"
+						},
+						{
+							"name": "Name",
+							"newValue": "Standard Product - 1"
+						},
+						{
+							"name": "Quantity",
+							"newValue": "2"
+						},
+						{
+							"name": "FulfillmentMethod",
+							"newValue": "Ship"
+						},
+						{
+							"name": "FulfillmentLocationCode",
+							"newValue": "W-1"
+						},
+						{
+							"name": "UnitPrice",
+							"newValue": "80"
+						}
+					]
+				},
+				{
+					"type": "Add",
+					"path": "Items#2",
+					"fields": [
+						{
+							"name": "ProductCode",
+							"newValue": "sp_2021"
+						},
+						{
+							"name": "Name",
+							"newValue": "sp_2021"
+						},
+						{
+							"name": "Quantity",
+							"newValue": "1"
+						},
+						{
+							"name": "FulfillmentMethod",
+							"newValue": "Ship"
+						},
+						{
+							"name": "FulfillmentLocationCode",
+							"newValue": "W-1"
+						},
+						{
+							"name": "UnitPrice",
+							"newValue": "100"
+						}
+					]
+				}
+			],
+			"auditInfo": {
+				"updateDate": "2021-03-19T05:57:42.613Z",
+				"createDate": "2021-03-19T05:57:42.613Z",
+				"updateBy": "00872df76e734b2c96ac75e6b31e2636",
+				"createBy": "00872df76e734b2c96ac75e6b31e2636"
+			}
+		}
+	],
+	"auditInfo": {
+		"updateDate": "2021-03-19T05:57:42.613Z",
+		"createDate": "2021-03-18T07:15:58.053Z",
+		"updateBy": "00872df76e734b2c96ac75e6b31e2636",
+		"createBy": "00872df76e734b2c96ac75e6b31e2636"
+	},
+	"comments": [
+		{
+			"id": "30d7e00c1e604f0abf93acef0078eef9",
+			"text": "Testing View Quote",
+			"auditInfo": {
+				"updateDate": "2021-03-18T07:20:18.320Z",
+				"createDate": "2021-03-18T07:20:18.320Z",
+				"updateBy": "00872df76e734b2c96ac75e6b31e2636",
+				"createBy": "00872df76e734b2c96ac75e6b31e2636"
+			}
+		},
+		{
+			"id": "38968688dbd04b28bdf2acef007a06f2",
+			"text": "Sales Reps ",
+			"auditInfo": {
+				"updateDate": "2021-03-18T07:24:17.231Z",
+				"createDate": "2021-03-18T07:24:17.231Z",
+				"updateBy": "593343cd6bee4828a81567f217ed9740",
+				"createBy": "593343cd6bee4828a81567f217ed9740"
+			}
+		}
+	],
+	"expirationDate": "2021-03-19T00:00:00.000Z",
+	"fulfillmentInfo": {
+		"fulfillmentContact": {
+			"id": 2,
+			"firstName": "anagha",
+			"lastNameOrSurname": "deshmukh",
+			"companyOrOrganization": "B2B-ViewQuote",
+			"phoneNumbers": {
+				"home": "5129991111"
+			},
+			"address": {
+				"address1": "717 N. Harwood St.",
+				"address2": "",
+				"cityOrTown": "Dallas",
+				"stateOrProvince": "TX",
+				"postalOrZipCode": "75201",
+				"countryCode": "US",
+				"addressType": "Residential",
+				"isValidated": false
+			}
+		},
+		"shippingMethodCode": "ups_UPS_GROUND",
+		"shippingMethodName": "UPS Ground - $23.40",
+		"auditInfo": {
+			"updateDate": "2021-03-18T07:20:00.844Z",
+			"createDate": "2021-03-18T07:17:29.012Z",
+			"updateBy": "00872df76e734b2c96ac75e6b31e2636",
+			"createBy": "00872df76e734b2c96ac75e6b31e2636"
+		}
+	},
+	"userId": "00872df76e734b2c96ac75e6b31e2636",
+	"customerAccountId": 1272,
+	"isTaxExempt": false,
+	"currencyCode": "USD",
+	"customerInteractionType": "Unknown",
+	"orderDiscounts": [],
+	"subTotal": 260,
+	"itemLevelProductDiscountTotal": 4,
+	"orderLevelProductDiscountTotal": 0,
+	"itemTaxTotal": 0,
+	"itemTotal": 256,
+	"total": 324.4,
+	"shippingDiscounts": [],
+	"itemLevelShippingDiscountTotal": 0,
+	"orderLevelShippingDiscountTotal": 0,
+	"shippingAmount": 0,
+	"shippingAdjustment": {
+		"amount": 15
+	},
+	"shippingSubTotal": 23.4,
+	"shippingTax": 0,
+	"shippingTaxTotal": 0,
+	"shippingTotal": 38.4,
+	"handlingDiscounts": [],
+	"itemLevelHandlingDiscountTotal": 0,
+	"orderLevelHandlingDiscountTotal": 0,
+	"handlingAmount": 10,
+	"handlingAdjustment": {
+		"amount": -10
+	},
+	"handlingSubTotal": 40,
+	"handlingTax": 0,
+	"handlingTaxTotal": 0,
+	"handlingTotal": 30,
+	"dutyTotal": 0,
+	"feeTotal": 0,
+	"isDraft": false,
+	"hasDraft": false,
+	"status": "InReview",
+	"couponCodes": [],
+	"invalidCoupons": [],
+	"b2BAccount": {
+		"users": [
+			{
+				"emailAddress": "jo_jo@kibo.com",
+				"userName": "jo_jo@kibo.com",
+				"firstName": "Jo",
+				"lastName": "Jo",
+				"localeCode": "en-us",
+				"userId": "c252ab907ff34d69ad2e88aa8805f052",
+				"isLocked": false,
+				"isActive": true,
+				"isRemoved": false,
+				"acceptsMarketing": false,
+				"hasExternalPassword": false
+			},
+			{
+				"emailAddress": "chi_chi@b2b.com",
+				"userName": "chi_chi@b2b.com",
+				"firstName": "Chi",
+				"lastName": "Chi",
+				"localeCode": "en-US",
+				"userId": "e9ce234cbe60456981b5d6bb1b935768",
+				"isLocked": false,
+				"isActive": true,
+				"isRemoved": false,
+				"acceptsMarketing": false,
+				"hasExternalPassword": false
+			}
+		],
+		"isActive": true,
+		"salesReps": [
+			{
+				"accountId": 1027,
+				"adminUserId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+			},
+			{
+				"accountId": 1027,
+				"adminUserId": "5446fc97f5224e6c9a141ab8150d20c8"
+			}
+		],
+		"id": 1027,
+		"customerSet": "default",
+		"commerceSummary": {
+			"totalOrderAmount": {
+				"amount": 0
+			},
+			"orderCount": 0,
+			"wishlistCount": 2,
+			"visitsCount": 19
+		},
+		"contacts": [
+			{
+				"accountId": 1027,
+				"types": [
+					{
+						"name": "Shipping",
+						"isPrimary": false
+					},
+					{
+						"name": "Billing",
+						"isPrimary": false
+					}
+				],
+				"auditInfo": {
+					"updateDate": "2020-12-08T14:06:52.831Z",
+					"createDate": "2020-12-08T14:06:52.831Z",
+					"updateBy": "tbd",
+					"createBy": "tbd"
+				},
+				"id": 1034,
+				"email": "jo_jo@kibo.com",
+				"firstName": "Ya",
+				"middleNameOrInitial": "",
+				"lastNameOrSurname": "Ya",
+				"companyOrOrganization": "",
+				"phoneNumbers": {
+					"home": "6666666666",
+					"mobile": "",
+					"work": ""
+				},
+				"address": {
+					"address1": "350 5th Ave",
+					"address2": "",
+					"address3": "",
+					"address4": "",
+					"cityOrTown": "NEW YORK",
+					"stateOrProvince": "NY",
+					"postalOrZipCode": "10118",
+					"countryCode": "US",
+					"addressType": "Residential",
+					"isValidated": false
+				}
+			}
+		],
+		"companyOrOrganization": "TestCompany",
+		"notes": [],
+		"attributes": [],
+		"segments": [],
+		"taxExempt": false,
+		"auditInfo": {
+			"updateDate": "2020-12-02T20:18:23.721Z",
+			"createDate": "2020-12-02T20:18:23.721Z",
+			"updateBy": "tbd",
+			"createBy": "tbd"
+		},
+		"customerSinceDate": "2020-12-02T20:18:23.721Z",
+		"accountType": "B2B"
+	}
+}

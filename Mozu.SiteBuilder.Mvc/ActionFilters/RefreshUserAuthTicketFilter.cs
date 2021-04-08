@@ -14,22 +14,66 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.Core.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-
-
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.AdminUser.Contracts;
+using Mozu.AdminUser.Contracts.Clients;
+using APIConstants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class RefreshStoreFrontUserAuthTicketFilter : Attribute, IAsyncAuthorizationFilter
     {
+        const int TOKEN_EXPIRATION_TIME_IN_MINS = 10;
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var sbc = context.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
+            var authHelper = context.HttpContext.RequestServices.GetService<IAuthenticationHelper>();
 
-            if (sbc.UserClaims == null || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
+            await RefreshAdminUserToken(context, sbc, authHelper);
+            await RefreshStorefrontUserToken(context, sbc, authHelper);
+            return;
+        }
+
+        public async Task RefreshAdminUserToken(AuthorizationFilterContext context, ISiteBuilderApiContext sbc, IAuthenticationHelper authHelper)
+        {
+            var adminClient = context.HttpContext.RequestServices.GetService<IPublicAdminAuthTicketWebApiClient>();
+            context.HttpContext.Request.Headers.TryGetValue(APIConstants.Headers.USER_SCOPE_TYPE, out var headerValue);
+
+            if (string.IsNullOrWhiteSpace(headerValue))
+                return;
+
+            var adminRefreshToken = authHelper.GetAdminRefreshToken();
+            if (adminRefreshToken == null)
             {
                 return;
             }
-            var authHelper = context.HttpContext.RequestServices.GetService<IAuthenticationHelper>();
+
+            if (sbc.AdminUserClaim == null ||  sbc.AdminUserClaim.Expiration < DateTime.UtcNow.AddMinutes(TOKEN_EXPIRATION_TIME_IN_MINS))
+            {
+                ServiceClientResponse<TenantAdminUserAuthTicket> res = await adminClient.RefreshAuthTicket(
+                    existingAuthTicket: new TenantAdminUserAuthTicket
+                    {
+                        RefreshToken = adminRefreshToken
+                    },
+                    tenantId: sbc.TenantId);
+
+                if (res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    TenantAdminUserAuthTicket ticket = res.ReadAsSync();
+
+                    authHelper.SaveAdminAccessToken(ticket.AccessToken, false);
+
+                    sbc.SetUserClaim(LightweightUserClaims.Parse(ticket.AccessToken));
+                }
+            }
+        }
+
+        public async Task RefreshStorefrontUserToken(AuthorizationFilterContext context, ISiteBuilderApiContext sbc, IAuthenticationHelper authHelper)
+        {
+            if (sbc.UserClaims == null || DateTime.UtcNow.AddMinutes(TOKEN_EXPIRATION_TIME_IN_MINS) < sbc.UserClaims.Expiration)
+            {
+                return;
+            }
 
             if (sbc.UserClaims.IsAnonymous)
             {
@@ -40,7 +84,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 return;
             }
 
-            if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
+            if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || DateTime.UtcNow.AddMinutes(TOKEN_EXPIRATION_TIME_IN_MINS) < sbc.UserClaims.Expiration)
             {
                 return;
             }
@@ -76,7 +120,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     authHelper.SaveStoreFrontRefreshToken(null, DateTime.MaxValue);
                 }
             });
-            return;
         }
     }
 }

@@ -1,0 +1,367 @@
+{
+  "id": "11011dae3a92fa0001f7af08000043c8",
+  "name": "EstherQuote1",
+  "siteId": 21429,
+  "tenantId": 17352,
+  "number": 32,
+  "submittedDate": "2021-01-14T17:25:09.576Z",
+  "IsSeller": true,
+  "items": [
+    {
+      "id": "0d6bbcd72ac945c49da4acb0016b7d5b",
+      "fulfillmentLocationCode": "W-1",
+      "fulfillmentMethod": "Ship",
+      "localeCode": "en-US",
+      "lineId": 1,
+      "product": {
+        "fulfillmentTypesSupported": [
+          "DirectShip",
+          "InStorePickup"
+        ],
+        "variationProductCode": "cp_01-1",
+        "options": [
+          {
+            "value": "1",
+            "attributeFQN": "tenant~listoptionnumber123"
+          }
+        ],
+        "properties": [],
+        "categories": [
+          {
+            "id": 1
+          }
+        ],
+        "price": {
+          "price": 20
+        },
+        "discountsRestricted": false,
+        "isTaxable": true,
+        "productType": "Configurable Product Type - ListOptionNumber123",
+        "productUsage": "Configurable",
+        "bundledProducts": [],
+        "productCode": "cp_01",
+        "name": "Configurable Product with List Option Number 123",
+        "goodsType": "Physical",
+        "isPackagedStandAlone": false,
+        "stock": {
+          "manageStock": true,
+          "isOnBackOrder": false,
+          "stockAvailable": 40
+        },
+        "measurements": {
+          "height": {
+            "unit": "in",
+            "value": 1
+          },
+          "width": {
+            "unit": "in",
+            "value": 1
+          },
+          "length": {
+            "unit": "in",
+            "value": 1
+          },
+          "weight": {
+            "unit": "lbs",
+            "value": 1
+          }
+        },
+        "fulfillmentStatus": "Pending"
+      },
+      "quantity": 2,
+      "isRecurring": false,
+      "isTaxable": true,
+      "subtotal": 40,
+      "extendedTotal": 40,
+      "taxableTotal": 41.25,
+      "discountTotal": 0,
+      "discountedTotal": 40,
+      "itemTaxTotal": 3.4,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "handlingAmount": 6,
+      "feeTotal": 0,
+      "total": 43.4,
+      "unitPrice": {
+        "extendedAmount": 20,
+        "listAmount": 20
+      },
+      "productDiscounts": [],
+      "shippingDiscounts": [],
+      "auditInfo": {
+        "createDate": "2021-01-14T22:03:35.932Z",
+        "updateBy": "qa",
+        "createBy": "qa"
+      },
+      "shippingAmountBeforeDiscountsAndAdjustments": 0,
+      "weightedOrderAdjustment": 1.25,
+      "weightedOrderDiscount": 0,
+      "totalWithoutWeightedShippingAndHandling": 40,
+      "weightedOrderShipping": -1.06,
+      "weightedOrderShippingDiscount": 0,
+      "weightedOrderHandlingFeeDiscount": 0,
+      "totalWithWeightedShippingAndHandling": 40,
+      "weightedOrderHandlingAdjustment": -6
+    }
+  ],
+  "auditHistory": [
+    {
+      "id": "f37fd96991294fd8b492acb0016f014b",
+      "changes": [
+        {
+          "type": "Update",
+          "fields": [
+            {
+              "name": "Adjustment.Amount",
+              "newValue": "$1.25"
+            }
+          ]
+        }
+      ],
+      "auditInfo": {
+        "updateDate": "2021-01-14T22:16:13.471Z",
+        "createDate": "2021-01-14T22:16:13.471Z",
+        "updateBy": "qa",
+        "createBy": "qa"
+      }
+    },
+    {
+      "id": "a8b59a2563664458af2bacb0017120b6",
+      "changes": [
+        {
+          "type": "Update",
+          "fields": [
+            {
+              "name": "ShippingAdjustment.Amount",
+              "newValue": "-$1.06"
+            },
+            {
+              "name": "HandlingAdjustment.Amount",
+              "newValue": "-$6.00"
+            }
+          ]
+        }
+      ],
+      "auditInfo": {
+        "updateDate": "2021-01-14T22:23:57.187Z",
+        "createDate": "2021-01-14T22:23:57.187Z",
+        "updateBy": "qa",
+        "createBy": "qa"
+      }
+    }
+  ],
+  "auditInfo": {
+    "updateDate": "2021-01-14T22:23:57.187Z",
+    "createDate": "2021-01-14T22:03:35.932Z",
+    "updateBy": "qa",
+    "createBy": "qa"
+  },
+  "comments": [],
+  "expirationDate": "2021-05-03T17:25:09.576Z",
+  "destinations": [
+    {
+      "id": "575a6b37c62f46729401acb0016b7d5b",
+      "destinationContact": {
+        "email": "jo_jo@kibo.com",
+        "firstName": "Jo",
+        "lastNameOrSurname": "Jo",
+        "companyOrOrganization": "TestCompany",
+        "phoneNumbers": {
+          "home": "777-777-7777"
+        },
+        "address": {
+          "address1": "717 N Harwood St",
+          "cityOrTown": "Dallas",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "75201",
+          "countryCode": "US",
+          "addressType": "Commercial",
+          "isValidated": true
+        }
+      },
+      "isDestinationCommercial": true
+    }
+  ],
+  "userId": "c252ab907ff34d69ad2e88aa8805f052",
+  "customerAccountId": 1027,
+  "email": "jo_jo@kibo.com",
+  "isTaxExempt": false,
+  "currencyCode": "USD",
+  "customerInteractionType": "Unknown",
+  "orderDiscounts": [],
+  "subTotal": 40,
+  "itemLevelProductDiscountTotal": 0,
+  "orderLevelProductDiscountTotal": 0,
+  "itemTaxTotal": 3.4,
+  "adjustment": {
+    "amount": 1.25
+  },
+  "itemTotal": 44.65,
+  "total": 54.65,
+  "shippingDiscounts": [],
+  "itemLevelShippingDiscountTotal": 0,
+  "orderLevelShippingDiscountTotal": 0,
+  "shippingAmount": 0,
+  "shippingAdjustment": {
+    "amount": -1.06
+  },
+  "shippingSubTotal": 0,
+  "shippingTax": 0,
+  "shippingTaxTotal": 0,
+  "shippingTotal": 0,
+  "handlingDiscounts": [],
+  "itemLevelHandlingDiscountTotal": 0,
+  "orderLevelHandlingDiscountTotal": 0,
+  "handlingAmount": 10,
+  "handlingAdjustment": {
+    "amount": -6
+  },
+  "handlingSubTotal": 16,
+  "handlingTax": 0,
+  "handlingTaxTotal": 0,
+  "handlingTotal": 10,
+  "dutyTotal": 0,
+  "feeTotal": 0,
+  "shippingMethodCode": "fedex_FEDEX_GROUND",
+  "shippingMethodName": "FedEx Ground",
+  "isDraft": false,
+  "hasDraft": false,
+  "status": "Pending",
+  "b2BAccount": {
+    "users": [
+      {
+        "emailAddress": "jo_jo@kibo.com",
+        "userName": "jo_jo@kibo.com",
+        "firstName": "Jo",
+        "lastName": "Jo",
+        "localeCode": "en-us",
+        "userId": "c252ab907ff34d69ad2e88aa8805f052",
+        "isLocked": false,
+        "isActive": true,
+        "isRemoved": false,
+        "acceptsMarketing": false,
+        "hasExternalPassword": false
+      },
+      {
+        "emailAddress": "chi_chi@b2b.com",
+        "userName": "chi_chi@b2b.com",
+        "firstName": "Chi",
+        "lastName": "Chi",
+        "localeCode": "en-US",
+        "userId": "e9ce234cbe60456981b5d6bb1b935768",
+        "isLocked": false,
+        "isActive": true,
+        "isRemoved": false,
+        "acceptsMarketing": false,
+        "hasExternalPassword": false
+      }
+    ],
+    "isActive": true,
+    "salesReps": [
+      {
+        "accountId": 1027,
+        "adminUserId": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      },
+      {
+        "accountId": 1027,
+        "adminUserId": "5446fc97f5224e6c9a141ab8150d20c8"
+      }
+    ],
+    "id": 1027,
+    "customerSet": "default",
+    "commerceSummary": {
+      "totalOrderAmount": {
+        "amount": 0
+      },
+      "orderCount": 0,
+      "wishlistCount": 2,
+      "visitsCount": 19
+    },
+    "contacts": [
+      {
+        "accountId": 1027,
+        "types": [
+          {
+            "name": "Shipping",
+            "isPrimary": false
+          },
+          {
+            "name": "Billing",
+            "isPrimary": false
+          }
+        ],
+        "auditInfo": {
+          "updateDate": "2020-12-08T14:06:52.831Z",
+          "createDate": "2020-12-08T14:06:52.831Z",
+          "updateBy": "tbd",
+          "createBy": "tbd"
+        },
+        "id": 1034,
+        "email": "jo_jo@kibo.com",
+        "firstName": "Ya",
+        "middleNameOrInitial": "",
+        "lastNameOrSurname": "Ya",
+        "companyOrOrganization": "",
+        "phoneNumbers": {
+          "home": "6666666666",
+          "mobile": "",
+          "work": ""
+        },
+        "address": {
+          "address1": "350 5th Ave",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "NEW YORK",
+          "stateOrProvince": "NY",
+          "postalOrZipCode": "10118",
+          "countryCode": "US",
+          "addressType": "Residential",
+          "isValidated": false
+        }
+      }
+    ],
+    "companyOrOrganization": "TestCompany",
+    "notes": [],
+    "attributes": [],
+    "segments": [],
+    "taxExempt": false,
+    "auditInfo": {
+      "updateDate": "2020-12-02T20:18:23.721Z",
+      "createDate": "2020-12-02T20:18:23.721Z",
+      "updateBy": "tbd",
+      "createBy": "tbd"
+    },
+    "customerSinceDate": "2020-12-02T20:18:23.721Z",
+    "accountType": "B2B"
+  },
+  "b2bUsers": {
+    "startIndex": 0,
+    "pageSize": 20,
+    "pageCount": 1,
+    "totalCount": 1,
+    "items": [
+      {
+        "emailAddress": "sagar.raut@kibocommerce.com",
+        "userName": "sagar.raut@kibocommerce.com",
+        "firstName": "Sagar",
+        "lastName": "Raut",
+        "localeCode": "en-us",
+        "userId": "17158905153d4ee488d89ce8653ee939",
+        "roles": [
+          {
+            "userId": "17158905153d4ee488d89ce8653ee939",
+            "roleId": 1,
+            "roleName": "Admin",
+            "roleTags": []
+          }
+        ],
+        "isLocked": false,
+        "isActive": true,
+        "isRemoved": false,
+        "acceptsMarketing": false,
+        "hasExternalPassword": false
+      }
+    ]
+  }
+}

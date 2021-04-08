@@ -34,5 +34,8 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
 
         [DataMember(Name = "behaviors")]
         public List<int> Behaviors { get; set; }
+
+        [DataMember(Name = "isSalesRep")]
+        public bool IsSalesRep { get; set; }
     }
 }

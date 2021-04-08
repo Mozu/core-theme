@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "emailAddress": "sagar.raut@kibocommerce.com",
+      "userName": "sagar.raut@kibocommerce.com",
+      "firstName": "Sagar",
+      "lastName": "Raut",
+      "localeCode": "en-us",
+      "userId": "17158905153d4ee488d89ce8653ee939",
+      "roles": [
+        {
+          "userId": "17158905153d4ee488d89ce8653ee939",
+          "roleId": 1,
+          "roleName": "Admin",
+          "roleTags": []
+        }
+      ],
+      "isLocked": false,
+      "isActive": true,
+      "isRemoved": false,
+      "acceptsMarketing": false,
+      "hasExternalPassword": false
+    }
+  ]
+}
