@@ -123,12 +123,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pageType = "my_account";
             var pagePath = "my-account";
 
-            if (account.AccountType == "B2B")
+            bool isB2BAccount = account.AccountType == "B2B";
+
+            if (isB2BAccount)
             {
                pageType = "b2b_account";
                pagePath = "b2b-account";
             }
-            
 
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -160,9 +161,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
 
-            var quoteHistoryTask = _quoteWebApiClient.GetQuotes(0, 5, null);
+            // Only execute this if this is a B2B account
+            var quoteHistoryTask = isB2BAccount ? _quoteWebApiClient.GetQuotes(0, 5, null) : null;
 
-            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask, quoteHistoryTask);
+            if (isB2BAccount)
+                await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask, quoteHistoryTask);
+            else
+                await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, reasonList, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
 
             PageContext.ShippingCountries = shipTask.Result;
             PageContext.BillingCountries  = billTask.Result;
@@ -212,7 +217,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 order["shipments"] = orderShipments.ToJObject();
             });
 
-            var quoteHistory = quoteHistoryTask.Result.ReadAsSync();
+            var quoteHistory = quoteHistoryTask != null ? quoteHistoryTask.Result.ReadAsSync() : new DCs.Quotes.QuoteCollection();
 
             var jAccount = account.ToJObject();
 
