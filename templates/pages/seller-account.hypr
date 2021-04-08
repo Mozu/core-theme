@@ -1,0 +1,25 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/selleraccount" %}
+
+{% preload_json model "customer" %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.yourAccount }}
+    </h1>
+
+      <div class="mz-b2b-pane-switcher">
+             {% include "modules/b2b-account/pane-switcher" %}
+      </div>
+</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

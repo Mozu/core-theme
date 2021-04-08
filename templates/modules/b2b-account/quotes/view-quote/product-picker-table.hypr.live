@@ -1,0 +1,128 @@
+
+<table class="mz-product-picker-table">
+  <thead>
+    <tr>
+      <th>
+        <b>{{labels.b2bProductPicker}}</b>
+      </th>
+      <th>
+        <b>{{labels.b2bQuantity}}</b>
+      </th>
+      <th>
+        <b>{{labels.fulfillmentType}}</b>
+      </th>
+      <th>
+        <b>{{labels.unitPrice}}</b>
+      </th>
+      <th>
+        <b>{{labels.mobileDiscount}}</b>
+      </th>
+      <th>
+        <b>{{labels.returnReceiptItemTotalColumn}}</b>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in model.items %}
+    <tr>
+      <td class="product-name">
+        <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
+        {% if item.product.options %}
+        <dl class="mz-propertylist">
+          {% for option in item.product.options %}
+          <dt>{{ option.name }}</dt>&nbsp;
+          <dd>
+            {% if option.value %}
+            {{ option.value }}
+            {% else %}
+            {{ option.shopperEnteredValue }}
+            {% endif %}
+          </dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+
+        {% if item.product.productUsage == 'Bundle' %}
+        <dl class="mz-propertylist">
+          {% for bundledProduct in item.product.bundledProducts %}
+          <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+          <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+          {% endfor %}
+        </dl>
+        {% endif %}
+        <span class="mz-carttable-item-code">
+          {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
+        </span>
+
+        {% if model.hasPricelist %}
+        {% if item.product.price.priceListEntryMode.toLowerCase() === 'bulk' %}
+        <dl class="mz-propertylist">
+          <div class="product-volume-price-list">
+            <span>
+              <img src="/resources/images/icon-volume-15x15.png"/> {{ labels.volumePriceList }}
+            </span>
+          </div>
+        </dl>
+        {% else %}
+        <dl class="mz-propertylist">
+          <div class="product-no-price-list">
+            <span>
+              <img src="/resources/images/icon-no-15x15.png"/> {{ labels.noPriceList }}
+            </span>
+          </div>
+        </dl>
+        {% endif %}
+        {% endif %}
+        {% if item.productDiscounts.length > 0 %}
+        <dl class="mz-propertylist">
+          {% for product in item.productDiscounts %}
+          <div>
+            <span class="mz-discount-name">{{ product.discount.name }}:</span>
+            <span class="mz-discount-amt"> -{{ product.impact|currency }}</span>
+          </div>
+          {% endfor %}
+        </dl>
+        {% endif %}
+        {% if item.shippingDiscounts.length > 0 %}
+        <dl class="mz-propertylist">
+          {% for product in item.shippingDiscounts %}
+          <div>
+            <span class="mz-discount-name">{{ product.discount.discount.name }}:</span>
+            <span class="mz-discount-amt"> -{{ product.discount.impact|currency }}</span>
+          </div>
+          {% endfor %}
+        </dl>
+        {% endif %}
+      </td>
+      <td>
+          {{ item.quantity }}
+      </td>
+      <td>
+        {% if item.fulfillmentMethod != "Digital"%}
+          {% if item.fulfillmentMethod=="Ship" %}
+              Direct Ship
+          {% else %}
+              Pickup
+          {% endif %}
+        {% if item.fulfillmentMethod=="Pickup" %}
+        <div>Location: <b>{{item.fulfillmentLocationCode}}</b></div>
+        {% endif %}
+        {% else %}
+        <div class='mz-fulfillment-options' style="padding: 0 0 0 40px">
+          <p>{{ labels.digitalDeliveryOnly }}</p>
+        </div>
+        {% endif %}
+      </td>
+      <td>
+          {{ item.unitPrice.extendedAmount | currency }}
+      </td>
+      <td>
+        {{ item.discountTotal | currency}}
+      </td>
+      <td>
+        {{ item.discountedTotal | currency}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,162 @@
+{% extends "back-office/base" %}
+{% block body-content %}
+    <table cellpadding="0" cellspacing="0" border="0" class="b2b-backgroundTable">
+        <tr>
+            <td valign="top">
+                <div class="quote-name"> {{model.name}} </div>
+                <br/>
+                <table class="quote-details-table" width="100%" cellpadding="1" cellspacing="1" width="50%">
+                <thead>
+                    <tr>
+                        <td colspan = 3 bgcolor="#B3B3B3"><font class ="quoteSummary-font" color="#000000"><b>{{labels.quoteDetails}}</b></font></td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td class="quote-account-details">
+                        <table class="quote-account-details-table">
+                            <tr>
+                                <th>{{labels.quoteAccountName}}:</th>
+                                <td>{{account.companyOrOrganization}}</td>
+                            </tr>
+                                <tr>
+                                <th>{{labels.quoteNumber}}:</th>
+                                <td>{{model.number}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteName}}:</th>
+                                <td>{{model.name}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteCreatedDate}}:</th>
+                                <td>{{model.auditInfo.createDate|date("m/d/y")}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteCreatedBy}}:</th>
+                                {% for item in userAccount.items %}
+                                    {% if item.userId == model.userId  %}
+                                        <td>{{item.firstName}} {{item.lastName}}</td>
+                                    {% endif %}
+                                {% endfor %}
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>{{labels.quoteExpirationDate}}:</th>
+                                <td>{{model.expirationDate|date("m/d/y")}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    {% if isShippable %}
+                    <td>
+                        <table>
+                            <tr>
+                                <td><b>{{labels.quoteShippingAddress}}:</b></td>
+                            </tr>
+                            <tr>
+                                <td class = "quote-shipping-child-table">
+                                    <span>{{model.fulfillmentInfo.fulfillmentContact.firstName}} {{model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname}}  </span></br>
+                                    <span> {{model.fulfillmentInfo.fulfillmentContact.address.address1}} </span></br>
+                                    <span>{{model.fulfillmentInfo.fulfillmentContact.address.cityOrTown}} {{model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince}} {{model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode}} </span></br>
+                                    <span>{{labels.quoteHomePhoneNumber}}: {{model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home}} </span></br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class = "quote-shipping-method">
+                        <table>
+                            <tr>
+                                <td><b>{{labels.shippingMethod}}:</b></td>
+                            </tr>
+                            <tr>
+                                <td class = "quote-shipping-child-table">{{model.fulfillmentInfo.shippingMethodName}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    {% endif %}
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <table class ="quote-details-table" width="100%" cellpadding="1" cellspacing="1">
+                <thead>
+                    <tr>
+                        <td colspan = 6 bgcolor="#B3B3B3"><font class ="quoteSummary-font" color="#000000"><b>{{labels.quoteDetails}}</b></font></td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><font><b>{{labels.b2bProductPicker}}</b></font></td>
+                    <td><font><b>{{labels.b2bQuantity}}</b></font></td>
+                    <td><font><b>{{labels.fulfillmentType}}</b></font></td>
+                    <td><font><b>{{labels.unitPrice}}</b></font></td>
+                    <td><font><b>{{labels.quoteDiscount}}</b></font></td>
+                    <td><font><b>{{labels.total}}</b></font></td>
+                </tr>
+                    
+                {% for item in model.items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.fulfillmentMethod }}</td>
+                    <td>{{ item.unitPrice.extendedAmount|currency  }}</td>
+                    <td>{{ item.discountTotal|currency  }}</td>
+                    <td>{{ item.discountedTotal|currency  }}</td>
+                </tr>
+                {% endfor %}
+                <tr class= "quote-shipping-summary">
+                        <td colspan=4>
+                        </td>
+                        <td>
+                            {% if model.adjustment and model.adjustment.amount != 0 %}
+                            <p>{{labels.quoteAdjustments}}: </p>
+                            {% endif %}
+                            <p>{{labels.itemTotal}}: </p>
+                            <p>{{labels.shippingInformation}}: </p>
+                            <p>{{labels.handling}}: </p>
+                            <p>{{labels.taxAndDuty}}: </p>
+                            <p  class ="quote-total-summary-font">{{labels.total}}: </p>
+                        </td>
+                        <td>
+                            {% if model.adjustment and model.adjustment.amount != 0 %}
+                            <p><b>{{model.adjustment.amount |currency }}</b> </p>
+                            {% endif %}
+                                <p>
+                                <b> 
+                                    {% filter currency %} 
+                                        {% if model.adjustment and model.adjustment.amount != 0 %}
+                                            {{ model.subTotal|add:model.adjustment.amount|subtract:model.orderLevelProductDiscountTotal|subtract:model.itemLevelProductDiscountTotal }} 
+                                        {% else %}
+                                            {{ model.subTotal|subtract:model.orderLevelProductDiscountTotal|subtract:model.itemLevelProductDiscountTotal }}
+                                        {% endif %}
+                                    {% endfilter %} 
+                                </b> 
+                            </p>
+                            <p>
+                                <b> 
+                                    {% filter currency %} 
+                                        {% if model.shippingAdjustment  and model.shippingAdjustment.amount != 0  %}
+                                            {{ model.shippingSubTotal|add:model.shippingAdjustment.amount|subtract:model.orderLevelShippingDiscountTotal|subtract:model.itemLevelShippingDiscountTotal }} 
+                                        {% else %}
+                                            {{ model.shippingSubTotal|subtract:model.orderLevelShippingDiscountTotal|subtract:model.itemLevelShippingDiscountTotal }}
+                                        {% endif %}
+                                    {% endfilter %} 
+                                </b> 
+                            </p>
+                            <p>
+                                <b> 
+                                    {% filter currency %} 
+                                        {% if model.handlingAdjustment and model.handlingAdjustment.amount != 0 %}
+                                            {{ model.handlingSubTotal|add:model.handlingAdjustment.amount|subtract:model.orderLevelHandlingDiscountTotal|subtract:model.itemLevelHandlingDiscountTotal }} 
+                                        {% else %}
+                                            {{ model.handlingSubTotal|subtract:model.orderLevelHandlingDiscountTotal|subtract:model.itemLevelHandlingDiscountTotal }}
+                                        {% endif %}
+                                    {% endfilter %} 
+                                </b> 
+                            </p>
+                            <p><b> {% filter currency %} {{  model.itemTaxTotal|add:model.shippingTaxTotal|add:model.handlingTaxTotal|add:model.dutyTotal }} {% endfilter %}</b> </p>
+                            <p><b> {{model.total |currency }}</b> </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+{% endblock body-content %}

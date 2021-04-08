@@ -1,0 +1,7 @@
+{% if tree_list.id %}
+    {% include "modules/b2b-account/account-hierarchy/tree" with tree=tree_list %}
+{% else %}
+    {% for tree in tree_list %}
+        {% include "modules/b2b-account/account-hierarchy/tree" with tree=tree %}
+    {% endfor %}
+{% endif %}

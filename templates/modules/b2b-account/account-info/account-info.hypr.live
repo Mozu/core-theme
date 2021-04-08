@@ -2,10 +2,14 @@
     {% include "modules/common/message-bar" with model=model.messages %}
 </div>
 <div class="mz-b2b-accountsettings mz-l-stack-section" style="clear:none">
+{% if model.viewB2BAccount == false %}
 <h2 class="mz-l-stack-sectiontitle">{{ labels.b2bAccountWelcome|string_format(model.firstName)|safe }}</h2>
+{% endif %}
 <h3>{{ labels.b2bAccountInfo }}</h3>
 <span class="mz-accountsettings-label mz-account-settings-label-name">B2B Account ID</span>
 <div>{{ model.id }}</div>
+
+{% if model.viewB2BAccount == false %}
 <h3 style="font-size: 16px">User Info{% if not model.editing %}<a href class="mz-b2b-link-edit-accountsettings" data-mz-action="startEdit">{{ labels.edit }}</a>{% endif %}</h3>
 <span class="mz-accountsettings-label mz-account-settings-label-name">{{ labels.firstName }} / {{ labels.lastName }}</span>
 {% if model.editing %}
@@ -38,4 +42,5 @@
 <div class="mz-l-stack-section mz-b2b-passwordsection" id="password-section">
     {% include "modules/b2b-account/account-info/b2b-account-password" with editing=model.editingPassword %}
 </div>
+{% endif %}
 </div>

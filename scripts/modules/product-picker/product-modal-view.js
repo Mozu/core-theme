@@ -116,7 +116,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             // handle preset selects, etc
             var me = this;
             var productModel = this.model;
-            var pickerItemQuantity = window.views.currentPane.model.get('pickerItemQuantity');
+            var pickerItemQuantity = window.views ? window.views.currentPane.model.get('pickerItemQuantity') : this.model.get('quantity');
             this.model.set('quantity', pickerItemQuantity);
 
               me.$('[data-mz-product-option]').each(function () {
@@ -181,7 +181,9 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         loadAddProductView: function (product) {
             var self = this;
-
+            if (self.model.messages) {
+                self.model.messages.reset();
+            }
             var addProductView = new AddProductView({
                 el: $(self.modalContentEl()),
                 model: product,

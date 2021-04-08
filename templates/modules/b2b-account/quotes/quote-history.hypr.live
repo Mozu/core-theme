@@ -1,0 +1,168 @@
+﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.quoteHistory}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        <table class="mz-quote-history">
+          <tr>
+            <td>
+              <div class="quote-history-viewer">
+                <div class="quote-histories">
+                  {% for history in model.auditHistory|dictsortreversed("createDate") %}
+                  <div class="quote-history">
+                      <p>
+                        <b>
+                          Updated By: {{history.auditInfo.createByName || history.auditInfo.createBy}} {% if history.auditInfo.createByEmail %}({{history.auditInfo.createByEmail}}) {% endif %} -
+                          {{ history.auditInfo.createDate|date("m/d/Y") }}
+                        </b>
+                      </p>                        
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>
+                                  <b>{{labels.fieldChanged}}</b>
+                                </th>
+                                <th>
+                                  <b>{{labels.changedFrom}}</b>
+                                </th>
+                                <th></th>
+                                <th>
+                                  <b>{{labels.changedTo}}</b>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for change in history.changes %}
+                              {% set changePath=change.path|split("#") %}
+
+                              {% if changePath and changePath[0]!="FulfillmentInfo" %}
+
+                              {% if change.path %}
+                              <tr class="space-before">
+                                    <td>
+                                      {% if change.path != 'CouponCodes'%}
+                                      {% if change.type =='Add' %} {{labels.added}} {% elif change.type =='Remove' %} {{labels.removed}} {% else %} {{labels.updated}} {% endif %}
+
+                                      {{ labels.item }} #{{changePath[1]}}
+                                      {% set name=change.fields|findwhere("name", "Name") %}
+                                      {% set productCode=change.fields|findwhere("name", "ProductCode") %}
+                                      {% set variationProductCode=change.fields|findwhere("name", "VariationProductCode") %}
+
+                                      {{name.newValue || name.oldValue}}
+
+                                      ({% if variationProductCode.newValue or variationProductCode.oldValue %}{{variationProductCode.newValue || variationProductCode.oldValue}}{% else %}{{productCode.newValue || productCode.oldValue}}
+                                      {% endif %})
+                                      {% endif %}
+                                    </td>
+                                  </tr>
+                              {% endif %}
+
+                              {% for field in change.fields %}
+                              {% if change.path and (field.name=='ProductCode' or field.name=='VariationProductCode' or field.name=='Name')  %}
+                              {% else %}
+                              <tr>
+                                  <td>
+                                    {% if change.path == 'CouponCodes'%}
+                                    {% if change.type =='Add' %} {{labels.added}} {% else %} {{labels.removed}} {% endif %} {{labels.couponCode}}
+                                    {% else %}
+                                    {{field.name}}
+                                    {% endif %}
+
+                                  </td>
+                                <td>
+                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.oldValue %}
+                                  </td>
+                                <td class="space"></td>
+                                  <td>
+                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.newValue %}
+                                  </td>
+                                </tr>
+                              {% endif %}
+                              {% endfor %}
+                              {% else %}
+
+                              {% if change.path %}
+                              <tr class="space-before">
+                                {% set firstName=change.fields|findwhere("name", "FirstName") %}
+                                {% set lastNameOrSurname=change.fields|findwhere("name", "LastNameOrSurname") %}
+                                {% set companyOrOrganization=change.fields|findwhere("name", "CompanyOrOrganization") %}
+                                {% set address1=change.fields|findwhere("name", "Address1") %}
+                                {% set address2=change.fields|findwhere("name", "Address2") %}
+                                {% set address3=change.fields|findwhere("name", "Address3") %}
+                                {% set address4=change.fields|findwhere("name", "Address4") %}
+                                {% set cityOrTown=change.fields|findwhere("name", "CityOrTown") %}
+                                {% set stateOrProvince=change.fields|findwhere("name", "StateOrProvince") %}
+                                {% set postalOrZipCode=change.fields|findwhere("name", "PostalOrZipCode") %}
+                                {% set countryCode=change.fields|findwhere("name", "CountryCode") %}
+                                {% set home=change.fields|findwhere("name", "Home") %}
+                                {% set work=change.fields|findwhere("name", "Work") %}
+                                {% set mobile=change.fields|findwhere("name", "Mobile") %}
+
+                                <td>
+                                  {% if change.type =='Add' %} {{labels.added}} {% elif change.type =='Remove' %} {{labels.removed}} {% else %} {{labels.updated}} {% endif %}
+                                  {{ changePath[0] }}
+                                </td>
+                                <td class="address">
+                                  <span>
+                                    {% if firstName and firstName.oldValue %}{{firstName.oldValue}} {% endif %}
+                                    {% if lastNameOrSurname and lastNameOrSurname.oldValue %} {{lastNameOrSurname.oldValue}} {% endif %}
+                                  </span>
+                                  <span>{% if address1 and address1.oldValue %}{{address1.oldValue}}{% endif %}</span>
+                                  <span>{% if address2 and address2.oldValue %}{{address2.oldValue}}{% endif %}</span>
+                                  <span>{% if address3 and address3.oldValue %}{{address3.oldValue}}{% endif %}</span>
+                                  <span>{% if address4 and address4.oldValue %}{{address4.oldValue}}{% endif %}</span>
+                                  <span>
+                                    {% if cityOrTown and cityOrTown.oldValue %}{{cityOrTown.oldValue}}, {% endif %}
+                                    {% if stateOrProvince and stateOrProvince.oldValue %}{{stateOrProvince.oldValue}}, {% endif %}
+                                    {% if countryCode and countryCode.oldValue %}{{countryCode.oldValue}}, {% endif %}
+                                    {% if postalOrZipCode and postalOrZipCode.oldValue %}{{postalOrZipCode.oldValue}} {% endif %}
+                                  </span>
+                                  <span>{% if home and home.oldValue %}{{home.oldValue}}{% endif %}</span>
+                                  <span>{% if work and work.oldValue %}{{work.oldValue}}{% endif %}</span>
+                                  <span>{% if mobile and mobile.oldValue %}{{mobile.oldValue}}{% endif %}</span>
+                                </td>
+                                <td class="space"></td>
+                                <td class="address">
+                                  <span>
+                                    {% if firstName and firstName.newValue %}{{firstName.newValue}} {% endif %}
+                                    {% if lastNameOrSurname and lastNameOrSurname.newValue %} {{lastNameOrSurname.newValue}} {% endif %}
+                                  </span>
+                                  <span>{% if address1 and address1.newValue %}{{address1.newValue}}{% endif %}</span>
+                                  <span>{% if address2 and address2.newValue %}{{address2.newValue}}{% endif %}</span>
+                                  <span>{% if address3 and address3.newValue %}{{address3.newValue}}{% endif %}</span>
+                                  <span>{% if address4 and address4.newValue %}{{address4.newValue}}{% endif %}</span>
+                                  <span>
+                                    {% if cityOrTown and cityOrTown.newValue %}{{cityOrTown.newValue}}, {% endif %}
+                                    {% if stateOrProvince and stateOrProvince.newValue %}{{stateOrProvince.newValue}}, {% endif %}
+                                    {% if countryCode and countryCode.newValue %}{{countryCode.newValue}}, {% endif %}
+                                    {% if postalOrZipCode and postalOrZipCode.newValue %}{{postalOrZipCode.newValue}} {% endif %}
+                                  </span>
+                                  <span>{% if home and home.newValue %}{{home.newValue}}{% endif %}</span>
+                                  <span>{% if work and work.newValue %}{{work.newValue}}{% endif %}</span>
+                                  <span>{% if mobile and mobile.newValue %}{{mobile.newValue}}{% endif %}</span>
+                                </td>
+                              </tr>
+                              {% endif %}
+
+                              {% endif %}
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                  {% endfor %}      
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

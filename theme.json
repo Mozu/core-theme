@@ -207,6 +207,24 @@
       "title": "Password Reset"
     },
     {
+      "id": "b2baccount.created",
+      "properties": {},
+      "template": "email/b2b-account-created",
+      "title": "B2B Account Created"
+    },
+    {
+      "id": "b2baccount.accountinactive",
+      "properties": {},
+      "template": "email/b2b-account-inactive",
+      "title": "B2B Account Inactive"
+    },
+    {
+      "id": "b2baccount.accountdenied",
+      "properties": {},
+      "template": "email/b2b-account-denied",
+      "title": "B2B Account Denied"
+    },
+    {
       "id": "shipment.backordered",
       "properties": {},
       "template": "email/backorder",
@@ -271,6 +289,30 @@
       "properties": {},
       "template": "email/curbside-intransit",
       "title": "Customer In Transit"
+    },
+    {
+      "id": "quote.summary",
+      "properties": {},
+      "template": "email/quote-summary",
+      "title": "Quote Summary"
+    },
+    {
+      "id": "quote.inreview",
+      "properties": {},
+      "template": "email/quote-in-review",
+      "title": "Quote In Review"
+    },
+    {
+      "id": "quote.readyforcheckout",
+      "properties": {},
+      "template": "email/quote-ready-for-checkout",
+      "title": "Quote Ready for Checkout"
+    },
+    {
+      "id": "quote.expired",
+      "properties": {},
+      "template": "email/quote-expired",
+      "title": "Quote Expired"
     }
   ],
   "backOfficeTemplates": [
@@ -388,6 +430,13 @@
       "id": "curbside-partial-pickup-ready",
       "template": "back-office/curbside-partial-pickup-ready",
       "title": "Curbside Partial Pickup Ready",
+      "userCreatable": false
+    },
+    {
+      "entityType": "quote.summary",
+      "id": "quote.summary",
+      "template": "back-office/quote-summary",
+      "title": "Quote Summary",
       "userCreatable": false
     }
   ],
@@ -669,9 +718,30 @@
     },
     {
       "entityType": "customer",
+      "id": "seller_account",
+      "template": "seller-account",
+      "title": "Seller Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
       "id": "b2b_account",
       "template": "b2b-account",
       "title": "B2B Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "view_b2baccount",
+      "template": "view-b2baccount",
+      "title": "View B2B Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "b2b_account_request",
+      "template": "b2b-account-request",
+      "title": "B2B Account Request",
       "userCreatable": false
     },
     {

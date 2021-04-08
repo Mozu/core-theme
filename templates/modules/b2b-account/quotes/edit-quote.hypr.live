@@ -1,0 +1,55 @@
+﻿<div>
+<h2 class="quote-name">
+  {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
+  <button class="mz-button" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
+</h2>
+<div class="modal fade" id="mz-location-selector">
+  {% include "modules/cart/cart-location-select" %}
+</div>
+<ul class="mz-orderlist edit-quote-form">
+  <li>
+    {% include "modules/b2b-account/quotes/quote-error-message-bar" with model=model %}
+  </li>
+  <li>
+    {% include "modules/b2b-account/quotes/edit-quote/quote-details" with model=model %}
+  </li>
+  <li>
+    {% include "modules/b2b-account/quotes/edit-quote/quote-summary" with model=model %}
+  </li>
+  {% if model.isShippable %}
+  <li>
+    {% include "modules/b2b-account/quotes/edit-quote/quote-shipping" with model=model %}
+  </li>
+  {% endif %}
+  <li>
+    {% include "modules/b2b-account/quotes/edit-quote/quote-comments" with model=model %}
+  </li>
+  <li>
+    {% include "modules/b2b-account/quotes/quote-history" with model=model %}
+  </li>
+  <li>
+    <div class="mz-quote-actions">
+      {% if model.status=="Pending" %}
+        <button class="mz-button" data-mz-action="submitForApproval"  >{{labels.submitForApproval}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardChanges}}</button>
+      
+      {% elif model.status=="InReview" %}
+        <button class="mz-button" data-mz-action="approveQuote" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
+        <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitChanges}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
+
+      {% elif model.status=="ReadyForCheckout" %}
+      {% if model.isUserPurchaser or model.isUserAdmin %}
+      <form method="post" action="/checkout/quoteOrder/{{model.id}}" id="quoteCheckoutform">
+      <button class="mz-button" {% if model.hasDraft ==true %} disabled {% endif %} >{{labels.continueToCheckout}}</button>
+      </form>
+      {% endif %}
+        <button class="mz-button" data-mz-action="submitForApproval" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitForApproval}}</button>
+        <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
+      
+      {% else %}      
+      {% endif %}
+    </div>
+  </li>
+</ul>
+</div>

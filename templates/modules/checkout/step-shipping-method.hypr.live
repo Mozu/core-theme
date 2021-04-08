@@ -16,7 +16,11 @@
                 {% endfor %}
                 <span class="mz-validationmessage" data-mz-validationmessage-for="shippingMethodCode"></span>
             {% else %}
+              {% if model.originalQuoteId %}
+                <p>{{ model.shippingMethodName }}</p>
+              {% else %}
                 <p>{{ labels.noShippingMethods }}</p>
+              {% endif %}
             {% endif %}
         {% else %}
             {{ labels.noFulfillmentInfoRequired }}

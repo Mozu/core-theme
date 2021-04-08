@@ -19,3 +19,5 @@ mozu.config.json
 # WebStorm project files
 .idea/
 
+# Visual Studio Code
+/.vs

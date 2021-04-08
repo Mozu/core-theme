@@ -1,12 +1,15 @@
- <h3 class="mz-formstep-header mz-checkoutform-header">
-        {{ labels.shippingInformation }}
-        {% if model.requiresFulfillmentInfo && model.hasRequiredBehavior %}
-        <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
-        {% endif %}
-        {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
-          <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
-        {% endif %}
-    </h3>
+<h3 class="mz-formstep-header mz-checkoutform-header">
+  {{ labels.shippingInformation }}
+  {% if model.originalQuoteId=="" %}
+    {% if model.requiresFulfillmentInfo && model.hasRequiredBehavior %}
+          <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
+          {% endif %}
+          {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
+            <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
+    {% endif %}
+  {% endif %}
+</h3>
+
     <div class="mz-formstep-body">
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
         {% endif %}

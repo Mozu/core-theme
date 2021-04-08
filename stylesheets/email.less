@@ -276,7 +276,48 @@ dl.mz-orderheader {
     margin: 0;
     padding-bottom: 0.4em;
   }
+
+  .mz-b2b-email-header {
+    display: flex;
+    justify-content: center;
+    height: 5rem;  
   
+    .header-logo {
+      flex-basis: 20%;
+
+      img {
+        width: 80%;
+        margin: 1rem;
+      }
+    }
+
+    .header-text {
+      color: black;
+      background-color: #f7f7f7;
+      flex-basis: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      
+      .subject {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-left: 1rem;
+      }
+  
+      .store-name {
+        font-size: 1.5rem;
+        margin-left: 1rem;
+      }
+    }
+  }
+  
+  .mz-b2b-email-body {
+    font-size: 1rem;
+    line-height: 1rem;
+    color: black;
+  }
+
   .mz-store-details {
     background-color: #f7f7f7;
     width: 100%;
@@ -403,5 +444,71 @@ dl.mz-orderheader {
   text-align: center !important;
   
 }
+
+.quote-name {
+  color: #3A3A3A;
+  font-family: Roboto;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.quote-details-table {
+  background-color: #FFFFFF;
+  border: 1px solid #DCDCDC;
+}
+
+.quote-account-details {
+  border-right: 2px solid #eeeeef;
+}
+
+.quote-account-details-table {
+  tr {
+    line-height: 2px;
+  }
+
+  th {
+    text-align: right;
+  }
+}
+.quote-shipping-summary {
+  border-top: 2px solid #eeeeef;
+}
+
+.quoteSummary-font {
+  font-size: 15px;
+}
+.quote-shipping-child-table {
+  padding-top: 0px !important;
+}
+
+.quote-total-summary-font {
+  font-size: 17px;
+}
+
+@media screen and (max-width: 640px) {
+
+  .quote-account-details-table tr {
+    line-height: 15px !important; 
+  }
+
+  .mz-b2b-email-header {
+    .header-logo {
+      img {
+        margin: 2rem 0.5rem;
+      }
+    }
+
+    .header-text {
+      .subject {
+        font-size: 1.5rem;
+      }
   
+      .store-name {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
   

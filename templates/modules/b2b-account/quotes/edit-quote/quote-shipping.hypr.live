@@ -1,0 +1,66 @@
+﻿<div class="mz-b2b-orders-grid">
+  <div class="is-loading"></div>
+  <div class="mz-mozuDataGrid mz-grid mz-quote-grid">
+    <div data-mz-datagrid="" class="mz-grid-table">
+      <div class="mz-grid-header mz-quote-grid-header">
+        <div class="mz-grid-row">
+          <div class="mz-grid-cols mz-cols-">
+            <h3>{{labels.shippingInformation}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="mz-grid-body">
+        <table class="mz-quote-shipping">
+          <tr>
+            <td>
+              <div>
+                <b>{{labels.chooseAddress}}</b>
+              </div>
+              
+              <select id="selectShippingAddress" class="mz-l-formfieldgroup-halfsize address-dropdown">
+                <option value="-1">{{labels.shippingDestinationSelect}}</option>
+                {% for contact in model.allContacts %}
+                  <option value="{{contact.id}}"  
+                    {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact and model.fulfillmentInfo.fulfillmentContact.id == contact.id %} selected {% endif %} >
+                    {% include "modules/common/address-list" with model=contact %}
+                  </option>
+                {% endfor %}
+              </select>
+              {% if model.fulfillmentInfo and model.fulfillmentInfo.fulfillmentContact %}
+              <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
+                  <span>{{model.fulfillmentInfo.fulfillmentContact.firstName}} {{model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname}}</span>
+
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address1 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address1}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address2}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address3}}</span>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<span>{{model.fulfillmentInfo.fulfillmentContact.address.address4}}</span>{% endif %}
+                
+                <span>
+                  {{model.fulfillmentInfo.fulfillmentContact.address.cityOrTown}}, {{model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince}}, {{model.fulfillmentInfo.fulfillmentContact.address.countryCode}} {{model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode}}
+                </span>
+                <span>{{labels.phone}}: {{model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home || model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile || model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work}}</span>
+              </div>
+              {% endif %}
+              {% if model.isUserAdmin || model.isSalesRep %}
+              <div>
+              <button class="mz-button mz-contact-save create-new-address" data-mz-action="addNewAddress" data-backdrop="true">{{labels.createNewAddress}}</button>
+              </div>
+              {% endif %}
+            </td>
+            <td>
+              <div>
+                <b>{{labels.shippingMethod}}</b>
+              </div>
+              <select class="mz-l-formfieldgroup-halfsize" id="selectShippingMethod"  data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">              
+               <option value="-1">{{labels.selectShippingMethod}}</option>
+                {% for method in model.shippingMethods %}
+                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.selectedShippingMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
