@@ -345,6 +345,9 @@
                 this.isLoading(true);
                 var order = this.getOrder();
                 if (order) {
+                    // Don't update fulfillment info if order is created from a quote.
+                    if (order.get('originalQuoteId')) return false;
+
                     order.apiModel.update({ fulfillmentInfo: me.toJSON() })
                         .then(function (o) {
                             var billingInfo = me.parent.get('billingInfo');
