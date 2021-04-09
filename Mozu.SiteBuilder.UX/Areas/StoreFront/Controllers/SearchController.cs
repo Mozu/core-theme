@@ -186,6 +186,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             pc.Init(true, this.PageContext.Search);
             pc.UrlBase = "/search?query=" + _.query;
+                        
+            if (!String.IsNullOrEmpty(pc.SearchRedirect))
+            {            
+                return Redirect(pc.SearchRedirect);
+            }
 
             var searchPageType = pc.TotalCount > 0 ? "search-results" : "no-search-results";
 
@@ -199,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 },
             };
 
-            return Ok(View(searchPageType, pc));
+            return Ok(View(searchPageType, pc));            
         }
 
         SolrDebugActionResult CreateDebugResponse (string debugTxt)

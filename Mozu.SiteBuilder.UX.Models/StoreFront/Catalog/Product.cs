@@ -341,6 +341,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
          [DataMember(EmitDefaultValue = false)]
         public virtual List<Facet> Facets { get; set; }
+
+        public string SearchRedirect { get; set; }
     }
 
 
