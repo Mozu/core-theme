@@ -60,22 +60,25 @@
                     </dl>
                 </li>
             {% endif %}
-            {% if model.shopperNotes.deliveryInstructions %}
-            <li class="mz-orderlisting-details-item">
-                <dl class="mz-propertylist mz-propertylist-order">
-                    <dt>{{ labels.deliveryInstructions}}</dt>
-                    <dd>{{ model.shopperNotes.deliveryInstructions }}</dd>
-                </dl>
-            </li>
-            {% endif %}
-            {% with model.items|first as firstitem %}
-                {% if firstitem.expectedDeliveryDate %}
-                <li class="mz-orderlisting-details-item">
-                    <dl class="mz-propertylist mz-propertylist-order">
-                        <dt>{{ labels.expectedDeliveryDate }}</dt>
-                        <dd>{{ firstitem.expectedDeliveryDate|date("F j, Y") }}</dd>
-                    </dl>
-                </li>
+            
+            {% with model.items|findwhere('fulfillmentMethod', 'Delivery') as deliveryItem %}
+                {% if deliveryItem %}
+                    {% if model.shopperNotes.deliveryInstructions %}
+                    <li class="mz-orderlisting-details-item">
+                        <dl class="mz-propertylist mz-propertylist-order">
+                            <dt>{{ labels.deliveryInstructions}}</dt>
+                            <dd>{{ model.shopperNotes.deliveryInstructions }}</dd>
+                        </dl>
+                    </li>
+                    {% endif %}
+                    {% if deliveryItem.expectedDeliveryDate %}
+                    <li class="mz-orderlisting-details-item">
+                        <dl class="mz-propertylist mz-propertylist-order">
+                            <dt>{{ labels.expectedDeliveryDate }}</dt>
+                            <dd>{{ deliveryItem.expectedDeliveryDate|date("F j, Y") }}</dd>
+                        </dl>
+                    </li>
+                    {% endif %}
                 {% endif %}
             {% endwith %}
         </ul>
