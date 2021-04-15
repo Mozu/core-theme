@@ -1,6 +1,7 @@
 ﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
     <div class="mz-orderlisting-detail">
     {% block order-details %}
+    <div class="mz-orderlisting-detail">
         <ul class="mz-orderlisting-details-list">
             <li class="mz-orderlisting-details-item">
                 <dl class="mz-propertylist mz-propertylist-order">
@@ -60,17 +61,8 @@
                     </dl>
                 </li>
             {% endif %}
-            
             {% with model.items|findwhere('fulfillmentMethod', 'Delivery') as deliveryItem %}
                 {% if deliveryItem %}
-                    {% if model.shopperNotes.deliveryInstructions %}
-                    <li class="mz-orderlisting-details-item">
-                        <dl class="mz-propertylist mz-propertylist-order">
-                            <dt>{{ labels.deliveryInstructions}}</dt>
-                            <dd>{{ model.shopperNotes.deliveryInstructions }}</dd>
-                        </dl>
-                    </li>
-                    {% endif %}
                     {% if deliveryItem.expectedDeliveryDate %}
                     <li class="mz-orderlisting-details-item">
                         <dl class="mz-propertylist mz-propertylist-order">
@@ -82,6 +74,26 @@
                 {% endif %}
             {% endwith %}
         </ul>
+    </div>
+    <div class="mz-orderlisting-detail">
+    {% block deliveryInfo %}
+        {% with model.items|findwhere('fulfillmentMethod', 'Delivery') as deliveryItem %}
+                {% if deliveryItem %}
+                    {% if model.shopperNotes.deliveryInstructions %}
+                    <ul class="mz-orderlisting-details-list">
+                        <li class="mz-orderlisting-details-item">
+                            <dl class="mz-propertylist mz-propertylist-order">
+                                <dt>{{ labels.deliveryInstructions}}</dt>
+                                <dd>{{ model.shopperNotes.deliveryInstructions }}</dd>
+                            </dl>
+                        </li>
+                    </ul>
+                    {% endif %}
+                {% endif %}
+        {% endwith %}
+    {% endblock deliveryInfo %}
+    </div>
+
     {% block attributes %}
         {% for attribute in model.attributes %}
         {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
