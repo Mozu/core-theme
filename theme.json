@@ -313,6 +313,18 @@
       "properties": {},
       "template": "email/quote-expired",
       "title": "Quote Expired"
+    },
+    {
+      "id": "shipment.deliverydateupdated",
+      "properties": {},
+      "template": "email/delivery-date-updated",
+      "title": "Delivery Date Updated"
+    },
+    {
+      "id": "shipment.readyfordelivery",
+      "properties": {},
+      "template": "email/ready-for-delivery",
+      "title": "Ready For Delivery"
     }
   ],
   "backOfficeTemplates": [
