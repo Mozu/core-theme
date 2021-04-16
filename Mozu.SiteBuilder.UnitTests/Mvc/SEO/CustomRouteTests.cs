@@ -586,20 +586,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var collection =  ((ICustomRouteCollectionRepository) repo).GetRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
         }
-
-        class DummyStorefrontCache : SiteBuilder.Mvc.Caching.IStorefrontCache
-        {
-            public static DummyStorefrontCache Default = new DummyStorefrontCache();
-            public T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
-            {
-                return default(T);
-            }
-
-            public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null, IList<string> filePaths= null)
-            {
-
-            }
-        }
+        
         static ServiceClientResponse<T> Response<T>(T obj)
         {
             return new ServiceClientResponse<T>

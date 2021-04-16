@@ -28,8 +28,8 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return ret;
             }
             ret = await value(ret).ConfigureAwait(false);
-            Func<object, object> updateFn = x => value(ret).Result;
-            cache.Set(key, ret, scope, cacheType, updateFn);
+            
+            cache.Set(key, ret, scope, cacheType);
             return ret;
         }
 
@@ -43,8 +43,8 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return ret;
             }
             ret = await value().ConfigureAwait(false);
-            Func<object, object> updateFn = x => value().Result;
-            cache.Set(key, ret, scope, cacheType, updateFn);
+     
+            cache.Set(key, ret, scope, cacheType);
             return ret;
         }
 

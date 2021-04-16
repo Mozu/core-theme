@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
             return default(T);
         }
         
-        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null, IList<string> filePaths = null)
+        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
         {
             var inKey = new ScopedName{key = key, scope = scope};
             _cache[inKey] = value;

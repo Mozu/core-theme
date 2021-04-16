@@ -28,17 +28,5 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
 
        
     }
-    public class AdminStorefrontCache : IStorefrontCache
-    {
-        T IStorefrontCache.Get<T>(string key, CacheScope scope, StorefrontCacheTypes cacheType)
-        {
-            return default(T);
-        }
-
-        void IStorefrontCache.Set(string key, object value, CacheScope scope, StorefrontCacheTypes cacheType, Func<object, object> updateCallback, IList<string> filePaths)
-        {
-           
-
-        }
-    }
+   
 }

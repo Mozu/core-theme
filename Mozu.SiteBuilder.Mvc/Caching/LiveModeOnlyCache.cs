@@ -29,10 +29,10 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             return  _backingCache.Get<T>(key, scope, cacheType);
         }
 
-        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback = null, IList<string> filePaths = null)
+        public void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default)
         {
             if (CachingIsDisabled(_pageContext, _apiContext)) return; // don't want to corrupt the cache with 'pending' stuff from a consumer.
-            _backingCache.Set(key, value, scope, cacheType, updateCallback);
+            _backingCache.Set(key, value, scope, cacheType);
         }
 
         private static bool CachingIsDisabled(IEditableContext pageCtx, IApiContext apiCtx )
