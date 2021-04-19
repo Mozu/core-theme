@@ -27,7 +27,7 @@
               <b>{{labels.quoteName}}:</b>
             </dt>
             <dd>
-            {% if model.isEditQuoteName==true %}
+            {% if model.isEditQuoteName==true and model.status != "Expired" %}
                 <input type="text" id="quoteName" />
                 <span>
                     <button class="mz-button mz-button" data-mz-action="updateQuoteName">{{labels.save}}</button> &nbsp;&nbsp;&nbsp;
@@ -36,7 +36,9 @@
             {% else %}
                 {{model.name}}
                 <span>
-                    <img src="/resources/images/edit.png" data-mz-action="startEditingQuoteName" />
+                  {% if model.status != "Expired" %}
+                  <img src="/resources/images/edit.png" data-mz-action="startEditingQuoteName" />
+                  {% endif %}
                 </span>
             {% endif %}
 
@@ -53,7 +55,7 @@
               <b>{{labels.createdBy}}:</b>
             </dt>
             <dd>
-              {% if model.isEditSubmittedBy==true and model.isSalesRep==true and model.status=="Pending" %}
+              {% if model.isEditSubmittedBy==true and model.isSalesRep==true and model.status=="Pending" and model.status!="Expired" %}
               <select id="submittedBy">
                 {% for user in model.b2bUsers %}
                   <option value="{{user.userId}}" {% if user.userId==model.userId %} selected {% endif %}>{{user.firstName}} {{user.lastName}}</option>
@@ -65,7 +67,7 @@
               </span>
               {% else %}
               {{ model.fullName }}
-              {% if model.isSalesRep==true and model.status=="Pending" %}
+              {% if model.isSalesRep==true and model.status=="Pending" and model.status!="Expired" %}
               <span>
                 <img src="/resources/images/edit.png" data-mz-action="startEditingSubmittedBy" />
               </span>

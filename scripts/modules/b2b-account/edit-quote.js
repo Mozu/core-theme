@@ -406,21 +406,31 @@ define([
                 expirationDate = new Date(expirationDate);
 
                 if (expirationDate > today) {
+                    self.model.set("error", null);
                     self.model.set('expirationDate', expirationDate);
                     self.model.set("isEditExpirationDate", false);
-                    self.updateQuote();
+                    if (self.model.apiModel.data.status == "Expired") {
+                        self.updateQuote(applyAndCommit);
+                    } else {
+                        self.updateQuote();
+                    }
                 }
                 else {
                     self.showMessageBar({
-                        message: 'Expiration Date should be greater than today.'
+                        message: Hypr.getLabel("quoteExpirationDateMsg")
                     });
                 }
             }
         },
         cancelExpirationDateUpdate: function () {
             var self = this;
+            self.model.set("error", null);
             self.model.set("isEditExpirationDate", false);
             self.render();
+        },
+        reviveQuote: function () {
+            var self = this;
+            self.startEditingExpirationDate();
         },
         startEditingSubmittedBy: function () {
             var self = this;
@@ -614,6 +624,7 @@ define([
 
             self.model.set('updatemode', updateMode);
             self.model.isLoading(true);
+            var previousStatus = self.model.apiModel.data.status;
             return this.model.apiUpdate().then(function (response) {
                 if (updateMode === applyToDraft) {
                     self.model.isLoading(false);
@@ -627,7 +638,12 @@ define([
                     self.render();
                 }
                 else {
-                    self.exitQuote();
+                    if (previousStatus == "Expired") {
+                        window.location.reload();
+                    }
+                    else {
+                        self.exitQuote();
+                    }
                 }
             }, function (error) {
                 self.showMessageBar(error);
