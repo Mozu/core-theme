@@ -41,6 +41,8 @@
   "approveQuote": "Angebot genehmigen",
   "availableBalance": "Verfügbares Guthaben",
   "availableNow": "Jetzt erhältlich",
+  "awsCheckout": "Versand- und Abrechnungszusammenfassung",
+  "awsCheckoutBilling": "Rechnungsübersicht",
   "b2bAccountRequest": "B2B Kontoanfrage",
   "b2bAccountRequestSuccessHeading": "Anfrage erfolgreich",
   "b2bAccountRequestSuccessMessage": "Ihre Anfrage wurde gesendet und muss noch genehmigt werden.",

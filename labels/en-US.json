@@ -57,6 +57,7 @@
   "awsAddressWarning": "Note: For security reasons, if you change the shipping information, this order will not be eligible for Amazon payment protection.",
   "awsChangeAddress": "Change your Amazon shipping information",
   "awsCheckout": "Shipping & Billing Summary",
+  "awsCheckoutBilling": "Billing Summary",
   "awsNoShippingOptions": "No shipping methods found for selected address",
   "awsPaymentWarning": "Note: For security reasons, if you change the payment or billing information, this will no longer be a pay with Amazon transaction.",
   "b2bAccount": "B2B Account",
