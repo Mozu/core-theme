@@ -508,7 +508,7 @@
   "quoteNumber": "Angebotsnummer",
   "quotePrint": "Angebot drucken",
   "quoteRevive": "Zitat wiederbeleben",
-  "quoteReviveAlert": "Das Angebot ist abgelaufen. Bitte aktualisieren Sie das Ablaufdatum, indem Sie auf Angebot wiederbeleben klicken.",
+  "quoteReviveAlert": "Le devis est expiré. Veuillez mettre à jour la date d'expiration en cliquant sur Revive Quote.",
   "quoteShippingAddress": "Lieferanschrift",
   "quoteSummary": "Zitat Zusammenfassung",
   "quotes": "Zitate",

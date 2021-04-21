@@ -614,7 +614,7 @@
   "quoteNumber": "Quote Number",
   "quotePrint": "Print Quote",
   "quoteRevive": "Revive Quote",
-  "quoteReviveAlert": "Quote is expired, please update the expiration date by clicking revive quote.",
+  "quoteReviveAlert": "Quote is expired. Please update the expiration date by clicking Revive Quote.",
   "quotes": "Quotes",
   "quoteShippingAddress": "Shipping Address",
   "quoteSummary": "Quote Summary",

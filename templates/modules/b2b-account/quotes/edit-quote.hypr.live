@@ -8,7 +8,7 @@
   {% endif %}
 </h2>
   {% if model.isSalesRep==true and model.status=="Expired" %}
-  <h4 class="quote-name">{{labels.quoteReviveAlert}}</h4>
+  <h4 class="quote-name mz-revive-alert">{{labels.quoteReviveAlert}}</h4>
   {% endif %}
 
 
