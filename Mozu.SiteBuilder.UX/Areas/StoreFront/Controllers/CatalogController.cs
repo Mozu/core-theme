@@ -473,8 +473,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
             }
 
-            var res = new RssActionResult { Feed = feed };
-            return Ok(res);
+            var rssResponse = new RssActionResult { Feed = feed };
+            return rssResponse;
+
         }
 
         /// <summary>
