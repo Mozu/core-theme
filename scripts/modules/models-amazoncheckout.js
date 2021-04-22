@@ -132,14 +132,17 @@ define([
                         fulfillmentInfo.fulfillmentContact = null;
                     }
 
-                    me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
-                        me.set("fulfillmentInfo",result.data);
-                        //me.isLoading(false);
-                        if (me.apiModel.data.requiresFulfillmentInfo)
-                            me.applyShippingMethods(existingShippingMethodCode);
-                        else
-                            me.applyBilling();
-                    });
+                    if(this.attributes && !this.attributes.originalQuoteId){
+                        me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
+                            me.set("fulfillmentInfo",result.data);
+                            //me.isLoading(false);    
+                            if (me.apiModel.data.requiresFulfillmentInfo)
+                                me.applyShippingMethods(existingShippingMethodCode);                       
+                        });
+                    }
+                    else
+                        me.applyBilling();
+                        
                 } else {
                     var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
                     payWithAmazonToken.set('tokenObject', me.awsData);
