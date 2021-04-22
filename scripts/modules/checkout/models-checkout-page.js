@@ -65,7 +65,7 @@ define([
 
 
 var CheckoutOrder = OrderModels.Order.extend({
-    helpers : ['selectableDestinations', 'isOriginalCartItem'],
+    helpers : ['selectableDestinations', 'isOriginalCartItem', 'getDeliverableItems'],
     validation : {
         destinationId : {
             required: true,
@@ -152,6 +152,35 @@ var CheckoutOrder = OrderModels.Order.extend({
         var self = this;
         var me = this;
         this.getCheckout().get('shippingStep').splitCheckoutItem(self.get('id'), 1);
+    },
+    getDeliverableItems: function() {
+        return this.getCheckout().apiModel.data.items.filter(function(item) {
+            return item.fulfillmentMethod == "Delivery";
+        });
+    },
+    updateSingleCheckoutDestination: function(destinationId, customerContactId, isFulfillmentMethodDelivery){
+        var self = this;
+        self.isLoading(true);
+        if(destinationId){
+            return self.getCheckout().apiSetAllShippingDestinations({
+                destinationId: destinationId,
+                isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+            }).ensure(function(){
+                 self.isLoading(false);
+            });
+        }
+
+        var destination = self.getCheckout().get('destinations').findWhere({customerContactId: customerContactId});
+        if(destination){
+            return destination.saveDestinationAsync().then(function(data){
+                return self.getCheckout().apiSetAllShippingDestinations({
+                    destinationId: data.data.id,
+                    isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+                }).ensure(function(){
+                    self.isLoading(false);
+                });
+            });
+        }
     }
 });
 

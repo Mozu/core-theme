@@ -2,9 +2,10 @@
   <thead>
       <tr>
           <th class="mz-ordersummary-header-product">
-            {% if fulfillmentMethod=="Ship" %}{{ labels.shippingInformation }}{% endif %}
+            {% if fulfillmentMethod=="Ship" %}{{ labels.orderItemsShipToHome }}{% endif %}
             {% if fulfillmentMethod=="Digital" %}{{ labels.digitalDelivery }}{% endif %}
             {% if fulfillmentMethod=="Pickup" %}{{ labels.orderItemsPickup }}{% endif %}
+            {% if fulfillmentMethod=="Delivery" %}{{ labels.orderItemsDelivery }}{% endif %}
           </th>
           <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
           <th class="mz-ordersummary-header-each">{{ labels.each }}</th>

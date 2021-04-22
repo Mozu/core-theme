@@ -61,6 +61,58 @@ define(["modules/jquery-mozu",
                 }
             }
         });
+        
+        var DeliveryDestinationView = Backbone.MozuView.extend({
+            templateName: 'modules/multi-ship-checkout/delivery-destination',
+            requiredBehaviors: [1002],
+            renderOnChange: [
+                'fulfillmentInfoId',
+                'fulfillmentContactId',
+                'isLoading'
+            ],
+            additionalEvents: {
+                "change [data-mz-fulfillment-contact]": "handleChangeDestinationAddress"
+            },
+            initialize: function(){
+                var self = this;
+                this.listenTo(this.model, 'addedNewDestination', function() {
+                    self.render();
+                });
+                this.listenTo(this.model, 'changeDestination', function() {
+                    self.render();
+                }); 
+                this.listenTo(this.model, 'destinationsUpdate', function() {
+                    self.render();
+                });
+            },
+            handleChangeDestinationAddress: function(e) {
+                var self = this;
+
+                var $target = $(e.currentTarget);
+                var customerContactId = $target.find(":selected").data("mzCustomercontactid");
+
+                if ($target.val() === "" && !customerContactId) {
+                    return false;
+                }
+
+                // All Delivery items will have same destination.
+                // Hence update destination of all orderItems for delivery
+                self.model.updateSingleCheckoutDestination($target.val(), customerContactId, true)
+                    .ensure(function(){
+                        self.render();
+                    });
+            },
+            handleNewContact: function(e){
+                this.model.set('editingDestination', true);
+                this.model.addNewContact();
+            },
+            handleEditContact: function(e){
+                var destinationId = this.model.get('destinationId');
+                if(destinationId) {
+                    this.model.editContact(destinationId);    
+                }
+            }
+        });
 
         var ShippingDestinationItemView = Backbone.MozuView.extend({
             templateName: 'modules/multi-ship-checkout/shipping-destinations-item',
@@ -175,7 +227,7 @@ define(["modules/jquery-mozu",
                     return false;
                 }
 
-                self.model.updateSingleCheckoutDestination($target.val(), customerContactId).ensure(function(){
+                self.model.updateSingleCheckoutDestination($target.val(), customerContactId, false).ensure(function(){
                    //self.render(); 
                 });
             },
@@ -222,6 +274,19 @@ define(["modules/jquery-mozu",
                 EditableView.prototype.render.apply(this, arguments);
                 this.resize();
 
+                // Delivery Destination:
+                // Find one item which has fulfillmentMethod as Delivery and pass that as model.
+                var deliveryDestination = self.model.parent.get("items").models
+                    .find(function(item) { 
+                        return item.attributes.fulfillmentMethod === "Delivery";
+                    });
+                if (deliveryDestination) {
+                    var deliveryDestinationView = new DeliveryDestinationView({
+                        el: this.$el.find('[data-mz-delivery-destination]'),
+                        model: deliveryDestination
+                    });
+                    deliveryDestinationView.render();
+                }
 
                 $.each(this.$el.find('[data-mz-shipping-destinations-item]'), function(index, val) {
                     var id = $(this).data('mzItemId');
