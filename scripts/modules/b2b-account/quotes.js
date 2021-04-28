@@ -141,6 +141,7 @@ define([
             }
             if (isSalesRep) {
                 if (!self.model.get("b2bAccounts")) {
+                    var userId = require.mozuData('user').userId;
                     // Custom configurable dropdown with search and pagination.
                     $("#selectb2bAccount").mozuPaginatedSearchableDropdown({
                         model: B2BAccountModels.b2bAccounts,
@@ -154,7 +155,8 @@ define([
                         pageSelector: 'selectb2bAccount',
                         optionalFilter: 'and',
                         filterKey: 'isActive',
-                        filterValue: 'true'
+                        filterValue: 'true',
+                        userId: userId
                     });
                     $("#selectb2bAccountGrid").mozuPaginatedSearchableDropdown({
                         model: B2BAccountModels.b2bAccounts,

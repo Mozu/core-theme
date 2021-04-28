@@ -20,7 +20,11 @@ define(["jquery", "underscore"], function ($, _) {
             "(": "^(",
             ")": "^)"
         };
-        var dataSet = new options.model({ pageSize: options.pageSize, filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
+        var filterUserIdStr = "";
+        if (options.userId) {
+            filterUserIdStr += "salesrep.userid" + ' ' + options.filterOption1 + ' ' + options.userId + " and ";
+        }
+        var dataSet = new options.model({ pageSize: options.pageSize, filter: filterUserIdStr +  options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
         if (options.optionalFilter === '') {
             dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc' });
         }
@@ -45,14 +49,14 @@ define(["jquery", "underscore"], function ($, _) {
                     return specialCharactersObj[match];
                 });
                 inputValue = inputValue.replace(/undefined/g, ' ');
-                var dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
+                var dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: filterUserIdStr +  options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
                 if (options.optionalFilter === '') {
                     dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc' });
                 }
                 if (filteredVal) {
-                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '" ' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
+                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: filterUserIdStr +  options.textField + ' ' + options.filterOption + ' "' + inputValue + '" ' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
                     if (options.optionalFilter === '') {
-                        dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '"', sortBy: options.textField + ' ' + 'asc' });
+                        dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: filterUserIdStr +  options.textField + ' ' + options.filterOption + ' "' + inputValue + '"', sortBy: options.textField + ' ' + 'asc' });
                     }
                 }
                 dataSet.apiGet().then(function (accounts) {
@@ -137,12 +141,12 @@ define(["jquery", "underscore"], function ($, _) {
                     inputValue = inputValue.replace(/undefined/g, ' ');
                     $('.' + options.pageSelector + '> .mz-dropdown-data').show();
                     clearTimeout(timeout);
-                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '"' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, pageSize: options.pageSize });
+                    var dataSet = new options.model({ filter: filterUserIdStr +  options.textField + " " + options.filterOption + " '" + inputValue + '"' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, pageSize: options.pageSize });
                     if (options.optionalFilter === "") {
-                        dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '"', pageSize: options.pageSize });
+                        dataSet = new options.model({ filter: filterUserIdStr +  options.textField + " " + options.filterOption + " '" + inputValue + '"', pageSize: options.pageSize });
                     }
                     if (inputValue === "") {
-                        dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue });
+                        dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: filterUserIdStr +  options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue });
                         filteredVal = false;
                     }
                     $('.' + options.pageSelector + '-mz-listData').scrollTop(0);
