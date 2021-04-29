@@ -12,7 +12,7 @@ define([
 function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDestinationModels, CustomerModels) {
 
     var ShippingStep = CheckoutStep.extend({
-        helpers : ['orderItems', 'selectableDestinations', 'selectedDestination', 'selectedDestinationsCount', 'totalQuantity'],
+        helpers : ['orderItems', 'selectableDestinations', 'selectedDestination', 'selectedDestinationsCount', 'totalQuantity', 'hasMultipleShipToHomeItems', 'hasShipToHomeAndDeliveryItems'],
         validation: this.multiShipValidation,
         digitalOnlyValidation: {
             fn: function(value, attr){
@@ -116,11 +116,25 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
             return selectable;
         },
         selectedDestinationsCount : function(){
-            var shippingItems = this.parent.get("items").filter(function(item){ return item.get('fulfillmentMethod') == "Ship"; });
+            var shippingItems = this.parent.get("items").filter(function(item){ return (item.get('fulfillmentMethod') == "Ship" || item.get('fulfillmentMethod') == "Delivery"); });
             var destinationCount = _.countBy(shippingItems, function(item){
                 return item.get('destinationId');
             });
             return _.size(destinationCount);
+        },
+        hasMultipleShipToHomeItems: function() {
+            var totalQty = 0;
+            this.parent.get("items").forEach(function(item){
+                if (item.get("fulfillmentMethod") == "Ship") {
+                    totalQty+=item.get("quantity");
+                }
+            });
+            return totalQty > 1;
+        },
+        hasShipToHomeAndDeliveryItems: function() {
+            var shippingItems = this.parent.get("items").filter(function(item){ return item.get('fulfillmentMethod') == "Ship"; });
+            var deliveryItems = this.parent.get("items").filter(function(item){ return item.get('fulfillmentMethod') == "Delivery"; });
+            return (shippingItems.length && deliveryItems.length);
         },
         totalQuantity: function(){
           var totalQty = 0;
@@ -135,18 +149,23 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
 
             if(directShipItems){
                 selectedId = directShipItems.get('destinationId');
+            } else {
+                // find items with fulfillmentMethod as Delivery
+                var deliveryItem = this.getCheckout().get('items').findWhere({fulfillmentMethod: "Delivery"});
+                selectedId = deliveryItem.get('destinationId');
             }
 
             if(selectedId){
                 return this.getCheckout().get('destinations').get(selectedId).toJSON();
             }
         },
-        updateSingleCheckoutDestination: function(destinationId, customerContactId){
+        updateSingleCheckoutDestination: function(destinationId, customerContactId, isFulfillmentMethodDelivery){
             var self = this;
             self.isLoading(true);
             if(destinationId){
                 return self.getCheckout().apiSetAllShippingDestinations({
-                    destinationId: destinationId
+                    destinationId: destinationId,
+                    isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
                 }).ensure(function(){
                      self.isLoading(false);
                 });
@@ -156,7 +175,8 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
             if(destination){
                 return destination.saveDestinationAsync().then(function(data){
                     return self.getCheckout().apiSetAllShippingDestinations({
-                        destinationId: data.data.id
+                        destinationId: data.data.id,
+                        isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
                     }).ensure(function(){
                         self.isLoading(false);
                     });
