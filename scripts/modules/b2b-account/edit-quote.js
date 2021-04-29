@@ -442,6 +442,7 @@ define([
                 });
             }
             else {
+                self.model.isLoading(false);
                 self.render();
             }
         },
@@ -638,7 +639,15 @@ define([
                 id: self.model.get('id'),
                 draft: true
             };
-            return this.model.apiDelete(data).then(function (response) {
+            return this.model.apiDelete(data).then(function () {
+                self.model.set("adjustment", null);
+                self.model.set("handlingAdjustment", null);
+                self.model.set("shippingAdjustment", null);
+                self.model.set("quoteUpdatedAdjustments", null);
+                self.model.set('fullName', '');
+                self.populateWithUsers();//Set intial creator of the quote
+                self.model.set('name', '');
+                self.model.set('expirationDate', '');
                 self.refreshQuote();
             }, function (error) {
                 self.showMessageBar(error);
