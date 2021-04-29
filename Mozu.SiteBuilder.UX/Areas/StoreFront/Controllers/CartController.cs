@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
-            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP || x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY))
             {
                 locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
             }
@@ -167,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cartbase = Mapper.Map<UX.Models.StoreFront.Commerce.Cart>(cart);
             if (locations != null && locations.Items.Any())
             {
-                foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+                foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP || item.FulfillmentMethod == FulfillmentMethodConst.DELIVERY))
                 {
                     var location = locations.Items.FirstOrDefault(x => x.Code.EqualsIgnoreCase(cartItem.FulfillmentLocationCode));
                     if (location != null) cartItem.FulfillmentLocationName = location.Name;
