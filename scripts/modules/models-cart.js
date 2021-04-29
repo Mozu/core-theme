@@ -4,7 +4,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
       HyprLiveContext, LocationModels, DiscountDialogModels) {
 
     var CartItemProduct = ProductModels.Product.extend({
-        helpers: ['mainImage','directShipSupported', 'inStorePickupSupported'],
+        helpers: ['mainImage','directShipSupported', 'inStorePickupSupported','deliverySupported'],
         mainImage: function() {
             var imgs = this.get("productImages"),
                 img = imgs && imgs[0],
@@ -20,8 +20,10 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
         },
         inStorePickupSupported: function(){
             return (_.indexOf(this.get('fulfillmentTypesSupported'), "InStorePickup") !== -1) ? true : false;
+        },
+        deliverySupported: function(){
+            return (_.indexOf(this.get('fulfillmentTypesSupported'), "Delivery") !== -1) ? true : false;
         }
-
     }),
 
     CartItem = Backbone.MozuModel.extend({

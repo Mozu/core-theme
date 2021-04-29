@@ -186,6 +186,7 @@
   "defective": "Defekt - nicht richtig funktioniert",
   "denyAndSubmitEdits": "Verweigern und Senden von Änderungen",
   "delete": "löschen",
+  "delivery": "Lieferung",
   "deleteQuote": "Angebot löschen",
   "deleteQuoteName": "Angebot löschen",
   "deliveryInstructions": "Lieferanweisungen",
@@ -346,6 +347,7 @@
   "mailCheckTo": "E-Mail-Check auf",
   "mapPrice": "in den Warenkorb Endpreis zu sehen",
   "measurements": "Messungen",
+  "memberProducts": "Produits des membres(1)",
   "methodDelivery": "Mode de livraison",
   "mfgPartNumber": "Mfg Teilenummer",
   "milesAway": "{0} Meilen entfernt",
@@ -701,6 +703,5 @@
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yes": "Ja",
   "yourAccount": "Ihr Konto",
-  "yourOrderNumber": "Ihre Bestellnummer lautet <strong> {0} </ strong>.",
-  "memberProducts": "Produits des membres(1)"
+  "yourOrderNumber": "Ihre Bestellnummer lautet <strong> {0} </ strong>."
 }

@@ -512,7 +512,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             },
             // for catalog instead of commerce
             FulfillmentTypes: {
-                IN_STORE_PICKUP: "InStorePickup"
+                IN_STORE_PICKUP: "InStorePickup",
+                DELIVERY:"Delivery"
             },
             ProductUsage: {
                 Configurable: 'Configurable'

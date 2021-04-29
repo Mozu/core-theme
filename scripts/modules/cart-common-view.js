@@ -226,20 +226,33 @@ define(['modules/api',
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
 
-                cartItem.apiUpdate().then(function(success){}, function(error){
-                  cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
-                  cartItem.set('fulfillmentLocationName', oldPickupLocation);
-                  cartItem.set('fulfillmentLocationCode', oldLocationCode);
-
-                });
-
-
-              } else if (value=="Pickup"){
-                  //first we get the correct product code for this item.
-                  //If the product is a variation, we want to pass that when searching for inventory.
-                  var productCode = cartItem.apiModel.data.product.variationProductCode || cartItem.apiModel.data.product.productCode;
-                  //pickStore function makes api calls, then builds/launches modal dialog
-                  this.pickStore(productCode, cartItemId);
+                cartItem.apiUpdate().then(
+                  function (success) {},
+                  function (error) {
+                    cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                    cartItem.set('fulfillmentLocationName', oldPickupLocation);
+                    cartItem.set('fulfillmentLocationCode', oldLocationCode);
+                  }
+                );
+              } else if (value == 'Pickup') {
+                //first we get the correct product code for this item.
+                //If the product is a variation, we want to pass that when searching for inventory.
+                cartItem.set('fulfillmentMethod', value);
+                cartItem.set('fulfillmentLocationName', '');
+                cartItem.set('fulfillmentLocationCode', '');
+                var pickupProductCode =
+                  cartItem.apiModel.data.product.variationProductCode ||
+                  cartItem.apiModel.data.product.productCode;
+                //pickStore function makes api calls, then builds/launches modal dialog
+                this.pickStore(pickupProductCode, cartItemId);
+              } else if (value == 'Delivery') {
+                cartItem.set('fulfillmentMethod', value);
+                cartItem.set('fulfillmentLocationName', '');
+                cartItem.set('fulfillmentLocationCode', '');
+                var deliveryProductCode =
+                  cartItem.apiModel.data.product.variationProductCode ||
+                  cartItem.apiModel.data.product.productCode;
+                this.pickStore(deliveryProductCode, cartItemId);
               }
 
         },0),
@@ -323,7 +336,7 @@ define(['modules/api',
           var oldPickupLocation = cartItem.get('fulfillmentLocationName');
           var oldLocationCode = cartItem.get('fulfillmentLocationCode');
 
-          cartItem.set('fulfillmentMethod', 'Pickup');
+          cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
           cartItem.apiUpdate().then(function(success){}, function(error){

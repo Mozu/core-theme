@@ -28,4 +28,19 @@
     </div>
 
   </li>
+  <li>
+    <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Delivery" id="delivery-radio-{{ item.id }}"
+    {% if item.fulfillmentMethod=="Delivery" %} checked {% endif %}
+    {% if item.product.deliverySupported == false %} disabled {% endif %}
+    />
+    <label for="delivery-radio-{{ item.id }}">{{ labels.delivery }}</label><span class="fulfillmentLocationName" id="fulfillmentLocationName-{{ item.id }}">{% if item.fulfillmentMethod == "Delivery" %} <strong>{{item.storeLocation.name}}</strong> {% endif %}</span>
+    {% if item.product.deliverySupported == false %}
+    <div class="fulfillment-unavailable-message">
+      {{ labels.unavailableForThisItem }}
+    </div>
+    {% endif %}
+    <div id="delivery-option-links-{{ item.id }}" {% if item.fulfillmentMethod !="Delivery" %} style="display: none" {% endif %}>
+      <a href="#" data-mz-action="changeStore" data-mz-cart-item="{{ item.id }}" style="margin-left:30px"> {{ labels.changeStore }}</a>
+    </div>
+  </li>
 </ul>
