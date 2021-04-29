@@ -2,8 +2,17 @@
 <h2 class="quote-name">
   {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
   <button class="mz-button" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
+  
+  {% if model.isSalesRep==true and model.status=="Expired" %}
+  <button class="mz-button mz-revive-btn" data-mz-action="reviveQuote">{{labels.quoteRevive}}</button> 
+  {% endif %}
 </h2>
-<div class="modal fade" id="mz-location-selector">
+  {% if model.isSalesRep==true and model.status=="Expired" %}
+  <h4 class="quote-name mz-revive-alert">{{labels.quoteReviveAlert}}</h4>
+  {% endif %}
+
+
+  <div class="modal fade" id="mz-location-selector">
   {% include "modules/cart/cart-location-select" %}
 </div>
 <ul class="mz-orderlist edit-quote-form">
@@ -14,15 +23,29 @@
     {% include "modules/b2b-account/quotes/edit-quote/quote-details" with model=model %}
   </li>
   <li>
+    {% if model.isSalesRep==true and model.status=="Expired" %}
+      <div id="view-quote-summary">
+      {% include "modules/b2b-account/quotes/view-quote/quote-summary" with model=model %}
+      <div>
+    {% else %}
     {% include "modules/b2b-account/quotes/edit-quote/quote-summary" with model=model %}
+    {% endif %}
   </li>
   {% if model.isShippable %}
   <li>
-    {% include "modules/b2b-account/quotes/edit-quote/quote-shipping" with model=model %}
+    {% if model.isSalesRep==true and model.status=="Expired" %}
+      {% include "modules/b2b-account/quotes/view-quote/quote-shipping" with model=model %}
+    {% else %}
+      {% include "modules/b2b-account/quotes/edit-quote/quote-shipping" with model=model %}
+    {% endif %}
   </li>
   {% endif %}
   <li>
-    {% include "modules/b2b-account/quotes/edit-quote/quote-comments" with model=model %}
+    {% if model.isSalesRep==true and model.status=="Expired" %}
+      {% include "modules/b2b-account/quotes/view-quote/quote-comments" with model=model %}
+    {% else %}
+      {% include "modules/b2b-account/quotes/edit-quote/quote-comments" with model=model %}
+    {% endif %}
   </li>
   <li>
     {% include "modules/b2b-account/quotes/quote-history" with model=model %}

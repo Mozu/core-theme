@@ -406,21 +406,31 @@ define([
                 expirationDate = new Date(expirationDate);
 
                 if (expirationDate > today) {
+                    self.model.set("error", null);
                     self.model.set('expirationDate', expirationDate);
                     self.model.set("isEditExpirationDate", false);
-                    self.updateQuote();
+                    if (self.model.apiModel.data.status == "Expired") {
+                        self.updateQuote(applyAndCommit);
+                    } else {
+                        self.updateQuote();
+                    }
                 }
                 else {
                     self.showMessageBar({
-                        message: 'Expiration Date should be greater than today.'
+                        message: Hypr.getLabel("quoteExpirationDateMsg")
                     });
                 }
             }
         },
         cancelExpirationDateUpdate: function () {
             var self = this;
+            self.model.set("error", null);
             self.model.set("isEditExpirationDate", false);
             self.render();
+        },
+        reviveQuote: function () {
+            var self = this;
+            self.startEditingExpirationDate();
         },
         startEditingSubmittedBy: function () {
             var self = this;
@@ -442,6 +452,7 @@ define([
                 });
             }
             else {
+                self.model.isLoading(false);
                 self.render();
             }
         },
@@ -613,6 +624,7 @@ define([
 
             self.model.set('updatemode', updateMode);
             self.model.isLoading(true);
+            var previousStatus = self.model.apiModel.data.status;
             return this.model.apiUpdate().then(function (response) {
                 if (updateMode === applyToDraft) {
                     self.model.isLoading(false);
@@ -626,7 +638,12 @@ define([
                     self.render();
                 }
                 else {
-                    self.exitQuote();
+                    if (previousStatus == "Expired") {
+                        window.location.reload();
+                    }
+                    else {
+                        self.exitQuote();
+                    }
                 }
             }, function (error) {
                 self.showMessageBar(error);
@@ -638,7 +655,15 @@ define([
                 id: self.model.get('id'),
                 draft: true
             };
-            return this.model.apiDelete(data).then(function (response) {
+            return this.model.apiDelete(data).then(function () {
+                self.model.set("adjustment", null);
+                self.model.set("handlingAdjustment", null);
+                self.model.set("shippingAdjustment", null);
+                self.model.set("quoteUpdatedAdjustments", null);
+                self.model.set('fullName', '');
+                self.populateWithUsers();//Set intial creator of the quote
+                self.model.set('name', '');
+                self.model.set('expirationDate', '');
                 self.refreshQuote();
             }, function (error) {
                 self.showMessageBar(error);
@@ -902,7 +927,7 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    comments[c].createDate = new Date(comments[c].auditInfo.createDate).toLocaleDateString();
+                    comments[c].createDate = comments[c].auditInfo.createDate;
                 }
                 this.model.set('comments', comments);
             }
@@ -924,7 +949,7 @@ define([
                         }
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
-                    auditHistory[a].createDate = new Date(auditHistory[a].auditInfo.createDate).toLocaleDateString();
+                    auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
                 }
                 this.model.set('auditHistory', auditHistory);
             }

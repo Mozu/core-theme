@@ -23,7 +23,7 @@ function($, Api, CartModels, hyprlivecontext, _) {
             environment: environment.value,
             click: function(event) {
                 event.preventDefault();
-                var url = "../paypal/token?id=" + id + (!document.URL.split('?')[1] ? "": "&" + document.URL.split('?')[1].replace("id="+id,"").replace("&&", "&"));
+                var url = window.location.protocol + "//" + window.location.host + "/paypal/token?id=" + id + (!document.URL.split('?')[1] ? "": "&" + document.URL.split('?')[1].replace("id="+id,"").replace("&&", "&"));
                 if (isCart)
                   url += "&isCart="+ isCart;
                 window.paypal.checkout.initXO();
