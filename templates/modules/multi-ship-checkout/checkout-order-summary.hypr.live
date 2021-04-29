@@ -4,6 +4,11 @@
         <a style="margin-top:10px" href="{{siteContext.siteSubdirectory}}/cart" class="mz-formstep-edit" data-mz-action="editCart">{{ labels.change }}</a>
     </h3>
     <div class="mz-formstep-body">
+
+      {% if model.items|findwhere('fulfillmentMethod', 'Delivery') %}
+        {% include "modules/multi-ship-checkout/checkout-order-summary-details" with fulfillmentMethod="Delivery" items=model.items %}
+      {% endif %}
+
       {% if model.items|findwhere('fulfillmentMethod', 'Ship') %}
         {% include "modules/multi-ship-checkout/checkout-order-summary-details" with fulfillmentMethod="Ship" items=model.items %}
       {% endif %}

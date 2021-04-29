@@ -3,7 +3,7 @@
   {% if model.requiresFulfillmentInfo  %}
 
     <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
-      {% if model.totalQuantity>1 %}
+      {% if model.hasMultipleShipToHomeItems or model.hasShipToHomeAndDeliveryItems %}
       <p>
         <button class="mz-button mz-checkout-button-link" data-mz-action="toggleMultiShipMode">{{ labels.toggleToMultiShip }}</button>
       </p>
