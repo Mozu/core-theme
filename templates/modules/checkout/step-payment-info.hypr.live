@@ -76,7 +76,7 @@
         </div>
       {% endif %}
 
-      {% if model.originalQuoteId == "" %}
+
       {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower == "token"  || payment.paymentType|lower  == "paywithamazon"  %}
       {% if model.nonStoreCreditOrGiftCardTotal > 0%}
       {%if model.isExternalCheckoutFlowComplete%}
@@ -114,9 +114,9 @@
           {%endif%}
 
           {% endif %}
-      {% endif %}
-      
       {% endfor %}
+      
+
 
       <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             <p>

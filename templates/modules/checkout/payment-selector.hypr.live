@@ -94,7 +94,7 @@
         {% endif %}
     </div>
     {% endif %}
-    {% if model.originalQuoteId == "" %}
+
     {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
         {% if externalPaymentWorkflowsEnabled %}
             <div class="mz-l-formfieldgroup-row">
@@ -130,7 +130,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    {% endif %}
+
     <div class="mz-l-formfieldgroup-row mz-paymentselector-validation">
         <div class="mz-formfieldgroup-cell">
         </div>
