@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-04-04
+ * Mozu JavaScript SDK - v0.3.0 - 2021-04-22
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -5342,7 +5342,7 @@ module.exports = (function () {
 
             for (i = 0; i < items.length; i++) {
                 if (items[i].destinationId) {
-                    if (items[i].fulfillmentMethod === "Ship") {
+                    if (items[i].fulfillmentMethod === "Ship" || items[i].fulfillmentMethod === "Delivery") {
                         payloadCollection.postdata[0].itemIds.push(items[i].id);
                     }
                 }
@@ -5369,9 +5369,17 @@ module.exports = (function () {
                 }]
             }
 
-            for (i = 0; i < items.length; i++) {
-                if (items[i].fulfillmentMethod === "Ship") {
-                    payloadCollection.postdata[0].itemIds.push(items[i].id);
+            if (params.isFulfillmentMethodDelivery) {
+                for (i = 0; i < items.length; i++) {
+                    if (items[i].fulfillmentMethod === "Delivery") {
+                        payloadCollection.postdata[0].itemIds.push(items[i].id);
+                    }
+                }
+            } else {
+                for (i = 0; i < items.length; i++) {
+                    if (items[i].fulfillmentMethod === "Ship" || items[i].fulfillmentMethod === "Delivery") {
+                        payloadCollection.postdata[0].itemIds.push(items[i].id);
+                    }
                 }
             }
 

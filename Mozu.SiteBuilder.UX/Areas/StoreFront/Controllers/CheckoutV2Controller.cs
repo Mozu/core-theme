@@ -348,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var isFulfillmentInfoRequired = model.Items.Exists(
-                    x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
+                    x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP || x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY);
 
             jOrder.Add("requiresFulfillmentInfo", isFulfillmentInfoRequired);
             jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DIGITAL));
