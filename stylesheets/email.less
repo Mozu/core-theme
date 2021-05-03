@@ -512,3 +512,41 @@ dl.mz-orderheader {
   }
 }
   
+.emailWrapper{ width:88vw; margin:0 auto; }
+.header-container {  display: flex;  justify-content: center;  align-items: center; }
+.delivery-logo{ 
+    width: 30vw;
+    text-align: left;
+    img { max-width: 220px; }    
+}
+.delivery-title { 
+    width:70vw; 
+    p.storename {
+        font-size:14px;
+        margin: 5px 0;
+    }
+    p.title {
+        font-size: calc(20px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+        line-height:calc(24px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+        font-family: arial-black;
+        margin: 5px 0;
+    }
+}
+.body-container {    padding: 20px;}
+.d-flex { display:flex; }
+.content-right { justify-content: flex-end; }
+.bggrey { background:#F0F0F0; color: #5A646F; }
+.deliveryTable { 
+    width: 100%;
+    border: 1px solid #DEE2E6; 
+    th, td { border: 1px solid #DEE2E6; padding: 10px; }
+}
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.pr-fourvw {     padding: 10px 4vw !important; }
+.no-border { border: none;}
+@media (max-width: 767.98px) { 
+     .delivery-logo{ width:100vw; margin:0 auto; }
+     .delivery-title{ width:100vw; margin:0 auto; }   
+}

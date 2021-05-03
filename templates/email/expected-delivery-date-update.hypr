@@ -1,0 +1,45 @@
+{% extends "email/email" %}
+{% block body-content %}
+<div class="emailWrapper">
+    <div class="header-container">
+        <div class="delivery-logo text-left">
+            <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+        </div>
+        <div class="delivery-title">
+            <p class="storename">{{ siteContext.generalSettings.websiteName }}</p>
+            <p class="title">{{ labels.deliveryExpectedHeader }}</p>
+        </div>
+    </div>
+    <div class="body-container">
+        <p>{{ labels.deliveryHello }},</p><br/>
+        <p>{{ labels.deliveryExpectedBody }}</p><br/>
+        <p>{{ labels.deliveryDetails|string_format(model.orderNumber, model.order.externalId)|safe }}</p><br/>
+        <p><span>{{ labels.deliveryNewEstimatedDateTitle }}</span> - <span>{{ model.items.0.expectedDeliveryDate| date(themeSettings.backofficeDateTimeFormat) }}</span></p><br/>
+        <table class="deliveryTable">
+            <tr>
+                <th class="bggrey text-left">{{ labels.deliveryItem }}</th>
+                <th class="bggrey">{{ labels.deliveryQty }}</th>
+                <th class="bggrey">{{ labels.deliveryPrice }}</th>
+            </tr>
+            {% for item in model.items %}
+                <tr>
+                    <td class="no-border text-left"><b>{{ item.name }}</b></td>
+                    <td class="no-border text-center">{{ item.quantity }}</td>
+                    <td class="no-border text-center">{{ item.unitPrice|currency }}</td>
+                </tr>
+            {% endfor %}
+            
+            <tr class="text-right">
+                <td class="bggrey pr-fourvw" colspan="3" >{{ labels.deliveryTax }}: {{ model.taxTotal|currency }}</td>
+            </tr>
+            <tr class="text-right">
+                <td  class="bggrey pr-fourvw" colspan="3" >{{ labels.deliveryTotal }}: {{ model.total|currency }}</td>
+            </tr>
+        </table>
+        <p>{{ labels.deliveryThankyou }},</p>
+        <p>{{ siteContext.generalSettings.websiteName }}</p>
+    </div>
+</div>
+{% endblock body-content %}
+
+
