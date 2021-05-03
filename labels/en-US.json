@@ -324,6 +324,7 @@
   "freeShipping": "Free Shipping",
   "friday": "Friday",
   "from": "from",
+  "fromDeliveryLocation": "from location",
   "fulfillmentType": "Fulfillment Type",
   "fullDesc": "Description",
   "gatewayGiftCardDeleteEmail": "DO NOT DELETE THIS EMAIL",
