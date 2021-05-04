@@ -369,8 +369,23 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
       var self = this;
       var totalAmount = self.getTotal();
       var newLineItems = [];
+      var itemLevelProductDiscountTotal = 0;
+      
+      if(self.MultishipEnabled){
+        itemLevelProductDiscountTotal = self.orderModel.get('itemLevelProductDiscountTotal') || 0;
+      } else{
+          var items = self.orderModel.get('items');
+          items.forEach(function(item){
+          if(Array.isArray(item.productDiscounts) && item.productDiscounts.length){
+            var productDiscounts = item.productDiscounts;
+            productDiscounts.forEach(function(productDiscount){
+              itemLevelProductDiscountTotal = itemLevelProductDiscountTotal + productDiscount.impact;
+            });
+          }
+      });
+    }
       //casing for the subtotal value varies depending on context apparently... eye roll emoji
-      var subtotalAmount = (self.orderModel.get('subTotal') || self.orderModel.get('subtotal')) - (self.orderModel.get('itemLevelProductDiscountTotal') || 0);
+      var subtotalAmount = (self.orderModel.get('subTotal') || self.orderModel.get('subtotal')) - itemLevelProductDiscountTotal;
       if (totalAmount != subtotalAmount){
           newLineItems.push({
               "label": "Subtotal",
