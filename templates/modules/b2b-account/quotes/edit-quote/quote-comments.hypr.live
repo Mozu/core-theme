@@ -33,7 +33,7 @@
                   {% for comment in model.comments|dictsortreversed("createDate") %}
                   <div class="quote-comment">
                       <b>
-                        Commented By: {{comment.auditInfo.createByName || comment.auditInfo.createBy}} - {{ comment.auditInfo.createDate|date("m/d/Y") }}
+                        Commented By: {{comment.auditInfo.createByName || comment.auditInfo.createBy}} - {{ comment.createDateLocale }}
                       </b>
                       <p>
                         {{comment.text}}
