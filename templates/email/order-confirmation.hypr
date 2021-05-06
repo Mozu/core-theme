@@ -90,6 +90,7 @@
             <hr/><br>
             {% endif %}
 
+
             <!--- Need Order Help Card --->
             <div class="mz-curbside-card">
                 <div class="mz-curbside-card-header">{{ labels.orderCompleteBlob3 }}</div>
@@ -187,6 +188,16 @@
                 <h5>{{ labels.giftMessage }}</h5>
                 <br><p>{{ model.shopperNotes.giftMessage }}</p>
             {% endif %}
+
+            {% if model.shopperNotes.deliveryInstructions %}
+            <h5>deliveryInstructions</h5>
+            <br><p>{{ model.shopperNotes.deliveryInstructions }}</p>
+            <hr/><br>
+            {% endif %}
+
+             {% for item in model.items %}
+                <div> Expected Delivery Date: {{item.expectedDeliveryDate}}
+             {% endfor %}
 
             {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
         {% endif %} 
