@@ -32,7 +32,7 @@
     "jquery-colorbox": "1.5.15",
     "jquery.cookie": "1.4.1",
     "typeahead.js": "0.10.5",
-    "underscore": "1.8.3"
+    "underscore": "1.12.1"
   },
   "exportsOverride": {
     "bootstrap": [
