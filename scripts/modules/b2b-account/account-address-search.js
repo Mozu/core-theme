@@ -21,6 +21,7 @@ define([
         var pubsub = {};
         var wordCount = 3;
         var createQuoteAccountId;
+        var isSalesRep = require.mozuData('user').isSalesRep;
 
         var B2bContactsMozuGrid = MozuGrid.extend({
             render: function () {
@@ -39,6 +40,9 @@ define([
                 var self = this;
                 Backbone.MozuView.prototype.render.apply(this, arguments);
                 var collection = new B2bContactsGridCollectionModel({ autoload: true });
+                if (isSalesRep) {
+                    collection.filterBy("salesrep.userid eq " + require.mozuData("user").userId);
+                }
                 _.extend(collection, Backbone.Events);
                 collection.bind('custom:event', this.callbackForGridSelection, this);
                 this.initializeGrid(collection);
@@ -145,7 +149,12 @@ define([
                 var emailstring = "email cont";
                 var countrystring = "address.countrycode cont";
                 var zipcodestring = "address.postalorzipCode cont";
+                var userIdstring = "salesrep.userid eq";
                 filterstring = "";
+
+                if (isSalesRep) {
+                    self.createFilterString(userIdstring, require.mozuData("user").userId);
+                }
                 self.createFilterString(addressstring, $("#searchAddress").val());
                 self.createFilterString(citystring, $("#searchCity").val());
                 self.createFilterString(statestring, $("#searchState").val());
