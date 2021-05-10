@@ -196,7 +196,7 @@
   "deliveryNoteTitle" : "Lieferscheine",
   "deliveryExpectedHeader" : "Voraussichtliche Aktualisierung des Liefertermins",
   "deliveryExpectedBody": "Das Lieferdatum für Artikel in Ihrer Bestellung wird aktualisiert. Der neue Liefertermin ist unten angegeben. Wir entschuldigen uns für die Unannehmlichkeiten.",
-  "deliveryDetails" : "Einzelheiten: <br/><br/> Bestellnummer {0}",
+  "deliveryDetails" : "Einzelheiten: <br/><br/> Bestellnummer - {0}",
   "deliveryNewEstimatedDateTitle" : "Neuer voraussichtlicher Liefertermin",
   "deliveryItem" : "Artikel",
   "deliveryQty" : "Menge",

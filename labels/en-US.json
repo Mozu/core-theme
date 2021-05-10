@@ -245,7 +245,7 @@
   "deliveryNoteTitle" : "Delivery Notes",
   "deliveryExpectedHeader" : "Expected Delivery Date Update",
   "deliveryExpectedBody": "Delivery date for item(s) in your order is updated. The new delivery date is indicated below. We apologize for the inconvenience.",
-  "deliveryDetails" : "Details: <br/><br/> Order Number {0}",
+  "deliveryDetails" : "Details: <br/><br/> Order Number - {0}",
   "deliveryNewEstimatedDateTitle" : "New estimated Delivery Date",
   "deliveryItem" : "Item",
   "deliveryQty" : "Qty",

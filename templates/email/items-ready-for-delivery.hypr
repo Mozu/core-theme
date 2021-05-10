@@ -14,7 +14,8 @@
         <p>{{ labels.deliveryHello }},</p><br/>
         <p>{{ labels.deliveryReadyBody }}</p><br/>
         <p><span>{{ labels.deliveryDateTitle }}</span> - <span>{{ model.items.0.expectedDeliveryDate| date(themeSettings.backofficeDateTimeFormat) }}</span></p><br/>
-        <p><span>{{ labels.deliveryNoteTitle }}</span> - 
+        <p>
+           <span>{{ labels.deliveryNoteTitle }}</span> - 
            <span>{{ model.shopperNotes.giftMessage }}</span>
            <span>{{ model.shopperNotes.comments }}</span>
            <span>{{ model.shopperNotes.deliveryInstructions }}</span>
@@ -35,7 +36,7 @@
             {% endfor %}
             
             <tr class="text-right">
-                <td class="bggrey pr-fourvw" colspan="3" >{{ labels.deliveryTax }}: {{ model.taxTotal|currency }}</td>
+                <td class="bggrey pr-fourvw" colspan="3" >{{ labels.deliveryTax }}: {{ model.lineItemTaxTotal|currency }}</td>
             </tr>
             <tr class="text-right">
                 <td  class="bggrey pr-fourvw" colspan="3" >{{ labels.deliveryTotal }}: {{ model.total|currency }}</td>
