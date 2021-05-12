@@ -45,6 +45,44 @@
     </div>
     {% endif %}
 
+    {% if model.items|findwhere("fulfillmentMethod", "Delivery") %}
+    <div class="mz-l-stack-section" id="mz-ship-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.delivery }}</h4>
+        {% for grouping in groupings %}
+          {% if grouping.fulfillmentMethod == "Delivery" %}
+            <div class="mz-confirmation-container">
+                  {% with model.items as items %}
+                    {% include "modules/confirmationv2/confirmation-order-summary" with items=items grouping=grouping %}
+                  {% endwith %}
+
+              <div style="display:-webkit-flex;margin:10px;width:100%">
+               
+                {% with model.destinations|findwhere("id", grouping.destinationId) as destination %}
+                  <div class="mz-addresssummary" style="width:50%">
+                    {{labels.storeName}}
+                    {% for location in model.deliveryLocations %}
+                      {% for item in model.items %}
+                        {% if item.fulfillmentLocationCode == location.id && item.fulfillmentMethod == "Delivery" %}
+                          <div>
+                            {{ item.product.name }} <b>{{ labels.deliveryLocationTo }}</b>
+                            {% with location.locationInfo as locationInfo %}
+                              {{ locationInfo.name }}
+                            {% endwith %}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+                    <br/>
+                    <b>{{ labels.deliverTo }}</b>{% include "modules/common/address-summary" with model=destination.destinationContact %}</div>
+                {% endwith %}
+              </div>
+            </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% if groupings|findwhere('fulfillmentMethod', 'Digital') %}
     <div class="mz-l-stack-section" id="mz-digital-section">
         <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalDownload }}</h4>
@@ -131,7 +169,6 @@
     </div>
      {% endif %}
     {% endwith %}
-
     <div class="mz-l-stack-section" id="mz-payment-details">
         <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
         {% if model.total == 0 %}
