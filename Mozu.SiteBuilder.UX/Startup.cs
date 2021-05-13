@@ -85,8 +85,8 @@ namespace Mozu.SiteBuilder.UX
                         .UsingAssembly(typeof(ReferenceDataWebApiClient).Assembly)
                         .UsingAssembly(typeof(IEntityListsWebApiClient).Assembly)
                         .UsingAssembly(typeof(IDocumentListWebApiClient).Assembly)
-                        .UsingAssembly(typeof(Kibo.Fulfillment.Contracts.Api.FulfillmentControllerApiClient).Assembly)
                         .UsingAssembly(typeof(Kibo.Inventory.Contracts.Api.InventoryControllerApiClient).Assembly)
+                        .UsingAssembly(Assembly.Load("Kibo.Fulfillment.Contracts"))
                         .UsingAssembly(typeof(Mozu.Core.Messaging.Configuration.AutofacModule).Assembly)
                         .UsingAssembly(typeof(Mozu.SiteBuilder.Mvc.Configuration.AutofacModule).Assembly)
                         .UsingAssembly(typeof(Mozu.SiteBuilder.UX.Configuration.AutofacModule).Assembly);
