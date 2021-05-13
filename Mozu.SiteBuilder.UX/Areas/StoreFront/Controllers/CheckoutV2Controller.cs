@@ -468,6 +468,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
             Location.Contracts.LocationCollection locations = null;
+            
             var pickUpItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP);
             if (pickUpItems.NotIsNullOrEmpty())
             {
@@ -476,9 +477,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 locations = locationsTask.ReadAsSync();
             }
+            Location.Contracts.LocationCollection DeliveryLocation = null;
+            var deliveryItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY);
+            if (deliveryItems.NotIsNullOrEmpty())
+            {
+                
+                  var locationsTask = (await _locationRuntimeWebApiClient.GetDeliveryLocations(0, null, null, string.Join(" or ", deliveryItems.Select(x =>
+                   $"Code eq \"{x.FulfillmentLocationCode}\"").Distinct().ToList())));
 
+                DeliveryLocation = locationsTask.ReadAsSync();
+            }
             var jOrder = checkout.ToJObject();
+            if(DeliveryLocation != null)
+            {
+                var jDeliveryLocations = new JArray();
 
+                DeliveryLocation.Items.ForEach(x => jDeliveryLocations.Add(new JObject(
+                    new JProperty("id", x.Code),
+                    new JProperty("locationInfo", x.ToJObject()))));
+
+                jOrder.Add("deliveryLocations", jDeliveryLocations);
+            }
             if (locations != null)
             {
                 var jFulfillmentLocations = new JArray();

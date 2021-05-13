@@ -446,6 +446,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jOrder = order.ToJObject();
 
             jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
+            jOrder.Add("hasDelivery", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY));
 
             if (locations != null)
             {
