@@ -438,7 +438,7 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
                     }
                 }
 
-                if(self.requiresFulfillmentInfo()){
+                if(self.requiresShippingMethod()){
                     self.isLoading(true);
                     checkout.get('shippingInfo').updateShippingMethods().then(function(methods) {
                         if(methods){
@@ -458,8 +458,12 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
                         checkout.get('shippingInfo').calculateStepStatus();
                     });
                 } else {
-                   self.stepStatus('complete');
-                   checkout.get('billingInfo').calculateStepStatus();
+                    // if shippingMethod is not required, then set ShippingInfo(shipping method) step to complete.
+                    // e.g. If all items are Delivery items or Delivery and Pickup
+                    // then ShippingStep is required but ShippingInfo(shipping method) step is not required
+                    self.stepStatus('complete');
+                    self.getCheckout().get('shippingInfo').stepStatus('complete');
+                    checkout.get('billingInfo').calculateStepStatus();
                 }
             },
             // Breakup for validation
