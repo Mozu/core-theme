@@ -111,7 +111,7 @@ define(["jquery", "underscore"], function ($, _) {
             $(document).on("click", '.' + options.pageSelector + '-mz-listData > a', function () {
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val('');
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val($(this).text());
-                $('.' + options.pageSelector + '- > a').removeClass("mz-dd-active");
+                $('.' + options.pageSelector + '-mz-listData > a').removeClass("mz-dd-active");
                 $(this).addClass("mz-dd-active");
                 $('.mz-dropdown-data').hide();
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').attr('data-mz-value', $(this).data('mz-value'));
