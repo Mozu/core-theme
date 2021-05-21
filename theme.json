@@ -438,6 +438,18 @@
       "template": "back-office/quote-summary",
       "title": "Quote Summary",
       "userCreatable": false
+    },
+    {
+      "id": "shipment.deliverydateupdated",
+      "properties": {},
+      "template": "email/expected-delivery-date-update.hypr",
+      "title": "Expected Delivery Date Updated"
+    },
+    {
+      "id": "shipment.readyfordelivery",
+      "properties": {},
+      "template": "email/items-ready-for-delivery.hypr",
+      "title": "Items Ready For Delivery"
     }
   ],
   "mobileNotificationTemplates": [
