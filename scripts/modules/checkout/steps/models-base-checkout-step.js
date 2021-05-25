@@ -9,7 +9,7 @@ define([
 function ($, _, Hypr, Backbone, api, HyprLiveContext) {
 
     var CheckoutStep = Backbone.MozuModel.extend({
-        helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact', 'isMultiShipMode'],  //
+        helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact', 'isMultiShipMode', 'requiresShippingMethod'],  //
         // instead of overriding constructor, we are creating
         // a method that only the CheckoutStepView knows to
         // run, so it can run late enough for the parent
@@ -80,6 +80,9 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext) {
         },
         requiresDigitalFulfillmentContact: function () {
             return this.getOrder().get('requiresDigitalFulfillmentContact');
+        },
+        requiresShippingMethod: function () {
+            return this.getOrder().get('requiresShippingMethod');
         },
         edit: function () {
             this.stepStatus('incomplete');
