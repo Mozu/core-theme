@@ -1651,6 +1651,10 @@
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
                     }
 
+                    if (!self.get('requiresShippingMethod')) {
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('shippingMethodCode') === -1; }));    
+                    }
+
                     var billingEmail = billingInfo.get('billingContact.email');
 
                     self.get('billingInfo.billingContact').on('change:email', function(model, newVal) {
