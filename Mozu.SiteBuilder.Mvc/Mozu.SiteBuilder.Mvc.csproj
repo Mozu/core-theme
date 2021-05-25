@@ -17,10 +17,10 @@
 
   <ItemGroup>
 
- 
+
     <PackageReference Include="DeviceDetector.NET" Version="4.2.0" />
 
- 
+
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
     <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2046.0-master.10" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
@@ -69,6 +69,9 @@
     <None Remove="TestData\backoffice\Account.json" />
 
     <None Remove="TestData\backoffice\b2bUsers.json" />
+    <None Remove="TestData\shipment.transfercreatedbyfulfiller\Location1.json" />
+
+    <None Remove="TestData\shipment.transfercreatedbyfulfiller\Shipment1.json" />
 
     <EmbeddedResource Include="ArcJsExtensions\Content\dist\webpack.bundle.js" />
   </ItemGroup>

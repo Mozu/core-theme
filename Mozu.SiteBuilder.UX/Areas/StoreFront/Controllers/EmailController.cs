@@ -71,12 +71,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Location.Contracts.Location StoreLocation { get; set; }
         public bool IsShopperCanceled { get; set; }
     }
-    
+
     public class OrderEmail : Order {
         public List<Location.Contracts.Location> Locations { get; set; }
         public bool IsCurbside { get; set; }
     }
-    
+
     public class GatewayGiftCardEmail  : EmailGatewayGiftCard
     {
         public Order Order { get; set; }
@@ -248,7 +248,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                         new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
-                                               Topic = Topics.TransferShipmentCreatedByFulfiller 
+                                               Topic = Topics.TransferShipmentCreatedByFulfiller
                                            },
                                         new EmailTypeInfo
                                            {
@@ -364,6 +364,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var locationCode = string.Empty;
 
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
+
             var queryStringParams = Request.Query;
             if (emailTemplate == null)
             {
@@ -384,8 +385,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 else
                 {
                     model = MergeEmailParams(queryStringParams, model);
-                    var locationModel = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(model, emailTypeInfo?.ModelType, CaseInsensitiveJsonSerializerSettings.Default), emailTypeInfo?.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
-                    locationCode = (locationModel is ReturnEmail returnEmail) ? returnEmail.LocationCode : string.Empty;
+                    if (emailTypeInfo?.ModelType == typeof(ReturnEmail))
+                    {
+                        var locationModel = JsonConvert.DeserializeObject<ReturnEmail>(JsonConvert.SerializeObject(model, emailTypeInfo?.ModelType, CaseInsensitiveJsonSerializerSettings.Default));
+                        locationCode = locationModel.LocationCode;
+                    }
                 }
             }
 
@@ -465,7 +469,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
             _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
-            
+
             ViewData["smsEnabled"] = IsSmsEnabled(tenant);
             ViewData["adminDomainName"] = tenant.Domain.DomainName;
             var model = await Convert(notification.Payload, emailTypeInfo);
@@ -625,12 +629,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     returnEmail.Order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
                     var locationCode = returnEmail.LocationCode;
-                    if (!locationCode.IsNullOrEmpty())
-                    {
-                        var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
-                        FormatRegularHours(location);
-                        returnEmail.StoreLocation = location;
-                    }
+                    returnEmail.StoreLocation = await GetStorageLocation(locationCode);
                 }
 
             }
@@ -663,14 +662,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     shipmentEmail.IsShopperCanceled = shipmentEmail.CanceledItems.Any(a => string.Equals(a.CanceledReason.ReasonCode, "PurchaseNeverPickedUp", StringComparison.OrdinalIgnoreCase));
                 }
 
-                var locationCode = shipmentEmail.FulfillmentLocationCode;
-                if (!locationCode.IsNullOrEmpty()) {
-                    var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
-                    FormatRegularHours(location);
-                    shipmentEmail.StoreLocation = location;
-                }
+                shipmentEmail.StoreLocation = await GetStorageLocation(shipmentEmail.FulfillmentLocationCode);
             }
-               
+
             if (obj is OrderEmail orderEmail)
             {
                 orderEmail.IsCurbside = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode)).All(a => string.Equals(a.FulfillmentMethod, CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE, StringComparison.OrdinalIgnoreCase));
@@ -724,9 +718,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = await _locationRuntimeWebApiClient.GetLocation(locationCode);
             if (!result.HasException)
             {
-               var location = result.ReadAsSync();
-               FormatRegularHours(location);
-               return location;
+                    var location = await _locationRuntimeWebApiClient.GetLocation(locationCode);
+                    if (location.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        FormatRegularHours(location.ReadAsSync());
+                        return location.ReadAsSync();
+                    }
+
             }
          }
          return null;
@@ -752,7 +750,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //both openTime and close time always have hours, if isClosed is false.
                 if (string.IsNullOrEmpty(hours.OpenTime) && string.IsNullOrEmpty(hours.CloseTime))
                     return;
-                
+
                 DateTime.TryParse(hours.OpenTime, out DateTime openTime);
                 DateTime.TryParse(hours.CloseTime, out DateTime closeTime);
                 hours.OpenTime = openTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
@@ -798,13 +796,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
 			public const string ShipmentItemCanceled = "shipment.itemscanceled";
-            public const string ShipmentAssigned = "shipment.assigned"; 
+            public const string ShipmentAssigned = "shipment.assigned";
             public const string TransferShipmentCreatedByFulfiller = "shipment.transfercreatedbyfulfiller";
             public const string TransferShipmentCreated = "shipment.transfercreated";
             public const string TransferShipmentShipped = "shipment.transfershipped";
             public const string PartialPickupReady = "shipment.partialpickupready";
             public const string IntransitConfirmation = "shipment.intransitconfirmation";
-            public const string CurbsideReady = "shipment.curbsideready"; 
+            public const string CurbsideReady = "shipment.curbsideready";
             public const string PartialCurbsideReady = "shipment.partialcurbsideready";
             public const string GatewayGiftCardCreated = "gatewaygiftcard.created";
             public const string CustomerIntransit = "shipment.customerintransit";
@@ -819,7 +817,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
     }
 
-   
+
     public class EmailResponse
     {
         public string Subject { get; set; }
