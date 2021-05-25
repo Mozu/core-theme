@@ -161,6 +161,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jOrder.Add("requiresFulfillmentInfo", isFulfillmentInfoRequired);
             jOrder.Add("requiresDigitalFulfillmentContact", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DIGITAL));
 
+            var isShippingMethodRequired = order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP);
+            jOrder.Add("requiresShippingMethod", isShippingMethodRequired);
+
             if (account != null)
             {
                 var accountJson = account.ToJObject();
