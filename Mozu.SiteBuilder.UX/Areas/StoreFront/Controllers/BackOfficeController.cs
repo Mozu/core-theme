@@ -1,13 +1,21 @@
 ﻿using AutoMapper;
+using Kibo.Fulfillment.Contracts.Api;
+using Kibo.Inventory.Contracts.Api;
+using Kibo.Inventory.Contracts.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
-using Mozu.Core.Logging;
 using Mozu.Location.Contracts.Clients;
+using Mozu.ProductAdmin.Contracts;
+using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -20,20 +28,13 @@ using Mozu.Tenant.Contracts.Clients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using Kibo.Fulfillment.Contracts.Api;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
-using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.Customer.Contracts.Clients;
+using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -54,6 +55,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private readonly ISitesWebApiClient _sitesWebApiClient;
+        private readonly Lazy<IInventoryControllerApiClient> _inventoryControllerApiClient;       
+
         private readonly IReturnWebApiClient _returnWebApiClient;
         private readonly IQuoteWebApiClient _quoteWebApiClient;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
@@ -91,7 +94,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ISitesWebApiClient sitesWebApiClient,
             IQuoteWebApiClient quoteWebApiClient,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
-            IB2BAccountWebApiClient b2bAccountWebApiClient)
+            IB2BAccountWebApiClient b2bAccountWebApiClient,
+            Lazy<IInventoryControllerApiClient> inventoryControllerApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient
@@ -107,6 +111,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _quoteWebApiClient = quoteWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _b2bAccountWebApiClient = b2bAccountWebApiClient;
+            _inventoryControllerApiClient = inventoryControllerApiClient;
         }
 
         /// <summary>
@@ -165,8 +170,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return;
             }
+            var inventories = GetInventories(shipment.Items.Select(shipmentItem => shipmentItem.VariationProductCode ?? shipmentItem.ProductCode).ToList(), shipment.FulfillmentLocationCode);
 
-            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, order));
+            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, inventories, order));
             shipment.Items = t.ToList();
         }
 
@@ -193,13 +199,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return result;
         }
 
-        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem, DC.Order order)
+        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem, List<InventoryResponse> inventories, DC.Order order)
         {
             var result = Mapper.Map<DetailedShipmentItem>(shipmentItem);
             var product = FindProduct(shipmentItem.ProductCode, order);
             result.ProductName = product.Name;
             result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, shipmentItem.Quantity);
+            if (inventories.Count > 0)
+            {
+                GetInventoryDetails(result, inventories);
+            }
             return result;
+        }
+
+        private List<InventoryResponse> GetInventories(List<string> productCodes, string locationCode)
+        {
+            var inventoryRequest = CreateInventoryGetRequest(productCodes, locationCode);
+            return _inventoryControllerApiClient.Value.PostQueryInventory(inventoryRequest, null).Result.ReadAsSync().ToList();
+        }
+        private void GetInventoryDetails(DetailedShipmentItem item, List<InventoryResponse> inventories)
+        {
+            var inventory = inventories.FirstOrDefault(x => x.Upc == (item.VariationProductCode ?? item.ProductCode));
+
+            item.StockAvailable = inventory?.Available ?? 0;
+            item.StockOnHand = inventory?.OnHand ?? 0;
+            item.StockAllocated = inventory?.Allocated ?? 0;
+            item.StockOnBackOrder = Math.Abs(Math.Min(0, (inventory?.OnHand ?? 0) - inventory?.Allocated ?? 0));
+            item.SafetyStock = inventory?.SafetyStock ?? 0;
+            item.Ltd = inventory?.Ltd ?? 0;
+            item.Floor = inventory?.Floor ?? 0;
+            item.PendingStock = inventory?.Pending ?? 0;
         }
 
         private DetailedPickupItem GetDetailPickupItem(PickupItem pickupItem, DC.Order order)
@@ -209,6 +238,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             result.ProductName = product.Name;
             result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, pickupItem.Quantity);
             return result;
+        }
+
+        private static InventoryRequest CreateInventoryGetRequest(IEnumerable<string> productCodes, string locationCode, int pageNum = 1, int pageSize = 200)
+        {
+            return new InventoryRequest
+            {
+                Type = "ALL",
+                LocationCode = locationCode,
+                PageNum = pageNum,
+                PageSize = pageSize,
+                Items = productCodes.Select(productCode => new ItemQuantity
+                {
+                    Upc = productCode,
+                    Quantity = 0
+                }).ToList()
+            };
         }
 
         private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
@@ -238,7 +283,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (!string.IsNullOrEmpty(locationCode))
             {
-               return (await _locationAdminWebApi.GetLocation(locationCode)).ReadAsSync();
+                return (await _locationAdminWebApi.GetLocation(locationCode)).ReadAsSync();
             }
 
             return null;
@@ -334,7 +379,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> PackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
-            
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
@@ -343,12 +387,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var dcShipment = Mapper.Map<Shipment>(shipment);
-            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
+            order.Shipments = order.Shipments ?? new List<Shipment>(new[] { dcShipment });
 
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
             {
-                return NotFound( "Could not find packing slip template for the current Theme.");
+                return NotFound("Could not find packing slip template for the current Theme.");
             }
 
             //var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
@@ -359,7 +403,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["order"] = order;
             ViewData["returnLocation"] = await GetDefaultReturnLocation();
             ViewData["fulfillmentLocation"] = await GetLocation(shipment.FulfillmentLocationCode);
-            return await RenderWithContext(template, shipment);
+            return await RenderWithContext(template, dcShipment);
         }
 
         [HttpGet]
@@ -371,7 +415,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("pick-wave-print"));
             if (template == null)
             {
-                return NotFound( "Could not find pick wave template for the current Theme.");
+                return NotFound("Could not find pick wave template for the current Theme.");
             }
 
             var shipments = new List<DCShipment>();
@@ -390,7 +434,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 orders.Add(dcOrder);
             }
             ViewData["orders"] = orders;
-            
+
             ViewData["printPickwave"] = printPickWave;
             ViewData["printPackingSlips"] = printPackingLists;
             ViewData["printPickSheets"] = printSingleOrderSheets;
@@ -424,7 +468,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("order-pick-sheet"));
             if (template == null)
             {
-                return   NotFound("Could not find order pick sheet template for the current Theme.");
+                return NotFound("Could not find order pick sheet template for the current Theme.");
             }
 
             return await RenderWithContext(template, shipments);
@@ -447,7 +491,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("transfer-packing-slip"));
             if (template == null)
             {
-                return NotFound( "Could not find transfer packing slip template for the current Theme.");
+                return NotFound("Could not find transfer packing slip template for the current Theme.");
             }
 
             PopulateShipmentDetails(dcShipment, order);
@@ -464,7 +508,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReturnReceipt(string orderId , string returnId, [FromQuery(Name = "t")]string token = null)
+        public async Task<IActionResult> ReturnReceipt(string orderId, string returnId, [FromQuery(Name = "t")]string token = null)
         {
             DCReturns.Return returnObject = (await this._returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
             if (returnObject.Status != DCReturns.Return.ReturnStatusConst.CLOSED &&
@@ -579,7 +623,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
-            else if (templateid == "customer-at-curbside" )
+            else if (templateid == "customer-at-curbside")
             {
                 object model = TestDataBroker.GetFileContents(CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["isBackofficePreview"] = true;
@@ -614,7 +658,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
             }
-			else if (templateid == "return-receipt")
+            else if (templateid == "return-receipt")
             {
                 object model = TestDataBroker.GetFileContents(RETURN_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
@@ -658,7 +702,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
             //Should this be WhenAll?
-            return Task.WhenAll(this.GetContextInitializationTasks()).ContinueWith(_ => {
+            return Task.WhenAll(this.GetContextInitializationTasks()).ContinueWith(_ =>
+            {
                 ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
                 return (IActionResult)Ok(View(template.Template, model));
             });
@@ -701,7 +746,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!isAuthorized) throw new HttpResponseException(StatusCodes.Status403Forbidden);
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
-       
+
             bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
             if (isExpired)
             {
