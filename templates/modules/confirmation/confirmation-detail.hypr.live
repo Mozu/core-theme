@@ -19,6 +19,27 @@
             </div>
         </div>
         {% endif %}
+        {% if model.hasDelivery %}
+        <div class="mz-l-stack-section">
+            <h4 class="mz-l-stack-sectiontitle">{{ labels.delivery }}</h4>
+            <div class="mz-l-stack-item">
+                <small>{{ labels.storeName }}</small>
+                {% for item in model.items %}
+                {% if item.fulfillmentMethod == "Delivery" %}
+                <div> {{ item.product.name }} <b>{{ labels.deliveryLocationTo }} </b>
+                    {% with model.locationDetails|findwhere("code", item.fulfillmentLocationCode) as location %}
+                        {{ location.name }}
+                    {% endwith %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="mz-l-stack-item">
+                <b>{{ labels.deliverTo }}</b>
+                <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</div>
+            </div>
+        </div>
+        {% endif %}
         {% for item in model.items %}
         {% if item.fulfillmentMethod == "Pickup" %}
         <div class="mz-l-stack-section">

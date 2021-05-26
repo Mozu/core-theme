@@ -3,7 +3,13 @@
 {% if model.requiresFulfillmentInfo %}
 <div class="mz-formstep-fields mz-checkoutform-shipping-edit">
   <p><button class="mz-button mz-checkout-button-link" data-mz-action="toggleMultiShipMode">{{ labels.toggleToSingleShip }}</button></p>
+
+  <div data-mz-delivery-destination class="mz-l-formfieldgroup-full">
+    {% include "modules/multi-ship-checkout/delivery-destination"%}
+  </div>
+
   {% for item in model.orderItems %}
+        {% if forloop.index == 1 %} <div class="mz-l-formfieldgroup-full"><h3>{{ labels.orderItemsShipToHome }}</h3></div> {% endif %}
   	  	<div data-mz-shipping-destinations-item data-mz-item-id="{{item.id}}" data-mz-destination-id="{{item.destinationId}}" data-mz-model-id="{{item.cid}}" class="mz-l-formfieldgroup-full mz-shipping-destinations">
   	    	{% include "modules/multi-ship-checkout/shipping-destinations-item" with model=item %}
         </div>

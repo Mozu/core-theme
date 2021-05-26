@@ -169,14 +169,42 @@ define(['modules/api',
           //click handler for change store link.launches store picker
           var cartItemId = $(e.currentTarget).data('mz-cart-item');
           var cartItem = this.model.get("items").get(cartItemId);
+          var fulfillmentMethod = cartItem.get('fulfillmentMethod');
           var productCode = cartItem.apiModel.data.product.variationProductCode || cartItem.apiModel.data.product.productCode;
-          this.pickStore(productCode, cartItemId);
+          if(fulfillmentMethod == 'Delivery'){
+            this.pickDelivery(productCode, cartItemId);
+          }else{
+            this.pickStore(productCode, cartItemId);
+          }
         },0),
         pickStore: function(productCode, cartItemId){
           var me = this;
           var locationsCollection = new LocationModels.LocationCollection();
 
           locationsCollection.apiGetForProduct({productCode: productCode}).then(function(collection){
+            locationsCollection.get('items').forEach(function(item){
+              me.model.get('storeLocationsCache').addLocation({code: item.get('code'), name: item.get('name')});
+            });
+
+            var $bodyElement = $('#mz-location-selector').find('.modal-body');
+            $bodyElement.attr('mz-cart-item', cartItemId);
+            if (collection.length === 0){
+              me.pickerDialog.setBody(Hypr.getLabel("noNearbyLocationsProd"));
+            } else {
+              me.pickerDialog.setBody(me.makeLocationPickerBody(locationsCollection, cartItemId));
+            }
+            me.pickerDialog.show();
+
+          }, function(error){
+            //error
+          });
+
+        },
+        pickDelivery: function(productCode, cartItemId){
+          var me = this;
+          var locationsCollection = new LocationModels.LocationCollection();
+          
+          locationsCollection.apiGetForProduct({productCode: productCode,fulfillmentMethod: 'Delivery'}).then(function(collection){
             locationsCollection.get('items').forEach(function(item){
               me.model.get('storeLocationsCache').addLocation({code: item.get('code'), name: item.get('name')});
             });
@@ -226,20 +254,33 @@ define(['modules/api',
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
 
-                cartItem.apiUpdate().then(function(success){}, function(error){
-                  cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
-                  cartItem.set('fulfillmentLocationName', oldPickupLocation);
-                  cartItem.set('fulfillmentLocationCode', oldLocationCode);
-
-                });
-
-
-              } else if (value=="Pickup"){
-                  //first we get the correct product code for this item.
-                  //If the product is a variation, we want to pass that when searching for inventory.
-                  var productCode = cartItem.apiModel.data.product.variationProductCode || cartItem.apiModel.data.product.productCode;
-                  //pickStore function makes api calls, then builds/launches modal dialog
-                  this.pickStore(productCode, cartItemId);
+                cartItem.apiUpdate().then(
+                  function (success) {},
+                  function (error) {
+                    cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                    cartItem.set('fulfillmentLocationName', oldPickupLocation);
+                    cartItem.set('fulfillmentLocationCode', oldLocationCode);
+                  }
+                );
+              } else if (value == 'Pickup') {
+                //first we get the correct product code for this item.
+                //If the product is a variation, we want to pass that when searching for inventory.
+                cartItem.set('fulfillmentMethod', value);
+                cartItem.set('fulfillmentLocationName', '');
+                cartItem.set('fulfillmentLocationCode', '');
+                var pickupProductCode =
+                  cartItem.apiModel.data.product.variationProductCode ||
+                  cartItem.apiModel.data.product.productCode;
+                //pickStore function makes api calls, then builds/launches modal dialog
+                this.pickStore(pickupProductCode, cartItemId);
+              } else if (value == 'Delivery') {
+                cartItem.set('fulfillmentMethod', value);
+                cartItem.set('fulfillmentLocationName', '');
+                cartItem.set('fulfillmentLocationCode', '');
+                var deliveryProductCode =
+                  cartItem.apiModel.data.product.variationProductCode ||
+                  cartItem.apiModel.data.product.productCode;
+                this.pickDelivery(deliveryProductCode, cartItemId);
               }
 
         },0),
@@ -323,7 +364,7 @@ define(['modules/api',
           var oldPickupLocation = cartItem.get('fulfillmentLocationName');
           var oldLocationCode = cartItem.get('fulfillmentLocationCode');
 
-          cartItem.set('fulfillmentMethod', 'Pickup');
+          cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
           cartItem.apiUpdate().then(function(success){}, function(error){

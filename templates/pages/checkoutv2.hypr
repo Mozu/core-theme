@@ -62,7 +62,7 @@
             {% include "modules/multi-ship-checkout/step-shipping-destinations" %}
         </div>
 
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
+        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresShippingMethod %}style="display:none"{% endif %}>
             {% include "modules/multi-ship-checkout/step-shipping-methods" %}
         </div>
 

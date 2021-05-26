@@ -1,0 +1,49 @@
+{% if model.fulfillmentMethod == "Delivery" %}
+ 
+  <div class="mz-shipping-row">
+    <h3>{{ labels.orderItemsDelivery }}</h> 
+  </div>
+
+  <div class="mz-shipping-row">
+    <div class="mz-shipping-row-item">
+      <div class="mz-shipping-row-item">
+        <label for="mz-shipping-destination-address">{{ labels.shippingDestinationAddressLabel }}</label>
+      </div>
+      <div class="mz-shipping-row-item">
+        <span class="mz-validationmessage" data-mz-validationmessage-for="shippingDestinationAddress"></span>
+        <select id="mz-shipping-destination-address" name="shippingDestinationAddress" class="mz-shipping-destination-address-dd" data-mz-fulfillment-contact data-mz-value="fulfillmentContactId" {% if model.isLoading %} disabled {% endif %} {% if model.selectableDestinations.length === 0 %} disabled {% endif %}>
+          {% if model.selectableDestinations.length === 0 %}
+            <option class="mz-shipping-destination-address" value="" disabled selected hidden>{{labels.selectSavedAddress}}</option>
+          {% else %}
+            <option class="mz-shipping-destination-address" value="" disabled selected hidden>{{labels.selectSavedAddress}}</option>
+          {% endif %} 
+
+          {% for destination in model.selectableDestinations %}
+            <option class="mz-shipping-destination-address-select" value="{{ destination.id }}" data-mz-customerContactId="{{destination.customerContactId}}" {% if model.destinationId && model.destinationId == destination.id %} selected="selected" {% endif %}>{{ destination.destinationContact.address.address1 }}, {{ destination.destinationContact.address.cityOrTown }} {{ destination.destinationContact.address.stateOrProvince }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="mz-shipping-row-item">
+       {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+        <a class="mz-shipping-destination-edit-address-link" {% if not model.destinationId %} style="visibility:hidden" {% endif %} data-mz-action="handleEditContact" data-mz-destination-id="{{ model.destinationId }}"> | {{ labels.shippingDestinationEditAddress}}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% for item in model.getDeliverableItems %}
+    <br>
+    <div class="mz-shipping-row">
+      <b>{{ item.product.name }}</b>
+    </div>
+    <div class="mz-shipping-row">
+      {{ labels.shippingDestinationQuantityLabel }}
+      <span id="mz-shipping-destination-quantity" data-mz-destination-quantity>{{ item.quantity }}</span>
+    </div>
+  {% endfor %}
+  
+  <hr>
+
+{% endif %} 

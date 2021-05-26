@@ -321,7 +321,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 if (!me.validate()) {
                     var fulfillMethod = me.get('fulfillmentMethod');
                     if (!fulfillMethod) {
-                        fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
+                        fulfillMethod = (me.get('goodsType') === 'Physical' || me.get('goodsType') === 'Service') ?
+                            Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
                     }
                     return me.apiAddToCart({
                         options: me.getConfiguredOptions(),
@@ -344,7 +345,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 if (!memberProduct.validate()) {
                     var fulfillMethod = memberProduct.get('fulfillmentMethod');
                     if (!fulfillMethod) {
-                        fulfillMethod = (memberProduct.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
+                        fulfillMethod = (memberProduct.get('goodsType') === 'Physical' || memberProduct.get('goodsType') === 'Service') ?
+                            Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
                     }
                     var payload = {
                         options: memberProduct.getConfiguredOptions(),
@@ -510,7 +512,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             },
             // for catalog instead of commerce
             FulfillmentTypes: {
-                IN_STORE_PICKUP: "InStorePickup"
+                IN_STORE_PICKUP: "InStorePickup",
+                DELIVERY:"Delivery"
             },
             ProductUsage: {
                 Configurable: 'Configurable'
