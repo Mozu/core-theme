@@ -324,6 +324,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (QuoteEmail),
                                                Topic = Topics.QuoteExpired
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.DeliveryDateUpdated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ReadyForDelivery
                                            }
                 };
         }
@@ -814,6 +824,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string QuoteInReview = "quote.inreview";
             public const string QuoteReadyForCheckout = "quote.readyforcheckout";
             public const string QuoteExpired = "quote.expired";
+            public const string DeliveryDateUpdated = "shipment.deliverydateupdated";
+            public const string ReadyForDelivery = "shipment.readyfordelivery";
         }
     }
 

@@ -114,11 +114,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private async Task<JObject> RenderCart(Exception error)
         {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
-            LocationCollection locations = null;
+            var locations = new LocationCollection();
+            locations.Items = new List<Location.Contracts.Location>();
+
             if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
-                locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
+                var pickupLocations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
+                if(pickupLocations != null && pickupLocations.Items.Any())
+                {
+                    locations.Items.AddRange(pickupLocations.Items);
+                }
             }
+
+            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY))
+            {
+                var deliveryLocations = (await _locationClient.GetDeliveryLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
+                if (deliveryLocations != null && deliveryLocations.Items.Any())
+                {
+                    locations.Items.AddRange(deliveryLocations.Items);
+                }
+            }
+            
 
             var cartVM = CreateCartWithLocations(cart, locations);
             var jCart = cartVM.ToJObject(_cartSerializer.Value);
@@ -165,9 +181,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private UX.Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
         {
             var cartbase = Mapper.Map<UX.Models.StoreFront.Commerce.Cart>(cart);
-            if (locations != null && locations.Items.Any())
+            if (locations.Items != null && locations.Items.Any())
             {
-                foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+                foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP || item.FulfillmentMethod == FulfillmentMethodConst.DELIVERY))
                 {
                     var location = locations.Items.FirstOrDefault(x => x.Code.EqualsIgnoreCase(cartItem.FulfillmentLocationCode));
                     if (location != null) cartItem.FulfillmentLocationName = location.Name;

@@ -197,6 +197,30 @@
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
+  "delivery-locations": {
+    "defaultParams": {
+      "pageSize": 15
+    },
+    "collectionOf": "location",
+    "get": {
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
+    },
+    "get-by-lat-long": {
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-by-zipcode": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    }
+  },
   "cartsummary": "{+cartService}summary",
   "cart": {
     "defaults": {

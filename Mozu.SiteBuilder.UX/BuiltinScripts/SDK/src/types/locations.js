@@ -67,15 +67,16 @@ module.exports = (function () {
         },
 
         getForProduct: function (opts) {
+            var apiKey = opts.fulfillmentMethod == 'Delivery' ? 'delivery-locations' : 'locations';
             var self = this,
                 coll,
                 // not running the method on self since it shouldn't sync until it's been processed!
                 operation = opts.location ?
-                this.api.action('locations', 'get-by-lat-long', {
+                    this.api.action(apiKey, 'get-by-lat-long', {
                     latitude: opts.location.coords.latitude,
                     longitude: opts.location.coords.longitude
                 }) :
-                this.api.get('locations');
+                    this.api.get(apiKey);
             return operation.then(function (c) {
                 coll = c;
                 var codes = utils.map(coll.data.items, function (loc) {

@@ -304,10 +304,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var isFulfillmentInfoRequired = model.Items.Exists(
-                    x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
+                    x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP || x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY);
 
             jOrder.Add("requiresFulfillmentInfo", isFulfillmentInfoRequired);
             jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DIGITAL));
+
+            var isShippingMethodRequired = model.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP);
+            jOrder.Add("requiresShippingMethod", isShippingMethodRequired);
 
             if (account != null)
             {
@@ -446,6 +449,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jOrder = order.ToJObject();
 
             jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
+            jOrder.Add("hasDelivery", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DELIVERY));
 
             if (locations != null)
             {

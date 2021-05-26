@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-04-04
+ * Mozu JavaScript SDK - v0.3.0 - 2021-05-10
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -3737,6 +3737,30 @@ module.exports=
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
+  "delivery-locations": {
+    "defaultParams": {
+      "pageSize": 15
+    },
+    "collectionOf": "location",
+    "get": {
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
+    },
+    "get-by-lat-long": {
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-by-zipcode": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/DL/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    }
+  },
   "cartsummary": "{+cartService}summary",
   "cart": {
     "defaults": {
@@ -5342,7 +5366,7 @@ module.exports = (function () {
 
             for (i = 0; i < items.length; i++) {
                 if (items[i].destinationId) {
-                    if (items[i].fulfillmentMethod === "Ship") {
+                    if (items[i].fulfillmentMethod === "Ship" || items[i].fulfillmentMethod === "Delivery") {
                         payloadCollection.postdata[0].itemIds.push(items[i].id);
                     }
                 }
@@ -5369,9 +5393,17 @@ module.exports = (function () {
                 }]
             }
 
-            for (i = 0; i < items.length; i++) {
-                if (items[i].fulfillmentMethod === "Ship") {
-                    payloadCollection.postdata[0].itemIds.push(items[i].id);
+            if (params.isFulfillmentMethodDelivery) {
+                for (i = 0; i < items.length; i++) {
+                    if (items[i].fulfillmentMethod === "Delivery") {
+                        payloadCollection.postdata[0].itemIds.push(items[i].id);
+                    }
+                }
+            } else {
+                for (i = 0; i < items.length; i++) {
+                    if (items[i].fulfillmentMethod === "Ship" || items[i].fulfillmentMethod === "Delivery") {
+                        payloadCollection.postdata[0].itemIds.push(items[i].id);
+                    }
                 }
             }
 
@@ -5925,15 +5957,16 @@ module.exports = (function () {
         },
 
         getForProduct: function (opts) {
+            var apiKey = opts.fulfillmentMethod == 'Delivery' ? 'delivery-locations' : 'locations';
             var self = this,
                 coll,
                 // not running the method on self since it shouldn't sync until it's been processed!
                 operation = opts.location ?
-                this.api.action('locations', 'get-by-lat-long', {
+                    this.api.action(apiKey, 'get-by-lat-long', {
                     latitude: opts.location.coords.latitude,
                     longitude: opts.location.coords.longitude
                 }) :
-                this.api.get('locations');
+                    this.api.get(apiKey);
             return operation.then(function (c) {
                 coll = c;
                 var codes = utils.map(coll.data.items, function (loc) {
