@@ -20,7 +20,7 @@
                       <p>
                         <b>
                           Updated By: {{history.auditInfo.createByName || history.auditInfo.createBy}} {% if history.auditInfo.createByEmail %}({{history.auditInfo.createByEmail}}) {% endif %} -
-                          {{ history.auditInfo.createDate|date("m/d/Y") }}
+                          {{ history.createDateLocale }}
                         </b>
                       </p>                        
                           <table>

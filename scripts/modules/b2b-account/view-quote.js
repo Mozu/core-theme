@@ -320,6 +320,10 @@ define([
         addUserInfoOnModel: function () {
             var self = this;
             var adminUserIds = [];
+            this.model.set('createDateLocale', this.getDateInLocaleFormat(self.model.apiModel.data.auditInfo.createDate));
+            if (self.model.apiModel.data.expirationDate) {
+                this.model.set('expirationDateLocale', this.getDateInLocaleFormat(self.model.apiModel.data.expirationDate));
+            }
             self.setUserNameOnComment(self.model.get('comments'), adminUserIds);
             self.setUserInfoOnAuditHistory(self.model.get('auditHistory'), adminUserIds);
             if (adminUserIds.length > 0) {
@@ -341,6 +345,7 @@ define([
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
                     comments[c].createDate = comments[c].auditInfo.createDate;
+                    comments[c].createDateLocale = this.getDateInLocaleFormat(comments[c].auditInfo.createDate);
                 }
                 this.model.set('comments', comments);
             }
@@ -361,9 +366,13 @@ define([
                     }
                     //Need this for hypr filters. Hypr filter not working on complex/nested objects.
                     auditHistory[a].createDate = auditHistory[a].auditInfo.createDate;
+                    auditHistory[a].createDateLocale = this.getDateInLocaleFormat(auditHistory[a].auditInfo.createDate);
                 }
                 this.model.set('auditHistory', auditHistory);
             }
+        },
+        getDateInLocaleFormat: function (dateToConvert) {
+            return (dateToConvert ? new Date(dateToConvert).toLocaleDateString() : "");
         },
         getContactById: function (contactId) {
             var self = this;
