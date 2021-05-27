@@ -53,12 +53,11 @@
   <li>
     <div class="mz-quote-actions">
       {% if model.status=="Pending" %}
-        <button class="mz-button" data-mz-action="submitForApproval"  >{{labels.submitForApproval}}</button>
-        <button class="mz-button" data-mz-action="discardDraft" >{{labels.discardChanges}}</button>
+        <button class="mz-button" data-mz-action="submitForApproval">{{labels.submitForApproval}}</button>
+        <button class="mz-button" data-mz-action="discardDraft">{{labels.discardChanges}}</button>
       
       {% elif model.status=="InReview" %}
-        <button class="mz-button" data-mz-action="approveQuote" {% if model.hasDraft==true %} disabled {% endif %} >{{labels.approveQuote}}</button>
-        <button class="mz-button" data-mz-action="commitDraft" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitChanges}}</button>
+        <button class="mz-button" data-mz-action="approveQuote">{% if model.hasDraft==false %} {{labels.approveQuote}} {% endif %} {% if model.hasDraft==true %} {{labels.approveQuoteWithChanges}} {% endif %} </button>
         <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
 
       {% elif model.status=="ReadyForCheckout" %}
@@ -69,7 +68,6 @@
       {% endif %}
         <button class="mz-button" data-mz-action="submitForApproval" {% if model.hasDraft==false %} disabled {% endif %} >{{labels.submitForApproval}}</button>
         <button class="mz-button" data-mz-action="discardDraft" {% if model.hasDraft==false %} style="display:none;" {% endif %} >{{labels.discardChanges}}</button>
-      
       {% else %}      
       {% endif %}
     </div>
