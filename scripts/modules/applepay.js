@@ -139,7 +139,7 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
         var hasShippingItem = false;
         var items = this.cart.get('items');
         items.forEach(function(item){
-            if (item.get('fulfillmentMethod').toLowerCase() == "ship" && self.orderModel.originalQuoteId === ""){
+            if (item.get('fulfillmentMethod').toLowerCase() == "ship"){
                 hasShippingItem = true;
             }
         });
