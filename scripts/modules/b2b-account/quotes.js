@@ -141,34 +141,31 @@ define([
             }
             if (isSalesRep) {
                 if (!self.model.get("b2bAccounts")) {
+                    var userId = require.mozuData('user').userId;
                     // Custom configurable dropdown with search and pagination.
                     $("#selectb2bAccount").mozuPaginatedSearchableDropdown({
                         model: B2BAccountModels.b2bAccounts,
                         pageSize: 20,
                         textField: 'companyOrOrganization',
+                        filterOption: 'cont',
                         valueField: 'id',
                         placeHolder: $('#selectb2bAccount > .mz-dd-placeholder').text(),
-                        filterOption: 'cont',
-                        filterOption1: 'eq',
                         noRecords: $('#selectb2bAccount > .mz-dd-no-records').text(),
                         pageSelector: 'selectb2bAccount',
-                        optionalFilter: 'and',
-                        filterKey: 'isActive',
-                        filterValue: 'true'
+                        filters: 'isActive eq true and salesrep.userid eq ' + userId,
+                        sortDirection: 'asc'
                     });
                     $("#selectb2bAccountGrid").mozuPaginatedSearchableDropdown({
                         model: B2BAccountModels.b2bAccounts,
                         pageSize: 10,
                         textField: 'companyOrOrganization',
+                        filterOption: 'cont',
                         valueField: 'id',
                         placeHolder: $('#selectb2bAccountGrid > .mz-dd-placeholder').text(),
-                        filterOption: 'cont',
-                        filterOption1: 'eq',
                         noRecords: $('#selectb2bAccountGrid > .mz-dd-no-records').text(),
                         pageSelector: 'selectb2bAccountGrid',
-                        optionalFilter: 'and',
-                        filterKey: 'isActive',
-                        filterValue: 'true'
+                        filters: 'isActive eq true and salesrep.userid eq ' + userId,
+                        sortDirection: 'asc'
                     });
                 }
             }
