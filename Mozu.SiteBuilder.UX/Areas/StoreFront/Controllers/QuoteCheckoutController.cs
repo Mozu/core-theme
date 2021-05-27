@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return new RedirectResult(redirectUrl.ToString());
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.QuoteCheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.QuoteCheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
         [Route("checkout/quoteOrder/{orderId}")]
