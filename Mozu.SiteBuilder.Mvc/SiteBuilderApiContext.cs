@@ -58,14 +58,14 @@ namespace Mozu.SiteBuilder.Mvc
                 new OrderReadBehavior().Id,       //73
                 new PriceListReadBehavior().Id,   //239
                 new WishlistReadBehavior().Id,    //161
-                new B2BAccountCreateBehavior().Id,//266
-                new B2BAccountUpdateBehavior().Id,//267
-                new B2BAccountDeleteBehavior().Id,//268
-                new B2BAccountReadBehavior().Id,  //269
-                new QuoteCreateBehavior().Id,     //270
-                new QuoteUpdateBehavior().Id,     //271
-                new QuoteDeleteBehavior().Id,     //272
-                new QuoteReadBehavior().Id,       //273
+                new B2BAccountCreateBehavior().Id,//270
+                new B2BAccountUpdateBehavior().Id,//271
+                new B2BAccountDeleteBehavior().Id,//272
+                new B2BAccountReadBehavior().Id,  //273
+                new QuoteCreateBehavior().Id,     //274
+                new QuoteUpdateBehavior().Id,     //275
+                new QuoteDeleteBehavior().Id,     //276
+                new QuoteReadBehavior().Id,       //277
             };
             var isSalesRep = AdminUserClaim.BehaviorIds.ContainsAll(requiredBehaviorIds);
 

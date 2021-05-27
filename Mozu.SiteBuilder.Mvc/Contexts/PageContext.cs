@@ -283,7 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             DataViewMode = apiContext.DataViewMode;
             _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
             PurchaseLocation = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
-            _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile, _apiContext.IsSalesRep()));
+            _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile, _apiContext.IsSalesRep(), _apiContext.AdminUserClaim));
             IpAddress = ipAddressFinderOuter.IpAddress;
             try
             {
@@ -377,7 +377,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return prof;
         }
 
-        static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile, bool isSalesRep)
+        static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile, bool isSalesRep, LightweightUserClaims adminUserClaims)
         {
             var accountId = -1;
 
@@ -415,7 +415,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 Email = userProfile.Value.EmailAddress,
                 FirstName = userProfile.Value.FirstName,
                 LastName = userProfile.Value.LastName,
-                UserId = userClaims.UserId,
+                UserId = isSalesRep ? adminUserClaims.UserId : userClaims.UserId,
                 AccountId = accountId > 0 ? accountId : (int?)null,
                 IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
                 IsAnonymous = userClaims.IsAnonymous,
