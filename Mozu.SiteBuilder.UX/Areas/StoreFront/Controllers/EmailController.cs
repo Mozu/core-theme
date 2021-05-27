@@ -171,6 +171,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo
                                            {
+                                               ModelType = typeof (Order),
+                                               Topic = Topics.OrderCancelFailed
+                                           },
+                                       new EmailTypeInfo
+                                           {
                                                ModelType = typeof (Mozu.ProductRuntime.Contracts.Product),
                                                Topic = Topics.InStockNotification
                                            },
@@ -789,6 +794,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string OrderEmailTopic = "order.changed";
             public const string CheckoutEmailTopic = "checkout.changed";
             public const string OrderShippedTopic = "order.shipped";
+            public const string OrderCancelFailed = "order.cancelfailed";
             public const string ReturnChanged = "return.changed";
             public const string ReturnCreated = "return.created";
             public const string ReturnAuthorized = "return.authorized";
