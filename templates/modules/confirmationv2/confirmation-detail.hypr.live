@@ -64,7 +64,7 @@
                       {% for item in model.items %}
                         {% if item.fulfillmentLocationCode == location.id && item.fulfillmentMethod == "Delivery" %}
                           <div>
-                            {{ item.product.name }} <b>{{ labels.deliveryLocationTo }}</b>
+                            {{ item.product.name }} <b>{{ labels.fromDeliveryLocation }}</b>
                             {% with location.locationInfo as locationInfo %}
                               {{ locationInfo.name }}
                             {% endwith %}

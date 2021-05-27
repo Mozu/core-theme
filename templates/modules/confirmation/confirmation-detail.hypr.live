@@ -26,7 +26,7 @@
                 <small>{{ labels.storeName }}</small>
                 {% for item in model.items %}
                 {% if item.fulfillmentMethod == "Delivery" %}
-                <div> {{ item.product.name }} <b>{{ labels.deliveryLocationTo }} </b>
+                <div> {{ item.product.name }} <b>{{ labels.fromDeliveryLocation }} </b>
                     {% with model.locationDetails|findwhere("code", item.fulfillmentLocationCode) as location %}
                         {{ location.name }}
                     {% endwith %}
