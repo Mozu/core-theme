@@ -53,17 +53,21 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				return;
 			return value.value;
 		},
-		addCheckoutButton: function(id, isCart) {
+		addCheckoutButton: function(id, isCart, isQuoteOrder) {
 			var self = this;
 			if (!self.isEnabled) return;
 			//var pageContext = require.mozuData('pagecontext');
 			var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
 			var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
+			var quoteOrderUrl = "/checkout/quoteOrder";
 
-			if (!isCart)
-				redirectUrl += checkoutUrl+"/"+id+"?isAwsCheckout=true&view="+self.viewName;
-			else
+			if (isCart)
 				redirectUrl += "/cart?cartId="+id+"&isAwsCheckout=true&view="+self.viewName;
+			else if(isQuoteOrder)
+				redirectUrl += quoteOrderUrl+"/"+id+"?isAwsCheckout=true&view="+self.viewName;
+			else
+				redirectUrl += checkoutUrl+"/"+id+"?isAwsCheckout=true&view="+self.viewName;
+
 			EventBus.on("aws-script-loaded", function(){
 				var authRequest;
 				window.OffAmazonPayments.Button("AmazonPayButton", self.sellerId, { //use seller id
@@ -94,7 +98,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 
 	function loadWalletWidget(sellerId,awsReferenceId) {
 		var divId = "walletWidgetDiv";
-		var walletData = {
+		var  walletData = {
 			sellerId: sellerId,
 			onPaymentSelect: function(orderReference) {
 				EventBus.trigger("aws-card-selected");

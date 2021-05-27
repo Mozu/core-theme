@@ -20,10 +20,8 @@ define(["jquery", "underscore"], function ($, _) {
             "(": "^(",
             ")": "^)"
         };
-        var dataSet = new options.model({ pageSize: options.pageSize, filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
-        if (options.optionalFilter === '') {
-            dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc' });
-        }
+        
+        var dataSet = new options.model({ pageSize: options.pageSize, filter:  options.filters, sortBy: options.textField + ' ' + options.sortDirection });
         dataSet.apiGet().then(function (accounts) {
             lastPageIndex = accounts.data.pageCount;
             var divElm = "";
@@ -32,7 +30,10 @@ define(["jquery", "underscore"], function ($, _) {
             });
             $(self.selector).append('<div tabindex="-1" class="' + options.pageSelector + '-mz-listData mz-data-list">' + divElm + '</div>');
             $('<div class="' + options.pageSelector + '-mz-pagination-url mz-pagination-url"><a class="firstPage" data-page-val="0" href="javascript:void(0)"><<</a> <a class="prevPage" href="javascript:void(0)"><</a>  <span class="displayPageCount"> <span clss="count_val">' + (accounts.data.startIndex + 1) + '</span> of ' + lastPageIndex + ' </span> <a class="nextPage" data-pagination="0" href="javascript:void(0)">></a> <a class="lastPage" href="javascript:void(0)">>></a><div class="mz-dd-loading"></div></div>').appendTo(self.selector);
-
+            if (lastPageIndex === 0) {
+                $('.' + options.pageSelector + '-mz-listData').html('<div style="text-align: center">' + options.noRecords + '</div>');
+                $('.pagination_btn').hide();
+            }
             $(document).on('click', '.mz-dd-arrow', function () {
                 $(this).prev('input').focus();
             });
@@ -45,15 +46,9 @@ define(["jquery", "underscore"], function ($, _) {
                     return specialCharactersObj[match];
                 });
                 inputValue = inputValue.replace(/undefined/g, ' ');
-                var dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
-                if (options.optionalFilter === '') {
-                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc' });
-                }
+                var dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter:  options.filters, sortBy: options.textField + ' ' + options.sortDirection });
                 if (filteredVal) {
-                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '" ' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, sortBy: options.textField + ' ' + 'asc' });
-                    if (options.optionalFilter === '') {
-                        dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter: options.textField + ' ' + options.filterOption + ' "' + inputValue + '"', sortBy: options.textField + ' ' + 'asc' });
-                    }
+                    dataSet = new options.model({ startIndex: options.pageSize * pageNumber, pageSize: options.pageSize, filter:  options.textField + ' ' + options.filterOption + ' "' + inputValue + '" ' + options.filters, sortBy: options.textField + ' ' + options.sortDirection });
                 }
                 dataSet.apiGet().then(function (accounts) {
                     $('.' + options.pageSelector + '-mz-listData').text('');
@@ -87,6 +82,9 @@ define(["jquery", "underscore"], function ($, _) {
 
             $(document).on('click', '.' + options.pageSelector + '-mz-pagination-url > .prevPage', function (evt) {
                 evt.stopImmediatePropagation();
+                if(pageIndex >= lastPageIndex) {
+                    pageIndex = lastPageIndex - 1;
+                }
                 if (pageIndex >= 1) {
                     $('.' + options.pageSelector + '-mz-pagination-url > .displayPageCount').text((pageIndex + ' of ' + lastPageIndex));
                     pageIndex--;
@@ -113,7 +111,7 @@ define(["jquery", "underscore"], function ($, _) {
             $(document).on("click", '.' + options.pageSelector + '-mz-listData > a', function () {
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val('');
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').val($(this).text());
-                $('.' + options.pageSelector + '- > a').removeClass("mz-dd-active");
+                $('.' + options.pageSelector + '-mz-listData > a').removeClass("mz-dd-active");
                 $(this).addClass("mz-dd-active");
                 $('.mz-dropdown-data').hide();
                 $(self.selector + '> .' + options.pageSelector + '-mz-dd-search').attr('data-mz-value', $(this).data('mz-value'));
@@ -137,12 +135,13 @@ define(["jquery", "underscore"], function ($, _) {
                     inputValue = inputValue.replace(/undefined/g, ' ');
                     $('.' + options.pageSelector + '> .mz-dropdown-data').show();
                     clearTimeout(timeout);
-                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '"' + options.optionalFilter + ' ' + options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue, pageSize: options.pageSize });
-                    if (options.optionalFilter === "") {
-                        dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '"', pageSize: options.pageSize });
+                    var dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '" ', pageSize: options.pageSize });
+                    if(options.filters !== "") {
+                        var addOptional = 'and ' + options.filters;
+                        dataSet = new options.model({ filter: options.textField + " " + options.filterOption + " '" + inputValue + '" ' + addOptional, pageSize: options.pageSize });
                     }
                     if (inputValue === "") {
-                        dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + 'asc', filter: options.filterKey + ' ' + options.filterOption1 + ' ' + options.filterValue });
+                        dataSet = new options.model({ pageSize: options.pageSize, sortBy: options.textField + ' ' + options.sortDirection, filter: options.filters });
                         filteredVal = false;
                     }
                     $('.' + options.pageSelector + '-mz-listData').scrollTop(0);

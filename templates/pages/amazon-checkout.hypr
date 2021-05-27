@@ -41,8 +41,24 @@
 {% endwith %}
 
 <div class="mz-l-container">
-    <h1 class="mz-pagetitle">
-        {{ labels.awsCheckout }}
+		<script type="text/javascript">
+			window.onload = function(){
+				var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
+
+				var elementId = 'shippingAndBillingTitle';
+				if(isQuoteOrder) {
+					elementId = 'billingTitle';
+				}
+				
+				var element = document.getElementById(elementId);
+				element.style.display = 'block';
+        	};
+		</script>
+    <h1 class="mz-pagetitle" id="shippingAndBillingTitle" style="display:none;">
+		{{ labels.awsCheckout }}
+    </h1>
+	<h1 class="mz-pagetitle" id="billingTitle" style="display:none;">
+		{{ labels.awsCheckoutBilling }}
     </h1>
 
     <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">

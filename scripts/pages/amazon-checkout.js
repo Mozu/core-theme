@@ -14,12 +14,23 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){
 				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
-				window.location = checkoutUrl+"/"+id;
+				
+				if(this.model.attributes.originalQuoteId)
+					window.location = "/checkout/quoteOrder/" + id;
+				else
+				 	window.location = checkoutUrl +"/"+id;
 			});
 			
 		},
 		render: function() {
 			Backbone.MozuView.prototype.render.call(this);
+
+			var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
+			if(!isQuoteOrder)
+			{				
+				$("#amazonAddressBookWidgetTD").show();
+			}
+				
 			AmazonPay.addAddressWidget();
 			AmazonPay.addWalletWidget();
 

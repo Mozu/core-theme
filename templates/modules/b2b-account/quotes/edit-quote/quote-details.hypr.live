@@ -48,7 +48,7 @@
             </dt>
             <dd>
               {% if model.auditInfo.createDate %}
-                {{ model.auditInfo.createDate|date("m/d/Y") }}
+              {{ model.createDateLocale }}
               {% endif %}
             </dd>
             <dt>
@@ -89,7 +89,7 @@
               {% else %}
 
               {% if model.expirationDate %}
-              {{ model.expirationDate|date("m/d/Y") }}
+              {{ model.expirationDateLocale }}
               {% endif %}
 
               {% if model.isSalesRep==true %}
