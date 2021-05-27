@@ -1,0 +1,11 @@
+﻿{% extends "email/email" %}
+{% block body-content %}
+<div>
+    {{ labels.orderCancelFailed|string_format(model.orderNumber)|safe }} 
+     <a href="https://{{ adminDomainName }}/Admin/s-{{model.siteId}}/orders/edit/{{model.id}}">https://{{ adminDomainName }}/Admin/s-{{model.siteId}}/orders/edit/{{model.id}}</a>.
+    <br /><br />
+</div>
+<div>
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+</div>
+{% endblock body-content %}
