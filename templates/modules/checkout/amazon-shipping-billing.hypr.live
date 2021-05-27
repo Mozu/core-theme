@@ -1,10 +1,10 @@
 
 <tbody>
 	<tr>
-		<td style="padding:0px 10px 0px 0px;">
+		<td id="amazonAddressBookWidgetTD" style="padding:0px 10px 0px 0px; display:none;">
 			<div id="amazonAddressBookWidgetDiv"></div>
 		</td>
-		<td style="padding:0px 10px 0px 0px;">
+		<td id="walletWidgetTD" style="padding:0px 10px 0px 0px;">
 			<div id="walletWidgetDiv"></div>    
 		</td>
 	<tr>

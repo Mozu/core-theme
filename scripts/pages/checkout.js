@@ -719,8 +719,9 @@ require(["modules/jquery-mozu",
 
         $checkoutView.noFlickerFadeIn();
         
+        var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
         if (AmazonPay.isEnabled)
-            AmazonPay.addCheckoutButton(window.order.id, false);
+            AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
 
         //For quote originated order, skip shipping address and shipping method steps
         if (checkoutData.originalQuoteId) {
