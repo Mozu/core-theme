@@ -1647,11 +1647,17 @@
                         });
                     });
 
-                    if (!self.get('requiresFulfillmentInfo')) {
+                    // If both fulfillmentInfo and shippingMethod are not required,
+                    // E.g. When only Pickup Items are present in cart, 
+                    // then remove all validations related to fulfillmentInfo. This will also remove shippingMethodCode validation.
+                    if (!self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
                     }
 
-                    if (!self.get('requiresShippingMethod')) {
+                    // If fulfillmentInfo is required and shippingMethod is not required,
+                    // E.g. When only Delivery Items or Delivery and Pickup Items are present in cart,
+                    // then remove only shippingMethodCode validation as fulfillmentInfo will be required for Delivery Items.
+                    if (self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('shippingMethodCode') === -1; }));    
                     }
 
