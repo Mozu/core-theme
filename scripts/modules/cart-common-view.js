@@ -12,8 +12,9 @@ define(['modules/api',
         'modules/models-location',
         'modules/amazonPay',
         'modules/applepay',
-        'modules/mozu-utilities'
-], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, MozuUtilities) {
+        'modules/mozu-utilities',
+        'modules/message-handler'
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, MozuUtilities, MessageHandler) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -185,7 +186,6 @@ define(['modules/api',
             locationsCollection.get('items').forEach(function(item){
               me.model.get('storeLocationsCache').addLocation({code: item.get('code'), name: item.get('name')});
             });
-
             var $bodyElement = $('#mz-location-selector').find('.modal-body');
             $bodyElement.attr('mz-cart-item', cartItemId);
             if (collection.length === 0){
@@ -196,7 +196,8 @@ define(['modules/api',
             me.pickerDialog.show();
 
           }, function(error){
-            //error
+            MessageHandler.saveMessage('LocationTypes', 'Error', error.message);
+            MessageHandler.showMessage('LocationTypes');
           });
 
         },
@@ -219,7 +220,8 @@ define(['modules/api',
             me.pickerDialog.show();
 
           }, function(error){
-            //error
+            MessageHandler.saveMessage('LocationTypes', 'Error', error.message);
+            MessageHandler.showMessage('LocationTypes');
           });
 
         },
