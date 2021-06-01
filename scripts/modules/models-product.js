@@ -319,7 +319,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             var me = this;
             return this.whenReady(function () {
                 if (!me.validate()) {
+                    var hasAssemblyOptions = me.getConfiguredOptions().some(function(option) {
+                        return option.name == "Assembly";
+                    });
+                    var newAssemblyServiceItem;
                     var fulfillMethod = me.get('fulfillmentMethod');
+                    if(hasAssemblyOptions) fulfillMethod = "Pickup";
                     if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical' || me.get('goodsType') === 'Service') ?
                             Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
@@ -329,6 +334,25 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         fulfillmentMethod: fulfillMethod,
                         quantity: me.get("quantity")
                     }).then(function (item) {
+                        // check if the item has Assembly options
+                        // if yes then add assembly service item also to cart
+                        if (hasAssemblyOptions) {
+                            if (me.id == "ikea-bed") {
+                                newAssemblyServiceItem = new Product({ productCode: "sps_01" });
+                            } else if (me.id == "grill"){
+                                newAssemblyServiceItem = new Product({ productCode: "sps_02" });                                
+                            } else {
+                                newAssemblyServiceItem = new Product({ productCode: "sps_03" });                                
+                            }
+                            return newAssemblyServiceItem.apiAddToCart({
+                                fulfillmentMethod: "Pickup",
+                                quantity: me.get("quantity"),
+                                parentItemId: item.data.id
+                            });
+                        } else {
+                            return item;
+                        }
+                    }).then(function(item) {
                         me.trigger('addedtocart', item, stopRedirect);
                     });
                 }
