@@ -68,6 +68,13 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                 return self.collection.parent.get('storeLocationsCache').getLocationByCode(self.get('fulfillmentLocationCode'));
             }
             return;
+        },
+        hasAssemblyOptions: function() {
+            var self = this;
+            var options = self.apiModel.data.product.options;
+            return options.some(function(option) {
+                return option.name == "Assembly";
+            });
         }
     }),
     StoreLocationsCache = Backbone.Collection.extend({
@@ -271,6 +278,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
     });
 
     return {
+        CartItemProduct: CartItemProduct,
         CartItem: CartItem,
         Cart: Cart
     };

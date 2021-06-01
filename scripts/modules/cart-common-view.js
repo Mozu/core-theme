@@ -87,6 +87,8 @@ define(['modules/api',
             // this.messageView.render();
         },
         updateQuantity: _.debounce(function (e) {
+            var me = this;
+
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val(), 10),
                 id = $qField.data('mz-cart-item'),
@@ -94,7 +96,25 @@ define(['modules/api',
 
             if (item && !isNaN(newQuantity)) {
                 item.set('quantity', newQuantity);
-                item.saveQuantity();
+                
+                if (item.hasChanged("quantity")) {
+                    var assemblyServiceItem;
+                    if (item.hasAssemblyOptions()) {
+                        assemblyServiceItem = me.model.get("items").find(function (cartItem) {
+                            return cartItem.get("parentItemId") == item.id;
+                        });
+                    }
+
+                    item.apiModel.updateQuantity(newQuantity)
+                        .then(function() {
+                            // if item has Assembly options then update qty of assembly service item too
+                            if (assemblyServiceItem) {
+                                return assemblyServiceItem.apiModel.updateQuantity(newQuantity);
+                            }
+                        }).then(function() {
+                            me.model.fetch();
+                        });
+                }
             }
         },400),
 
@@ -118,7 +138,44 @@ define(['modules/api',
             }
             var $removeButton = $(e.currentTarget);
             var id = $removeButton.data('mz-cart-item');
-            this.model.removeItem(id);
+
+            var item = me.model.get("items").get(id);
+            var assemblyServiceItem,
+                deliveryServiceItem;
+            
+            // check if the item has assembly option.
+            // If yes then delete assembly service item too
+            if (item.hasAssemblyOptions()) {
+                assemblyServiceItem = me.model.get("items").find(function (cartItem) {
+                    return cartItem.get("parentItemId") == item.id;
+                });
+                me.model.get("items").models = me.model.get("items").filter(function(cartItem) {
+                    return cartItem.id != assemblyServiceItem.id;
+                });
+
+            }
+
+            // check if it is the only item in cart with delivery
+            // If yes then delete service item too
+            var otherItemsHaveDelivery = me.model.get("items").find(function (cartItem) {
+                return (cartItem.get("fulfillmentMethod") == "Delivery" && cartItem.get("product").get("goodsType") == "Physical" && cartItem.id != item.id);
+            });
+            if (item.get("fulfillmentMethod") == "Delivery" && !otherItemsHaveDelivery) {
+                deliveryServiceItem = me.model.get("items").find(function (item) {
+                    return item.get("product").id == "dsp_01";
+                });
+                me.model.get("items").models = me.model.get("items").filter(function(cartItem) {
+                    return cartItem.id != deliveryServiceItem.id;
+                });
+            }
+
+            // remove parent product
+            me.model.get("items").models = me.model.get("items").filter(function(cartItem) {
+                return cartItem.id != item.id;
+            });
+
+            me.model.apiUpdate().then(function() {});
+
             _.delay(function () {
                 me.backorderMessageView.render();
             }, 5000);
@@ -247,6 +304,24 @@ define(['modules/api',
                 return 0;
               }
 
+              // if changing ffmt method from Delivery to STH remove delivery service item from cart if no other item has delivery on them
+              // Also set assembly option to false and remove assembly service item
+              var deliveryServiceItem;
+              if (cartItem.get('fulfillmentMethod') == "Delivery") {
+                  deliveryServiceItem = me.model.get("items").find(function (item) {
+                      return item.get("product").id == "dsp_01";
+                  });
+              }
+
+              var assemblyServiceItem;
+              assemblyServiceItem = me.model.get("items").find(function (item) {
+                  return item.get("parentItemId") == cartItem.id;
+              });
+
+              var otherItemsHaveDelivery = me.model.get("items").find(function(item) {
+                return (item.get("fulfillmentMethod") == "Delivery" && item.apiModel.data.product.goodsType == "Physical" && item.id != cartItem.id);
+              });
+
               if (value=="Ship"){
                 var oldFulfillmentMethod = cartItem.get('fulfillmentMethod');
                 var oldPickupLocation = cartItem.get('fulfillmentLocationName');
@@ -256,14 +331,30 @@ define(['modules/api',
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
 
-                cartItem.apiUpdate().then(
-                  function (success) {},
-                  function (error) {
-                    cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
-                    cartItem.set('fulfillmentLocationName', oldPickupLocation);
-                    cartItem.set('fulfillmentLocationCode', oldLocationCode);
+                cartItem.apiUpdate().then(function(){
+
+                  if (cartItem.hasAssemblyOptions() && assemblyServiceItem) {
+                    cartItem.get('product').get('options').models = 
+                    cartItem.get('product').get('options').models.filter(function(opt) {
+                      return opt.get('name') != "Assembly";
+                    });
+                    me.model.get("items").models = me.model.get("items").filter(function(item) {
+                      return item.id != assemblyServiceItem.id;
+                    });
                   }
-                );
+  
+                  if (oldFulfillmentMethod == "Delivery" && !otherItemsHaveDelivery) {
+                    me.model.get("items").models = me.model.get("items").filter(function(item) {
+                      return item.id != deliveryServiceItem.id;
+                    });
+                  } 
+                  me.model.apiUpdate().then(function(success) {});
+
+                }, function (error) {
+                  cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                  cartItem.set('fulfillmentLocationName', oldPickupLocation);
+                  cartItem.set('fulfillmentLocationCode', oldLocationCode);
+                });
               } else if (value == 'Pickup') {
                 //first we get the correct product code for this item.
                 //If the product is a variation, we want to pass that when searching for inventory.
@@ -369,7 +460,76 @@ define(['modules/api',
           cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
-          cartItem.apiUpdate().then(function(success){}, function(error){
+          cartItem.apiUpdate().then(function(success){
+
+              var assemblyServiceItem = me.model.get("items").find(function (item) {
+                  return item.get("parentItemId") == cartItem.id;
+              });
+              var oldDeliveryServiceItem = me.model.get("items").find(function (item) {
+                  return item.get("product").id == "dsp_01";
+              });
+
+              // If changing ffmt from Delivery to Pickup remove delivery service item from cart if no other item has delivery on them
+              // Also update ffmt method of assembly service item if present
+              if (cartItem.apiModel.data.product.goodsType == "Physical" && cartItem.get('fulfillmentMethod') == "Pickup") {
+
+                var otherItemsHaveDelivery = me.model.get("items").find(function(item) {
+                  return (item.get("fulfillmentMethod") == "Delivery" && item.apiModel.data.product.goodsType == "Physical");
+                });
+
+                if (!otherItemsHaveDelivery) {
+                  me.model.removeItem(oldDeliveryServiceItem.id)
+                    .then(function() {
+                      if (cartItem.hasAssemblyOptions() && assemblyServiceItem) {
+                        assemblyServiceItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                        return assemblyServiceItem.apiUpdate();
+                      }
+                    })
+                    .then(function() {
+                      me.model.fetch();
+                    });
+                } else {
+                  if (cartItem.hasAssemblyOptions() && assemblyServiceItem) {
+                    assemblyServiceItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                    assemblyServiceItem.apiUpdate()
+                    .then(function() {
+                      me.model.fetch();
+                    });
+                  }
+                }
+              }
+
+              // If changing ffmt to Delivery add delivery service item to cart.
+              // Since Delivery service item will be addded at order level, we should not add multiple delivery service items.
+              // Hence check before adding if already present.
+              // Also update ffmt method of assembly service item if present
+            if (cartItem.apiModel.data.product.goodsType == "Physical" && cartItem.get('fulfillmentMethod') == "Delivery") {
+              if (oldDeliveryServiceItem) {
+                if (cartItem.hasAssemblyOptions() && assemblyServiceItem) {
+                  assemblyServiceItem.set('fulfillmentMethod', "Delivery");
+                  assemblyServiceItem.apiUpdate()
+                    .then(function () {
+                      me.model.fetch();
+                    });
+                }
+              } else {
+                var newDeliveryServiceItem = new CartModels.CartItemProduct({ productCode: "dsp_01" });
+                newDeliveryServiceItem.apiAddToCart({
+                  fulfillmentMethod: "Delivery",
+                  quantity: 1
+                })
+                  .then(function () {
+                    if (cartItem.hasAssemblyOptions() && assemblyServiceItem) {
+                      assemblyServiceItem.set('fulfillmentMethod', "Delivery");
+                      return assemblyServiceItem.apiUpdate();
+                    }
+                  })
+                  .then(function () {
+                    me.model.fetch();
+                  });
+                }
+              }
+          }, function(error){
             cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
             cartItem.set('fulfillmentLocationName', oldPickupLocation);
             cartItem.set('fulfillmentLocationCode', oldLocationCode);
