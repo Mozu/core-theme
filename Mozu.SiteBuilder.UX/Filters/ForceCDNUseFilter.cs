@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,12 @@ namespace Mozu.SiteBuilder.UX.Filters
     {
         public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
-            actionExecutedContext.HttpContext.Response?.Headers.Remove("Set-Cookie");
+            actionExecutedContext.HttpContext.Response.OnStarting(state =>
+            {
+                var ctx = (HttpContext) state;
+                ctx.Response?.Headers.Remove("Set-Cookie");
+                return Task.CompletedTask;
+            }, actionExecutedContext.HttpContext);
         }
     }
 
