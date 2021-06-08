@@ -29,6 +29,7 @@ using FileStreamResult = Mozu.SiteBuilder.Mvc.ActionResults.FileStreamResult;
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     [NoCookieFilter]
+    [AccessAllowOriginFilter]
     public class ContentController : ApiControllerBase
     {
         static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
