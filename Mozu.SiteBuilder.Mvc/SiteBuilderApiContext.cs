@@ -50,22 +50,21 @@ namespace Mozu.SiteBuilder.Mvc
             if (!isAdminUser)
                 return false;
 
-            // Check a subset of behaviors to see if this user is a Sales Rep
-            // or Admin who needs access to the B2B seller functionality
+            // Check a subset of behaviors to see if this user is a Sales Rep or Admin
+            // who needs access to the B2B seller functionality. Only include those
+            // behaviors that are strictly required to use storefront as a Seller.
+            // Note: This should work for Custom Roles as well with the below permissions.
             int[] requiredBehaviorIds = {
-                new CustomerReadBehavior().Id,    //41 
-                new ShopperReadBehavior().Id,     //33 
-                new OrderReadBehavior().Id,       //73
-                new PriceListReadBehavior().Id,   //239
-                new WishlistReadBehavior().Id,    //161
-                new B2BAccountCreateBehavior().Id,//270
-                new B2BAccountUpdateBehavior().Id,//271
-                new B2BAccountDeleteBehavior().Id,//272
-                new B2BAccountReadBehavior().Id,  //273
-                new QuoteCreateBehavior().Id,     //274
-                new QuoteUpdateBehavior().Id,     //275
-                new QuoteDeleteBehavior().Id,     //276
-                new QuoteReadBehavior().Id,       //277
+                new ShopperReadBehavior().Id,       //33 (Required to read users on a B2B account)
+                new CustomerReadBehavior().Id,      //41 (Not required by storefront but required by Admin to access B2B)
+                new PriceListReadBehavior().Id,     //239
+                new B2BAccountCreateBehavior().Id,  //270
+                new B2BAccountUpdateBehavior().Id,  //271
+                new B2BAccountReadBehavior().Id,    //273
+                new QuoteCreateBehavior().Id,       //274
+                new QuoteUpdateBehavior().Id,       //275
+                new QuoteDeleteBehavior().Id,       //276
+                new QuoteReadBehavior().Id          //277
             };
             var isSalesRep = AdminUserClaim.BehaviorIds.ContainsAll(requiredBehaviorIds);
 
