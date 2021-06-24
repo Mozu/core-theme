@@ -79,7 +79,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class GatewayGiftCardEmail  : EmailGatewayGiftCard
     {
-        public Order Order { get; set; }
+        public Order Order { get; set; } 
+        public Fulfillment.EntityModelOfShipment Shipment { get; set; }
     }
 
     public class QuoteEmail : Quote

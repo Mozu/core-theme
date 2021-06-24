@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="DeviceDetector.NET" Version="4.2.0" />
+    <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2122.0-master.22" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2120.2" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />

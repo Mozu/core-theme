@@ -11,6 +11,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.Email
         public decimal Amount { get; set; }
 
         public string CurrencyCode { get; set; }
+
+        public string GiftMessage { get; set; }
+
     }
 
     public class EmailGatewayGiftCard : GatewayGiftCard
