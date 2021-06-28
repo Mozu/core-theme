@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 using AutoMapper;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -8,28 +7,17 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System.Collections.Generic;
 using System;
-using System.Net.Http;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Catalog;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.IO;
-using System.Net;
 using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Mozu.Core.Configuration;
 
@@ -84,7 +72,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string w = null,
             string inStockLocation = null,
             [FromQuery]AdvancedSearchParamaters searchParams = null,
-            [FromQuery(Name = "debug.explain.structured")]bool  debug_explain_structure = false)
+            [FromQuery(Name = "debug.explain.structured")]bool  debug_explain_structure = false,
+            [FromQuery(Name = "debug")] string debug = null)
         {
             if (string.Equals(this.HttpContext.Request.Method , "OPTIONS", StringComparison.OrdinalIgnoreCase))
             {
@@ -92,13 +81,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             var _ = searchParams;
 
-            //commenting out until bluefly can change their arc actions.
-            //nulled out in asp model binder  ... should only be set if done in arcjs
-            //if (query != null)
-            //{
-            //    searchParams.query = query;
-            //}
-            
             //set back for post actions
             //todo:cole revisit for server-side JS
             //this.ActionContext.ActionArguments["query"] = query ?? _.query;
@@ -118,37 +100,50 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (debug_explain_structure)
             {
                 var debugTxt = await (await _searchClient.SearchDebug(
-                query: _.query,
-                filter: parsedFilter,
-                facetTemplate: _.facetTemplate,
-                facetTemplateSubset: _.facetTemplateSubset,
-                facet: _.facet,
-                facetFieldRangeQuery: _.facetFieldRangeQuery,
-                facetHierPrefix: _.facetHierPrefix,
-                facetHierValue: _.facetHierValue,
-                facetStartIndex: _.facetStartIndex,
-                facetPageSize: _.facetPageSize,
-                cursorMark: _.cursorMark,
-                enableSearchTuningRules: _.enableSearchTuningRules,
-                facetHierDepth: _.facetHierDepth,
-                facetPrefix: _.facetPrefix,
-                facetSettings: _.facetSettings,
-                facetTemplateExclude: _.facetTemplateExclude,
-                facetValueFilter: _.facetValueFilter,
-                pageSize: _.pageSize,
-                // responseFields: _.responseFields,
-                //  responseGroups: _.responseGroups,
-                //   responseOptions: _.responseOptions,
-                searchSettings: _.searchSettings,
-                searchTuningRuleCode: _.searchTuningRuleCode,
-                searchTuningRuleContext: _.searchTuningRuleContext,
-                sortBy: _.sortBy,
-                startIndex: _.startIndex,
-                mid: this.PageContext.MonetateId,
-                targetContextLevel: _.targetContextLevel))
-                .ResponseMessage
-                .Content
-                .ReadAsStringAsync();
+                        query: _.query,
+                        filter: parsedFilter,
+                        facetTemplate: _.facetTemplate,
+                        facetTemplateSubset: _.facetTemplateSubset,
+                        facet: _.facet,
+                        facetFieldRangeQuery: _.facetFieldRangeQuery,
+                        facetHierPrefix: _.facetHierPrefix,
+                        facetHierValue: _.facetHierValue,
+                        facetStartIndex: _.facetStartIndex,
+                        facetPageSize: _.facetPageSize,
+                        cursorMark: _.cursorMark,
+                        enableSearchTuningRules: _.enableSearchTuningRules,
+                        facetHierDepth: _.facetHierDepth,
+                        facetPrefix: _.facetPrefix,
+                        facetSettings: _.facetSettings,
+                        facetTemplateExclude: _.facetTemplateExclude,
+                        facetValueFilter: _.facetValueFilter,
+                        pageSize: _.pageSize,
+                        searchSettings: _.searchSettings,
+                        searchTuningRuleCode: _.searchTuningRuleCode,
+                        searchTuningRuleContext: _.searchTuningRuleContext,
+                        sortBy: _.sortBy,
+                        startIndex: _.startIndex,
+                        mid: this.PageContext.MonetateId,
+                        targetContextLevel: _.targetContextLevel))
+                    .ResponseMessage
+                    .Content
+                    .ReadAsStringAsync();
+                return CreateDebugResponse(debugTxt);
+            }
+
+            if (debug == "suggest.explain" || debug == "suggest.returnUrl")
+            {
+                var debugTxt = await (await _searchClient.SuggestDebug(
+                        query: _.query,
+                        pageSize: _.pageSize,
+                        groups: _.groups,
+                        searchSettingsName: _.searchSettings,
+                        mid: this.PageContext.MonetateId,
+                        returnUrl: debug == "suggest.returnUrl",
+                        targetContextLevel: _.targetContextLevel))
+                    .ResponseMessage
+                    .Content
+                    .ReadAsStringAsync();
                 return CreateDebugResponse(debugTxt);
             }
 
@@ -425,6 +420,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string responseOptions { get; set; }
             public string cursorMark { get; set; }
             public string responseFields { get; set; }
+            public string groups { get; set; }
             public Core.Api.Contracts.TargetContextLevelType targetContextLevel { get; set; }
         }
 
