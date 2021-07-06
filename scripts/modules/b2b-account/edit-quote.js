@@ -1041,9 +1041,7 @@ define([
                     else {
                         self.exitQuote();
                     }
-                  
-                   self.getAvailableShippingMethods();
-                
+                    self.getAvailableShippingMethods();
                 }, function (error) {
                     self.showMessageBar(error);
                 });
@@ -1106,11 +1104,6 @@ define([
                                 }
                                 contacts.push(fulfillmentInfo.fulfillmentContact);
                                 this.model.set('fulfillmentInfo', fulfillmentInfo);
-                            }
-                            
-                            if (!fulfillmentInfo.shippingMethodCode) {
-                                $('#selectShippingMethod').val('-1');
-                                this.model.set('shippingMethods', null);
                             }
                         }
                     }
