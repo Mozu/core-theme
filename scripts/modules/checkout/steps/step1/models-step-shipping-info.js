@@ -152,7 +152,9 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
             } else {
                 // find items with fulfillmentMethod as Delivery
                 var deliveryItem = this.getCheckout().get('items').findWhere({fulfillmentMethod: "Delivery"});
-                selectedId = deliveryItem.get('destinationId');
+                if(deliveryItem){
+                    selectedId = deliveryItem.get('destinationId');
+                }
             }
 
             if(selectedId){
