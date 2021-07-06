@@ -553,12 +553,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return string.Empty;
             }
 
-            var locationCode = (model is ReturnEmail returnEmail) ? returnEmail.LocationCode : string.Empty;
+            Location.Contracts.Location storeLocation = null;
+            if (model is ReturnEmail returnEmail)
+                storeLocation = returnEmail.StoreLocation;
+            else if (model is ShipmentEmail shipmentEmail)
+                storeLocation = shipmentEmail.StoreLocation;
 
             ViewData.Model = model;
             ViewData["content"] = cmdContent;
             ViewData["User"] = user;
-            ViewData["rmaLocation"] = locationCode.IsNullOrEmpty() ? await GetDefaultReturnLocation() : await GetStorageLocation(locationCode);
+            ViewData["rmaLocation"] = storeLocation == null ? await GetDefaultReturnLocation() : storeLocation;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
@@ -732,15 +736,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          if (!locationCode.IsNullOrEmpty())
          {
             var result = await _locationRuntimeWebApiClient.GetLocation(locationCode);
-            if (!result.HasException)
-            {
-                    var location = await _locationRuntimeWebApiClient.GetLocation(locationCode);
-                    if (location.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        FormatRegularHours(location.ReadAsSync());
-                        return location.ReadAsSync();
-                    }
-
+            if (!result.HasException && result.ResponseMessage.IsSuccessStatusCode)
+            {   
+                var resultLocation = result.ReadAsSync();
+                FormatRegularHours(resultLocation);
+                return resultLocation;                   
             }
          }
          return null;
