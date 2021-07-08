@@ -33,7 +33,7 @@ define([
             //get adjustments
             self.model.set("quoteUpdatedAdjustments", self.getQuoteAdjustment());
             //populate user details on model
-            self.populateWithUsers();
+            self.populateAccountAndUsers();
             self.addUserInfoOnModel();
             self.model.set('isShippable', self.isShippable());
             self.model.set("isUserAdmin", require.mozuData('user').behaviors.includes(1000));
@@ -46,33 +46,37 @@ define([
             //initialize the store picker model
             self.pickerDialog = this.initializeStorePickerDialog();
         },
-        populateWithUsers: function () {
+        populateAccountAndUsers: function () {
             var self = this;
-            if (!self.model.get('fullName') || !self.model.get('accountName')) {
-                var userId = self.model.get('userId');
-                var b2bAccount = new B2BAccountModels.b2bAccount({ id: self.model.get('customerAccountId') });
-                b2bAccount.apiGet().then(function (account) {
-                    self.model.set('allContacts', account.data.contacts);
-                    self.model.set('accountName', account.data.companyOrOrganization);
-                    return b2bAccount.apiGetUsers().then(function (users) {
-                        if (users && users.data.items) {
-                            self.model.set('allB2bUsers', users.data.items);
-                            users.data.items.forEach(function (user) {
-                                if (user.userId == userId) {
-                                    self.model.set('fullName', user.firstName + ' ' + user.lastName);
-                                    self.render();
-                                }
-                            });
-                        }
-                    }, function (error) {
-                        self.showMessageBar(error);
-                    });
+            // Return early if we've already queried the APIs
+            if (self.model.get('allContacts') && self.model.get('allB2bUsers')) {
+                return;
+            }
+            var userId = self.model.get('userId');
+            var b2bAccount = new B2BAccountModels.b2bAccount({ id: self.model.get('customerAccountId') });
+            b2bAccount.apiGet().then(function (account) {
+                self.model.set('accountName', account.data.companyOrOrganization || ' ');
+                self.model.set('allContacts', account.data.contacts || []);
+                return b2bAccount.apiGetUsers().then(function (users) {
+                    var items = [];
+                    if (users && users.data.items) {
+                        items = users.data.items;
+                        items.forEach(function (user) {
+                            if (user.userId == userId) {
+                                self.model.set('fullName', user.firstName + ' ' + user.lastName);
+                            }
+                        });
+                    }
+                    self.model.set('allB2bUsers', items);
+                    self.render();
                 }, function (error) {
-                    self.model.set('fullName', ' ');
-                    self.model.set('accountName', ' ');
                     self.showMessageBar(error);
                 });
-            }
+            }, function (error) {
+                self.model.set('fullName', ' ');
+                self.model.set('accountName', ' ');
+                self.showMessageBar(error);
+            });
         },
         renderProductPicker: function () {
             var self = this;
