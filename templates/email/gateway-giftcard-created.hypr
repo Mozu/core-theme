@@ -14,7 +14,8 @@
 	</p>
 
     <p>
-	{% if model.ReturnId %}
+	
+	{% if model.ReturnId || model.IsRefund == true %}
 		{{labels.gatewayGiftCardRefundIntro|safe }}	
 	{% else %}
 		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
