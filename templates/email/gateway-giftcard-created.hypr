@@ -13,10 +13,11 @@
 	{% endif %}
 	</p>
 
-    <p>
-	
-	{% if model.ReturnId || model.IsRefund == true %}
+    <p>	
+	{% if model.ReturnId %}
 		{{labels.gatewayGiftCardRefundIntro|safe }}	
+	{% elseif model.IsRefund == true %}
+	    {{labels.gatewayGiftCardRefundIntro|safe }}		
 	{% else %}
 		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
 		{% if model.GiftMessage %}
