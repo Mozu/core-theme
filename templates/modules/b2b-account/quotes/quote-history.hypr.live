@@ -77,11 +77,11 @@
 
                                   </td>
                                 <td>
-                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.oldValue %}
+                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.oldValue model=model %}
                                   </td>
                                 <td class="space"></td>
                                   <td>
-                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.newValue %}
+                                    {% include "modules/b2b-account/quotes/quote-history-field" with name=field.name value=field.newValue model=model %}
                                   </td>
                                 </tr>
                               {% endif %}
