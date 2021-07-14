@@ -35,7 +35,7 @@
 
 		{% if model.ReturnId %}
 		{% else %}
-		    { % if model.IsRefund == false %}
+		    {% if model.IsRefund == false %}
 				{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
 			{% endif %}	
 		{% endif %}	
