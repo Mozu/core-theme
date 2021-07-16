@@ -638,6 +638,7 @@ define([
                     self.model.set("isEditExpirationDate", false);
                     self.model.set("isEditSubmittedBy", false);
                     self.model.set('allAdminUsers', null);
+                    self.model.set('fullName', self.getNameForB2bUser(response.data.userId));
                     self.model.syncApiModel();
                     self.render();
                 }
@@ -1417,6 +1418,18 @@ define([
             }
 
             return false;
+        },
+        getNameForB2bUser: function (userId) {
+            var users = this.model.get('b2bUsers') || this.model.get('allB2bUsers');
+            if (users && users.length > 0) {
+                for (var i = 0; i < users.length; i++) {
+                    if (users[i].userId === userId)
+                    {
+                        return users[i].firstName + ' ' + users[i].lastName;
+                    }
+                }
+            }
+            return '';
         }
     });
 
