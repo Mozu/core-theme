@@ -13,15 +13,19 @@
 	{% endif %}
 	</p>
 
-    <p>
-	{% if model.ReturnId %}
-		{{labels.gatewayGiftCardRefundIntro|safe }}	
-	{% else %}
-		{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
-		{% if model.GiftMessage %}
-			<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.GiftMessage}}</span></p>
-		{% endif %}		
-	{% endif %}
+    <p>	
+		{% if model.ReturnId %}
+			{{labels.gatewayGiftCardRefundIntro|safe }}		
+		{% else %}
+			{% if model.IsRefund == true %}
+	    		{{labels.gatewayGiftCardRefundIntro|safe }}	
+			{% else %}
+				{{labels.gatewayGiftCardEmailIntro|string_format(model.Order.Data.Brand, model.Order.Data.SenderName)|safe }}</br></br></br>
+				{% if model.GiftMessage %}
+					<p><b>{{ labels.giftMessage }}{{":"}}</b> <span class="mz-price">{{model.GiftMessage}}</span></p>
+				{% endif %}		
+			{% endif %}			
+		{% endif %}
 	</p>	
 		
 	<p><b>{{labels.orderNumber}}{{":"}}</b> <span class="mz-price">{{model.Order.OrderNumber}}</span></p>
@@ -31,7 +35,9 @@
 
 		{% if model.ReturnId %}
 		{% else %}
-			{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
+		    {% if model.IsRefund == false %}
+				{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
+			{% endif %}	
 		{% endif %}	
 
 	<b>{{labels.gatewayGiftCardDeleteEmail}}</b>{{labels.gatewayGiftCardNeedsCard}}
