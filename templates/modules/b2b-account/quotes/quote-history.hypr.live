@@ -90,6 +90,23 @@
 
                               {% if change.path %}
                               <tr class="space-before">
+                                <td>
+                                  {% if change.type =='Add' %} {{labels.added}} {% elif change.type =='Remove' %} {{labels.removed}} {% else %} {{labels.updated}} {% endif %}
+                                  {{ changePath[0] }}
+                                </td>
+                              </tr>
+                              <tr>
+                                {% set shippingMethodName=change.fields|findwhere("name", "ShippingMethodName") %}
+                                <td>{{labels.quoteShippingMethod}}</td>
+                                <td class="address">
+                                  {% include "modules/b2b-account/quotes/quote-history-field" with name=shippingMethodName.name value=shippingMethodName.oldValue %}
+                                </td>
+                                <td class="space"></td>
+                                <td class="address">
+                                  {% include "modules/b2b-account/quotes/quote-history-field" with name=shippingMethodName.name value=shippingMethodName.newValue %}
+                                </td>
+                              </tr>
+                              <tr>
                                 {% set firstName=change.fields|findwhere("name", "FirstName") %}
                                 {% set lastNameOrSurname=change.fields|findwhere("name", "LastNameOrSurname") %}
                                 {% set companyOrOrganization=change.fields|findwhere("name", "CompanyOrOrganization") %}
@@ -106,8 +123,7 @@
                                 {% set mobile=change.fields|findwhere("name", "Mobile") %}
 
                                 <td>
-                                  {% if change.type =='Add' %} {{labels.added}} {% elif change.type =='Remove' %} {{labels.removed}} {% else %} {{labels.updated}} {% endif %}
-                                  {{ changePath[0] }}
+                                  {{labels.quoteAddress}}
                                 </td>
                                 <td class="address">
                                   <span>
