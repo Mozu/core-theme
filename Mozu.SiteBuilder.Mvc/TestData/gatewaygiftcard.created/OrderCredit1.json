@@ -6,7 +6,7 @@
   "cardNumber": "12334",
   "amount": 50.0,
   "currencyCode": null,
-  "giftMessage": "test message for gift card",
+  "giftMessage": "test message for gift card",  
   "Order": {
     "orderNumber": 255,
     "version": "1",

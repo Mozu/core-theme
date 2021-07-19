@@ -25,5 +25,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.Email
         public string ReturnId { get; set; }
 
         public string PaymentId { get; set; }
+
+        public bool IsRefund { get; set; }
     }
 }
