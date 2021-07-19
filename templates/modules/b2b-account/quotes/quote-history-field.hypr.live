@@ -3,6 +3,10 @@
 		{{ value | currency }}
 	{% elif name=='ExpirationDate' %}
 		{{ value|date("m/d/Y") }}
+	{% elif name=='UserId' %}
+	    {% for user in model.allB2bUsers %}
+		     {% if value==user.userId %} {{ user.firstName }} {{ user.lastName }} {% endif %}
+		{% endfor %}
 	{% else %}
 		{{ value || "-" }}
 	{% endif %}
