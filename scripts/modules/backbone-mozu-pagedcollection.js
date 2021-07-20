@@ -2,7 +2,10 @@
     "jquery",
     "underscore",
     "hyprlive",
-    "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
+    "modules/backbone-mozu-model",
+    'modules/mozu-utilities'], function ($, _, Hypr, Backbone, MozuUtilities) {
+
+        var utilities = MozuUtilities.Utilities;
 
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
@@ -176,7 +179,7 @@
 
             filterBy: function (filterString) {
                 this.lastRequest.startIndex = 0;
-                return this.apiGet($.extend(this.lastRequest, { filter: filterString }));
+                return this.apiGet($.extend(this.lastRequest, { filter: utilities.Filters.mzEscapeSpecialCharacters(filterString) }));
             },
 
             initialize: function() {
