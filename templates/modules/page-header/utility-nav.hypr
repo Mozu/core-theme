@@ -14,7 +14,7 @@
       {% if user.isSalesRep %}
       <li class="mz-utilitynav-item">
         <div id="mz-logged-in-notice">
-          Welcome, <a href="{{siteContext.siteSubdirectory}}/selleraccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout?returnurl=/user/login" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+          Welcome, <a href="{{siteContext.siteSubdirectory}}/selleraccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>!
         </div>
       </li>
       {%else%}
