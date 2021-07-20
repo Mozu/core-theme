@@ -22,6 +22,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.AdjustedWeight, config => config.Ignore())
                 .ForMember(x => x.ProductName, config => config.Ignore())
                 ;
+
+            CreateMap<Kibo.Fulfillment.Contracts.Model.Item, ShipmentInventoryDetails>()
+                .ForMember(x => x.StockAvailable, config => config.Ignore())
+                .ForMember(x => x.StockAllocated, config => config.Ignore())
+                .ForMember(x => x.StockOnBackOrder, config => config.Ignore())
+                .ForMember(x => x.SafetyStock, config => config.Ignore())
+                .ForMember(x => x.Ltd, config => config.Ignore())
+                .ForMember(x => x.Floor, config => config.Ignore())
+                .ForMember(x => x.PendingStock, config => config.Ignore())
+                .ForMember(x => x.StockOnHand, config => config.Ignore());
         }
     }
 }

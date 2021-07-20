@@ -169,11 +169,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (shipment == null)
             {
                 return;
-            }
-            var inventories = GetInventories(shipment.Items.Select(shipmentItem => shipmentItem.VariationProductCode ?? shipmentItem.ProductCode).ToList(), shipment.FulfillmentLocationCode);
+            }            
 
-            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, inventories, order));
+            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i,order));
             shipment.Items = t.ToList();
+        }
+
+        private void PopulateInventoryDetails(DCShipment shipment)
+        {
+            if (shipment == null)
+                return;
+
+            var inventories = GetInventories(shipment.Items.Select(shipmentItem => shipmentItem.VariationProductCode ?? shipmentItem.ProductCode).ToList(), shipment.FulfillmentLocationCode);
+            IEnumerable<Kibo.Fulfillment.Contracts.Model.Item> items = shipment.Items.Select(i => GetShipmentInventoryItem(i, inventories));
+            shipment.Items = items.ToList();
         }
 
         private void PopulatePickupDetails(DC.Order order)
@@ -199,13 +208,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return result;
         }
 
-        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem, List<InventoryResponse> inventories, DC.Order order)
+        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem,  DC.Order order)
         {
             var result = Mapper.Map<DetailedShipmentItem>(shipmentItem);
             var product = FindProduct(shipmentItem.ProductCode, order);
             result.ProductName = product.Name;
-            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, shipmentItem.Quantity);
-            if (inventories.Count > 0)
+            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, shipmentItem.Quantity);            
+            return result;
+        }
+
+        private ShipmentInventoryDetails GetShipmentInventoryItem(Kibo.Fulfillment.Contracts.Model.Item shipmentItem, List<InventoryResponse> inventories)
+        {
+            var result = Mapper.Map<ShipmentInventoryDetails>(shipmentItem);
+            if(inventories.Count > 0)
             {
                 GetInventoryDetails(result, inventories);
             }
@@ -217,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var inventoryRequest = CreateInventoryGetRequest(productCodes, locationCode);
             return _inventoryControllerApiClient.Value.PostQueryInventory(inventoryRequest, null).Result.ReadAsSync().ToList();
         }
-        private void GetInventoryDetails(DetailedShipmentItem item, List<InventoryResponse> inventories)
+        private void GetInventoryDetails(ShipmentInventoryDetails item, List<InventoryResponse> inventories)
         {
             var inventory = inventories.FirstOrDefault(x => x.Upc == (item.VariationProductCode ?? item.ProductCode));
 
@@ -399,11 +414,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
             PopulateShipmentDetails(dcShipment, order);
+            PopulateInventoryDetails(shipment);
 
             ViewData["order"] = order;
             ViewData["returnLocation"] = await GetDefaultReturnLocation();
             ViewData["fulfillmentLocation"] = await GetLocation(shipment.FulfillmentLocationCode);
-            return await RenderWithContext(template, dcShipment);
+            return await RenderWithContext(template, shipment);
         }
 
         [HttpGet]
@@ -495,6 +511,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             PopulateShipmentDetails(dcShipment, order);
+            PopulateInventoryDetails(shipment);
 
             var locationCode = shipment.FulfillmentLocationCode;
             if (!locationCode.IsNullOrEmpty())
