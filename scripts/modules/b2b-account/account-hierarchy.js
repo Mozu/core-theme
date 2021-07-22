@@ -129,6 +129,17 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                         self.trigger("render");
                     });
                 }
+                else {
+                    var rootAccount = [];
+                    rootAccount.push(account.data);
+                    var accountsObj = {
+                        accounts: rootAccount,
+                        hierarchy: { id: require.mozuData('user').accountId }
+                    };
+                    self.set("hierarchy", self.processAccountHierarchy(accountsObj));
+                    self.syncApiModel();
+                    self.trigger("render");
+                }
             });
             
             self.set("isUserAdmin", self.isUserAdmin());
