@@ -122,27 +122,27 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             var b2bAccount = new B2BAccountModels.b2bAccount({ id: require.mozuData('user').accountId });
             b2bAccount.apiGet().then(function (account) {
                 currentAccount = account.data;
+                var accountId = require.mozuData('user').accountId;
                 if (account.data && account.data.rootAccountId) {
-                    self.apiGet({ id: require.mozuData('user').accountId }).then(function (response) {
-                        self.set("hierarchy", self.processAccountHierarchy(response.data));
-                        self.syncApiModel();
-                        self.trigger("render");
+                    self.apiGet({ id: accountId }).then(function (response) {
+                        self.setHierarchy(self, self.processAccountHierarchy(response.data));
                     });
                 }
                 else {
-                    var rootAccount = [];
-                    rootAccount.push(account.data);
-                    var accountsObj = {
-                        accounts: rootAccount,
-                        hierarchy: { id: require.mozuData('user').accountId }
+                    var data = {
+                        accounts: [account.data],
+                        hierarchy: { id: accountId }
                     };
-                    self.set("hierarchy", self.processAccountHierarchy(accountsObj));
-                    self.syncApiModel();
-                    self.trigger("render");
+                    self.setHierarchy(self, self.processAccountHierarchy(data));
                 }
             });
             
             self.set("isUserAdmin", self.isUserAdmin());
+        },
+        setHierarchy: function (self, hierarchy) {
+            self.set("hierarchy", hierarchy);
+            self.syncApiModel();
+            self.trigger("render");
         },
         userHasBehavior: function (behaviorId) {
             var behaviors = require.mozuData('user').behaviors;
