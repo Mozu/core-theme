@@ -102,8 +102,11 @@
       <td>
         {% if item.fulfillmentMethod != "Digital" %}
           <select class="mz-l-formfieldgroup-halfsize" data-mz-value="fulfillmentMethod" data-mz-quote-item="{{ item.id }}" >
-            <option {% if item.fulfillmentMethod=="Ship" %} selected {% endif %} value="Ship">Direct Ship</option>
-            <option {% if item.fulfillmentMethod=="Pickup" %} selected {% endif %} value="Pickup">Pickup</option>
+            <option {% if item.fulfillmentMethod=="Ship" %} selected {% endif %} value="Ship">{{ labels.fulfillmentDirectShip }}</option>
+            // putting a check for StorePick enable Items should only have the option
+            {% if item.product.fulfillmentTypesSupported.includes('InStorePickup') %} 
+              <option {% if item.fulfillmentMethod=="Pickup" %} selected {% endif %} value="Pickup">{{ labels.fulfillmentPickup }}</option>
+            {% endif %}
           </select>
         {% if item.fulfillmentMethod=="Pickup" %}
           <div>Location: <b>{{item.fulfillmentLocationCode}}</b></div>

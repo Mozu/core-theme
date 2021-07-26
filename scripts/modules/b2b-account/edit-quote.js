@@ -748,13 +748,15 @@ define([
             var self = this;
             var locationsCollection = new LocationModels.LocationCollection();
 
-            locationsCollection.apiGetForProduct({ productCode: productCode }).then(function (collection) {
+            //As Quotes dont depend on Stock, changing it to StorePickup which will return all Pickup Stores that are Active.
+            locationsCollection.apiGetForStorePickup().then(function (collection) {
                 locationsCollection.get('items').forEach(function (item) {
                     self.model.get('storeLocationsCache').addLocation({ code: item.get('code'), name: item.get('name') });
                 });
 
                 var $bodyElement = $('#mz-location-selector').find('.modal-body');
                 $bodyElement.attr('mz-quote-item', quoteItemId);
+                // keeping the check as there may be case for no active StorePickup loaction
                 if (collection.length === 0) {
                     self.pickerDialog.setBody(Hypr.getLabel("noNearbyLocationsProd"));
                 } else {
@@ -771,8 +773,6 @@ define([
             var body = "";
 
             locations.items.forEach(function (location) {
-                var stockLevel = location.quantity;
-
                 //Piece together UI for a single location listing
                 var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex", "data-mz-quote-item": quoteItemId });
                 var leftSideDiv = $('<div>', { "style": "flex:1" });
@@ -788,24 +788,17 @@ define([
                 leftSideDiv.append($('<div>' + address.cityOrTown + ', ' + address.stateOrProvince + ' ' + address.postalOrZipCode + '</div>'));
                 var $selectButton;
 
-                if (stockLevel > 0) {
-                    leftSideDiv.append("<p class='mz-locationselect-available'>" + Hypr.getLabel("availableNow") + "</p>");
-                    var buttonData = {
-                        locationCode: location.code,
-                        locationName: location.name,
-                        quoteItemId: quoteItemId
-                    };
+                // Removing the storeLevel variable and check as Quotes dont depend on Stock level, it can still be selected.
+                leftSideDiv.append("<p class='mz-locationselect-available'>" + Hypr.getLabel("availableNow") + "</p>");
+                var buttonData = {
+                    locationCode: location.code,
+                    locationName: location.name,
+                    quoteItemId: quoteItemId
+                };
 
-                    $selectButton = $("<button>", { "type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
-                    $selectButton.text(Hypr.getLabel("selectStore"));
-                    rightSideDiv.append($selectButton);
-
-                } else {
-                    leftSideDiv.append("<p class='mz-locationselect-unavailable'>" + Hypr.getLabel("outOfStock") + "</p>");
-                    $selectButton = $("<button>", { "type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled": "disabled", "style": "margin:25% 0 0 25%" });
-                    $selectButton.text(Hypr.getLabel("selectStore"));
-                    rightSideDiv.append($selectButton);
-                }
+                $selectButton = $("<button>", { "type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
+                $selectButton.text(Hypr.getLabel("selectStore"));
+                rightSideDiv.append($selectButton);
 
                 locationSelectDiv.append(leftSideDiv);
                 locationSelectDiv.append(rightSideDiv);

@@ -283,6 +283,8 @@
   "forgotPasswordLink": "Passwort vergessen?",
   "freeShipping": "Versand kostenfrei",
   "from": "aus",
+  "fulfillmentDirectShip": "Direktversand",
+  "fulfillmentPickup": "Aufsammeln",
   "fulfillmentType": "Erfüllungstyp",
   "fullDesc": "Beschreibung",
   "gatewayGiftCardDeleteEmail": "NE SUPPRIMEZ PAS CET EMAIL",
