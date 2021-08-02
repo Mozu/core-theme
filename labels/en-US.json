@@ -340,6 +340,8 @@
   "friday": "Friday",
   "from": "from",
   "fromDeliveryLocation": "from location",
+  "fulfillmentDirectShip": "Direct Ship",
+  "fulfillmentPickup": "Pickup",
   "fulfillmentType": "Fulfillment Type",
   "fullDesc": "Description",
   "gatewayGiftCardDeleteEmail": "DO NOT DELETE THIS EMAIL",
