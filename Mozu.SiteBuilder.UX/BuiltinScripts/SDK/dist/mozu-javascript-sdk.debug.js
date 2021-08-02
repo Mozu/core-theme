@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-06-15
+ * Mozu JavaScript SDK - v0.3.0 - 2021-07-23
  *
  * Copyright (c) 2021 Volusion, Inc.
  *
@@ -3735,6 +3735,12 @@ module.exports=
         "includeAttributeDefinition": false
       },
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-for-store-pickup": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=isDisabled eq false{&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
   "delivery-locations": {

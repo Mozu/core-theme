@@ -195,6 +195,12 @@
         "includeAttributeDefinition": false
       },
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-for-store-pickup": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=isDisabled eq false{&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
   "delivery-locations": {
