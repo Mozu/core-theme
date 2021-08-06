@@ -1,0 +1,101 @@
+:root {
+  --default-theme-color: rgb(51, 0, 101);
+  --default-text-color: #ffffff;
+  /*For all grid headers in the application*/
+  --grid-head-color: #f7f7f7;
+  --grid-head-text-color: #333;
+  /*Header*/
+  --top-bar-background-color: #306;
+  --top-bar-text-color: #fff;
+  --hamburger-background-color: red;
+  --hamburger-text-color: #fff;
+  --searchbar-background-color: #260845;
+  --searchbar-text-color: #fff;
+  --searchbar-placeholder-text-color: #bda8c5;
+  --search-icon-color: #bda8c5;
+  /*Sidebar*/
+  --sidebar-background-color: white;
+  --sidebar-text-color: #000;
+  --sidebar-hover-text-color: #212529;
+  --color-one: #306;
+  --color-two: #56ba77;
+  --color-three: #85cfd7;
+  --color-four: #f9a44f;
+  --color-one-light: #e9e1f9;
+  --color-two-light: #d6f7e1;
+  --color-three-light: #d4ecef;
+  --color-four-light: #fde9d4;
+  /*Dashboard Tabs*/
+  --dashboard-active-tab-background-color: #2ea195;
+  --dashboard-active-tab-text-color: #ffffff;
+  --dashboard-active-tab-hover-background-color: #2ea195;
+  --dashboard-active-tab-hover-text-color: #ffffff;
+  --dashboard-inactive-tab-background-color: #f4f4f4;
+  --dashboard-inactive-tab-text-color: #333333;
+  --dashboard-inactive-tab-hover-background-color: #dbdbdb;
+  --dashboard-inactive-tab-hover-text-color: #333333;
+  /*Pagination*/
+  --active-pagination-button-background-color: #2ea195;
+  --active-pagination-button-text-color: #fff;
+  --active-pagination-perpage-dropdown-item-background-color: #2ea195;
+  --active-pagination-perpage-dropdown-item-text-color: #fff;
+  /*Input boxes*/
+  --input-border-color: #ced4da;
+  --input-focus-border-color: #2ea195;
+  --input-hover-border-color: #ced4da;
+  /*Snapshot page accordian*/
+  --snapshot-accordian-active-header-background-color: #f0f0f0;
+  --snapshot-accordian-active-header-text-color: #333;
+  --snapshot-accordian-inactive-header-background-color: #f0f0f0;
+  --snapshot-accordian-inactive-header-text-color: #333;
+  /*User Settings page*/
+  /*Btn color*/
+  --secondary-btn-background-color: #fafafa;
+  --secondary-btn-text-color: #333;
+  --secondary-btn-hover-background-color: #5a6268;
+  --secondary-btn-hover-text-color: #fff;
+  --secondary-btn-border-color: #ccc;
+  --primary-btn-background-color: #2ea195;
+  --primary-btn-text-color: #fff;
+  --primary-btn-hover-background-color: #2ea195;
+  --primary-btn-hover-text-color: #fff;
+  --primary-btn-border: #2ea195;
+  --warning-btn-background-color: #FF8330;
+  --warning-btn-text-color: #fff;
+  --warning-btn-hover-background-color: #FF8330;
+  --warning-btn-hover-text-color: #fff;
+  --warning-btn-border: #FF8330;
+  /*accordian*/
+  --accordian-header-background-color: #f7f7f7;
+  --accordian-header-text-color: #333;
+  --accordian-inactive-header-background-color: #f7f7f7;
+  --accordian-inactive-header-text-color: #333;
+  /*page internal header*/
+  --shipment-detail-main-header-background-color: #f7f7f7;
+  --shipment-detail-main-header-text-color: #333;
+  --shipment-overview-tabs-background-color: #f0f0f0;
+  --shipment-overview-tabs-text-color: #333;
+  --shipment-overview-tabs-hover-background-color: #5A6268;
+  --shipment-overview-tabs-hover-text-color: #fff;
+  /*Modal popup*/
+  --modal-header-backgorund-color: #f4f4f4;
+  --modal-header-text-color: #333;
+  /*Select Store Component*/
+  --select-store-background-color: #fff;
+  --select-store-text-color: #333;
+  /*Spinner/loader color*/
+  --spinner-color: #2ea195;
+  /*Text color*/
+  --success-text-color: #2ea195;
+  --warning-text-color: #FF8330;
+  --danger-text-color: #D30000;
+  /*Return Status*/
+  --returnstatus-background-color: #2ea195;
+  --returnstatus-text-color: #fff;
+  /*Shipment Status*/
+  --shipment-status-ready: #000;
+  --shipment-status-backorder: #0c0aca;
+  --shipment-status-fulfilled: #4e9c2a;
+  --shipment-status-customer-care: #306;
+  --shipment-status-canceled: #ff0017;
+}

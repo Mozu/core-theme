@@ -1,0 +1,1852 @@
+{
+  "MESSAGES": {
+    "Dialog": {
+      "AuthFailedInvalidAuthResponse": {
+        "isLogoutOnPrimaryButton": "faux",
+        "isShowSecondaryButton": "faux",
+        "message": "Échec de l'authentification pour l'utilisateur spécifié. Veuillez saisir des informations d'identification valides et réessayer. Si vous voyez toujours le même problème, contactez l'équipe de support client.",
+        "primaryButton": "D'accord",
+        "secondaryButton": "",
+        "title": "Authentification échouée"
+      }
+    },
+    "Toastr": {
+      "EmptyEmailAddress": {
+        "message": "Veuillez saisir votre adresse e-mail.",
+        "messageType": ""
+      },
+      "EmptyPassword": {
+        "message": "Veuillez entrer le mot de passe.",
+        "messageType": "avertissement"
+      },
+      "Fatal": {
+        "message": "Une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer plus tard ou contacter l'équipe de support client.",
+        "messageType": "Erreur"
+      },
+      "ShipmentRejectionError": {
+        "message": "L'envoi ne peut pas être rejeté pour le moment.",
+        "messageType": "Erreur"
+      },
+      "ShipmentAcceptError": {
+        "message": "L'expédition ne peut pas être acceptée pour le moment.",
+        "messageType": "Erreur"
+      },
+      "ShipmentItemScanError": {
+        "message": "L'article dépasse sa quantité maximale",
+        "messageTitle": "Numérisation des articles d'expédition"
+      },
+      "ShipmentItemValidScanError": {
+        "message": "Le code numérisé ne correspond à aucun élément",
+        "messageTitle": "Numérisation des articles d'expédition"
+      },
+      "ItemScannedWithNoQuantity" : {
+        "message": "Code scanné avec quantité nulle",
+        "messageTitle": "Shipment item scanning"
+      }
+    }
+  },
+  "PUBLIC": {
+    "Login": {
+      "emailAddressPlaceHolder": "Adresse électronique",
+      "loginButton": "S'identifier",
+      "pageTitle": "Connexion Xpanxion",
+      "passwordPlaceHolder": "Mot de passe",
+      "title": "Bienvenue à Xpanxion"
+    }
+  },
+  "SHARED": {
+    "FOOTER": {
+      "copyRight": "droits d'auteur",
+      "and": "et",
+      "allRightsReserved": "Tous les droits sont réservés.",
+      "customerSupport": "Support client à",
+      "proweredBy": "Alimenté par:",
+      "supportEmail": "test"
+    },
+    "HEADER": {
+      "title": "Kibo Commerce",
+      "fulfillerTitle": "Exécution des commandes",
+      "login": {
+        "logintext": "connecté en tant que"
+      },
+      "logoutConfirmation": {
+        "dialogMessage": "Voulez-vous quitter l'application?",
+        "dialogTitle": "Se déconnecter",
+        "primaryButton": "Oui",
+        "secondaryButton": "Non"
+      },
+      "userMenu": {
+        "helpMenu": "Aidez-moi",
+        "logoutMenu": "Se déconnecter",
+        "profileMenu": "Profil",
+        "userMessage": "salut",
+        "search": "Chercher"
+      },
+      "SideNavbar": {
+        "home": "Accueil",
+        "backToPOS": "Retour à POS",
+        "fulfillerDashboard": "Tableau de bord Partenaire",
+        "shipmentsInProcess": "Expéditions en cours",
+        "pickandPack": "Pick & Pack",
+        "shippingManifests": "Manifeste d'expéditions",
+        "receiveTransfers": "Recevoir des transferts",
+        "help": "Aidez-moi",
+        "settings": "Paramètres",
+        "loggedIn": "connecté en tant que",
+        "logOut": "Se déconnecter",
+        "returns": "Retour",
+        "inventory": "Inventaire",
+        "openWaves": "Vagues ouvertes",
+        "createWave": "Créer une vague",
+        "createManifest": "Créer un manifeste",
+        "viewManifest": "Manifestes d'expédition"
+      },
+      "AdvancedFilter": {
+        "advancedFiltertitle": "Filtre avancé",
+        "cancelBtn": "Annuler",
+        "filterBtn": "Filtre",
+        "keywordSearch": "Mot-clé",
+        "to": "à",
+        "today": "Aujourd'hui",
+        "search": "Chercher",
+        "advanceSearch": "Recherche Avancée",
+        "FormsErrorMessages": {
+          "toDateValid": "La date à ce jour ne peut pas être antérieure à la date du",
+          "fromDateValid": "La date de début ne peut pas être postérieure à la date"
+        },
+        "Form": {
+          "customerFirstName": "Prénom du client",
+          "customerLastName": "Nom du client",
+          "customerEmailAddress": "Adresse e-mail du client",
+          "shipmentStatusTitle": "Expédition statut",
+          "shipmentStatus": {
+            "ready": "Prêt",
+            "fulfilled": "Rempli",
+            "backorder": "Commande Différée",
+            "cancelled": "Annulé",
+            "customerCare": "Service client"
+          },
+          "submittedDateRange": "Plage de dates soumise",
+          "returnNumber": "Numéro de retour",
+          "phoneNumber": "Numéro de téléphone"
+        },
+        "ToasterMessages": {
+          "quicksearchMessage": "Impossible de rechercher rapidement avec une valeur ",
+          "advancesearchMessage": "Impossible d'avancer la recherche avec une valeur donnée"
+        }
+      },
+      "SelectStore": {
+        "label": "Sélectionnez un magasin",
+        "defaultOption": "Tous les magasins"
+      },
+      "TenantSelection": {
+        "searchTenant": "Sélectionnez un locataire",
+        "currentTenant": "Locataire actuel: ",
+        "noItemsFound": "Aucun élément trouvé"
+      }
+    },
+    "NAVIGATION": {
+      "invoiceMenu": "facture d'achat",
+      "offerMenu": "offre",
+      "orderMenu": "ordre",
+      "productMenu": "produit"
+    },
+    "BUTTON": {
+      "cancel": "Annuler",
+      "submit": "Soumettre",
+      "remove": "Retirer",
+      "close": "Fermer",
+      "search": "Chercher",
+      "continue": "Continuer",
+      "scan": "Analyser les éléments"
+    },
+    "PageNavigation": {
+      "page": "Page",
+      "of": "de",
+      "previous": "Précédente",
+      "next": "Prochain"
+    },
+    "GRID": {
+      "EmptyFeildError": {
+        "noImage": "Image non disponible"
+      }
+    },
+    "GRIDHEADER":{
+      "fulfillmentType": "L'Accomplissement De Type",
+      "exceptedDeliveryDate": "Date de livraison exclue",
+      "deliveryNotes": "Bons de livraison"
+    },
+    "AddNote": {
+      "addNotebtn": "Ajouter une note",
+      "submitNote": "Soumettre une note",
+      "insertText": "Insérer une note ici ...",
+      "newNote": "Nouvelle note"
+    },
+    "SHIPMENTS": {
+      "results": "Résultats",
+      "shipmentNumber": "Expédition",
+      "status": "Statut",
+      "assignedTo": "Assigné à",
+      "type": "Type d'envoi",
+      "orderNumber": "Ordre",
+      "externalOrderId": "Commande externe",
+      "one": "1",
+      "two": "2",
+      "three": "3",
+      "four": "4",
+      "five": "5",
+      "six": "6",
+      "onPickWave": "Sur Pick Wave"
+    },
+    "ProductDetailsGrid": {
+      "image": "Image",
+      "product": "Produit",
+      "productIdentifiers": "Identificateurs de produit",
+      "quantity": "Quantité",
+      "partNo": "Numéro d'article",
+      "SKU": "SKU",
+      "UPC": "UPC",
+      "pricePaid": "Prix ​​unitaire",
+      "pricePerUnit": "Prix ​​par unité",
+      "totalPrice": "Prix ​​total",
+      "neededQty": "Qté nécessaire",
+      "actualQty": "Quantité réelle",
+      "locatorName": "Nom du localisateur",
+      "binName": "Poubelle"
+    },
+    "LOCALEFORMAT": {
+      "dateFormat": "MM/dd/yyyy, h:mm:ss a z"
+    },
+    "Carriers": {
+      "Names": {
+        "fedex": "FedEx",
+        "ups": "UPS",
+        "usps": "USPS",
+        "canadapost": "Postes Canada",
+        "purolator": "Purolator",
+        "fedexcrossborder": "FedEx transfrontalier"
+      }
+    },
+    "TENANTSETTINGS": {
+      "printLabelMessage": "Génération d'étiquettes pour l'impression ...",
+      "displayOrderNumber": 1,
+      "displayExternalOrderId": 0,
+      "displayOrderPreparation": 1,
+      "isAirPrintEnabled": 0,
+      "isItemUPCScanAllowed": 0,
+      "ValidateStockQuantity": {
+        "defaultZeroQuantity": 0,
+        "defaultShipmentQuantity": 1,
+        "locationInventoryQuantity": 0
+      },
+      "CustomMessages": {
+        "readyForPickupInstructions": "Prêt pour le ramassage des instructions",
+        "afterPickingTheOrder": "Après la cueillette de la commande, placez les dans une boîte ou en sachet articles dans le Magasin de Ramasser maintenez la zone; l'étiquette de plus grands objets avec une copie de la liste de ramassage.",
+        "orderContinueInstructions": "Cliquez sur continuer et suivez les instructions de préparation de la commande pour le client de ramassage. Lorsque le client dans le magasin pour ramasser de l'ordre, de revenir pour terminer la Fournir au Client une étape.",
+        "readyForPickup": "En sélectionnant READY FOR PICKUP, vous générez une notification au client que sa commande est prête à être récupérée. Veuillez vous assurer que votre site dispose également de la capacité opérationnelle pour livrer la commande.",
+        "partialOrderReadyForPickup": "En sélectionnant COMMANDE PARTIELLE PRÊTE POUR LE RAMASSAGE, vous générerez une notification au client que sa commande ne peut pas être exécutée en totalité et est prête à être récupérée. Veuillez vous assurer que votre site dispose également de la capacité opérationnelle pour livrer la commande.",
+        "itemUnavailableCancelShipment": "En sélectionnant ARTICLE NON DISPONIBLE ANNULER L'EXPÉDITION, vous générerez une notification au client indiquant que son envoi a été annulé.",
+        "cancelShipmentModalheader": "Annuler l'envoi",
+        "cancelShipmentNotification": "En sélectionnant cette option, vous confirmez que le client souhaite annuler la commande. Sélectionnez cette option pour informer le client que la commande a été annulée et il doit informer le service client pour toute question.",
+        "acceptShipmentModalheader": "Accepter l'expédition",
+        "acceptShipmentNotification": "En sélectionnant cette option, vous avez vérifié que le client a reçu l'intégralité de la commande. Sélectionnez cette option pour informer le client que le processus de commande est terminé et qu'aucune action supplémentaire n'est requise"
+      },
+      "pickWaveDisplayFields" : {
+        "department": {
+          "displayValue" : "département",
+          "isDisplay": 0
+        },
+        "locatorName": {
+          "displayValue" : "Nom du localisateur",
+          "isDisplay": 0
+        },
+        "binName": {
+          "displayValue" : "Poubelle",
+          "isDisplay": 0
+        }
+      },
+      "isAllowExcludeLocation": 1,
+      "returnPolicyLink": "https://www.acehardware.com/customer-service#mz-cs-top",
+      "ProductIdentifierLabels": {
+        "productCode": "Code produit",
+        "variationProductCode": "Code produit de variation",
+        "color": "Couleur",
+        "partNo": "Numéro d'article",
+        "SKU": "SKU",
+        "UPC": "UPC"
+      },
+      "defaultDashboardTab": "Late"
+    },
+    "ToasterSummary": {
+      "errorMessage": "Message d'erreur",
+      "error": "Erreur: ",
+      "additionalInfo": "Information additionnelle: "
+    },
+    "SMSHistory": {
+      "gridHeaders": {
+        "date": "DATE",
+        "sentTo": "ENVOYÉ À",
+        "status": "STATUT",
+        "messageBody": "CORPS DU MESSAGE",
+        "openBody": "Ouverte",
+        "closeBody": "Fermer"
+      },
+      "gridNoDataMessage": "Historique SMS introuvable pour cet utilisateur"
+    },
+    "DeliveryDate": {
+      "updatedDeliveryDate": "Date de livraison mise à jour",
+      "updatedReason": "Sélectionnez la raison de la mise à jour",
+      "reasonHeading": "Raison (facultatif):",
+      "enterReasonPlaceHolder": "entrez une raison",
+      "Buttons": {
+        "cancel": "Annuler",
+        "submit": "Soumettre"
+      }
+    }
+  },
+  "DASHBOARD": {
+    "GridTabs": {
+      "lateShipments": "Envois en retard",
+      "expressShipments": "Envois express",
+      "shipToHomeShipments": "Expédié à la maison",
+      "pickupShipments": "Envois de ramassage",
+      "transferShipments": "Transferts d'expédition",
+      "curbsideShipments": "Sur Le Trottoir Envois",
+      "curbsideOMSShipments": "Sur Le Trottoir Envois",
+      "fedexCrossBorderShipments": "Expéditions transfrontalières Fedex",
+      "preparationDeliveryShipments": "Livraison"
+    },
+    "GridHeader": {
+      "alertType": "Type d'alerte",
+      "shipmentPlaced": "Expédition placée",
+      "shipmentType": "Type d'envoi",
+      "orderNumber": "Numéro de commande",
+      "externalOrderId": "ID de commande externe",
+      "shipmentNumber": "Numéro d'expédition",
+      "store": "Boutique",
+      "currentStep": "Étape actuelle",
+      "addNote": "Ajouter une note"
+    },
+    "ShipmentsGridEmptyMessages": {
+      "noShipmentsFound": "Aucun envoi trouvé"
+    },
+    "AssignedList": {
+      "title": "Envois assignés",
+      "subtitle": "Préparez ces envois assignés"
+    },
+    "AddNote": {
+      "addNotebtn": "Ajouter une note",
+      "submitNote": "Soumettre une note",
+      "insertText": "Insérer une note ici ...",
+      "newNote": "Nouvelle note"
+    },
+    "SnapShot": {
+      "HEADER": {
+        "title": "Sélectionnez les envois à visualiser. Pour pousser un envoi à l'étape suivante de l'envoi, cliquez sur le bouton en bas de l'envoi",
+        "results": "Résultats",
+        "shipmentNumber": "Expédition",
+        "orderNumber": "Ordre",
+        "externalOrderId": "Commande externe",
+        "status": "Statut",
+        "assignedTo": "Assigné à",
+        "type": "Type d'envoi",
+        "sortBy": "Trier par",
+        "SortOrder": {
+          "newestFirst": "Le plus récent d'abord",
+          "oldestFirst": "Le plus ancien d'abord",
+          "shipmentLowTotal": "Expédition totale faible",
+          "shipmentHighTotal": "Expédition totale élevée"
+        },
+        "onPickWave": "Sur Pick Wave"
+      },
+      "GridHeader": {
+        "placed": "Mis",
+        "expectedPickupDate": "Date de ramassage prévue",
+        "assignedtoYourStore": "Attribué à votre magasin",
+        "acceptedbyYourStore": "Accepté par votre magasin",
+        "pickedUp": "Ramassé",
+        "shipped": "Expédié"
+      },
+      "BODY": {
+        "ProductDetailsGrid": {
+          "image": "Image",
+          "product": "Produit",
+          "productIdentifiers": "Identificateurs de produit",
+          "quantity": "Quantité",
+          "returnableQuantity": "Quantité restituable",
+          "pricedPaid": "Prix Payé",
+          "discount": "Discount",
+          "subtotal": "Sous-total",
+          "returnStatus" : "Statut de retour",
+          "productSpecification": {
+            "packageColor": "Couleur",
+            "packageSize": "Taille",
+            "partNo": "Partie #",
+            "SKU": "SKU",
+            "UPC": "UPC"
+          }
+        },
+        "CustomerInformation": {
+          "title": "Informations client"
+        }
+      },
+      "FOOTER": {
+        "discount": "Remise",
+        "subtotal": "Total",
+        "adjustment": "Ajustement",
+        "shippingandHandling": "Frais de port et de manutention",
+        "tax": "Impôt",
+        "total": "Totale"
+      },
+      "FinishFulfillment": {
+        "title": "Souhaitez-vous terminer l'exécution de cette expédition",
+        "fulfilledTitle": "Souhaitez-vous voir cet envoi",
+        "fulfillmentBtn": "Terminer l'expédition",
+        "fulfilledBtn": "Voir l'expédition"
+      }
+    },
+    "Returns": {
+      "customStatus": {
+        "itemReturnableString": "L'article peut être retourné",
+        "itemReturnInitiatedString": "Retour initié  - #",
+        "itemNonReturnableString": "L'article ne peut pas être retourné",
+        "itemReturnedString": "Article retourné - #",
+        "hash": " - #"
+      },
+      "Snapshot" : {
+          "header" : "Accepter ou refuser un retour, selon que le retour est conforme à notre politique de retour",
+          "receiptHeader": "{{returnedItems}} Les articles ont été retournés pour cette commande",
+          "viewReturnPolicy": "Voir la politique de retour",
+          "createReturnBtn": "Créer un retour",
+          "processReturnBtn": "Retour de processus",
+          "printReceiptBtn" :"Retour #{{returnNumber}} le reçu",
+          "footer" : "Lorsque le retour est accepté, un remboursement sera appliqué au moyen de paiement utilisé pour acheter les produits",
+          "ReturnDialogTitle": {
+            "create": "Créer un retour",
+            "process": "Retour de processus"
+          },
+          "toastr": {
+            "authorizationFailed": "Une erreur inconnue s'est produite lors de l'autorisation du retour"
+          },
+          "selectStoreTitle": "Sélectionnez un magasin"
+      }
+    }
+  },
+  "SHAREDSHIPMENT": {
+    "ShipmentDetails": {
+      "title": "Détails de l'envoi",
+      "ProductDetailsGrid": {
+        "image": "Image",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "quantity": "Quantité",
+        "partNo": "Numéro d'article",
+        "SKU": "SKU",
+        "UPC": "UPC",
+        "pricePaid": "Prix ​​unitaire",
+        "pricePerUnit": "Prix ​​par unité",
+        "totalPrice": "Prix ​​total"
+      }
+    },
+    "CustomerInformation": {
+      "title": "Informations client",
+      "contactName": "NOM DU CONTACT",
+      "shippingAdd": "ADRESSE DE LIVRAISON",
+      "billingAdd": "ADRESSE DE FACTURATION",
+      "labels": {
+        "phone": "Téléphone",
+        "home": "Accueil",
+        "work": "Travail",
+        "mobile": "Mobile"
+      }
+    },
+    "ShipmentHistory": {
+      "title": "Historique des expéditions",
+      "noChangeMsg": "Aucun message de changement"
+    },
+    "OrderNotes": {
+      "title": "Notes d'ordre",
+      "dateAdded": "date ajoutée",
+      "user": "Utilisatrice",
+      "role": "Rôle",
+      "note": "Remarque"
+    },
+    "ViewWorkflow": {
+      "viewWorkflowButton": "Affichage De Flux De Travail",
+      "currentWorkflow": "Flux De Travail Actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible D'Obtenir De Flux De Travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative pour obtenir le flux de travail, s'il vous plaît essayer à nouveau plus tard"
+      }
+    },
+    "ReprintList": {
+      "packingSlip": "Bon de livraison",
+      "reprintPackingSlip": "Réimpression du bordereau d'emballage"
+    },
+    "ItemIdentification": {
+      "itemIdentificationTitle" : "Numéro d'identification",
+      "valuePlaceholder" : "Entrez une valeur",
+      "formError" : "Erreur: aucune valeur saisie pour le numéro d'identification",
+      "updateError": "Error: no se pudieron actualizar los detalles de identificación del artículo",
+      "updationSuccess": "Les détails d'identification de l'article ont été mis à jour avec succès."
+    },
+    "Inventory" : {
+      "inventoryLocationAPIFailure": "Impossible d'extraire la quantité à partir de l'emplacement pour {{0}}"
+    }
+  },
+  "SHIPTOHOME": {
+    "reason": "Raison",
+    "selectReason": "Sélectionnez une raison",
+    "moreInfoPlaceholder": "Détails",
+    "TABS": {
+      "Accept Shipment": "Accepter l'expédition",
+      "validateStock": "Valider le stock",
+      "printNPack": "Imprimer le bordereau d'emballage",
+      "prepareShipment": "Préparez-vous à l'expédition",
+      "waitForPaymentConfirmation": "Attendez la confirmation du paiement"
+    },
+    "AcceptSTH": {
+      "title": "Accepter l'expédition",
+      "dialogMessage": "Acceptez-vous cette commande?"
+    },
+    "CancelSTH": {
+      "rejectReason": "Sélectionnez la raison du rejet",
+      "cancellationReason": "Sélectionnez le motif d'annulation",
+      "handleRejectShipmentSuccess": "Envoi rejeté avec succès"
+    },
+    "CompleteSTH": {
+      "trackNo": "Numéro de suivi",
+      "emptyTrackingListText": "Il n'y a pas encore de numéro de suivi pour cette expédition",
+      "orderComplete": "Expédition terminée",
+      "haveYou": "Avez-vous",
+      "thank": "Merci",
+      "addorderNote": "Ajouter une note de commande",
+      "returnTOPnPList": "Retour à la liste de colisage d'impression",
+      "returnToWFPC": "Retourner pour attendre la confirmation du paiement",
+      "completeShipment": "Oui, expédition complète",
+      "reprintShippingLabel": "Réimprimer l'étiquette d'expédition",
+      "removeTrackingNo": "Retirer",
+      "toaster": {
+        "errorPackageNotFound": "Le numéro de suivi ne figure dans aucun des packages"
+      }
+    },
+    "FulFillmentSTH": {
+      "title": "Livraison à domicile",
+      "subtitle": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipmentDetails": "Détails de l'envoi",
+      "customerInformation": "Informations client",
+      "shipmentHistory": "Historique des expéditions",
+      "orderNotes": "Notes d'ordre"
+    },
+    "PrepareShipmentSTH": {
+      "title": "Préparez-vous à l'expédition",
+      "BODY": {
+        "title": "Créer une étiquette d'expédition",
+        "subtitle": "Lors de l'expédition de plusieurs boîtes, utilisez un formulaire pour chaque boîte",
+        "customerType": "Client sélectionné",
+        "carrier": "Transporteuse",
+        "serviceType": "Type de service",
+        "boxTtype": "Type de boîte",
+        "other": "Autre"
+      },
+      "enterDimensions": "Entrez les dimensions de l'emballage",
+      "enterWeight": "Entrez le poids du colis",
+      "length": "Longueur",
+      "width": "Largeur",
+      "height": "la taille",
+      "weight": "Poids",
+      "entertrackingNobtn": "Entrez le numéro de suivi",
+      "trackingNo": "Numéro de suivi:",
+      "or": "-ou-",
+      "PackageValidations": {
+        "emptyLengthError": "La longueur ne peut pas être vide",
+        "invalidLengthError": "La longueur ne doit contenir que des chiffres",
+        "emptyWidthError": "La largeur ne peut pas être vide",
+        "invalidWidthError": "La largeur ne doit contenir que des chiffres",
+        "emptyHeightError": "La hauteur ne peut pas être vide",
+        "invalidHeightError": "La hauteur ne doit contenir que des chiffres",
+        "emptyWeightError": "Le poids ne peut pas être vide",
+        "invalidWeightError": "Le poids ne doit contenir que des chiffres",
+        "emptytrackingNo": "Le numéro de suivi ne peut pas être vide",
+        "invalidtrackingNo": "Le numéro de suivi doit être alphanumérique"
+      },
+      "printShippingbtn": "Imprimer l'étiquette d'expédition",
+      "printShippingLabel": "Veuillez ajouter les articles suivants avant d'imprimer une étiquette d'expédition: l'envoi n'a pas d'informations d'adresse de livraison.",
+      "generateShippingLabelInvalid": "Informations d'étiquette d'expédition non valides",
+      "generateShippingLabelFail": "Impossible de créer une étiquette d'expédition, veuillez réessayer",
+      "manualTrackingNo": "Entrez le numéro de suivi manuellement",
+      "unitTypes": {
+        "cm": "cm",
+        "kg": "kg",
+        "inches": "pouces",
+        "lbs": "Kg"
+      }
+    },
+    "PrintPackSheetSTH": {
+      "title": "Imprimer le bordereau d'emballage",
+      "stepsMessage": "Imprimez le bordereau d'emballage et joignez-le à la commande lorsqu'elle est mise en scène dans la zone de stockage de l'e-com.",
+      "Buttons": {
+        "printPackSheet": "Imprimer le bordereau d'emballage",
+        "proceedForShipment": "Procéder à la préparation de l'expédition",
+        "returnToValidateStock": "Retour pour valider le stock",
+        "proceedForWaitforPayment": "Attendre la confirmation du paiement"
+      }
+    },
+    "ValidateStockSTH": {
+      "title": "Valider le stock",
+      "SelectQuantity": "Sélectionnez la quantité à remplir en stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En stock",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "Button": {
+        "printPackingList": "Passez à Imprimer le bordereau d'emballage"
+      },
+      "AssignShipmentSuccess": "Expédition correctement affectée",
+      "RemoveShipmentItemsSuccess": "Les envois ont bien été annulés"
+    },
+    "ValidateStockModalSTH": {
+      "selectReason": "Sélectionnez la raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "ProductGrid": {
+        "reason": "Raison",
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité"
+      },
+      "Button": {
+        "confirm": "Confirmer"
+      },
+      "itemsInStockTitle": "Je n'ai pas ces articles en stock",
+      "splitShipment": "Expédition fractionnée",
+      "assignShipment": "Attribuer l'expédition"
+    },
+    "ViewWorkflowSTH": {
+      "viewWorkflowButton": "Afficher le workflow",
+      "currentWorkflow": "Workflow actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible d'obtenir le flux de travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative d'obtention du flux de travail, veuillez réessayer plus tard"
+      }
+    }
+  },
+  "FedexCrossBorder": {
+    "FulFillmentFXB": {
+      "title": "Exécution transfrontalière Fedex",
+      "subtitle": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipmentDetails": "Détails de l'envoi",
+      "customerInformation": "Informations client",
+      "shipmentHistory": "Historique des expéditions",
+      "orderNotes": "Notes d'ordre"
+    },
+    "TABS": {
+      "Accept Shipment": "Accepter l'expédition",
+      "validateStock": "Validate Stock",
+      "printNPack": "Print Packing Slip",
+      "prepareShipment": "Prepare for Shipment",
+      "waitingDocuments": "En attente de documents",
+      "documentsReady": "Documents prêts"
+    },
+    "Messages": {
+      "waitingMessagePart1": "La commande attend que les documents soient générés. Ce processus peut prendre 10 minutes ou plus.",
+      "waitingMessagePart2": "La commande sortira automatiquement de cet état.",
+      "documentsReadyForPrint": "Les documents sont prêts à être imprimés!"
+    },
+    "Buttons": {
+      "ForceOrder": "Forcer l'ordre aux documents prêts",
+      "PrintDocuments": "Imprimer des documents pour le pack"
+    },
+    "AcceptFXCB": {
+      "title": "Accepter l'expédition",
+      "dialogMessage": "Acceptez-vous cette commande?"
+    },
+    "CancelFXCB": {
+      "rejectReason": "Sélectionnez la raison du rejet",
+      "cancellationReason": "Sélectionnez le motif d'annulation",
+      "handleRejectShipmentSuccess": "Envoi rejeté avec succès"
+    },
+    "CompleteFXCB": {
+      "trackNo": "Numéro de suivi",
+      "emptyTrackingListText": "Il n'y a pas encore de numéro de suivi pour cette expédition",
+      "orderComplete": "Expédition terminée",
+      "haveYou": "Avez-vous",
+      "thank": "Merci",
+      "addorderNote": "Ajouter une note de commande",
+      "returnTOPnPList": "Retour à la liste de colisage d'impression",
+      "completeShipment": "Oui",
+      "reprintShippingLabel": "Réimprimer l'étiquette d'expédition",
+      "removeTrackingNo": "Retirer",
+      "toaster": {
+        "errorPackageNotFound": "Le numéro de suivi ne figure dans aucun des packages"
+      }
+    },
+    "PrepareShipmentFXCB": {
+      "title": "Préparez-vous à l'expédition",
+      "printDocuments": "Impossible de créer des documents de notification",
+      "BODY": {
+        "title": "Créer une étiquette d'expédition",
+        "subtitle": "Lors de l'expédition de plusieurs boîtes, utilisez un formulaire pour chaque boîte",
+        "customerType": "Client sélectionné",
+        "carrier": "Transporteuse",
+        "serviceType": "Type de service",
+        "boxTtype": "Type de boîte",
+        "other": "Autre"
+      },
+      "enterDimensions": "Entrez les dimensions de l'emballage",
+      "enterWeight": "Entrez le poids du colis",
+      "enterBoxes": "Entrez le nombre de cases",
+      "length": "Longueur",
+      "width": "Largeur",
+      "height": "la taille",
+      "weight": "Poids",
+      "entertrackingNobtn": "Entrez le numéro de suivi",
+      "packNotificationID": "ID de notification du pack:",
+      "or": "-ou-",
+      "PackageValidations": {
+        "emptyLengthError": "La longueur ne peut pas être vide",
+        "invalidLengthError": "La longueur ne doit contenir que des chiffres",
+        "emptyWidthError": "La largeur ne peut pas être vide",
+        "invalidWidthError": "La largeur ne doit contenir que des chiffres",
+        "emptyHeightError": "La hauteur ne peut pas être vide",
+        "invalidHeightError": "La hauteur ne doit contenir que des chiffres",
+        "emptyWeightError": "Le poids ne peut pas être vide",
+        "invalidWeightError": "Le poids ne doit contenir que des chiffres",
+        "emptytrackingNo": "Le numéro de suivi ne peut pas être vide",
+        "invalidtrackingNo": "Le numéro de suivi doit être alphanumérique"
+      },
+      "generateDocumentsbtn": "Générer des documents",
+      "printDocumentbtn": "Imprimer le document",
+      "printDocument": "Veuillez ajouter le (s) élément (s) suivant (s) avant d'imprimer un document: L'expédition n'a pas d'informations d'adresse de traitement.",
+      "generateDocumentsInvalid": "Informations sur les documents non valides",
+      "generateDocumentsFail": "Impossible de générer des documents, veuillez réessayer",
+      "manualTrackingNo": "Entrez le numéro de suivi manuellement",
+      "unitTypes": {
+        "cm": "cm",
+        "kg": "kg",
+        "inches": "pouces",
+        "lbs": "Kg"
+      }
+    },
+    "PrintPackSheetFXCB": {
+      "title": "Imprimer le bordereau d'emballage",
+      "stepsMessage": "Imprimez le bordereau d'emballage et joignez-le à la commande lorsqu'elle est mise en scène dans la zone de stockage de l'e-com.",
+      "Buttons": {
+        "printPackSheet": "Imprimer le bordereau d'emballage",
+        "proceedForShipment": "Procéder à la préparation de l'expédition",
+        "returnToValidateStock": "Retour pour valider le stock"
+      }
+    },
+    "ValidateStockFXCB": {
+      "title": "Valider le stock",
+      "SelectQuantity": "Sélectionnez la quantité à remplir en stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En stock",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "Button": {
+        "printPackingList": "Passez à Imprimer le bordereau d'emballage"
+      },
+      "AssignShipmentSuccess": "Expédition correctement affectée"
+    },
+    "ValidateStockModalFXCB": {
+      "selectReason": "Sélectionnez la raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "ProductGrid": {
+        "reason": "Raison",
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité"
+      },
+      "Button": {
+        "confirm": "Confirmer"
+      },
+      "itemsInStockTitle": "Je n'ai pas ces articles en stock",
+      "splitShipment": "Expédition fractionnée",
+      "assignShipment": "Attribuer l'expédition"
+    },
+    "ViewWorkflowFXCB": {
+      "viewWorkflowButton": "Afficher le workflow",
+      "currentWorkflow": "Workflow actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible d'obtenir le flux de travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative d'obtention du flux de travail, veuillez réessayer plus tard"
+      }
+    }
+  },
+  "Transfers": {
+    "reason": "Raison",
+    "selectReason": "Sélectionnez une raison",
+    "moreInfoPlaceholder": "Détails",
+    "TABS": {
+      "Accept Shipment": "Accepter l'expédition",
+      "validateStock": "Valider le stock",
+      "printNPack": "Imprimer le bordereau d'emballage",
+      "prepareShipment": "Préparez-vous à l'expédition"
+    },
+    "AcceptSTH": {
+      "title": "Accepter l'expédition",
+      "dialogMessage": "Acceptez-vous cette commande?"
+    },
+    "Cancel": {
+      "rejectReason": "Sélectionnez la raison du rejet",
+      "cancellationReason": "Sélectionnez le motif d'annulation",
+      "handleRejectShipmentSuccess": "Envoi rejeté avec succès"
+    },
+    "CompleteSTH": {
+      "trackNo": "Numéro de suivi",
+      "emptyTrackingListText": "Il n'y a pas encore de numéro de suivi pour cette expédition",
+      "orderComplete": "Expédition terminée",
+      "haveYou": "Avez-vous",
+      "thank": "Merci",
+      "addorderNote": "Ajouter une note de commande",
+      "returnTOPnPList": "Retour à la liste de colisage d'impression",
+      "completeShipment": "Oui, expédition complète",
+      "reprintShippingLabel": "Réimprimer l'étiquette d'expédition",
+      "removeTrackingNo": "Retirer",
+      "toaster": {
+        "errorPackageNotFound": "Le numéro de suivi ne figure dans aucun des packages"
+      }
+    },
+    "FulFillmentSTH": {
+      "title": "Exécution du transfert",
+      "subtitle": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipmentDetails": "Détails de l'envoi",
+      "customerInformation": "Informations client",
+      "shipmentHistory": "Historique des expéditions",
+      "orderNotes": "Notes d'ordre",
+      "selectLocationMessage": "Veuillez sélectionner l'emplacement pour effectuer cette expédition."
+    },
+    "WaitForPaymentSTH": {
+      "title": "Attendez la confirmation du paiement",
+      "stepsMessage": "Veuillez attendre la confirmation du paiement avant de continuer",
+      "Buttons": {
+        "proceedForShipment": "Confirmation de paiement de contournement",
+        "returnToPrintPackSlip": "Retourner à imprimer le bon de livraison"
+      }
+    },
+    "PrepareShipmentSTH": {
+      "title": "Préparez-vous à l'expédition",
+      "BODY": {
+        "title": "Créer une étiquette d'expédition",
+        "subtitle": "Lors de l'expédition de plusieurs boîtes, utilisez un formulaire pour chaque boîte",
+        "customerType": "Client sélectionné",
+        "carrier": "Transporteuse",
+        "serviceType": "Type de service",
+        "boxTtype": "Type de boîte",
+        "other": "Autre"
+      },
+      "enterDimensions": "Entrez les dimensions de l'emballage",
+      "enterWeight": "Entrez le poids du colis",
+      "length": "Longueur",
+      "width": "Largeur",
+      "height": "la taille",
+      "weight": "Poids",
+      "entertrackingNobtn": "Entrez le numéro de suivi",
+      "trackingNo": "Numéro de suivi:",
+      "or": "-ou-",
+      "PackageValidations": {
+        "emptyLengthError": "La longueur ne peut pas être vide",
+        "invalidLengthError": "La longueur ne doit contenir que des chiffres",
+        "emptyWidthError": "La largeur ne peut pas être vide",
+        "invalidWidthError": "La largeur ne doit contenir que des chiffres",
+        "emptyHeightError": "La hauteur ne peut pas être vide",
+        "invalidHeightError": "La hauteur ne doit contenir que des chiffres",
+        "emptyWeightError": "Le poids ne peut pas être vide",
+        "invalidWeightError": "Le poids ne doit contenir que des chiffres",
+        "emptytrackingNo": "Le numéro de suivi ne peut pas être vide",
+        "invalidtrackingNo": "Le numéro de suivi doit être alphanumérique"
+      },
+      "printShippingbtn": "Imprimer l'étiquette d'expédition",
+      "manualTrackingNo": "Entrez le numéro de suivi manuellement"
+    },
+    "PrintPackSheetSTH": {
+      "title": "Imprimer le bordereau d'emballage",
+      "stepsMessage": "Imprimez le bordereau d'emballage et joignez-le à la commande lorsqu'elle est mise en scène dans la zone de stockage de l'e-com.",
+      "Buttons": {
+        "printPackSheet": "Imprimer le bordereau d'emballage",
+        "proceedForShipment": "Procéder à la préparation de l'expédition",
+        "returnToValidateStock": "Retour pour valider le stock"
+      }
+    },
+    "ValidateStockSTH": {
+      "title": "Valider le stock",
+      "SelectQuantity": "Sélectionnez la quantité à remplir en stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En stock",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "Button": {
+        "printPackingList": "Passez à Imprimer le bordereau d'emballage"
+      },
+      "AssignShipmentSuccess": "Expédition correctement affectée"
+    },
+    "ValidateStockModalSTH": {
+      "selectReason": "Sélectionnez la raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "ProductGrid": {
+        "reason": "Raison",
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité"
+      },
+      "Button": {
+        "confirm": "Confirmer"
+      },
+      "itemsInStockTitle": "Je n'ai pas ces articles en stock",
+      "splitShipment": "Expédition fractionnée",
+      "assignShipment": "Attribuer l'expédition"
+    },
+    "ViewWorkflowSTH": {
+      "viewWorkflowButton": "Afficher le workflow",
+      "currentWorkflow": "Workflow actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible d'obtenir le flux de travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative d'obtention du flux de travail, veuillez réessayer plus tard"
+      }
+    }
+  },
+  "SHIPMENTS": {
+    "Accept": {
+      "title": "Accepter l'expédition",
+      "confirmationMessage": "Acceptez-vous cette commande?",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "partNumber": "Numéro d'article",
+        "UPC": "UPC",
+        "SKU": "SKU",
+        "quantity": "Quantité",
+        "pricePaid": "Prix ​​unitaire"
+      },
+      "Button": {
+        "yes": "Oui",
+        "no": "Non"
+      },
+      "successMessage": "Expédition acceptée avec succès"
+    },
+    "Cancel": {
+      "reason": "Raison:",
+      "selectAReason": "Sélectionnez une raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "Button": {
+        "cancel": "Annuler",
+        "submit": "Soumettre"
+      },
+      "rejectionReasonMessage": "Sélectionnez la raison du rejet",
+      "cancellationReasonMessage": "Sélectionnez le motif d'annulation",
+      "RejectShipmentSuccessMessage": "Envoi rejeté avec succès",
+      "excludeLocationMessage": "Exclure l'emplacement des affectations futures"
+    },
+    "Fulfillment": {
+      "title": "Exécution des expéditions",
+      "stepsMessage": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipment#": "Expédition #",
+      "order#": "Ordre #",
+      "externalOrder#": "Commande externe #",
+      "assignedTo": " - Assigné à",
+      "BelInv001": "BelInv001",
+      "shipmentType": "Type d'expédition:",
+      "Buttons": {
+        "cancelShipment": "Annuler l'envoi",
+        "shipmentDetails": "Détails de l'envoi",
+        "customerInformation": "Informations client",
+        "shipmentHistory": "Historique des expéditions",
+        "orderNotes": "Notes d'ordre"
+      },
+      "onPickWave": "Sur Pick Wave"
+    },
+    "PrintPickList": {
+      "title": "Imprimer la feuille de sélection",
+      "stepsMessage": "Imprimez la feuille de sélection et joignez-la à la commande lorsqu'elle est mise en scène dans la zone d'attente de l'e-com.",
+      "Buttons": {
+        "printPickSheet": "Imprimer la feuille de sélection",
+        "proceedToValidateStock": "Procéder à la validation du stock",
+        "rejectShipment": "Refuser l'envoi"
+      }
+    },
+    "ProvideToCustomer": {
+      "title": "Fournir au client",
+      "printPickSheet": "Imprimer la feuille de sélection",
+      "ProductGrid": {
+        "image": "Image",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "quantity": "Quantité",
+        "retailPrice": "Prix ​​en détail",
+        "unitPrice": "Prix ​​unitaire",
+        "subtotal": "Total",
+        "imageNotAvailable": "Image non disponible",
+        "color": "Image non disponible",
+        "size": "Taille:",
+        "packageSize": "Taille du paquet ici",
+        "part": "Partie #:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "updatedSubtotal": "Sous-total mis à jour",
+        "shippingAndHandling": "Frais de port et de manutention",
+        "tax": "Impôt",
+        "total": "Totale",
+        "updatedTotal": "Total mis à jour",
+        "discount": "Remise",
+        "adjustment": "Ajustement",
+        "pricePaid": "Prix ​​unitaire",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "Buttons": {
+        "customerAcceptsEntireShipment": "Le client accepte l'envoi complet",
+        "editShipment": "Modifier l'envoi",
+        "customerWantsToCancel": "Le client souhaite annuler",
+        "saveChanges": "Sauvegarder les modifications"
+      },
+      "customerOptionsMessage": "Choisissez l'une des options client suivantes:",
+      "dialog": {
+        "thankYou": "Merci",
+        "orderComplete": "Expédition terminée",
+        "close": "Fermer"
+      },
+      "toaster": {
+        "warningIfQtyIsZero": "Si la quantité ou le prix de tous les articles est de 0,",
+        "warningIfQtyIsZeroThen": "l'envoi ne peut être annulé",
+        "failureEditPrice": "Impossible de modifier le prix de l'article d'expédition",
+        "successEditPrice": "Le prix de l'article d'expédition a été modifié avec succès",
+        "successEditQuantity": "La quantité de l'article d'expédition a été modifiée avec succès",
+        "wanrningIfQtyIsExceeding": "J'ai essayé d'entrer plus que la quantité maximale d'articles"
+      }
+    },
+    "ProvideToCustomerRemoveItem": {
+      "itemsToRemove": "Éléments à supprimer",
+      "ProductGrid": {
+        "image": "Image",
+        "product": "Produit",
+        "quantityRemoved": "Quantité supprimée",
+        "reason": "Raison",
+        "imageNotAvailable": "Image non disponible",
+        "color": "Couleur:",
+        "size": "Taille:",
+        "packageSize": "Taille du paquet ici",
+        "selectRemovalReason": "Sélectionnez le motif de suppression ..."
+      },
+      "Button": {
+        "cancel": "Annuler",
+        "submit": "Soumettre"
+      }
+    },
+    "ValidateStock": {
+      "title": "Valider le stock",
+      "ScanLabel": "Scan UPC \/ SKU ou entrez le numéro",
+      "SelectQuantity": "Sélectionnez la quantité à remplir en stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En stock",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "ItemsReadyForTheCustomer": "Avez-vous tous ces articles prêts pour le client?",
+      "Button": {
+        "readyForPickup": "Prêt pour le ramassage",
+        "continue": "Continuer"
+      },
+      "StockValidatedSuccessMessage": "Validation réussie des stocks"
+    },
+    "ValidateStockModal": {
+      "selectAReason": "Sélectionnez une raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "ProductGrid": {
+        "reason": "Raison",
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité"
+      },
+      "Button": {
+        "confirm": "Confirmer"
+      },
+      "rejectShipment": "Refuser l'envoi",
+      "transferShipment": "Transfert de transfert",
+      "noItemsInStock": "Je n'ai pas ces articles en stock",
+      "removeSelectedItem": "Supprimer les éléments sélectionnés)",
+      "someItemsNotAvailable": "Certains articles non disponibles"
+    },
+    "ViewWorkflow": {
+      "viewWorkflowButton": "Afficher le workflow",
+      "currentWorkflow": "Workflow actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible d'obtenir le flux de travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative d'obtention du flux de travail, veuillez réessayer plus tard"
+      }
+    },
+    "CANCELSHIPMENTREASONS": {
+      "addAdditionalItems": "Ajouter des éléments supplémentaires",
+      "arrivedToLate": "Arrivé trop tard",
+      "canNotFindItem": "Impossible de trouver l'élément",
+      "customerChangedThierMind": "Le client a changé d'avis",
+      "customerFailedToPickupOrder": "Le client n'a pas pu retirer la commande",
+      "damagedOrDefectiveItem": "Article endommagé ou défectueux",
+      "doNotHaveEnoughQuantity": "N'ont pas assez de quantité",
+      "foundABetterPrice": "Trouvé un meilleur prix",
+      "itemDidNotMatchWebiste": "L'élément ne correspond pas au site Web",
+      "itemIsOnReserveForOtherCustomer": "L'article est en réserve pour un autre client",
+      "itemIsShopWornNotWebSaleable": "L'article est porté en magasin, non vendable sur le Web",
+      "itemNotAvailable": "Objet non disponible",
+      "itemPriceToHigh": "Prix ​​de l'article trop élevé",
+      "needToChangePaymentMethod": "Besoin de changer de méthode de paiement",
+      "noInventory": "Pas d'inventaire",
+      "onMannequinOrDisplay": "Sur mannequin ou présentoir",
+      "orderCreatedByMistake": "Commande créée par erreur",
+      "other": "Autre",
+      "productIsNotTheCorrectSize": "Le produit n'est pas de la bonne taille",
+      "storeError": "Erreur de stockage"
+    },
+    "WaitingForTransfer": {
+      "title": "En attente de transfert",
+      "reviewLabel": "Vérifier ce transfert",
+      "transferredFrom": "Transféré depuis {{ transferFromLocation }}",
+      "status": "Statut: {{ status }}",
+      "PartialPickup": {
+        "itemsAvailable": "Articles disponibles pour le ramassage du client",
+        "itemsReceived": "Articles reçus",
+        "Button": {
+          "pickup": "Ramasser",
+          "editPickupQty": "Modifier la quantité d'enlèvement",
+          "save": "sauver"
+        },
+        "Dialog": {
+          "thankYou": "Merci",
+          "pickupComplete": "Ramassage partiel terminé",
+          "close": "Fermer"
+        },
+        "toaster": {
+          "warningIfQtyIsZero": "La quantité de tous les articles est de 0, veuillez sélectionner les articles"
+        }
+      }
+    }
+  },
+  "USERSETTINGS": {
+    "SMSHistory": {
+      "dialog": {
+        "title": "Journaux d'historique SMS",
+        "cancelButton": "Annuler"
+      },
+      "viewButton": "Afficher l'historique des SMS",
+      "toaster": {
+        "errorUnableToGetSMSHistory": "Impossible d'obtenir l'historique des SMS"
+      }
+    },
+    "Labels": {
+      "accountInformation": "Information sur le compte",
+      "userInformation": "Informations de l'utilisateur",
+      "storeAssociations": "Associations de magasins",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "userName": "Nom d'utilisateur",
+      "phone": "Téléphone",
+      "status": "Statut",
+      "updatedOn": "Mis à jour le",
+      "uniqueId": "Identifiant unique",
+      "lastLogin": "Dernière connexion",
+      "phoneNumber": "Numéro de téléphone",
+      "password": "Mot de passe",
+      "email": "Email",
+      "role": "Rôle",
+      "save": "sauver",
+      "add": "Ajouter",
+      "storeList": "Liste des magasins",
+      "createNewUser": "Créer un nouvel utilisateur",
+      "listOfLocations": "Liste des emplacements de traitement",
+      "currentStoreAssociations": "Associations de magasins actuelles",
+      "searchFufillmentLocations": "Rechercher des emplacements de traitement",
+      "locationId": "Code de localisation",
+      "externalStoreId": "Type de lieu",
+      "fulfillerLocationName": "Nom de la localisation",
+      "all": "Toute",
+      "addAll": "Tout ajouter",
+      "removeAll": "Enlever tout",
+      "type": "Type",
+      "regionAndStore": "Par région et magasin",
+      "storeLenWarning": "Un utilisateur doit avoir au moins un magasin qui lui est associé",
+      "textNotifications": "Activer les notifications par SMS",
+      "emailNotifications": "Activez les notifications par e-mail",
+      "confirmation": "Confirmation",
+      "enterNewPassword": "Entrer un nouveau mot de passe "
+    },
+    "Buttons": {
+      "edit": "Éditer",
+      "save": "sauver",
+      "cancel": "Annuler",
+      "remove": "Retirer"
+    },
+    "Messages": {
+      "viewUsers": "Afficher les utilisateurs de Partenaire",
+      "subHeadingText": "Gérez les noms d'utilisateur, les mots de passe, les autorisations et les associations de magasins pour les utilisateurs de votre compte",
+      "searchUsers": "Rechercher des utilisateurs",
+      "manageStoresAssociation": "Gérer les associations de magasins",
+      "resetUserPassword": "Réinitialiser le mot de passe de l'utilisateur",
+      "reactiveUser": "Utilisateur réactif",
+      "optEmailNotifications": "Activez les notifications par e-mail",
+      "noStoresAssociated": "Aucun magasin associé",
+      "showInactiveUsers": "Afficher les utilisateurs inactifs",
+      "editStoreAssociations": "Modifier les associations de magasins d'utilisateurs pour",
+      "associateLocations": "Associez les emplacements des magasins à un utilisateur. Cliquez sur un magasin ci-dessous pour ajouter à la liste de droite",
+      "confirmToDeleteUser": "Etes-vous sûr que vous voulez supprimer <b>{{userName}}</b>?",
+      "confirmResetUserPassword": "Voulez-vous vraiment réinitialiser <b>{{userName}}'s</b> password?",
+      "confirmUpdateUser": "Voulez-vous vraiment mettre à jour <b>{{userName}}</b>?",
+      "confirmReactivateUser": "Voulez-vous vraiment réactiver <b>{{userName}}<b/>",
+      "userUpdateSuccessSummary": "Utilisateur mis à jour avec succès",
+      "userUpdateSuccess": "Information de {{userName}} a été mis à jour avec succès.",
+      "userUpdateFailSummary": "Impossible de mettre à jour l'utilisateur",
+      "deleteUserFulfillerRolesSuccess": "{{userName}} supprimé avec succès",
+      "deleteUserFulfillerRolesFail": "Impossible de supprimer {{userName}}",
+      "resetUserPasswordFail": "Impossible de réinitialiser {{userName}}'s mot de passe",
+      "resetUserPasswordSuccess": "{{userName}}'s réinitialisation du mot de passe réussie",
+      "confirmNewUser": "Nouvel utilisateur créé avec succès"
+    },
+    "ErrorMessages": {
+      "userNameBlank": "Le nom d'utilisateur ne peut pas être vide",
+      "userNameRepeat": "Nom d'utilisateur déjà pris",
+      "userNameMinLength": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "userNameMaxLength": "Le nom d'utilisateur ne peut pas dépasser 50 caractères",
+      "userNameAllowChars": "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres et \". @ _ -\"",
+      "passwordMinLength": "Le mot de passe doit comporter au moins 6 caractères avec au moins 1 chiffre et 1 caractère alphabétique",
+      "passwordBlank": "Le mot de passe ne peut pas être vide",
+      "firstNameBlank": "Le prénom ne peut pas être vide",
+      "firstNameMaxLength": "Le prénom ne peut pas dépasser 50 caractères",
+      "lastNameBlank": "Le nom ne peut pas être vide",
+      "lastNameMaxLength": "Le nom de famille ne peut pas dépasser 50 caractères",
+      "phoneNumberInvalid": "Numéro de téléphone non valide (doit être au format xxx-xxx-xxxx ou + ccc xxx-xxx-xxxx)",
+      "emailBlank": "L'e-mail ne peut pas être vide",
+      "emailInvalid": "Adresse e-mail invalide",
+      "emailRegistered": "L'adresse e-mail est déjà utilisée",
+      "noStoresFound": "Aucun magasin trouvé contenant",
+      "noStoresSelected": "Aucun magasin actuel sélectionné.",
+      "storeAssociationMising": "Au moins un magasin doit être associé à l'utilisateur, l'utilisateur n'est pas créé",
+      "optInTextError": "Veuillez entrer le numéro de téléphone pour vous inscrire aux notifications par SMS",
+      "optInEmailError": "Veuillez saisir votre e-mail pour vous inscrire aux notifications par e-mail",
+      "fetchingRolesFailed": "Une erreur s'est produite lors du chargement des rôles utilisateur"
+    }
+  },
+  "PICKANDPACK": {
+    "Labels": {
+      "pickWave": "Pick Wave",
+      "openPickWaves": "Open Pick Waves",
+      "opened": "Ouverte",
+      "pickWaveId": "Choisir l'ID de vague",
+      "fulfillmentType": "Type de réalisation",
+      "openedBy": "Ouvert par",
+      "orderNumbers": "Numéros de commande",
+      "shipmentIds": "ID d'expédition",
+      "fulfillmentTypeFilter": "Filtre de type de réalisation",
+      "userFilter": "Filtre utilisateur",
+      "thisContains": "Cette vague de sélection contient",
+      "shipmentAnd": "expédition (s) et",
+      "items": "articles",
+      "shipmentPlaced": "Expédition placée",
+      "closePickWave": "Fermer Pick Wave",
+      "reprintWave": "Réimprimer Wave",
+      "pickLocationToCreate": "Veuillez choisir un emplacement pour créer une vague de prélèvement",
+      "createPickWaveFor": "Créer une vague de sélection pour",
+      "orderType": "Type de commande",
+      "orders": "Ordres",
+      "numberOfOrders": "Nombre de commandes",
+      "shippingOptions": "Les options d'expédition",
+      "allAvailableOrders": "Toutes les commandes disponibles",
+      "printOptions": "Options d'impression",
+      "printPickWave": "Imprimer la vague de sélection",
+      "printPackingList": "Imprimer le bon de livraison",
+      "printSingleOrder": "Imprimer des feuilles de commande unique",
+      "itemsPerOrder": "Nombre d'articles par commande",
+      "pickwaveType": "Type de Pickwave",
+      "productMatch": "Correspondance produit",
+      "matchType": "Type de match",
+      "productIdentifier": "étiquette d'un produit",
+      "department": "département",
+      "optional": "optionnelle",
+      "orderPlaced": "Commande passée",
+      "createPickWave": "Créer une vague de prélèvement",
+      "advanced": "Avancée",
+      "simple": "Facile",
+      "noPickWavesFound": "Aucune vague de sélection trouvée",
+      "orderPickSheets": "Commander des feuilles de prélèvement"
+    },
+    "ErrorMessages": {
+      "numberOfOrdersInvalidMinLength": "Le nombre de commandes ne peut pas être inférieur à 1"
+    }
+  },
+  "TransferShipments": {
+    "ReceiveHeading": "Recevoir des envois de transfert",
+    "EnterShipmentLabel": "Numériser / saisir le numéro d'expédition ou le numéro de suivi",
+    "SuccessfulScans": "Analyses réussies",
+    "ButtonProcess": "Recevoir",
+    "Reason": "Raison",
+    "SuccessMessage": "L'expédition est traitée.",
+    "PrintLabelFailMessage": "Impossible d'imprimer l'étiquette, veuillez réessayer",
+    "NotesMessages": {
+      "NotesAddedHeader": "Note de commande ajoutée avec succès",
+      "NotesAddedMessage": "La note de commande a été ajoutée avec succès"
+    },
+    "ErrorMessages": {
+      "notAuthorized": "Pas autorisé.",
+      "cantFound": "L'envoi est introuvable.",
+      "notTransfer": "Pas un envoi par transfert",
+      "alreadyReceived": "L'expédition a déjà été reçue",
+      "shipmentCanceled": "L'expédition a été annulée",
+      "shipmentReassigned": "L'envoi a été réaffecté à un autre emplacement",
+      "hasntShipped": "L'envoi n'a pas encore été expédié",
+      "bopisCanceledTitle": "BOPIS associé annulé",
+      "bopisCanceledMessage": "La commande BOPIS associée à ce transfert a été annulée. Veuillez retourner les articles de ce transfert dans le stock de votre magasin",
+      "transferCreateError": "Impossible de créer le transfert avec succès"
+    },
+    "QuestionTexts": {
+      "promotionalMaterials": "Vous avez placé tous les articles, la liste de colisage et le matériel promotionnel dans le colis?",
+      "attachLabels": "Imprimé l'étiquette d'expédition et attaché à l'emballage",
+      "sealedPackage": "Vous avez scellé le colis pour qu'il soit prêt à être expédié?"
+    },
+    "IncomingTransfers": {
+      "title": "Recevoir des transferts entrants",
+      "viewButton": "Afficher les éléments de transfert entrants",
+      "noTransferItems": "Il n'y a aucun élément de transfert entrant.",
+      "receivedTitle": "Reçue",
+      "validateTransferStock": "Valider le transfert de stock",
+      "yesReceiveItems": "Oui, recevez les articles entrants",
+      "createNewTransfer": "Créer un nouveau transfert",
+      "CancelItems": "Annuler les articles de cette commande",
+      "receivedItemsLabel": "Vous venez de recevoir des articles qui préparent partiellement l'expédition",
+      "pickupLabel": "pour le ramassage des clients",
+      "transferComplete": "Tous les transferts pour cette expédition sont terminés",
+      "receivedAndReady": "Reçu et prêt",
+      "inTransit": "En transit",
+      "notYetShipped": "Pas encore expédié",
+      "shipped": "Expédié",
+      "nextLabel": "Que faire ensuite",
+      "proceedLabel": "Passez à l'étape Fournir au client lorsque tous les articles à expédier",
+      "areInStock": "sont en stock"
+    }
+  },
+  "SHIPPINGMANIFEST": {
+    "ViewManifest": {
+      "title": "Manifestes d'expédition",
+      "manifestInfo": "Affichage des manifestes des 15 derniers jours:",
+      "reprintLink": "Réimpression",
+      "GridHeader": {
+        "manifestId": "ID du manifeste",
+        "createdDate": "date créée",
+        "createdBy": "Créé par",
+        "packageCount": "Nombre de paquets",
+        "shipmentCount": "Nombre d'envois"
+      }
+    },
+    "ManifestDetails": {
+      "manifestId": "Manifeste#",
+      "createdByLabel": "Date créée",
+      "byLabel": "par",
+      "printManifestButton": "Manifeste d'impression"
+    },
+    "CreateManifest": {
+      "title": "Créer des manifestes",
+      "manifestInfo": "Choisissez les commandes à inclure dans un manifeste",
+      "createAndPrintButton": "Créer et imprimer",
+      "Dialog": {
+        "title": "Créer un manifeste",
+        "message": "Voulez-vous vraiment créer un manifeste? Votre compte Postes Canada sera débité.",
+        "confirmButton": "D'accord"
+      }
+    },
+    "ManifestGrid": {
+      "GridHeader": {
+        "orderId": "numéro de commande",
+        "externalOrderId": "ID de commande externe",
+        "name": "Nom",
+        "address": "Adresse",
+        "shipmentNumber": "Numéro d'expédition",
+        "boxType": "Type de boîte",
+        "trackingNumber": "Numéro de suivi",
+        "selectShipment": "Sélectionnez l'envoi"
+      },
+      "GridEmptyMessages": {
+        "noRecordFound": "Aucun Enregistrement Trouvé"
+      }
+    }
+  },
+  "CommonControls": {
+    "yesButton": "Oui",
+    "noButton": "Non",
+    "results": "Résultats",
+    "questions": [
+      "Vous avez placé tous les articles, la liste de colisage et le matériel promotionnel dans le colis?",
+      "Imprimé l'étiquette d'expédition et attaché à l'emballage",
+      "Vous avez scellé le colis pour qu'il soit prêt à être expédié?"
+    ],
+    "fxcbQuestions" : [
+      "Vous avez placé tous les articles, la liste de colisage et le matériel promotionnel dans le colis?",
+      "Avez-vous commencé la génération de documents?"
+    ]
+  },
+  "CURBSIDE": {
+    "Fulfillment": {
+      "title": "Ramassage au bord de la rue",
+      "stepsMessage": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipment#": "Ramassage au bord de la rue #",
+      "order#": "Ordre #",
+      "externalOrder#": "Commande externe #",
+      "assignedTo": " - Assigné à",
+      "status": "Statut: ",
+      "expectedPickupDte": "Date de ramassage prévue: ",
+      "pickupNotes": "Notes de ramassage en bordure de rue: ",
+      "Buttons": {
+        "cancelShipment": "Annuler l'envoi",
+        "shipmentDetails": "Détails de l'envoi",
+        "customerInformation": "Informations client",
+        "shipmentHistory": "Historique des expéditions",
+        "orderNotes": "Notes d'ordre"
+      },
+      "PickupInfoKeys": {
+        "MethodofDelivery": "Mode de livraison",
+        "ParkingSpotNumber": "Numéro de place de parking",
+        "VehicleColorMakeModel": "Couleur, marque, modèle du véhicule",
+        "LicensePlate": "Plaque d'immatriculation"
+      }
+    },
+    "ProvideToCustomer": {
+      "title": "Fournir au client",
+      "printPickSheet": "Imprimer la feuille de sélection",
+      "ProductGrid": {
+        "image": "Image",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "quantity": "Quantité",
+        "retailPrice": "Prix ​​en détail",
+        "unitPrice": "Prix ​​unitaire",
+        "subtotal": "Total",
+        "imageNotAvailable": "Image non disponible",
+        "color": "Couleur:",
+        "size": "Taille:",
+        "packageSize": "Taille du paquet ici",
+        "part": "Partie #:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "shippingAndHandling": "Frais de port et de manutention",
+        "tax": "Impôt",
+        "total": "Totale",
+        "discount": "Remise",
+        "adjustment": "Ajustement",
+        "pricePaid": "Prix ​​unitaire",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "order": "Ordre #",
+      "curbsidePickup": "Ramassage au bord de la rue #",
+      "Buttons": {
+        "customerAcceptsEntireShipment": "Le client accepte l'envoi complet",
+        "customerWantsToCancel": "Le client a annulé tout l'envoi",
+        "scanCodeToValidateCustomerID": "Scannez le code pour valider l'ID client"
+      },
+      "customerOptionsMessage": "Choisissez l'une des options client suivantes:",
+      "scannedQRCodeValidationMessage": "ATTENTION: veuillez valider le numéro de commande et le numéro de ramassage en bordure de rue qui correspondent aux valeurs en haut de cet écran.",
+      "dialog": {
+        "thankYou": "Merci",
+        "orderComplete": "Expédition terminée",
+        "close": "Fermer"
+      },
+      "toaster": {
+        "scannedQRCodeMatched": "Identité client validée avec succès",
+        "scannedQRCodeNotMatched": "Les valeurs attendues ne correspondent pas, veuillez vous assurer que le client est correct pour cet envoi"
+      }
+    },
+    "ValidateStock": {
+      "title": "Ordre de process",
+      "SelectQuantity": "Sélectionnez la quantité à remplir à partir du stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En Stock",
+        "Placeholder": {
+          "currentStockAmount": "Stock Actuel Montant",
+          "inStock":"En Stock",
+          "partial": "Partiel",
+          "outOfStock": "En rupture de stock"
+        }
+      },
+      "itemsReadyForTheCustomer": "Avez-vous tous ces articles prêts pour le client?",
+      "generateNotificationForOrderCancelled": "La sélection de cette option générera une notification au client l'informant que son envoi a été annulé",
+      "generateNotificationForReadyForPickup": "La sélection de cette option générera une notification au client l'informant que la commande est prête pour le ramassage.",
+      "Button": {
+        "readyForPickup": "Prêt pour le ramassage",
+        "partialReadyForPickup": "Expédition partielle prête pour l'enlèvement",
+        "itemsUnavailableCancelOrder": "Articles non disponibles: Annuler l'expédition",
+        "continue": "Continue"
+      },
+      "stockValidatedSuccessMessage": "Validation réussie des stocks"
+    }
+  },
+  "DELIVERY": {
+    "Accept": {
+      "title": "Accepter l'expédition",
+      "confirmationMessage": "Acceptez-vous cette commande?",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "partNumber": "Numéro d'article",
+        "UPC": "UPC",
+        "SKU": "SKU",
+        "quantity": "Quantité",
+        "pricePaid": "Prix ​​unitaire",
+        "pricedPaid": "Prix Payé",
+        "subtotal": "Sous-total",
+        "discount": "Remise",
+        "adjustment": "Ajustement",
+        "shippingandHandling": "Frais de port et de manutention",
+        "tax": "Impôt",
+        "total": "Totale"
+      },
+      "Button": {
+        "yes": "Oui",
+        "no": "Non"
+      },
+      "successMessage": "Expédition acceptée avec succès"
+    },
+    "Cancel": {
+      "reason": "Raison:",
+      "selectAReason": "Sélectionnez une raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "Button": {
+        "cancel": "Annuler",
+        "submit": "Soumettre"
+      },
+      "rejectionReasonMessage": "Sélectionnez la raison du rejet",
+      "cancellationReasonMessage": "Sélectionnez le motif d'annulation",
+      "RejectShipmentSuccessMessage": "Envoi rejeté avec succès",
+      "excludeLocationMessage": "Exclure l'emplacement des affectations futures"
+    },
+    "Fulfillment": {
+      "title": "Exécution des expéditions",
+      "stepsMessage": "Traitez l'expédition à travers les étapes de réalisation.",
+      "shipment#": "Expédition #",
+      "order#": "Ordre #",
+      "externalOrder#": "Commande externe #",
+      "assignedTo": " - Assigné à",
+      "BelInv001": "BelInv001",
+      "shipmentType": "Type d'expédition:",
+      "Buttons": {
+        "cancelShipment": "Annuler l'envoi",
+        "shipmentDetails": "Détails de l'envoi",
+        "customerInformation": "Informations client",
+        "shipmentHistory": "Historique des expéditions",
+        "orderNotes": "Notes d'ordre"
+      },
+      "onPickWave": "Sur Pick Wave"
+    },
+    "PrintPickList": {
+      "title": "Imprimer la feuille de sélection",
+      "stepsMessage": "Imprimez la feuille de sélection et joignez-la à la commande lorsqu'elle est mise en scène dans la zone d'attente de l'e-com.",
+      "Buttons": {
+        "printPickSheet": "Imprimer la feuille de sélection",
+        "proceedToValidateStock": "Procéder à la validation du stock",
+        "rejectShipment": "Refuser l'envoi"
+      }
+    },
+    "ValidateStock": {
+      "title": "Valider le stock",
+      "ScanLabel": "Scan UPC \/ SKU ou entrez le numéro",
+      "SelectQuantity": "Sélectionnez la quantité à remplir en stock",
+      "ProductGrid": {
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité",
+        "inStock": "En stock",
+        "Placeholder": {
+          "currentStockAmount": "Montant actuel du stock"
+        }
+      },
+      "ItemsReadyForTheCustomer": "Avez-vous tous ces articles prêts pour le client?",
+      "Button": {
+        "readyForPickup": "Prêt pour le ramassage",
+        "continue": "Continuer"
+      },
+      "StockValidatedSuccessMessage": "Validation réussie des stocks"
+    },
+    "ValidateStockModal": {
+      "selectAReason": "Sélectionnez une raison",
+      "dots": "...",
+      "moreInfoPlaceholder": "Détails",
+      "ProductGrid": {
+        "reason": "Raison",
+        "image": "Image",
+        "imageNotAvailable": "Image non disponible",
+        "product": "Produit",
+        "productIdentifiers": "Identificateurs de produit",
+        "color": "Couleur:",
+        "SKU": "SKU:",
+        "UPC": "UPC:",
+        "part": "Partie #:",
+        "quantity": "Quantité"
+      },
+      "Button": {
+        "confirm": "Confirmer"
+      },
+      "rejectShipment": "Refuser l'envoi",
+      "transferShipment": "Transfert de transfert",
+      "noItemsInStock": "Je n'ai pas ces articles en stock",
+      "removeSelectedItem": "Supprimer les éléments sélectionnés)",
+      "someItemsNotAvailable": "Certains articles non disponibles"
+    },
+    "ViewWorkflow": {
+      "viewWorkflowButton": "Afficher le workflow",
+      "currentWorkflow": "Workflow actuel",
+      "toaster": {
+        "errorUnableToGetWorlflow": "Impossible d'obtenir le flux de travail",
+        "errorErrorOccured": "Une erreur s'est produite lors de la tentative d'obtention du flux de travail, veuillez réessayer plus tard"
+      }
+    },
+    "CANCELSHIPMENTREASONS": {
+      "addAdditionalItems": "Ajouter des éléments supplémentaires",
+      "arrivedToLate": "Arrivé trop tard",
+      "canNotFindItem": "Impossible de trouver l'élément",
+      "customerChangedThierMind": "Le client a changé d'avis",
+      "customerFailedToPickupOrder": "Le client n'a pas pu retirer la commande",
+      "damagedOrDefectiveItem": "Article endommagé ou défectueux",
+      "doNotHaveEnoughQuantity": "N'ont pas assez de quantité",
+      "foundABetterPrice": "Trouvé un meilleur prix",
+      "itemDidNotMatchWebiste": "L'élément ne correspond pas au site Web",
+      "itemIsOnReserveForOtherCustomer": "L'article est en réserve pour un autre client",
+      "itemIsShopWornNotWebSaleable": "L'article est porté en magasin, non vendable sur le Web",
+      "itemNotAvailable": "Objet non disponible",
+      "itemPriceToHigh": "Prix ​​de l'article trop élevé",
+      "needToChangePaymentMethod": "Besoin de changer de méthode de paiement",
+      "noInventory": "Pas d'inventaire",
+      "onMannequinOrDisplay": "Sur mannequin ou présentoir",
+      "orderCreatedByMistake": "Commande créée par erreur",
+      "other": "Autre",
+      "productIsNotTheCorrectSize": "Le produit n'est pas de la bonne taille",
+      "storeError": "Erreur de stockage"
+    },
+    "WaitingForTransfer": {
+      "title": "En attente de transfert",
+      "reviewLabel": "Vérifier ce transfert",
+      "transferredFrom": "Transféré depuis {{ transferFromLocation }}",
+      "status": "Statut: {{ status }}",
+      "PartialPickup": {
+        "itemsAvailable": "Articles disponibles pour le ramassage du client",
+        "Button": {
+          "pickup": "Ramasser",
+          "editPickupQty": "Modifier la quantité d'enlèvement",
+          "save": "sauver"
+        },
+        "Dialog": {
+          "thankYou": "Merci",
+          "pickupComplete": "Ramassage partiel terminé",
+          "close": "Fermer"
+        },
+        "toaster": {
+          "warningIfQtyIsZero": "La quantité de tous les articles est de 0, veuillez sélectionner les articles"
+        }
+      }
+    },
+    "ErrorMessages": {
+      "transferCreateError": "Impossible de créer le transfert avec succès"
+    },
+    "OrderPreparation": {
+      "deliveryInstructions": "Instructions de livraison :",
+      "comments": "commentaires :",
+      "giftMessage": "Message de cadeau :"
+    },
+    "others": {
+      "checkAssembly": "Assemblage terminé",
+      "readyToDelivery": "Prêt pour la livraison",
+      "orderDelivered": "La commande a été livrée",
+      "orderComplete": "Expédition terminée",
+      "itemsReadyForTheCustomer": "Avez-vous de tous ces éléments, prêt pour le client?"
+    }
+  },
+  "ToastrSummary":{
+    "PasswordResetSuccess": "Réinitialisation du mot de passe réussie",
+    "PasswordResetFail": "Impossible de réinitialiser le mot de passe",
+    "UserUpdateSuccess": "L'utilisateur a bien été mis à jour",
+    "UserUpdateFail": "Impossible de mettre à jour l'utilisateur",
+    "CreateUserSuccess": "L'utilisateur a été créé avec succès",
+    "AddRoleSuccess": "Rôle ajouté à l'utilisateur avec succès",
+    "CreateUserFail": "Impossible de créer un utilisateur",
+    "DeleteUserSuccess": "L'utilisateur a bien été supprimé",
+    "DeleteUserFail": "Impossible de supprimer l'utilisateur",
+    "AddRoleFail": "Impossible d'ajouter un rôle à l'utilisateur",
+    "AcceptShipmentSuccess": "Expédition acceptée avec succès",
+    "AcceptShipmentFail": "Impossible d'accepter l'envoi avec succès",
+    "WaitingTransferShipmentSuccess": "Envoi examiné avec succès",
+    "WaitingTransferShipmentFail": "Impossible de vérifier l'envoi avec succès",
+    "RejectShipmentSuccess": "Expédition refusée avec succès",
+    "RejectShipmentFail": "Impossible de refuser l'envoi avec succès",
+    "PrintPickListFail": "Impossible de terminer l'impression de la liste de sélection avec succès",
+    "ValidateStockSuccess": "Stock validé avec succès",
+    "ValidateStockFail": "Impossible de valider le stock avec succès",
+    "TransferShipmentSuccess": "Envoi transféré avec succès",
+    "TransferShipmentFail": "Impossible de transférer l'envoi avec succès",
+    "CompleteShipmentSuccess": "Expédition terminée avec succès",
+    "CompleteShipmentFail": "Impossible de terminer l'expédition avec succès",
+    "CompleteShipmentRevertFail": "Impossible de passer à l'étape précédente",
+    "ShipmentEditSuccess": "Envoi modifié avec succès",
+    "ShipmentEditFail": "Impossible de modifier l'envoi avec succès",
+    "CancelShipmentSuccess": "Envoi annulé avec succès",
+    "CancelShipmentFail": "Impossible d'annuler l'envoi avec succès",
+    "UnableToFindUPC": "Impossible de trouver l'UPC numérisé pour cet envoi",
+    "QuantityIsZero": "La quantité de tous les articles est de 0",
+    "QuantityOrPriceIsZero": "La quantité ou le prix de tous les articles est de 0",
+    "EditPriceTitle": "Modifier le prix de l'article d'expédition",
+    "AssignShipmentSuccess": "Envoi attribué avec succès",
+    "TrackingNumbersUpdatedSuccess": "Numéros de suivi mis à jour avec succès",
+    "TrackingNumbersUpdatedFail": "Impossible de mettre à jour les numéros de suivi avec succès",
+    "TrackingNumberNotFound": "Impossible de trouver les informations de suivi",
+    "ItemsPickupCompleteSuccess": "Articles d'expédition récupérés avec succès",
+    "ItemsPickupCompleteFail": "Impossible de terminer les articles de ramassage d'expédition",
+    "CreateManifestFail": "Impossible de créer un manifeste",
+    "fetchManifestFail": "Impossible de récupérer le manifeste",
+    "CreateManifestSuccess": "Manifeste créé avec succès",
+    "ScanCodeToValidateCustomerIDSuccess": "Identité client validée avec succès",
+    "ScanCodeToValidateCustomerIDFail": "Impossible de valider l'identité du client",
+    "ScannedQRCodeToValidateCustomerIDSuccess": "Identité client validée avec succès",
+    "ScannedQRCodeToValidateCustomerIDFail": "Impossible de valider l'identité du client",
+    "returnAuthorizationFailed": "Impossible d'autoriser le retour",
+    "cancelNotificationSuccess": "Notification annulée avec succès",
+    "cancelNotificationFail": "Impossible d'annuler la notification",
+    "printDocumentsFail": "Impossible d'imprimer les documents",
+    "WaitForPaymentConfirmationSuccess":"Attendre la confirmation du paiement",
+    "WaitForPaymentConfirmationFail":"Échec de l'exécution de l'action",
+    "ReturnToPrintPackingList": "Impossible de retourner l'étape de la liste d'emballage d'impression",
+    "CancelManualNotificationFailure": "Non autorisé ou accès refusé pour annuler les étiquettes générées manuellement",
+    "invalidOrderId": "Un identifiant de commande non valide est utilisé pour générer les documents",
+    "PrepareForShipment": "Impossible de terminer la préparation de l'expédition",
+    "ReturnToPrepareForShipmentError": "Impossible de retourner l'étape de préparation pour l'expédition",
+    "PrepareForDeliverySuccess": "Préparation réussie pour la livraison",
+    "PrepareForDeliveryFail": "Impossible de terminer la préparation de la livraison",
+    "UpdateDeliveryDateSuccess": "La date de livraison prévue a bien été mise à jour",
+    "UpdatedDeliveryDateFailure": "Impossible de mettre à jour la date de livraison prévue"
+  },
+  "DYNAMICCONTENTS":{
+    "ShipmentTypes":{
+      "STH":"Expédié à la maison",
+      "BOPIS":"Achetez en ligne, ramassez en magasin",
+      "Transfer":"Transfert",
+      "Curbside": "Bordure",
+      "BOPIS_Curbside": "Achetez en ligne, ramassez en magasin Bordure",
+      "Pickup": "Ramasser",
+      "CurbsidePickup": "Ramassage en bordure de rue",
+      "ShipToHome" : "Expédié à la maison",
+      "FXCB": "Fedex transfrontalier",
+      "Delivery": "Livraison"
+    },
+    "WorkflowSteps": {
+      "AcceptShipment": "Accepter l'expédition",
+      "PrintPickList": "Imprimer la liste de sélection",
+      "ValidateItemsInStock": "Valider les articles en stock",
+      "PrintPackingSlip": "Imprimer le bordereau d'emballage",
+      "WaitforTransfer": "Attendre le transfert",
+      "CustomerPickup": "Ramassage des clients",
+      "ValidateStock": "Valider le stock",
+      "ProvidetoCustomer": "Fournir au client",
+      "PrepareforShipment": "Préparez-vous pour l'expédition",
+      "WaitforPaymentConfirmation": "Attendez la confirmation du paiement",
+      "ValidateIncomingTransfer": "Valider le transfert entrant",
+      "WaitingforDocuments": "En attente de documents",
+      "DocumentsReady": "Documents prêts",
+      "Completed": "TERMINÉ",
+      "DeliveryPreparation": "Préparation de la livraison",
+      "DeliveryToCustomer": "Livraison au client",
+      "OrderPreparation": "Préparation de la commande"
+    },
+    "ShipmentStatus":{
+      "READY": "PRÊT",
+      "BACKORDER": "COMMANDE DIFFÉRÉE",
+      "FULFILLED": "REMPLI",
+      "CUSTOMER_CARE": "SERVICE CLIENTE",
+      "CANCELED": "ANNULÉ"
+    }
+  }
+}
