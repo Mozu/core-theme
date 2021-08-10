@@ -30,6 +30,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mozu.Core.Behaviors;
+using Mozu.Core.Exceptions;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -120,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> OrderSummary(string orderId, [FromQuery(Name = "t")]string token = null)
         {
-            var order = await GetOrderWithCustomToken(orderId, token);
+            var order = await GetOrderForContext(orderId, token);
 
             PopulateDataForTemplate(order);
 
@@ -393,7 +395,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [AddUnifiedCookieFilter]
         public async Task<IActionResult> PackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
         {
-            var order = await GetOrderWithCustomToken(orderId, token);
+            var order = await GetOrderForContext(orderId, token);
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
@@ -493,7 +495,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<IActionResult> TransferPackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
         {
-            var order = await GetOrderWithCustomToken(orderId, token);
+            var order = await GetOrderForContext(orderId, token);
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
             if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
@@ -734,43 +736,75 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     "Aw, poop! Your access to this page has expired. Please re-request this resource from admin.")
             };
         }
+        
+        /// <summary>
+        ///  Validates that an app claims was sent and that it has access to get orders
+        /// </summary>
+        /// <exception cref="VaeInvalidOrMissingTokenException"></exception>
+        /// <exception cref="VaeUnAuthorizedException"></exception>
+        void  ValidateAppAuthorizationForOrders()
+        {
+            if (_apiContext.AppClaims == null)
+            {
+                throw new VaeInvalidOrMissingTokenException("missing app token",VaeInvalidOrMissingTokenException.TokenExceptionType.AppInvalid);
+            }
+            if (_apiContext.AppClaims.Expiration < DateTime.UtcNow)
+            {
+                throw TokenExpiredException();
+            }
+            
+            var sbClientApp = LightweightAppClaims.CreateForPublicStorefront().AppKey;
+            if (_apiContext.AppClaims.AppKey.AppId  == sbClientApp.AppId &&  _apiContext.AppClaims.AppKey.DevAccountNamespace  == sbClientApp.DevAccountNamespace )
+            {
+                throw new VaeInvalidOrMissingTokenException("user token required when",VaeInvalidOrMissingTokenException.TokenExceptionType.AppInvalid);
+            }
 
+            if (!_apiContext.AppClaims.BehaviorIds.Contains(new OrderReadBehavior().Id))
+            {
+                throw new VaeUnAuthorizedException("not authorized for order read");
+            }
+        }
         /// <summary>
         /// Confirms that the user claim has permission to access this tenant and order id.
         /// </summary>
-        private bool IsUserAuthorizedForOrder(LightweightUserClaims userClaimFromQuery, string orderId)
+        private void ValidateUserTokenOrder(string orderId, string authToken)
         {
-            int claimTenantId;
-            string claimOrderId, tidString;
+            if (!LightweightUserClaims.TryParse(authToken, out var userClaimFromCustomToken))
+            {
+                throw new VaeInvalidOrMissingTokenException("invalide token",VaeInvalidOrMissingTokenException.TokenExceptionType.UserInvalid);
+            }
 
-            return
-                (userClaimFromQuery.ScopeType == UserScopeType.Tenant.ToString())
-                &&
-                (userClaimFromQuery.Bag.TryGetValue("OrderId", out claimOrderId) && claimOrderId == orderId)
-                &&
-                (userClaimFromQuery.Bag.TryGetValue("TenantId", out tidString) && Int32.TryParse(tidString, out claimTenantId) && claimTenantId == _apiContext.TenantId);
+            if (userClaimFromCustomToken.Expiration < DateTime.UtcNow)
+            {
+                throw TokenExpiredException();
+            }
+
+            if (userClaimFromCustomToken.ScopeType != UserScopeType.Tenant.ToString()
+                ||
+                userClaimFromCustomToken.Bag.GetValueOrDefault("OrderId", null) != orderId
+                ||
+                !(userClaimFromCustomToken.Bag.TryGetValue("TenantId", out var tidString) &&
+                 Int32.TryParse(tidString, out var claimTenantId) && claimTenantId == _apiContext.TenantId))
+            {
+                throw new HttpResponseException(StatusCodes.Status403Forbidden);
+            }
         }
 
         /// <summary>
         /// Retrieves an order from CommerceRuntime service using a custom access token rather than the one in api context.
         /// </summary>
-        private Task<DC.Order> GetOrderWithCustomToken(string orderId, string authToken)
+        private async Task<DC.Order> GetOrderForContext(string orderId, string authToken)
         {
-            LightweightUserClaims userClaimFromCustomToken = null;
-
-            //ensure things are on the up and up
-            bool isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
-            if (!isAuthorized) throw new HttpResponseException(StatusCodes.Status403Forbidden);
-
-            var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
-
-            bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
-            if (isExpired)
+            if (string.IsNullOrEmpty(authToken))
             {
-                throw TokenExpiredException();
+                ValidateAppAuthorizationForOrders();
             }
-
-            return _orderWebApiClient.GetOrder(orderId).ContinueWith(t => t.Result.ReadAsAsync()).Unwrap();
+            else
+            {
+                ValidateUserTokenOrder(orderId, authToken);
+            }
+            var customOrderClient = _orderWebApiClient.CloneWithoutUserClaims();
+            return (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
         }
     }
 }

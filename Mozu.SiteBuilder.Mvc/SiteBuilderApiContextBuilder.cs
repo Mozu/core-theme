@@ -141,13 +141,15 @@ namespace Mozu.SiteBuilder.Mvc
                 LoadFromCookie(_cookieProvider, apiCtx);
             }
 
-            if (string.IsNullOrEmpty(apiCtx.LocaleCode) && apiCtx.SiteId.HasValue && _settings.AppSettingsAsNullableBool("ReverseProxy").GetValueOrDefault(false))
+            if (string.IsNullOrEmpty(apiCtx.LocaleCode) && apiCtx.SiteId.HasValue )
             {
                 var site = g_SiteIdSiteLookup.GetOrAdd(apiCtx.SiteId.Value, LookupSiteById);
                 if (site != null)
                 {
                     apiCtx.LocaleCode = site.DefaultLocaleCode;
                     apiCtx.CurrencyCode = site.DefaultCurrencyCode;
+                    apiCtx.MasterCatalogId = site.MasterCatalogId;
+                    apiCtx.CatalogId = site.CatalogId;
                 }
             }
             LoadExtraInfoFromCookie(_cookieProvider, apiCtx);
