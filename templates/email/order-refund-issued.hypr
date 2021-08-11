@@ -60,9 +60,12 @@
 					{%if refund.payment.billingInfo.token.type|lower == "paywithamazon" %}
 						{{labels.payWithAmazon}}
 					{% endif %}
-          {%if refund.payment.billingInfo.token.type|lower == "applepay" %}
-            {{labels.applePay}}
-          {% endif %}
+					{%if refund.payment.billingInfo.token.type|lower == "applepay" %}
+						{{labels.applePay}}
+					{% endif %}
+				{% endif %}
+				{% if refund.payment.paymentType == "Check" %}
+				{{labels.check}}
 				{% endif %}
 			</td>
 			<td>{{ refund.amount|currency }}</td>
