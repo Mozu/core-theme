@@ -79,6 +79,20 @@ module.exports = (function () {
                     this.api.get(apiKey);
             return operation.then(function (c) {
                 coll = c;
+                if (!opts.manageStock) {
+                    var nonStockItemLocations = {
+                        totalCount: coll.data.items.length,
+                        items: []
+                    }
+                    nonStockItemLocations.items = utils.map(coll.data.items, function (loc) {
+                        return {
+                            productCode: opts.productCode,
+                            locationCode: loc.code,
+                            stockAvailable: 1
+                        }
+                    })
+                    return nonStockItemLocations;
+                }
                 var codes = utils.map(coll.data.items, function (loc) {
                     return loc.code;
                 }).join(',');
