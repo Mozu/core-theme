@@ -4,28 +4,42 @@ using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Mozu.CommerceRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class HotOnlyAuthActionFilter : ActionFilterAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext actionContext)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext actionContext,
+            ActionExecutionDelegate next)
+        {
+            await TryRefresh(actionContext);
+            if (actionContext.Result == null)
+            {
+                await next();
+            }
+        }
+
+        async Task TryRefresh(ActionExecutingContext actionContext)
         {
             var sbCtx = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
             var userClaims = sbCtx.UserClaims;
+            
             if(userClaims.IsAnonymous || !userClaims.IsAuthenticationHot)
             {
                 // check for case when we are order auth'd
-                if(userClaims.Bag.ContainsKey("orderId"))
+                if (userClaims.Bag.ContainsKey("orderId"))
+                {
                     return;
-
+                }
                 var authHelper = actionContext.HttpContext.RequestServices.GetService<IAuthenticationHelper>();
                 var rToken = authHelper.GetStoreFrontRefreshToken();
                 if (rToken != null)
                 {
                     var authTicketTask = actionContext.HttpContext.RequestServices.GetService<IAuthTicketWebApiClient>().RefreshUserAuthTicket(rToken).ConfigureAwait(false);
-                    var result = authTicketTask.GetAwaiter().GetResult();
+                    var result = await authTicketTask;
                     if (!result.HasException && result.ResponseMessage.IsSuccessStatusCode)
                     {
                         var ticket = result.ReadAsSync();
@@ -44,9 +58,11 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                         return;
                     }
                 }
-
                 actionContext.Result = new RedirectResult(new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(actionContext.HttpContext.Request.Path) + actionContext.HttpContext.Request.QueryString.Value, UriKind.Relative).ToString());
+             
             }
         }
+        
+
     }
 }
