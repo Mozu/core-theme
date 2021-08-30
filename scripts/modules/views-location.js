@@ -51,7 +51,8 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mod
                     var self = this;
                     this.model.apiGetForProduct({
                         productCode: this.product.get('variationProductCode') || this.product.get('productCode'),
-                        location: location
+                        location: location,
+                        manageStock: this.product.attributes.inventoryInfo.manageStock
                     }).then(function () {
                         self.render();
                         $('.mz-locationsearch-pleasewait').fadeOut();
