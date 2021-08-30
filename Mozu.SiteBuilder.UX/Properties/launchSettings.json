@@ -14,9 +14,10 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "http_proxy_2":"http://localhost:8866",
-        "mozu__appsettings__environment": "pert",
-        "mozu__appsettings__scaleunint": "tp1"
+        "http_proxy":"http://localhost:8866",
+        "mozu__appsettings__environment": "perf",
+        "mozu__appsettings__ScaleUnitId": "tp1",
+        "spring__cloud__config__label": "environment(_)perf"
       },
       "applicationUrl": "http://localhost:57521/"
     },
@@ -27,7 +28,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy_2":"http://localhost:8866",
         "mozu__appsettings__environment": "ngdev04",
-        "mozu__appsettings__scaleunint": "sb"
+        "mozu__appsettings__ScaleUnitId": "sb"
       },
       "applicationUrl": "http://localhost:57521/"
     },
@@ -38,7 +39,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy":"http://localhost:8866",
         "mozu__appsettings__environment": "dev01",
-        "mozu__appsettings__scaleunint": "sb"
+        "mozu__appsettings__ScaleUnitId": "sb"
       },
       "applicationUrl": "http://localhost:57521/"
     }
