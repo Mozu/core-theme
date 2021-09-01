@@ -10,9 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using FSharpx.Collections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Control;
 using Microsoft.FSharp.Core;
 using Mozu.Core;
 using Mozu.Core.Settings;
@@ -67,7 +69,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return tagNode.Walk(templateManager, walker);
         }
 
-        private class TagNodeImpl : ParserNodes.TagNode, IHyprNode
+        private class TagNodeImpl : ParserNodes.TagNode, IHyprNode , INodeImplAsync
         {
             
             private readonly Lexer.BlockToken _blockToken;
@@ -99,10 +101,16 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 return base.walk(templateManager, walker);
             }
-
-            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
+            
+            public FSharpAsync<FSharpList<WalkResult>> asyncWalk(ITemplateManager manager, Walker walker)
             {
-                var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
+                return FSharpAsync.AwaitTask(AsyncWalkInternal(manager, walker));
+            }
+
+            public async Task<FSharpList<WalkResult>> AsyncWalkInternal(ITemplateManager manager, Walker walker)
+            {
+                
+               var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
                 var siteCtx = walker.context.Resolve<SiteContext>();
                 var pageCtx = walker.context.Resolve<PageContext>();
                 
@@ -142,7 +150,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 var key = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"), apiCtx.PriceListCode, apiCtx.CurrencyCodeOverride);
                 var cachescope = GetCacheScope(apiCtx.MostSpecificContext);
 
-                var output = TryGetOutputStrings(manager, walker, key, cachescope, settings);
+                var output = await AsyncTryGetOutputStrings(manager, walker, key, cachescope, settings);
 
                 if (output.Length == 1)
                 {
@@ -153,6 +161,64 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return ChildNodeWalker(output);
                 }
             }
+            
+            /*
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
+            {
+                /*var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
+                var siteCtx = walker.context.Resolve<SiteContext>();
+                var pageCtx = walker.context.Resolve<PageContext>();
+                
+                var arguments = ProcessArguments(walker);
+                if (TagBase.ArguemntParserStrategy != null)
+                {
+                    arguments = TagBase.ArguemntParserStrategy(arguments);
+                }
+
+                int configDuration;
+                var settings = walker.context.Resolve<ISettings>();
+                if (!int.TryParse(settings.AppSettings("partial_caching_default_duration"), out configDuration))
+                {
+                    configDuration = 0;
+                }
+
+                var duration = arguments.GetValueOrDefault("duration", configDuration);
+                if (duration == 0)
+                {
+                    return Uncached(walker);
+                }
+
+                bool disabled = IsDisabled(arguments, pageCtx, siteCtx); ;
+
+              
+
+
+                object epc = siteCtx.ThemeSettings["enablePartialCaching"];
+                if (!Convert.ToBoolean(epc) || disabled)
+                {
+                    return Uncached(walker);
+                }
+
+
+                var viewPath = _blockToken.Location.TemplateName;
+                var loc = _blockToken.Location.Offset;
+                var key = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"), apiCtx.PriceListCode, apiCtx.CurrencyCodeOverride);
+                var cachescope = GetCacheScope(apiCtx.MostSpecificContext);
+
+                var output = await AsyncTryGetOutputStrings(manager, walker, key, cachescope, settings);
+
+                if (output.Length == 1)
+                {
+                    return StringWalker(output[0]);
+                }
+                else
+                {
+                    return ChildNodeWalker(output);
+                }#1#
+            }
+            */
+
+          
 
             private bool IsDisabled ( ArgumentCollection arguments, PageContext pageCtx, SiteContext siteCtx)
             {
@@ -222,17 +288,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                
             }
 
-            private string[] TryGetOutputStrings(ITemplateManager manager, Walker walker, string key, CacheScope cachescope, ISettings settings)
+            private async Task<string[]> AsyncTryGetOutputStrings(ITemplateManager manager, Walker walker, string key, CacheScope cachescope, ISettings settings)
             {
                 var cache = walker.context.Resolve<ILiveModeOnlyCache>();
                 var output = cache.Get<string[]>(key, cachescope, StorefrontCacheTypes.PartialOutput);
                 if (output != null) return output;
-                output = TryRender(manager, walker, key, settings);
+                output = await AsyncTryRender(manager, walker, key, settings);
                 cache.Set(key, output, cachescope, StorefrontCacheTypes.PartialOutput);
                 return output;
             }
 
-            private string[] TryRender(ITemplateManager manager, Walker walker, string key, ISettings settings)
+            private async  Task<string[]> AsyncTryRender(ITemplateManager manager, Walker walker, string key, ISettings settings)
             {
                 var context = walker.context.Resolve<HttpContext>();
                 object callCount = 0;
@@ -262,7 +328,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
                 var innerWalker = new Walker(null, _childNodes, string.Empty, 0, walker.context);
                 var renderer = new TemplateRenderer(manager, innerWalker);
-                var output = Render(renderer);
+                var output = await AsyncRender(renderer);
 
                 if (context == null) return output;
                 
@@ -288,12 +354,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return WalkResultHelpers.Nodes(_childNodes).ToFSharpList();
             }
 
-            private static string[] Render(TemplateRenderer renderer)
+            private static async Task<string[]> AsyncRender(TemplateRenderer renderer)
             {
                 var sb = StringBuilderPool.Default.Get();
                 var sw = new StringWriter(sb);
-                renderer.Render(sw);
-                sw.Flush();
+                await renderer.AsyncRender(sw);
+                await sw.FlushAsync();
                 string[] output;
                 if (sb.Length > CharBufferPool.Default.MaxBufferSize)
                 {

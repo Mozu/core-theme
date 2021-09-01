@@ -6,6 +6,7 @@ using Mozu.Core.Logging;
 using DeviceDetectorNET;
 using DeviceDetectorNET.Cache;
 using DeviceDetectorNET.Parser;
+using Microsoft.CodeAnalysis;
 
 namespace Mozu.SiteBuilder.Mvc.Mobile
 {
@@ -57,47 +58,64 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
                 return true;
             }
         }
-
+        static ConcurrentDictionary<string,LookupResult> _lookupCache = new ConcurrentDictionary<string, LookupResult>();
+        class LookupResult
+        {
+            public bool IsBot { get; set; }
+            public bool IsCurrentRequestTablet { get; set; }
+            public bool IsCurrentRequestMobile { get; set; }
+            
+        }
         /// <summary>
         /// Constructor
         /// </summary>
         public FiftyOneDegreesMobileDetectionProvider(HttpContext context = null)
         {
-            _context = context;
-            DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_BUILD);
             var uAgent = (string)context?.Request?.Headers["User-Agent"];
-            var dd = new DeviceDetector(uAgent);
+            if (!_lookupCache.TryGetValue(uAgent, out var lookupResult))
+            {
+                lookupResult = CreateLookupResult(uAgent);
+                _lookupCache[uAgent] = lookupResult;
+            }
 
+            if (_lookupCache.Count > 10000)
+            {
+                _lookupCache.Clear();
+            }
+            this.IsCurrentRequestCrawler = lookupResult.IsBot;
+            this.IsCurrentRequestMobile = lookupResult.IsCurrentRequestMobile;
+            this.IsCurrentRequestTablet = lookupResult.IsCurrentRequestTablet;
+
+        }
+
+        LookupResult CreateLookupResult(string userAgent)
+        {
+            var result = new LookupResult();
+            DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_MAJOR);
+            var dd = new DeviceDetector(userAgent);
             // OPTIONAL: Set caching method
             // By default static cache is used, which works best within one php process (memory array caching)
             // To cache across requests use caching in files or memcache
             // add using DeviceDetectorNET.Cache;
             dd.SetCache(Cache);
-
             // OPTIONAL: If called, GetBot() will only return true if a bot was detected  (speeds up detection a bit)
             dd.DiscardBotInformation();
-
             // OPTIONAL: If called, bot detection will completely be skipped (bots will be detected as regular devices then)
             //  dd.SkipBotDetection();
-
             dd.Parse();
-
             if (dd.IsBot())
             {
-                // handle bots,spiders,crawlers,...
-                this.IsCurrentRequestCrawler = true;
+                result.IsBot = true;
             }
             else
-            {
-               
-                
-                this.IsCurrentRequestTablet = dd.IsMobile() && (
+            { 
+                result.IsCurrentRequestTablet = dd.IsMobile() && (
                     dd.GetModel() == "iPad" ||
-                    uAgent?.Contains("tablet", StringComparison.OrdinalIgnoreCase) == true);
-                this.IsCurrentRequestMobile = !this.IsCurrentRequestTablet  && dd.IsMobile();
-
-
+                    userAgent?.Contains("tablet", StringComparison.OrdinalIgnoreCase) == true);
+                result.IsCurrentRequestMobile = !this.IsCurrentRequestTablet  && dd.IsMobile();
             }
+
+            return result;
         }
 
         /// <summary>
