@@ -72,7 +72,9 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         public FiftyOneDegreesMobileDetectionProvider(HttpContext context = null)
         {
             var uAgent = (string)context?.Request?.Headers["User-Agent"];
-            if (!_lookupCache.TryGetValue(uAgent, out var lookupResult))
+            LookupResult lookupResult = null;
+
+            if (uAgent != null && !_lookupCache.TryGetValue(uAgent, out lookupResult))
             {
                 lookupResult = CreateLookupResult(uAgent);
                 _lookupCache[uAgent] = lookupResult;
@@ -82,10 +84,10 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
             {
                 _lookupCache.Clear();
             }
-            this.IsCurrentRequestCrawler = lookupResult.IsBot;
-            this.IsCurrentRequestMobile = lookupResult.IsCurrentRequestMobile;
-            this.IsCurrentRequestTablet = lookupResult.IsCurrentRequestTablet;
 
+            IsCurrentRequestCrawler = lookupResult?.IsBot ?? false;
+            IsCurrentRequestMobile = lookupResult?.IsCurrentRequestMobile ?? false;
+            IsCurrentRequestTablet = lookupResult?.IsCurrentRequestTablet ?? false;
         }
 
         LookupResult CreateLookupResult(string userAgent)
