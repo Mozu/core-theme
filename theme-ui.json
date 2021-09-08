@@ -383,9 +383,9 @@
                     "fieldLabel": "Enable Kibo Personalization"
                 },
                 {
-                  "xtype": "mz-input-checkbox",
-                  "name": "monetateAsync",
-                  "fieldLabel": "Enable Async Personalization Tag"
+                    "xtype": "mz-input-checkbox",
+                    "name": "monetateAsync",
+                    "fieldLabel": "Enable Async Personalization Tag"
                 },
                 {
                     "xtype": "mz-input-text",
