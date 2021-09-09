@@ -146,6 +146,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     .ReadAsStringAsync();
                 return CreateDebugResponse(debugTxt);
             }
+           // _.responseFields = "items(-categories,-measurements,content(-productFullDescription),*),facets(values(-childrenFacetValues,*),*)";
 
             var searchResponse = (await _searchClient.Search(
                 query: _.query,
