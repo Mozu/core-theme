@@ -1,10 +1,16 @@
 ﻿{% extends "page" %}
 
+<div>Pre-Title</div>
 {% block title-tag-content %}{{ labels.searchTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
 
-{% block body-tag-classes %} mz-searchresults {% endblock body-tag-classes %}
+<div>Post-body</div>
 
+
+{% block body-tag-classes %} mz-searchresults {% endblock body-tag-classes %}
+<div>Pre-body</div>
 {% block body-content %}
+
+<div>POST-body</div>
 
 {% require_script "pages/search" %}
 
