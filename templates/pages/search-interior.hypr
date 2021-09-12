@@ -1,5 +1,38 @@
-﻿<h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
-{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
-{% include "modules/product/faceted-products" %}
-{% endpartial_cache %}
+﻿{% if model.spellcheck.autoCorrected %}
+    <h1 class="mz-pagetitle">{{ labels.searchResultsAutocorrected }}: <span class="mz-searchresults-query">{{ model.spellcheck.correctedQuery }}</span></h1>
+{% else %}
+    <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
+{% endif %}
+
+{% if model.spellcheck.didyoumean %}
+    <h2>
+        <span>{{ labels.searchResultsDidyoumean }}:</span>
+        <a href="{% make_url "search" with query=model.spellcheck.didyoumean and spellCorrectionOverride='skipDidyoumean' as_parameters %}">{{ model.spellcheck.didyoumean }}</a>
+    </h2>
+{% endif %}
+
+{% if model.spellcheck.autoCorrected %}
+    {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy model.spellcheck.correctedQuery %}
+    {% include "modules/product/faceted-products" %}
+    {% endpartial_cache %}
+{% else %}
+    {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
+    {% include "modules/product/faceted-products" %}
+    {% endpartial_cache %}
+{% endif %}
+
 {% dropzone "search-results" scope="template" %}
+
+<br/>
+<br/>
+
+<h2 style="color:red">Debug: ================================</h2>
+<h5>
+      
+    <div>AutoCorrected: {{model.spellcheck.autoCorrected}}</div>
+    <div>Original query: {{model.spellcheck.originalQuery}}</div>
+    <div>Corrected query: {{model.spellcheck.correctedQuery}}</div>
+    
+    <div>Didyoumean: {{model.spellcheck.didyoumean}}</div>
+    <div>First Of Text:    {% firstof model.spellcheck.correctedQuery pageContext.search.query %}</div>
+</h5>
