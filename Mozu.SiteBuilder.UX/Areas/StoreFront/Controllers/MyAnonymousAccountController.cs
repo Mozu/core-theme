@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var idFilter = string.Format("id eq {0} or parentCheckoutId eq {0}", orderId);
 
 
-            var orders = (await _orderWebApiClient.GetOrders(filter: idFilter, pageSize: 200));
+            var orders = (await _orderWebApiClient.GetOrders(filter: idFilter, pageSize: 200, mode: "synthesized"));
             // because we're an auth'd anonymous user the only returns returned are those which are associated
             // with the bag's orderid
             var returns = (await _returnApiClient.GetReturns());
