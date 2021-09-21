@@ -4,12 +4,16 @@
     <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
 {% endif %}
 
-{% if model.spellcheck.didyoumean %}
-    <h2>
-        <span>{{ labels.searchResultsDidyoumean }}:</span>
-        <a href="{% make_url "search" with query=model.spellcheck.didyoumean and spellCorrectionOverride='skipDidyoumean' as_parameters %}">{{ model.spellcheck.didyoumean }}</a>
-    </h2>
-{% endif %}
+{% with model.spellcheck.spellCorrections|first as firstCorrection %}
+    {% if firstCorrection.collationQuery %}
+        <h2>
+            <span>{{ labels.searchResultsDidyoumean }}:</span>
+            <a href="{% make_url "search" with query=firstCorrection.collationQuery and spellCorrectionOverride='skipall' as_parameters %}">
+                {{ firstCorrection.collationQuery }}
+            </a>
+        </h2>
+    {% endif %}
+{% endwith %}
 
 {% if model.spellcheck.autoCorrected %}
     {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy model.spellcheck.correctedQuery %}
@@ -26,13 +30,19 @@
 <br/>
 <br/>
 
-<h2 style="color:red">Debug: ================================</h2>
+<h2 style="color:red">START DEBUG: =========================================</h2>
 <h5>
-      
     <div>AutoCorrected: {{model.spellcheck.autoCorrected}}</div>
     <div>Original query: {{model.spellcheck.originalQuery}}</div>
     <div>Corrected query: {{model.spellcheck.correctedQuery}}</div>
-    
-    <div>Didyoumean: {{model.spellcheck.didyoumean}}</div>
     <div>First Of Text:    {% firstof model.spellcheck.correctedQuery pageContext.search.query %}</div>
+    {% if model.spellcheck.spellCorrections.count > 0 %}
+        {% with model.spellcheck.spellCorrections|first as firstCorrection %}
+            {% if firstCorrection.collationQuery %}
+                <div>{{ labels.searchResultsDidyoumean }} : {{ firstCorrection.collationQuery }} </div>
+            {% endif %}
+        {% endwith %}
+
+    {% endif %}
+<h2 style="color:red">END DEBUG =========================================</h2>
 </h5>
