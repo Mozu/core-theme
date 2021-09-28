@@ -177,6 +177,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             shipment.Items = t.ToList();
         }
 
+        private void FilterOrderShipments(DC.Order order, string packageId)
+        {
+           if (order == null || string.IsNullOrWhiteSpace(packageId)) return;
+           var filteredShipments = order.Shipments?.Where(v => v.Packages.Any(x => x.Id == packageId))?
+                                      .Select(m => {
+                                          m.Packages = m.Packages.Where(b => b.Id == packageId).ToList();
+                                          return m;
+                                      }).ToList() ?? null;
+
+            order.Shipments = filteredShipments;
+        }
+
+        private void FilterShipmentPackages(DCShipment dcShipment, string packageId)
+        {
+            if (dcShipment == null || string.IsNullOrWhiteSpace(packageId)) return;
+            var packages = dcShipment.Packages?.Where(v => v.PackageId == packageId)?.ToList() ?? null;
+            dcShipment.Packages = packages;
+        }
+
         private void PopulateInventoryDetails(DCShipment shipment)
         {
             if (shipment == null)
@@ -393,20 +412,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         [HttpGet]
         [AddUnifiedCookieFilter]
-        public async Task<IActionResult> PackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "t")]string token = null)
+        public async Task<IActionResult> PackingSlip(string orderId, int shipmentNumber, [FromQuery(Name = "packageId")] string packageId = null, [FromQuery(Name = "t")]string token = null)
         {
             var order = await GetOrderForContext(orderId, token);
-            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            var dcShipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
 
-            if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
+            if (order == null || dcShipment == null || !dcShipment.OrderId.EqualsIgnoreCase(orderId))
             {
                 return NotFound();
             }
 
-            var dcShipment = Mapper.Map<Shipment>(shipment);
-            order.Shipments = order.Shipments ?? new List<Shipment>(new[] { dcShipment });
-
-            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
+            var shipment = Mapper.Map<Shipment>(dcShipment);
+            order.Shipments = order.Shipments ?? new List<Shipment>(new[] { shipment });
+           
+             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
             {
                 return NotFound("Could not find packing slip template for the current Theme.");
@@ -415,13 +434,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
-            PopulateShipmentDetails(dcShipment, order);
-            PopulateInventoryDetails(shipment);
+            PopulateShipmentDetails(shipment, order);
+            PopulateInventoryDetails(dcShipment);
+
+            // If we are getting `packageId` then filter the `orderShipments => packages`,
+            // `shipments => packages` by `packageId`.
+            // else continue with existing flow
+            if (!string.IsNullOrWhiteSpace(packageId))
+            {
+                //Filter the `Shipments` and `Packages` in shipments by `PackageId`
+                FilterOrderShipments(order, packageId);
+                //Filter the `Packages` in dcShipments by `PackageId`
+                FilterShipmentPackages(dcShipment, packageId);
+            }
 
             ViewData["order"] = order;
             ViewData["returnLocation"] = await GetDefaultReturnLocation();
-            ViewData["fulfillmentLocation"] = await GetLocation(shipment.FulfillmentLocationCode);
-            return await RenderWithContext(template, shipment);
+            ViewData["fulfillmentLocation"] = await GetLocation(dcShipment?.FulfillmentLocationCode);
+            return await RenderWithContext(template, dcShipment);
         }
 
         [HttpGet]

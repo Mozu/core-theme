@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(dest => dest.WorkflowProcessId, op => op.Ignore())
                 .ForMember(dest => dest.BackorderCreatedDate, op => op.Ignore())
                 .ForMember(dest => dest.Cost, op => op.MapFrom(_=>1m))
-                .ForMember(x => x.Packages, op => op.Ignore())
+                .ForMember(x => x.Packages, op => op.MapFrom(x => x.Packages))
                 .ForMember(dest => dest.PickupInfo, op =>
                 {
                     op.PreCondition(src => src.PickupInfo != null);
@@ -84,6 +84,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             CreateMap<CR.FulfillmentTask, F.Task>();
             CreateMap<F.Task, CR.FulfillmentTask>();
+
+            CreateMap<F.Package, CR.Package>()
+                .ForMember(dest => dest.Id, o => o.MapFrom(v => v.PackageId))
+                .ForMember( dest => dest.TrackingNumbers, o=> o.MapFrom(x => x.TrackingNumbers))
+                .ForMember(dest => dest.Trackings, o => o.MapFrom(v => v.Trackings))
+                .ForMember(dest => dest.Measurements, o => o.MapFrom(v => v.Measurements));
         }
     }
 }
