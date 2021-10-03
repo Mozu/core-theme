@@ -4,32 +4,26 @@
     <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
 {% endif %}
 
-{% with model.spellcheck.candidateCorrections|first as firstCorrection %}
-    {% if firstCorrection.query %}
-        <h2>
-            <span>{{ labels.searchResultsDidyoumean }}:</span>
-            <a href="{% make_url "search" with query=firstCorrection.query and spellCorrectionOverride='skipall' as_parameters %}">
-                {{ firstCorrection.query }}
-            </a>
-        </h2>
-    {% endif %}
-{% endwith %}
+{% include "modules/search/did-you-mean" %}
 
 {% if model.spellcheck.autoCorrected %}
     {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy model.spellcheck.correctedQuery %}
-    {% include "modules/product/faceted-products" %}
+        {% include "modules/product/faceted-products" %}
     {% endpartial_cache %}
 {% else %}
     {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
-    {% include "modules/product/faceted-products" %}
+        {% include "modules/product/faceted-products" %}
     {% endpartial_cache %}
 {% endif %}
 
 {% dropzone "search-results" scope="template" %}
 
-<br/>
-<br/>
 
+
+
+
+<br/>
+<br/>
 
 <div style="color:red;-webkit-border-radius:10px;border:1px solid #900; margin:10px;padding:10px;font-size:1.5em;background-color:#fcc">
     <h2 style="color:red">DEBUG</h2>
@@ -47,3 +41,4 @@
         {% endif %}
     </h5>
 </div>
+
