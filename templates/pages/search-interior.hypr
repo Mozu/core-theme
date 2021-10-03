@@ -4,12 +4,12 @@
     <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
 {% endif %}
 
-{% with model.spellcheck.spellCorrections|first as firstCorrection %}
-    {% if firstCorrection.collationQuery %}
+{% with model.spellcheck.candidateCorrections|first as firstCorrection %}
+    {% if firstCorrection.query %}
         <h2>
             <span>{{ labels.searchResultsDidyoumean }}:</span>
-            <a href="{% make_url "search" with query=firstCorrection.collationQuery and spellCorrectionOverride='skipall' as_parameters %}">
-                {{ firstCorrection.collationQuery }}
+            <a href="{% make_url "search" with query=firstCorrection.query and spellCorrectionOverride='skipall' as_parameters %}">
+                {{ firstCorrection.query }}
             </a>
         </h2>
     {% endif %}
@@ -30,19 +30,20 @@
 <br/>
 <br/>
 
-<h2 style="color:red">START DEBUG: =========================================</h2>
-<h5>
-    <div>AutoCorrected: {{model.spellcheck.autoCorrected}}</div>
-    <div>Original query: {{model.spellcheck.originalQuery}}</div>
-    <div>Corrected query: {{model.spellcheck.correctedQuery}}</div>
-    <div>First Of Text:    {% firstof model.spellcheck.correctedQuery pageContext.search.query %}</div>
-    {% if model.spellcheck.spellCorrections.count > 0 %}
-        {% with model.spellcheck.spellCorrections|first as firstCorrection %}
-            {% if firstCorrection.collationQuery %}
-                <div>{{ labels.searchResultsDidyoumean }} : {{ firstCorrection.collationQuery }} </div>
-            {% endif %}
-        {% endwith %}
 
-    {% endif %}
-<h2 style="color:red">END DEBUG =========================================</h2>
-</h5>
+<div style="color:red;-webkit-border-radius:10px;border:1px solid #900; margin:10px;padding:10px;font-size:1.5em;background-color:#fcc">
+    <h2 style="color:red">DEBUG</h2>
+    <h5>
+        <div>AutoCorrected: {{model.spellcheck.autoCorrected}}</div>
+        <div>Original query: {{model.spellcheck.originalQuery}}</div>
+        <div>Corrected query: {{model.spellcheck.correctedQuery}}</div>
+        {% if model.spellcheck.candidateCorrections.count > 0 %}
+            {% with model.spellcheck.candidateCorrections|first as firstCorrection %}
+                {% if firstCorrection.query %}
+                    <div>{{ labels.searchResultsDidyoumean }} : {{ firstCorrection.query }} </div>
+                {% endif %}
+            {% endwith %}
+    
+        {% endif %}
+    </h5>
+</div>
