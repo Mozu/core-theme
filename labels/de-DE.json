@@ -606,6 +606,8 @@
   "searchByAddress": "Suche nach Adresse",
   "searchExpirationDate": "Ablaufdatum der Suche",
   "searchResults": "Suchergebnisse",
+  "searchResultsAutocorrected": "Es werden Ergebnisse gezeigt für",
+  "searchResultsDidyoumean": "Meinten Sie",
   "searchResultsSummary": "Ihre Suche nach \"{0}\" im {1} ergab {2} Ergebnisse. <a href=\"#\" data-mz-action=\"expandSearch\">Wiederholen Sie diese Suche in allen Kategorien.</a>",
   "searchTitle": "Suchergebnisse für {0}",
   "securityCode": "Sicherheitscode",
