@@ -21,30 +21,3 @@
 
 {% block body-below-content %}
 {% endblock body-below-content %}
-
-
-
-
-
-
-
-
-
-<div style="color:red;-webkit-border-radius:10px;border:1px solid #900; margin:10px;padding:10px;font-size:1.5em;background-color:#fcc">
-    <h2 style="color:red">DEBUG</h2>
-    <h5>
-        <div>No Search Results</div>
-        <div>AutoCorrected: {{model.spellcheck.autoCorrected}}</div>
-        <div>Original query: {{model.spellcheck.originalQuery}}</div>
-        <div>Corrected query: {{model.spellcheck.correctedQuery}}</div>
-        {% if model.spellcheck.candidateCorrections.count > 0 %}
-            {% with model.spellcheck.candidateCorrections|first as firstCandidate %}
-                {% if firstCandidate.query %}
-                    <div>{{ labels.searchResultsDidyoumean }} : {{ firstCandidate.query }} </div>
-                {% endif %}
-            {% endwith %}
-    
-        {% endif %}
-    </h5>
-</div>
-
