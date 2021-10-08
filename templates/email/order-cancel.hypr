@@ -27,7 +27,7 @@
                       </dl>s
                       {% endif %}
                     </td>
-                    <td align="right"> {% include "modules/common/email-item-price" %}</td>
+                    <td align="right"> {% include "modules/common/email-item-total" %}</td>
                 </tr>
             </tbody>
         {% endfor %}
