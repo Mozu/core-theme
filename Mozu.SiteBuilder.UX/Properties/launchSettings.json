@@ -14,9 +14,12 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "http_proxy_2": "http://localhost:8866",
-        "mozu__appsettings__environment": "pert",
-        "mozu__appsettings__scaleunint": "tp1"
+        "http_proxy": "http://localhost:8866",
+        "mozu__appsettings__environment": "perf",
+        "mozu__appsettings__ScaleUnitId": "tp1",
+        "spring__cloud__config__label": "environment(_)perf",
+        "mozu__appsettings__rabbit_default_host" : "linuxdb.dev10.dev.kibocommerce.com"
+
       },
       "applicationUrl": "http://localhost:57521/"
     },
@@ -27,7 +30,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy_2": "http://localhost:8866",
         "mozu__appsettings__environment": "prod",
-        "mozu__appsettings__scaleunint": "tp3"
+        "mozu__appsettings__scaleunint": "tp3",
+
       },
       "applicationUrl": "http://localhost:57521/"
     },

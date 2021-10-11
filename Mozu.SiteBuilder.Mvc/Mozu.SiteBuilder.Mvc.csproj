@@ -28,7 +28,7 @@
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2134.2" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2140.5" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />
