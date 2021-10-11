@@ -96,7 +96,7 @@
                             <td>
                             {{ item.quantity }}
                             </td>
-                            <td align="right"> {{ item.unitPrice|currency }}</td>
+                            <td align="right"> {{ item.lineItemCost|currency }}</td>
                         </tr>
                     </tbody>
                 {% endfor %}
