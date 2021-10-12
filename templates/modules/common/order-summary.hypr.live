@@ -1,4 +1,4 @@
-﻿    <table class="mz-ordersummary">
+    <table class="mz-ordersummary">
         <thead>
             <tr>
                 <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
@@ -35,10 +35,14 @@
                         {% endfor %}
                       </dl>
                       {% else %}
-                      {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock %}
+                      {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock and Math.max(item.product.stock.aggregateInventory, item.product.stock.stockAvailable) < item.quantity %}
                       <div class="mz-product-backorder">
-                      <div class="is-warning mz-product-backorder-warning">
-                        {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+                        <div class="is-warning mz-product-backorder-warning">
+                        {% if item.product.stock.aggregateInventory > item.product.stock.stockAvailable %}
+                          {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.aggregateInventory) }} {{ labels.itemOnBackorder }}
+                        {% else %}
+                          {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+                        {% endif %}
                         {% if item.product.stock.availableDate  %}
                         .<br /> {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
                         {% endif %}
