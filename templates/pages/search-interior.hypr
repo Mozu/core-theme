@@ -1,5 +1,19 @@
-﻿<h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
-{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
-{% include "modules/product/faceted-products" %}
-{% endpartial_cache %}
+﻿{% if model.spellcheck.autoCorrected %}
+    <h1 class="mz-pagetitle">{{ labels.searchResultsAutocorrected }}: <span class="mz-searchresults-query">{{ model.spellcheck.correctedQuery }}</span></h1>
+{% else %}
+    <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
+{% endif %}
+
+{% include "modules/search/did-you-mean" %}
+
+{% if model.spellcheck.autoCorrected %}
+    {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy model.spellcheck.correctedQuery %}
+        {% include "modules/product/faceted-products" %}
+    {% endpartial_cache %}
+{% else %}
+    {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
+        {% include "modules/product/faceted-products" %}
+    {% endpartial_cache %}
+{% endif %}
+
 {% dropzone "search-results" scope="template" %}

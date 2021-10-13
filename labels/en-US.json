@@ -719,6 +719,8 @@
   "searchByAddress": "Search by Address",
   "searchExpirationDate": "Search Expiration Date",
   "searchResults": "Search Results",
+  "searchResultsAutocorrected": "Showing results for",
+  "searchResultsDidyoumean": "Did you mean",
   "searchResultsSummary": "Your search for \"{0}\" within {1} returned {2} results. <a href=\"#\" data-mz-action=\"expandSearch\">Repeat this search across all categories.</a>",
   "searchTitle": "Search Results for {0}",
   "securityCode": "Security Code (CVV2)",
