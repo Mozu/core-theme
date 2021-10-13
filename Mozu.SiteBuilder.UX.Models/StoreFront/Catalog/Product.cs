@@ -296,23 +296,25 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         T Resolve<T>();
     }
 
-    
-    public class ProductSearchResult : ProductCollection 
+
+    public class ProductSearchResult : ProductCollection
     {
-        public override  void Init(bool force = false, IProductListingState state = null)
+        public override void Init(bool force = false, IProductListingState state = null)
         {
-            if ( state != null)
+            if (state != null)
             {
                 this.Query = state.Query;
-                
+
             }
-           
+
             base.Init(force, state);
         }
-        [DataMember(EmitDefaultValue = false)]
+
+        [DataMember(EmitDefaultValue = false)] 
         public object Respell { get; set; }
 
         private bool? _hasValueFacets;
+
         public bool HasValueFacets
         {
             get
@@ -321,30 +323,47 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 {
                     return false;
                 }
+
                 if (!_hasValueFacets.HasValue)
                 {
                     _hasValueFacets = this.Facets.Any(x => x.FacetType == "Value");
                 }
 
-
-                 return _hasValueFacets.Value;
-                 
-                          
+                return _hasValueFacets.Value;
             }
-
         }
-
-
-        
 
         public string Query { get; set; }
 
-         [DataMember(EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)] 
         public virtual List<Facet> Facets { get; set; }
 
         public string SearchRedirect { get; set; }
+
+        [DataMember(EmitDefaultValue = false)] 
+        public Spellcheck Spellcheck { get; set; }
+
     }
 
+    /// <summary>This collation comes from the SOLR response object</summary>
+    public class CandidateCorrection
+    {
+        /// <summary>
+        /// This is the corrected spelling of the original search term (e.g. "mountin" =&gt; "mountain")
+        /// </summary>
+        public string Query { get; set; }
+    }
+    
+    public class Spellcheck
+    {
+        public List<CandidateCorrection> CandidateCorrections { get; set; }
+
+        public bool AutoCorrected { get; set; }
+
+        public string OriginalQuery { get; set; }
+
+        public string CorrectedQuery { get; set; }
+    }
 
     public class Facet : Mozu.ProductRuntime.Contracts.Facet
     {

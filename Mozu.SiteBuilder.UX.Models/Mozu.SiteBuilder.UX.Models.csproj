@@ -13,7 +13,7 @@
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Messaging" Version="1.2031.2" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2112.2" />
+    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="1.2138.2" />
     
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
@@ -23,7 +23,7 @@
     <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
     <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2108.2" />
     <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2108.2" />
-    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2124.7" />
+    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2140.2" />
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.1943.0-dotnetcore.78" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2005.0-plat-153.2" />

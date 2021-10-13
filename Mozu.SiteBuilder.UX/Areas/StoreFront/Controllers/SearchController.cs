@@ -59,26 +59,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Ok();
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction,
+            executionType: ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction,
+            executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         [HttpOptions]
         public async Task<IActionResult> Index(
-            string query = null, 
-            int? categoryId = null, 
-            string categoryCode = null , 
+            string query = null,
+            int? categoryId = null,
+            string categoryCode = null,
             int? page = null,
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
             string w = null,
             string inStockLocation = null,
-            [FromQuery]AdvancedSearchParamaters searchParams = null,
-            [FromQuery(Name = "debug.explain.structured")]bool  debug_explain_structure = false,
+            [FromQuery] AdvancedSearchParamaters searchParams = null,
+            [FromQuery(Name = "debug.explain.structured")]
+            bool debug_explain_structure = false,
             [FromQuery(Name = "debug")] string debug = null)
         {
-            if (string.Equals(this.HttpContext.Request.Method , "OPTIONS", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(this.HttpContext.Request.Method, "OPTIONS", StringComparison.OrdinalIgnoreCase))
             {
                 return OptionsIndex();
             }
+
             var _ = searchParams;
 
             //set back for post actions
@@ -176,7 +180,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 sortBy: _.sortBy,
                 startIndex: _.startIndex,
                 mid: this.PageContext.MonetateId,
-                targetContextLevel: _.targetContextLevel)).ReadAsSync();
+                targetContextLevel: _.targetContextLevel,
+                spellcorrectOverride: _.spellcorrectOverride)).ReadAsSync();
 
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
 
@@ -184,11 +189,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.UrlBase = "/search?query=" + _.query;
                         
             if (!String.IsNullOrEmpty(pc.SearchRedirect))
-            {            
+            {
                 return Redirect(pc.SearchRedirect);
             }
 
-            var searchPageType = pc.TotalCount > 0 ? "search-results" : "no-search-results";
+            var searchPageType = pc.TotalCount > 0 
+                ? "search-results" 
+                : "no-search-results";
 
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -200,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 },
             };
 
-            return Ok(View(searchPageType, pc));            
+            return Ok(View(searchPageType, pc));
         }
 
         SolrDebugActionResult CreateDebugResponse (string debugTxt)
@@ -423,6 +430,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string responseFields { get; set; }
             public string groups { get; set; }
             public Core.Api.Contracts.TargetContextLevelType targetContextLevel { get; set; }
+            public string spellcorrectOverride { get; set; }
         }
 
         private IDictionary<string, object> MakeSearchDict(string query, int? categoryId, int? page, string w)

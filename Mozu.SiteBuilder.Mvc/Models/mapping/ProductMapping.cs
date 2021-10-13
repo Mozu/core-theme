@@ -61,6 +61,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                .ConvertUsing<ProductToDictionaryConverter>();
 
             CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
+            
+            CreateMap<Mozu.ProductRuntime.Contracts.Spellcheck, Spellcheck>();
+              
             CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
           
      

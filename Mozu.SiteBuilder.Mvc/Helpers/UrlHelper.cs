@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                     }
                 case UrlType.Search:
                     {
-                        url = MakeSearchUrl(hostname);
+                        url = MakeSearchUrl(hostname, config);
                         break;
                     }
                 case UrlType.Cart:
@@ -178,9 +178,32 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false, hostName:hostName) ?? "/cart";
         }
 
-        private string MakeSearchUrl(string hostName)
+        private string MakeSearchUrl(string hostName, Dictionary<string, object> parameters)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false, hostName:hostName) ?? "/search";
+            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false, hostName) ?? "/search";
+
+            if (parameters.Count == 0)
+                return url;
+
+            var query = parameters.TryGetValue("query", out var queryOut)
+                ? queryOut as string
+                : "";
+
+            var spellcorrectOverride = parameters.TryGetValue("spellcorrectOverride", out var overrideOut)
+                ? overrideOut as string
+                : "";
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                url = $"{url}{(url.Contains("?") ? "&" : "?")}query={Uri.EscapeUriString(query)}";
+            }
+
+            if (!string.IsNullOrEmpty(spellcorrectOverride))
+            {
+                url = $"{url}{(url.Contains("?") ? "&" : "?")}spellcorrectOverride={spellcorrectOverride}";
+            }
+
+            return url;
         }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
