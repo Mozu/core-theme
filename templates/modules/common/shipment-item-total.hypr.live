@@ -1,0 +1,14 @@
+{% if item.itemDiscount || item.itemDiscount === 0 %}
+	{% if (item.actualPrice|subtract(item.itemDiscount)) < item.actualPrice %}
+		<span class="mz-item-rowtotal is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}>	{{ item.actualPrice|currency }}</span>
+		<span class="mz-item-rowtotal {% if item.unitPrice > item.actualPrice %}is-saleprice{% endif %}">{{ item.actualPrice|subtract(item.itemDiscount)|currency }}</span>
+	{% else %}
+		{% if item.unitPrice > item.actualPrice %}
+			<span class="mz-item-rowtotal is-saleprice">{{ item.actualPrice|currency }}</span>
+		{% else %}
+			{{ item.actualPrice|subtract(item.itemDiscount)|currency }}
+		{% endif %}
+	{% endif %}
+{% else %}
+	<span class="mz-item-rowtotal {% if item.unitPrice > item.actualPrice  %}is-saleprice{% endif %}">{{ item.actualPrice|currency }}</span>
+{% endif %}
