@@ -1,0 +1,12 @@
+﻿<div class="mz-did-you-mean">
+    {% with model.spellcheck.candidateCorrections|first as firstCandidate %}
+        {% if firstCandidate.query %}
+            <h2>
+                <span>{{ labels.searchResultsDidyoumean }}:</span>
+                <a href="{% make_url "search" with query=firstCandidate.query and spellcorrectOverride='skipall' as_parameters %}">
+                    {{ firstCandidate.query }}
+                </a>
+            </h2>
+        {% endif %}
+    {% endwith %}
+</div>
