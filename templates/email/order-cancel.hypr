@@ -7,7 +7,7 @@
     <p>{{ labels.orderCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
 
     <br>
-    {% if model.omsShipments.count > 0 %}
+    {% if (model.omsShipments.count > 0) %}
         <table cellpadding="1" width="100%">
             <thead>
                 <tr>
@@ -31,6 +31,7 @@
                     </tbody>
                 {% endfor %}
             {% endfor %}
+        </table>
     {% else %}
         <table cellpadding="1" width="100%">
             <thead>
