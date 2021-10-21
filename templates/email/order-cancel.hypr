@@ -7,7 +7,7 @@
     <p>{{ labels.orderCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
 
     <br>
-    {% if (model.omsShipments.count > 0) %}
+    {% if model.hasPOSEItems %}
         <table cellpadding="1" width="100%">
             <thead>
                 <tr>
@@ -51,7 +51,7 @@
                             <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
                             <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
                             {% endfor %}
-                        </dl>s
+                        </dl>
                         {% endif %}
                         </td>
                         <td align="right"> {% include "modules/common/email-item-total" %}</td>
