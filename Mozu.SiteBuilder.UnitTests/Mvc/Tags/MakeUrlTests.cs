@@ -189,6 +189,54 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     }}},
                     ExpectedFunc = TestDescriptor.ContainsLiteral("c/66")
                 },
+                 new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = ContainerMods,
+                    Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "12/16/2020 18:30:00",
+                        FilterValue = "tenant~date:12/16/2020 18:30:00"
+                    }}},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("?facetValueFilter=tenant%7edate%3a12%2f16%2f2020+18%3a30%3a00")
+                },
+                 new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = ContainerMods,
+                    Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "12/16/2020 18:30:00",
+                        FilterValue = "tenant~date"
+                    }}},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("#")
+                },
+                 new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = ContainerMods,
+                    Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "2.0",
+                        FilterValue = "price:2.0"
+                    }}},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("?facetValueFilter=price%3a2.0")
+                },
+                 new TestDescriptor
+                {
+                    Name = "categoryFacet",
+                    Template = @"{% make_url ""facet"" facetValue %}",
+                    ContainerModifier = ContainerMods,
+                    Context = new Dictionary<string, object>() { { "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue() {
+                        ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
+                        Value = "2.0",
+                        FilterValue = ""
+                    }}},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("#")
+                },
                   new TestDescriptor
                 {
                     Name = "document",

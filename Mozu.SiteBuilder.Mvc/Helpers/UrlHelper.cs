@@ -698,7 +698,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
             // this means we have some other facet type
             var isApplied = !(obj is string) && Resolver.ResolveMemberOrDefault(obj, "isApplied", false);
-            var facetParts = facetValue.Split(':');
+            var facetParts = facetValue.Split(':', 2);
             if (facetParts.Length != 2)
             {
                 return "#";
