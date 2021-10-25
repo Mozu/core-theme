@@ -1299,6 +1299,13 @@
                     me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
 
+                    //Enable purchase order as payment method for orders like pickup and digital
+                    if (me.isPurchaseOrderEnabled()) {
+                        me.setDefaultPaymentType(me);
+                        me.updatePurchaseOrderAmount();
+                        me.calculateStepStatus();
+                    }
+
                     var savedCardId = me.get('card.paymentServiceCardId');
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
