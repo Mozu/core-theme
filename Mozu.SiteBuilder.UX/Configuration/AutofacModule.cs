@@ -18,8 +18,10 @@ using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.UX.Messaging;
 using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Mozu.SiteBuilder.Mvc.Middleware;
+using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -59,6 +61,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddSingleton<SiteBuilderContextInvalidatorConsumer>();
             configure.AddSingleton<BusService>();
             configure.AddHostedService<BusService>();
+            configure.AddScoped<ContentFetcher>();
+            configure.AddHttpClient<ContentFetcher>()
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+                {
+                    AllowAutoRedirect = false,
+                    UseDefaultCredentials = true
+                });
 
         }
     }
