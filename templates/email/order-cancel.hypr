@@ -7,6 +7,8 @@
     <p>{{ labels.orderCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
 
     <br>
+    <!--POSE stands for Post Order Submit Edit. EX: An order has been submitted and items are added to the order-->
+    <!--If the cancelled order includes POSE items a different template is used for the email-->
     {% if model.hasPOSEItems %}
         <table cellpadding="1" width="100%">
             <thead>

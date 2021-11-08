@@ -97,7 +97,7 @@
       "title": "Order Canceled"
     },
     {
-      "id": "order.cancelledPOSE",
+      "id": "order.cancelled.POSE",
       "properties": {},
       "template": "email/order-cancel",
       "title": "Order Canceled POSE"
