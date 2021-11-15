@@ -94,7 +94,13 @@
       "id": "order.cancelled",
       "properties": {},
       "template": "email/order-cancel",
-      "title": "Order Cancel"
+      "title": "Order Canceled"
+    },
+    {
+      "id": "order.cancelled.POSE",
+      "properties": {},
+      "template": "email/order-cancel",
+      "title": "Order Canceled POSE"
     },
     {
       "id": "shipment.itemscanceled",
@@ -176,7 +182,7 @@
       "template": "email/product-return-changed",
       "title": "Return Has Been Updated"
     },
-	{
+    {
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",

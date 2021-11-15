@@ -5,38 +5,63 @@
     <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</p>
     <br>
     <p>{{ labels.orderCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
-    
-    <table cellpadding="1" width="100%">
-        <thead>
-            <tr>
-                <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
-                <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
-            </tr>
-        </thead>
-        {% for item in model.items %}
-            <tbody class="mz-ordersummary-lineitems">
-              <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
-                    <td class="mz-ordersummary-item-product">
-                      {{ item.product.name }}
-                      {% if item.product.productUsage == 'Bundle' %}
-                      <dl class="mz-propertylist">
-                        {% for bundledProduct in item.product.bundledProducts %}
-                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                        {% endfor %}
-                      </dl>s
-                      {% endif %}
-                    </td>
-                    <td align="right"> {% include "modules/common/email-item-total" %}</td>
-                </tr>
-            </tbody>
-        {% endfor %}
-    </table>
 
-    
-    
-    
-    
+    <br>
+    <!--POSE stands for Post Order Submit Edit. EX: An order has been submitted and items are added to the order-->
+    <!--If the cancelled order includes POSE items a different template is used for the email-->
+    {% if model.hasPOSEItems %}
+        <table cellpadding="1" width="100%">
+            <thead>
+                <tr>
+                    <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
+                    <td bgcolor="#666666"><font color="#ffffff">{{ labels.qty }}</font></td>
+                    <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
+                </tr>
+            </thead>
+            {% for shipment in model.omsShipments %}
+                {% for item in shipment.canceledItems %}
+                    <tbody class="mz-ordersummary-lineitems">
+                        <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.itemDiscount > 0 %}is-discounted{% endif %}">
+                            <td class="mz-ordersummary-item-product">
+                                {{ item.name }}
+                            </td>
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+                            <td align="right"> {% include "modules/common/email-shipment-item-total" %}</td>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    {% else %}
+        <table cellpadding="1" width="100%">
+            <thead>
+                <tr>
+                    <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
+                    <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
+                </tr>
+            </thead>
+            {% for item in model.items %}
+                <tbody class="mz-ordersummary-lineitems">
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+                        <td class="mz-ordersummary-item-product">
+                        {{ item.product.name }}
+                        {% if item.product.productUsage == 'Bundle' %}
+                        <dl class="mz-propertylist">
+                            {% for bundledProduct in item.product.bundledProducts %}
+                            <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                            {% endfor %}
+                        </dl>
+                        {% endif %}
+                        </td>
+                        <td align="right"> {% include "modules/common/email-item-total" %}</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    {% endif %}
 
     <br>
     <p>{{ labels.orderCancelBlob2|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
