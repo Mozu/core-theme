@@ -1,0 +1,1284 @@
+﻿{
+    "orderNumber":255,
+    "version":"1",
+    "originalCartId":"03f2be9421f66322f4e9e43200000e7a",
+    "availableActions":[
+        "ValidateOrder",
+        "AcceptOrder",
+        "CancelOrder"
+    ],
+    "customerAccountId":1019,
+    "isTaxExempt":false,
+    "email":"dpuddy14@gmail.com",
+    "status":"Validated",
+    "paymentStatus":"Unpaid",
+    "returnStatus":"None",
+    "isEligibleForReturns":false,
+    "totalCollected":0.0,
+    "attributes":[
+
+    ],
+    "shippingDiscounts":[
+
+    ],
+    "handlingAmount":0.0,
+    "handlingTotal":0.0,
+    "fulfillmentStatus":"Fulfilled",
+    "submittedDate":"2014-02-14T15:07:57.270Z",
+    "notes":[
+
+    ],
+    "items":[
+        {
+            "id":"4a4dd93a2f494199a3e9a2d100963a18",
+            "originalCartItemId":"a3ef00352606446e9b17a2c9000cae23",
+            "fulfillmentLocationCode":"BWH",
+            "fulfillmentMethod":"Ship",
+            "product":{
+                "name":"Marker Jester 130 Downhill Ski Bindings",
+                "description":"<span style=\"font-size: medium; \">Designed for park, pipe and big-mountain freeskiers, the Marker Jester B130 downhill ski bindings meet the demands of the most aggressive downhillers around.</span>",
+                "imageUrl":"//cdn-sb.mozu.com/2295-2527/cms/2527/files/116bedf3-1f32-44d6-85af-ee57c361903b",
+                "productCode":"MS-SKI-BND-005",
+                "options":[
+
+                ],
+                "properties":[
+                    {
+                        "attributeFQN":"tenant~availability",
+                        "name":"Availability",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Usually Ships in 24 Hours",
+                                "value":"24hrs"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Color",
+                        "name":"Color",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Black",
+                                "value":"Black"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Best-Use",
+                        "name":"Best Use",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Downhill Skiing",
+                                "value":"Downhill-Skiing"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Boot-Compatibility",
+                        "name":"Boot Compatibility",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"NA",
+                                "value":"NA"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Brand",
+                        "name":"Brand",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Marker",
+                                "value":"Marker"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Closing-Mechanism",
+                        "name":"Closing Mechanism",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"NA",
+                                "value":"NA"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Gender",
+                        "name":"Gender",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Unisex",
+                                "value":"Unisex"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Highest-DIN",
+                        "name":"Highest DIN",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"16",
+                                "value":"16"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Lowest-DIN",
+                        "name":"Lowest DIN",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"6",
+                                "value":"6"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Made-in-USA",
+                        "name":"Made in USA",
+                        "dataType":"Bool",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "value":false
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Skill-Level",
+                        "name":"Skill Level",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Advanced",
+                                "value":"Advanced"
+                            }
+                        ]
+                    },
+                    {
+                        "attributeFQN":"Tenant~Weight--g-",
+                        "name":"Weight (g)",
+                        "dataType":"String",
+                        "isMultiValue":false,
+                        "values":[
+                            {
+                                "stringValue":"Unavailable",
+                                "value":"Unavailable"
+                            }
+                        ]
+                    }
+                ],
+                "categories":[
+                    {
+                        "id":2
+                    },
+                    {
+                        "id":21,
+                        "parent":{
+                            "id":2
+                        }
+                    }
+                ],
+                "price":{
+                    "price":359.0
+                },
+                "measurements":{
+                    "height":{
+                        "unit":"in",
+                        "value":10.000
+                    },
+                    "width":{
+                        "unit":"in",
+                        "value":12.000
+                    },
+                    "length":{
+                        "unit":"in",
+                        "value":18.000
+                    },
+                    "weight":{
+                        "unit":"lbs",
+                        "value":6.800
+                    }
+                },
+                "isTaxable":true,
+                "isPackagedStandAlone":false,
+                "productUsage":"Standard",
+                "bundledProducts":[
+
+                ]
+            },
+            "quantity":1,
+            "subtotal":359.0,
+            "extendedTotal":359.0,
+            "taxableTotal":323.1,
+            "discountTotal":35.9,
+            "discountedTotal":323.1,
+            "itemTaxTotal":0.0,
+            "shippingTaxTotal":0.0,
+            "shippingTotal":21.58,
+            "feeTotal":0.0,
+            "total":344.68,
+            "unitPrice":{
+                "baseAmount":359.0,
+                "extendedAmount":359.0,
+                "listAmount":359.0,
+                "discountAmount":35.9,
+                "discountedAmount":323.1
+            },
+            "productDiscounts":[
+                {
+                    "productQuantity":0,
+                    "impactPerUnit":35.90,
+                    "impact":35.9,
+                    "discount":{
+                        "id":17,
+                        "name":"10% Off Non- North Face Items",
+                        "itemIds":[
+
+                        ]
+                    },
+                    "excluded":false
+                }
+            ],
+            "shippingDiscounts":[
+
+            ],
+            "auditInfo":{
+
+            }
+        }
+    ],
+    "validationResults":[
+
+    ],
+    "billingInfo":{
+        "paymentType":"CreditCard",
+        "billingContact":{
+            "id":-1,
+            "email":"dpuddy14@gmail.com",
+            "firstName":"David",
+            "lastNameOrSurname":"Puddy",
+            "phoneNumbers":{
+                "home":"617-635-3880"
+            },
+            "address":{
+                "address1":"43 Hawkins St",
+                "cityOrTown":"Boston",
+                "stateOrProvince":"MA",
+                "postalOrZipCode":"02114",
+                "countryCode":"US",
+                "addressType":"None",
+                "isValidated":false
+            }
+        },
+        "isSameBillingShippingAddress":true,
+        "card":{
+            "paymentServiceCardId":"3f79098451384790ad5c250bd14d4078",
+            "isUsedRecurring":false,
+            "nameOnCard":"David Puddy",
+            "isCardInfoSaved":false,
+            "paymentOrCardType":"MC",
+            "cardNumberPartOrMask":"************1111",
+            "expireMonth":10,
+            "expireYear":2017
+        },
+        "auditInfo":{
+            "updateDate":"2014-02-13T15:09:07.064Z",
+            "createDate":"2014-02-13T15:09:07.064Z",
+            "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+            "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+        }
+    },
+    "payments":[
+        {
+            "id":"943322e12e2c41148d8ea2d100967b02",
+            "availableActions":[
+
+            ],
+            "orderId":"03fd3d9121f66320803f4ace000008f7",
+            "paymentType":"CreditCard",
+            "billingInfo":{
+                "paymentType":"CreditCard",
+                "billingContact":{
+                    "id":-1,
+                    "email":"dpuddy14@gmail.com",
+                    "firstName":"David",
+                    "lastNameOrSurname":"Puddy",
+                    "phoneNumbers":{
+                        "home":"617-635-3880"
+                    },
+                    "address":{
+                        "address1":"43 Hawkins St",
+                        "cityOrTown":"Boston",
+                        "stateOrProvince":"MA",
+                        "postalOrZipCode":"02114",
+                        "countryCode":"US",
+                        "addressType":"None",
+                        "isValidated":false
+                    }
+                },
+                "isSameBillingShippingAddress":true,
+                "card":{
+                    "paymentServiceCardId":"3f79098451384790ad5c250bd14d4078",
+                    "isUsedRecurring":false,
+                    "nameOnCard":"David Puddy",
+                    "isCardInfoSaved":false,
+                    "paymentOrCardType":"MC",
+                    "expireMonth":10,
+                    "expireYear":2017
+                },
+                "auditInfo":{
+                    "updateDate":"2014-02-13T15:07:52.966Z",
+                    "createDate":"2014-02-13T15:07:52.966Z",
+                    "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+                    "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+                }
+            },
+            "status":"Voided",
+            "interactions":[
+                {
+                    "id":"3ae6d2686f1544be88d5a2d10096d163",
+                    "paymentId":"943322e12e2c41148d8ea2d100967b02",
+                    "orderId":"03fd3d9121f66320803f4ace000008f7",
+                    "currencyCode":"usd",
+                    "interactionType":"Void",
+                    "status":"Voided",
+                    "paymentEntryStatus":"New",
+                    "isRecurring":false,
+                    "isManual":true,
+                    "amount":344.68,
+                    "interactionDate":"2014-02-13T15:09:06.674Z",
+                    "auditInfo":{
+                        "updateDate":"2014-02-13T15:09:06.674Z",
+                        "createDate":"2014-02-13T15:09:06.674Z",
+                        "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+                        "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+                    }
+                }
+            ],
+            "isRecurring":false,
+            "amountCollected":0.0,
+            "amountCredited":0.0,
+            "amountRequested":344.68,
+            "auditInfo":{
+                "updateDate":"2014-02-13T15:07:52.966Z",
+                "createDate":"2014-02-13T15:07:52.966Z",
+                "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+                "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+            }
+        },
+        {
+            "id":"75074679797448eab728a2d10096d1d8",
+            "availableActions":[
+                "VoidPayment",
+                "CreatePayment",
+                "AuthorizePayment",
+                "AuthAndCapture"
+            ],
+            "orderId":"03fd3d9121f66320803f4ace000008f7",
+            "paymentType":"CreditCard",
+            "billingInfo":{
+                "paymentType":"CreditCard",
+                "billingContact":{
+                    "id":-1,
+                    "email":"dpuddy14@gmail.com",
+                    "firstName":"David",
+                    "lastNameOrSurname":"Puddy",
+                    "phoneNumbers":{
+                        "home":"617-635-3880"
+                    },
+                    "address":{
+                        "address1":"43 Hawkins St",
+                        "cityOrTown":"Boston",
+                        "stateOrProvince":"MA",
+                        "postalOrZipCode":"02114",
+                        "countryCode":"US",
+                        "addressType":"None",
+                        "isValidated":false
+                    }
+                },
+                "isSameBillingShippingAddress":true,
+                "card":{
+                    "paymentServiceCardId":"3f79098451384790ad5c250bd14d4078",
+                    "isUsedRecurring":false,
+                    "nameOnCard":"David Puddy",
+                    "isCardInfoSaved":false,
+                    "paymentOrCardType":"MC",
+                    "cardNumberPartOrMask":"************1111",
+                    "expireMonth":10,
+                    "expireYear":2017
+                },
+                "auditInfo":{
+                    "updateDate":"2014-02-13T15:09:07.064Z",
+                    "createDate":"2014-02-13T15:09:07.064Z",
+                    "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+                    "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+                }
+            },
+            "status":"New",
+            "interactions":[
+
+            ],
+            "isRecurring":false,
+            "amountCollected":0.0,
+            "amountCredited":0.0,
+            "amountRequested":344.68,
+            "auditInfo":{
+                "updateDate":"2014-02-13T15:09:07.064Z",
+                "createDate":"2014-02-13T15:09:07.064Z",
+                "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+                "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+            }
+        }
+    ],
+    "packages":[
+        {
+            "id":"35f25fcb69594ce6a640a2e601159a42",
+            "shippingMethodCode":"fedex_FEDEX_2_DAY_AM",
+            "status":"Fulfilled",
+            "items":[
+                {
+                    "productCode":"MS-SKI-BND-005",
+                    "quantity":1
+                }
+            ],
+            "fulfillmentDate":"2014-03-06T22:50:47.306Z",
+            "fulfillmentLocationCode":"BWH",
+            "auditInfo":{
+                "updateDate":"2014-03-06T22:50:47.306Z",
+                "createDate":"2014-03-06T22:50:43.187Z",
+                "updateBy":"942c39acf34d418cbef51e129c7d605f",
+                "createBy":"942c39acf34d418cbef51e129c7d605f"
+            },
+            "availableActions":[
+
+            ]
+        }
+    ],
+    "pickups":[
+
+    ],
+    "shipments":[
+
+    ],
+    "isDraft":false,
+    "hasDraft":false,
+    "isImport":false,
+    "couponCodes":[
+
+    ],
+    "amountAvailableForRefund":0.0,
+    "amountRemainingForPayment":0.00,
+    "id":"03fd3d9121f66320803f4ace00000e7a",
+    "tenantId":3706,
+    "siteId":4507,
+    "channelCode":"ONL",
+    "currencyCode":"usd",
+    "customerInteractionType":"Unknown",
+    "fulfillmentInfo":{
+        "fulfillmentContact":{
+            "id":1018,
+            "email":"dpuddy14@gmail.com",
+            "firstName":"David",
+            "lastNameOrSurname":"Puddy",
+            "phoneNumbers":{
+                "home":"617-635-3880"
+            },
+            "address":{
+                "address1":"43 Hawkins St",
+                "cityOrTown":"Boston",
+                "stateOrProvince":"MA",
+                "postalOrZipCode":"02114",
+                "countryCode":"US",
+                "addressType":"None",
+                "isValidated":false
+            }
+        },
+        "isDestinationCommercial":false,
+        "shippingMethodCode":"fedex_FEDEX_2_DAY_AM",
+        "shippingMethodName":"FedEx 2Day® A.M.",
+        "auditInfo":{
+            "updateDate":"2014-02-13T15:07:08.338Z",
+            "createDate":"2014-02-13T15:06:57.572Z",
+            "updateBy":"a5b8ccc3bd5c46768df30d7d0a693cd3",
+            "createBy":"a5b8ccc3bd5c46768df30d7d0a693cd3"
+        }
+    },
+    "orderDiscounts":[
+
+    ],
+    "subtotal":359.0,
+    "discountedSubtotal":323.1,
+    "discountTotal":35.9,
+    "discountedTotal":323.1,
+    "shippingTotal":21.58,
+    "shippingSubTotal":21.58,
+    "shippingTaxTotal":0.0,
+    "handlingTaxTotal":0.0,
+    "itemTaxTotal":0.0,
+    "taxTotal":0.0,
+    "feeTotal":0.0,
+    "total":344.68,
+    "lastValidationDate":"2014-02-13T15:07:46.090Z",
+    "changeMessages":[
+        {
+            "id":"b33228a6a5d14ebebe8ca2d100963a18",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:06:57.572Z"
+        },
+        {
+            "id":"de4c17b41cd94eaa9827a2d100963f81",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:07:02.188Z"
+        },
+        {
+            "id":"73a9e90cf826456fbd3ea2d1009646b6",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Fulfillment Info Updated",
+            "verb":"Updated",
+            "message":"Fulfillment information was updated.",
+            "createDate":"2014-02-13T15:07:08.338Z"
+        },
+        {
+            "id":"329c60034cb54b30a9c8a2d1009672f4",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Coupon Applied: FREESHIP",
+            "verb":"Applied",
+            "message":"Coupon with code:  FREESHIP applied.",
+            "createDate":"2014-02-13T15:07:46.090Z"
+        },
+        {
+            "id":"f8d0e3d6e1d147f89d6ea2e601159a42",
+            "subjectType":"Order",
+            "identifier":"03fd3d9121f66320803f4ace000008f7",
+            "subject":"Package Added",
+            "verb":"Added",
+            "message":"Package with ID: 35f25fcb69594ce6a640a2e601159a42 was added.",
+            "createDate":"2014-03-06T22:50:43.203Z"
+        }
+    ],
+  "auditInfo": {
+    "updateDate": "2014-03-06T22:50:47.337Z",
+    "createDate": "2014-02-13T15:06:57.697Z",
+    "updateBy": "942c39acf34d418cbef51e129c7d605f",
+    "createBy": "a5b8ccc3bd5c46768df30d7d0a693cd3"
+  },
+  "OmsShipments": [
+    {
+      "shipmentNumber": 944,
+      "orderId": "0e69ba3e34ee670001515a160000433f",
+      "orderNumber": 947,
+      "orderSubmitDate": "2019-08-30T17:26:44.391Z",
+      "customerAccountId": 1005,
+      "tenantId": 17215,
+      "siteId": 21153,
+      "fulfillmentDate": "2019-08-30T18:02:35.931Z",
+      "shipmentType": "BOPIS",
+      "shipmentStatus": "FULFILLED",
+      "fulfillmentStatus": "Fulfilled",
+      "fulfillmentLocationCode": "sp_1",
+      "cost": 0.0,
+      "shipmentAdjustment": 0.0,
+      "lineItemSubtotal": 50.00,
+      "lineItemTaxAdjustment": 0.0,
+      "lineItemTaxTotal": 0.00,
+      "lineItemTotal": 50.00,
+      "shippingAdjustment": 0.0,
+      "shippingSubtotal": 0.00,
+      "shippingTaxAdjustment": 0.0,
+      "shippingTaxTotal": 0.00,
+      "shippingTotal": 0.00,
+      "handlingAdjustment": 0.0,
+      "handlingSubtotal": 0.00,
+      "handlingTaxAdjustment": 0.0,
+      "handlingTaxTotal": 0.00,
+      "handlingTotal": 0.00,
+      "dutyAdjustment": 0.0,
+      "dutyTotal": 0.0,
+      "total": 50.00,
+      "currencyCode": "USD",
+      "destination": {
+        "destinationContact": {
+          "firstName": "Test-User",
+          "lastNameOrSurname": "Data"
+        }
+      },
+      "destinationContact": {},
+      "originContact": {},
+      "trackingNumbers": [],
+      "items": [],
+      "canceledItems": [
+        {
+          "lineId": 1,
+          "originalOrderItemId": "b6675d1058ef4f6aa034aab9011f79c4",
+          "productCode": "sp_01",
+          "quantity": 1,
+          "name": "Standard Product - 1",
+          "partNumber": "sp_01",
+          "upc": "sp_01",
+          "unitPrice": 50.0,
+          "isTaxable": false,
+          "actualPrice": 50.0,
+          "itemDiscount": 0.00,
+          "lineItemCost": 50.0,
+          "itemTax": 0.00,
+          "shipping": 0.00,
+          "shippingDiscount": 0.00,
+          "shippingTax": 0.00,
+          "handling": 0.00,
+          "handlingDiscount": 0.00,
+          "handlingTax": 0.00,
+          "duty": 0.0,
+          "weight": 0.0,
+          "auditInfo": {
+            "createDate": "2019-08-30T17:26:44.556Z"
+          },
+          "options": [],
+          "giftCards": []
+        }
+      ],
+      "packages": [],
+      "workflowState": {
+        "shipmentState": "COMPLETED",
+        "taskList": [
+          {
+            "attributes": {},
+            "name": "Accept Shipment",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "shipmentAccepted",
+                "type": "BOOLEAN"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Print Pick List",
+            "subject": "",
+            "inputs": [],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Validate Items In Stock",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "stockLevel",
+                "type": "STRING"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Customer Pickup",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "customerAccepted",
+                "type": "BOOLEAN"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          }
+        ],
+        "processInstanceId": "2516",
+        "auditInfo": {
+          "updateDate": "2019-08-30T18:02:35.952Z",
+          "createDate": "2019-08-30T17:26:44.583Z"
+        }
+      },
+      "changeMessages": [
+        {
+          "changeMessageId": "5d695c7b3b35f80001c58fb7",
+          "createdDate": "2019-08-30T17:27:23.382Z",
+          "correlationId": "7c47542b5ac542e69ef4c60b153a576e",
+          "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+          "oldValue": "PRE_ACCEPT_SHIPMENT",
+          "newValue": "ACCEPTED_SHIPMENT",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d695c803b35f80001c58fbe",
+          "createdDate": "2019-08-30T17:27:28.350Z",
+          "correlationId": "93b858c11cf740119426af7b67cd7397",
+          "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
+          "oldValue": "ACCEPTED_SHIPMENT",
+          "newValue": "PROCESSING_PICK_LIST",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d695ca33b35f80001c58fcb",
+          "createdDate": "2019-08-30T17:28:03.308Z",
+          "correlationId": "9ead76d824a94c98884219f483c1c36c",
+          "message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
+          "oldValue": "PROCESSING_PICK_LIST",
+          "newValue": "READY_FOR_PICKUP",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f126",
+          "createdDate": "2019-08-30T18:02:35.926Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
+          "oldValue": "READY_FOR_PICKUP",
+          "newValue": "COMPLETED",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12c",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
+          "oldValue": "null",
+          "newValue": "2019-08-30T18:02:35.931701Z",
+          "subject": "fulfillmentDate",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12d",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
+          "oldValue": "READY",
+          "newValue": "FULFILLED",
+          "subject": "shipmentStatus",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12e",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
+          "oldValue": "null",
+          "newValue": "Fulfilled",
+          "subject": "fulfillmentStatus",
+          "userId": "12345"
+        }
+      ],
+      "email": "jack_wu@mailtrap.com",
+      "readyForPickup": false,
+      "auditInfo": {
+        "updateDate": "2019-08-30T18:02:35.952Z",
+        "createDate": "2019-08-30T17:26:44.583Z"
+      },
+      "_links": {
+        "self": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944"
+        },
+        "shipments": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
+        },
+        "process": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/processes/shipmentType/BOPIS"
+        },
+        "reject": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+          "method": "PUT"
+        },
+        "cancel": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+          "method": "PUT"
+        },
+        "fulfill": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+          "method": "PUT"
+        },
+        "reassign": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+          "method": "PUT"
+        },
+        "reassignItems": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+          "method": "PUT"
+        },
+        "cancelItems": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+          "method": "PUT"
+        }
+      },
+      "storeLocation": {
+        "code": "storelocation1",
+        "locationTypes": [
+          {
+            "code": "storelocationtype1",
+            "name": "Store Location Type1",
+            "auditInfo": {
+              "updateDate": "2016-05-04T20:07:18.859Z",
+              "createDate": "2016-05-04T20:07:18.859Z",
+              "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+              "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+          }
+        ],
+        "name": "Store Location 1",
+        "description": "",
+        "address": {
+          "address1": "1835 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "78758",
+          "countryCode": "US",
+          "isValidated": false
+        },
+        "geo": {
+          "lat": 30.3871389,
+          "lng": -97.7100097
+        },
+        "phone": "",
+        "fax": "",
+        "supportsInventory": true,
+        "fulfillmentTypes": [
+          {
+            "code": "SP",
+            "name": "In Store Pickup"
+          }
+        ],
+        "regularHours": {
+          "sunday": {
+            "label": "9AM-4PM"
+          },
+          "monday": {
+            "label": "9AM-6PM"
+          },
+          "tuesday": {
+            "label": "9AM-6PM"
+          },
+          "wednesday": {
+            "label": "9AM-6PM"
+          },
+          "thursday": {
+            "label": "9AM-6PM"
+          },
+          "friday": {
+            "label": "9AM-6PM"
+          },
+          "saturday": {
+            "label": "9AM-9PM"
+          }
+        },
+        "shippingOriginContact": {
+          "firstName": "a",
+          "middleNameOrInitial": "",
+          "lastNameOrSurname": "b",
+          "companyOrOrganization": "Volusion",
+          "phoneNumber": "6662227878",
+          "email": "ab@volusion.com"
+        },
+        "note": "",
+        "tags": [],
+        "attributes": [],
+        "auditInfo": {
+          "updateDate": "2019-09-03T16:58:16.279Z",
+          "createDate": "2016-05-04T20:27:23.589Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "allowFulfillmentWithNoStock": false,
+        "isDisabled": false,
+        "express": false,
+        "transferEnabled": false,
+        "includeInInventoryAggregrate": true,
+        "includeInLocationExport": false,
+        "warehouseEnabled": false
+      }
+    },
+    {
+      "shipmentNumber": 944,
+      "orderId": "0e69ba3e34ee670001515a160000433f",
+      "orderNumber": 947,
+      "orderSubmitDate": "2019-08-30T17:26:44.391Z",
+      "customerAccountId": 1005,
+      "tenantId": 17215,
+      "siteId": 21153,
+      "fulfillmentDate": "2019-08-30T18:02:35.931Z",
+      "shipmentType": "BOPIS",
+      "shipmentStatus": "FULFILLED",
+      "fulfillmentStatus": "Fulfilled",
+      "fulfillmentLocationCode": "sp_1",
+      "cost": 0.0,
+      "shipmentAdjustment": 0.0,
+      "lineItemSubtotal": 50.00,
+      "lineItemTaxAdjustment": 0.0,
+      "lineItemTaxTotal": 0.00,
+      "lineItemTotal": 50.00,
+      "shippingAdjustment": 0.0,
+      "shippingSubtotal": 0.00,
+      "shippingTaxAdjustment": 0.0,
+      "shippingTaxTotal": 0.00,
+      "shippingTotal": 0.00,
+      "handlingAdjustment": 0.0,
+      "handlingSubtotal": 0.00,
+      "handlingTaxAdjustment": 0.0,
+      "handlingTaxTotal": 0.00,
+      "handlingTotal": 0.00,
+      "dutyAdjustment": 0.0,
+      "dutyTotal": 0.0,
+      "total": 50.00,
+      "currencyCode": "USD",
+      "destination": {
+        "destinationContact": {
+          "firstName": "Test-User",
+          "lastNameOrSurname": "Data"
+        }
+      },
+      "destinationContact": {},
+      "originContact": {},
+      "trackingNumbers": [],
+      "items": [],
+      "canceledItems": [
+        {
+          "lineId": 1,
+          "originalOrderItemId": "b6675d1058ef4f6aa034aab9011f79c4",
+          "productCode": "sp_01",
+          "quantity": 1,
+          "name": "Standard Product - 1",
+          "partNumber": "sp_01",
+          "upc": "sp_01",
+          "unitPrice": 50.0,
+          "isTaxable": false,
+          "actualPrice": 50.0,
+          "itemDiscount": 0.00,
+          "lineItemCost": 50.0,
+          "itemTax": 0.00,
+          "shipping": 0.00,
+          "shippingDiscount": 0.00,
+          "shippingTax": 0.00,
+          "handling": 0.00,
+          "handlingDiscount": 0.00,
+          "handlingTax": 0.00,
+          "duty": 0.0,
+          "weight": 0.0,
+          "auditInfo": {
+            "createDate": "2019-08-30T17:26:44.556Z"
+          },
+          "options": [],
+          "giftCards": []
+        }
+      ],
+      "packages": [],
+      "workflowState": {
+        "shipmentState": "COMPLETED",
+        "taskList": [
+          {
+            "attributes": {},
+            "name": "Accept Shipment",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "shipmentAccepted",
+                "type": "BOOLEAN"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Print Pick List",
+            "subject": "",
+            "inputs": [],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Validate Items In Stock",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "stockLevel",
+                "type": "STRING"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          },
+          {
+            "attributes": {},
+            "name": "Customer Pickup",
+            "subject": "",
+            "inputs": [
+              {
+                "name": "customerAccepted",
+                "type": "BOOLEAN"
+              }
+            ],
+            "active": false,
+            "completed": true,
+            "completedDate": "2019-08-30T18:02:35.913Z"
+          }
+        ],
+        "processInstanceId": "2516",
+        "auditInfo": {
+          "updateDate": "2019-08-30T18:02:35.952Z",
+          "createDate": "2019-08-30T17:26:44.583Z"
+        }
+      },
+      "changeMessages": [
+        {
+          "changeMessageId": "5d695c7b3b35f80001c58fb7",
+          "createdDate": "2019-08-30T17:27:23.382Z",
+          "correlationId": "7c47542b5ac542e69ef4c60b153a576e",
+          "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+          "oldValue": "PRE_ACCEPT_SHIPMENT",
+          "newValue": "ACCEPTED_SHIPMENT",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d695c803b35f80001c58fbe",
+          "createdDate": "2019-08-30T17:27:28.350Z",
+          "correlationId": "93b858c11cf740119426af7b67cd7397",
+          "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'PROCESSING_PICK_LIST'",
+          "oldValue": "ACCEPTED_SHIPMENT",
+          "newValue": "PROCESSING_PICK_LIST",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d695ca33b35f80001c58fcb",
+          "createdDate": "2019-08-30T17:28:03.308Z",
+          "correlationId": "9ead76d824a94c98884219f483c1c36c",
+          "message": "'workflowState.shipmentState' changed from 'PROCESSING_PICK_LIST' to 'READY_FOR_PICKUP'",
+          "oldValue": "PROCESSING_PICK_LIST",
+          "newValue": "READY_FOR_PICKUP",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f126",
+          "createdDate": "2019-08-30T18:02:35.926Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'workflowState.shipmentState' changed from 'READY_FOR_PICKUP' to 'COMPLETED'",
+          "oldValue": "READY_FOR_PICKUP",
+          "newValue": "COMPLETED",
+          "subject": "shipmentState",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12c",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'fulfillmentDate' changed from '' to '2019-08-30T18:02:35.931701Z'",
+          "oldValue": "null",
+          "newValue": "2019-08-30T18:02:35.931701Z",
+          "subject": "fulfillmentDate",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12d",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
+          "oldValue": "READY",
+          "newValue": "FULFILLED",
+          "subject": "shipmentStatus",
+          "userId": "12345"
+        },
+        {
+          "changeMessageId": "5d6964bb3b35f80001c5f12e",
+          "createdDate": "2019-08-30T18:02:35.934Z",
+          "correlationId": "4d4bee71621d468baf00b943ffeb7ca4",
+          "message": "'fulfillmentStatus' changed from '' to 'Fulfilled'",
+          "oldValue": "null",
+          "newValue": "Fulfilled",
+          "subject": "fulfillmentStatus",
+          "userId": "12345"
+        }
+      ],
+      "email": "jack_wu@mailtrap.com",
+      "readyForPickup": false,
+      "auditInfo": {
+        "updateDate": "2019-08-30T18:02:35.952Z",
+        "createDate": "2019-08-30T17:26:44.583Z"
+      },
+      "_links": {
+        "self": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944"
+        },
+        "shipments": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
+        },
+        "process": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/processes/shipmentType/BOPIS"
+        },
+        "reject": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/rejected",
+          "method": "PUT"
+        },
+        "cancel": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceled",
+          "method": "PUT"
+        },
+        "fulfill": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/fulfilled",
+          "method": "PUT"
+        },
+        "reassign": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassigned",
+          "method": "PUT"
+        },
+        "reassignItems": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/reassignedItems",
+          "method": "PUT"
+        },
+        "cancelItems": {
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+          "href": "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/944/canceledItems",
+          "method": "PUT"
+        }
+      },
+      "storeLocation": {
+        "code": "storelocation1",
+        "locationTypes": [
+          {
+            "code": "storelocationtype1",
+            "name": "Store Location Type1",
+            "auditInfo": {
+              "updateDate": "2016-05-04T20:07:18.859Z",
+              "createDate": "2016-05-04T20:07:18.859Z",
+              "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+              "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+          }
+        ],
+        "name": "Store Location 1",
+        "description": "",
+        "address": {
+          "address1": "1835 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "78758",
+          "countryCode": "US",
+          "isValidated": false
+        },
+        "geo": {
+          "lat": 30.3871389,
+          "lng": -97.7100097
+        },
+        "phone": "",
+        "fax": "",
+        "supportsInventory": true,
+        "fulfillmentTypes": [
+          {
+            "code": "SP",
+            "name": "In Store Pickup"
+          }
+        ],
+        "regularHours": {
+          "sunday": {
+            "label": "9AM-4PM"
+          },
+          "monday": {
+            "label": "9AM-6PM"
+          },
+          "tuesday": {
+            "label": "9AM-6PM"
+          },
+          "wednesday": {
+            "label": "9AM-6PM"
+          },
+          "thursday": {
+            "label": "9AM-6PM"
+          },
+          "friday": {
+            "label": "9AM-6PM"
+          },
+          "saturday": {
+            "label": "9AM-9PM"
+          }
+        },
+        "shippingOriginContact": {
+          "firstName": "a",
+          "middleNameOrInitial": "",
+          "lastNameOrSurname": "b",
+          "companyOrOrganization": "Volusion",
+          "phoneNumber": "6662227878",
+          "email": "ab@volusion.com"
+        },
+        "note": "",
+        "tags": [],
+        "attributes": [],
+        "auditInfo": {
+          "updateDate": "2019-09-03T16:58:16.279Z",
+          "createDate": "2016-05-04T20:27:23.589Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "allowFulfillmentWithNoStock": false,
+        "isDisabled": false,
+        "express": false,
+        "transferEnabled": false,
+        "includeInInventoryAggregrate": true,
+        "includeInLocationExport": false,
+        "warehouseEnabled": false
+      }
+    }
+  ],
+  "hasPOSEItems" : true
+}

@@ -44,6 +44,7 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Configuration;
+using Kibo.Fulfillment.Contracts.Api;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using Mozu.Customer.Contracts;
@@ -74,7 +75,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
     public class OrderEmail : Order {
         public List<Location.Contracts.Location> Locations { get; set; }
+
+        public List<Fulfillment.EntityModelOfShipment> OmsShipments { get; set; }
+
         public bool IsCurbside { get; set; }
+
+        public bool hasPOSEItems { get; set; }
     }
 
     public class GatewayGiftCardEmail  : EmailGatewayGiftCard
@@ -118,6 +124,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly IB2BAccountWebApiClient _b2bAccountWebApiClient;
 
@@ -188,8 +195,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Order),
+                                               ModelType = typeof (OrderEmail),
                                                Topic = Topics.OrderCancellation
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (OrderEmail),
+                                               Topic = Topics.OrderCancellationPOSE
                                            },
                                        new EmailTypeInfo
                                            {
@@ -353,6 +365,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            IShipmentControllerApiClient shipmentControllerApiClient,
             ITenantsWebApiClient tenantsWebApiClient,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
@@ -366,6 +379,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _shipmentControllerApiClient = shipmentControllerApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
@@ -699,6 +713,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                     orderEmail.Locations = allLocations;
                 }
+                var SHIPMENT_FILTER = "orderId==" + orderEmail.Id + ";shipmentStatus!=REASSIGNED;shipmentType!=Transfer";
+                var omsShipments = (await _shipmentControllerApiClient.GetShipmentsUsingGET(SHIPMENT_FILTER)).ReadAsSync().Embedded.Values.SelectMany(x => x).ToList();
+                var omsShipmentsItemCount = 0;
+                foreach (Fulfillment.EntityModelOfShipment shipment in omsShipments)
+                {
+                    omsShipmentsItemCount += shipment.CanceledItems.Count;
+                }
+                var orderItemCountWithBundleItems = orderEmail.Items.Count;
+                foreach (OrderItem item in orderEmail.Items)
+                {
+                    if (item.Product.BundledProducts.Count > 1)
+                    {
+                        orderItemCountWithBundleItems += (item.Product.BundledProducts.Count - 1); //We have already added an item count for the parent product, so we subtract one here
+                    }
+                }
+                bool hasPOSEItems = (omsShipmentsItemCount > orderItemCountWithBundleItems);
+                orderEmail.hasPOSEItems = hasPOSEItems;
+                orderEmail.OmsShipments = omsShipments;
             }
             if (obj is GatewayGiftCardEmail giftCardEmail)
             {
@@ -805,6 +837,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
             public const string OrderCancellation = "order.cancelled";
+            public const string OrderCancellationPOSE = "order.cancelled.POSE";
             public const string Backorder = "shipment.backordered";
             //public const string BackorderUpdate = "shipment.backorderdatechanged";
             public const string ShipmentConfirmation = "shipment.fulfilled";
