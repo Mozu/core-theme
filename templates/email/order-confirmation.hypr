@@ -135,7 +135,13 @@
                             {% for payment in model.payments %}
                             {% if payment.status != "Voided" and payment.status != "Declined" %}
                                 {% if payment.billingInfo.paymentType == "CreditCard" %}
-                                    <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
+                                     <b>{{ labels.paymentMethod }}</b>: 
+									 {% if payment.billingInfo.card.cCLastFour != null %} 
+                                          ************{{ payment.billingInfo.card.cCLastFour }}
+                                            {% else %}
+                                            {{ payment.billingInfo.card.cardNumberPartOrMask }}
+                                     {% endif %}
+                                     <br>
                                 {% endif %}
                                 {% if payment.billingInfo.paymentType == "GiftCard" %}
                                     <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
