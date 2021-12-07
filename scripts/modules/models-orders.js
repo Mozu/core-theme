@@ -1,6 +1,7 @@
 define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product", "modules/models-returns"], function(api, _, Backbone, Hypr, ProductModels, ReturnModels) {
 
     var OrderItem = Backbone.MozuModel.extend({
+            idAttribute: 'lineId',
             relations: {
                 product: ProductModels.Product
             },
@@ -107,6 +108,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             model: OrderPackage
         }),
         OrderItemBit = Backbone.MozuModel.extend({
+            idAttribute: 'lineId',
             relations: {
                 product: ProductModels.Product
             },
