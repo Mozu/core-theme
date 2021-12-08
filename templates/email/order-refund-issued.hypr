@@ -35,7 +35,12 @@
 		<tr class="mz-ordersummary-line">
 			<td class="mz-ordersummary-item-product">
 				{% if refund.payment.paymentType == "CreditCard" %}
-					{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+					{{ refund.payment.billingInfo.card.paymentOrCardType }}
+					{% if refund.payment.billingInfo.card.cCLastFour != null %} 
+							************{{ refund.payment.billingInfo.card.cCLastFour }}
+						{% else %}
+							{{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+						{% endif %}
 				{% else %}
 					{% if refund.payment.paymentType == "PurchaseOrder" %}
 						{{ labels.purchaseOrder }}
