@@ -135,7 +135,7 @@
                             {% for payment in model.payments %}
                             {% if payment.status != "Voided" and payment.status != "Declined" %}
                                 {% if payment.billingInfo.paymentType == "CreditCard" %}
-                                     <b>{{ labels.paymentMethod }}</b>: 
+                                     <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} 
 									 {% if payment.billingInfo.card.cCLastFour != null %} 
                                           ************{{ payment.billingInfo.card.cCLastFour }}
                                             {% else %}
