@@ -18,7 +18,7 @@
             <select data-mz-value="rmaReason" class="mz-returnform-reason">
               <option value="">{{ labels.pleaseSelect }}</option>
               {% for reason in pageContext.reasonCollection.items %}
-              <option value="{{reason}}">{{ labels|prop(reason) }}</option>
+                  <option value="{{reason}}">{{ labels|prop(reason|split|join("")) }}</option>
               {% endfor %}
             </select>
           </div>
