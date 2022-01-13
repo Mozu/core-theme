@@ -718,3 +718,7 @@ table {
       line-height: 15px !important; 
     }
   }
+
+  .isSplitPackingClass {
+    page-break-after: always;
+}
