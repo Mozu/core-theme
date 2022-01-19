@@ -163,6 +163,19 @@
   ],
   "rmaDeadline": null,
   "ReturnType": "Replace",
+  "ReturnRefunds": [
+    {
+      "id": "3460efe557164b449f17adb100c5ef8f",
+      "refundAmount": 42.22,
+      "returnId": "125361a62e4e850001f843390000433f",
+      "paymentType": "CreditCard",
+      "cardType": "MC",
+      "cardNumber": "***************1111",
+      "nameOnCard": "Aalekh",
+      "createDate": "2021-09-28T12:00:39.728Z",
+      "createBy": "Kibo admin"
+    }
+  ],
   "RefundAmount": 0.4,
   "AuditInfo": {
     "UpdateDate": "2020-05-13T07:37:07.686Z",

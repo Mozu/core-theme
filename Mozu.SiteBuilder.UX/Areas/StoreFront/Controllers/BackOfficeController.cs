@@ -37,6 +37,8 @@ using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.Customer.Contracts.Clients;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
+using Mozu.CommerceRuntime.Contracts.Payments;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -558,11 +560,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ReturnReceipt(string orderId, string returnId, [FromQuery(Name = "t")]string token = null)
-        {
-            DCReturns.Return returnObject = (await this._returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
-            if (returnObject.Status != DCReturns.Return.ReturnStatusConst.CLOSED &&
-                ((returnObject.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.FULLY_RECEIVED && returnObject.RefundStatus != DCReturns.Return.RefundStatusConst.FULLY_REFUNDED) ||
-                (returnObject.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.PARTIALLY_RECEIVED && returnObject.RefundStatus != DCReturns.Return.RefundStatusConst.PARTIALLY_REFUNDED))
+        {            
+            var sbReturn = await GetReturn(returnId);
+
+            if (sbReturn.Status != DCReturns.Return.ReturnStatusConst.CLOSED &&
+                ((sbReturn.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.FULLY_RECEIVED && sbReturn.RefundStatus != DCReturns.Return.RefundStatusConst.FULLY_REFUNDED) ||
+                (sbReturn.ReceiveStatus != DCReturns.Return.ReceiveStatusConst.PARTIALLY_RECEIVED && sbReturn.RefundStatus != DCReturns.Return.RefundStatusConst.PARTIALLY_REFUNDED))
                 )
             {
                 return NotFound("Return Receipt can not be generated for a return which is not processed");
@@ -572,7 +575,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return NotFound("Could not find return receipt template for the current Theme.");
             }
-            return await RenderWithContext(template, returnObject);
+
+            return await RenderWithContext(template, sbReturn);
         }
 
         [HttpGet]
@@ -835,6 +839,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             var customOrderClient = _orderWebApiClient.CloneWithoutUserClaims();
             return (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+        }
+
+        private async Task<Return> GetReturn(string returnId)
+        {
+            var returnObject = (await _returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
+            return returnObject?.ToSiteBuilder();
         }
     }
 }
