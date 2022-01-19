@@ -57,21 +57,35 @@ define([
             b2bAccount.apiGet().then(function (account) {
                 self.model.set('accountName', account.data.companyOrOrganization || ' ');
                 self.model.set('allContacts', account.data.contacts || []);
-                return b2bAccount.apiGetUsers().then(function (users) {
-                    var items = [];
-                    if (users && users.data.items) {
-                        items = users.data.items;
-                        items.forEach(function (user) {
-                            if (user.userId == userId) {
-                                self.model.set('fullName', user.firstName + ' ' + user.lastName);
-                            }
-                        });
-                    }
-                    self.model.set('allB2bUsers', items);
+
+                var b2bUsers = account.data.users || []; 
+                if(b2bUsers.length > 0) {
+                    b2bUsers.forEach(function (user) {
+                        if (user.userId == userId) {
+                            self.model.set('fullName', user.firstName + ' ' + user.lastName);
+                        }
+                    });
+                    
+                    self.model.set('allB2bUsers', b2bUsers);
                     self.render();
-                }, function (error) {
-                    self.showMessageBar(error);
-                });
+                }
+                else {
+                    return b2bAccount.apiGetUsers().then(function (users) {
+                        var items = [];
+                        if (users && users.data.items) {
+                            items = users.data.items;
+                            items.forEach(function (user) {
+                                if (user.userId == userId) {
+                                    self.model.set('fullName', user.firstName + ' ' + user.lastName);
+                                }
+                            });
+                        }
+                        self.model.set('allB2bUsers', items);
+                        self.render();
+                    }, function (error) {
+                        self.showMessageBar(error);
+                    });
+                }                
             }, function (error) {
                 self.model.set('fullName', ' ');
                 self.model.set('accountName', ' ');
