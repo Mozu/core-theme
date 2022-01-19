@@ -41,12 +41,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.IsPackagedStandAlone, opt => opt.Ignore())
                 .ForMember(x => x.Measurements, opt => opt.Ignore());
 
-            CreateMap<F.ChangeMessage, Mozu.CommerceRuntime.Contracts.Commerce.ChangeMessage>()
+            CreateMap<F.ChangeMessage, CommerceRuntime.Contracts.Commerce.ChangeMessage>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.UserScopeType, opt => opt.Ignore())
                 .ForMember(x => x.CreateDate, opt => opt.Ignore());
 
-            CreateMap<F.CanceledItem, Mozu.CommerceRuntime.Contracts.Fulfillment.CanceledItem>()
+            CreateMap<F.CanceledItem, CR.CanceledItem>()
                 .ForMember(dest => dest.Data, opt =>
                 {
                     opt.PreCondition(src => src.Data != null);
@@ -87,9 +87,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             CreateMap<F.Package, CR.Package>()
                 .ForMember(dest => dest.Id, o => o.MapFrom(v => v.PackageId))
+                .ForMember(dest => dest.PackingSlipNumber, o => o.MapFrom(v => v.PackingSlipNumber))
                 .ForMember( dest => dest.TrackingNumbers, o=> o.MapFrom(x => x.TrackingNumbers))
                 .ForMember(dest => dest.Trackings, o => o.MapFrom(v => v.Trackings))
-                .ForMember(dest => dest.Measurements, o => o.MapFrom(v => v.Measurements));
+                .ForMember(dest => dest.Measurements, o => o.MapFrom(v => v.Measurements))
+                .ForMember(dest => dest.PackingSlipItemDetails, o => o.MapFrom(v => v.PackingSlipItemDetails))
+                ;
+
+            CreateMap<F.PackingSlipItemDetail, CR.PackingSlipItemDetail>()
+                .ForMember(dest => dest.LineId, o => o.MapFrom(v => v.LineId))
+                .ForMember(dest => dest.OriginalOrderItemId, o => o.MapFrom(v => v.OriginalOrderItemId))
+                .ForMember(dest => dest.Quantity, o => o.MapFrom(v => v.Quantity))
+                .ForMember(dest => dest.Attributes, o => o.MapFrom(v => v.Attributes));
+
         }
     }
 }
