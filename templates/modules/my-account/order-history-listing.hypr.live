@@ -21,7 +21,7 @@
         </div>
     {% endif %}
 
-    {% if model.hasFulfilledPickups %}
+    {% if model.hasFulfilledPickups or model.hasOrderFulfilled %}
         <h2 class="mz-orderlisting-heading">{{labels.orderItemsPickup}}</h2>
         <div class="mz-orderlisting-pickup">
             {% include "modules/my-account/order-history-package-group" with model=model packages=model.pickups %}
@@ -35,7 +35,7 @@
         </div>
     {% endif %}
 
-    {% if not model.hasOrderFullyFulfilled and model.getNonShippedItems.length > 0 %}
+    {% if model.getNonShippedItems.length > 0 %}
         <h2 class="mz-orderlisting-heading">{{labels.orderItemsNotShipped}}</h2>
         <div class="mz-orderlisting-nonShipped">
         {% for item in model.getNonShippedItems %}

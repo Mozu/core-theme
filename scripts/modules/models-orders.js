@@ -316,7 +316,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 rma: ReturnModels.RMA
             },
             handlesMessages: true,
-            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasOrderFulfilled','hasOrderFullyFulfilled', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
+            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasOrderFulfilled', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
             _nonShippedItems: {},
             initialize: function() {
                 var self = this;
@@ -343,10 +343,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             hasOrderFulfilled: function() {
                 var self = this;
                 return (self.get('fulfillmentStatus') === "Fulfilled" || self.get('fulfillmentStatus') === "PartiallyFulfilled");
-            },
-            hasOrderFullyFulfilled: function() {
-                var self = this;
-                return (self.get('fulfillmentStatus') === "Fulfilled");
             },
             hasFulfilledPickups: function() {
                 var self = this,
