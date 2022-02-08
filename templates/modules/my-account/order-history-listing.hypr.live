@@ -39,7 +39,6 @@
         <h2 class="mz-orderlisting-heading">{{labels.orderItemsNotShipped}}</h2>
         <div class="mz-orderlisting-nonShipped">
         {% for item in model.getNonShippedItems %}
-        {%dump item %}
                 {% if item.Type == "BundleItem" %}
                     {% include "modules/my-account/my-account-product-bundle" with model=item %}
                 {% else %}
