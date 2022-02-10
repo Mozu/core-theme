@@ -21,7 +21,7 @@
         </div>
     {% endif %}
 
-    {% if model.hasFulfilledPickups or model.hasOrderFulfilled %}
+    {% if model.hasFulfilledPickups %}
         <h2 class="mz-orderlisting-heading">{{labels.orderItemsPickup}}</h2>
         <div class="mz-orderlisting-pickup">
             {% include "modules/my-account/order-history-package-group" with model=model packages=model.pickups %}
