@@ -98,7 +98,7 @@
                     <tbody>
                         {% for packagesItemDetails in packages.packingSlipItemDetails %}
                             {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if packagesItemDetails.originalOrderItemId == item.originalOrderItemId %}
+                                {% if packagesItemDetails.lineId == item.lineId %}
                                 <tr>
                                     <td>
                                         {{ item.productCode }}
