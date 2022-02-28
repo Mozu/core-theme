@@ -3,7 +3,7 @@
 
 {% if model.packages %} 
 
-{% for packages in model.packages %}
+{% for package in model.packages %}
 <table class="mz-printable-order mz-printable-order-packingslip isSplitPackingClass">
             <thead class="header"><tr>
                 <th class="company-info">
@@ -55,9 +55,9 @@
                         <th>Weight</th>
                     </tr></thead>
                     <tbody>
-                        {% for packagesItemDetails in packages.packingSlipItemDetails %}
+                        {% for packageItemDetail in package.packingSlipItemDetails %}
                             {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if packagesItemDetails.lineId == item.lineId %}
+                                {% if packageItemDetail.lineId == item.lineId %}
                                 <tr>
                                     <td>
                                         {{ item.productCode }}
@@ -66,7 +66,7 @@
                                         <div class="product-name">{{ item.name }}</div>
                                     </td>
                                     <td>
-                                        {{ packagesItemDetails.quantity }}
+                                        {{ packageItemDetail.quantity }}
                                     </td>
                                     <td>
                                         {{ item.weight }} {{ item.weightUnit }}
