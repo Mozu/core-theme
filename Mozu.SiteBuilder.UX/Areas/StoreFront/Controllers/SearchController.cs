@@ -23,7 +23,6 @@ using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction,
