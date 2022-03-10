@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// <summary>
     /// Enforces HTTP on a call, unless that call is to a custom route that required HTTPS.
     /// </summary>
-    public class NoSslActionFilter : ActionFilterAttribute
+    public class NoSslActionFilter2 : ActionFilterAttribute
     {
         public bool AllowMultiple => false;
 
