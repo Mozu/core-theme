@@ -182,6 +182,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 targetContextLevel: _.targetContextLevel,
                 spellcorrectOverride: _.spellcorrectOverride)).ReadAsSync();
 
+            
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
 
             pc.Init(true, this.PageContext.Search);
@@ -299,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public Task BindModelAsync(ModelBindingContext bindingContext)
             {
                 var actionContext = bindingContext.ActionContext;
-
+                var categoryCode = default(string);
                 var avp = new AdvancedSearchParamaters();
                 bindingContext.Model = avp;
 
@@ -308,6 +309,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var sc = bindingContext.HttpContext.RequestServices.Resolve<ISiteContext>();
                 var pc = bindingContext.HttpContext.RequestServices.Resolve<IPageContext>();
                 var includeFacets = ((bool?)sc.ThemeSettings["showCategoryFacets"]);
+                var includeCategoryCodeFacets = ((bool?)sc.ThemeSettings["showCategoryCodeFacets"]);
                 var isVolumePricingBandsEnabled = ((bool?)sc.ThemeSettings["listVolumePricing"]);
                 var pageStr = bindingContext.ValueProvider.GetValue("page");
                 if (!int.TryParse(pageStr.FirstValue, out var pageInt))
@@ -355,7 +357,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 res = bindingContext.ValueProvider.GetValue("categoryCode");
                 if (categoryId == null && res.Length > 0 && res.FirstValue != null)
                 {
-                    var categoryCode = res.FirstValue;
+                    categoryCode = res.FirstValue;
                     categoryId = actionContext.HttpContext.RequestServices.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
                 }
                 if (categoryId == null)
@@ -364,6 +366,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         pc.Search.CategoryId = categoryId = tempInt;
                     }
+                }
+
+                if (categoryId == null && actionContext.HttpContext.Request.Query.TryGetValue("facetValueFilter", out var queryStr))
+                {
+                    categoryCode = queryStr.ToString().Split(",")
+                        .Where(x => x.StartsWith("categoryCode:", StringComparison.OrdinalIgnoreCase))
+                        .Select(x => x.Substring(13))
+                        .FirstOrDefault();
+                    categoryId = actionContext.HttpContext.RequestServices.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
+                   
                 }
 
                 if (categoryId != null)
@@ -377,7 +389,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 avp.responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
                 avp.facetValueFilter = pc.Search.ToFacetValueFilter();
-                if (includeFacets.GetValueOrDefault(true))
+                if (includeCategoryCodeFacets.GetValueOrDefault(true) )
+                {
+                    avp.facet = "categoryCode";
+                    avp.facetHierDepth = "categoryCode:2";
+                    if (!string.IsNullOrEmpty(categoryCode))
+                    {
+                        avp.facetTemplate = "categoryCode:" + categoryCode;
+                        avp.facetHierValue = "categoryCode:" + categoryCode;
+                    }
+                    else if (categoryId.HasValue)
+                    {
+                        avp.facetTemplate = "categoryId:" + categoryId;
+                        avp.facetHierValue = "categoryId:" + categoryId;
+                    }
+                    else
+                    {
+                        avp.facetTemplate = "categoryCode:_root";
+                        avp.facetHierValue = "categoryCode:_root";
+                    }
+                }
+                else if (includeFacets.GetValueOrDefault(true))
                 {
                     avp.facet = "categoryId";
                     avp.facetHierDepth = "categoryId:2";
@@ -392,6 +424,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         avp.facetHierValue = "categoryCode:_root";
                     }
                 }
+              
                 
                 bindingContext.Result = ModelBindingResult.Success(avp);
                 return Task.CompletedTask;
