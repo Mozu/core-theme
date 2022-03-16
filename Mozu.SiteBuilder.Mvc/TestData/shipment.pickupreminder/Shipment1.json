@@ -333,5 +333,8 @@
 		  "includeInInventoryAggregrate": true,
 		  "includeInLocationExport": false,
 		  "warehouseEnabled": false
-		}
+		},
+		"externalOrderId": "123456",
+		"storePhone": "999999",
+		"storeName": "Store Location 1"
 }

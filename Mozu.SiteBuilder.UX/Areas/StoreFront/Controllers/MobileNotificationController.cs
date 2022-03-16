@@ -41,6 +41,8 @@ using Microsoft.Extensions.Logging;
 using Shipment = Mozu.CommerceRuntime.Contracts.Fulfillment.Shipment;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
+using Mozu.Location.Contracts.Clients;
+using System.Runtime.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -62,14 +64,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public const string CustomerAtStore = "shipment.customeratstore";
     }
 
+    [DataContract]
     public class ShipmentNotification : Fulfillment.EntityModelOfShipment
     {
+        [DataMember(Name = "storeId", EmitDefaultValue = false)]
         public string StoreId { get; set; }
+        [DataMember(Name = "shipmentUrl", EmitDefaultValue = false)]
         public string ShipmentUrl { get; set; }
+        [DataMember(Name = "fulfillerUrl", EmitDefaultValue = false)]
         public string FulfillerUrl { get; set; }
-        public Order Order { get; set; }
-        public Location.Contracts.Location StoreLocation { get; set; }
+        [DataMember(Name = "isShopperCanceled", EmitDefaultValue = false)]
         public bool IsShopperCanceled { get; set; }
+        [DataMember(Name = "storeName", EmitDefaultValue = false)]
+        public string StoreName { get; set; }
+        [DataMember(Name = "storePhone", EmitDefaultValue = false)]
+        public string StorePhone { get; set; }
     }
 
     public class OrderNotification : Order
@@ -113,6 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILogger<MobileNotificationController> _logger;
         private readonly ISettings _settings;
         private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
 
         static MobileNotificationController()
         {
@@ -200,13 +210,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
             Lazy<IExpressionEvaluator> pageRuleEvaluator,
-            IOrderWebApiClient orderWebApiClient)
+            IOrderWebApiClient orderWebApiClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient)
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
             _settings = settings;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
         [HttpGet]
@@ -227,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (mobileNotificationTypeInfo != null && mobileNotificationTypeInfo.ModelType == typeof(ShipmentNotification))
                 {
                     var str = JsonConvert.SerializeObject(MergeNotificationParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
-                    model = await Convert(str, mobileNotificationTypeInfo);
+                    model = await Convert(str, mobileNotificationTypeInfo, true);
                 }
                 else
                 {
@@ -338,7 +350,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return stringWriter.ToString();
         }
 
-        private async Task<object> Convert(string json, MobileNotificationTypeInfo mnti)
+        private async Task<object> Convert(string json, MobileNotificationTypeInfo mnti, bool isPreview = false)
         {
             if (mnti == null || mnti.ModelType == null)
             {
@@ -380,6 +392,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     case Topics.OrderPickupReady:
                     case Topics.OrderPartialPickupReady:
                     case Topics.OrderPickupReminder:
+                        //get order by shipment orderId
+                        if (!isPreview)
+                        {
+                            var shipmentOrder = (await _orderWebApiClient.GetOrder(orderId:shipmentModel.OrderId, responseFields: "externalId")).ReadAsSync();
+                            var storeLocation = (await _locationRuntimeWebApiClient.GetLocation(locationCode:shipmentModel.FulfillmentLocationCode, responseFields: "name,phone")).ReadAsSync();
+                            shipmentModel.ExternalOrderId = shipmentOrder.ExternalId;
+                            shipmentModel.StoreName = storeLocation.Name;
+                            shipmentModel.StorePhone = storeLocation.Phone;
+                        }
                         shipmentModel.StoreId = shipmentModel.FulfillmentLocationCode;
                         var shipmentPickupLink = await CreateTinyUrl($"{ANNONYMOUS_NOTIFICATION_URL_FRAGMENT}/{SHIPMENT_PICKUP_READY}/{shipmentModel.ShipmentNumber}/{shipmentModel.OrderId}");
                         shipmentModel.ShipmentUrl = shipmentPickupLink.Link;
