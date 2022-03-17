@@ -110,11 +110,9 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
                 result.IsBot = true;
             }
             else
-            { 
-                result.IsCurrentRequestTablet = dd.IsMobile() && (
-                    dd.GetModel() == "iPad" ||
-                    userAgent?.Contains("tablet", StringComparison.OrdinalIgnoreCase) == true);
-                result.IsCurrentRequestMobile = !this.IsCurrentRequestTablet  && dd.IsMobile();
+            {                
+                result.IsCurrentRequestTablet = dd.IsTablet();
+                result.IsCurrentRequestMobile = result.IsCurrentRequestTablet ? false : dd.IsMobile();
             }
 
             return result;
