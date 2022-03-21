@@ -1,0 +1,17 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+    <!--- Header --->
+    
+    <div class="mz-b2b-email-body">
+      {{ labels.emailOpeningAlternative|safe }}
+      <br/>
+      {% with model.nextOrderDate|date('M d, Y') as nextOrderDate %}
+        {{ labels.subscriptionSkippedBlob1|string_format(model.number, nextOrderDate)|safe }}
+      {% endwith %}
+      <br/>
+      <br/> 
+      {{ labels.emailClosingWithSpace|string_format(siteContext.generalSettings.websiteName)|safe }}
+    </div>
+
+{% endblock body-content %}

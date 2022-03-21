@@ -804,6 +804,7 @@
   "submit": "Submit",
   "submitForApproval": "Submit for Approval",
   "submittedBy": "Submitted By",
+  "subscriptionSkippedBlob1": "As you requested, your subscription <strong>{0}</strong> was skipped. The next order date on your subscription will be <strong>{1}</strong>. If you would like to view or manage your subscription, please visit My Account.",
   "subtotal": "Subtotal",
   "subtract": "Subtract",
   "subtracted": "Subtracted",
