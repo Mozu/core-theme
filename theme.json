@@ -325,6 +325,12 @@
       "properties": {},
       "template": "email/order-cancel-failed",
       "title": "Order Cancel Failed"
+    },
+    {
+      "id": "subscription.skipped",
+      "properties": {},
+      "template": "email/subscription-skipped",
+      "title": "Subscription Skipped"
     }
   ],
   "backOfficeTemplates": [
