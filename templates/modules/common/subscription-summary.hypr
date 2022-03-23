@@ -1,0 +1,80 @@
+
+<table class="mz-ordersummary subscription-detail">
+    {% for discount in model.orderDiscounts %}
+        {% if not discount.excluded %}
+            <tr class="mz-ordersummary-discount">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-discountname">{{ discount.discount.name }}:</span>
+                    <span class="mz-ordersummary-discountamt">-{{ discount.impact|currency }}</span>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    <tr>
+        <td>
+            {{ labels.subtotal }}
+       </td>
+       <td class="subscription-item-total">
+            {{ model.subTotal|currency }}
+       </td>
+   </tr>
+   {% if model.shippingTotal %}
+    <tr>
+        <td>
+            {{labels.shippingHandling}}
+        </td>
+        <td class="subscription-item-total">
+                {{model.shippingTotal|currency}}
+            </td>
+    </tr>
+    {% endif %}
+   {% if model.handlingTotal %}
+    <tr>
+        <td>
+            {{labels.additionalHandling}}
+        </td>
+        <td class="subscription-item-total">
+            {{model.handlingTotal|currency}}
+        </td>
+    </tr>
+{% endif %}
+{% if model.dutyTotal > 0 %}
+    <tr>
+        <td>
+            {{ labels.taxDuty }}
+        </td>
+        <td class="subscription-item-total">
+            {% filter currency %} {{ model.dutyTotal|add:model.itemTaxTotal}} {% endfilter %}
+        </td>
+    </tr>
+{% else %}
+{% if model.itemTaxTotal %}
+    <tr>
+        <td>
+            {{ labels.tax }}
+        </td>
+        <td class="subscription-item-total">
+               {{ model.itemTaxTotal|currency }}
+        </td>
+    </tr>
+{% endif %}
+{% endif %}
+{% for shippingDiscount in model.shippingDiscounts %}
+    <tr>
+        <td>
+            {{ shippingDiscount.discount.discount.name }}
+        </td>
+        <td class="subscription-item-total">
+                -{{ shippingDiscount.discount.impact|currency }}
+        </td>
+    </tr>
+{% endfor %}
+    <tr>
+        <td>
+            {{labels.subscriptionTotal}}
+        </td>
+        <td class="subscription-item-total">
+            {{model.total|currency}}
+        </td>
+    </tr>
+</table>

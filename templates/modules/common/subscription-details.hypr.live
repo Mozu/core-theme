@@ -1,0 +1,65 @@
+<div class="mz-multiship-email" style="width: 100%;">
+    <div class="mz-table-header" style="padding:15px">
+        <span style="font-size:25px">{{ labels.subscriptionDetails }}</span>
+    </div>
+</div>
+
+<div class="mz-store-details subscription-info">
+    <div>
+        <div><strong> {{ labels.subscriptionNumber }}</strong> : {{ model.number }}</div><br/>
+        <div><strong> {{ labels.subscriptionStatus }}</strong> : {{ model.status }} </div><br/>
+        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} {{model.frequency.unit|lower}} </div><br/>
+        <div><strong> {{ labels.nextOrderDate }}</strong>: {{model.nextOrderDate|date("m/d/y")}}</div>
+    </div>
+</div>
+{% if model.fulfillmentInfo.fulfillmentContact %}
+    <div class="subscription-info">
+        <div>
+            <strong>
+                {{labels.shipTo}} :
+            </strong>
+            <br/><br/>
+            <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</div>
+        </div>
+    </div>
+    <br/></br/>
+{% endif %}
+    {% if model.fulfillmentInfo.shippingMethodName %}
+    <div class="subscription-info">
+        <strong>
+        {{labels.shippingMethod}}:
+        </strong> 
+        {{model.fulfillmentInfo.shippingMethodName}}    
+    </div>
+    <br/><br/>
+    {% endif %}
+    <div class="subscription-info">
+        <strong>
+        {{labels.paymentMethod}}: 
+        </strong>
+        {% if model.payment.billingInfo.paymentType == 'PurchaseOrder' %} {{ labels.purchaseOrder }}<br/>
+            <b>{{ labels.purchaseOrderNumber }}</b>:{{model.payment.billingInfo.purchaseOrder.purchaseOrderNumber}} 
+        {% endif %}
+        {% if model.payment.billingInfo.paymentType == 'CreditCard' %} {{model.payment.billingInfo.card.paymentOrCardType}} {{model.payment.billingInfo.card.cardNumberPartOrMask}} {% endif %}
+        {% if model.payment.billingInfo.paymentType == 'Check' %} {{ labels.check }} {% endif %}
+        {% if model.payment.billingInfo.paymentType == "StoreCredit" %}
+            {{ labels.storeCreditCode }} {{ model.payment.billingInfo.storeCreditCode }}
+        {% endif %}
+        {% if model.payment.billingInfo.paymentType == "GiftCard" %}
+            {{ model.payment.billingInfo.card.paymentOrCardType }} {{ model.payment.billingInfo.card.cardNumberPartOrMask }}
+        {% endif %}
+        {% if  model.payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+            {{ labels.paypalExpress }}
+        {% endif %}
+        {%if model.payment.billingInfo.paymentType|lower == "paywithamazon" %}
+            {{ labels.payWithAmazon }}
+        {% endif %}
+        {% if model.payment.paymentType|lower == "token" %}
+            {% if model.payment.billingInfo.token.type|lower == "paywithamazon" %}
+                {{ labels.payWithAmazon }}
+            {% endif %}
+            {% if model.payment.billingInfo.token.type|lower == "applepay" %}
+                {{ labels.applePay }}
+            {% endif %}
+        {% endif %}
+    </div>
