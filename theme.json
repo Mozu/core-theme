@@ -349,6 +349,12 @@
       "properties": {},
       "template": "email/subscription-activated",
       "title": "Subscription Activated"
+    },
+    {
+      "id": "subscription.errored",
+      "properties": {},
+      "template": "email/subscription-errored",
+      "title": "Subscription Errored"
     }
   ],
   "backOfficeTemplates": [
