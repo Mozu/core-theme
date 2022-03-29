@@ -1,0 +1,48 @@
+<table class="mz-ordersummary subscription-detail">
+    <thead>
+        <tr>
+            <th class="mz-ordersummary-header-product">{{ labels.line }}</th>
+            <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+            <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+            <th class="mz-ordersummary-header-each">{{ labels.each }}</th>
+            <th class="mz-ordersummary-header-total">{{ labels.total }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in model.items %} 
+            <tr>
+                <td class="pull-left">
+                    <span>
+                        {{item.lineId}}
+                    </span>
+                </td>       
+                <td class="pull-left">
+                    <span>{{item.product.name}}</span>
+                </td>
+                <td>
+                    <span>
+                        {{item.quantity}}
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        {% if item.product.price %}
+                        {{item.product.price.price|currency}}
+                        {% else %}
+                        {{item.unitPrice.extendedAmount|currency}}
+                        {% endif %}
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        {% if item.discountedTotal %}
+                        {{item.discountedTotal|currency}}
+                        {% else %}
+                        {{item.subtotal|currency}}
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>  
+        {% endfor %}
+    </tbody>
+</table>

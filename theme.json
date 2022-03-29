@@ -343,6 +343,12 @@
       "properties": {},
       "template": "email/subscription-cancelled",
       "title": "Subscription Cancelled"
+    },
+    {
+      "id": "subscription.activated",
+      "properties": {},
+      "template": "email/subscription-activated",
+      "title": "Subscription Activated"
     }
   ],
   "backOfficeTemplates": [
