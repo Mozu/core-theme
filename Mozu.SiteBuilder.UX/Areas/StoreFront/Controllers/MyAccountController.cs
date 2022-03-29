@@ -341,7 +341,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var SHIPMENT_FILTER = "orderId==" + orderId + ";shipmentStatus!=REASSIGNED;shipmentType!=Transfer";
 
                 var fulfillmentClient = _shipmentControllerApiClient.CloneWithoutUserClaims();
-                var response = (await fulfillmentClient.GetShipmentsUsingGET(SHIPMENT_FILTER)).ReadAsSync();
+                var response = (await fulfillmentClient.GetShipmentsUsingGET(filter:SHIPMENT_FILTER)).ReadAsSync();
 
                 return response;
             }

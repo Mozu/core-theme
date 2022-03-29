@@ -50,6 +50,7 @@ using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using Mozu.Customer.Contracts;
 using System.Globalization;
 using Mozu.CommerceRuntime.Contracts.Quotes;
+using Mozu.CommerceRuntime.Contracts.Subscriptions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -352,7 +353,68 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ReadyForDelivery
-                                           }
+                                           },
+                                        // subscription
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionActivated
+                                           },
+                                         new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionCancelled
+                                           },
+                                          new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionErrored
+                                           },
+                                           new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionPaused
+                                           },
+                                            new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionSkipped
+                                           },
+                                             new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionFrequencyChanged
+                                           },
+                                              new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionFulfillmentInfoUpdated
+                                           },
+                                               new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionPaymentUpdated
+                                           },
+                                                  new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionNextOrderDateChanged
+                                           },
+                                                 new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionItemAdded
+                                           },
+                                               new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionItemRemoved
+                                           },
+                                                   new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionItemQuantityUpdated
+                                           },
                 };
         }
 
@@ -731,7 +793,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     orderEmail.Locations = allLocations;
                 }
                 var SHIPMENT_FILTER = "orderId==" + orderEmail.Id + ";shipmentStatus!=REASSIGNED;shipmentType!=Transfer";
-                var omsShipments = (await _shipmentControllerApiClient.GetShipmentsUsingGET(SHIPMENT_FILTER)).ReadAsSync().Embedded.Values.SelectMany(x => x).ToList();
+                var omsShipments = (await _shipmentControllerApiClient.GetShipmentsUsingGET(filter:SHIPMENT_FILTER)).ReadAsSync().Embedded.Values.SelectMany(x => x).ToList();
                 var omsShipmentsItemCount = 0;
                 foreach (Fulfillment.EntityModelOfShipment shipment in omsShipments)
                 {
@@ -883,6 +945,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string QuoteExpired = "quote.expired";
             public const string DeliveryDateUpdated = "shipment.deliverydateupdated";
             public const string ReadyForDelivery = "shipment.readyfordelivery";
+            
+            // Subscription
+            public const string SubscriptionActivated = "subscription.activated";
+            public const string SubscriptionCancelled = "subscription.cancelled";
+            public const string SubscriptionErrored = "subscription.errored";
+            public const string SubscriptionPaused = "subscription.paused";
+            public const string SubscriptionSkipped = "subscription.skipped";
+            public const string SubscriptionFrequencyChanged = "subscription.frequencychanged";
+            public const string SubscriptionFulfillmentInfoUpdated = "subscription.fulfillmentinfoupdated";
+            public const string SubscriptionPaymentUpdated = "subscription.paymentupdated";
+            public const string SubscriptionItemAdded = "subscription.itemadded";
+            public const string SubscriptionNextOrderDateChanged = "subscription.nextorderdatechanged";
+            public const string SubscriptionItemRemoved = "subscription.itemremoved";
+            public const string SubscriptionItemQuantityUpdated = "subscription.itemquantityupdated";
         }
     }
 

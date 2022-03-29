@@ -16,9 +16,9 @@
 
    
     <PackageReference Include="dotless.Core" Version="1.2014.0-master.4" />
-    <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2202.0-master.36" />
+    <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2208.0-master.40" />
     <PackageReference Include="KuttSharp" Version="0.4.1" />
-    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2201.0-develop.247" />
+    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2212.0-develop.300" />
     <PackageReference Include="QRCoder" Version="1.3.9" />
 
     <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2037.2" />
