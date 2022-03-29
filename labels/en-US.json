@@ -814,6 +814,7 @@
   "subscriptionDetails": "Subscription Details",
   "subscriptionErroredBlob1": "Hello, <br/><br/> The status of your subscription #{0} is updated to {1}.  Subscription has been moved to an errored state because of a possible issue with the payment or another issue. Please contact customer care for more details. If you would like to view or manage your subscription, please visit <a href=\"https://{2}/myaccount\">My Account</a>.",
   "subscriptionFullfillmentInfoBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
+  "subscriptionFrequencyChangedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionItemAddedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionItemQuantityUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionItemRemovedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
