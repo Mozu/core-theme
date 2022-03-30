@@ -8,31 +8,46 @@
     <div>
         <div><strong> {{ labels.subscriptionNumber }}</strong> : {{ model.number }}</div><br/>
         <div><strong> {{ labels.subscriptionStatus }}</strong> : {{ model.status }} </div><br/>
-        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} {{model.frequency.unit|lower}} </div><br/>
+        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} 
+        {% if model.frequency.value > 1 %}
+            {% if model.frequency.unit|lower == "day" %} {{ labels.days }} {% endif %}
+            {% if model.frequency.unit|lower == "week" %} {{ labels.weeks }} {% endif %}
+            {% if model.frequency.unit|lower == "month" %} {{ labels.months }} {% endif %}
+        {% else%}
+            {{model.frequency.unit}}
+        {% endif %}
+        </div><br/>
         <div><strong> {{ labels.nextOrderDate }}</strong>: {{model.nextOrderDate|date("m/d/y")}}</div>
     </div>
 </div>
-{% if model.fulfillmentInfo.fulfillmentContact %}
-    <div class="subscription-info">
-        <div>
-            <strong>
-                {{labels.shipTo}} :
-            </strong>
+{% for item in model.items %}
+    {% if item.fulfillmentMethod == "Ship" %}
+        {% set_var shipmentMethod=item.fulfillmentMethod %}
+    {%endif%}
+ {%endfor%}
+    {% if shipmentMethod == "Ship" %}
+        {% if model.fulfillmentInfo.fulfillmentContact %}
+            <div class="subscription-info">
+                <div>
+                    <strong>
+                        {{labels.shipTo}} :
+                    </strong>
+                    <br/><br/>
+                    <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</div>
+                </div>
+            </div>
             <br/><br/>
-            <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</div>
-        </div>
-    </div>
-    <br/></br/>
-{% endif %}
-    {% if model.fulfillmentInfo.shippingMethodName %}
-    <div class="subscription-info">
-        <strong>
-        {{labels.shippingMethod}}:
-        </strong> 
-        {{model.fulfillmentInfo.shippingMethodName}}    
-    </div>
-    <br/><br/>
-    {% endif %}
+        {% endif %}
+        {% if model.fulfillmentInfo.shippingMethodName %}
+            <div class="subscription-info">
+                <strong>
+                {{labels.shippingMethod}}:
+                </strong> 
+                {{model.fulfillmentInfo.shippingMethodName}}    
+            </div>
+            <br/><br/>
+        {%endif%}
+    {%endif%}
     <div class="subscription-info">
         <strong>
         {{labels.paymentMethod}}: 

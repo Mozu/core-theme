@@ -2,11 +2,11 @@
 <table class="mz-ordersummary subscription-detail">
     {% for discount in model.orderDiscounts %}
         {% if not discount.excluded %}
-            <tr class="mz-ordersummary-discount">
-                <td align="right" colspan="4">
-                    <span class="mz-ordersummary-discountname">{{ discount.discount.name }}:</span>
-                    <span class="mz-ordersummary-discountamt">-{{ discount.impact|currency }}</span>
+            <tr>
+                <td>
+                    {{ discount.discount.name }}
                 </td>
+                    <td class="subscription-item-total">-{{ discount.impact|currency }}</td>                
             </tr>
         {% endif %}
     {% endfor %}
