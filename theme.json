@@ -355,6 +355,12 @@
       "properties": {},
       "template": "email/subscription-errored",
       "title": "Subscription Errored"
+    },
+    {
+      "id": "subscription.itemquantityupdated",
+      "properties": {},
+      "template": "email/subscription-item-quantity-updated",
+      "title": "Item quantity updated on subscription"
     }
   ],
   "backOfficeTemplates": [
