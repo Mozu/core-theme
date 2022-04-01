@@ -361,6 +361,12 @@
       "properties": {},
       "template": "email/subscription-payment-updated",
       "title": "Subscription Payment Updated"
+    },
+    {
+      "id": "subscription.itemadded",
+      "properties": {},
+      "template": "email/subscription-item-added",
+      "title": "Item added to Subscription"
     }
   ],
   "backOfficeTemplates": [
