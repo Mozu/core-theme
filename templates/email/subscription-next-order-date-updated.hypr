@@ -1,7 +1,7 @@
 {% extends "email/email" %}
 {% block body-content %}
 
-<p>{{ labels.subscriptionActivatedBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe}}</p>
+<p>{{ labels.subscriptionNextOrderDateUpdatedBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe}}</p>
 
 <!--- Subscription Details Header--->
     {% include "modules/common/subscription-details" %}
