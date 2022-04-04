@@ -206,7 +206,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private Uri MakeRedirectUri(string returnUrl = null)
         {
-            if (!string.IsNullOrEmpty(returnUrl)) return new Uri(returnUrl, UriKind.Relative);
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Url.IsLocalUrl(returnUrl)
+                    ? new Uri(returnUrl, UriKind.Relative)
+                    : new Uri(
+                        string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)
+                            ? "/"
+                            : this.SiteContext.SiteSubdirectory, UriKind.Relative);
+            }
 
             returnUrl = Request.GetTypedHeaders().Referer?.ToString();
             return string.IsNullOrEmpty(returnUrl) ? new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative) : new Uri(returnUrl, UriKind.Absolute);
@@ -475,7 +483,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 returnUrl = SiteContext.SiteSubdirectory + "/myaccount";
             }
-            return new RedirectResult(returnUrl);
+            
+            return new RedirectResult(this.MakeRedirectUri(returnUrl).ToString());
         }
 
         string GetLabel(string id, string defaultValue)
