@@ -8,7 +8,15 @@
     <div>
         <div><strong> {{ labels.subscriptionNumber }}</strong> : {{ model.number }}</div><br/>
         <div><strong> {{ labels.subscriptionStatus }}</strong> : {{ model.status }} </div><br/>
-        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} {{model.frequency.unit|lower}} </div><br/>
+        <div><strong> {{ labels.frequency }}</strong>: {{model.frequency.value}} 
+        {% if model.frequency.value > 1 %}
+            {% if model.frequency.unit|lower == "day" || model.frequency.unit|lower == "days" %} {{ labels.days }} {% endif %}
+            {% if model.frequency.unit|lower == "week" || model.frequency.unit|lower == "weeks" %} {{ labels.weeks }} {% endif %}
+            {% if model.frequency.unit|lower == "month" || model.frequency.unit|lower == "months" %} {{ labels.months }} {% endif %}
+        {% else%}
+            {{model.frequency.unit}}
+        {% endif %}
+        </div><br/>
         <div><strong> {{ labels.nextOrderDate }}</strong>: {{model.nextOrderDate|date("m/d/y")}}</div>
     </div>
 </div>
