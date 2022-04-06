@@ -188,11 +188,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable','hasVolumePricing'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'subscriptionMode', 'isSubscriptionOnly', 'frequencyOptions'],
         defaults: {
             purchasableState: {},
-            quantity: 1
-        },
+            quantity: 1,
+            purchaseType: '',
+            subscriptionFrequency: ''
+        },   
         dataTypes: {
             quantity: Backbone.MozuModel.DataTypes.Int
         },
@@ -200,7 +202,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             quantity: {
                 min: 1,
                 msg: Hypr.getLabel('enterProductQuantity')
-            }
+            },
+            subscriptionFrequency: {
+                fn: "requiresSubscriptionFrequency"
+            }  
         },
         relations: {
             content: ProductContent,
@@ -214,6 +219,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 model: Product
             })
         },
+        requiresSubscriptionFrequency: function(value, attr) {
+            //alert('requiresSubscriptionFrequency');
+            if ((this.get('purchaseType') === 'subscribe' && !value)) return Hypr.getLabel('subscriptionFrequencyRequired');
+        },        
         getBundledProductProperties: function(opts) {
             var self = this,
                 loud = !opts || !opts.silent;
@@ -288,6 +297,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 }
             });            
             this.set('initialStandardProps', standardProps);
+            if (this.subscriptionMode()) {
+                if (this.isSubscriptionOnly()) {
+                    this.set('purchaseType', 'subscribe');
+                } else {
+                    this.set('purchaseType', 'onetimepurchase');
+                }
+            }            
         },
         mainImage: function() {
             var productImages = this.get('content.productImages');
@@ -305,7 +321,50 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return true;
             }
             return false;
+        },        
+        isSubscriptionOnly: function() {
+            return this.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionOnly;
         },
+        subscriptionMode: function() {
+            var mode;
+            _.each(this.get('initialStandardProps'), function(prop) {
+                if (prop.attributeFQN === 'system~subscription-mode') {
+                     mode = prop.values[0].value;
+                }
+            });  
+            return mode;            
+        },
+        frequencyOptions: function() {
+            var options;
+            var mode = this.subscriptionMode();
+            if (mode) {
+                _.each(this.get('initialStandardProps'), function(prop) {
+                    if (prop.attributeFQN === 'system~subscription-frequency') {
+                        options = prop.values;
+                    }
+                });      
+            }
+            return options;            
+        },        
+        subscriptionFrequencyChanged: function(e) {
+            var frequency = $(e.currentTarget).val();
+            this.set('subscriptionFrequency', frequency);
+            $('#frequencyValidation').empty();
+            //alert('subscriptionFrequencyChanged');            
+        },      
+        purchaseTypeChanged: function(e) {            
+            var purchaseType = $(e.currentTarget).val();
+            this.set('purchaseType', purchaseType);
+            if (purchaseType === 'onetimepurchase') {
+                // clear out any settings
+                this.set('subscriptionFrequency', '');                
+                $("#frequency option:selected").prop("selected", false);
+                $('#frequencyValidation').empty();
+                $("#frequency").prop('disabled', 'disabled');
+            } else {
+                $("#frequency").prop('disabled', false);
+            }
+        },          
         supportsInStorePickup: function() {
             return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
         },
@@ -318,7 +377,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         addToCart: function (stopRedirect) {
             var me = this;
             return this.whenReady(function () {
-                if (!me.validate()) {
+                var isValid = me.validate();
+                if (!isValid) {
                     var fulfillMethod = me.get('fulfillmentMethod');
                     if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical' || me.get('goodsType') === 'Service') ?
@@ -448,12 +508,46 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
-                        me.trigger('optionsUpdated');
+                        // if SAOT, then make secondary call    
+                        if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                            me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                            .then(function (apiModel) {
+                                me.applySubscriptionPrice(apiModel);
+                                me.trigger('optionsUpdated');
+                            });
+                        } else {
+                            me.trigger('optionsUpdated');
+                        }
                      });
             } else {
                 me.trigger('optionsUpdated');
                 this.isLoading(false);
             }
+        },
+        applySubscriptionPrice: function(apiModel) {
+
+            var subscriptionPrice = apiModel.data.price.price;
+            this.set('subscriptionPrice', subscriptionPrice);
+            // need currency formatting
+            if (subscriptionPrice && subscriptionPrice > 0) {
+                var apiConfig = require.mozuData('apicontext');
+                var locale = apiConfig.headers['x-vol-locale'];
+                if (!locale) locale = 'en-US';
+                var currency = apiConfig.headers['x-vol-currency'];
+                if (!currency) currency = 'USD';
+                var i = new Intl.NumberFormat(locale, {
+                    style: 'currency',
+                    currency: currency
+                }).format(subscriptionPrice);
+                
+                // var i = new Intl.NumberFormat('en-US', {
+                //     style: 'currency',
+                //     currency: 'USD'
+                // }).format(apiModel.data.price.price);
+                $('#subscriptionPrice').text(i).show(); // currency??                         
+            } else {
+                $('#subscriptionPrice').hide();
+            }   
         },
         parse: function(prodJSON) {
             if (prodJSON && prodJSON.productCode && !prodJSON.variationProductCode) {
@@ -517,7 +611,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             },
             ProductUsage: {
                 Configurable: 'Configurable'
+            },
+            SubscriptionMode: {
+                SubscriptionAndOneTime: "SAOT",
+                SubscriptionOnly: "SO"
             }
+
         }
     }),
 

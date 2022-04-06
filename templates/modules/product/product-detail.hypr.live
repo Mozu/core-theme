@@ -13,7 +13,7 @@
 {% endif %}
 
 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.price }}</h4>
+  <h4 class="mz-l-stack-sectiontitle">{% if model.subscriptionMode=='SO' %} {{labels.subscriptionPrice}} {% else %} {{ labels.price }} {% endif %}</h4>
 {% include "modules/product/price-stack" %}
 </div>
 <div class="mz-price-container">
@@ -35,6 +35,38 @@
 		<span class="is-warning mz-product-backorder-warning">{{ labels.temporarilyOutOfStock }}</span>
 		<span >{{labels.temporarilyOutOfStockDetail}}</span>
 	</div>
+{% endif %}
+
+
+{% if model.subscriptionMode %}
+<div class="mz-productdetail-subscription mz-l-stack-section">
+  <div>
+    <input id="onetimepurchase" type="radio" name="purchasetype" value="onetimepurchase" {% if model.isSubscriptionOnly %} disabled="disabled" {% endif %}
+       data-mz-value="purchaseType"  {% if not model.isSubscriptionOnly %} checked="checked" {% endif %} /> One Time Purchase
+  </div>
+  <div>
+    <input id="subscribe" type="radio" name="purchasetype" value="subscribe"
+       data-mz-value="purchaseType" {% if model.isSubscriptionOnly %} checked="checked" {% endif %} /> Subscribe
+  </div>
+
+  <div class="mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.subscriptionFrequency }}</h4>
+    <select id="frequency" class="mz-productoptions-option" data-mz-frequency  data-mz-value="subscriptionFrequency" {% if not model.isSubscriptionOnly %} disabled="disabled" {% endif %}>      
+        <option value=""></option>
+        {% for value in model.frequencyOptions %}
+        <option value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+        {% endfor %}
+    </select>
+    <span id="frequencyValidation" class="mz-validationmessage" data-mz-validationmessage-for="subscriptionFrequency"></span>
+  </div>
+
+  {% if not model.isSubscriptionOnly %}
+  <div class="mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">Subscription Price</h4>
+    <span id="subscriptionPrice" class="mz-price" {% if not model.subscriptionPrice %} style="display:none" {% endif %} >{{model.subscriptionPrice|currency}}</span   
+  </div>
+  {% endif %}
+</div>
 {% endif %}
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
