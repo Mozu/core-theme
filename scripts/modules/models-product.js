@@ -188,7 +188,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'subscriptionMode', 'isSubscriptionOnly', 'frequencyOptions'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'subscriptionMode', 'hasSubscriptionPriceRange', 'isSubscriptionOnly', 'frequencyOptions'],
         defaults: {
             purchasableState: {},
             quantity: 1,
@@ -263,11 +263,20 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         hasPriceRange: function() {
             return this._hasPriceRange;
         },
+        hasSubscriptionPriceRange: function() {
+            return this._hasSubscriptionPriceRange;
+        },
         hasVolumePricing: function() {
             return this._hasVolumePricing;
         },
         calculateHasPriceRange: function(json) {
             this._hasPriceRange = json && !!json.priceRange;
+            if (json && json.productUsage) {                
+                this._hasSubscriptionPriceRange = json && !!json.subscriptionPriceRange;
+            } else {
+                // this is for configurable call
+                this._hasSubscriptionPriceRange = this.subscriptionMode() && this._hasPriceRange;
+            }
         },
         initialize: function(conf) {
             var slug = this.get('content').get('seoFriendlyUrl');
@@ -508,6 +517,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
+                        me.trigger('optionsUpdated');
                         // if SAOT, then make secondary call    
                         if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
@@ -515,9 +525,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                                 me.applySubscriptionPrice(apiModel);
                                 me.trigger('optionsUpdated');
                             });
-                        } else {
-                            me.trigger('optionsUpdated');
                         }
+                        //else {
+                        //    me.trigger('optionsUpdated');
+                        //}
                      });
             } else {
                 me.trigger('optionsUpdated');
@@ -526,10 +537,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         },
         applySubscriptionPrice: function(apiModel) {
 
-            var subscriptionPrice = apiModel.data.price.price;
+            //var subscriptionPrice = apiModel.data.price.price;
+            var subscriptionPrice = apiModel.data.price;
+            this.set('subscriptionPriceOld', subscriptionPrice.price);
             this.set('subscriptionPrice', subscriptionPrice);
             // need currency formatting
-            if (subscriptionPrice && subscriptionPrice > 0) {
+            if (subscriptionPrice.price && subscriptionPrice.price > 0) {
                 var apiConfig = require.mozuData('apicontext');
                 var locale = apiConfig.headers['x-vol-locale'];
                 if (!locale) locale = 'en-US';
@@ -538,7 +551,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 var i = new Intl.NumberFormat(locale, {
                     style: 'currency',
                     currency: currency
-                }).format(subscriptionPrice);
+                }).format(subscriptionPrice.price);
                 
                 // var i = new Intl.NumberFormat('en-US', {
                 //     style: 'currency',
