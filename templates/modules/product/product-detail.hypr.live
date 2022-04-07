@@ -16,6 +16,7 @@
   <h4 class="mz-l-stack-sectiontitle">{% if model.isSubscriptionOnly %} {{labels.subscriptionPrice}} {% else %} {{ labels.price }} {% endif %}</h4>
 {% include "modules/product/price-stack" %}
 </div>
+
 <div class="mz-price-container">
 <dl class="mz-productcodes mz-propertylist mz-pagetitle-note mz-l-stack-section">
 	<dt class="mz-productcodes-productcode-label">{{ labels.productCode }}</dt>
@@ -42,11 +43,11 @@
 <div class="mz-productdetail-subscription mz-l-stack-section">
   <div>
     <input id="onetimepurchase" type="radio" name="purchasetype" value="onetimepurchase" {% if model.isSubscriptionOnly %} disabled="disabled" {% endif %}
-       data-mz-value="purchaseType"  {% if not model.isSubscriptionOnly %} checked="checked" {% endif %} /> One Time Purchase
+       data-mz-value="purchaseType"  {% if not model.isSubscriptionOnly %} checked="checked" {% endif %} /> {{ labels.subscriptionModeSAOT }}
   </div>
   <div>
     <input id="subscribe" type="radio" name="purchasetype" value="subscribe"
-       data-mz-value="purchaseType" {% if model.isSubscriptionOnly %} checked="checked" {% endif %} /> Subscribe
+       data-mz-value="purchaseType" {% if model.isSubscriptionOnly %} checked="checked" {% endif %} />  {{ labels.subscriptionModeSO }}
   </div>
 
   <div class="mz-l-stack-section">
@@ -63,27 +64,20 @@
   {% if not model.isSubscriptionOnly %}
   <div class="mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{labels.subscriptionPrice}}</h4>
-
     <div class="mz-pricestack mz-pricestack-range">
-
-        {% if model.hasSubscriptionPriceRange %}
-          <span>hasSubscriptionPriceRange</span>
+        {% if model.hasSubscriptionPriceRange %}          
           <span id="subMinPrice" itemprop="subscriptionMinPrice" class="mz-pricestack-price-lower">
               {% include "modules/common/price" with model=model.subscriptionPriceRange.lower %}
           </span>
           <span id="subMaxPrice" itemprop="subscriptionMaxPrice" class="mz-pricestack-price-upper">
               {% include "modules/common/price" with model=model.subscriptionPriceRange.upper %}
           </span>
-        {% else %}
-          <span>no SubscriptionPriceRange</span>
-          <span id="subscriptionPrice" class="mz-price" {% if not model.subscriptionPriceOld %} style="display:none" {% endif %} >old {{model.subscriptionPriceOld|currency}}</span>
-          
-          <span id="subPrice" itemprop="subscriptionMaxPrice" class="mz-pricestack-price-upper">
+        {% else %}         
+          <span id="subPrice" itemprop="subscriptionMaxPrice" class="mz-pricestack-price-upper" >
             {% include "modules/common/price" with model=model.subscriptionPrice %}
           </span>
         {% endif %}
     </div>
-
   </div>
   {% endif %}
 </div>

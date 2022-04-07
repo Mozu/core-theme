@@ -517,7 +517,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
-                        me.trigger('optionsUpdated');
                         // if SAOT, then make secondary call    
                         if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
@@ -526,9 +525,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                                 me.trigger('optionsUpdated');
                             });
                         }
-                        //else {
-                        //    me.trigger('optionsUpdated');
-                        //}
+                        else {
+                            me.trigger('optionsUpdated');
+                        }
                      });
             } else {
                 me.trigger('optionsUpdated');
@@ -536,31 +535,32 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
         },
         applySubscriptionPrice: function(apiModel) {
-
             //var subscriptionPrice = apiModel.data.price.price;
             var subscriptionPrice = apiModel.data.price;
-            this.set('subscriptionPriceOld', subscriptionPrice.price);
-            this.set('subscriptionPrice', subscriptionPrice);
-            // need currency formatting
-            if (subscriptionPrice.price && subscriptionPrice.price > 0) {
-                var apiConfig = require.mozuData('apicontext');
-                var locale = apiConfig.headers['x-vol-locale'];
-                if (!locale) locale = 'en-US';
-                var currency = apiConfig.headers['x-vol-currency'];
-                if (!currency) currency = 'USD';
-                var i = new Intl.NumberFormat(locale, {
-                    style: 'currency',
-                    currency: currency
-                }).format(subscriptionPrice.price);
-                
-                // var i = new Intl.NumberFormat('en-US', {
-                //     style: 'currency',
-                //     currency: 'USD'
-                // }).format(apiModel.data.price.price);
-                $('#subscriptionPrice').text(i).show(); // currency??                         
+            if (subscriptionPrice) {
+                this.set('subscriptionPrice', subscriptionPrice);
+                if (subscriptionPrice.price && subscriptionPrice.price > 0) {
+                    // need currency formatting, not sure how to tap into pipe from template
+                    var apiConfig = require.mozuData('apicontext');
+                    var locale = apiConfig.headers['x-vol-locale'];
+                    if (!locale) locale = 'en-US';
+                    var currency = apiConfig.headers['x-vol-currency'];
+                    if (!currency) currency = 'USD';
+                    var i = new Intl.NumberFormat(locale, {
+                        style: 'currency',
+                        currency: currency
+                    }).format(subscriptionPrice.price);
+                    $('#subPrice > .mz-price').text(i);
+                    $('#subPrice').show();
+                    //$('#subscriptionPrice').text(i).show(); // currency??                         
+                } else {
+                    //$('#subscriptionPrice').hide();
+                    $('#subPrice').hide();                  
+                }   
             } else {
-                $('#subscriptionPrice').hide();
-            }   
+                //$('#subscriptionPrice').hide();
+                $('#subPrice').hide();                  
+            }
         },
         parse: function(prodJSON) {
             if (prodJSON && prodJSON.productCode && !prodJSON.variationProductCode) {
