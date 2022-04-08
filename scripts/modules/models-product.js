@@ -297,6 +297,48 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
         },
         isPurchasable: function() {
+            var split_extras_in_shipments_Fqn = "system~split-extras-in-shipments";
+
+            var  productProperties = this.get('properties');            
+            if(productProperties && productProperties.length > 0) {
+                var splitExtrasInShipmentsProp = productProperties.filter(function (property) {
+                    return property.attributeFQN === split_extras_in_shipments_Fqn;
+                });
+
+                if(splitExtrasInShipmentsProp && 
+                    splitExtrasInShipmentsProp.length > 0 && 
+                    splitExtrasInShipmentsProp[0].values && 
+                    splitExtrasInShipmentsProp[0].values.length > 0) {
+                    var splitExtrasInShipmentsValue = splitExtrasInShipmentsProp[0].values[0].value;
+                    if(splitExtrasInShipmentsValue) {
+                        var validConfiguration = false;
+                        var  productOptions = this.get('options');
+                        if(productOptions && productOptions.length > 0) {
+                            var validOptions = productOptions.filter(function (option) {
+                                return option.attributeDetail && option.attributeDetail.dataType.toLowerCase() === "productcode";
+                            });
+
+                            if(validOptions && validOptions.length > 0) {
+                                validConfiguration = true;
+                            }
+                        }
+
+                        if(!validConfiguration) {
+                            var prodPurchaseState = this.get('purchasableState');
+                            prodPurchaseState.isPurchasable = false;
+                            prodPurchaseState.messages = [];
+                            var validationMessage = {};
+                            validationMessage.validationType = "OptionError";
+                            validationMessage.message = "Configurable Bundle " + this.get('productCode') + " must have extras.";
+                            validationMessage.severity = "Error";
+
+                            prodPurchaseState.messages.push(validationMessage);
+                            return false;
+                        }
+                    }
+                }
+            }
+                
             var purchaseState = this.get('purchasableState');
             if (purchaseState.isPurchasable){
                 return true;
