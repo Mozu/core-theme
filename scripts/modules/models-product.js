@@ -188,7 +188,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'subscriptionMode', 'hasSubscriptionPriceRange', 'isSubscriptionOnly', 'frequencyOptions'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'hasSubscriptionPriceRange', 'isSubscriptionOnly', 'frequencyOptions'],
         defaults: {
             purchasableState: {},
             quantity: 1,
@@ -220,7 +220,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             })
         },
         requiresSubscriptionFrequency: function(value, attr) {
-            //alert('requiresSubscriptionFrequency');
             if ((this.get('purchaseType') === 'subscribe' && !value)) return Hypr.getLabel('subscriptionFrequencyRequired');
         },        
         getBundledProductProperties: function(opts) {
@@ -275,7 +274,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 this._hasSubscriptionPriceRange = json && !!json.subscriptionPriceRange;
             } else {
                 // this is for configurable call
-                this._hasSubscriptionPriceRange = this.subscriptionMode() && this._hasPriceRange;
+                this._hasSubscriptionPriceRange = this.get('subscriptionMode') && this._hasPriceRange;
             }
         },
         initialize: function(conf) {
@@ -306,7 +305,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 }
             });            
             this.set('initialStandardProps', standardProps);
-            if (this.subscriptionMode()) {
+            if (this.get('subscriptionMode')) {                
                 if (this.isSubscriptionOnly()) {
                     this.set('purchaseType', 'subscribe');
                 } else {
@@ -332,20 +331,11 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             return false;
         },        
         isSubscriptionOnly: function() {
-            return this.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionOnly;
-        },
-        subscriptionMode: function() {
-            var mode;
-            _.each(this.get('initialStandardProps'), function(prop) {
-                if (prop.attributeFQN === 'system~subscription-mode') {
-                     mode = prop.values[0].value;
-                }
-            });  
-            return mode;            
+            return this.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionOnly;
         },
         frequencyOptions: function() {
             var options;
-            var mode = this.subscriptionMode();
+            var mode = this.get('subscriptionMode');
             if (mode) {
                 _.each(this.get('initialStandardProps'), function(prop) {
                     if (prop.attributeFQN === 'system~subscription-frequency') {
@@ -359,7 +349,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             var frequency = $(e.currentTarget).val();
             this.set('subscriptionFrequency', frequency);
             $('#frequencyValidation').empty();
-            //alert('subscriptionFrequencyChanged');            
         },      
         purchaseTypeChanged: function(e) {            
             var purchaseType = $(e.currentTarget).val();
@@ -517,8 +506,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
-                        // if SAOT, then make secondary call    
-                        if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                        // if SAOT, then make secondary call                            
+                        //if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                        if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                             .then(function (apiModel) {
                                 me.applySubscriptionPrice(apiModel);
@@ -535,7 +525,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
         },
         applySubscriptionPrice: function(apiModel) {
-            //var subscriptionPrice = apiModel.data.price.price;
+            // this is only needed due to page render not occurring 
             var subscriptionPrice = apiModel.data.price;
             if (subscriptionPrice) {
                 this.set('subscriptionPrice', subscriptionPrice);
@@ -552,13 +542,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     }).format(subscriptionPrice.price);
                     $('#subPrice > .mz-price').text(i);
                     $('#subPrice').show();
-                    //$('#subscriptionPrice').text(i).show(); // currency??                         
                 } else {
-                    //$('#subscriptionPrice').hide();
                     $('#subPrice').hide();                  
                 }   
             } else {
-                //$('#subscriptionPrice').hide();
                 $('#subPrice').hide();                  
             }
         },
