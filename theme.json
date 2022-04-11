@@ -373,6 +373,12 @@
       "properties": {},
       "template": "email/subscription-fulfillment-info-updated",
       "title": "Subscription Shipping Info Updated"
+    },
+    {
+      "id": "subscription.itemremoved",
+      "properties": {},
+      "template": "email/subscription-item-removed",
+      "title": "Item Removed from subscription"
     }
   ],
   "backOfficeTemplates": [
