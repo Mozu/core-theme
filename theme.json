@@ -367,6 +367,12 @@
       "properties": {},
       "template": "email/subscription-item-added",
       "title": "Item added to Subscription"
+    },
+    {
+      "id": "subscription.fulfillmentinfoupdated",
+      "properties": {},
+      "template": "email/subscription-fulfillment-info-updated",
+      "title": "Subscription Shipping Info Updated"
     }
   ],
   "backOfficeTemplates": [
