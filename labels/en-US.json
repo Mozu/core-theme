@@ -815,7 +815,7 @@
   "subscriptionNumber": "Subscription #",
   "subscriptionPausedBlob1": "Hello! <br/><br/> The status of your subscription #{0} is updated to {1}. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionPaymentUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
-  "subscriptionSkippedBlob1": "As you requested, your subscription #{0} was skipped. The next order date on your subscription will be {1}. If you would like to view or manage your subscription, please visit My Account.",
+  "subscriptionSkippedBlob1": "As requested, your subscription #{0} was skipped. The next order date on your subscription will be {1}. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionStatus": "Subscription Status",
   "subscriptionTotal": "Subscription Total",
   "subtotal": "Subtotal",
