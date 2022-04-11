@@ -379,6 +379,12 @@
       "properties": {},
       "template": "email/subscription-item-removed",
       "title": "Item Removed from subscription"
+    },
+    {
+      "id": "subscription.itemquantityupdated",
+      "properties": {},
+      "template": "email/subscription-item-quantity-updated",
+      "title": "Item quantity updated on subscription"
     }
   ],
   "backOfficeTemplates": [
