@@ -818,6 +818,7 @@
   "subscriptionItemAddedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionItemQuantityUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionItemRemovedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
+  "subscriptionNextOrderDateUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionNumber": "Subscription #",
   "subscriptionPausedBlob1": "Hello! <br/><br/> The status of your subscription #{0} is updated to {1}. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionPaymentUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",

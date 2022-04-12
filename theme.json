@@ -391,6 +391,12 @@
       "properties": {},
       "template": "email/subscription-frequency-changed",
       "title": "Subscription Frequency Updated"
+    },
+    {
+      "id": "subscription.nextorderdatechanged",
+      "properties": {},
+      "template": "email/subscription-next-order-date-updated",
+      "title": "Subscription Next Order Date Updated"
     }
   ],
   "backOfficeTemplates": [

@@ -682,6 +682,7 @@
   "subscriptionItemAddedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
   "subscriptionItemQuantityUpdatedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
   "subscriptionItemRemovedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
+  "subscriptionNextOrderDateUpdatedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
   "subscriptionNumber": "Abonnement #",
   "subscriptionPausedBlob1": "Hallo! <br/><br/> Der Status Ihres Abonnements #{0} wird aktualisiert {1}. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, besuchen Sie bitte Mein Konto.",
   "subscriptionPaymentUpdatedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
