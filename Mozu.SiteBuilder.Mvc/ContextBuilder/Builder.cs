@@ -69,8 +69,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
+        public const string PrimaryCacheKeyPrefix = "sitebuilder.contextbuilder.compressed:k:{sitebuilder.contextbuilder.compressed";
+        public const string RedirectCacheKeyPrefix = "sitebuilder.redirects.compressed:k:{sitebuilder.redirects.compressed";
         private readonly System.Collections.Concurrent.ConcurrentDictionary<int, DateTime> _requestedSites = new System.Collections.Concurrent.ConcurrentDictionary<int, DateTime>();
         private readonly ILogger _logger;
+        private static readonly Random _random = new Random();
         public SitebuilderContextCacheRepository(ICacheProvider cacheProvider, Mozu.Core.Settings.ISettings settings, IServiceProvider globalScope)
         {
             _mdbProvider = new Core.Mongo.MongoDatabaseProvider("CacheDB", "Cache", settings);
@@ -94,6 +97,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             
             _globalScope = globalScope; 
         }
+
+       
 
         private TimeSpan GetNextBuildTime()
         {
@@ -425,7 +430,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
                 var policy = new CachePolicy()
                 {
-                    AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
+                    AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2).AddSeconds(_random.Next(1,600))
                 };
 
                 await _cacheProvider.GetCache(CacheName, apiContext).PutAsync(
@@ -486,7 +491,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
-        private string GetRedirectsCacheKey(IApiContext apiContext )
+        public static string GetRedirectsCacheKey(IApiContext apiContext )
         {
             return apiContext.TenantId + "|" + apiContext.SiteId + (apiContext.DataViewMode == DataViewModeType.Pending ? "p" : "l");
         }
@@ -508,10 +513,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             var cacheKey = GetRedirectsCacheKey(apiContext);
             var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
-
+            
             var policy = new CachePolicy()
             {
-                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
+                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2).AddSeconds(_random.Next(1,600))
             };
 
             return _cacheProvider.GetCache(RedirectCacheName, apiContext)
@@ -548,7 +553,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
                 var policy = new CachePolicy()
                 {
-                    AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
+                    AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2).AddSeconds(_random.Next(1,600))
                 };
 
                 await _cacheProvider.GetCache(CacheName, apiContext).PutAsync(
