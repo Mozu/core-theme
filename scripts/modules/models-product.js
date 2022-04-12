@@ -211,6 +211,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             content: ProductContent,
             price: PriceModels.ProductPrice,
             priceRange: PriceModels.ProductPriceRange,
+            subscriptionPrice: PriceModels.ProductPrice,
+            subscriptionPriceRange: PriceModels.ProductPriceRange,
             options: Backbone.Collection.extend({
                 model: ProductOption
             }),
@@ -220,7 +222,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             })
         },
         requiresSubscriptionFrequency: function(value, attr) {
-            if ((this.get('purchaseType') === 'subscribe' && !value)) return Hypr.getLabel('subscriptionFrequencyRequired');
+            if ((this.get('purchaseType') === 'subscribe' && !value)) {
+                if (!this.frequencyOptions())
+                    return Hypr.getLabel('subscriptionFrequencyNotFound');
+                else                     
+                    return Hypr.getLabel('subscriptionFrequencyRequired');
+            }
         },        
         getBundledProductProperties: function(opts) {
             var self = this,
@@ -499,6 +506,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         updateConfiguration: function() {
             var me = this,
               newConfiguration = this.getConfiguredOptions();
+            me._isSubscriptionPricingCall = false;
+
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
@@ -509,9 +518,10 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         // if SAOT, then make secondary call                            
                         //if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                            me._isSubscriptionPricingCall = true;
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                             .then(function (apiModel) {
-                                me.applySubscriptionPrice(apiModel);
+                                me._isSubscriptionPricingCall = false;
                                 me.trigger('optionsUpdated');
                             });
                         }
@@ -522,31 +532,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             } else {
                 me.trigger('optionsUpdated');
                 this.isLoading(false);
-            }
-        },
-        applySubscriptionPrice: function(apiModel) {
-            // this is only needed due to page render not occurring 
-            var subscriptionPrice = apiModel.data.price;
-            if (subscriptionPrice) {
-                this.set('subscriptionPrice', subscriptionPrice);
-                if (subscriptionPrice.price && subscriptionPrice.price > 0) {
-                    // need currency formatting, not sure how to tap into pipe from template
-                    var apiConfig = require.mozuData('apicontext');
-                    var locale = apiConfig.headers['x-vol-locale'];
-                    if (!locale) locale = 'en-US';
-                    var currency = apiConfig.headers['x-vol-currency'];
-                    if (!currency) currency = 'USD';
-                    var i = new Intl.NumberFormat(locale, {
-                        style: 'currency',
-                        currency: currency
-                    }).format(subscriptionPrice.price);
-                    $('#subPrice > .mz-price').text(i);
-                    $('#subPrice').show();
-                } else {
-                    $('#subPrice').hide();                  
-                }   
-            } else {
-                $('#subPrice').hide();                  
             }
         },
         parse: function(prodJSON) {
@@ -560,6 +545,19 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             if (typeof me.apiModel.data.variationProductCode === "undefined" && me.get('variationProductCode')) {
                 me.unset('variationProductCode');
             }
+            // differentiate between pricing calls
+            if (me._isSubscriptionPricingCall) {
+                // apply from api model
+                var subscriptionPrice = me.apiModel.data.price;
+                var subscriptionPriceRange = me.apiModel.data.priceRange;
+                me.set('subscriptionPrice', subscriptionPrice);
+                if (typeof subscriptionPriceRange === "undefined") {
+                    me.unset('subscriptionPriceRange');
+                } else {
+                    me.set('subscriptionPriceRange', subscriptionPriceRange);
+                }                
+            }
+
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
                 j.options = this.getConfiguredOptions({ unabridged: true });

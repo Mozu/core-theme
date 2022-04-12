@@ -63,22 +63,9 @@
 
   {% if not model.isSubscriptionOnly %}
   <div class="mz-l-stack-section">
-    <h4 class="mz-l-stack-sectiontitle">{{labels.subscriptionPrice}}</h4>
-    <div class="mz-pricestack mz-pricestack-range">
-        {% if model.hasSubscriptionPriceRange %}          
-          <span id="subMinPrice" itemprop="subscriptionMinPrice" class="mz-pricestack-price-lower">
-              {% include "modules/common/price" with model=model.subscriptionPriceRange.lower %}
-          </span>
-          <span id="subMaxPrice" itemprop="subscriptionMaxPrice" class="mz-pricestack-price-upper">
-              {% include "modules/common/price" with model=model.subscriptionPriceRange.upper %}
-          </span>
-        {% else %}         
-          <span id="subPrice" itemprop="subscriptionMaxPrice" class="mz-pricestack-price-upper" >
-            {% include "modules/common/price" with model=model.subscriptionPrice %}
-          </span>
-        {% endif %}
-    </div>
-  </div>
+    <h4 class="mz-l-stack-sectiontitle">{{labels.subscriptionPrice}}</h4>  
+    {% include "modules/product/price-stack-subscription" %}  
+  </div>    
   {% endif %}
 </div>
 {% endif %}

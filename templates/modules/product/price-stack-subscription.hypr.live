@@ -1,0 +1,12 @@
+﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.subscriptionPriceRange %} mz-pricestack-range{% endif %}">
+    {% if model.hasSubscriptionPriceRange %}
+    <span itemprop="minPrice" class="mz-pricestack-price-lower">
+        {% include "modules/common/price" with model=model.subscriptionPriceRange.lower %}
+    </span>
+    <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+        {% include "modules/common/price" with model=model.subscriptionPriceRange.upper %}
+    </span>
+    {% else %}
+    {% include "modules/common/price" with model=model.subscriptionPrice %}
+    {% endif %}
+</div>
