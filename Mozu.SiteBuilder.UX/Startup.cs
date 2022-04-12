@@ -44,6 +44,7 @@ using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Actions;
+using Mozu.SiteBuilder.UX.StartupTasks;
 
 namespace Mozu.SiteBuilder.UX
 {
@@ -60,6 +61,7 @@ namespace Mozu.SiteBuilder.UX
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddSiteBuilderContextWarmup()
                 .ConfigureArcJs(settings =>
                 {
                      settings.AddPipelineScript(typeof(Mozu.SiteBuilder.Mvc.OAF.ArcJsHttpRouter), "/ArcJsExtensions/Content/dist/webpack.bundle.js");
