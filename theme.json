@@ -385,6 +385,12 @@
       "properties": {},
       "template": "email/subscription-item-quantity-updated",
       "title": "Item quantity updated on subscription"
+    },
+    {
+      "id": "subscription.frequencychanged",
+      "properties": {},
+      "template": "email/subscription-frequency-changed",
+      "title": "Subscription Frequency Updated"
     }
   ],
   "backOfficeTemplates": [
