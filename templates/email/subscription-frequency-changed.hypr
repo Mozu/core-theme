@@ -1,0 +1,16 @@
+{% extends "email/email" %}
+{% block body-content %}
+
+<p>{{ labels.subscriptionFrequencyChangedBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe}}</p>
+
+<!--- Subscription Details Header--->
+    {% include "modules/common/subscription-details" %}
+<br/>
+<br/>
+    {% include "modules/common/subscription-item-list" %}
+    
+    {% include "modules/common/subscription-summary" %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

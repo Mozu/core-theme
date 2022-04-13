@@ -363,11 +363,11 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             if (purchaseType === 'onetimepurchase') {
                 // clear out any settings
                 this.set('subscriptionFrequency', '');                
-                $("#frequency option:selected").prop("selected", false);
+                $('#frequency option:selected').prop('selected', false);
                 $('#frequencyValidation').empty();
-                $("#frequency").prop('disabled', 'disabled');
+                $('#frequency').prop('disabled', 'disabled');
             } else {
-                $("#frequency").prop('disabled', false);
+                $('#frequency').prop('disabled', false);
             }
         },          
         supportsInStorePickup: function() {
@@ -516,7 +516,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
                         // if SAOT, then make secondary call                            
-                        //if (me.subscriptionMode() === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me._isSubscriptionPricingCall = true;
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
@@ -547,7 +546,6 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
             // differentiate between pricing calls
             if (me._isSubscriptionPricingCall) {
-                // apply from api model
                 var subscriptionPrice = me.apiModel.data.price;
                 var subscriptionPriceRange = me.apiModel.data.priceRange;
                 me.set('subscriptionPrice', subscriptionPrice);

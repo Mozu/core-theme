@@ -25,22 +25,10 @@
                     </span>
                 </td>
                 <td>
-                    <span>
-                        {% if item.product.price %}
-                        {{item.product.price.price|currency}}
-                        {% else %}
-                        {{item.unitPrice.extendedAmount|currency}}
-                        {% endif %}
-                    </span>
+                    {% include "modules/common/item-price" %}
                 </td>
                 <td>
-                    <span>
-                        {% if item.discountedTotal %}
-                        {{item.discountedTotal|currency}}
-                        {% else %}
-                        {{item.subtotal|currency}}
-                        {% endif %}
-                    </span>
+                    {% include "modules/common/item-total" %}
                 </td>
             </tr>  
         {% endfor %}

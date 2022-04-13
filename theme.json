@@ -355,6 +355,48 @@
       "properties": {},
       "template": "email/subscription-errored",
       "title": "Subscription Errored"
+    },
+    {
+      "id": "subscription.paymentupdated",
+      "properties": {},
+      "template": "email/subscription-payment-updated",
+      "title": "Subscription Payment Updated"
+    },
+    {
+      "id": "subscription.itemadded",
+      "properties": {},
+      "template": "email/subscription-item-added",
+      "title": "Item added to Subscription"
+    },
+    {
+      "id": "subscription.fulfillmentinfoupdated",
+      "properties": {},
+      "template": "email/subscription-fulfillment-info-updated",
+      "title": "Subscription Shipping Info Updated"
+    },
+    {
+      "id": "subscription.itemremoved",
+      "properties": {},
+      "template": "email/subscription-item-removed",
+      "title": "Item Removed from subscription"
+    },
+    {
+      "id": "subscription.itemquantityupdated",
+      "properties": {},
+      "template": "email/subscription-item-quantity-updated",
+      "title": "Item quantity updated on subscription"
+    },
+    {
+      "id": "subscription.frequencychanged",
+      "properties": {},
+      "template": "email/subscription-frequency-changed",
+      "title": "Subscription Frequency Updated"
+    },
+    {
+      "id": "subscription.nextorderdatechanged",
+      "properties": {},
+      "template": "email/subscription-next-order-date-updated",
+      "title": "Subscription Next Order Date Updated"
     }
   ],
   "backOfficeTemplates": [
