@@ -507,6 +507,8 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             var me = this,
               newConfiguration = this.getConfiguredOptions();
             me._isSubscriptionPricingCall = false;
+            me._originalPrice = null;
+            me._originalPriceRange = null;
 
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
@@ -515,9 +517,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
-                        // if SAOT, then make secondary call                            
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                            // save off because secondary call will overwrite
                             me._isSubscriptionPricingCall = true;
+                            me._originalPrice = apiModel.data.price; 
+                            me._originalPriceRange = apiModel.data.priceRange; 
+                            // make secondary call
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                             .then(function (apiModel) {
                                 me._isSubscriptionPricingCall = false;
@@ -553,7 +558,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     me.unset('subscriptionPriceRange');
                 } else {
                     me.set('subscriptionPriceRange', subscriptionPriceRange);
-                }                
+                }
+                // subscription call will auto apply to model, so have to re-apply initial values
+                if (me._originalPrice)
+                    me.set('price', me._originalPrice);
+                if (me._originalPriceRange)
+                    me.set('priceRange', me._originalPriceRange);
             }
 
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
