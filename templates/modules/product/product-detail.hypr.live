@@ -114,7 +114,9 @@
 {% if model.hasVolumePricing %}
 <div class="mz-volume-price-container">
   {% include "modules/product/volume-pricing" %}
+  {% include "modules/product/volume-pricing-subscription" %}
 </div>
+
 {% endif %}
 
 {% if model.productCollections %}

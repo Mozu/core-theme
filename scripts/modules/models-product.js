@@ -484,8 +484,20 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return this.showBelowQuantityWarning();
             }
             this.isLoading(true);
-            this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true }).then(function () {
-                me.trigger('optionsUpdated');
+            me.clearSubscriptionConfigureCall();
+            var newConfiguration = this.getConfiguredOptions();
+            this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true }).then(function (apiModel) {
+                if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                    me.setSubscriptionConfigureCall(apiModel);
+                    // make secondary call
+                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    .then(function (apiModel) {
+                        me._isSecondaryConfigureCall = false;
+                        me.trigger('optionsUpdated');
+                    });
+                } else {
+                    me.trigger('optionsUpdated');
+                }                
              });
         },
         showBelowQuantityWarning: function () {
@@ -506,10 +518,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         updateConfiguration: function() {
             var me = this,
               newConfiguration = this.getConfiguredOptions();
-            me._isSubscriptionPricingCall = false;
-            me._originalPrice = null;
-            me._originalPriceRange = null;
-
+            me.clearSubscriptionConfigureCall();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
@@ -518,14 +527,11 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
-                            // save off because secondary call will overwrite
-                            me._isSubscriptionPricingCall = true;
-                            me._originalPrice = apiModel.data.price; 
-                            me._originalPriceRange = apiModel.data.priceRange; 
+                            me.setSubscriptionConfigureCall(apiModel);
                             // make secondary call
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                             .then(function (apiModel) {
-                                me._isSubscriptionPricingCall = false;
+                                me._isSecondaryConfigureCall = false;
                                 me.trigger('optionsUpdated');
                             });
                         }
@@ -544,26 +550,56 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
             return prodJSON;
         },
+        clearSubscriptionConfigureCall: function() {
+            // reset
+            this._isSecondaryConfigureCall = false;
+            this._originalPrice = null;
+            this._originalPriceRange = null;
+            this._originalVolumePriceBands = null;
+            this._originalVolumePriceRange = null;
+        },
+        setSubscriptionConfigureCall: function(apiModel) {
+            // save off values because secondary call will overwrite in the model 
+            this._isSecondaryConfigureCall = true;
+            this._originalPrice = apiModel.data.price; 
+            this._originalPriceRange = apiModel.data.priceRange; 
+            this._originalVolumePriceBands = apiModel.data.volumePriceBands;
+            this._originalVolumePriceRange = apiModel.data.volumePriceRange;
+        },        
+        setSubscriptionModelData: function (apiData) {
+            // secondary subscription call will auto apply response values to model, 
+            // so have to re-apply initial values that were saved
+            var me = this;
+            var subscriptionPrice = apiData.price;
+            var subscriptionPriceRange = apiData.priceRange;
+            me.set('subscriptionPrice', subscriptionPrice);
+            if (typeof subscriptionPriceRange === "undefined") {
+                me.unset('subscriptionPriceRange');
+            } else {
+                me.set('subscriptionPriceRange', subscriptionPriceRange);
+            }            
+            if (me._originalPrice)
+                me.set('price', me._originalPrice);
+            if (me._originalPriceRange)
+                me.set('priceRange', me._originalPriceRange);
+
+            var subscriptionVolumePriceBands = apiData.subscriptionVolumePriceBands ? apiData.subscriptionVolumePriceBands : apiData.volumePriceBands;
+            var subscriptionVolumePriceRange = apiData.subscriptionVolumePriceRange ? apiData.subscriptionVolumePriceRange : apiData.volumePriceRange;
+            me.set('subscriptionVolumePriceBands', subscriptionVolumePriceBands);
+            me.set('subscriptionVolumePriceRange', subscriptionVolumePriceRange);
+            if (me._originalVolumePriceBands)
+                me.set('volumePriceBands', me._originalVolumePriceBands);    
+            if (me._originalVolumePriceRange)
+                me.set('volumePriceRange', me._originalVolumePriceRange);    
+        },
         toJSON: function(options) {
             var me = this;
             if (typeof me.apiModel.data.variationProductCode === "undefined" && me.get('variationProductCode')) {
                 me.unset('variationProductCode');
             }
-            // differentiate between pricing calls
-            if (me._isSubscriptionPricingCall) {
-                var subscriptionPrice = me.apiModel.data.price;
-                var subscriptionPriceRange = me.apiModel.data.priceRange;
-                me.set('subscriptionPrice', subscriptionPrice);
-                if (typeof subscriptionPriceRange === "undefined") {
-                    me.unset('subscriptionPriceRange');
-                } else {
-                    me.set('subscriptionPriceRange', subscriptionPriceRange);
-                }
-                // subscription call will auto apply to model, so have to re-apply initial values
-                if (me._originalPrice)
-                    me.set('price', me._originalPrice);
-                if (me._originalPriceRange)
-                    me.set('priceRange', me._originalPriceRange);
+            // differentiate between pricing/configure calls
+            if (me._isSecondaryConfigureCall) {
+                me.setSubscriptionModelData(me.apiModel.data);
             }
 
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);

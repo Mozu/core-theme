@@ -673,6 +673,7 @@
   "submit": "einreichen",
   "submitForApproval": "Zur Genehmigung einreichen",
   "submittedBy": "Eingereicht von",
+  "subscription": "Abonnement",  
   "subscriptionActivatedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
   "subscriptionCancelledBlob1": "Hallo!<br/><br/> Der Status Ihres Abonnements Nr. {0} wird auf {1} aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, besuchen Sie bitte Mein Konto.",
   "subscriptionDetails": "Abonnementdetails",

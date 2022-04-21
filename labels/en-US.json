@@ -809,6 +809,7 @@
   "submit": "Submit",
   "submitForApproval": "Submit for Approval",
   "submittedBy": "Submitted By",
+  "subscription": "Subscription",  
   "subscriptionActivatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionCancelledBlob1": "Hello!<br/><br/>The status of your subscription #{0} is updated to {1}. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionDetails": "Subscription Details",
