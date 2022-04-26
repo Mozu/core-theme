@@ -1,34 +1,34 @@
-<table class="mz-ordersummary subscription-detail">
+<table cellpadding="1" class="mz-ordersummary subscription-detail" style="width: 100%;">
     <thead>
         <tr>
-            <th class="mz-ordersummary-header-product">{{ labels.line }}</th>
-            <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
-            <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
-            <th class="mz-ordersummary-header-each">{{ labels.each }}</th>
-            <th class="mz-ordersummary-header-total">{{ labels.total }}</th>
+            <th class="mz-ordersummary-header-product" style="text-align: left;padding: 15px;">{{ labels.line }}</th>
+            <th class="mz-ordersummary-header-product" style="text-align: left;padding:15px;">{{ labels.product }}</th>
+            <th class="mz-ordersummary-header-qty" style="text-align: right;padding: 15px;">{{ labels.qty }}</th>
+            <th class="mz-ordersummary-header-each" style="text-align: right;padding: 15px;">{{ labels.each }}</th>
+            <th class="mz-ordersummary-header-total" style="text-align: right;padding: 15px;">{{ labels.total }}</th>
         </tr>
     </thead>
     <tbody>
         {% for item in model.items %} 
             <tr>
-                <td class="pull-left">
+                <td class="pull-left" style="text-align: left;padding: 15px;">
                     <span>
                         {{item.lineId}}
                     </span>
                 </td>       
-                <td class="pull-left">
+                <td class="pull-left" style="text-align: left;padding: 15px;">
                     <span>{{item.product.name}}</span>
                 </td>
-                <td>
+                <td style="text-align: right;padding: 15px;">
                     <span>
                         {{item.quantity}}
                     </span>
                 </td>
-                <td>
-                    {% include "modules/common/item-price" %}
+                <td style="text-align: right;padding: 15px;">
+                    {% include "modules/common/email-item-price" %}
                 </td>
-                <td>
-                    {% include "modules/common/item-total" %}
+                <td style="text-align: right;padding: 15px;">
+                    {% include "modules/common/email-item-total" %}
                 </td>
             </tr>  
         {% endfor %}
