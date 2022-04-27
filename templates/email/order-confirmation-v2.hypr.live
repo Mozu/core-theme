@@ -28,7 +28,7 @@
         Customer Care Number: {{ order.orderNumber }} <small><a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/></small>
       </div>
       <div class="mz-email-summary-container">
-        {% include "modules/common/email-order-summary-v2" with items=order.items fulfillmentInfo=order.fulfillmentInfo locations=model.locations %}
+        {% include "modules/common/email-order-summary-v2" with items=order.items fulfillmentInfo=order.fulfillmentInfo locations=model.locations order=order %}
       </div>
     </div>
 
