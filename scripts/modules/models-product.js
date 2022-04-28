@@ -388,12 +388,20 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical' || me.get('goodsType') === 'Service') ?
                             Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
-                    }
-                    return me.apiAddToCart({
+                    }                    
+                    var payload = {
                         options: me.getConfiguredOptions(),
                         fulfillmentMethod: fulfillMethod,
                         quantity: me.get("quantity")
-                    }).then(function (item) {
+                    };                    
+                    // if subscription 
+                    if (me.get('subscriptionMode') && me.get('purchaseType') === 'subscribe') {      
+                        var subscription = me.setCartPayloadForSubscription(payload);
+                        if (subscription) {
+                            payload.subscription = subscription;
+                        }                        
+                    } 
+                    return me.apiAddToCart(payload).then(function (item) {
                         me.trigger('addedtocart', item, stopRedirect);
                     });
                 }
@@ -591,6 +599,35 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 me.set('volumePriceBands', me._originalVolumePriceBands);    
             if (me._originalVolumePriceRange)
                 me.set('volumePriceRange', me._originalVolumePriceRange);    
+        },
+        setCartPayloadForSubscription: function() {
+            var subscriptionFrequency = this.get('subscriptionFrequency');            
+            if (subscriptionFrequency && subscriptionFrequency.length > 1) {
+                var subscriptionPayload = {
+                    required: this.isSubscriptionOnly() ? true : false
+                };    
+                var frequency = {};
+                // parse (ie D3, M30)
+                var freqUnit = subscriptionFrequency.substring(0,1).toLowerCase();
+                switch(freqUnit) {
+                    case 'w': 
+                        frequency.unit = 'week';
+                        break;
+                    case 'd': 
+                        frequency.unit = 'day';
+                        break;
+                    case 'm': 
+                        frequency.unit = 'month';
+                        break;
+                    default:
+                        break;
+                }
+                var freqValue = subscriptionFrequency.substring(1);
+                frequency.value = Number.parseInt(freqValue);
+                subscriptionPayload.frequency = frequency;
+                return subscriptionPayload;
+            }
+            return null;
         },
         toJSON: function(options) {
             var me = this;
