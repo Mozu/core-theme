@@ -1,5 +1,5 @@
 
-<table class="mz-ordersummary subscription-detail">
+<table class="mz-ordersummary subscription-detail" style="width: 100%; text-align: right;">
     {% for discount in model.orderDiscounts %}
         {% if not discount.excluded %}
             <tr>
@@ -59,16 +59,18 @@
     </tr>
 {% endif %}
 {% endif %}
-{% for shippingDiscount in model.shippingDiscounts %}
-    <tr>
-        <td>
-            {{ shippingDiscount.discount.discount.name }}
-        </td>
-        <td class="subscription-item-total">
-                -{{ shippingDiscount.discount.impact|currency }}
-        </td>
-    </tr>
-{% endfor %}
+{% if model.shippingDiscounts.length > 0 %}
+    {% for shippingDiscount in model.shippingDiscounts %}
+        <tr>
+            <td>
+                {{ shippingDiscount.discount.discount.name }}
+            </td>
+            <td class="subscription-item-total">
+                    -{{ shippingDiscount.discount.impact|currency }}
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}
     <tr>
         <td>
             {{labels.subscriptionTotal}}
