@@ -492,18 +492,21 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return this.showBelowQuantityWarning();
             }
             this.isLoading(true);
-            me.clearSubscriptionConfigureCall();
+            me.toggleSubscriptionConfigureCall(false);
             var newConfiguration = this.getConfiguredOptions();
             this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true }).then(function (apiModel) {
                 if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
-                    me.setSubscriptionConfigureCall(apiModel);
+                    me.toggleSubscriptionConfigureCall(true, apiModel);
                     // make secondary call
                     me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                     .then(function (apiModel) {
-                        me._isSecondaryConfigureCall = false;
+                        me.toggleSubscriptionConfigureCall(false);
+                        me.resetSubscriptionElements();
                         me.trigger('optionsUpdated');
                     });
                 } else {
+                    if (me.isSubscriptionOnly())
+                        me.resetSubscriptionElements();           
                     me.trigger('optionsUpdated');
                 }                
              });
@@ -526,24 +529,29 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         updateConfiguration: function() {
             var me = this,
               newConfiguration = this.getConfiguredOptions();
-            me.clearSubscriptionConfigureCall();
+            me.toggleSubscriptionConfigureCall(false);
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
                     .then(function (apiModel) {
                         if (me._hasVolumePricing) {
+                            if (me.isSubscriptionOnly())
+                                me.resetSubscriptionElements();            
                             return me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
-                            me.setSubscriptionConfigureCall(apiModel);
+                            me.toggleSubscriptionConfigureCall(true, apiModel);
                             // make secondary call
                             me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
                             .then(function (apiModel) {
-                                me._isSecondaryConfigureCall = false;
+                                me.toggleSubscriptionConfigureCall(false);
+                                me.resetSubscriptionElements();
                                 me.trigger('optionsUpdated');
                             });
                         }
                         else {
+                            if (me.isSubscriptionOnly())
+                                me.resetSubscriptionElements();
                             me.trigger('optionsUpdated');
                         }
                      });
@@ -558,22 +566,39 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
             return prodJSON;
         },
-        clearSubscriptionConfigureCall: function() {
-            // reset
-            this._isSecondaryConfigureCall = false;
-            this._originalPrice = null;
-            this._originalPriceRange = null;
-            this._originalVolumePriceBands = null;
-            this._originalVolumePriceRange = null;
-        },
-        setSubscriptionConfigureCall: function(apiModel) {
-            // save off values because secondary call will overwrite in the model 
-            this._isSecondaryConfigureCall = true;
-            this._originalPrice = apiModel.data.price; 
-            this._originalPriceRange = apiModel.data.priceRange; 
-            this._originalVolumePriceBands = apiModel.data.volumePriceBands;
-            this._originalVolumePriceRange = apiModel.data.volumePriceRange;
+        toggleSubscriptionConfigureCall: function(mode, apiModel) {
+            this._isSecondaryConfigureCall = mode;
+            if (mode === false) {
+                this._originalPrice = null;
+                this._originalPriceRange = null;
+                this._originalVolumePriceBands = null;
+                this._originalVolumePriceRange = null;
+            } else {
+                if (apiModel) {
+                    this._originalPrice = apiModel.data.price; 
+                    this._originalPriceRange = apiModel.data.priceRange; 
+                    this._originalVolumePriceBands = apiModel.data.volumePriceBands;
+                    this._originalVolumePriceRange = apiModel.data.volumePriceRange;
+                } 
+            }
         },        
+        resetSubscriptionElements: function() {
+            // reset UI
+            var purchaseType = this.get('purchaseType');
+            var subFrequency = this.get('subscriptionFrequency');
+            if (subFrequency && subFrequency.length > 0)
+                $("#frequency").val(subFrequency);
+            if (purchaseType) {
+                if (this.isSubscriptionOnly()) {                                   
+                    $('input[name="purchasetype"][value="onetimepurchase"]').prop('disabled', 'disabled');
+                    $('input[name="purchasetype"][value="subscribe"]').prop('disabled', false).prop('checked', true);
+                } else {                                         
+                    $('input[name="purchasetype"][value="' + purchaseType +'"]').prop('checked', true);   
+                    if (purchaseType === 'subscribe')
+                        $('#frequency').prop('disabled', false );
+                }
+            }
+        },
         setSubscriptionModelData: function (apiData) {
             // secondary subscription call will auto apply response values to model, 
             // so have to re-apply initial values that were saved
