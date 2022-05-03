@@ -1,6 +1,11 @@
 ﻿<div class="mz-volume-pricing mz-l-column">
 <table class="mz-table">
   <thead>
+    {% if model.isSubscriptionOnly %}
+    <tr>
+      <th colspan="2" class="mz-volume-pricing-header-quantity">{{ labels.subscription }}</th> 
+    </tr>  
+    {% endif %}
     <tr>
       <th class="mz-volume-pricing-header-quantity">{{ labels.volumePriceQuantity }}</th>
       <th class="mz-volume-pricing-header-price">{{ labels.volumePriceUnitPrice }}</th>
