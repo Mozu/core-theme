@@ -792,8 +792,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                     orderEmail.Locations = allLocations;
                 }
+
                 var SHIPMENT_FILTER = "orderId==" + orderEmail.Id + ";shipmentStatus!=REASSIGNED;shipmentType!=Transfer";
-                var omsShipments = (await _shipmentControllerApiClient.GetShipmentsUsingGET(filter:SHIPMENT_FILTER)).ReadAsSync().Embedded.Values.SelectMany(x => x).ToList();
+                var omsShipmentsEmbedded = (await _shipmentControllerApiClient.GetShipmentsUsingGET(filter: SHIPMENT_FILTER)).ReadAsSync();
+                var omsShipments = omsShipmentsEmbedded.Embedded.NotIsNullOrEmpty() ? (omsShipmentsEmbedded.Embedded.Values.NotIsNullOrEmpty() ? 
+                    omsShipmentsEmbedded.Embedded.Values.SelectMany(x => x).ToList() : new List<Fulfillment.EntityModelOfShipment>()): new List<Fulfillment.EntityModelOfShipment>(); //We must determine whether or not any shipments came back from the call
+
                 var omsShipmentsItemCount = 0;
                 foreach (Fulfillment.EntityModelOfShipment shipment in omsShipments)
                 {
