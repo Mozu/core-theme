@@ -516,14 +516,28 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this.validate();
             this.validation.quantity.min = 1;
         },
-        handleMixedVolumePricingTransitions: function (data) {
-            if (!data || !data.volumePriceBands || data.volumePriceBands.length === 0) return;
-            if (this._minQty === data.volumePriceBands[0].minQty) return;
-            this._minQty = data.volumePriceBands[0].minQty;
+        handleMixedVolumePricingTransitions: function (apiModel) {            
+            if (!apiModel || !apiModel.data || !apiModel.data.volumePriceBands || apiModel.data.volumePriceBands.length === 0) return;
+            if (this._minQty === apiModel.data.volumePriceBands[0].minQty) {
+                var me = this,
+                    newConfiguration = this.getConfiguredOptions();                
+                if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                    me.toggleSubscriptionConfigureCall(true, apiModel);
+                    // make secondary call for subscription pricing
+                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    .then(function () {
+                        me.toggleSubscriptionConfigureCall(false);
+                        me.resetSubscriptionElements();
+                        me.trigger('optionsUpdated');
+                    });
+                }
+                return;
+            }
+            this._minQty = apiModel.data.volumePriceBands[0].minQty;
             this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
             if (this.get('quantity') < this._minQty) {
                 return this.updateQuantity(this._minQty);
-            }
+            }            
             this.trigger('optionsUpdated');
         },
         updateConfiguration: function() {
@@ -537,7 +551,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             if (me.isSubscriptionOnly())
                                 me.resetSubscriptionElements();            
-                            return me.handleMixedVolumePricingTransitions(apiModel.data);
+                            return me.handleMixedVolumePricingTransitions(apiModel);
                         }
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me.toggleSubscriptionConfigureCall(true, apiModel);
