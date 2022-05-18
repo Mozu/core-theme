@@ -179,8 +179,13 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
     DateTimePicker.prototype.setDate = function (date) {
         date = decodeURIComponent(date);
-        date = date ? new Date(date).toDateString() + ', ' + new Date(date).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }) + ' CST' : 'Now';
-        this.dateField.text(date);
+        var currentDateText = 'Now';
+        var localedate = date ? new Date(date).toDateString() + ', ' + new Date(date).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }) + ' CST' : currentDateText;
+        this.dateField.text(localedate);
+        if(localedate != currentDateText) {
+            this.handler.handleDtpicker('setDate', new Date(date));
+            $('.datepicker_timelist').css('height','28vh');
+        }
     };
 
     DateTimePicker.prototype.getCookie = function () {

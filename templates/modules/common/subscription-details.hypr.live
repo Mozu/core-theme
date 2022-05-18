@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<div class="mz-store-details subscription-info">
+<div class="mz-store-details subscription-info" style="background-color: #fff;">
     <div>
         <div><strong> {{ labels.subscriptionNumber }}</strong> : {{ model.number }}</div><br/>
         <div><strong> {{ labels.subscriptionStatus }}</strong> : {{ model.status }} </div><br/>
