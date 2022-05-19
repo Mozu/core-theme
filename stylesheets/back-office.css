@@ -722,3 +722,8 @@ table {
   .isSplitPackingClass {
     page-break-after: always;
 }
+ 
+.mz-printable-order-packingslip .slip-product-image {
+  max-height: 100px;
+  max-width: 200px;
+}
