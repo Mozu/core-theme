@@ -33,7 +33,7 @@
           {% for item in shipment.items %}
              <tr>
                   <td>
-                      <img class="slip-product-image" src="{{ item.imageUrl }}">
+                      <img class="pickwave-slip-product-image" src="{{ item.imageUrl }}">
                   </td>
                   <td>
                       {{ item.partNumber }}
