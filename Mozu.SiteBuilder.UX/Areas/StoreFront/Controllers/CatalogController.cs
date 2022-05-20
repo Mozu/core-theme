@@ -103,7 +103,52 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var prod = await productResponse.ReadAsAsync();
 
+            // subscription check
+            ProductRuntime.Contracts.ProductPrice subscriptionPrice = null;
+            ProductRuntime.Contracts.ProductPriceRange subscriptionPriceRange = null;
+            List<ProductRuntime.Contracts.ProductVolumePrice> subscriptionVolumePriceBands = null;
+            ProductRuntime.Contracts.ProductPriceRange subscriptionVolumePriceRange = null;
+            var subscriptionModeProperty = prod?.Properties?.FirstOrDefault(x => x.AttributeFqn == "system~subscription-mode");
+            bool isSubscriptionProduct = false;
+            if (subscriptionModeProperty != null) 
+            {
+                isSubscriptionProduct = true;
+                if (subscriptionModeProperty.Values.Count > 0 && subscriptionModeProperty.Values[0].Value.ToString() == "SAOT")
+                {
+                    var subscriptionProductResponse = await _productClient.GetProduct(productCode, vpc,
+                        "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true, sliceValue: sliceValue, useSubscriptionPricing: true).ConfigureAwait(false);
+                    
+                    var subscriptionProd = await subscriptionProductResponse.ReadAsAsync();
+                    subscriptionPrice = subscriptionProd.Price;
+                    subscriptionPriceRange = subscriptionProd.PriceRange;
+                    subscriptionVolumePriceBands = subscriptionProd.VolumePriceBands;
+                    subscriptionVolumePriceRange = subscriptionProd.VolumePriceRange;
+                } 
+                else
+                {
+                    // Subscription only, so use from original
+                    subscriptionPrice = prod.Price;
+                    subscriptionPriceRange = prod.PriceRange;
+                    subscriptionVolumePriceBands = prod.VolumePriceBands;
+                    subscriptionVolumePriceRange = prod.VolumePriceRange;
+                }
+            } 
+
             var product = Mapper.Map<Product>(prod);
+
+            if (isSubscriptionProduct)
+            {
+                if (subscriptionModeProperty != null)
+                    product.SubscriptionMode = subscriptionModeProperty.Values[0].Value.ToString();
+                if (subscriptionPrice != null)
+                    product.SubscriptionPrice = Mapper.Map<ProductPrice>(subscriptionPrice);
+                if (subscriptionPriceRange != null)
+                    product.SubscriptionPriceRange = Mapper.Map<ProductPriceRange>(subscriptionPriceRange);
+                if (subscriptionVolumePriceBands != null)
+                    product.SubscriptionVolumePriceBands = Mapper.Map<List<ProductVolumePrice>>(subscriptionVolumePriceBands);
+                if (subscriptionVolumePriceRange != null)
+                    product.SubscriptionVolumePriceRange = Mapper.Map<ProductPriceRange>(subscriptionVolumePriceRange);
+            }
             //todo... ugh.. too many maps.
             var redirect =
                 _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,

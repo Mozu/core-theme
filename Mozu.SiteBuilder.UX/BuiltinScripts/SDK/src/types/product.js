@@ -27,7 +27,8 @@ module.exports = {
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
             fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL),
-            parentItemId: payload.parentItemId || null
+            parentItemId: payload.parentItemId || null,
+            subscription: payload.subscription || null
         });
     },
     addToWishlist: function (payload) {

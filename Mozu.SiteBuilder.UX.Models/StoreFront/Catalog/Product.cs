@@ -55,6 +55,15 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         }
 
         [DataMember]
+        public bool HasSubscriptionPriceRange
+        {
+            get
+            {
+                return SubscriptionPriceRange != null;
+            }
+        }
+
+        [DataMember]
         public new ProductContent Content { get; set; }
 
 
@@ -82,30 +91,44 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             }
         }
 
+        [DataMember(EmitDefaultValue = false)]
+        public ProductPrice SubscriptionPrice { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public ProductPriceRange SubscriptionPriceRange { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public string SubscriptionMode { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public List<ProductVolumePrice> SubscriptionVolumePriceBands { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public ProductPriceRange SubscriptionVolumePriceRange { get; set; }        
     }
 
-/*
-    public class ProductConverter : System.Text.Json.Serialization.JsonConverter<Product>
-    {
-        public override Product Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    /*
+        public class ProductConverter : System.Text.Json.Serialization.JsonConverter<Product>
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, Product value, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-            
-            writer.WriteString("Date", wf.Date);
-            writer.WriteNumber("TemperatureCelsius", wf.TemperatureCelsius);
-            if (!string.IsNullOrWhiteSpace(wf.Summary) && wf.Summary != "N/A")
+            public override Product Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                writer.WriteString("Summary", wf.Summary);
+                throw new NotImplementedException();
             }
 
-            writer.WriteEndObject();
-        }
-    }*/
+            public override void Write(Utf8JsonWriter writer, Product value, JsonSerializerOptions options)
+            {
+                writer.WriteStartObject();
+
+                writer.WriteString("Date", wf.Date);
+                writer.WriteNumber("TemperatureCelsius", wf.TemperatureCelsius);
+                if (!string.IsNullOrWhiteSpace(wf.Summary) && wf.Summary != "N/A")
+                {
+                    writer.WriteString("Summary", wf.Summary);
+                }
+
+                writer.WriteEndObject();
+            }
+        }*/
     public class RepeaterItem
     {
         public string Text { get; set; }

@@ -28,7 +28,7 @@
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2206.2" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2218.2" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />
@@ -37,7 +37,7 @@
     <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
     <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="1.2108.2" />
     <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2108.2" />
-    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2140.2" />
+    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2218.4" />
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2011.0-pr-13.7" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />

@@ -155,6 +155,16 @@
       },
       "includeSelf": true
     },
+    "configuresubscription": {
+      "verb": "POST",
+      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity,useSubscriptionPricing}",
+      "defaultParams": {
+        "includeOptionDetails": true,
+        "quantity": 1,
+        "useSubscriptionPricing": true
+      },
+      "includeSelf": true
+    },
     "add-to-cart": {
       "verb": "POST",
       "returnType": "cartitem",

@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2021-08-24
+ * Mozu JavaScript SDK - v0.3.0 - 2022-04-27
  *
- * Copyright (c) 2021 Volusion, Inc.
+ * Copyright (c) 2022 Volusion, Inc.
  *
  */
 
@@ -3695,6 +3695,16 @@ module.exports=
       },
       "includeSelf": true
     },
+    "configuresubscription": {
+      "verb": "POST",
+      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity,useSubscriptionPricing}",
+      "defaultParams": {
+        "includeOptionDetails": true,
+        "quantity": 1,
+        "useSubscriptionPricing": true
+      },
+      "includeSelf": true
+    },
     "add-to-cart": {
       "verb": "POST",
       "returnType": "cartitem",
@@ -6368,7 +6378,8 @@ module.exports = {
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
             fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL),
-            parentItemId: payload.parentItemId || null
+            parentItemId: payload.parentItemId || null,
+            subscription: payload.subscription || null
         });
     },
     addToWishlist: function (payload) {
