@@ -188,11 +188,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable','hasVolumePricing'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup', 'isPurchasable', 'hasVolumePricing', 'hasSubscriptionPriceRange', 'isSubscriptionOnly', 'frequencyOptions'],
         defaults: {
             purchasableState: {},
-            quantity: 1
-        },
+            quantity: 1,
+            purchaseType: '',
+            subscriptionFrequency: ''
+        },   
         dataTypes: {
             quantity: Backbone.MozuModel.DataTypes.Int
         },
@@ -200,12 +202,17 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             quantity: {
                 min: 1,
                 msg: Hypr.getLabel('enterProductQuantity')
-            }
+            },
+            subscriptionFrequency: {
+                fn: "requiresSubscriptionFrequency"
+            }  
         },
         relations: {
             content: ProductContent,
             price: PriceModels.ProductPrice,
             priceRange: PriceModels.ProductPriceRange,
+            subscriptionPrice: PriceModels.ProductPrice,
+            subscriptionPriceRange: PriceModels.ProductPriceRange,
             options: Backbone.Collection.extend({
                 model: ProductOption
             }),
@@ -214,6 +221,14 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 model: Product
             })
         },
+        requiresSubscriptionFrequency: function(value, attr) {
+            if ((this.get('purchaseType') === 'subscribe' && !value)) {
+                if (!this.frequencyOptions())
+                    return Hypr.getLabel('subscriptionFrequencyNotFound');
+                else                     
+                    return Hypr.getLabel('subscriptionFrequencyRequired');
+            }
+        },        
         getBundledProductProperties: function(opts) {
             var self = this,
                 loud = !opts || !opts.silent;
@@ -254,11 +269,20 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         hasPriceRange: function() {
             return this._hasPriceRange;
         },
+        hasSubscriptionPriceRange: function() {
+            return this._hasSubscriptionPriceRange;
+        },
         hasVolumePricing: function() {
             return this._hasVolumePricing;
         },
         calculateHasPriceRange: function(json) {
             this._hasPriceRange = json && !!json.priceRange;
+            if (json && json.productUsage) {                
+                this._hasSubscriptionPriceRange = json && !!json.subscriptionPriceRange;
+            } else {
+                // this is for configurable call
+                this._hasSubscriptionPriceRange = this.get('subscriptionMode') && this._hasPriceRange;
+            }
         },
         initialize: function(conf) {
             var slug = this.get('content').get('seoFriendlyUrl');
@@ -288,6 +312,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 }
             });            
             this.set('initialStandardProps', standardProps);
+            if (this.get('subscriptionMode')) {                
+                if (this.isSubscriptionOnly()) {
+                    this.set('purchaseType', 'subscribe');
+                } else {
+                    this.set('purchaseType', 'onetimepurchase');
+                }
+            }            
         },
         mainImage: function() {
             var productImages = this.get('content.productImages');
@@ -305,7 +336,40 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return true;
             }
             return false;
+        },        
+        isSubscriptionOnly: function() {
+            return this.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionOnly;
         },
+        frequencyOptions: function() {
+            var options;
+            var mode = this.get('subscriptionMode');
+            if (mode) {
+                _.each(this.get('initialStandardProps'), function(prop) {
+                    if (prop.attributeFQN === 'system~subscription-frequency') {
+                        options = prop.values;
+                    }
+                });      
+            }
+            return options;            
+        },        
+        subscriptionFrequencyChanged: function(e) {
+            var frequency = $(e.currentTarget).val();
+            this.set('subscriptionFrequency', frequency);
+            $('#frequencyValidation').empty();
+        },      
+        purchaseTypeChanged: function(e) {            
+            var purchaseType = $(e.currentTarget).val();
+            this.set('purchaseType', purchaseType);
+            if (purchaseType === 'onetimepurchase') {
+                // clear out any settings
+                this.set('subscriptionFrequency', '');                
+                $('#frequency option:selected').prop('selected', false);
+                $('#frequencyValidation').empty();
+                $('#frequency').prop('disabled', 'disabled');
+            } else {
+                $('#frequency').prop('disabled', false);
+            }
+        },          
         supportsInStorePickup: function() {
             return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
         },
@@ -318,17 +382,26 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         addToCart: function (stopRedirect) {
             var me = this;
             return this.whenReady(function () {
-                if (!me.validate()) {
+                var isValid = me.validate();
+                if (!isValid) {
                     var fulfillMethod = me.get('fulfillmentMethod');
                     if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical' || me.get('goodsType') === 'Service') ?
                             Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
-                    }
-                    return me.apiAddToCart({
+                    }                    
+                    var payload = {
                         options: me.getConfiguredOptions(),
                         fulfillmentMethod: fulfillMethod,
                         quantity: me.get("quantity")
-                    }).then(function (item) {
+                    };                    
+                    // if subscription 
+                    if (me.get('subscriptionMode') && me.get('purchaseType') === 'subscribe') {      
+                        var subscription = me.setCartPayloadForSubscription(payload);
+                        if (subscription) {
+                            payload.subscription = subscription;
+                        }                        
+                    } 
+                    return me.apiAddToCart(payload).then(function (item) {
                         me.trigger('addedtocart', item, stopRedirect);
                     });
                 }
@@ -419,8 +492,23 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return this.showBelowQuantityWarning();
             }
             this.isLoading(true);
-            this.apiConfigure({ options: this.getConfiguredOptions() }, { useExistingInstances: true }).then(function () {
-                me.trigger('optionsUpdated');
+            me.toggleSubscriptionConfigureCall(false);
+            var newConfiguration = this.getConfiguredOptions();
+            this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true }).then(function (apiModel) {
+                if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                    me.toggleSubscriptionConfigureCall(true, apiModel);
+                    // make secondary call
+                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    .then(function (apiModel) {
+                        me.toggleSubscriptionConfigureCall(false);
+                        me.resetSubscriptionElements();
+                        me.trigger('optionsUpdated');
+                    });
+                } else {
+                    if (me.isSubscriptionOnly())
+                        me.resetSubscriptionElements();           
+                    me.trigger('optionsUpdated');
+                }                
              });
         },
         showBelowQuantityWarning: function () {
@@ -428,27 +516,58 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             this.validate();
             this.validation.quantity.min = 1;
         },
-        handleMixedVolumePricingTransitions: function (data) {
-            if (!data || !data.volumePriceBands || data.volumePriceBands.length === 0) return;
-            if (this._minQty === data.volumePriceBands[0].minQty) return;
-            this._minQty = data.volumePriceBands[0].minQty;
+        handleMixedVolumePricingTransitions: function (apiModel) {            
+            if (!apiModel || !apiModel.data || !apiModel.data.volumePriceBands || apiModel.data.volumePriceBands.length === 0) return;
+            if (this._minQty === apiModel.data.volumePriceBands[0].minQty) {
+                var me = this,
+                    newConfiguration = this.getConfiguredOptions();                
+                if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                    me.toggleSubscriptionConfigureCall(true, apiModel);
+                    // make secondary call for subscription pricing
+                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    .then(function () {
+                        me.toggleSubscriptionConfigureCall(false);
+                        me.resetSubscriptionElements();
+                        me.trigger('optionsUpdated');
+                    });
+                }
+                return;
+            }
+            this._minQty = apiModel.data.volumePriceBands[0].minQty;
             this.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', this._minQty);
             if (this.get('quantity') < this._minQty) {
                 return this.updateQuantity(this._minQty);
-            }
+            }            
             this.trigger('optionsUpdated');
         },
         updateConfiguration: function() {
             var me = this,
               newConfiguration = this.getConfiguredOptions();
+            me.toggleSubscriptionConfigureCall(false);
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
                 this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
                     .then(function (apiModel) {
                         if (me._hasVolumePricing) {
-                            return me.handleMixedVolumePricingTransitions(apiModel.data);
+                            if (me.isSubscriptionOnly())
+                                me.resetSubscriptionElements();            
+                            return me.handleMixedVolumePricingTransitions(apiModel);
                         }
-                        me.trigger('optionsUpdated');
+                        if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
+                            me.toggleSubscriptionConfigureCall(true, apiModel);
+                            // make secondary call
+                            me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                            .then(function (apiModel) {
+                                me.toggleSubscriptionConfigureCall(false);
+                                me.resetSubscriptionElements();
+                                me.trigger('optionsUpdated');
+                            });
+                        }
+                        else {
+                            if (me.isSubscriptionOnly())
+                                me.resetSubscriptionElements();
+                            me.trigger('optionsUpdated');
+                        }
                      });
             } else {
                 me.trigger('optionsUpdated');
@@ -461,11 +580,104 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
             return prodJSON;
         },
+        toggleSubscriptionConfigureCall: function(mode, apiModel) {
+            this._isSecondaryConfigureCall = mode;
+            if (mode === false) {
+                this._originalPrice = null;
+                this._originalPriceRange = null;
+                this._originalVolumePriceBands = null;
+                this._originalVolumePriceRange = null;
+            } else {
+                if (apiModel) {
+                    this._originalPrice = apiModel.data.price; 
+                    this._originalPriceRange = apiModel.data.priceRange; 
+                    this._originalVolumePriceBands = apiModel.data.volumePriceBands;
+                    this._originalVolumePriceRange = apiModel.data.volumePriceRange;
+                } 
+            }
+        },        
+        resetSubscriptionElements: function() {
+            // reset UI
+            var purchaseType = this.get('purchaseType');
+            var subFrequency = this.get('subscriptionFrequency');
+            if (subFrequency && subFrequency.length > 0)
+                $("#frequency").val(subFrequency);
+            if (purchaseType) {
+                if (this.isSubscriptionOnly()) {                                   
+                    $('input[name="purchasetype"][value="onetimepurchase"]').prop('disabled', 'disabled');
+                    $('input[name="purchasetype"][value="subscribe"]').prop('disabled', false).prop('checked', true);
+                } else {                                         
+                    $('input[name="purchasetype"][value="' + purchaseType +'"]').prop('checked', true);   
+                    if (purchaseType === 'subscribe')
+                        $('#frequency').prop('disabled', false );
+                }
+            }
+        },
+        setSubscriptionModelData: function (apiData) {
+            // secondary subscription call will auto apply response values to model, 
+            // so have to re-apply initial values that were saved
+            var me = this;
+            var subscriptionPrice = apiData.price;
+            var subscriptionPriceRange = apiData.priceRange;
+            me.set('subscriptionPrice', subscriptionPrice);
+            if (typeof subscriptionPriceRange === "undefined") {
+                me.unset('subscriptionPriceRange');
+            } else {
+                me.set('subscriptionPriceRange', subscriptionPriceRange);
+            }            
+            if (me._originalPrice)
+                me.set('price', me._originalPrice);
+            if (me._originalPriceRange)
+                me.set('priceRange', me._originalPriceRange);
+
+            var subscriptionVolumePriceBands = apiData.subscriptionVolumePriceBands ? apiData.subscriptionVolumePriceBands : apiData.volumePriceBands;
+            var subscriptionVolumePriceRange = apiData.subscriptionVolumePriceRange ? apiData.subscriptionVolumePriceRange : apiData.volumePriceRange;
+            me.set('subscriptionVolumePriceBands', subscriptionVolumePriceBands);
+            me.set('subscriptionVolumePriceRange', subscriptionVolumePriceRange);
+            if (me._originalVolumePriceBands)
+                me.set('volumePriceBands', me._originalVolumePriceBands);    
+            if (me._originalVolumePriceRange)
+                me.set('volumePriceRange', me._originalVolumePriceRange);    
+        },
+        setCartPayloadForSubscription: function() {
+            var subscriptionFrequency = this.get('subscriptionFrequency');            
+            if (subscriptionFrequency && subscriptionFrequency.length > 1) {
+                var subscriptionPayload = {
+                    required: this.isSubscriptionOnly() ? true : false
+                };    
+                var frequency = {};
+                // parse (ie D3, M30)
+                var freqUnit = subscriptionFrequency.substring(0,1).toLowerCase();
+                switch(freqUnit) {
+                    case 'w': 
+                        frequency.unit = 'week';
+                        break;
+                    case 'd': 
+                        frequency.unit = 'day';
+                        break;
+                    case 'm': 
+                        frequency.unit = 'month';
+                        break;
+                    default:
+                        break;
+                }
+                var freqValue = subscriptionFrequency.substring(1);
+                frequency.value = Number.parseInt(freqValue);
+                subscriptionPayload.frequency = frequency;
+                return subscriptionPayload;
+            }
+            return null;
+        },
         toJSON: function(options) {
             var me = this;
             if (typeof me.apiModel.data.variationProductCode === "undefined" && me.get('variationProductCode')) {
                 me.unset('variationProductCode');
             }
+            // differentiate between pricing/configure calls
+            if (me._isSecondaryConfigureCall) {
+                me.setSubscriptionModelData(me.apiModel.data);
+            }
+
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
                 j.options = this.getConfiguredOptions({ unabridged: true });
@@ -517,7 +729,12 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             },
             ProductUsage: {
                 Configurable: 'Configurable'
+            },
+            SubscriptionMode: {
+                SubscriptionAndOneTime: "SAOT",
+                SubscriptionOnly: "SO"
             }
+
         }
     }),
 

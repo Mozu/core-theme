@@ -7,7 +7,9 @@
             "change [data-mz-product-option]": "onOptionChange",
             "blur [data-mz-product-option]": "onOptionChange",
             "change [data-mz-value='quantity']": "onQuantityChange",
-            "keyup input[data-mz-value='quantity']": "onQuantityChange"
+            "keyup input[data-mz-value='quantity']": "onQuantityChange",
+            "change [data-mz-value='subscriptionFrequency']": "onFrequencyChange",
+            "change [name='purchasetype']": "onPurchaseTypeChange"
         },
         render: function () {
             var me = this;
@@ -16,6 +18,12 @@
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
         },
+        onPurchaseTypeChange: function (e) {
+            this.model.purchaseTypeChanged(e);          
+        },           
+        onFrequencyChange: function (e) {
+            this.model.subscriptionFrequencyChanged(e);            
+        },        
         onOptionChange: function (e) {
             return this.configure($(e.currentTarget));
         },
