@@ -744,5 +744,12 @@
   "wrongCountryForType": "Bitte wählen Sie ein Land für diesen Kontakt Typ unterstützt",
   "yes": "Ja",
   "yourAccount": "Ihr Konto",
-  "yourOrderNumber": "Ihre Bestellnummer lautet <strong> {0} </ strong>."
+  "yourOrderNumber": "Ihre Bestellnummer lautet <strong> {0} </ strong>.",
+  "primaryContact":"Hauptansprechpartner",
+  "alternateContact": "Alternativer Kontakt",
+  "optional":"(optional)",
+  "addAlternatePickup":"Fügen Sie einen alternativen Abholkontakt hinzu",
+  "noPickupRequired":"Es sind keine Kontaktinformationen für die Abholung erforderlich, da alle Artikel nach Hause geliefert oder digital erfüllt werden.",
+  "primaryPickup":"Primärer Abholkontakt:",
+  "alternatePickup":"Alternativer Abholkontakt:"
 }
