@@ -150,21 +150,51 @@
                 {% endif %}
               {% endfor %}
             </tbody>
-        </table>
-        <div style="margin:10px">
-          <b>{{ labels.pickupAt }}</b>
-          <div>
-            {% with location.locationInfo as locationInfo %}
-            <div>{{ locationInfo.name }}</div>
-            <div>{{ locationInfo.address.address1}}</div>
-            {% if locationInfo.address.address2 %}<div>{{ locationInfo.address.address2 }}</div>{% endif %}
-            {% if locationInfo.address.address3 %}<div>{{ locationInfo.address.address3 }}</div>{% endif %}
-            {% if locationInfo.address.address4 %}<div>{{ locationInfo.address.address4 }}</div>{% endif %}
-            <div>{{locationInfo.address.cityOrTown}}, {{locationInfo.address.stateOrProvince}} {{locationInfo.address.postalOrZipCode}}</div>
-           {% endwith %}
+          </table>
+          <div class="mz-pickup-info-container">
+              <div class="mz-pickup-info" >
+                <b>{{ labels.pickupAt }}</b>
+                <div>
+                  {% with location.locationInfo as locationInfo %}
+                  <div>{{ locationInfo.name }}</div>
+                  <div>{{ locationInfo.address.address1}}</div>
+                  {% if locationInfo.address.address2 %}<div>{{ locationInfo.address.address2 }}</div>{% endif %}
+                  {% if locationInfo.address.address3 %}<div>{{ locationInfo.address.address3 }}</div>{% endif %}
+                  {% if locationInfo.address.address4 %}<div>{{ locationInfo.address.address4 }}</div>{% endif %}
+                  <div>{{locationInfo.address.cityOrTown}}, {{locationInfo.address.stateOrProvince}} {{locationInfo.address.postalOrZipCode}}</div>
+                {% endwith %}
+                </div>
+              </div>
+                  {% for payment in model.payments %}
+                    {% if payment.status != "Voided" and payment.status != "Declined" %}
+                      {% if payment.billingInfo.billingContact %}
+                        {% with payment.billingInfo.billingContact as billingContact %}
+                            <div class="mz-pickup-info" >
+                              <b>{{ labels.primaryPickup }}</b>
+                                <div>
+                                    <div>{{billingContact.firstName}} {{billingContact.lastNameOrSurname}}</div>
+                                    <div>{{billingContact.email}}</div>
+                                    <div>{{billingContact.phoneNumbers.home}}</div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+              {% if model.alternateContact %}
+                <div class="mz-pickup-info" >
+                  <b>{{ labels.alternatePickup }}</b>
+                  <div>
+                    {% with model.alternateContact as alternateContact %}
+                      <div>{{alternateContact.firstName}} {{alternateContact.lastNameOrSurname}}</div>
+                      <div>{{alternateContact.emailAddress}}</div>
+                      <div>{{alternateContact.phoneNumber}}</div>
+                  {% endwith %}
+                  </div>
+                </div>
+              {% endif %}
           </div>
         </div>
-      </div>
       {% endfor %}
     </div>
      {% endif %}

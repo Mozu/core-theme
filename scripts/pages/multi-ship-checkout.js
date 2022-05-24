@@ -169,6 +169,129 @@ require(["modules/jquery-mozu",
         }
     });
 
+    var PickupView = Backbone.MozuView.extend({
+        templateName: 'modules/multi-ship-checkout/pickup-contact',
+        renderOnChange: [
+            'isReady'
+        ],
+        initialize: function() {
+
+            var alternatePickupContact= new AlternatePickupView({
+                el:$('#alternate-contact'),
+                model: this.model.get("alternateContact")
+            });
+           
+        },
+        render: function() {
+            var self = this;
+            Backbone.MozuView.prototype.render.apply(this,arguments);
+                setTimeout(
+                    function() {
+                        var alternatePickupContact= new AlternatePickupView({
+                            el:$('#alternate-contact'),
+                            model: self.model.get("alternateContact")
+                        });
+                        alternatePickupContact.render();
+                    },1000);
+        }
+
+    });
+
+    var tempAlternateContactData;
+    var AlternatePickupView =  Backbone.MozuView.extend({ //Backbone.MozuView
+        templateName: 'modules/multi-ship-checkout/pickup-contact-alternate',
+        autoUpdate: [
+            'firstName',
+            'lastNameOrSurname',
+            'emailAddress',
+            'phoneNumber'],
+        additionalEvents: {
+            "click [data-mz-action='addAlternateContact']": "addAlternateContact",
+            "click [data-mz-action='deleteAlternateContact']": "deleteAlternateContact",
+            "click [data-mz-action='editAlternateContact']":"editAlternateContact",
+            "click [data-mz-action='saveAlternateContact']":"saveAlternateContact",
+            "click [data-mz-action='cancelAlternateContact']":"cancelAlternateContact",
+            "keyup input":"onKeyUpAlternate"
+        },
+        initialize:function(){
+            var self = this;
+            self.hideForm();
+            $("#pickup-contact [data-mz-action='editAlternateContact']").on('click',function(e){
+                self.editAlternateContact(e);
+            });
+
+        },
+        render: function() {
+            var self = this;
+            Backbone.MozuView.prototype.render.apply(this,arguments);
+            setTimeout(function(){
+                self.hideForm();
+            },500);
+        },
+        saveAlternateContact: function () {
+            var self = this;
+            _.defer(function () {
+                var successfull = self.model.submit();
+                if(successfull) {
+                   self.render();
+                }
+            });
+
+        },
+        showForm: function() {
+            $("#change-alternate-contact").hide();
+            $("#pickup-display-section").hide();
+            $("#add-alternate-contact").hide();
+            $("#delete-alternate-contact").show();
+            $("#pickup-form-section").show();
+        },
+        hideForm: function(e) {
+            var firstName=this.model.get("firstName"),
+            lastNameOrSurname = this.model.get("lastNameOrSurname"),
+            emailAddress = this.model.get("emailAddress");
+            if((!firstName||firstName==='')||(!lastNameOrSurname||lastNameOrSurname==='')||(!emailAddress||emailAddress==='')){
+                $("#change-alternate-contact").hide();
+                $("#delete-alternate-contact").hide();
+                $("#pickup-form-section").hide();
+                $("#pickup-display-section").show();
+                $("#add-alternate-contact").show();
+                } else {
+                    $("#delete-alternate-contact").hide();
+                    $("#pickup-form-section").hide();
+                    $("#add-alternate-contact").hide();
+                    $("#pickup-display-section").show();
+                    $("#change-alternate-contact").show();
+                }
+        },
+        addAlternateContact: function(e) {
+            e.preventDefault();
+            this.showForm();
+        },
+        deleteAlternateContact:function(e) {
+            e.preventDefault();
+            this.model.set("firstName",null);
+            this.model.set("lastNameOrSurname",null);
+            this.model.set("emailAddress",null);
+            this.model.set("phoneNumber",null);
+            this.render();
+        },
+        editAlternateContact: function(e) {
+            e.preventDefault();
+            tempAlternateContactData = _.clone(this.model.attributes);//this.model.parent.get("alternateContact");
+            this.showForm();
+        },
+        cancelAlternateContact: function(e) {
+            if(tempAlternateContactData) {
+                this.model.attributes = _.clone(tempAlternateContactData);//this.model.parent.set("alternateContact",tempAlternateContactData);
+                this.render();
+            }
+            else {
+                this.hideForm();
+            }
+
+        }
+    });
+
     var ParentView = function(conf) {
       var gutter = parseInt(Hypr.getThemeSetting('gutterWidth'), 10);
       if (isNaN(gutter)) gutter = 15;
@@ -247,6 +370,10 @@ require(["modules/jquery-mozu",
                     el: $("[mz-modal-contact-dialog]"),
                     model: checkoutModel.get('dialogContact'),
                     messagesEl: $("[mz-modal-contact-dialog]").find('[data-mz-message-bar]')
+                }),
+                pickupContact: new PickupView({
+                    el:$('#pickup-contact'),
+                    model: checkoutModel
                 })
             };
 

@@ -1,0 +1,59 @@
+<h4 class="mz-checkoutform-title">{{labels.alternateContact}} {{labels.optional}} 
+<a href="javascript:;" id="delete-alternate-contact" class="img-action-button" data-mz-action="deleteAlternateContact" style="display:none;">
+<img src="/resources/images/trash.png" class="action-icon delete-button"/>
+</a>
+</h4>
+                        <a href="javascript:;" id="add-alternate-contact"  data-mz-action="addAlternateContact" style="display:none">{{labels.addAlternatePickup}}</a>
+                        
+                        <div id="pickup-display-section">
+                         {% if model.firstName and model.lastNameOrSurname and model.emailAddress %}
+                                        <div>
+                                            <div>{{model.firstName}} {{model.lastNameOrSurname}}</div>
+                                            <div>{{model.emailAddress}}</div>
+                                            <div>{{model.phoneNumber}}</div>
+                                        </div>
+                        {% endif%}
+                        </div>
+                        <div class="mz-l-formfieldgroup" id="pickup-form-section" style="display:none">
+                            
+                            <div class="mz-l-formfieldgroup-row">
+                                <div class="mz-l-formfieldgroup-cell">
+                                <label for="alternate-pickup-first-name">{{labels.firstName}}<span class="is-required"> *</span></label>
+                                </div>
+                                <div class="mz-l-formfieldgroup-cell">
+                                <input type="text" name="alternate-pickup-first-name" id="alternate-pickup-first-name" data-mz-value="firstName" value="{{model.firstName}}">
+                                <span class="mz-validationmessage" data-mz-validationmessage-for="firstName"></span>
+                                </div>
+                            </div>
+                            <div class="mz-l-formfieldgroup-row">
+                                <div class="mz-l-formfieldgroup-cell">
+                                <label for="alternate-pickup-last-name">{{labels.lastName}}<span class="is-required"> *</span></label>
+                                </div>
+                                <div class="mz-l-formfieldgroup-cell">
+                                <input type="text" name="alternate-pickup-last-name" id="alternate-pickup-last-name" data-mz-value="lastNameOrSurname" value="{{model.lastNameOrSurname}}">
+                                <span class="mz-validationmessage" data-mz-validationmessage-for="lastNameOrSurname"></span>
+                                </div>
+                            </div>
+                            <div class="mz-l-formfieldgroup-row">
+                                <div class="mz-l-formfieldgroup-cell">
+                                <label for="alternate-pickup-email">{{labels.emailAddress}}<span class="is-required"> *</span></label>
+                                </div>
+                                <div class="mz-l-formfieldgroup-cell">
+                                <input type="text" name="alternate-pickup-email" id="alternate-pickup-email" data-mz-value="emailAddress" value="{{model.emailAddress}}">
+                                <span class="mz-validationmessage" data-mz-validationmessage-for="emailAddress"></span>
+                                </div>
+                            </div>
+                            <div class="mz-l-formfieldgroup-row">
+                                    <div class="mz-l-formfieldgroup-cell">
+                                    <label for="alternate-pickup-phone">{{labels.phone}}</label>
+                                    </div>
+                                    <div class="mz-l-formfieldgroup-cell">
+                                    <input type="text" name="alternate-pickup-phone" id="alternate-pickup-phone" data-mz-value="phoneNumber" value="{{model.phoneNumber}}">
+                                    <span class="mz-validationmessage" data-mz-validationmessage-for="phoneNumber"></span>
+                                    </div>
+                            </div>
+                            <div class="mz-l-formfieldgroup-row">
+                            <button class="mz-button" data-mz-action="saveAlternateContact">{{labels.save}}</button>
+                            <button class="mz-button cancel-button" data-mz-action="cancelAlternateContact" >{{labels.cancel}}</button>
+                            <div>
+                        </div>

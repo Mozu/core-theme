@@ -1,0 +1,18 @@
+<h3 class="mz-formstep-header mz-checkoutform-header ">{{labels.pickupContact}} 
+<a href="javascript:;" style="display:none;" class="mz-formstep-edit" id="change-alternate-contact" data-mz-action="editAlternateContact">{{labels.change}}</a>
+</h3>
+
+<div {% if not model.isReady %} style="display:none" {% endif %} >
+    {% with model.items|first as item %}
+        {% if item.fulfillmentMethod == "Pickup" %}
+                        <div class="mz-l-stack-section" id ="primary-contact">
+                            {% include "modules/multi-ship-checkout/pickup-contact-primary" with model=model %}
+                        </div>
+                        <div class="mz-l-stack-section alternate-contact-section" id="alternate-contact">                            
+                        </div>
+        {% endif %}
+        {%if item.fulfillmentMethod!="Pickup" %}
+            {{labels.noPickupRequired}}
+        {% endif %}
+    {% endwith %}
+</div>
