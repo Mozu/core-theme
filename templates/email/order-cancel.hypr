@@ -5,7 +5,12 @@
     <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</p>
     <br>
     <p>{{ labels.orderCancelBlob1|string_format(model.orderNumber, model.externalId)|safe }}</p>
-
+    
+    {% if model.hasPickupItems %}
+        <br><br>
+        {% include "modules/common/pickup-contacts" with model=model %}
+        <br>
+    {% endif %}
     <br>
     <!--POSE stands for Post Order Submit Edit. EX: An order has been submitted and items are added to the order-->
     <!--If the cancelled order includes POSE items a different template is used for the email-->

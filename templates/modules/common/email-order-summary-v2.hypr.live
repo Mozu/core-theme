@@ -103,7 +103,7 @@
 
         {% if pickupItems and items|collection_filter(q) %}
         <tr class="mz-email-fulfillment-info">
-          <td class="mz-addresssummary" colspan="4">
+          <td class="mz-addresssummary">
             <b>{{ labels.pickupAt }}</b>
             <div>
               <div>{{ location.name }}</div>
@@ -113,6 +113,9 @@
               {% if location.address.address4 %}<div>{{ location.address.address4 }}</div>{% endif %}
               <div>{{location.address.cityOrTown}}, {{location.address.stateOrProvince}} {{location.address.postalOrZipCode}}</div>
             </div>
+          </td>
+          <td colspan="3">
+            {% include "modules/common/pickup-contacts" with model=order %}
           </td>
         </tr>
         {% endif %}
