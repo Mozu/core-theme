@@ -47,9 +47,7 @@ using Mozu.Core.Configuration;
 using Kibo.Fulfillment.Contracts.Api;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
-using Mozu.Customer.Contracts;
 using System.Globalization;
-using Mozu.CommerceRuntime.Contracts.Quotes;
 using Mozu.CommerceRuntime.Contracts.Subscriptions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -82,6 +80,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public bool IsCurbside { get; set; }
 
         public bool hasPOSEItems { get; set; }
+
+        public bool hasPickupItems { get; set; }
     }
 
     public class GatewayGiftCardEmail  : EmailGatewayGiftCard
@@ -814,6 +814,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 bool hasPOSEItems = (omsShipmentsItemCount > orderItemCountWithBundleItems);
                 orderEmail.hasPOSEItems = hasPOSEItems;
                 orderEmail.OmsShipments = omsShipments;
+                orderEmail.hasPickupItems = orderEmail.Items.Any(item => item.FulfillmentMethod.Equals(CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP) || item.FulfillmentMethod.Equals(CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.CURBSIDE));
             }
             if (obj is GatewayGiftCardEmail giftCardEmail)
             {

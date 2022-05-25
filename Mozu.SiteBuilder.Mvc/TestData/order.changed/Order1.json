@@ -1599,6 +1599,11 @@
       "includeInLocationExport": false,
       "warehouseEnabled": false
     }
-  ]
-
+  ],
+  "alternateContact": {
+    "firstName": "alternatefirst",
+    "lastNameOrSurname": "alternateLast",
+    "emailAddress": "alternateemail@test.com",
+    "phoneNumber": "876-543-2112"
+  }
 }

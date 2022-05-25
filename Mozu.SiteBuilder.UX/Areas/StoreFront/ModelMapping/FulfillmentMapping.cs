@@ -29,7 +29,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 {
                     op.PreCondition(src => src.PickupInfo != null);
                     op.MapFrom(src => JObject.FromObject(src.PickupInfo));
+                })
+                .ForMember(dest => dest.AlternateContact, op =>
+                {
+                    op.PreCondition(src => src.AlternateContact != null);
+                    op.MapFrom(src => src.AlternateContact);
                 });
+
+            CreateMap<F.Contact, CR.AlternateContact>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumbers.Home ?? src.PhoneNumbers.Mobile ?? src.PhoneNumbers.Work))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastNameOrSurname, opt => opt.MapFrom(src => src.LastNameOrSurname));
 
             CreateMap<F.Item, CR.ShipmentItem>()
                 .ForMember(dest => dest.Data, opt =>
