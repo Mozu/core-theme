@@ -58,8 +58,8 @@ namespace Mozu.SiteBuilder.UX.Filters
             // else we are in a locked-down state. Is there an admin logged in?
             if (!HasAdminCookie(adminToken))
             {
-                var host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
-                context.Result = RedirectTo(CreateLoginLink(loginAppHelper, request.HttpContext.GetRequestUri(), host, apiContext.TenantId));
+                var current = new UriBuilder(resolver.Resolve<IRequestUrlFinderOuter>().GetRequestUrl()).Uri;
+                context.Result = RedirectTo(CreateLoginLink(loginAppHelper, current, apiContext.TenantId));
                 return;
             }
 
@@ -158,9 +158,9 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !adminToken.IsNullOrEmpty();
         }
 
-        private static Uri CreateLoginLink(LoginAppRouteHelper router, Uri requestUri, string postbackHostValue, int tenantId)
+        private static Uri CreateLoginLink(LoginAppRouteHelper router, Uri requestUri, int tenantId)
         {
-            var postback = new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString();
+            var postback = new UriBuilder(requestUri.Scheme, requestUri.Host, requestUri.Port, "/auth/pants").Uri.ToString();
             return router.To(UserScopeType.Tenant, tenantId, requestUri.PathAndQuery, postback, false);
         }
 
