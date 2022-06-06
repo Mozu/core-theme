@@ -18,7 +18,7 @@
 </div>
 <br />
 {% endif %}
-{% if model.viewB2BAccount == false %}
+{% if model.viewB2BAccount == false && model.isNonPurchaserUser == false %}
 <div style="padding-bottom: 10px;"><button class="mz-button" {% if user.isSalesRep %} disabled="true" {% endif %}  data-mz-action="create-quote" id="createQuoteHompageBtn" >{{labels.createQuote}}</button></div>
 {% endif %}
 <div class="mz-l-stack-section mz-orderlist" style="clear:none">
