@@ -257,6 +257,7 @@ require(["modules/jquery-mozu",
         },
         addAlternateContact: function(e) {
             e.preventDefault();
+            tempAlternateContactData = {};
             this.showForm();
         },
         deleteAlternateContact:function(e) {
