@@ -74,7 +74,7 @@ define(['modules/api',
         }, 
         userHasBehavior: function (behaviorId) {
           var behaviors = require.mozuData('user').behaviors;
-          console.log( require.mozuData('user'));
+          
           if (behaviors) {
               return behaviors.includes(behaviorId);
           }
