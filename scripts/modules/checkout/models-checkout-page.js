@@ -225,6 +225,52 @@ var CheckoutGrouping = Backbone.MozuModel.extend({
     }
 });
 
+        
+var AlternateContact = Backbone.MozuModel.extend({
+    validation: {
+        'firstName': {
+            required: true,
+            msg: Hypr.getLabel("firstNameMissing")
+        },
+        'lastNameOrSurname': {
+            required: true,
+            msg: Hypr.getLabel("lastNameMissing")
+        },
+        'emailAddress': {
+            pattern: 'email',
+            msg: Hypr.getLabel('emailMissing')
+        }
+    },
+    getOrder: function() {
+        return this.parent;
+    },
+    submit: function() {
+        
+        var order = this.getOrder();
+
+        var val = this.validate();
+
+        if (val) {
+            // display errors:
+            var error = {"items":[]};
+            for (var key in val) {
+                if (val.hasOwnProperty(key)) {
+                    var errorItem = {};
+                    errorItem.name = key;
+                    errorItem.message = key.substring(0, ".") + val[key];
+                    error.items.push(errorItem);
+                }
+            }
+            if (error.items.length > 0) {
+                order.onCheckoutError(error);
+            }
+            return false;
+        }
+        order.messages.reset();
+        return true;
+    }
+});
+
 var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'checkout',
             handlesMessages: true,
@@ -242,7 +288,8 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 shippingStep: ShippingStep,
                 shippingInfo: ShippingInfo,
                 dialogContact: ContactDialogModels,
-                shippingMethods : Backbone.Collection.extend()
+                shippingMethods : Backbone.Collection.extend(),
+                alternateContact: AlternateContact
             },
             validation: checkoutPageValidation,
             dataTypes: {
@@ -876,11 +923,15 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
                     requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
                     process = [function() {
-                        return checkout.apiUpdateCheckout({
+                        var requestPayload =  {
                             ipAddress: checkout.get('ipAddress'),
                             shopperNotes: checkout.get('shopperNotes').toJSON(),
                             email: checkout.get('email')
-                        });
+                        };
+                        if(checkout.get('alternateContact').isValid()) {
+                            requestPayload.alternateContact =  checkout.get('alternateContact').toJSON();
+                        }
+                        return checkout.apiUpdateCheckout(requestPayload);
                     }];
 
                 var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;

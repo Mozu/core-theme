@@ -900,5 +900,12 @@
   "wrongCountryForType": "Please select a country supported for this contact type",
   "yes": "Yes",
   "yourAccount": "Your Account",
-  "yourOrderNumber": "Your order number is <strong>{0}</strong>."
+  "yourOrderNumber": "Your order number is <strong>{0}</strong>.",
+  "primaryContact":"Primary Contact",
+  "alternateContact": "Alternate Contact",
+  "optional":"(optional)",
+  "addAlternatePickup":"Add an alternate pickup contact",
+  "noPickupRequired":"No pickup contact information is required since all items will be shipped to home or digitally fulfilled.",
+  "primaryPickup":"Primary Pickup Contact:",
+  "alternatePickup":"Alternate Pickup Contact:"
 }

@@ -1,0 +1,33 @@
+<h4 class="mz-checkoutform-title">{{labels.primaryContact}}</h4>
+{% if model.billingInfo.billingContact %}
+    {% with model.billingInfo.billingContact as billingContact %}
+            <div>
+                <div>{{billingContact.firstName}} {{billingContact.lastNameOrSurname}}</div>
+                <div>{{billingContact.email}}</div>
+                <div>{{billingContact.phoneNumbers.home}}</div>
+            </div>
+    {% endwith %}
+{% else %}
+    {% if model.destinations%}
+        {% with model.destinations|first as destination %}
+            {% if destination.destinationContact %}
+                <div>
+                    <div>{{destination.destinationContact.firstName}} {{destination.destinationContact.lastNameOrSurname}}</div>
+                    <div>{{destination.destinationContact.email}}</div>
+                    <div>{{destination.destinationContact.phoneNumbers.home}}</div>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {%endif%}
+    {% if model.payments and not model.destinations or model.payments and model.destinations.length == 0%}
+        {% with model.payments|first as payment %}
+            {% if payment.billingInfo and payment.billingInfo.billingContact%}
+                <div>
+                    <div>{{payment.billingInfo.billingContact.firstName}} {{payment.billingInfo.billingContact.lastNameOrSurname}}</div>
+                    <div>{{payment.billingInfo.billingContact.email}}</div>
+                    <div>{{payment.billingInfo.billingContact.phoneNumbers.home}}</div>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif%}
+{% endif%}

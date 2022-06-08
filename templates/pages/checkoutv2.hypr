@@ -69,6 +69,9 @@
         <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
             {% include "modules/multi-ship-checkout/step-payment-info" %}
         </div>
+        <div class="mz-formstep mz-checkoutform-pickup-contact mz-l-stack" id="pickup-contact">
+            {% include "modules/multi-ship-checkout/pickup-contact" %}
+        </div>
 
         <div class="mz-formstep mz-checkoutform-review" id="step-review">
             {% include "modules/checkout/step-review" %}
