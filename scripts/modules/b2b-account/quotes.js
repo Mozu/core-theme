@@ -36,7 +36,7 @@ define([
         var isSalesRep = require.mozuData('user').isSalesRep;
         var accountDict = {};
         var uniqueAccountId = [];
-    var QuotesMozuGrid = MozuGrid.extend({
+        var QuotesMozuGrid = MozuGrid.extend({
         render: function () {
             var self = this;
             if (isSalesRep)
@@ -126,6 +126,8 @@ define([
         },
         render: function () {
             var self = this;
+            var isNonPurchaserUser =  !require.mozuData('user').behaviors.includes(1000) && !require.mozuData('user').behaviors.includes(1005);
+            self.model.set("isNonPurchaserUser", isNonPurchaserUser);
             Backbone.MozuView.prototype.render.apply(this, arguments);
             var viewB2BAccount = self.model.attributes.viewB2BAccount;
             var collection;
@@ -136,6 +138,10 @@ define([
             }
             else {
                 collection = new QuotesGridCollectionModel({ autoload: true });
+                if(isNonPurchaserUser)
+                {
+                    collection.attributes.rowActions = [];
+                }
                 _.extend(collection, Backbone.Events);
                 collection.bind('custom:eventOnRowClick', this.quotesGridRowSelected, this);
             }

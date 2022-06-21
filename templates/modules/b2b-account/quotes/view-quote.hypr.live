@@ -3,7 +3,7 @@
     {{model.name}} {% if model.isDraft == true %} ({{labels.draft}}) {% endif %}
     <button class="mz-button" style="margin-left: 10px;" data-mz-action="exitQuote">{{labels.exitQuote}}</button>
     {% if model.isSalesRep == false %}
-      {% if model.status=="Pending" or model.status=="ReadyForCheckout" %}
+      {% if (model.status=="Pending" or model.status=="ReadyForCheckout") && model.isNonPurchaserUser == false %}
     <button class="mz-button" data-mz-action="editQuote">{{labels.editQuote}}</button>
       {% endif %}
       {% if model.status=="Expired" or model.status=="InReview" or model.status=="Completed" %}

@@ -71,7 +71,18 @@ define(['modules/api',
             //       })
             //    })
             //})
-        },
+        }, 
+        userHasBehavior: function (behaviorId) {
+          var behaviors = require.mozuData('user').behaviors;
+          
+          if (behaviors) {
+              return behaviors.includes(behaviorId);
+          }
+          return false;
+      },
+      isUserNonPurchaser: function () {
+        return !this.userHasBehavior(1005) && !this.userHasBehavior(1000);
+      },
         render: function() {
             preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
@@ -81,6 +92,7 @@ define(['modules/api',
             var userBehaviors = require.mozuData('user').behaviors || [];
             var isB2BUser = !userBehaviors.includes(MozuUtilities.Behaviors.User_Has_Full_Access_To_Their_Account);
             this.model.set("isB2BUser", isB2BUser);
+            this.model.set("isUserNonPurchaser", this.isUserNonPurchaser());
             // normally we preserveElement on the apple pay button, but we hide it if a change to the cart 
             // has lead the total price to be $0. Apple doesn't like $0 orders
             if (ApplePay && ApplePay.scriptLoaded) ApplePay.hideOrShowButton();

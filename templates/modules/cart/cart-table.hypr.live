@@ -65,7 +65,7 @@
         {% include "modules/common/coupon-code-field" %}
       </div>
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
-      {% if model.isB2BUser == true %} 
+      {% if model.isB2BUser == true &&  model.isUserNonPurchaser == false %} 
         <button type="button" id="quote-checkout" class="mz-button mz-button-large mz-carttable-button-active mz-carttable-InitiateQuote"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToInitiateQuote">{{ labels.proceedToInitiateQuote }}</button> 
       {% endif %}
       {% if model.hasRequiredBehavior %}
