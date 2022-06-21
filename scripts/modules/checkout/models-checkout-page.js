@@ -65,7 +65,7 @@ define([
 
 
 var CheckoutOrder = OrderModels.Order.extend({
-    helpers : ['selectableDestinations', 'isOriginalCartItem', 'getDeliverableItems'],
+    helpers : ['selectableDestinations', 'getDeliverableItems'],
     validation : {
         destinationId : {
             required: true,
@@ -90,11 +90,6 @@ var CheckoutOrder = OrderModels.Order.extend({
             }
         });
         return selectable;
-    },
-    isOriginalCartItem : function(){
-        var self = this;
-        var originalCartItem = self.collection.findWhere({originalCartItemId: self.get('originalCartItemId')});
-        return originalCartItem.id == self.get('id');
     },
     addNewContact: function(){
         var self = this;

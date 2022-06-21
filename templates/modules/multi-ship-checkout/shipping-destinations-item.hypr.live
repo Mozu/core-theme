@@ -1,8 +1,6 @@
 {% if model.fulfillmentMethod == "Ship" %}
 <div class="mz-shipping-destination-title mz-l-formfieldgroup-row">
-{% if model.isOriginalCartItem%}
   <h3>{{ model.product.name }}</h3>
-{%endif%}
 </div>
 
 <div class="mz-shipping-row">
