@@ -49,7 +49,7 @@ module.exports = {
         return this.applyCoupon(couponCode).then(function () {
             return self.get();
         }, function (reason) {
-            errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+           errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message == undefined ? (reason.items != undefined && reason.items.length > 0 ? reason.items[0].message : '') : '')
         });
     }
 };
