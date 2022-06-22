@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(dest => dest.PackingSlipItemDetails, o => o.MapFrom(v => v.PackingSlipItemDetails))
                 ;
 
-            CreateMap<F.PackingSlipItemDetail, CR.PackingSlipItemDetail>()
+            CreateMap<F.PackingSlipItemDetailDto, CR.PackingSlipItemDetail>()
                 .ForMember(dest => dest.LineId, o => o.MapFrom(v => v.LineId))
                 .ForMember(dest => dest.OriginalOrderItemId, o => o.MapFrom(v => v.OriginalOrderItemId))
                 .ForMember(dest => dest.Quantity, o => o.MapFrom(v => v.Quantity))

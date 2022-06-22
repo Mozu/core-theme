@@ -72,6 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
         private const string PICKWAVE_PREVIEW_RESOURCE_NAME = "backoffice.pickwave1";
         private const string PICKWAVE2_PREVIEW_RESOURCE_NAME = "backoffice.pickwave2";
+        private const string PICKWAVEDETAILS_PREVIEW_RESOURCE_NAME = "backoffice.pickwavedetails";
         private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
         private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
         private const string SHIPMENT3_PREVIEW_RESOURCE_NAME = "backoffice.shipment3";
@@ -485,6 +486,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             ViewData["orders"] = orders;
 
+            var pickWaveDetails = (await pickWaveControllerApiClient.GetPickWaveDetailsUsingGET(pickWaveNumber)).ReadAsAsync().Result;
+            ViewData["pickWaveDetails"] = pickWaveDetails;
+
             ViewData["printPickwave"] = printPickWave;
             ViewData["printPackingSlips"] = printPackingLists;
             ViewData["printPickSheets"] = printSingleOrderSheets;
@@ -629,8 +633,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "pick-list")
             {
                 object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickWaveDetails = TestDataBroker.GetFileContents(PICKWAVEDETAILS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+
                 ViewData["shipments"] = shipments;
+                ViewData["orders"] = orders;
+                ViewData["pickWaveDetails"] = pickWaveDetails;
 
                 return await RenderWithContext(template, model);
             }
@@ -647,9 +656,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickWaveDetails = TestDataBroker.GetFileContents(PICKWAVEDETAILS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+
                 ViewData["shipments"] = shipments;
                 ViewData["orders"] = orders;
+                ViewData["pickWaveDetails"] = pickWaveDetails;
                 ViewData["printPickwave"] = true;
                 ViewData["printPackingSlips"] = true;
                 ViewData["printPickSheets"] = true;
