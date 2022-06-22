@@ -9,8 +9,9 @@ require(["modules/jquery-mozu",
     'modules/preserve-element-through-render',
     'modules/xpress-paypal',
     'modules/amazonpay',
-    'modules/applepay'],
-    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements, PayPal, AmazonPay, ApplePay) {
+    'modules/applepay',
+    'modules/checkout/views-pickup'],
+    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements, PayPal, AmazonPay, ApplePay, PickupView) {
 
 
     var ThresholdMessageView = Backbone.MozuView.extend({
@@ -696,6 +697,10 @@ require(["modules/jquery-mozu",
                 messageView: messageViewFactory({
                     el: $checkoutView.find('[data-mz-message-bar]'),
                     model: checkoutModel.messages
+                }),
+                pickupContact: new PickupView({
+                    el:$('#pickup-contact'),
+                    model: checkoutModel
                 })
             };
 

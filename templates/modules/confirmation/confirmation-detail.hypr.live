@@ -48,9 +48,11 @@
             <div class="mz-l-stack-item">
                 <small>{{ labels.storeName }}</small>
                 <div>{{ location.name }}</div>
-
             </div>
+            <div class="mz-pickup-info-container">
             <div class="mz-l-stack-item">
+            <small>{{ labels.pickupAt }}</small>
+            <div>
               <small>{{ labels.address }}</small>
               <div>{{ location.address.address1 }}</div>
               {% if location.address.address2 %}<div> {{ location.address.address2 }}</div>{% endif %}
@@ -58,6 +60,36 @@
               {% if location.address.address4 %}<div> {{ location.address.address4 }}</div>{% endif %}
               <div> {{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }}</div>
               <div> {{location.address.postalOrZipCode}} </div>
+            </div>
+            </div>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.status != "Declined" %}
+                        {% if payment.billingInfo.billingContact %}
+                            {% with payment.billingInfo.billingContact as billingContact %}
+                                <div class="mz-l-stack-item" >
+                                <small>{{ labels.primaryPickup }}</small>
+                                    <div>
+                                        <div>{{billingContact.firstName}} {{billingContact.lastNameOrSurname}}</div>
+                                        <div>{{billingContact.email}}</div>
+                                        <div>{{billingContact.phoneNumbers.home}}</div>
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% if model.alternateContact %}
+                    <div class="mz-l-stack-item" >
+                    <small>{{ labels.alternatePickup }}</small>
+                    <div>
+                        {% with model.alternateContact as alternateContact %}
+                        <div>{{alternateContact.firstName}} {{alternateContact.lastNameOrSurname}}</div>
+                        <div>{{alternateContact.emailAddress}}</div>
+                        <div>{{alternateContact.phoneNumber}}</div>
+                    {% endwith %}
+                    </div>
+                    </div>
+                {% endif %}
             </div>
             {% endwith %}
         </div>

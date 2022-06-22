@@ -14,11 +14,12 @@ define([
     'modules/checkout/models-shipping-destinations',
     'modules/checkout/steps/step2/models-step-shipping-methods',
     'modules/checkout/steps/step3/models-payment',
-    'modules/checkout/contact-dialog/models-contact-dialog'
+    'modules/checkout/contact-dialog/models-contact-dialog',
+    'modules/checkout/models-alternate-contact'
 ],
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods,
         HyprLiveContext, OrderModels, CheckoutStep, ShippingStep,
-        ShippingDestinationModels, ShippingInfo, BillingInfo, ContactDialogModels) {
+        ShippingDestinationModels, ShippingInfo, BillingInfo, ContactDialogModels,AlternateContact) {
 
     var checkoutPageValidation = {
             'emailAddress': {
@@ -220,52 +221,6 @@ var CheckoutGrouping = Backbone.MozuModel.extend({
     }
 });
 
-        
-var AlternateContact = Backbone.MozuModel.extend({
-    validation: {
-        'firstName': {
-            required: true,
-            msg: Hypr.getLabel("firstNameMissing")
-        },
-        'lastNameOrSurname': {
-            required: true,
-            msg: Hypr.getLabel("lastNameMissing")
-        },
-        'emailAddress': {
-            pattern: 'email',
-            msg: Hypr.getLabel('emailMissing')
-        }
-    },
-    getOrder: function() {
-        return this.parent;
-    },
-    submit: function() {
-        
-        var order = this.getOrder();
-
-        var val = this.validate();
-
-        if (val) {
-            // display errors:
-            var error = {"items":[]};
-            for (var key in val) {
-                if (val.hasOwnProperty(key)) {
-                    var errorItem = {};
-                    errorItem.name = key;
-                    errorItem.message = key.substring(0, ".") + val[key];
-                    error.items.push(errorItem);
-                }
-            }
-            if (error.items.length > 0) {
-                order.onCheckoutError(error);
-            }
-            return false;
-        }
-        order.messages.reset();
-        return true;
-    }
-});
-
 var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'checkout',
             handlesMessages: true,
@@ -283,8 +238,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 shippingStep: ShippingStep,
                 shippingInfo: ShippingInfo,
                 dialogContact: ContactDialogModels,
-                shippingMethods : Backbone.Collection.extend(),
-                alternateContact: AlternateContact
+                shippingMethods : Backbone.Collection.extend()
             },
             validation: checkoutPageValidation,
             dataTypes: {
@@ -923,8 +877,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
                             shopperNotes: checkout.get('shopperNotes').toJSON(),
                             email: checkout.get('email')
                         };
-                        if(checkout.get('alternateContact').isValid()) {
-                            requestPayload.alternateContact =  checkout.get('alternateContact').toJSON();
+                        var alternateContactJson = checkout.get('alternateContact')?checkout.get('alternateContact').toJSON():{};
+                        if(Object.keys(alternateContactJson).length>0) {
+                            requestPayload.alternateContact =  alternateContactJson;
                         }
                         return checkout.apiUpdateCheckout(requestPayload);
                     }];

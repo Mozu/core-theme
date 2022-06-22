@@ -7,9 +7,10 @@
     'modules/models-customer',
     'modules/models-address',
     'modules/models-paymentmethods',
-    'hyprlivecontext'
+    'hyprlivecontext',
+    'modules/checkout/models-alternate-contact'
 ],
-    function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
+    function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext,AlternateContact) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
             helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsCheckout','isNonMozuCheckout', 'requiresDigitalFulfillmentContact','isShippingEditHidden', 'requiresShippingMethod'],  //
@@ -2084,10 +2085,15 @@
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
                     requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
                     process = [function() {
-                        return order.update({
+                        var requestPayload = {
                             ipAddress: order.get('ipAddress'),
                             shopperNotes: order.get('shopperNotes').toJSON()
-                        });
+                        };
+                        var alternateContactJson = order.get('alternateContact')?order.get('alternateContact').toJSON():{};
+                        if(Object.keys(alternateContactJson).length>0) {
+                            requestPayload.alternateContact =  alternateContactJson;
+                        }
+                        return order.update(requestPayload);
                     }];
 
                 var activePayments = this.apiModel.getActivePayments();
