@@ -13,18 +13,20 @@
     <table class="grid">
         <thead><tr>
             <th>Image</th>
-            <th>Part#</th>
+            <th>Part #</th>
             <th>UPC</th>
             <th>SKU</th>
-            <th>Product Name</th>
-            <th>Order#s</th>
-			<th>External Order#s</th>
-            <th>Qty Needed</th>
-            <th>Qty Picked</th>
+            <th>Locator Name</th>
+            <th>Bin</th>
+            <th>Shipment #</th>
+            <th>Order #</th>
+			<th>External Order #</th>
+            <th>Needed Qty</th>
+            <th>Picked Qty</th>
         </tr></thead>
         <tbody>
                 
-          {% for item in model.contents %}
+          {% for item in pickWaveDetails.contentGroups %}
              <tr>
                   <td>
                       <img class="pickwave-slip-product-image" src="{{ item.imageUrl }}">
@@ -39,21 +41,77 @@
                       {{ item.sku }}
                   </td>
                   <td>
-                      <div class="product-name">{{ item.name }}</div>
+                      {{ item.locatorName }}
                   </td>
                   <td>
+                    <div class="hidden-table-cell">
+                      {{ item.binName }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="hidden-table-cell">
+                      {{ item.shipmentNumber }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="hidden-table-cell">
                       {{ item.orderNumber }}
+                    </div>
                   </td>
 				  <td>
+				    <div class="hidden-table-cell">
                       {{ item.externalOrderId }}
+				    </div>
                   </td>
                   <td>
                       {{ item.quantity }}
                   </td>
                   <td>
+                    <div class="hidden-table-cell">
                       {{ item.actualQuantity }}
+                    </div>
                   </td>
               </tr>
+              
+             {% for contentItem in item.contents %}
+              <tr>
+                  <td>
+                      <img class="pickwave-slip-product-image hidden-table-cell" src="{{ contentItem.imageUrl }}">
+                  </td>
+                  <td>
+                      {{ contentItem.partNumber }}
+                  </td>
+                  <td>
+                      {{ contentItem.upc }}
+                  </td>
+                  <td>
+                      {{ contentItem.sku }}
+                  </td>
+                  <td>
+                    <div class="hidden-table-cell" >
+                      {{ contentItem.locatorName }}
+                    </div>
+                  </td>
+                  <td>
+                      {{ contentItem.binName }}
+                  </td>
+                  <td>
+                      {{ contentItem.shipmentNumber }}
+                  </td>
+                  <td>
+                      {{ contentItem.orderNumber }}
+                  </td>
+				  <td>
+                      {{ contentItem.externalOrderId }}
+                  </td>
+                  <td>
+                      {{ contentItem.quantity }}
+                  </td>
+                  <td>
+                      {{ contentItem.actualQuantity }}
+                  </td>
+              </tr>
+             {% endfor %}
           {% endfor %}
         </tbody>
     </table>
