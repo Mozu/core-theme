@@ -10,19 +10,19 @@
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
-    <table class="grid">
+    <table class="grid pick-list-table">
         <thead><tr>
             <th>Image</th>
             <th>Part #</th>
             <th>UPC</th>
             <th>SKU</th>
-            <th>Locator Name</th>
+            <th>Locator<br> Name</th>
             <th>Bin</th>
             <th>Shipment #</th>
             <th>Order #</th>
-			<th>External Order #</th>
-            <th>Needed Qty</th>
-            <th>Picked Qty</th>
+			<th>External<br> Order #</th>
+            <th>Needed<br> Qty</th>
+            <th>Picked<br> Qty</th>
         </tr></thead>
         <tbody>
                 
