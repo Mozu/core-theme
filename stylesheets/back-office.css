@@ -725,5 +725,18 @@ table {
  
 .mz-printable-order-packingslip .pickwave-slip-product-image {
   max-height: 100px;
-  max-width: 200px;
+  max-width: 100px;
+}
+
+.mz-printable-order-packingslip .pick-list-table.table {
+  table-layout: fixed;
+}
+
+.mz-printable-order-packingslip .pick-list-table td {
+  max-width: 100px;
+  word-wrap: break-word;
+}
+
+.hidden-table-cell {
+  visibility: hidden;
 }
