@@ -6,6 +6,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
       render: function(){
         var self = this;
         this.populateWithUsers();
+        this.populateOrderShipments();
         MozuGrid.prototype.render.apply(self, arguments);
       },
       populateWithUsers: function(){
@@ -17,6 +18,21 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
               order.set('fullName', userInQuestion.firstName+' '+userInQuestion.lastName);
           });
           return self.model;
+      },
+      populateOrderShipments: function() {
+        var self = this;
+
+        self.model.get('items').models.forEach(function(order) {
+            var orderId = order.get('id');
+            var orderModel = OrderModels.Order.fromCurrent();
+
+            orderModel.apiModel.getShipments(orderId).then(function (response) {
+                order.set('shipments', response.data);
+            }, function (error) {
+                self.showMessageBar(error);
+            }); 
+        });
+        return self.model;
       }
   });
   var OrdersView = Backbone.MozuView.extend({
