@@ -1,4 +1,4 @@
-﻿define([
+define([
     'modules/jquery-mozu',
     'underscore',
     'hyprlive',
@@ -1958,15 +1958,22 @@
                     orderContact.types = contactTypes;
                     return api.steps(process);
                 } else {
-                    var customerContact = customerContacts.get(orderContact.id).toJSON();
-                    if (this.isContactModified(orderContact, customerContact)) {
-                        //keep the current types on edit
-                        orderContact.types = orderContact.types ? orderContact.types : customerContact.types;
-                        return api.steps(process);
+                    var customerContactExists = customerContacts.get(orderContact.id);
+                    if(customerContactExists) {
+                        var customerContact = customerContactExists.toJSON();
+                        if (this.isContactModified(orderContact, customerContact)) {
+                            //keep the current types on edit
+                            orderContact.types = orderContact.types ? orderContact.types : customerContact.types;
+                            return api.steps(process);
+                        } else {
+                            var deferred = api.defer();
+                            deferred.resolve();
+                            return deferred.promise;
+                        }
                     } else {
-                        var deferred = api.defer();
-                        deferred.resolve();
-                        return deferred.promise;
+                        delete orderContact.id;
+                        //this.trigger('error', {message: 'Testing'});
+                        return api.steps(process);
                     }
                 }
             },
