@@ -90,6 +90,7 @@ define(["modules/jquery-mozu",
                 if(!$(e.currentTarget).selected) {
                     self.model.getCheckout().apiSetShippingMethod({groupId: groupingId, shippingRate: shippingRate}).ensure(function(){
                         self.model.isLoading(false);
+                        self.render();
                     });
                     // self.model.getCheckout().apiSetShippingMethods().then(function(){
 
