@@ -43,7 +43,7 @@
                 <div class="filter-column">
                     <span class="mz-b2b-quotes-compare"> > </span>
                     <input type="date" data-mz-is-datepicker id="expirationdate" class="expirationdate-filter"
-                        data-mz-action="dateChanged" data-format="yy/mm/dd" placeholder="{{ labels.searchExpirationDate }}">
+                        data-mz-action="dateChanged" data-format="yy/mm/dd" placeholder="{{ labels.searchExpirationDate }}" onkeydown="return false">
                 </div>
                 <div class="fill-remaining-space"></div>
                 <div class="status-filter-column">
