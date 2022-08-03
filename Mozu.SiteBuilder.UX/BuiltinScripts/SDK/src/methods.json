@@ -742,7 +742,7 @@
     "get-shipments": {
       "verb": "GET",
       "includeSelf": false,
-      "template": "{+storefrontShipmentsService}?filter=orderId=={orderId}shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
+      "template": "{+storefrontShipmentsService}?filter=orderId=={orderId};shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
       "shortcutParam": "orderId",
       "returnType": "storefrontShipments"
     }

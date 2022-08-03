@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2022-04-27
+ * Mozu JavaScript SDK - v0.3.0 - 2022-07-28
  *
  * Copyright (c) 2022 Volusion, Inc.
  *
@@ -4282,7 +4282,7 @@ module.exports=
     "get-shipments": {
       "verb": "GET",
       "includeSelf": false,
-      "template": "{+storefrontShipmentsService}?filter=orderId=={orderId}shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
+      "template": "{+storefrontShipmentsService}?filter=orderId=={orderId};shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED{?sort,page,pageSize,filter,fields,quickSearch,isLate}",
       "shortcutParam": "orderId",
       "returnType": "storefrontShipments"
     }
@@ -5227,7 +5227,7 @@ module.exports = {
         return this.applyCoupon(couponCode).then(function () {
             return self.get();
         }, function (reason) {
-                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message == undefined ? (reason.items != undefined && reason.items.length > 0 ? reason.items[0].message : '') : reason.message);
+           errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message == undefined ? (reason.items != undefined && reason.items.length > 0 ? reason.items[0].message : '') : '')
         });
     }
 };
