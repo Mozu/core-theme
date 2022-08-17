@@ -1,4 +1,4 @@
-﻿{% extends "email/email" %}
+{% extends "email/email" %}
 
 {% block body-content %}
     <br>
@@ -122,7 +122,23 @@
                         <td>
                             <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="https://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
                             <b>{{ labels.externalOrderId }}</b>: {{ model.externalId }}<br/><br/>
-                            <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br>
+                            {% set_var subscriptionWithDelivery=false %}
+                            {% for item in model.items %}
+                                {% if item.fulfillmentMethod == "Delivery" %}
+                                    {% for property in item.product.properties %}
+                                        {% if property && property.attributeFQN == "system~subscription-mode" %}
+                                            {% for value in property.values %}
+                                                {% if value.value == "SO" || value.value == "SOAT" %}
+                                                    {% set_var subscriptionWithDelivery=true %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if subscriptionWithDelivery == false %}
+                                <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br>
+                            {% endif %}
                             {% if model.fulfillmentInfo.shippingMethodName %}
                                 <br>
                                 <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}
