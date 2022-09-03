@@ -656,7 +656,9 @@ define([
                 if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
                     (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)
                     ) {
-                    order.get('billingInfo').clear();
+                        if(order.get('total') < Math.abs(order.get('amountRemainingForPayment'))){
+                            order.get('billingInfo').clear();
+                        }
                     order.set(updatedOrder, { silent: true });
                 }
                 self.setPurchaseOrderInfo();
