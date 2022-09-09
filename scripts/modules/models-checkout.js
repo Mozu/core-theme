@@ -654,8 +654,7 @@ define([
                 var activePayments = this.activePayments();
                 var hasNonStoreCreditPayment = (_.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; })).length > 0;
                 if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
-                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)
-                    ) {
+                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) {
                         if(order.get('total') < Math.abs(order.get('amountRemainingForPayment'))){
                             order.get('billingInfo').clear();
                         }
