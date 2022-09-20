@@ -156,9 +156,20 @@ define([
                 if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
+                    if (!this.tempAddr) {
+                        this.tempAddr = {};
+                        for (var key in addr) {
+                            this.tempAddr[key] = addr[key];
+                        }
+                    }
                     for (var k in valAddr) {
                         addr.set(k, valAddr[k]);
                     }
+                } else {
+                    for (var k in this.tempAddr) {
+                        addr.set(k, this.tempAddr[k]);
+                    }
+                    this.tempAddr = undefined;
                 }
             },
             toJSON: function () {
