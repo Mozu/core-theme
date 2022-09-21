@@ -31,6 +31,64 @@ define(['modules/api',
 
             var me = this;
 
+            setInterval(function () {
+              var items = me.model.get("items");
+
+              if (items.length > 0 ) {
+
+                var cartId = me.model.get('id');
+                window.console.log(cartId);
+
+                var reservationStatusUrl = "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.reservation.status.api.poc/reservation-status/";
+                var reservationStatusRequest = new XMLHttpRequest();
+
+                reservationStatusRequest.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status === 200) {
+                    var data = JSON.parse(this.responseText);
+
+                    if (data.outOfStockItems.length > 0 ) {
+                      window.sessionStorage.reservationExpiredConfirmed = "false";
+                    }
+
+                    data.outOfStockItems.forEach(function (item) {
+                      var cartItem = me.model.get("items").get(item);
+                      var outOfStockProduct = document.getElementById(item);
+  
+                      if (outOfStockProduct.style.borderColor !== 'rgb(255, 0, 0)') {
+                        MessageHandler.saveMessage('OutOfStockProduct', 'Error', "Could not reserve the item '"+ cartItem.apiModel.data.product.name +"'. Please remove and add a different item.");
+                        MessageHandler.showMessage('OutOfStockProduct');
+                      }                         
+  
+                      outOfStockProduct.style.borderColor = 'rgb(255, 0, 0)';
+                      outOfStockProduct.style.borderStyle = "dotted";
+                    });
+  
+                    if (data.status === "Expired" && (window.sessionStorage.reservationExpiredConfirmed === undefined || window.sessionStorage.reservationExpiredConfirmed === "false")) {
+                      var refresh = window.confirm("Reservation for your item(s) in Cart expired");
+                      if (refresh === true) {
+                        window.sessionStorage.reservationExpiredConfirmed = "true"; 
+                        //Assuming: 
+                        // - background service would delete the all the cart item on reservation expired event
+                        // - on reload cart will be empty.
+                        window.location.reload(true);
+                      }
+                    }
+                  }
+                  else if(this.readyState == 4 && this.status === 404)
+                  {
+                    var response = JSON.parse(this.responseText);
+                    window.console.log(response.message);
+                  }
+                };
+
+                reservationStatusRequest.open("GET", reservationStatusUrl + cartId, true);
+                reservationStatusRequest.send();
+              }
+              else {
+                window.console.log("cart is empty.");
+              }
+            }, 5000);
+
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.codeEntered = !!this.model.get('couponCode');
             this.$el.on('keypress', 'input', function (e) {

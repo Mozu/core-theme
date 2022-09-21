@@ -5,7 +5,7 @@
         <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% endif %} />
     {% endif %}
     {% endblock image %}
-    <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
+    <div id="{{item.id}}" class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
       <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
       {% if item.product.options and themeSettings.showCartItemOptions %}
       <dl class="mz-propertylist">
