@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string BuildLocationsFilter(IEnumerable<string> locationCodes)
         {
-            return string.Join(" or ", locationCodes.Select(x => "Code eq \"" + x +"\""));
+            return string.Join(" or ", locationCodes.Where(locCode => locCode.NotIsNullOrEmpty()).Select(x => "Code eq \"" + x + "\""));
         }
 
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
