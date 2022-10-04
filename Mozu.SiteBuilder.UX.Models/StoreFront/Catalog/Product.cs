@@ -913,12 +913,18 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         {
             get { return this.Content == null ? null : this.Content.Name; }
         }
+
+        int? _parentCategory = null;
         [DataMember(EmitDefaultValue = false, Order = 5)]
         public int? ParentCategoryId
         {
             get
             {
-                return this.ParentCategory != null ? (int?)this.ParentCategory.CategoryId : (int?)null;
+                return _parentCategory.HasValue ? _parentCategory : (this.ParentCategory != null ? (int?)this.ParentCategory.CategoryId : (int?)null);
+            }
+            set
+            {
+                _parentCategory = value;
             }
         }
 
