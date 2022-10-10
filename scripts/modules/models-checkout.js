@@ -1,4 +1,4 @@
-define([
+﻿define([
     'modules/jquery-mozu',
     'underscore',
     'hyprlive',
@@ -172,6 +172,8 @@ define([
                         for (var b in backupAddr) {
                             addr.set(b, backupAddr[b]);
                         }
+                        //Unset backup data.
+                        addr.set('backupAddr', undefined);
                     }
                 }
             },
