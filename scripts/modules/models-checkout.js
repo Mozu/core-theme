@@ -153,11 +153,25 @@ define([
             },
             choose: function (e) {
                 var idx = parseInt($(e.currentTarget).val(), 10);
+                var addr = this.get('address');
+                var backupAddr = addr.get('backupAddr') || {};
+                //Set address in backup variable before swapping.
+                var hasBackupAddr = backupAddr && Object.values(backupAddr).some(function (v) {return v ? true : false;});
+
                 if (idx !== -1) {
-                    var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
                     for (var k in valAddr) {
+                        if (!hasBackupAddr) {
+                            backupAddr[k] = addr.get(k);
+                        }
                         addr.set(k, valAddr[k]);
+                    }
+                    addr.set('backupAddr', backupAddr);
+                } else {
+                    if (hasBackupAddr) {
+                        for (var b in backupAddr) {
+                            addr.set(b, backupAddr[b]);
+                        }
                     }
                 }
             },
