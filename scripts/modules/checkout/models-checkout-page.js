@@ -734,7 +734,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 delete billingContact.email;
                 billingContact.types =  [{
                         "name": "Billing",
-                        "isPrimary": true
+                        "isPrimary": false
                     }];
 
                 var existingBillingContactIndex = existingContacts.length > 0 ?
