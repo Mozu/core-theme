@@ -740,3 +740,7 @@ table {
 .hidden-table-cell {
   visibility: hidden;
 }
+
+.break-word{
+  word-wrap: break-word
+  }

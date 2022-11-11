@@ -907,5 +907,18 @@
   "addAlternatePickup":"Add an alternate pickup contact",
   "noPickupRequired":"No pickup contact information is required since all items will be shipped to home or digitally fulfilled.",
   "primaryPickup":"Primary Pickup Contact:",
-  "alternatePickup":"Alternate Pickup Contact:"
+  "alternatePickup":"Alternate Pickup Contact:",
+  "productCodePackingSlip": "Product Code",
+  "productNamePackingSlip":"Product Name",
+  "quantityPackingSlip": "Quantity",
+  "weightPackingSlip":"Weight",
+  "orderNoPackingSlip":"Order #",
+  "externalOrderPackingSlip":"External Order #",
+  "datePackingSlip":"Date",
+  "billToPackingSlip":"Bill To",
+  "shipToPackingSlip":"Ship To",
+  "quantitySubstitutedPackingSlip":"Quantity Substituted",
+  "substituteProductNamePackingSlip":"Substitute Product Name",
+  "substituteProductCodePackingSlip":"Substitute Product Code",
+  "productSubstitutedPackingSlip":"Product Substituted"
 }
