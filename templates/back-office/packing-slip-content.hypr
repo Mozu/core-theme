@@ -10,16 +10,16 @@
                     <div class="company-url">{{ customContent.websiteUrl }}</div>
                 </th>
                 <th class="order-essentials">
-                    <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-            		<div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-                    <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+                    <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+            		<div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+                    <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
                 </th>
             </tr></thead>
             <tbody><tr><td colspan="4">
                 <table class="grid">
                     <thead><tr>
-                        <th>Bill To:</th>
-                        <th>Ship To:</th>
+                        <th>{{ labels.billToPackingSlip }}:</th>
+                        <th>{{ labels.billToPackingSlip }}:</th>
                     </tr></thead>
                     <tbody><tr>
                         <td>
@@ -92,16 +92,57 @@
                 </table>
                 <table class="grid">
                     <thead><tr>
-                        <th>Product Code</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Weight</th>
+                        <th>{{ labels.productCodePackingSlip }}</th>
+                        <th>{{ labels.productNamePackingSlip }}</th>
+                        <th>{{ labels.quantityPackingSlip }}</th>
+                        <th>{{ labels.weightPackingSlip }}</th>
                     </tr></thead>
                     <tbody>
                         {% for packageItemDetail in package.packingSlipItemDetails %}
                             {% for item in model.items %} <!-- model represents the shipment -->
                                 {% if packageItemDetail.lineId == item.lineId %}
                                 <tr>
+                                    <td>
+                                        {{ item.productCode }}
+                                    </td>
+                                    <td>
+                                        <div class="product-name">{{ item.name }}</div>
+                                    </td>
+                                    <td>
+                                        {{ packageItemDetail.quantity }}
+                                    </td>
+                                    <td>
+                                        {{ item.weight }} {{ item.weightUnit }}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="grid no-border">
+                    <tr>
+                        <td><b>Substitute By:</b><br></td>
+                    </tr>
+                </table>
+                <table class="grid substitute-table">
+                    <thead>
+                        <tr>
+                            <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
+                            <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
+                            <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
+                            <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
+                            <th class="break-word">{{ labels.weightPackingSlip }}</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                        {% for packageItemDetail in package.packingSlipItemDetails %}
+                            {% for item in model.items %} <!-- model represents the shipment -->
+                                {% if packageItemDetail.lineId == item.lineId %}
+                                <tr>
+                                    <td>
+                                        <div class="product-name">{{ item.name }}</div>
+                                    </td>
                                     <td>
                                         {{ item.productCode }}
                                     </td>
@@ -132,9 +173,9 @@
             <div class="company-url">{{ customContent.websiteUrl }}</div>
         </th>
         <th class="order-essentials">
-            <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-    		<div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-            <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+            <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+    		<div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+            <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
         </th>
     </tr></thead>
     <tbody><tr><td colspan="4">
@@ -214,10 +255,10 @@
         </table>
         <table class="grid">
             <thead><tr>
-                <th>Product Code</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Weight</th>
+                <th>{{ labels.productCodePackingSlip }}</th>
+                <th>{{ labels.productNamePackingSlip }}</th>
+                <th>{{ labels.quantityPackingSlip }}</th>
+                <th>{{ labels.weightPackingSlip }}</th>
             </tr></thead>
             <tbody>
                 {% for item in model.items %} <!-- model represents the shipment -->
@@ -237,6 +278,47 @@
                     </tr>
                 {% endfor %}
             </tbody>
+        </table>        
+        <table class="grid no-border">
+            <tr>
+                <td><b>Substitute By:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
+                    <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
+                    <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
+                    <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
+                    <th class="break-word">{{ labels.weightPackingSlip }}</th>
+                </tr>
+                </thead>
+            <tbody>
+                {% for packageItemDetail in package.packingSlipItemDetails %}
+                    {% for item in model.items %} <!-- model represents the shipment -->
+                        {% if packageItemDetail.lineId == item.lineId %}
+                        <tr>
+                            <td>
+                                <div class="product-name">{{ item.name }}</div>
+                            </td>
+                            <td>
+                                {{ item.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ item.name }}</div>
+                            </td>
+                            <td>
+                                {{ packageItemDetail.quantity }}
+                            </td>
+                            <td>
+                                {{ item.weight }} {{ item.weightUnit }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
         </table>
     </td></tr></tbody>
 </table>
@@ -251,9 +333,9 @@
         <div class="company-url">{{ customContent.websiteUrl }}</div>
     </th>
     <th class="order-essentials">
-        <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-        <div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+        <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+        <div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+        <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
@@ -333,10 +415,10 @@
     </table>
     <table class="grid">
         <thead><tr>
-            <th>Product Code</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Weight</th>
+            <th>{{ labels.productCodePackingSlip }}</th>
+            <th>{{ labels.productNamePackingSlip }}</th>
+            <th>{{ labels.quantityPackingSlip }}</th>
+            <th>{{ labels.weightPackingSlip }}</th>
         </tr></thead>
         <tbody>
             {% for item in model.items %} <!-- model represents the shipment -->
@@ -354,6 +436,47 @@
                         {{ item.weight }} {{ item.weightUnit }}
                     </td>
                 </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table class="grid no-border">
+        <tr>
+            <td><b>Substitute By:</b><br></td>
+        </tr>
+    </table>
+    <table class="grid substitute-table">
+        <thead>
+            <tr>
+                <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
+                <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
+                <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
+                <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
+                <th class="break-word">{{ labels.weightPackingSlip }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for packageItemDetail in package.packingSlipItemDetails %}
+                {% for item in model.items %} <!-- model represents the shipment -->
+                    {% if packageItemDetail.lineId == item.lineId %}
+                    <tr>
+                        <td>
+                            <div class="product-name">{{ item.name }}</div>
+                        </td>
+                        <td>
+                            {{ item.productCode }}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ item.name }}</div>
+                        </td>
+                        <td>
+                            {{ packageItemDetail.quantity }}
+                        </td>
+                        <td>
+                            {{ item.weight }} {{ item.weightUnit }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
         </tbody>
     </table>
