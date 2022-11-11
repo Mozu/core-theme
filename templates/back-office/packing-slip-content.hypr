@@ -332,6 +332,47 @@
                     {% endif %}
                 {% endfor %}
             </tbody>
+        </table>        
+        <table class="grid no-border">
+            <tr>
+                <td><b>Substitute By:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
+                    <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
+                    <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
+                    <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
+                    <th class="break-word">{{ labels.weightPackingSlip }}</th>
+                </tr>
+                </thead>
+            <tbody>
+                {% for packageItemDetail in package.packingSlipItemDetails %}
+                    {% for item in model.items %} <!-- model represents the shipment -->
+                        {% if packageItemDetail.lineId == item.lineId %}
+                        <tr>
+                            <td>
+                                <div class="product-name">{{ item.name }}</div>
+                            </td>
+                            <td>
+                                {{ item.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ item.name }}</div>
+                            </td>
+                            <td>
+                                {{ packageItemDetail.quantity }}
+                            </td>
+                            <td>
+                                {{ item.weight }} {{ item.weightUnit }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
         </table>
         {% if model.substitutedItems.length > 0 %} 
         {% if showSubstituteItemHeaderInWithElse %}       
