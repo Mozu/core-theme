@@ -751,5 +751,18 @@
   "addAlternatePickup":"Fügen Sie einen alternativen Abholkontakt hinzu",
   "noPickupRequired":"Es sind keine Kontaktinformationen für die Abholung erforderlich, da alle Artikel nach Hause geliefert oder digital erfüllt werden.",
   "primaryPickup":"Primärer Abholkontakt:",
-  "alternatePickup":"Alternativer Abholkontakt:"
+  "alternatePickup":"Alternativer Abholkontakt:",
+  "productCodePackingSlip": "Produktcode",
+  "productNamePackingSlip":"Produktname",
+  "quantityPackingSlip": "Menge",
+  "weightPackingSlip":"Gewicht",
+  "orderNumberPackingSlip":"Befehl #",
+  "externalOrderNumberPackingSlip":"Externe Bestellung #",
+  "datePackingSlip":"Datum",
+  "billToPackingSlip":"Gesetzesentwurf für",
+  "shipToPackingSlip":"Ausliefern",
+  "quantitySubstitutedPackingSlip":"Menge ersetzt",
+  "substituteProductNamePackingSlip":"Produktname ersetzen",
+  "substituteProductCodePackingSlip":"Ersatzproduktcode",
+  "productSubstitutedPackingSlip":"Produkt ersetzt"
 }
