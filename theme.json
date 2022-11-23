@@ -397,6 +397,12 @@
       "properties": {},
       "template": "email/subscription-next-order-date-updated",
       "title": "Subscription Next Order Date Updated"
+    },
+    {
+      "id": "subscription.orderreminder",
+      "properties": {},
+      "template": "email/subscription-order-reminder",
+      "title": "Subscription Order Reminder"
     }
   ],
   "backOfficeTemplates": [
