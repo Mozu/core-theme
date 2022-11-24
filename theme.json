@@ -402,7 +402,7 @@
       "id": "subscription.orderreminder",
       "properties": {},
       "template": "email/subscription-order-reminder",
-      "title": "Subscription Order Reminder"
+      "title": "Your upcoming subscription order"
     }
   ],
   "backOfficeTemplates": [
