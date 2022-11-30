@@ -1,5 +1,7 @@
-<pre>{%dump model%}</pre>
-<table class="mz-ordersummary subscription-detail" style="width: 100%; text-align: right;">
+<p>{% dump model %}</p>
+<pre><code>{% dump model %}</code></pre>
+<table class="mz-ordersummary subscription-detail test-class" style="width: 100%; text-align: right;">
+    <tr><td>{% dump model %}</td></tr>
     {% for discount in model.orderDiscounts %}
         {% if not discount.excluded %}
             <tr>
