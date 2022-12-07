@@ -22,7 +22,7 @@
 
 
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
-    <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2222.0-master.48" />
+    <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2250.0-master.71" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.2013.0-bpm.5" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
