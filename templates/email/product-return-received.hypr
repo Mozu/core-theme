@@ -39,16 +39,64 @@
 		</thead>
 		<tbody class="mz-ordersummary-lineitems">
 		{% for item in model.items %}
-			{% for reason in item.reasons %}
-			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-				<td>{{ reason.quantity }}</td>
-				<td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
-			</tr>
-			{% endfor %}
+            {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+                {% if (item.quantity > 0) %}
+					{% for reason in item.reasons %}
+					<tr class="mz-ordersummary-line mz-ordersummary-line-item">
+						<td>{{ reason.quantity }}</td>
+						<td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
+					</tr>
+					{% endfor %}
+                {% endif %}
+            {% endif %}
 		{% endfor %}
 		</tbody>
     </table>
-
+	{% if model.substitutedItems.length > 0 %}
+		<table class="grid no-border">
+			<tr>
+				<td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+			</tr>
+		</table>
+		<table class="grid substitute-table">
+			<thead>
+				<tr>
+					<th class="break-word">{{ labels.productSubstituted }}</th>
+					<th class="break-word">{{ labels.substituteProductCode }}</th>
+					<th class="break-word">{{ labels.substituteProductName }}</th>
+					<th class="break-word">{{ labels.quantitySubstituted }}</th>
+					<th class="break-word">{{ labels.weightSubstituted }}</th>
+				</tr>
+				</thead>
+			<tbody>
+				{% for substitutedItem in model.items %}
+					{% if substitutedItem.originalLineId && substitutedItem.length > 0 %}
+					<tr>
+						<td>
+							{% for item in model.items %}
+							{% if substitutedItem.originalLineId == item.lineId %}
+							<div class="product-name">{{ item.name }}</div>
+							{% endif %}
+							{% endfor %}
+						</td>
+						<td>
+							{{ substitutedItem.productCode }}
+						</td>
+						<td>
+							<div class="product-name">{{ substitutedItem.name }}</div>
+						</td>
+						<td>
+							{{ substitutedItem.quantity }}
+						</td>
+						<td>
+							{{ substitutedItem.weight }} {{ substitutedItem.weightUnit }}
+						</td>
+					</tr>
+					{% endif  %}
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
 	<!--{{ labels.returnReceivedBlob2|safe }} removed per bug #51526 -->
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}

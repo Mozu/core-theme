@@ -761,8 +761,10 @@
   "datePackingSlip":"Datum",
   "billToPackingSlip":"Gesetzesentwurf für",
   "shipToPackingSlip":"Ausliefern",
-  "quantitySubstitutedPackingSlip":"Menge ersetzt",
-  "substituteProductNamePackingSlip":"Produktname ersetzen",
-  "substituteProductCodePackingSlip":"Ersatzproduktcode",
-  "productSubstitutedPackingSlip":"Produkt ersetzt"
+  "substituteBy":"Ersetzen durch",
+  "quantitySubstituted":"Menge ersetzt",
+  "substituteProductName":"Produktname ersetzen",
+  "substituteProductCode":"Ersatzproduktcode",
+  "productSubstitutedPackingSlip":"Produkt ersetzt",
+  "weightSubstituted":"Gewicht"
 }
