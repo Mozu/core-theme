@@ -100,7 +100,52 @@
                         </tr>
                     </tbody>
                 {% endfor %}
-            </table>
+            </table>            
+            {% if model.substitutedItems.length > 0 %}
+                <table class="grid no-border">
+                    <tr>
+                        <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+                    </tr>
+                </table>
+                <table class="grid substitute-table">
+                    <thead>
+                        <tr>
+                            <th class="break-word">{{ labels.productSubstituted }}</th>
+                            <th class="break-word">{{ labels.substituteProductCode }}</th>
+                            <th class="break-word">{{ labels.substituteProductName }}</th>
+                            <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                            <th class="break-word">{{ labels.weightSubstituted }}</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                        {% for substitutedItem in model.items %}
+                            {% if substitutedItem.originalLineId && substitutedItem.length > 0 %}
+                            <tr>
+                                <td>
+                                    {% for item in model.items %}
+                                    {% if substitutedItem.originalLineId == item.lineId %}
+                                    <div class="product-name">{{ item.name }}</div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ substitutedItem.productCode }}
+                                </td>
+                                <td>
+                                    <div class="product-name">{{ substitutedItem.name }}</div>
+                                </td>
+                                <td>
+                                    {{ substitutedItem.quantity }}
+                                </td>
+                                <td>
+                                    {{ substitutedItem.weight }} {{ substitutedItem.weightUnit }}
+                                </td>
+                            </tr>
+                            {% endif  %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         <br>
         <p>{{ labels.itemCancelBlob2|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
 

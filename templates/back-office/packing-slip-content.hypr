@@ -100,67 +100,75 @@
                     <tbody>
                         {% for packageItemDetail in package.packingSlipItemDetails %}
                             {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if packageItemDetail.lineId == item.lineId %}
-                                <tr>
-                                    <td>
-                                        {{ item.productCode }}
-                                    </td>
-                                    <td>
-                                        <div class="product-name">{{ item.name }}</div>
-                                    </td>
-                                    <td>
-                                        {{ packageItemDetail.quantity }}
-                                    </td>
-                                    <td>
-                                        {{ item.weight }} {{ item.weightUnit }}
-                                    </td>
-                                </tr>
+                                {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+                                    {% if (item.quantity > 0) %}
+                                        {% if packageItemDetail.lineId == item.lineId %}
+                                        <tr>
+                                            <td>
+                                                {{ item.productCode }}
+                                            </td>
+                                            <td>
+                                                <div class="product-name">{{ item.name }}</div>
+                                            </td>
+                                            <td>
+                                                {{ packageItemDetail.quantity }}
+                                            </td>
+                                            <td>
+                                                {{ item.weight }} {{ item.weightUnit }}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
-                <table class="grid no-border">
-                    <tr>
-                        <td><b>Substitute By:</b><br></td>
-                    </tr>
-                </table>
-                <table class="grid substitute-table">
-                    <thead>
+                {% if model.substitutedItems.length > 0 %}
+                    <table class="grid no-border">
                         <tr>
-                            <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
-                            <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
-                            <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
-                            <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
-                            <th class="break-word">{{ labels.weightPackingSlip }}</th>
+                            <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
                         </tr>
-                        </thead>
-                    <tbody>
-                        {% for packageItemDetail in package.packingSlipItemDetails %}
-                            {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if packageItemDetail.lineId == item.lineId %}
+                    </table>
+                    <table class="grid substitute-table">
+                        <thead>
+                            <tr>
+                                <th class="break-word">{{ labels.productSubstituted }}</th>
+                                <th class="break-word">{{ labels.substituteProductCode }}</th>
+                                <th class="break-word">{{ labels.substituteProductName }}</th>
+                                <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                                <th class="break-word">{{ labels.weightSubstituted }}</th>
+                            </tr>
+                            </thead>
+                        <tbody>
+                            {% for substitutedItem in model.items %}
+                                {% if substitutedItem.originalLineId && substitutedItem.length > 0 %}
                                 <tr>
                                     <td>
+                                        {% for item in model.items %}
+                                        {% if substitutedItem.originalLineId == item.lineId %}
                                         <div class="product-name">{{ item.name }}</div>
+                                        {% endif %}
+                                        {% endfor %}
                                     </td>
                                     <td>
-                                        {{ item.productCode }}
+                                        {{ substitutedItem.productCode }}
                                     </td>
                                     <td>
-                                        <div class="product-name">{{ item.name }}</div>
+                                        <div class="product-name">{{ substitutedItem.name }}</div>
                                     </td>
                                     <td>
-                                        {{ packageItemDetail.quantity }}
+                                        {{ substitutedItem.quantity }}
                                     </td>
                                     <td>
-                                        {{ item.weight }} {{ item.weightUnit }}
+                                        {{ substitutedItem.weight }} {{ substitutedItem.weightUnit }}
                                     </td>
                                 </tr>
-                                {% endif %}
+                                {% endif  %}
                             {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                {% endif %}
             </td></tr></tbody>
         </table>
     {% endfor %}
