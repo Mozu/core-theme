@@ -119,24 +119,26 @@
                     </tr></thead>
                     {% endif %}
                     <tbody>
-                        {% for item in model.items %} <!-- model represents the shipment -->
-                            {% if (not item.originalLineId) %}
-                                {% if (item.quantity > 0) %}
-                                    {% if packageItemDetail.lineId == item.lineId %}
-                                    <tr>
-                                        <td>
-                                            {{ item.productCode }}
-                                        </td>
-                                        <td>
-                                            <div class="product-name">{{ item.name }}</div>
-                                        </td>
-                                        <td>
-                                            {{ packageItemDetail.quantity }}
-                                        </td>
-                                        <td>
-                                            {{ item.weight }} {{ item.weightUnit }}
-                                        </td>
-                                    </tr>
+                        {% for packageItemDetail in package.packingSlipItemDetails %}
+                            {% for item in model.items %} <!-- model represents the shipment -->
+                                {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+                                    {% if (item.quantity > 0) %}
+                                        {% if packageItemDetail.lineId == item.lineId %}
+                                        <tr>
+                                            <td>
+                                                {{ item.productCode }}
+                                            </td>
+                                            <td>
+                                                <div class="product-name">{{ item.name }}</div>
+                                            </td>
+                                            <td>
+                                                {{ packageItemDetail.quantity }}
+                                            </td>
+                                            <td>
+                                                {{ item.weight }} {{ item.weightUnit }}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
