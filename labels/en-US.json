@@ -917,7 +917,7 @@
   "datePackingSlip":"Date",
   "billToPackingSlip":"Bill To",
   "shipToPackingSlip":"Ship To",
-  "substituteBy":"Substitute By",
+  "substituteBy":"Substitutes",
   "productSubstituted":"Product Substituted",
   "substituteProductCode":"Substitute Product Code",
   "substituteProductName":"Substitute Product Name",
