@@ -220,7 +220,7 @@
         <tbody>
           {% for item in model.items %}
               {% if item.readyForPickupQuantity > 0 %}                
-                {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+                {% if (not item.originalLineId) %}
                     {% if (item.quantity > 0) %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-item">
                         <td>

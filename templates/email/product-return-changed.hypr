@@ -39,7 +39,7 @@
 		</thead>
 		<tbody class="mz-ordersummary-lineitems">
 		{% for item in model.items %}
-            {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+            {% if (not item.originalLineId) %}
                 {% if (item.quantity > 0) %}
 					{% for reason in item.reasons %}
 					<tr class="mz-ordersummary-line mz-ordersummary-line-item">
