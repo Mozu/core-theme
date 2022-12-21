@@ -9,7 +9,7 @@
         </thead>
         {% for item in model.items %}
             <tbody class="mz-ordersummary-lineitems">
-            {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+            {% if (not item.originalLineId) %}
                 {% if (item.quantity > 0) %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.itemDiscount > 0 %}is-discounted{% endif %}">
                         <td class="mz-ordersummary-item-product">
