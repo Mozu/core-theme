@@ -918,9 +918,9 @@
   "billToPackingSlip":"Bill To",
   "shipToPackingSlip":"Ship To",
   "substituteBy":"Substitutes",
-  "productSubstituted":"Product Substituted",
-  "substituteProductCode":"Substitute Product Code",
-  "substituteProductName":"Substitute Product Name",
-  "quantitySubstituted":"Quantity Substituted",
+  "productSubstituted":"Product Name",
+  "substituteProductCode":"Substitute Code",
+  "substituteProductName":"Substitute Name",
+  "quantitySubstituted":"Substitute Quantity",
   "weightSubstituted":"Weight"
 }
