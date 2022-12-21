@@ -121,7 +121,7 @@
                     <tbody>
                         {% for packageItemDetail in package.packingSlipItemDetails %}
                             {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if ((not item.originalLineId) && model.substitutedItems.length > 0) %}
+                                {% if (not item.originalLineId) %}
                                     {% if (item.quantity > 0) %}
                                         {% if packageItemDetail.lineId == item.lineId %}
                                         <tr>
@@ -337,17 +337,17 @@
         </table>        
         <table class="grid no-border">
             <tr>
-                <td><b>Substitute By:</b><br></td>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
             </tr>
         </table>
         <table class="grid substitute-table">
             <thead>
                 <tr>
-                    <th class="break-word">{{ labels.productSubstitutedPackingSlip }}</th>
-                    <th class="break-word">{{ labels.substituteProductCodePackingSlip }}</th>
-                    <th class="break-word">{{ labels.substituteProductNamePackingSlip }}</th>
-                    <th class="break-word">{{ labels.quantitySubstitutedPackingSlip }}</th>
-                    <th class="break-word">{{ labels.weightPackingSlip }}</th>
+                    <th class="break-word">{{ labels.productSubstituted }}</th>
+                    <th class="break-word">{{ labels.substituteProductCode }}</th>
+                    <th class="break-word">{{ labels.substituteProductName }}</th>
+                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                    <th class="break-word">{{ labels.weightSubstituted }}</th>
                 </tr>
                 </thead>
             <tbody>
