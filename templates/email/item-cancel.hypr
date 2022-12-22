@@ -118,27 +118,27 @@
                         </tr>
                         </thead>
                     <tbody>
-                        {% for substitutedItem in model.items %}
-                            {% if substitutedItem.originalLineId && substitutedItem.length > 0 %}
+                        {% for substituteItem in model.items %}
+                            {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
                             <tr>
                                 <td>
                                     {% for item in model.items %}
-                                    {% if substitutedItem.originalLineId == item.lineId %}
+                                    {% if substituteItem.originalLineId == item.lineId %}
                                     <div class="product-name">{{ item.name }}</div>
                                     {% endif %}
                                     {% endfor %}
                                 </td>
                                 <td>
-                                    {{ substitutedItem.productCode }}
+                                    {{ substituteItem.productCode }}
                                 </td>
                                 <td>
-                                    <div class="product-name">{{ substitutedItem.name }}</div>
+                                    <div class="product-name">{{ substituteItem.name }}</div>
                                 </td>
                                 <td>
-                                    {{ substitutedItem.quantity }}
+                                    {{ substituteItem.quantity }}
                                 </td>
                                 <td>
-                                    {{ substitutedItem.weight }} {{ substitutedItem.weightUnit }}
+                                    {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
                                 </td>
                             </tr>
                             {% endif  %}
