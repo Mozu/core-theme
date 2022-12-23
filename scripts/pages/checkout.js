@@ -352,14 +352,20 @@ require(["modules/jquery-mozu",
             this.$el.addClass('is-loading');
             this.model.getDigitalCredit().ensure(function () {
                 self.$el.removeClass('is-loading');
+                self.render();
+            }, function (error) {
+                self.render();
             });
         },
         getGatewayGiftCard: function (e) {
             var self = this;
             this.$el.addClass('is-loading');
             this.model.getGatewayGiftCard().ensure(function() {
-                 self.$el.removeClass('is-loading');
-             });
+                self.$el.removeClass('is-loading');
+                self.render();
+            }, function (error) {
+                self.render();
+            });
         },
         stripNonNumericAndParseFloat: function (val) {
             if (!val) return 0;
