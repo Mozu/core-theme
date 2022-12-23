@@ -1,0 +1,507 @@
+﻿{
+  "id": "13b4a7c87a2454000192bc8c000047b1",
+  "siteId": 23134,
+  "tenantId": 18353,
+  "number": 417,
+  "parentOrderId": "13b4a2947cd7e4000100b31e000047b1",
+  "items": [
+    {
+      "id": "2cf2a4cab48a490b8e87aebd00b7baa4",
+      "fulfillmentLocationCode": "us_loc",
+      "fulfillmentMethod": "Delivery",
+      "isOnetimeItem": false,
+      "lineId": 1,
+      "product": {
+        "fulfillmentTypesSupported": [
+          "DirectShip",
+          "InStorePickup",
+          "Delivery"
+        ],
+        "variationProductCode": "ConfigBundle_Test-1",
+        "options": [
+          {
+            "name": "colors",
+            "value": "blue",
+            "shopperEnteredValue": "blue",
+            "attributeFQN": "tenant~color_020120224924_1",
+            "stringValue": "blue"
+          },
+          {
+            "name": "Extra",
+            "value": "2",
+            "shopperEnteredValue": "2",
+            "attributeFQN": "tenant~extra",
+            "stringValue": "2"
+          }
+        ],
+        "properties": [
+          {
+            "attributeFQN": "system~split-extras-in-shipments",
+            "name": "Split Extras In Shipments",
+            "dataType": "Bool",
+            "isMultiValue": false,
+            "values": [
+              {
+                "value": false
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~subscription-mode",
+            "name": "subscription-mode",
+            "dataType": "String",
+            "isMultiValue": false,
+            "values": [
+              {
+                "stringValue": "Subscription Only",
+                "value": "SO"
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~subscription-frequency",
+            "name": "Subscription Frequency",
+            "dataType": "String",
+            "isMultiValue": true,
+            "values": [
+              {
+                "stringValue": "30 days",
+                "value": "D30"
+              },
+              {
+                "stringValue": "60 days",
+                "value": "D60"
+              },
+              {
+                "stringValue": "100 days",
+                "value": "D100"
+              },
+              {
+                "stringValue": "2 months",
+                "value": "M2"
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~subscription-trial-productCode",
+            "name": "Trial Product Code",
+            "dataType": "String",
+            "isMultiValue": false,
+            "values": [
+              {
+                "stringValue": "ikea-bed",
+                "value": "ikea-bed"
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~subscription-trial-days",
+            "name": "Trial Days",
+            "dataType": "Number",
+            "isMultiValue": false,
+            "values": [
+              {
+                "value": 12
+              }
+            ]
+          }
+        ],
+        "categories": [],
+        "price": {
+          "price": 10,
+          "priceListCode": "Test",
+          "priceListEntryMode": "Simple"
+        },
+        "discountsRestricted": false,
+        "isTaxable": true,
+        "productType": "Config",
+        "productUsage": "Configurable",
+        "bundledProducts": [],
+        "productCode": "ConfigBundle_Test",
+        "name": "ConfigBundle_Test",
+        "goodsType": "Physical",
+        "isPackagedStandAlone": false,
+        "stock": {
+          "manageStock": true,
+          "isOnBackOrder": false,
+          "stockAvailable": 78,
+          "aggregateInventory": 0
+        },
+        "measurements": {
+          "height": {
+            "unit": "in",
+            "value": 1
+          },
+          "width": {
+            "unit": "in",
+            "value": 1
+          },
+          "length": {
+            "unit": "in",
+            "value": 1
+          },
+          "weight": {
+            "unit": "lbs",
+            "value": 1
+          }
+        },
+        "fulfillmentStatus": "PendingFulfillment"
+      },
+      "quantity": 3,
+      "subtotal": 30,
+      "extendedTotal": 30,
+      "taxableTotal": 29.4,
+      "discountTotal": 0,
+      "discountedTotal": 30,
+      "itemTaxTotal": 2.57,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "feeTotal": 0,
+      "total": 32.57,
+      "unitPrice": {
+        "extendedAmount": 10,
+        "listAmount": 10
+      },
+      "productDiscounts": [],
+      "shippingDiscounts": [],
+      "auditInfo": {
+        "updateDate": "2022-06-23T11:08:56.298Z",
+        "createDate": "2022-06-23T11:08:56.298Z",
+        "updateBy": "2b3c42f21f4c431380f7281fba95d525",
+        "createBy": "2b3c42f21f4c431380f7281fba95d525"
+      },
+      "shippingAmountBeforeDiscountsAndAdjustments": 0,
+      "weightedOrderDiscount": 0.6,
+      "adjustedLineItemSubtotal": 29.4,
+      "totalWithoutWeightedShippingAndHandling": 31.97,
+      "weightedOrderTax": 0,
+      "weightedOrderShipping": 0,
+      "weightedOrderShippingDiscount": 0,
+      "weightedOrderShippingManualAdjustment": 0,
+      "weightedOrderShippingTax": 0,
+      "weightedOrderHandlingFee": 0,
+      "weightedOrderHandlingFeeTax": 0,
+      "weightedOrderHandlingFeeDiscount": 0,
+      "weightedOrderDuty": 0,
+      "totalWithWeightedShippingAndHandling": 31.97,
+      "weightedOrderHandlingAdjustment": 0,
+      "isAssemblyRequired": false
+    },
+    {
+      "id": "9751c20e9f9b48eebeb8aebd00b7baa4",
+      "fulfillmentLocationCode": "us_loc",
+      "fulfillmentMethod": "Delivery",
+      "isOnetimeItem": false,
+      "lineId": 2,
+      "product": {
+        "fulfillmentTypesSupported": [
+          "DirectShip",
+          "InStorePickup",
+          "Delivery"
+        ],
+        "imageAlternateText": "",
+        "imageUrl": "//d2ybw0k096aut6.cloudfront.net/18353-23134/cms/23134/files/9d8c0173-f382-4fc7-8c95-0fabc535c8e9",
+        "options": [
+          {
+            "name": "Extra",
+            "value": "1",
+            "shopperEnteredValue": "1",
+            "attributeFQN": "tenant~extra",
+            "stringValue": "1"
+          }
+        ],
+        "properties": [
+          {
+            "attributeFQN": "system~subscription-mode",
+            "name": "subscription-mode",
+            "dataType": "String",
+            "isMultiValue": false,
+            "values": [
+              {
+                "stringValue": "Subscription Only",
+                "value": "SO"
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~subscription-frequency",
+            "name": "Subscription Frequency",
+            "dataType": "String",
+            "isMultiValue": false,
+            "values": [
+              {
+                "stringValue": "30 days",
+                "value": "D30"
+              }
+            ]
+          },
+          {
+            "attributeFQN": "system~split-extras-in-shipments",
+            "name": "Split Extras In Shipments",
+            "dataType": "Bool",
+            "isMultiValue": false,
+            "values": [
+              {
+                "value": false
+              }
+            ]
+          }
+        ],
+        "categories": [],
+        "price": {
+          "price": 118
+        },
+        "discountsRestricted": false,
+        "isTaxable": true,
+        "productType": "ExtraType",
+        "productUsage": "Standard",
+        "bundledProducts": [],
+        "productCode": "Sp_2",
+        "name": "Sp_2",
+        "goodsType": "Physical",
+        "isPackagedStandAlone": false,
+        "stock": {
+          "manageStock": true,
+          "isOnBackOrder": false,
+          "stockAvailable": 108,
+          "aggregateInventory": 0
+        },
+        "measurements": {
+          "height": {
+            "unit": "in",
+            "value": 1
+          },
+          "width": {
+            "unit": "in",
+            "value": 1
+          },
+          "length": {
+            "unit": "in",
+            "value": 1
+          },
+          "weight": {
+            "unit": "lbs",
+            "value": 1
+          }
+        },
+        "fulfillmentStatus": "PendingFulfillment"
+      },
+      "quantity": 2,
+      "subtotal": 236,
+      "extendedTotal": 236,
+      "taxableTotal": 231.28,
+      "discountTotal": 0,
+      "discountedTotal": 236,
+      "itemTaxTotal": 20.24,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "feeTotal": 0,
+      "total": 256.24,
+      "unitPrice": {
+        "extendedAmount": 118,
+        "listAmount": 118
+      },
+      "productDiscounts": [],
+      "shippingDiscounts": [],
+      "auditInfo": {
+        "updateDate": "2022-06-23T11:08:56.298Z",
+        "createDate": "2022-06-23T11:08:56.298Z",
+        "updateBy": "2b3c42f21f4c431380f7281fba95d525",
+        "createBy": "2b3c42f21f4c431380f7281fba95d525"
+      },
+      "shippingAmountBeforeDiscountsAndAdjustments": 0,
+      "weightedOrderDiscount": 4.72,
+      "adjustedLineItemSubtotal": 231.28,
+      "totalWithoutWeightedShippingAndHandling": 251.52,
+      "weightedOrderTax": 0,
+      "weightedOrderShipping": 0,
+      "weightedOrderShippingDiscount": 0,
+      "weightedOrderShippingManualAdjustment": 0,
+      "weightedOrderShippingTax": 0,
+      "weightedOrderHandlingFee": 0,
+      "weightedOrderHandlingFeeTax": 0,
+      "weightedOrderHandlingFeeDiscount": 0,
+      "weightedOrderDuty": 0,
+      "totalWithWeightedShippingAndHandling": 251.52,
+      "weightedOrderHandlingAdjustment": 0,
+      "isAssemblyRequired": false
+    }
+  ],
+  "payment": {
+    "id": "809b0bf22e074f8cbd0daebd00b7af0d",
+    "availableActions": [],
+    "paymentType": "CreditCard",
+    "paymentWorkflow": "Mozu",
+    "billingInfo": {
+      "paymentType": "CreditCard",
+      "billingContact": {
+        "email": "Anagha@kibocommerce.com",
+        "firstName": "anagha",
+        "middleNameOrInitial": "",
+        "lastNameOrSurname": "deshmukh",
+        "phoneNumbers": {
+          "home": "5129991111",
+          "mobile": "",
+          "work": ""
+        },
+        "address": {
+          "address1": "717 N HARWOOD ST test for default",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "DALLAS",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "75201-6501",
+          "countryCode": "US",
+          "addressType": "Residential",
+          "isValidated": false
+        }
+      },
+      "isSameBillingShippingAddress": false,
+      "card": {
+        "paymentServiceCardId": "864e4554dcae4d3688a15ea90747e241",
+        "isUsedRecurring": false,
+        "nameOnCard": "XYZ",
+        "isCardInfoSaved": false,
+        "isTokenized": false,
+        "paymentOrCardType": "VISA",
+        "cardNumberPartOrMask": "************1111",
+        "expireMonth": 1,
+        "expireYear": 2026
+      },
+      "auditInfo": {
+        "updateDate": "2022-10-03T06:30:42.048Z",
+        "createDate": "2022-10-03T06:30:42.042Z",
+        "updateBy": "foo",
+        "createBy": "foo"
+      },
+      "isRecurring": false
+    },
+    "status": "New",
+    "subPayments": [],
+    "interactions": [],
+    "isRecurring": false,
+    "amountCollected": 0,
+    "amountCredited": 0,
+    "amountRequested": 0,
+    "changeMessages": [],
+    "auditInfo": {}
+  },
+  "priceListCode": "Test",
+  "notes": [],
+  "oneTimeCouponCodes": [],
+  "changeMessages": [
+    {
+      "id": "e96672c7042b4f4ea7a3af2300d85d28",
+      "correlationId": "b9b830eeaabf44fdb18a25eca14716d3",
+      "appId": "foo",
+      "appKey": "mozu.dev.1.1.1.Release",
+      "subjectType": "Subscription.StateChange",
+      "subject": "PAUSE",
+      "verb": "Applied",
+      "message": "Subscription updated",
+      "metadata": [
+        {
+          "oldValue": "Active",
+          "newValue": "Paused"
+        }
+      ],
+      "createDate": "2022-10-03T07:37:45.408Z"
+    }
+  ],
+  "auditInfo": {
+    "updateDate": "2022-10-03T07:37:45.419Z",
+    "createDate": "2022-06-23T11:08:56.298Z",
+    "updateBy": "foo",
+    "createBy": "2b3c42f21f4c431380f7281fba95d525"
+  },
+  "fulfillmentInfo": {
+    "fulfillmentContact": {
+      "id": 1149,
+      "email": "Anagha@kibocommerce.com",
+      "firstName": "anagha",
+      "lastNameOrSurname": "deshmukh",
+      "companyOrOrganization": "Test",
+      "phoneNumbers": {
+        "home": "5129991111"
+      },
+      "address": {
+        "address1": "717 N HARWOOD ST test for default",
+        "cityOrTown": "DALLAS",
+        "stateOrProvince": "TX",
+        "postalOrZipCode": "75201-6501",
+        "countryCode": "US",
+        "addressType": "Residential",
+        "isValidated": true
+      }
+    },
+    "shippingMethodCode": "",
+    "shippingMethodName": "",
+    "auditInfo": {
+      "updateDate": "2022-06-23T10:47:14.326Z",
+      "createDate": "2022-06-23T10:46:44.188Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    }
+  },
+  "userId": "f6529a290d9b4f57b3ab7ccb4ed1d488",
+  "customerAccountId": 1000,
+  "email": "Anagha@kibocommerce.com",
+  "isTaxExempt": false,
+  "currencyCode": "USD",
+  "channelCode": "Online",
+  "ipAddress": "172.16.254.126",
+  "customerInteractionType": "Unknown",
+  "frequency": {
+    "unit": "Day",
+    "value": 30
+  },
+  "lastContinuityOrderDateOnSubPaused": "2022-10-03T06:30:42.035Z",
+  "reactivationDate": "2022-12-23T11:08:56.298Z",
+  "ordinal": 5,
+  "orderDiscounts": [
+    {
+      "impact": 5.32,
+      "discount": {
+        "id": 26,
+        "name": "OrderProductLevelDiscountForSOAT",
+        "hasMultipleTargetProducts": false
+      },
+      "excluded": false
+    }
+  ],
+  "subTotal": 266,
+  "itemLevelProductDiscountTotal": 0,
+  "itemLevelAdjustmentsTotal": 0,
+  "orderLevelProductDiscountTotal": 5.32,
+  "itemTaxTotal": 22.81,
+  "itemTotal": 283.49,
+  "total": 283.49,
+  "shippingDiscounts": [],
+  "itemLevelShippingDiscountTotal": 0,
+  "orderLevelShippingDiscountTotal": 0,
+  "shippingAmount": 0,
+  "shippingSubTotal": 0,
+  "shippingTax": 0,
+  "shippingTaxTotal": 0,
+  "shippingTotal": 0,
+  "handlingDiscounts": [],
+  "itemLevelHandlingDiscountTotal": 0,
+  "orderLevelHandlingDiscountTotal": 0,
+  "handlingSubTotal": 0,
+  "handlingTax": 0,
+  "handlingTaxTotal": 0,
+  "handlingTotal": 0,
+  "dutyTotal": 0,
+  "feeTotal": 0,
+  "status": "Paused",
+  "couponCodes": [],
+  "invalidCoupons": [],
+  "isImport": false,
+  "lineItemSubtotalWithOrderAdjustments": 260.68,
+  "discountedSubtotal": 266,
+  "onetimeProducts": [],
+  "onetimeShippingMethod": {},
+  "isDraft": false,
+  "hasDraft": false
+}
