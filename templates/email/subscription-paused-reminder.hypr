@@ -1,0 +1,14 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<div class="mz-b2b-email-body">
+      {{ labels.emailOpeningAlternative|safe }}
+        <p>{{ labels.subscriptionPausedReminderBlob|string_format(model.number, model.status)|safe }}</p>
+
+  <br><br>
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+</div>
+
+{% endblock body-content %}
