@@ -41,7 +41,11 @@
                         <span title="{{col}}" class="mz-grid-column adjust-text-overflow">
                             {{col|safe}}
                         </span>
-                        {% else %}
+                        {% else if model.columns[forloop.index-1].index == "total" or model.columns[forloop.index-1].index == "transactionAmount"%}
+                        <span class="mz-grid-column">
+                            {{col|currency}}
+                        </span>
+                        {% else  %}
                         <span class="mz-grid-column">
                             {{col|safe}}
                         </span>

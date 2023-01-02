@@ -192,10 +192,10 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
           {
               index: 'total',
               displayName: 'Order Total',
-              sortable: false,
-              displayTemplate: function (amount){
-                  return '$'+amount.toFixed(2);
-              }
+              sortable: false
+            //   displayTemplate: function (amount){
+            //       return '$'+amount.toFixed(2);
+            //   }
           },
           {
               index: 'status',
