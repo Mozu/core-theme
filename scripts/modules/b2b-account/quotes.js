@@ -411,10 +411,7 @@ define([
             {
                 index: 'total',
                 displayName: 'Total',
-                sortable: false,
-                displayTemplate: function (amount) {
-                    return '$' + amount.toFixed(2);
-                }
+                sortable: false
             },
             {
                 index: 'status',
@@ -564,10 +561,7 @@ define([
                 {
                     index: 'total',
                     displayName: 'Total',
-                    sortable: false,
-                    displayTemplate: function (amount) {
-                        return '$' + amount.toFixed(2);
-                    }
+                    sortable: false
                 },
                 {
                     index: 'status',
