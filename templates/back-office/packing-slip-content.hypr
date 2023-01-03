@@ -90,12 +90,11 @@
                         <td>{{ model.shippingMethodName }}</td>
                     </tr></tbody>
                 </table>
-            {% for packageItemDetail in package.packingSlipItemDetails %}
-                <table class="grid">
                     {% set_var showOriginalItemHeader=false %} 
-                    {% set_var showSubstituteItemHeader=false %}                 
+                    {% set_var showSubstituteItemHeader=false %}     
+            {% for packageItemDetail in package.packingSlipItemDetails %}            
                     {% for item in model.items %} <!-- model represents the shipment -->
-                        {% if (not item.originalLineId) %}
+                        {% if not item.originalLineId %}
                             {% if (item.quantity > 0) %}
                                 {% if packageItemDetail.lineId == item.lineId %}
                                     {% set_var showOriginalItemHeader=true %}
@@ -110,6 +109,8 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
+            {% endfor %}
+                <table class="grid">
                     {% if showOriginalItemHeader %}
                     <thead><tr>
                         <th>{{ labels.productCodePackingSlip }}</th>
@@ -119,6 +120,7 @@
                     </tr></thead>
                     {% endif %}
                     <tbody>
+                    {% for packageItemDetail in package.packingSlipItemDetails %}
                         {% for item in model.items %} <!-- model represents the shipment -->
                             {% if (not item.originalLineId) %}
                                 {% if (item.quantity > 0) %}
@@ -141,6 +143,7 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
                 {% if model.substitutedItems.length > 0  %}
@@ -164,6 +167,7 @@
                             </thead>
                         {% endif %}
                         <tbody>
+                        {% for packageItemDetail in package.packingSlipItemDetails %}
                             {% for substituteItem in model.items %}
                                 {% if packageItemDetail.lineId == substituteItem.lineId  %}
                                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
@@ -191,10 +195,10 @@
                                 {% endif  %}
                                 {% endif  %}
                             {% endfor %}
+                        {% endfor %}
                         </tbody>
                     </table>
                 {% endif %}
-            {% endfor %}
             </td></tr></tbody>
         </table>
     {% endfor %}
