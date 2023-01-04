@@ -38,6 +38,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             var validPages = new List<Tuple<int?, JObject>>();
             foreach (var variation in variations)
             {
+                variation.TryGetValue("isDisabled", StringComparison.OrdinalIgnoreCase, out var isDisabled);
+
+                if (isDisabled != null && isDisabled?.Value<bool>() == true) continue;
                 //variation.TryGetValue("variation_rule", StringComparison.OrdinalIgnoreCase, out var rule);
                 variation.TryGetValue("properties", StringComparison.OrdinalIgnoreCase, out var varProps);
 
