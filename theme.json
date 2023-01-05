@@ -403,6 +403,12 @@
       "properties": {},
       "template": "email/subscription-order-reminder",
       "title": "Your upcoming subscription order"
+    },
+    {
+      "id": "subscription.reactivationreminder",
+      "properties": {},
+      "template": "email/subscription-reactivation-reminder",
+      "title": "Subscription reactivation reminder"
     }
   ],
   "backOfficeTemplates": [

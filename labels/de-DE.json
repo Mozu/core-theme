@@ -696,6 +696,7 @@
   "subscriptionPausedBlob1": "Hallo! <br/><br/> Der Status Ihres Abonnements #{0} wird aktualisiert {1}. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, besuchen Sie bitte Mein Konto.",
   "subscriptionPaymentUpdatedBlob": "Hallo, <br/><br/> Vielen Dank für Ihren Einkauf bei uns unter {0}. Ihr Abonnement wurde aktualisiert. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, bitte besuche Mein Konto.",
   "subscriptionPrice": "Einschreibegebühr",
+  "subscriptionReactivationReminderBlob": "Vous avez atteint votre limite de pause et votre abonnement sera réactivé le {0}. Si vous souhaitez consulter ou gérer votre abonnement, veuillez visiter Mon compte.",
   "subscriptionSkippedBlob1": "Wie gewünscht wurde Ihr Abonnement #{0} übersprungen. Das nächste Bestelldatum für Ihr Abonnement ist der {1}. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, besuchen Sie bitte Mein Konto.",
   "subscriptionOrderReminderBlob": "Dies ist eine freundliche Erinnerung, dass Ihre Abonnementbestellung am {0} erstellt wird. Wenn Sie Ihr Abonnement anzeigen oder verwalten möchten, besuchen Sie bitte <a href=\"https://{1}/myaccount\">Mein Konto</a>.",
   "subscriptionStatus": "Abonnementstatus",
