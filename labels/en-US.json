@@ -832,6 +832,7 @@
   "subscriptionPaymentUpdatedBlob": "Hello, <br/><br/> Thank you for shopping with us at {0}. Your subscription was updated. If you would like to view or manage your subscription, please visit My Account.",
   "subscriptionPrice": "Subscription Price",
   "subscriptionSkippedBlob1": "As requested, your subscription #{0} was skipped. The next order date on your subscription will be {1}. If you would like to view or manage your subscription, please visit My Account.",
+  "subscriptionOrderReminderBlob": "This is a friendly reminder that your subscription order will be created on {0}. If you would like to view or manage your subscription, please visit <a href=\"https://{1}/myaccount\">My Account</a>.",
   "subscriptionStatus": "Subscription Status",
   "subscriptionTotal": "Subscription Total",
   "subtotal": "Subtotal",

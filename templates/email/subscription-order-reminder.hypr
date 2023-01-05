@@ -1,0 +1,24 @@
+{% extends "email/email" %}
+{% block body-content %}
+
+    <!--- Header --->
+    
+    <div class="mz-b2b-email-body">
+      {{ labels.emailOpeningAlternative|safe }}
+      {% with model.nextOrderDate|date('M d, Y') as nextOrderDate %}
+        <p>{{ labels.subscriptionOrderReminderBlob|string_format(nextOrderDate, domainName)|safe}}</p>
+      {% endwith %}
+      <br/>
+    </div>
+
+
+    <!--- Subscription Details Header--->
+
+    {% include "modules/common/subscription-details" %}
+    <br/>
+    <br/>
+    {% include "modules/common/subscription-item-list" %}
+    {% include "modules/common/subscription-summary" %}
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}
