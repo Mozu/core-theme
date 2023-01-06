@@ -740,3 +740,19 @@ table {
 .hidden-table-cell {
   visibility: hidden;
 }
+.no-border {
+  border:none;
+}
+.substitute-table th {
+white-space: normal;
+}
+.break-word{
+word-wrap: break-word
+}
+.no-left-padding {
+padding-left: 0  !important;
+}
+.substitute-table tr th{
+background-color: #666666;
+color: #ffffff;
+}

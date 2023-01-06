@@ -40,15 +40,27 @@
             {% endfor %}
         </table>
     {% else %}
+        {% set_var showOriginalItemHeader=false %}              
+        {% for item in model.items %}
+            {% if (not item.originalLineId) %}
+                {% if (item.quantity > 0) %}
+                    {% set_var showOriginalItemHeader=true %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
         <table cellpadding="1" width="100%">
+            {% if showOriginalItemHeader %}
             <thead>
                 <tr>
                     <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
                     <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
                 </tr>
             </thead>
+            {% endif %}
             {% for item in model.items %}
                 <tbody class="mz-ordersummary-lineitems">
+                {% if (not item.originalLineId) %}
+                    {% if (item.quantity > 0) %}
                     <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                         <td class="mz-ordersummary-item-product">
                         {{ item.product.name }}
@@ -63,10 +75,59 @@
                         </td>
                         <td align="right"> {% include "modules/common/email-item-total" %}</td>
                     </tr>
+                    {% endif %}
+                {% endif %}
                 </tbody>
             {% endfor %}
         </table>
+        
+        {% if model.substitutedItems.length > 0 %}
+            <table class="grid no-border">
+                <tr>
+                    <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+                </tr>
+            </table>
+            <table class="grid substitute-table">
+                <thead>
+                    <tr>
+                        <th class="break-word">{{ labels.productSubstituted }}</th>
+                        <th class="break-word">{{ labels.substituteProductCode }}</th>
+                        <th class="break-word">{{ labels.substituteProductName }}</th>
+                        <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                        <th class="break-word">{{ labels.weightSubstituted }}</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    {% for substituteItem in model.items %}
+                        {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                        <tr>
+                            <td>
+                                {% for item in model.items %}
+                                {% if substituteItem.originalLineId == item.lineId %}
+                                <div class="product-name">{{ item.name }}</div>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {{ substituteItem.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ substituteItem.name }}</div>
+                            </td>
+                            <td>
+                                {{ substituteItem.quantity }}
+                            </td>
+                            <td>
+                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                            </td>
+                        </tr>
+                        {% endif  %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     {% endif %}
+
 
     <br>
     <p>{{ labels.orderCancelBlob2|string_format(siteContext.generalSettings.websiteName)|safe }}</p>

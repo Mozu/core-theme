@@ -215,7 +215,15 @@
 		</div>		
    {% endif %}
 
-    <br>
+    <br>    
+    {% set_var showOriginalItemHeader=false %}              
+    {% for item in model.items %}
+        {% if (not item.originalLineId) %}
+            {% if (item.quantity > 0) %}
+                {% set_var showOriginalItemHeader=true %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
     <table width="100%" cellpadding="1" cellspacing="1" width="50%">
         <thead>
             <tr>
@@ -224,18 +232,68 @@
             </tr>
         </thead>
         
-    {% for item in model.items %}
-			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-				<td>
-                {{ item.name }}
-                <dl>
-                    <dd>{{ item.productCode }}</dd>&nbsp;
-                </dl>
-                </td>
-                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
-			</tr>
+        {% for item in model.items %}
+            {% if (not item.originalLineId) %}
+                {% if (item.quantity > 0) %}
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                        <td>
+                        {{ item.name }}
+                        <dl>
+                            <dd>{{ item.productCode }}</dd>&nbsp;
+                        </dl>
+                        </td>
+                        <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
+                    </tr>
+                {% endif %}
+            {% endif %}
 		{% endfor %}
     </table>
+    
+    {% if model.substitutedItems.length > 0 %}
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstituted }}</th>
+                    <th class="break-word">{{ labels.substituteProductCode }}</th>
+                    <th class="break-word">{{ labels.substituteProductName }}</th>
+                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                    <th class="break-word">{{ labels.weightSubstituted }}</th>
+                </tr>
+                </thead>
+            <tbody>
+                {% for substituteItem in model.items %}
+                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                    <tr>
+                        <td>
+                            {% for item in model.items %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                            <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ substituteItem.productCode }}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ substituteItem.name }}</div>
+                        </td>
+                        <td>
+                            {{ substituteItem.quantity }}
+                        </td>
+                        <td>
+                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                        </td>
+                    </tr>
+                    {% endif  %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     <p>{{ labels.orderPickupReadyBlob2 }}</p>
 

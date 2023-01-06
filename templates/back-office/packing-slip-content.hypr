@@ -10,16 +10,16 @@
                     <div class="company-url">{{ customContent.websiteUrl }}</div>
                 </th>
                 <th class="order-essentials">
-                    <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-            		<div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-                    <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+                    <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+            		<div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+                    <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
                 </th>
             </tr></thead>
             <tbody><tr><td colspan="4">
                 <table class="grid">
                     <thead><tr>
-                        <th>Bill To:</th>
-                        <th>Ship To:</th>
+                        <th>{{ labels.billToPackingSlip }}:</th>
+                        <th>{{ labels.billToPackingSlip }}:</th>
                     </tr></thead>
                     <tbody><tr>
                         <td>
@@ -90,36 +90,111 @@
                         <td>{{ model.shippingMethodName }}</td>
                     </tr></tbody>
                 </table>
+            {% for packageItemDetail in package.packingSlipItemDetails %}
                 <table class="grid">
-                    <thead><tr>
-                        <th>Product Code</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Weight</th>
-                    </tr></thead>
-                    <tbody>
-                        {% for packageItemDetail in package.packingSlipItemDetails %}
-                            {% for item in model.items %} <!-- model represents the shipment -->
+                    {% set_var showOriginalItemHeader=false %} 
+                    {% set_var showSubstituteItemHeader=false %}                 
+                    {% for item in model.items %} <!-- model represents the shipment -->
+                        {% if (not item.originalLineId) %}
+                            {% if (item.quantity > 0) %}
                                 {% if packageItemDetail.lineId == item.lineId %}
-                                <tr>
-                                    <td>
-                                        {{ item.productCode }}
-                                    </td>
-                                    <td>
-                                        <div class="product-name">{{ item.name }}</div>
-                                    </td>
-                                    <td>
-                                        {{ packageItemDetail.quantity }}
-                                    </td>
-                                    <td>
-                                        {{ item.weight }} {{ item.weightUnit }}
-                                    </td>
-                                </tr>
+                                    {% set_var showOriginalItemHeader=true %}
                                 {% endif %}
-                            {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                        {% if packageItemDetail.lineId == item.lineId  %}
+                            {% if item.originalLineId %}
+                                {% if item.quantity > 0 %}
+                                    {% set_var showSubstituteItemHeader=true %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if showOriginalItemHeader %}
+                    <thead><tr>
+                        <th>{{ labels.productCodePackingSlip }}</th>
+                        <th>{{ labels.productNamePackingSlip }}</th>
+                        <th>{{ labels.quantityPackingSlip }}</th>
+                        <th>{{ labels.weightPackingSlip }}</th>
+                    </tr></thead>
+                    {% endif %}
+                    <tbody>
+                        {% for item in model.items %} <!-- model represents the shipment -->
+                            {% if (not item.originalLineId) %}
+                                {% if (item.quantity > 0) %}
+                                    {% if packageItemDetail.lineId == item.lineId %}
+                                    <tr>
+                                        <td>
+                                            {{ item.productCode }}
+                                        </td>
+                                        <td>
+                                            <div class="product-name">{{ item.name }}</div>
+                                        </td>
+                                        <td>
+                                            {{ packageItemDetail.quantity }}
+                                        </td>
+                                        <td>
+                                            {{ item.weight }} {{ item.weightUnit }}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
+                {% if model.substitutedItems.length > 0  %}
+                    {% if showSubstituteItemHeader %}
+                    <table class="grid no-border">
+                        <tr>
+                            <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+                        </tr>
+                    </table>
+                    {% endif %}
+                    <table class="grid substitute-table">                        
+                        {% if showSubstituteItemHeader %}
+                        <thead>
+                            <tr>
+                                <th class="break-word">{{ labels.productSubstituted }}</th>
+                                <th class="break-word">{{ labels.substituteProductCode }}</th>
+                                <th class="break-word">{{ labels.substituteProductName }}</th>
+                                <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                                <th class="break-word">{{ labels.weightSubstituted }}</th>
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        <tbody>
+                            {% for substituteItem in model.items %}
+                                {% if packageItemDetail.lineId == substituteItem.lineId  %}
+                                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                                <tr>
+                                    <td>
+                                        {% for item in model.items %}
+                                        {% if substituteItem.originalLineId == item.lineId %}
+                                        <div class="product-name">{{ item.name }}</div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {{ substituteItem.productCode }}
+                                    </td>
+                                    <td>
+                                        <div class="product-name">{{ substituteItem.name }}</div>
+                                    </td>
+                                    <td>
+                                        {{ substituteItem.quantity }}
+                                    </td>
+                                    <td>
+                                        {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                                    </td>
+                                </tr>
+                                {% endif  %}
+                                {% endif  %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            {% endfor %}
             </td></tr></tbody>
         </table>
     {% endfor %}
@@ -132,9 +207,9 @@
             <div class="company-url">{{ customContent.websiteUrl }}</div>
         </th>
         <th class="order-essentials">
-            <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-    		<div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-            <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+            <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+    		<div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+            <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
         </th>
     </tr></thead>
     <tbody><tr><td colspan="4">
@@ -212,32 +287,101 @@
                 <td>{{ model.shippingMethodName }}</td>
             </tr></tbody>
         </table>
+        {% set_var showOriginalItemHeaderInWithElse=false %} 
+        {% set_var showSubstituteItemHeaderInWithElse=false %}                 
+        {% for item in model.items %} <!-- model represents the shipment -->
+            {% if (not item.originalLineId) %}
+                {% if (item.quantity > 0) %}
+                    {% set_var showOriginalItemHeaderInWithElse=true %}
+                {% endif %}
+            {% endif %}
+            {% if item.originalLineId %}
+                {% if item.quantity > 0 %}
+                    {% set_var showSubstituteItemHeaderInWithElse=true %}
+                {% endif %}    
+            {% endif %}
+        {% endfor %}
         <table class="grid">
+            {% if showOriginalItemHeaderInWithElse %}
             <thead><tr>
-                <th>Product Code</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Weight</th>
+                <th>{{ labels.productCodePackingSlip }}</th>
+                <th>{{ labels.productNamePackingSlip }}</th>
+                <th>{{ labels.quantityPackingSlip }}</th>
+                <th>{{ labels.weightPackingSlip }}</th>
             </tr></thead>
+            {% endif %}
             <tbody>
                 {% for item in model.items %} <!-- model represents the shipment -->
-                    <tr>
-                        <td>
-                            {{ item.productCode }}
-                        </td>
-                        <td>
-                            <div class="product-name">{{ item.name }}</div>
-                        </td>
-                        <td>
-                            {{ item.quantity }}
-                        </td>
-                        <td>
-                            {{ item.weight }} {{ item.weightUnit }}
-                        </td>
-                    </tr>
+                    {% if (not item.originalLineId) %}
+                        {% if (item.quantity > 0) %}
+                        <tr>
+                            <td>
+                                {{ item.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ item.name }}</div>
+                            </td>
+                            <td>
+                                {{ packageItemDetail.quantity }}
+                            </td>
+                            <td>
+                                {{ item.weight }} {{ item.weightUnit }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
+        {% if model.substitutedItems.length > 0 %} 
+        {% if showSubstituteItemHeaderInWithElse %}       
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        {% endif %}
+        <table class="grid substitute-table">
+            {% if showSubstituteItemHeaderInWithElse %} 
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstituted }}</th>
+                    <th class="break-word">{{ labels.substituteProductCode }}</th>
+                    <th class="break-word">{{ labels.substituteProductName }}</th>
+                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                    <th class="break-word">{{ labels.weightSubstituted }}</th>
+                </tr>
+            </thead>
+            {% endif %}
+            <tbody>
+                {% for substituteItem in model.items %}
+                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                    <tr>
+                        <td>
+                            {% for item in model.items %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                            <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ substituteItem.productCode }}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ substituteItem.name }}</div>
+                        </td>
+                        <td>
+                            {{ substituteItem.quantity }}
+                        </td>
+                        <td>
+                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                        </td>
+                    </tr>
+                    {% endif  %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
     </td></tr></tbody>
 </table>
 {% endif %}
@@ -251,9 +395,9 @@
         <div class="company-url">{{ customContent.websiteUrl }}</div>
     </th>
     <th class="order-essentials">
-        <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-        <div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+        <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+        <div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
+        <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
@@ -330,33 +474,103 @@
             </td>
             <td>{{ model.shippingMethodName }}</td>
         </tr></tbody>
-    </table>
+    </table>    
+    {% set_var showOriginalItemHeaderInElse=false %} 
+    {% set_var showSubstituteItemHeaderInElse=false %}                 
+    {% for item in model.items %} <!-- model represents the shipment -->
+        {% if (not item.originalLineId) %}
+            {% if (item.quantity > 0) %}
+                {% set_var showOriginalItemHeaderInElse=true %}
+            {% endif %}
+        {% endif %}
+        {% if item.originalLineId %}
+            {% if item.quantity > 0 %}
+                {% set_var showSubstituteItemHeaderInElse=true %}
+            {% endif %}    
+        {% endif %}
+    {% endfor %}
     <table class="grid">
+        {% if showOriginalItemHeaderInElse %}
         <thead><tr>
-            <th>Product Code</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Weight</th>
+            <th>{{ labels.productCodePackingSlip }}</th>
+            <th>{{ labels.productNamePackingSlip }}</th>
+            <th>{{ labels.quantityPackingSlip }}</th>
+            <th>{{ labels.weightPackingSlip }}</th>
         </tr></thead>
+        {% endif %}
         <tbody>
             {% for item in model.items %} <!-- model represents the shipment -->
-                <tr>
-                    <td>
-                        {{ item.productCode }}
-                    </td>
-                    <td>
-                        <div class="product-name">{{ item.name }}</div>
-                    </td>
-                    <td>
-                        {{ item.quantity }}
-                    </td>
-                    <td>
-                        {{ item.weight }} {{ item.weightUnit }}
-                    </td>
-                </tr>
+                {% if (not item.originalLineId) %}
+                    {% if (item.quantity > 0) %}
+                    <tr>
+                        <td>
+                            {{ item.productCode }}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ item.name }}</div>
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>
+                            {{ item.weight }} {{ item.weightUnit }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
+    
+    {% if model.substitutedItems.length > 0 %}
+        {% if showSubstituteItemHeaderInElse %}
+            <table class="grid no-border">
+                <tr>
+                    <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+                </tr>
+            </table>
+        {% endif %}
+    <table class="grid substitute-table">
+        {% if showSubstituteItemHeaderInElse %}
+        <thead>
+            <tr>
+                <th class="break-word">{{ labels.productSubstituted }}</th>
+                <th class="break-word">{{ labels.substituteProductCode }}</th>
+                <th class="break-word">{{ labels.substituteProductName }}</th>
+                <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                <th class="break-word">{{ labels.weightSubstituted }}</th>
+            </tr>
+        </thead>
+        {% endif %}
+        <tbody>
+            {% for substituteItem in model.items %}
+                {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                <tr>
+                    <td>
+                        {% for item in model.items %}
+                        {% if substituteItem.originalLineId == item.lineId %}
+                        <div class="product-name">{{ item.name }}</div>
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ substituteItem.productCode }}
+                    </td>
+                    <td>
+                        <div class="product-name">{{ substituteItem.name }}</div>
+                    </td>
+                    <td>
+                        {{ substituteItem.quantity }}
+                    </td>
+                    <td>
+                        {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                    </td>
+                </tr>
+                {% endif  %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </td></tr></tbody>
 </table>
 {% endif %}

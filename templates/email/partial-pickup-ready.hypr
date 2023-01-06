@@ -219,21 +219,25 @@
         </thead>
         <tbody>
           {% for item in model.items %}
-              {% if item.readyForPickupQuantity > 0 %}
-                  <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-                      <td>
-                          <img style="height: 100px;" src="{{ item.imageUrl }}">
-                      </td>
-                      <td>
-                      {{ item.name }}
-                      <dl>
-                          <dd>{{ item.productCode }}</dd>&nbsp;
-                      </dl>
-                      </td>
-                      <td> {{ item.unitPrice }} </td>
-                      <td> {{ item.readyForPickupQuantity }} </td>
-                      <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.readyForPickupQuantity) }} {% endfilter %}</span></td>
-                  </tr>
+              {% if item.readyForPickupQuantity > 0 %}                
+                {% if (not item.originalLineId) %}
+                    {% if (item.quantity > 0) %}
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                        <td>
+                            <img style="height: 100px;" src="{{ item.imageUrl }}">
+                        </td>
+                        <td>
+                        {{ item.name }}
+                        <dl>
+                            <dd>{{ item.productCode }}</dd>&nbsp;
+                        </dl>
+                        </td>
+                        <td> {{ item.unitPrice }} </td>
+                        <td> {{ item.readyForPickupQuantity }} </td>
+                        <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.readyForPickupQuantity) }} {% endfilter %}</span></td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
               {% endif %}
           {% endfor %}
         </tbody>

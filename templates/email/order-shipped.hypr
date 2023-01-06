@@ -16,9 +16,19 @@
 
     <h2>{{ labels.itemsShipped }}</h2>
 
-
+    
    {% for package in model.packages %}
+   
+    {% set_var showOriginalItemHeader=false %}              
+    {% for item in package.items %}
+        {% if (not item.originalLineId) %}
+            {% if (item.quantity > 0) %}
+                {% set_var showOriginalItemHeader=true %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
    <table width="100%" cellpadding="1" cellspacing="1" width="100%">
+        {% if showOriginalItemHeader %}
         <thead>
             <tr>
                 <td bgcolor="#EEEEEE" colspan="2">
@@ -30,29 +40,79 @@
                 <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.product }}</font></td>
             </tr>
         </thead>
-        
+        {% endif %}
         {% for packageItem in package.items %}
          
             <tbody class="mz-ordersummary-package">
-                <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-                    <td>{{ packageItem.quantity }}</td>
-                    <td class="mz-ordersummary-item-product">
-                        {{ packageItem.product.name }}
-                        {% if packageItem.product.productUsage == 'Bundle' %}
-                        <dl class="mz-propertylist">
-                        {% for bundledProduct in packageItem.product.bundledProducts %}
-                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                        {% endfor %}
-                        </dl>
-                        {% endif %}
-                    </td>
-                </tr>
+            {% if ((not packageItem.originalLineId) && package.substituteItems.length > 0) %}
+                {% if (packageItem.quantity > 0) %}
+                    <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                        <td>{{ packageItem.quantity }}</td>
+                        <td class="mz-ordersummary-item-product">
+                            {{ packageItem.product.name }}
+                            {% if packageItem.product.productUsage == 'Bundle' %}
+                            <dl class="mz-propertylist">
+                            {% for bundledProduct in packageItem.product.bundledProducts %}
+                            <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                            {% endfor %}
+                            </dl>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endif %}
             </tbody>
        
         {% endfor %}
     </table>
     {% endfor %}
+    
+    {% if model.substitutedItems.length > 0 %}
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstituted }}</th>
+                    <th class="break-word">{{ labels.substituteProductCode }}</th>
+                    <th class="break-word">{{ labels.substituteProductName }}</th>
+                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                    <th class="break-word">{{ labels.weightSubstituted }}</th>
+                </tr>
+                </thead>
+            <tbody>
+                {% for substituteItem in model.items %}
+                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                    <tr>
+                        <td>
+                            {% for item in model.items %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                            <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ substituteItem.productCode }}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ substituteItem.name }}</div>
+                        </td>
+                        <td>
+                            {{ substituteItem.quantity }}
+                        </td>
+                        <td>
+                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                        </td>
+                    </tr>
+                    {% endif  %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
 
     {{ labels.orderShipmentBlob2|safe }}
