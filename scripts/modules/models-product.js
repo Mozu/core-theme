@@ -52,6 +52,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     });
                 } else {
                     me.on("change:value", function(model, newVal) {
+                        if(this.get('isMultiValue') && Array.isArray(newVal) && newVal.length <= 0) return;
                         var newValObj, values = me.get("values"),
                             comparator = this.get('isMultiValue') ? containsThisValue : equalsThisValue;
                         if (typeof newVal === "string") newVal = $.trim(newVal);
