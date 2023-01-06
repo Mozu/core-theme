@@ -9,7 +9,7 @@
     
     <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2250.0-master.71" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2013.2" />
-    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2248.8" />
+    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2252.6" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Messaging" Version="1.2031.2" />
