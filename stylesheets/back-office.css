@@ -649,6 +649,9 @@ table {
   .align-center {
       text-align: center;
   }
+  .align-right {
+    text-align: right !important;
+  }
 
   .quote-name {
     color: #3A3A3A;
@@ -752,7 +755,16 @@ word-wrap: break-word
 .no-left-padding {
 padding-left: 0  !important;
 }
-.substitute-table tr th{
-background-color: #666666;
-color: #ffffff;
+.substitute-table tr th {
+background-color: #e5e5e5;
+color: #000000;
+}
+.no-topmargin {
+  margin: 0 2% 10px;
+}
+.no-bottommargin {  
+  margin: 10px 2% 0;
+}
+.top-border {
+  border-top: 1px solid #bfbfbf !important;
 }

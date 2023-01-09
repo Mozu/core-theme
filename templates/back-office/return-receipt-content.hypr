@@ -1,3 +1,23 @@
+{% set_var showOriginalItemHeader=false %} 
+{% set_var showSubstituteItemsSection=false %}
+{% for item in model.items %}
+  {% for shipment in model.shipments %}
+    {% for shipmentItem in shipment.items %}
+      {% if shipmentItem.lineId == item.shipmentItemId %}
+        {% if not shipmentItem.originalLineId %}
+          {% if shipmentItem.quantity > 0 %}
+            {% set_var showOriginalItemHeader=true %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      {% if shipmentItem.lineId == item.shipmentItemId %}
+        {% if shipmentItem.originalLineId && shipmentItem.length > 0 %}
+          {% set_var showSubstituteItemsSection=true %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
 <table>
   <tr>
     <td>
@@ -9,9 +29,9 @@
       {{ labels.returnReceiptBodyHeader | string_format(model.contact.firstName,model.contact.lastNameOrSurname,model.returnNumber,customContent.companyName,model.originalOrderNumber) |safe}}
     </td>
   </tr>
-  <tr>
-    <td>
+</table>
       <table class="grid">
+        {% if showOriginalItemHeader %}
         <thead>
           <tr>
             <th class="align-center">{{ labels.returnReceiptItemQtyColumn }}</th>
@@ -22,46 +42,105 @@
             <th class="align-center">{{ labels.returnReceiptItemTotalColumn }}</th>
           </tr>
         </thead>
+        {% endif %}
         <tbody>
           {% for item in model.items %}
-          <tr>
-            <td class="align-center">
-              {{ item.quantityReceived }}
-            </td>
-            <td>
-              {{ item.product.productCode }}
-            </td>
-            <td>
-              {{ item.product.name }}
-            </td>
-            <td>
-              {{ item.receiveStatus }}
-            </td>
-            <td class="align-center">
-              {{ item.product.price.price }}
-            </td>
-            <td class="align-center">
-              {{ item.product.price.price|multiply(item.quantityReceived) }}
-            </td>
-          </tr>
+          {% for shipment in model.shipments %}
+            {% for shipmentItem in shipment.items %}
+              {% if shipmentItem.lineId == item.shipmentItemId %}
+                {% if not shipmentItem.originalLineId %}
+                <tr>
+                  <td class="align-center">
+                    {{ item.quantityReceived }}
+                  </td>
+                  <td>
+                    {{ item.product.productCode }}
+                  </td>
+                  <td>
+                    {{ item.product.name }}
+                  </td>
+                  <td>
+                    {{ item.receiveStatus }}
+                  </td>
+                  <td class="align-center">
+                    {{ item.product.price.price }}
+                  </td>
+                  <td class="align-center">
+                    {{ item.product.price.price|multiply(item.quantityReceived) }}
+                  </td>
+                </tr>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
           {% endfor %}
-          <tr>
-            <td colspan="4"></td>
-            <td class="align-center">
-              <b>{{ labels.returnReceiptReductionAmountColumn }}</b>
-            </td>
-            <td class="align-center">{{ model.refundAmount }}</td>
-          </tr>
+          {% endfor %}
+          {% if not showSubstituteItemsSection %}
+            <tr>
+              <td class="align-right top-border" colspan="5">
+                <b>{{ labels.returnReceiptReductionAmountColumn }}</b>
+              </td>
+              <td class="align-center top-border">{{ model.refundAmount }}</td>
+            </tr>
+          {% endif %}
         </tbody>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td>
+</table>  
+      {% if showSubstituteItemsSection %}
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table no-bottommargin">
+            <thead>
+              <tr>
+                <th class="break-word">{{ labels.quantitySubstituted }}</th>
+                <th class="break-word">{{ labels.returnReceiptItemUPCColumn }}</th>
+                <th class="break-word">{{ labels.substituteProductName }}</th>
+                <th class="break-word">{{ labels.returnReceiptItemStatusColumn }}</th>
+                <th class="break-word">{{ labels.returnReceiptUnitPriceColumn }}</th>
+                <th class="break-word">{{ labels.returnReceiptItemTotalColumn }}</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for substituteItem in model.items %}
+                  {% for shipment in model.shipments %}
+                    {% for shipmentItem in shipment.items %}
+                      {% if shipmentItem.lineId == substituteItem.shipmentItemId %}
+                        {% if shipmentItem.originalLineId && shipmentItem.length > 0 %}
+                        <tr>
+                            <td>
+                                {{ substituteItem.quantityReceived }}
+                            </td>
+                            <td>
+                                {{ substituteItem.product.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ substituteItem.product.name }}</div>
+                            </td>
+                            <td>
+                                {{ substituteItem.receiveStatus }}
+                            </td>
+                            <td class="align-center">
+                              {{ substituteItem.product.price.price }}
+                            </td>
+                            <td class="align-center">
+                              {{ substituteItem.product.price.price|multiply(substituteItem.quantityReceived) }}
+                            </td>
+                        </tr>
+                        {% endif  %}
+                      {% endif  %}
+                    {% endfor %}
+                  {% endfor %}
+                {% endfor %}
+            </tbody>
+              <tr>
+                <td class="align-right top-border" colspan="5">
+                  <b>{{ labels.returnReceiptReductionAmountColumn }}</b>
+                </td>
+                <td class="align-center top-border">{{ model.refundAmount }}</td>
+              </tr>
+        {% endif %}
+    </table>
+    <div class="grid no-border">
       {{ labels.returnReceiptBodyContent | string_format(customContent.websiteUrl, customContent.companyName) |safe}}
-    </td>
-  </tr>
-</table>
-
-
-
+    </div>
