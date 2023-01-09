@@ -140,13 +140,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
           {
               index: 'transactionAmount',
               displayName: 'Amount',
-              sortable: true,
-              displayTemplate: function (amount){
-                  if(amount){
-                      return '$' + amount.toFixed(2);
-                  }
-                  return "";
-              }
+              sortable: true
           }
       ],
       relations: {
