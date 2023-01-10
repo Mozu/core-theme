@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kibo.Fulfillment.Contracts.Model;
+using System;
 using System.Collections.Generic;
 using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 
@@ -7,6 +8,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Models
     public class Return : DCReturns.Return
     {
         public List<ReturnRefund> ReturnRefunds { get; set; }
+        public List<EntityModelOfShipment> Shipments { get; set; }
     }
 
     public class ReturnRefund

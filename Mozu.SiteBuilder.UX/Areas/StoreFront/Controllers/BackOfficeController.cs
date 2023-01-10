@@ -39,6 +39,8 @@ using Mozu.Customer.Contracts.Clients;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
 using Mozu.CommerceRuntime.Contracts.Payments;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Hypr.Tags;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -856,7 +858,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private async Task<Return> GetReturn(string returnId)
         {
             var returnObject = (await _returnWebApiClient.CloneWithoutUserClaims().GetReturn(returnId)).ReadAsSync();
-            return returnObject?.ToSiteBuilder();
+            var result = returnObject?.ToSiteBuilder();
+
+            if (result != null && result.OriginalOrderId.NotIsNullOrEmpty())
+            {
+                var shipmentNumbers = result.Items?.Select(x => x.ShipmentNumber);
+                if (shipmentNumbers.SafeAny())
+                {
+                    var shipments = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentsUsingGET(filter: $"orderId=={result?.OriginalOrderId};shipmentStatus!=REASSIGNED")).ReadAsSync();
+                    result.Shipments = shipments.ExtractResources()?.Where(x => shipmentNumbers.Contains(x.ShipmentNumber))?.ToList();
+                }
+            }
+            return result;
         }
     }
 }
