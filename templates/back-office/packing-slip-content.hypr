@@ -336,44 +336,6 @@
                     {% endif %}
                 {% endfor %}
             </tbody>
-        </table>        
-        <table class="grid no-border">
-            <tr>
-                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
-            </tr>
-        </table>
-        <table class="grid substitute-table">
-            <thead>
-                <tr>
-                    <th class="break-word">{{ labels.productSubstituted }}</th>
-                    <th class="break-word">{{ labels.substituteProductCode }}</th>
-                    <th class="break-word">{{ labels.substituteProductName }}</th>
-                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
-                    <th class="break-word">{{ labels.weightSubstituted }}</th>
-                </tr>
-                </thead>
-            <tbody>
-                {% for packageItemDetail in package.packingSlipItemDetails %}
-                    {% for item in model.items %} <!-- model represents the shipment -->
-                        {% if packageItemDetail.lineId == item.lineId %}
-                        <tr>
-                            <td>
-                                {{ item.productCode }}
-                            </td>
-                            <td>
-                                <div class="product-name">{{ item.name }}</div>
-                            </td>
-                            <td>
-                                {{ packageItemDetail.quantity }}
-                            </td>
-                            <td>
-                                {{ item.weight }} {{ item.weightUnit }}
-                            </td>
-                        </tr>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </tbody>
         </table>
         {% if model.substitutedItems.length > 0 %} 
         {% if showSubstituteItemHeaderInWithElse %}       
@@ -563,7 +525,6 @@
             {% endfor %}
         </tbody>
     </table>
-    
     {% if model.substitutedItems.length > 0 %}
         {% if showSubstituteItemHeaderInElse %}
             <table class="grid no-border">
