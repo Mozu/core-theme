@@ -92,24 +92,24 @@
                 </table>
                     {% set_var showOriginalItemHeader=false %} 
                     {% set_var showSubstituteItemHeader=false %}     
-            {% for packageItemDetail in package.packingSlipItemDetails %}            
-                    {% for item in model.items %} <!-- model represents the shipment -->
-                        {% if not item.originalLineId %}
-                            {% if (item.quantity > 0) %}
-                                {% if packageItemDetail.lineId == item.lineId %}
-                                    {% set_var showOriginalItemHeader=true %}
+                    {% for packageItemDetail in package.packingSlipItemDetails %}            
+                            {% for item in model.items %} <!-- model represents the shipment -->
+                                {% if not item.originalLineId %}
+                                    {% if (item.quantity > 0) %}
+                                        {% if packageItemDetail.lineId == item.lineId %}
+                                            {% set_var showOriginalItemHeader=true %}
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        {% if packageItemDetail.lineId == item.lineId  %}
-                            {% if item.originalLineId %}
-                                {% if item.quantity > 0 %}
-                                    {% set_var showSubstituteItemHeader=true %}
+                                {% if packageItemDetail.lineId == item.lineId  %}
+                                    {% if item.originalLineId %}
+                                        {% if item.quantity > 0 %}
+                                            {% set_var showSubstituteItemHeader=true %}
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        {% endif %}
+                            {% endfor %}
                     {% endfor %}
-            {% endfor %}
                 <table class="grid">
                     {% if showOriginalItemHeader %}
                     <thead><tr>
@@ -171,28 +171,28 @@
                             {% for substituteItem in model.items %}
                                 {% if packageItemDetail.lineId == substituteItem.lineId  %}
                                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                                <tr>
-                                    <td>
-                                        {% for item in model.items %}
-                                        {% if substituteItem.originalLineId == item.lineId %}
-                                        <div class="product-name">{{ item.name }}</div>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {{ substituteItem.productCode }}
-                                    </td>
-                                    <td>
-                                        <div class="product-name">{{ substituteItem.name }}</div>
-                                    </td>
-                                    <td>
-                                        {{ substituteItem.quantity }}
-                                    </td>
-                                    <td>
-                                        {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
-                                    </td>
-                                </tr>
-                                {% endif  %}
+                                    <tr>
+                                        <td>
+                                            {% for item in model.items %}
+                                            {% if substituteItem.originalLineId == item.lineId %}
+                                            <div class="product-name">{{ item.name }}</div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {{ substituteItem.productCode }}
+                                        </td>
+                                        <td>
+                                            <div class="product-name">{{ substituteItem.name }}</div>
+                                        </td>
+                                        <td>
+                                            {{ substituteItem.quantity }}
+                                        </td>
+                                        <td>
+                                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                                        </td>
+                                    </tr>
+                                    {% endif  %}
                                 {% endif  %}
                             {% endfor %}
                         {% endfor %}
