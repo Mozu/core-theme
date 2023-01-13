@@ -516,7 +516,7 @@
                     }, 0);
 
                     result = total - giftCardTotal - storeCreditTotal;
-                    return me.roundToPlaces(result, 2);
+                    return me.currencyRound(result);
             },
             resetAddressDefaults: function () {
                 var billingAddress = this.get('billingContact').get('address');
@@ -709,7 +709,7 @@
 
                 //need to round to prevent being over total by .01
                 if (creditAmountToApply > 0) {
-                    creditAmountToApply = self.roundToPlaces(creditAmountToApply, 2);
+                    creditAmountToApply = self.currencyRound(creditAmountToApply);
                 }
 
                 var activeCreditPayments = this.activeStoreCredits();
@@ -788,8 +788,12 @@
             },
 
             areNumbersEqual: function(f1, f2) {
-                var epsilon = 0.01;
-                return (Math.abs(f1 - f2)) < epsilon;
+                var precision = require.mozuData('pagecontext').currencyInfo.precision;
+                if (precision === undefined || precision === null) {
+                    precision = 2;
+                }
+                var epsilon = 1 / Math.pow(10, precision);
+                return (Math.abs(f1 - f2).toFixed(precision)) < epsilon;
             },
             loadGiftCards: function(){
               //TODO: phase 2: get giftCards from customer account
@@ -835,7 +839,7 @@
              }
 
              if (amountToApply > 0) {
-                 amountToApply = self.roundToPlaces(amountToApply, 2);
+                 amountToApply = self.currencyRound(amountToApply);
              }
 
              var activeGiftCards = this.activeGiftCards();
@@ -1055,11 +1059,15 @@
                     remainingTotal += toBeVoidedPayment;
                 }
                 var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
-                return scope.roundToPlaces(maxAmt, 2);
+                return scope.currencyRound(maxAmt);
             },
 
-            roundToPlaces: function(amt, numberOfDecimalPlaces) {
-                var transmogrifier = Math.pow(10, numberOfDecimalPlaces);
+            currencyRound: function(amt) {
+                var precision = require.mozuData('pagecontext').currencyInfo.precision;
+                if (precision === undefined || precision === null) {
+                    precision = 2;
+                }
+                var transmogrifier = Math.pow(10, precision);
                 return Math.round(amt * transmogrifier) / transmogrifier;
             },
 
