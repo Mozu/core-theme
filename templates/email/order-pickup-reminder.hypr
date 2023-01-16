@@ -207,26 +207,27 @@
     {% endfor %}
     <table width="100%" cellpadding="1" cellspacing="1" width="100%">
         <thead>
+            {% if showOriginalItemHeader %}
             <tr>
                 <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.item }}</font></td>
                 <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.subtotal }}</font></td>
             </tr>
-        </thead>
-        
-    {% for item in model.items %}
-        {% if (not item.originalLineId) %}
-            {% if (item.quantity > 0) %}
-			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-				<td>
-                {{ item.name }}
-                <dl>
-                    <dd>{{ item.productCode }}</dd>&nbsp;
-                </dl>
-                </td>
-                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
-			</tr>
             {% endif %}
-        {% endif %}
+        </thead>        
+        {% for item in model.items %}
+            {% if (not item.originalLineId) %}
+                {% if (item.quantity > 0) %}
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                    <td>
+                    {{ item.name }}
+                    <dl>
+                        <dd>{{ item.productCode }}</dd>&nbsp;
+                    </dl>
+                    </td>
+                    <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
+                </tr>
+                {% endif %}
+            {% endif %}
 		{% endfor %}
     </table>
     {% if model.substitutedItems.length > 0 %}
@@ -238,13 +239,11 @@
         <table class="grid substitute-table">
             <thead>
                 <tr>
-                    <th class="break-word">{{ labels.productSubstituted }}</th>
-                    <th class="break-word">{{ labels.substituteProductCode }}</th>
-                    <th class="break-word">{{ labels.substituteProductName }}</th>
-                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
-                    <th class="break-word">{{ labels.weightSubstituted }}</th>
+                    <th class="break-word">{{ labels.itemSubstitutedEmail }}</th>
+                    <th class="break-word">{{ labels.substituteEmail }}</th>
+                    <th class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</th>
                 </tr>
-                </thead>
+            </thead>
             <tbody>
                 {% for substituteItem in model.items %}
                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
@@ -253,20 +252,17 @@
                             {% for item in model.items %}
                             {% if substituteItem.originalLineId == item.lineId %}
                             <div class="product-name">{{ item.name }}</div>
+                            <dl>
+                                <dd>{{ item.productCode }}</dd>&nbsp;
+                            </dl>
                             {% endif %}
                             {% endfor %}
                         </td>
                         <td>
-                            {{ substituteItem.productCode }}
-                        </td>
-                        <td>
                             <div class="product-name">{{ substituteItem.name }}</div>
                         </td>
-                        <td>
-                            {{ substituteItem.quantity }}
-                        </td>
-                        <td>
-                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                        <td class="align-right">
+                            <span class="mz-item-price">{% filter currency %} {{ substituteItem.actualPrice|multiply(substituteItem.quantity) }} {% endfilter %}</span>
                         </td>
                     </tr>
                     {% endif  %}

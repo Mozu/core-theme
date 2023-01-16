@@ -261,11 +261,11 @@
         <table class="grid substitute-table">
             <thead>
                 <tr>
-                    <th class="break-word">{{ labels.productSubstituted }}</th>
-                    <th class="break-word">{{ labels.substituteProductCode }}</th>
-                    <th class="break-word">{{ labels.substituteProductName }}</th>
-                    <th class="break-word">{{ labels.quantitySubstituted }}</th>
-                    <th class="break-word">{{ labels.weightSubstituted }}</th>
+                    <td bgcolor="#B3B3B3" class="break-word" colspan="2">{{ labels.itemSubstitutedEmail }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.substituteEmail }}</td>                
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.unitPrice }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.quantity }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</td>
                 </tr>
                 </thead>
             <tbody>
@@ -273,23 +273,25 @@
                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
                     <tr>
                         <td>
+                            <img style="height: 100px; width:100px;" src="{{ substituteItem.imageUrl }}">
+                        </td>
+                        <td>
                             {% for item in model.items %}
                             {% if substituteItem.originalLineId == item.lineId %}
                             <div class="product-name">{{ item.name }}</div>
+                            <dl>
+                                <dd>{{ item.productCode }}</dd>&nbsp;
+                            </dl>
                             {% endif %}
                             {% endfor %}
                         </td>
                         <td>
-                            {{ substituteItem.productCode }}
-                        </td>
-                        <td>
                             <div class="product-name">{{ substituteItem.name }}</div>
                         </td>
-                        <td>
-                            {{ substituteItem.quantity }}
-                        </td>
-                        <td>
-                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                        <td> {{ substituteItem.unitPrice }} </td>
+                        <td> {{ substituteItem.readyForPickupQuantity }} </td>
+                        <td class="align-right">
+                            <span class="mz-item-price">{% filter currency %} {{ substituteItem.actualPrice|multiply(substituteItem.quantity) }} {% endfilter %}</span>
                         </td>
                     </tr>
                     {% endif  %}
