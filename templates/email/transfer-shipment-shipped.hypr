@@ -227,12 +227,18 @@
                         <td>
                             {% for item in model.items %}
                             {% if substituteItem.originalLineId == item.lineId %}
-                            <div class="product-name">{{ item.name }}</div>
+                            <div class="product-name">{{ item.name }}</div>                            
+                            <dl>
+                                <dd>{{ item.productCode }}</dd>&nbsp;
+                            </dl>
                             {% endif %}
                             {% endfor %}
                         </td>
                         <td>
                             <div class="product-name">{{ substituteItem.name }}</div>
+                            <dl>
+                                <dd>{{ substituteItem.productCode }}</dd>&nbsp;
+                            </dl>
                         </td>
                         <td class="align-right">
                             {{ substituteItem.lineItemCost|currency}}
