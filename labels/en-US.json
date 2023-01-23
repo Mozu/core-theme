@@ -924,5 +924,12 @@
   "substituteProductCode":"Substitute Code",
   "substituteProductName":"Substitute Name",
   "quantitySubstituted":"Substitute Quantity",
-  "weightSubstituted":"Weight"
+  "weightSubstituted":"Weight",
+  "productSubstitutedEmail": "Product",
+  "substituteEmail":"Substitute",
+  "qtySubstituteEmail":"Qty",
+  "eachSubstituteEmail":"Each",
+  "totalSubstituteEmail":"Total",
+  "itemSubstitutedEmail":"Item",
+  "subtotalSubstituteEmail":"Subtotal"
 }

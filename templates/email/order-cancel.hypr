@@ -90,13 +90,11 @@
             <table class="grid substitute-table">
                 <thead>
                     <tr>
-                        <th class="break-word">{{ labels.productSubstituted }}</th>
-                        <th class="break-word">{{ labels.substituteProductCode }}</th>
-                        <th class="break-word">{{ labels.substituteProductName }}</th>
-                        <th class="break-word">{{ labels.quantitySubstituted }}</th>
-                        <th class="break-word">{{ labels.weightSubstituted }}</th>
+                        <th class="break-word">{{ labels.productSubstitutedEmail }}</th>
+                        <th class="break-word">{{ labels.substituteEmail }}</th>
+                        <th class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</th>
                     </tr>
-                    </thead>
+                </thead>
                 <tbody>
                     {% for substituteItem in model.items %}
                         {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
@@ -109,16 +107,10 @@
                                 {% endfor %}
                             </td>
                             <td>
-                                {{ substituteItem.productCode }}
-                            </td>
-                            <td>
                                 <div class="product-name">{{ substituteItem.name }}</div>
                             </td>
-                            <td>
-                                {{ substituteItem.quantity }}
-                            </td>
-                            <td>
-                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                            <td class="align-right">
+                                {{ substituteItem.lineItemCost|currency}}
                             </td>
                         </tr>
                         {% endif  %}

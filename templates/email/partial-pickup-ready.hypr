@@ -207,8 +207,16 @@
     </div>
  <br> <br> <hr> <br> <br>
     <h3>{{ labels.readyForPickup }}</h3>
-
+    {% set_var showOriginalItemHeader=false %}              
+    {% for item in model.items %}
+        {% if (not item.originalLineId) %}
+            {% if (item.quantity > 0) %}
+                {% set_var showOriginalItemHeader=true %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
     <table width="100%" class="tableStyle" cellpadding="1" cellspacing="1" width="50%">
+        {% if showOriginalItemHeader %}
         <thead>
             <tr>
                 <td bgcolor="#B3B3B3" colspan="2"><font color="#FFFFFF">{{ labels.item }}</font></td>                
@@ -217,6 +225,7 @@
                 <td bgcolor="#B3B3B3" style="text-align: right;"><font color="#FFFFFF">{{ labels.itemTotal }}</font></td>
             </tr>
         </thead>
+        {% endif %}
         <tbody>
           {% for item in model.items %}
               {% if item.readyForPickupQuantity > 0 %}                
@@ -243,7 +252,53 @@
         </tbody>
     </table>
     <br> <br>
-
+    {% if model.substitutedItems.length > 0 %}
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <td bgcolor="#B3B3B3" class="break-word" colspan="2">{{ labels.itemSubstitutedEmail }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.substituteEmail }}</td>                
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.unitPrice }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word">{{ labels.quantity }}</td>
+                    <td bgcolor="#B3B3B3" class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</td>
+                </tr>
+                </thead>
+            <tbody>
+                {% for substituteItem in model.items %}
+                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                    <tr>
+                        <td>
+                            <img style="height: 100px; width:100px;" src="{{ substituteItem.imageUrl }}">
+                        </td>
+                        <td>
+                            {% for item in model.items %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                            <div class="product-name">{{ item.name }}</div>
+                            <dl>
+                                <dd>{{ item.productCode }}</dd>&nbsp;
+                            </dl>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ substituteItem.name }}</div>
+                        </td>
+                        <td> {{ substituteItem.unitPrice }} </td>
+                        <td> {{ substituteItem.readyForPickupQuantity }} </td>
+                        <td class="align-right">
+                            <span class="mz-item-price">{% filter currency %} {{ substituteItem.actualPrice|multiply(substituteItem.quantity) }} {% endfilter %}</span>
+                        </td>
+                    </tr>
+                    {% endif  %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
      <h3>{{ labels.onItsWay }}</h3>
 
     <table width="100%" class="tableStyle" cellpadding="1" cellspacing="1" width="50%">

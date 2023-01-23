@@ -768,5 +768,12 @@
   "substituteProductName":"Produktname ersetzen",
   "substituteProductCode":"Ersatzproduktcode",
   "productSubstitutedPackingSlip":"Produkt ersetzt",
-  "weightSubstituted":"Gewicht"
+  "weightSubstituted":"Gewicht",
+  "productSubstitutedEmail": "Produkt",
+  "substituteEmail":"Ersatz",
+  "qtySubstituteEmail":"Menge",
+  "eachSubstituteEmail":"Jeder",
+  "totalSubstituteEmail":"Gesamt",
+  "itemSubstitutedEmail":"Artikel",
+  "subtotalSubstituteEmail":"Artikel"
 }
