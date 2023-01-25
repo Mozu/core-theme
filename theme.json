@@ -565,7 +565,7 @@
       "id": "shipment.fulfilled",
       "properties": {},
       "template": "mobile-notification/shipment-fulfilled",
-      "title": "Your Order Has Shipped"
+      "title": "Curbside Order Complete"
     },
     {
       "id": "shipment.intransitconfirmation",
