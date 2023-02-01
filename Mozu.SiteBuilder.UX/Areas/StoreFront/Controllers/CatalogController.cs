@@ -52,8 +52,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         readonly ICustomRouteHandler _customRouteHandler;
         private readonly IStorefrontCache _storeFrontCache;
         private readonly UrlHelper _urlhelper;
-        private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
-        private readonly Lazy<IExpressionEvaluator> _expressionEvaluator;
         private static readonly JsonSerializer ProductSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
         private readonly ILogger _logger;
         public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient,
@@ -69,8 +67,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customRouteHandler = customRouteHandler;
             _storeFrontCache = storeFrontCache;
             _urlhelper = urlhelper;
-            _pageRuleVisitor = pageRuleVisitor;
-            _expressionEvaluator = expressionEvaluator;
+            PageRuleVisitor = pageRuleVisitor;
+            ExpressionEvaluator = expressionEvaluator;
         }
 
         /// <summary>
