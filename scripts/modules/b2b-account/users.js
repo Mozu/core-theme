@@ -25,10 +25,15 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         },
         //Not Good... Rework
         saveUser: function(){
+            var locale = "en-US";
+            var apiContext = require.mozuData('apicontext');
+            if(apiContext && apiContext.headers['x-vol-locale']) {
+              locale = apiContext.headers['x-vol-locale'];
+            }
             var user = this.get('user');
             user.set('id', user.get('userId'));
             user.set('accountId', this.get('b2bAccountId'));
-            user.set('localeCode', "en-US");
+            user.set('localeCode', locale);
             user.set('acceptsMarketing', false);
             user.set('externalPassword', "");
             user.set('isImport', false);
