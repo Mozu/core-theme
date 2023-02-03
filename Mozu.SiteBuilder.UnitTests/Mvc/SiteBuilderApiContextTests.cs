@@ -126,6 +126,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var settings = Substitute.For<ISettings>();
             var authenticationHelper = Substitute.For<IAuthenticationHelper>();
             var env = Substitute.For<IWebHostEnvironment>();
+            var jwtService = Substitute.For<IJwtService>();
             var ctx = new DefaultHttpContext();
             ctx.Request.Method = "GET";
             ctx.Request.Host = new HostString("foo.com");
@@ -139,8 +140,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ctx.Request.Headers.Add("x-vol-user-claims", "__mzrpt__");
 
 
-            //var ct = new SiteBuilderApiContextBuilder(ctx, new JwtService(), cookieProvider, settings, authenticationHelper, dvmGetter, editModeGetter).BuildApiContext( new SiteBuilderApiContext(), ctx);
-            //Assert.AreEqual(ct.TenantId, 123);
+            var ct = new SiteBuilderApiContextBuilder(ctx, jwtService, cookieProvider, settings, authenticationHelper, dvmGetter, editModeGetter).BuildApiContext( new SiteBuilderApiContext(), ctx);
+            Assert.AreEqual(ct.TenantId, 123);
         }
                                
         [Test]
@@ -149,6 +150,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var cookieProvider = Substitute.For<ICookieProvider>();
             var env = Substitute.For<IWebHostEnvironment>();
             var auth = Substitute.For<IAuthenticationHelper>();
+            var jwtService = Substitute.For<IJwtService>();
 
             var settings = Substitute.For<ISettings>();
             settings.AppSettings(Arg.Is("ReverseProxy")).Returns("true");
@@ -162,13 +164,13 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var hctx = new DefaultHttpContext();
             hctx.Request.Host = new HostString("foo.com");
             hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
-            //var ctx = new SiteBuilderApiContextBuilder(hctx, new JwtService(), cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
+            var ctx = new SiteBuilderApiContextBuilder(hctx, jwtService, cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
             
-            //var now = ctx.PreviewDate.Value;
+            var now = ctx.PreviewDate.Value;
 
-            //Assert.AreEqual(now.Year, 2012);
-            //Assert.AreEqual(now.Month, 11);
-            //Assert.AreEqual(now.Day, 10);
+            Assert.AreEqual(now.Year, 2012);
+            Assert.AreEqual(now.Month, 11);
+            Assert.AreEqual(now.Day, 10);
         }
         [Test]
         public void Can_Set_Now_override_In_Live_Via_QS()
@@ -176,6 +178,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var cookieProvider = Substitute.For<ICookieProvider>();
             var env = Substitute.For<IWebHostEnvironment>();
             var auth = Substitute.For<IAuthenticationHelper>();
+            var jwtService = Substitute.For<IJwtService>();
 
             var settings = Substitute.For<ISettings>();
             settings.AppSettings(Arg.Is<string>("ReverseProxy")).Returns("true");
@@ -191,9 +194,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             hctx.Request.QueryString = new QueryString("?mz_now=2012-11-10");
 
             
-            //var ctx = new SiteBuilderApiContextBuilder(hctx, new JwtService(), cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
+            var ctx = new SiteBuilderApiContextBuilder(hctx, jwtService, cookieProvider, settings, auth, dvm, edit).BuildApiContext(new SiteBuilderApiContext(), hctx);
 
-            //Assert.IsNull(ctx.PreviewDate);
+            Assert.IsNull(ctx.PreviewDate);
         }
     }
 }
