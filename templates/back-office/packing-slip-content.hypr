@@ -326,7 +326,7 @@
                                 <div class="product-name">{{ item.name }}</div>
                             </td>
                             <td>
-                                {{ packageItemDetail.quantity }}
+                                {{ item.quantity }}
                             </td>
                             <td>
                                 {{ item.weight }} {{ item.weightUnit }}
