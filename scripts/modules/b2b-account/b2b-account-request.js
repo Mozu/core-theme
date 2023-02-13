@@ -37,6 +37,11 @@ define(["modules/jquery-mozu", "hyprlive", "modules/models-b2b-account", 'module
     }
 
     function requestAccountApiCall() {
+      var locale = "en-US";
+      var apiContext = require.mozuData('apicontext');
+      if(apiContext && apiContext.headers['x-vol-locale']) {
+        locale = apiContext.headers['x-vol-locale'];
+      }
       $("#requestAccount").addClass("is-loading");
       // get value from form
       var requestAccount = JSON.parse(JSON.stringify({
@@ -46,7 +51,7 @@ define(["modules/jquery-mozu", "hyprlive", "modules/models-b2b-account", 'module
             "userName": $("#userEmail").val().trim(),
             "firstName": $("#userFirstName").val().trim(),
             "lastName": $("#userLastName").val().trim(),
-            "localeCode": "en-US",
+            "localeCode": locale,
             "acceptsMarketing": false,
             "isActive": false
           }

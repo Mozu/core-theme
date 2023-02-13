@@ -93,6 +93,11 @@ define([
             },
             createAccountApiCall: function ($, B2BAccountModels) {
                 var self = this;
+                var locale = "en-US";
+                var apiContext = require.mozuData('apicontext');
+                if(apiContext && apiContext.headers['x-vol-locale']) {
+                  locale = apiContext.headers['x-vol-locale'];
+                }
                 var json = JSON.parse(JSON.stringify(
                     {
                         "users": [
@@ -101,7 +106,7 @@ define([
                                 "userName": $("#email").val(),
                                 "firstName": $("#firstName").val(),
                                 "lastName": $("#lastName").val(),
-                                "localeCode": "en-US",
+                                "localeCode": locale,
                                 "acceptsMarketing": "false",
                                 "isActive": true
                             }
