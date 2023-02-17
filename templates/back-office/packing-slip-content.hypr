@@ -19,7 +19,7 @@
                 <table class="grid">
                     <thead><tr>
                         <th>{{ labels.billToPackingSlip }}:</th>
-                        <th>{{ labels.billToPackingSlip }}:</th>
+                        <th>{{ labels.shipToPackingSlip }}:</th>
                     </tr></thead>
                     <tbody><tr>
                         <td>
@@ -211,7 +211,7 @@
             <div class="company-url">{{ customContent.websiteUrl }}</div>
         </th>
         <th class="order-essentials">
-            <div class="order-number"><span class="label">{{ labels.orderNoPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
+            <div class="order-number"><span class="label">{{ labels.orderNumberPackingSlip }}</span><span>{{ order.orderNumber }}</span></div>
     		<div class="order-number"><span class="label">{{ labels.externalOrderPackingSlip }}</span><span>{{ order.externalId }}</span></div>
             <div class="order-date"><span class="label">{{ labels.datePackingSlip }}: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
         </th>
@@ -219,8 +219,8 @@
     <tbody><tr><td colspan="4">
         <table class="grid">
             <thead><tr>
-                <th>Bill To:</th>
-                <th>Ship To:</th>
+                <th>{{ labels.billToPackingSlip }}:</th>
+                <th>{{ labels.shipToPackingSlip }}:</th>
             </tr></thead>
             <tbody><tr>
                 <td>
@@ -326,7 +326,7 @@
                                 <div class="product-name">{{ item.name }}</div>
                             </td>
                             <td>
-                                {{ packageItemDetail.quantity }}
+                                {{ item.quantity }}
                             </td>
                             <td>
                                 {{ item.weight }} {{ item.weightUnit }}
@@ -407,8 +407,8 @@
 <tbody><tr><td colspan="4">
     <table class="grid">
         <thead><tr>
-            <th>Bill To:</th>
-            <th>Ship To:</th>
+            <th>{{ labels.billToPackingSlip }}:</th>
+            <th>{{ labels.shipToPackingSlip }}:</th>
         </tr></thead>
         <tbody><tr>
             <td>
