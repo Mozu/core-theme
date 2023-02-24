@@ -66,24 +66,24 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         createPopover: function (e) {
             // in the absence of JS or in a small viewport, these links go to the login page.
             // Prevent them from going there!
-            var self = this;
-            if (usePopovers()) {
-                e.preventDefault();
-                // If the parent element's not positioned at least relative,
-                // the popover won't move with a window resize
-                //var pos = $parent.css('position');
-                //if (!pos || pos === "static") $parent.css('position', 'relative');
-                this.$el.popover({
-                    //placement: "auto right",
-                    animation: true,
-                    html: true,
-                    trigger: 'manual',
-                    content: this.template,
-                    container: 'body'
-                }).on('shown.bs.popover', this.onPopoverShow)
-                .popover('show');
+            // var self = this;
+            // if (usePopovers()) {
+            //     e.preventDefault();
+            //     // If the parent element's not positioned at least relative,
+            //     // the popover won't move with a window resize
+            //     //var pos = $parent.css('position');
+            //     //if (!pos || pos === "static") $parent.css('position', 'relative');
+            //     this.$el.popover({
+            //         //placement: "auto right",
+            //         animation: true,
+            //         html: true,
+            //         trigger: 'manual',
+            //         content: this.template,
+            //         container: 'body'
+            //     }).on('shown.bs.popover', this.onPopoverShow)
+            //     .popover('show');
 
-            }
+            // }
         },
         retrieveErrorLabel: function (xhr) {
             var message = "";
