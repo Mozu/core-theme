@@ -14,10 +14,10 @@ RUN apt-get update && \
     apt-get install -y gnupg  &&\
     curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
     apt-get install -y nodejs &&\
-    dotnet tool install -g dotnet-gcdump &&\
-    dotnet tool install -g dotnet-dump &&\
-    dotnet tool install -g dotnet-trace &&\
-    dotnet tool install -g dotnet-counters
+    dotnet tool install -g dotnet-gcdump --version  6.0.351802 &&\
+    dotnet tool install -g dotnet-dump --version  6.0.351802 &&\
+    dotnet tool install -g dotnet-trace --version  6.0.351802 &&\
+    dotnet tool install -g dotnet-counters --version  6.0.351802
  
 
 
