@@ -145,7 +145,7 @@
                                             <div class="product-name">{{ substituteItem.name }}</div>
                                         </td>
                                         <td>
-                                            {{ substituteItem.quantity }}
+                                            {{ packageItemDetail.quantity }}
                                         </td>
                                         <td>
                                             {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
