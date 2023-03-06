@@ -174,9 +174,9 @@
                                     <tr>
                                         <td>
                                             {% for item in model.items %}
-                                            {% if substituteItem.originalLineId == item.lineId %}
-                                            <div class="product-name">{{ item.name }}</div>
-                                            {% endif %}
+                                                {% if substituteItem.originalLineId == item.lineId %}
+                                                    <div class="product-name">{{ item.name }}</div>
+                                                {% endif %}
                                             {% endfor %}
                                         </td>
                                         <td>
@@ -363,9 +363,9 @@
                     <tr>
                         <td>
                             {% for item in model.items %}
-                            {% if substituteItem.originalLineId == item.lineId %}
-                            <div class="product-name">{{ item.name }}</div>
-                            {% endif %}
+                                {% if substituteItem.originalLineId == item.lineId %}
+                                    <div class="product-name">{{ item.name }}</div>
+                                {% endif %}
                             {% endfor %}
                         </td>
                         <td>
@@ -551,9 +551,9 @@
                 <tr>
                     <td>
                         {% for item in model.items %}
-                        {% if substituteItem.originalLineId == item.lineId %}
-                        <div class="product-name">{{ item.name }}</div>
-                        {% endif %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                                <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
                         {% endfor %}
                     </td>
                     <td>
