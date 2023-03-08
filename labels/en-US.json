@@ -934,7 +934,7 @@
   "totalSubstituteEmail":"Total",
   "itemSubstitutedEmail":"Item",
   "subtotalSubstituteEmail":"Subtotal",
-  "returnReceiptsubstitutedQty":"Substitute Qty",
-  "returnReceiptsubstitutedProductName":"Product Name",
+  "returnReceiptSubstitutedQty":"Substitute Qty",
+  "returnReceiptSubstitutedProductName":"Product Name",
   "returnReceiptSubstituteUPCColumn": "Substitute UPC"
 }

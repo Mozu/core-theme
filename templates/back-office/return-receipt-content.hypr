@@ -93,8 +93,8 @@
         <table class="grid substitute-table no-bottommargin">
             <thead>
               <tr>
-                <th class="break-word">{{ labels.returnReceiptsubstitutedProductName }}</th>
-                <th class="break-word">{{ labels.returnReceiptsubstitutedQty }}</th>
+                <th class="break-word">{{ labels.returnReceiptSubstitutedProductName }}</th>
+                <th class="break-word">{{ labels.returnReceiptSubstitutedQty }}</th>
                 <th class="break-word">{{ labels.returnReceiptSubstituteUPCColumn }}</th>
                 <th class="break-word">{{ labels.substituteProductName }}</th>
                 <th class="break-word">{{ labels.returnReceiptItemStatusColumn }}</th>
