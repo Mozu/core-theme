@@ -133,9 +133,9 @@
                                     <tr>
                                         <td>
                                             {% for item in model.items %}
-                                            {% if substituteItem.originalLineId == item.lineId %}
-                                            <div class="product-name">{{ item.name }}</div>
-                                            {% endif %}
+                                                {% if substituteItem.originalLineId == item.lineId %}
+                                                    <div class="product-name">{{ item.name }}</div>
+                                                {% endif %}
                                             {% endfor %}
                                         </td>
                                         <td>
@@ -145,7 +145,7 @@
                                             <div class="product-name">{{ substituteItem.name }}</div>
                                         </td>
                                         <td>
-                                            {{ substituteItem.quantity }}
+                                            {{ packageItemDetail.quantity }}
                                         </td>
                                         <td>
                                             {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
@@ -279,9 +279,9 @@
                     <tr>
                         <td>
                             {% for item in model.items %}
-                            {% if substituteItem.originalLineId == item.lineId %}
-                            <div class="product-name">{{ item.name }}</div>
-                            {% endif %}
+                                {% if substituteItem.originalLineId == item.lineId %}
+                                    <div class="product-name">{{ item.name }}</div>
+                                {% endif %}
                             {% endfor %}
                         </td>
                         <td>
@@ -424,9 +424,9 @@
                 <tr>
                     <td>
                         {% for item in model.items %}
-                        {% if substituteItem.originalLineId == item.lineId %}
-                        <div class="product-name">{{ item.name }}</div>
-                        {% endif %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                                <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
                         {% endfor %}
                     </td>
                     <td>
