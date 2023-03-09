@@ -93,8 +93,9 @@
         <table class="grid substitute-table no-bottommargin">
             <thead>
               <tr>
-                <th class="break-word">{{ labels.quantitySubstituted }}</th>
-                <th class="break-word">{{ labels.returnReceiptItemUPCColumn }}</th>
+                <th class="break-word">{{ labels.returnReceiptSubstitutedProductName }}</th>
+                <th class="break-word">{{ labels.returnReceiptSubstitutedQty }}</th>
+                <th class="break-word">{{ labels.returnReceiptSubstituteUPCColumn }}</th>
                 <th class="break-word">{{ labels.substituteProductName }}</th>
                 <th class="break-word">{{ labels.returnReceiptItemStatusColumn }}</th>
                 <th class="break-word">{{ labels.returnReceiptUnitPriceColumn }}</th>
@@ -108,6 +109,13 @@
                       {% if shipmentItem.lineId == substituteItem.shipmentItemId %}
                         {% if shipmentItem.originalLineId && shipmentItem.length > 0 %}
                         <tr>
+                            <td>
+                              {% for substitutedItems in shipment.substitutedItems %}
+                                {% if shipmentItem.originalLineId == substitutedItems.lineId %}
+                                  <div class="product-name">{{ substitutedItems.name }}</div>
+                                {% endif %}
+                              {% endfor %}
+                            </td>
                             <td>
                                 {{ substituteItem.quantityReceived }}
                             </td>
@@ -134,7 +142,7 @@
                 {% endfor %}
             </tbody>
               <tr>
-                <td class="align-right top-border" colspan="5">
+                <td class="align-right top-border" colspan="6">
                   <b>{{ labels.returnReceiptReductionAmountColumn }}</b>
                 </td>
                 <td class="align-center top-border">{{ model.refundAmount }}</td>

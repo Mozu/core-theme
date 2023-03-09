@@ -777,5 +777,8 @@
   "eachSubstituteEmail":"Jeder",
   "totalSubstituteEmail":"Gesamt",
   "itemSubstitutedEmail":"Artikel",
-  "subtotalSubstituteEmail":"Artikel"
+  "subtotalSubstituteEmail":"Zwischensumme",
+  "returnReceiptSubstitutedQty":"Ersatzmenge",
+  "returnReceiptSubstitutedProductName":"Produktname",
+  "returnReceiptSubstituteUPCColumn": "UPC ersetzen"
 }
