@@ -31,6 +31,8 @@ define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-pro
             return productModel.apiGet({ productCode: productCode, acceptVariantProductCode: true }).then(function (data) {
                 //self.get('products').reset([data.data]);
                 return data.data;
+            })['catch'](function (error) {
+                window.console.log(error);
             });
         },
         getDiscountDetails: function () {
@@ -75,6 +77,7 @@ define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-pro
 
             var getVariationBase = function (productCode) {
                     return self.getProductDetails(productCode).then(function (data) {
+                        if(!data) return;
                         data = self.tagVariationOptions(productCode, data);
                         products.push(data);
                         self.get('products').add(data);

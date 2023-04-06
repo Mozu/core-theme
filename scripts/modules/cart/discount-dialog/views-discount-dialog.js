@@ -368,18 +368,25 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         setInit: function (updatingItemId){
             var self = this;
             if (this.model.hasNextDiscount()) {
-                this.model.loadNextDiscount().then(function(){
+                this.model.loadNextDiscount().then(function() {
                     if (!self.model.hasMultipleProducts() && self.model.productHasOptions()) {
                         self.loadAddProductView();
                         self.handleDialogOpen();
                     } else if (self.model.hasMultipleProducts()) {
-                        self.loadProductSelectionView();
-                        self.handleDialogOpen();
-                    } else if (self.model.isDiscountAutoAdd()) {
-                        self.model.autoAddProduct().ensure(function(data){
-                            self.model.completeDiscount();
-                            self.render();
+                        var discountModel = self.model.get('discount');
+
+                        discountModel.getDiscountProducts().then(function(discount){
+                            if(discount && discount.length > 1) {
+                                self.loadProductSelectionView();
+                                self.handleDialogOpen();
+                            }
+                            else {
+                                self.autoAddProduct();
+                            }
                         });
+                        
+                    } else if (self.model.isDiscountAutoAdd()) {
+                        self.autoAddProduct();
                     }
                 });
             } else {
@@ -392,6 +399,13 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         modalContentEl: function () {
             return this.$el.find('[data-mz-discount-modal-content]');
+        },
+        autoAddProduct: function() {
+            var self = this;
+            self.model.autoAddProduct().ensure(function(data){
+                self.model.completeDiscount();
+                self.render();
+            });
         },
         loadProductSelectionView: function () {
             var self = this;
