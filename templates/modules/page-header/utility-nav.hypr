@@ -11,6 +11,9 @@
       Use require_script to load AMD modules that are wrapped in define() or require() function calls.
       {% endcomment %}
       {% require_script "modules/login-links" %}
+
+      {% if not themeSettings.edgeCachingEnabled %}
+
       {% if user.isSalesRep %}
       <li class="mz-utilitynav-item">
         <div id="mz-logged-in-notice">
@@ -45,7 +48,36 @@
             {{ labels.viewCart }} (<span class="mz-cartmonitor" data-mz-role="cartmonitor">0</span>)
             {% require_script "modules/cart-monitor" %}
             </a>
+      </li>
+
+      {% else %}
+        {# cached version of the settings #}
+        <li class="mz-utilitynav-item" id="mz-sign-in-salesrep" hidden>
+          <div id="mz-logged-in-notice">
+            <a href="{{siteContext.siteSubdirectory}}/selleraccount" class="mz-utilitynav-link">{{ labels.b2bAccount }}</a> (<a href="{{siteContext.siteSubdirectory}}/logout?returnurl=/user/login" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+          </div>
         </li>
+
+        <li class="mz-utilitynav-item mz-sign-in-logged-in-user" hidden>
+          <div id="mz-logged-in-notice">
+            <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{ labels.myAccount }}</a> (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+          </div>
+        </li>
+        <li class="mz-utilitynav-item mz-sign-in-logged-in-user" hidden>
+          <a href="{{siteContext.siteSubdirectory}}/myaccount#QuickOrder" data-mz-action="quickOrder" data-mz-role="quickOrderLink" data-placement="bottom" class="mz-utilitynav-link"></a>
+          {% require_script "modules/quick-order-helper" %}
+        </li>
+
+        <li class="mz-utilitynav-item mz-sign-in-guest-user">
+          <a href="{{siteContext.siteSubdirectory}}/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>
+        </li>
+        <li class="mz-utilitynav-item mz-sign-in-guest-user">
+          <a href="{{siteContext.siteSubdirectory}}/user/signup" data-mz-action="signup" data-placement="bottom" class="mz-utilitynav-link">{{ labels.signUp }}</a>
+        </li>
+
+        {# cart-monitor handles dynamically changing visiblity of the buttons #}
+        {% require_script "modules/cart-monitor" %}
+      {% endif %}
     </ul>
     {% if themeSettings.allowFilterByLocationInventory %}
         <div id="mz-my-store-header" class="mz-my-store-anonymous">

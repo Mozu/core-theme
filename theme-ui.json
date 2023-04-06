@@ -87,6 +87,45 @@
         },
         {
             "xtype": "panel",
+            "title": "Edge Caching",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Edge Caching Enabled",
+                    "xtype": "mz-input-checkbox",
+                    "name": "edgeCachingEnabled"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "edgeCachingEnabledHome",
+                    "fieldLabel": "Cache Home Page",
+                    "enableIf": "edgeCachingEnabled"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "edgeCachingEnabledPDP",
+                    "fieldLabel": "Cache PDP Pages",
+                    "enableIf": "edgeCachingEnabled"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "edgeCachingEnabledPLP",
+                    "fieldLabel": "Cache PLP Pages",
+                    "enableIf": "edgeCachingEnabled"
+                },
+                {
+                    "fieldLabel": "Maximum cache age (minutes)",
+                    "xtype": "mz-input-number",
+                    "name": "edgeCachingMaxAge",
+                    "enableIf": "edgeCachingEnabled",
+                    "hideTrigger": false,
+                    "allowDecimal": false,
+                    "minValue": 1
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Filters",
             "collapsed": false,
             "items": [

@@ -2,7 +2,7 @@
  * Watches for changes to the quantity of items in the shopping cart, to update
  * cart count indicators on the storefront.
  */
-define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
+define(['modules/jquery-mozu', 'modules/api', 'hyprlivecontext'], function ($, api, HyprLiveContext) {
 
     var $cartCount,
         user = require.mozuData('user'),
@@ -44,6 +44,29 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
 
     $document.ready(function () {
         CartMonitor.$el = $('[data-mz-role="cartmonitor"]').text(savedCount || 0);
+
+        if (HyprLiveContext.locals.themeSettings.edgeCachingEnabled) {
+            try {
+                var user = JSON.parse(atob($.cookie('_mzPc'))).user;
+
+                if (user.isSalesRep) {
+                    $('#mz-sign-in-salesrep').show();
+                } else {
+                    $('#mz-sign-in-salesrep').hide();
+                }
+
+                if (user.isAnonymous|| !user.isAuthenticated ) {
+                    $('.mz-sign-in-logged-in-user').hide();
+                    $('.mz-sign-in-guest-user').show();
+                } else {
+                    $('.mz-sign-in-logged-in-user').show();
+                    $('.mz-sign-in-guest-user').hide();
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
     });
 
     return CartMonitor;
