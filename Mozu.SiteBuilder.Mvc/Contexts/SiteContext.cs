@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -128,7 +129,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 try
                 {
-                    _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
+                    
 
                     var url = context.GetRequestUri().ToString();
 
@@ -144,9 +145,20 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     uriBuilder.Scheme = "https";
                     var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
                     SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
+                    _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
                 }
                 catch { }
             }
+        }
+
+        public static string FindThemeValue(string inputString) {
+            string regexPattern = @"(?<=t\d+-s\d+-thm)\d+-\d+";
+            var match = Regex.Match(inputString, regexPattern);
+            if (match.Success)
+            {
+                return "~"+ match.Value.Replace("-", "~");
+            }
+            return null; // return null if no match is found
         }
 
         private string ProcessThemeOverride(HttpContext context, ICookieProvider cookieProvider)
@@ -155,6 +167,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return null;
             }
+
+            if (!string.IsNullOrEmpty(_currentHost))
+            {
+                var themeValue = FindThemeValue(_currentHost);
+                if (!string.IsNullOrEmpty(themeValue))
+                {
+                    return themeValue;
+                }
+            }
+            
             var nvc = context.Request.Query;
             if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
             {
