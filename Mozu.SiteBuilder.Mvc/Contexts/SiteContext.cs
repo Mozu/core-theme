@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     }
     public class SiteContext : ISiteContext
     {
+        public const string FORCE_THEME_QUERY_NAME = "theme";
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
         ISiteBuilderContextProvider _siteBuilderContextDataProvider;
@@ -145,7 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     uriBuilder.Scheme = "https";
                     var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
                     SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
-                    _themeOverrideId = ProcessThemeOverride(context, cookieProvider);
+                    _themeOverrideId = ProcessThemeOverride(_currentHost, context, cookieProvider);
                 }
                 catch { }
             }
@@ -161,16 +162,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return null; // return null if no match is found
         }
 
-        private string ProcessThemeOverride(HttpContext context, ICookieProvider cookieProvider)
+        public static string ProcessThemeOverride(string currentHost, HttpContext context, ICookieProvider cookieProvider)
         {
             if ( context == null)
             {
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(_currentHost))
+            if (!string.IsNullOrEmpty(currentHost))
             {
-                var themeValue = FindThemeValue(_currentHost);
+                var themeValue = FindThemeValue(currentHost);
                 if (!string.IsNullOrEmpty(themeValue))
                 {
                     return themeValue;
@@ -181,6 +182,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_COOKIE_NAME))
             {
                 return nvc[FORCE_THEME_COOKIE_NAME];
+            }
+           
+            if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_QUERY_NAME, StringComparer.OrdinalIgnoreCase))
+            {
+                return nvc[FORCE_THEME_QUERY_NAME];
             }
             
             var cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
