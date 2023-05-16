@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
            
             if (nvc.Keys != null && nvc.Keys.Cast<string>().Contains(FORCE_THEME_QUERY_NAME, StringComparer.OrdinalIgnoreCase))
             {
-                return nvc[FORCE_THEME_QUERY_NAME];
+                return nvc[FORCE_THEME_QUERY_NAME].FirstOrDefault();
             }
             
             var cookie = cookieProvider.GetRequestCookie(FORCE_THEME_COOKIE_NAME);
@@ -417,11 +417,26 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 SupportsInStorePickup = data.LocationUsages.Items.Any(x => x.LocationUsageTypeCode == "SP" && x.LocationTypeCodes != null && x.LocationTypeCodes.Any());
             }
-            
+
+            var overrideThemeSelect = default(ThemeSelection);
             if (!string.IsNullOrEmpty(_themeOverrideId))
             {
-                _themeSelection = new ThemeSelection() { Id = _themeOverrideId };
-               
+                overrideThemeSelect = new ThemeSelection() { Id = _themeOverrideId };
+                //see if override theme is already one of the site settings configured themes
+                if (data.Themes.ContainsKey(overrideThemeSelect.Id))
+                {
+                    _themeSelection = overrideThemeSelect;
+                }
+                else
+                {
+                    //if not found validate that it exists.
+                    _theme = await _themeRepository.Value.GetTheme(overrideThemeSelect).ConfigureAwait(false);    
+                }
+            }
+            //if override theme was found set the theme selection so that the flow continues as normal.
+            if (_theme != null)
+            {
+                _themeSelection = overrideThemeSelect;
             }
             else if (_mobileDetectionProvider.IsCurrentRequestMobile && (_generalSettings.MobileTheme != null && !string.IsNullOrEmpty(_generalSettings.MobileTheme.Id)))
             {

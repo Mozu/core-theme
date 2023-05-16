@@ -116,6 +116,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
             tmd.FileListing = await LoadThemeFileListing(tmd.ThemePath, tmd.Id).ConfigureAwait(false);
             var themeJSon = tmd.FileListing.GetFileInfo(METADATA_THEME_FILE_NAME, true);
+            if (themeJSon == null)
+            {
+                return null;
+            }
 
             tmd.Configuration = await LoadThemeDescriptor(themeJSon).ConfigureAwait(false);
             //  tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);

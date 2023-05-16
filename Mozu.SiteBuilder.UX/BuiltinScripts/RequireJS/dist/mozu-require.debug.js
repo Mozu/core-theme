@@ -1,7 +1,7 @@
 /*! 
- * Mozu Require - v0.2.0 - 2019-04-18
+ * Mozu Require - v0.2.0 - 2023-05-16
  *
- * Copyright (c) 2019 Volusion, Inc.
+ * Copyright (c) 2023 Volusion, Inc.
  *
  */
 
@@ -2250,7 +2250,7 @@ var storeMode = "debug",
 
                 // short circuit for mozu builtins
                 if (moduleName in mozuBuiltins)
-                    return config.isBuild ? "empty:" : (config.cdnPrefix || ("//" + window.location.host)) + mozuBuiltins[moduleName] + (mozuBuiltins[moduleName].indexOf('?') === -1 ? '?' : '&') + "cacheKey=" + (encodeURIComponent(config.cacheKey) || '');
+                    return config.isBuild ? "empty:" : (config.cdnPrefix || ("//" + window.location.host)) + mozuBuiltins[moduleName] + (mozuBuiltins[moduleName].indexOf('?') === -1 ? '?' : '&') + "cacheKey=" + (encodeURIComponent(config.cacheKey) || '') + '&' + config.urlArgs;
                 if (pkgMain) {
                     moduleName = pkgMain;
                 }
