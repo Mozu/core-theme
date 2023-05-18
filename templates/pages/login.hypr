@@ -22,7 +22,7 @@
                 </div>
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
-                        <a id="guestCheckout" href="/cart/checkout" class="mz-guest-checkout" data-mz-action="continueAsGuest">
+                        <a id="guestCheckout" href="/logout?saveUserId=true&returnUrl=/cart/checkout" class="mz-guest-checkout" data-mz-action="continueAsGuest">
                             {{ labels.guestCheckoutLink }}
                         </a>
                     </div>
