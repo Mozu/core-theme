@@ -59,9 +59,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "Resource", action = "misc", pathinfo = "images/favicon.ico" }, 
                 _constraintResolver);
 
+            //Used to get files (images, etc) from the content repository
             routes.MapRoute(_defaultHandler,
                "Misc_content_3",
-               "cms/files/{documentId}",
+               "cms/files/{*documentId}", //may be the documentId or a path and filename
                new { action = "index", controller = "content", list = "files@mozu" }, 
                _constraintResolver);
 
