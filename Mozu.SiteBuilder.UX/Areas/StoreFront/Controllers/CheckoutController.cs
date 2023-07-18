@@ -29,8 +29,9 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.ProductRuntime.Contracts.Clients;
+using Mozu.Customer.Contracts.Credit;
+using Mozu.SiteBuilder.UX.Hypr.Tags;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -180,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
-            Customer.Contracts.Credit.CreditCollection credits = null;
+            List<Credit> credits = null;
             Customer.Contracts.CustomerPurchaseOrderAccount accountPurchaseOrder = null;
 
 
@@ -256,7 +257,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId, null, this.PageContext.User.UserId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
-                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
+                // In GetCredits() api call, `currentBalance` filter have performance issues. So, we are filtering the credits in memory.
+                var creditResponse = (await _creditWebApiClient.GetCredits(0, 100, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
+                credits = (creditResponse?.Items.SafeAny() ?? false) ?
+                    creditResponse.Items.Where(x => x.CurrentBalance >= 0.01m).ToList() :
+                    new List<Credit>();
+
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 
@@ -316,7 +322,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var accountJson = account.ToJObject();
                 accountJson.Add("cards", cards.Items.ToJArray());
-                accountJson.Add("credits", credits.Items.ToJArray());
+                accountJson.Add("credits", credits.ToJArray());
                 if (SiteContext.CheckoutSettings.PurchaseOrder != null && SiteContext.CheckoutSettings.PurchaseOrder.IsEnabled && accountPurchaseOrder != null)
                 {
                     var customerPurchaseOrder = Mapper.Map<Mozu.SiteBuilder.UX.Models.Customers.CustomerPurchaseOrderAccount>(accountPurchaseOrder);
