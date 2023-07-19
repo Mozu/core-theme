@@ -488,19 +488,24 @@ const Url = __webpack_require__(6).URL;
 
 function createLoginUser(innerRequest, global, arcJsContext) {
     return (config, callback) => {
-        if (!config.customerId && !config.userName) {
-            throw 'missing customerId or  userName';
+        if (!config.userId && !config.userName && !config.customerId) {
+            throw 'missing userId or userName or customerId';
         }
         const sdkConfig = JSON.parse(global.env.mozuHosted).sdkConfig;
         const custSearchUrl = new Url(
             '/api/commerce/customer/accounts/',
             sdkConfig.baseUrl);
-        if (config.userName) {
+        
+        if (config.userId) {
+            custSearchUrl.searchParams.set('filter', `userId eq "${config.userId}"`)
+            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id,accountType,userId)")
+        }
+        else if (config.userName) {
             custSearchUrl.searchParams.set('filter', `username eq "${config.userName}"`)
-            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id)")
+            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id,accountType,userId)")
         } else {
             custSearchUrl.pathname += config.customerId;
-            custSearchUrl.searchParams.set('responseFields', "items(id)")
+            custSearchUrl.searchParams.set('responseFields', "id,accountType,userId")
         }
         const options = {
             headers: {},
@@ -517,12 +522,19 @@ function createLoginUser(innerRequest, global, arcJsContext) {
             if (res.statusCode > 399) {
                 return callback(responseToError(res));
             }
+            if (config.userId) {
+                if (!res.body.items || res.body.items.length === 0) {
+                    return callback(Error(`userId: ${config.userId} not found`));
+                }
+            }
             if (config.userName) {
                 if (!res.body.items || res.body.items.length === 0) {
                     return callback(Error(`username: ${config.userName} not found`));
                 }
-                config.customerId = res.body.items[0].id;
             }
+            const account = res.body.items[0];
+            config.userId = account.userId;
+            config.customerId = account.id;
             innerRequest.execResult.loginUser = [[config]];
             callback(null, 'success');
         }).catch(e => {
@@ -7020,7 +7032,7 @@ module.exports = function (iconv) {
 /* 51 */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"needle@^2.5.2\",\"_id\":\"needle@2.5.2\",\"_inBundle\":false,\"_integrity\":\"sha512-LbRIwS9BfkPvNwNHlsA41Q29kL2L/6VaOJ0qisM5lLWsTV3nP15abO5ITL6L81zqFhzjRKDAYjpcBcwM0AVvLQ==\",\"_location\":\"/needle\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"range\",\"registry\":true,\"raw\":\"needle@^2.5.2\",\"name\":\"needle\",\"escapedName\":\"needle\",\"rawSpec\":\"^2.5.2\",\"saveSpec\":null,\"fetchSpec\":\"^2.5.2\"},\"_requiredBy\":[\"/\"],\"_resolved\":\"https://registry.npmjs.org/needle/-/needle-2.5.2.tgz\",\"_shasum\":\"cf1a8fce382b5a280108bba90a14993c00e4010a\",\"_spec\":\"needle@^2.5.2\",\"_where\":\"/Users/thomas.phipps/git/kibocode/Mozu.SiteBuilder.Storefront/Mozu.SiteBuilder.Mvc/ArcJsExtentions/Content\",\"author\":{\"name\":\"Tomás Pollak\",\"email\":\"tomas@forkhq.com\"},\"bin\":{\"needle\":\"bin/needle\"},\"bugs\":{\"url\":\"https://github.com/tomas/needle/issues\"},\"bundleDependencies\":false,\"dependencies\":{\"debug\":\"^3.2.6\",\"iconv-lite\":\"^0.4.4\",\"sax\":\"^1.2.4\"},\"deprecated\":false,\"description\":\"The leanest and most handsome HTTP client in the Nodelands.\",\"devDependencies\":{\"JSONStream\":\"^1.3.5\",\"jschardet\":\"^1.6.0\",\"mocha\":\"^5.2.0\",\"q\":\"^1.5.1\",\"should\":\"^13.2.3\",\"sinon\":\"^2.3.0\",\"xml2js\":\"^0.4.19\"},\"directories\":{\"lib\":\"./lib\"},\"engines\":{\"node\":\">= 4.4.x\"},\"homepage\":\"https://github.com/tomas/needle#readme\",\"keywords\":[\"http\",\"https\",\"simple\",\"request\",\"client\",\"multipart\",\"upload\",\"proxy\",\"deflate\",\"timeout\",\"charset\",\"iconv\",\"cookie\",\"redirect\"],\"license\":\"MIT\",\"main\":\"./lib/needle\",\"name\":\"needle\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/tomas/needle.git\"},\"scripts\":{\"test\":\"mocha test\"},\"tags\":[\"http\",\"https\",\"simple\",\"request\",\"client\",\"multipart\",\"upload\",\"proxy\",\"deflate\",\"timeout\",\"charset\",\"iconv\",\"cookie\",\"redirect\"],\"version\":\"2.5.2\"}");
+module.exports = JSON.parse("{\"_args\":[[\"needle@2.5.2\",\"D:\\\\Kibo\\\\repos\\\\Mozu.SiteBuilder.Storefront\\\\Mozu.SiteBuilder.Mvc\\\\ArcJsExtensions\\\\Content\"]],\"_from\":\"needle@2.5.2\",\"_id\":\"needle@2.5.2\",\"_inBundle\":false,\"_integrity\":\"sha512-LbRIwS9BfkPvNwNHlsA41Q29kL2L/6VaOJ0qisM5lLWsTV3nP15abO5ITL6L81zqFhzjRKDAYjpcBcwM0AVvLQ==\",\"_location\":\"/needle\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"version\",\"registry\":true,\"raw\":\"needle@2.5.2\",\"name\":\"needle\",\"escapedName\":\"needle\",\"rawSpec\":\"2.5.2\",\"saveSpec\":null,\"fetchSpec\":\"2.5.2\"},\"_requiredBy\":[\"/\"],\"_resolved\":\"https://registry.npmjs.org/needle/-/needle-2.5.2.tgz\",\"_spec\":\"2.5.2\",\"_where\":\"D:\\\\Kibo\\\\repos\\\\Mozu.SiteBuilder.Storefront\\\\Mozu.SiteBuilder.Mvc\\\\ArcJsExtensions\\\\Content\",\"author\":{\"name\":\"Tomás Pollak\",\"email\":\"tomas@forkhq.com\"},\"bin\":{\"needle\":\"bin/needle\"},\"bugs\":{\"url\":\"https://github.com/tomas/needle/issues\"},\"dependencies\":{\"debug\":\"^3.2.6\",\"iconv-lite\":\"^0.4.4\",\"sax\":\"^1.2.4\"},\"description\":\"The leanest and most handsome HTTP client in the Nodelands.\",\"devDependencies\":{\"JSONStream\":\"^1.3.5\",\"jschardet\":\"^1.6.0\",\"mocha\":\"^5.2.0\",\"q\":\"^1.5.1\",\"should\":\"^13.2.3\",\"sinon\":\"^2.3.0\",\"xml2js\":\"^0.4.19\"},\"directories\":{\"lib\":\"./lib\"},\"engines\":{\"node\":\">= 4.4.x\"},\"homepage\":\"https://github.com/tomas/needle#readme\",\"keywords\":[\"http\",\"https\",\"simple\",\"request\",\"client\",\"multipart\",\"upload\",\"proxy\",\"deflate\",\"timeout\",\"charset\",\"iconv\",\"cookie\",\"redirect\"],\"license\":\"MIT\",\"main\":\"./lib/needle\",\"name\":\"needle\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/tomas/needle.git\"},\"scripts\":{\"test\":\"mocha test\"},\"tags\":[\"http\",\"https\",\"simple\",\"request\",\"client\",\"multipart\",\"upload\",\"proxy\",\"deflate\",\"timeout\",\"charset\",\"iconv\",\"cookie\",\"redirect\"],\"version\":\"2.5.2\"}");
 
 /***/ }),
 /* 52 */

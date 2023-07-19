@@ -3,19 +3,24 @@ const Url = require('url').URL;
 
 function createLoginUser(innerRequest, global, arcJsContext) {
     return (config, callback) => {
-        if (!config.customerId && !config.userName) {
-            throw 'missing customerId or  userName';
+        if (!config.userId && !config.userName && !config.customerId) {
+            throw 'missing userId or userName or customerId';
         }
         const sdkConfig = JSON.parse(global.env.mozuHosted).sdkConfig;
         const custSearchUrl = new Url(
             '/api/commerce/customer/accounts/',
             sdkConfig.baseUrl);
-        if (config.userName) {
+        
+        if (config.userId) {
+            custSearchUrl.searchParams.set('filter', `userId eq "${config.userId}"`)
+            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id,accountType,userId)")
+        }
+        else if (config.userName) {
             custSearchUrl.searchParams.set('filter', `username eq "${config.userName}"`)
-            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id)")
+            custSearchUrl.searchParams.set('responseFields', "totalCount,items(id,accountType,userId)")
         } else {
             custSearchUrl.pathname += config.customerId;
-            custSearchUrl.searchParams.set('responseFields', "items(id)")
+            custSearchUrl.searchParams.set('responseFields', "id,accountType,userId")
         }
         const options = {
             headers: {},
@@ -32,12 +37,19 @@ function createLoginUser(innerRequest, global, arcJsContext) {
             if (res.statusCode > 399) {
                 return callback(responseToError(res));
             }
+            if (config.userId) {
+                if (!res.body.items || res.body.items.length === 0) {
+                    return callback(Error(`userId: ${config.userId} not found`));
+                }
+            }
             if (config.userName) {
                 if (!res.body.items || res.body.items.length === 0) {
                     return callback(Error(`username: ${config.userName} not found`));
                 }
-                config.customerId = res.body.items[0].id;
             }
+            const account = res.body.items[0];
+            config.userId = account.userId;
+            config.customerId = account.id;
             innerRequest.execResult.loginUser = [[config]];
             callback(null, 'success');
         }).catch(e => {

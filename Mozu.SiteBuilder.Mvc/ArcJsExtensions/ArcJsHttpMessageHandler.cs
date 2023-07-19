@@ -304,8 +304,10 @@ namespace Mozu.SiteBuilder.Mvc.OAF
                 var jarr = (JArray) objects[0];
                 var jobj = (JObject)jarr[0];
                 var customerId = (int) jobj["customerId"];
+                var isB2B = jobj.ContainsKey("isB2B") ? (bool) jobj["isB2B"] : false;
+                var userId = jobj.ContainsKey("userId") ? (string) jobj["userId"] : null;
                 var rememberUser = jobj.ContainsKey("rememberUser") ? (bool?) jobj["rememberUser"] : (bool?) false;
-                var authTicket = await (await authClient.CreateImpersonatedAuthTicket(customerId)).ReadAsAsync();
+                var authTicket = await (await authClient.CreateImpersonatedAuthTicket(customerId, userId)).ReadAsAsync();
                 var cust = authTicket.CustomerAccount;
                 var profile = new UserProfile()
                 {
