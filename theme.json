@@ -546,6 +546,12 @@
       "properties": {},
       "template": "email/items-ready-for-delivery.hypr",
       "title": "Items Ready For Delivery"
+    },
+    {
+      "id": "gift-receipt",
+      "properties": {},
+      "template": "back-office/gift-receipt",
+      "title": "Gift Receipt"
     }
   ],
   "mobileNotificationTemplates": [

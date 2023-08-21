@@ -1,0 +1,98 @@
+<table class="mz-printable-order gift-receipt">
+    <thead class="header">
+        <tr>
+            <th>
+                <h3>Gift Receipt</h3>
+            </th>
+            <th class="order-essentials">
+                <div class="order-number"><span class="label">Order</span><span>#{{ model.orderNumber }}</span></div>
+                <div class="order-number"><span class="label">External Order</span><span>#{{ model.externalOrderId }}</span></div>
+                <div><span class="label">Order Date: </span><span>{{ model.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <td colspan="4">
+            <div class="section section-contacts">
+                <table class="panes"><tbody><tr>
+                    <td class="billing-address">
+                        <div class="label">Bill To</div>
+                        <div>{{ model.customer.customerContact.firstName }} {{ model.customer.customerContact.lastNameOrSurname }}</div>
+                        {% if model.customer.customerContact.companyOrOrganization %}<div>{{ model.customer.customerContact.companyOrOrganization }}</div>{% endif %}
+                        <div>{{ model.customer.customerContact.address.address1 }}</div>
+                        {% if model.customer.customerContact.address.address2 %}<div>{{ model.customer.customerContact.address.address2 }}</div>{% endif %}
+                        {% if model.customer.customerContact.address.address3 %}<div>{{ model.customer.customerContact.address.address3 }}</div>{% endif %}
+                        {% if model.customer.customerContact.address.address4 %}<div>{{ model.customer.customerContact.address.address4 }}</div>{% endif %}
+                        <div>{{ model.customer.customerContact.address.cityOrTown }}, {{ model.customer.customerContact.address.stateOrProvince }} {{ model.customer.customerContact.address.postalOrZipCode }}</div>
+                        {% if model.customer.customerContact.phoneNumbers.home %}<div>{{ model.customer.customerContact.phoneNumbers.home }} (home)</div>{% endif %}
+                        {% if model.customer.customerContact.phoneNumbers.work %}<div>{{ model.customer.customerContact.phoneNumbers.work }} (work)</div>{% endif %}
+                        {% if model.customer.customerContact.phoneNumbers.mobile %}<div>{{ model.customer.customerContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                        <div>{{ model.customer.customerContact.email }}</div>
+                    </td>
+                    <td class="shipping-address">
+                        <div class="label">Ship To</div>
+                        <div>{{ model.destination.destinationContact.firstName }} {{ model.destination.destinationContact.lastNameOrSurname }}</div>
+                        {% if model.destination.destinationContact.companyOrOrganization %}<div>{{ model.destination.destinationContact.companyOrOrganization }}</div>{% endif %}
+                        <div>{{ model.destination.destinationContact.address.address1 }}</div>
+                        {% if model.destination.destinationContact.address.address2 %}<div>{{ model.destination.destinationContact.address.address2 }}</div>{% endif %}
+                        {% if model.destination.destinationContact.address.address3 %}<div>{{ model.destination.destinationContact.address.address3 }}</div>{% endif %}
+                        {% if model.destination.destinationContact.address.address4 %}<div>{{ model.destination.destinationContact.address.address4 }}</div>{% endif %}
+                        <div>{{ model.destination.destinationContact.address.cityOrTown }}, {{ model.destination.destinationContact.address.stateOrProvince }} {{ model.destination.destinationContact.address.postalOrZipCode }}</div>
+                        {% if model.destination.destinationContact.phoneNumbers.home %}<div>{{ model.destination.destinationContact.phoneNumbers.home }} (home)</div>{% endif %}
+                        {% if model.destination.destinationContact.phoneNumbers.work %}<div>{{ model.destination.destinationContact.phoneNumbers.work }} (work)</div>{% endif %}
+                        {% if model.destination.destinationContact.phoneNumbers.mobile %}<div>{{ model.destination.destinationContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                        <div>{{ model.destination.destinationContact.email }}</div>
+                    </td>
+                    {% if pickupLocation %}
+                        <td>
+                            <div class="label">Pickup At</div>
+                            <div>{{ pickupLocation.name }}</div>
+                            <div>{{ pickupLocation.shippingOriginContact.email }}</div>
+                            <div>{{ pickupLocation.address.address1 }}</div>
+                            {% if pickupLocation.address.address2 %}<div>{{ pickupLocation.address.address2 }}</div>{% endif %}
+                            {% if pickupLocation.address.address3 %}<div>{{ pickupLocation.address.address3 }}</div>{% endif %}
+                            {% if pickupLocation.address.address4 %}<div>{{ pickupLocation.address.address4 }}</div>{% endif %}
+                            <div>{{ pickupLocation.address.cityOrTown }}, {{ pickupLocation.address.stateOrProvince }} {{ pickupLocation.address.postalOrZipCode }}</div>
+                            {% if pickupLocation.shippingOriginContact.phoneNumber %}<div>{{ pickupLocation.shippingOriginContact.phoneNumber }} (work)</div>{% endif %}
+                        </td>
+                    {% endif %}
+                    </tr></tbody>
+                </table>
+            </div>
+            <div class="section section-giftitems">
+                <h2>Gift Items</h2>
+                <table>
+                    <tbody>
+                        {% for item in model.items %}
+                            {% if item.isGift %}
+                                <tr>
+                                    <td class="item-details">
+                                        <div class="item-name">{{ item.name }}</b></div>
+                                        <div>Code: {{ item.productCode  }}</div>
+                                        <div>Qty: {{ item.quantity }}</div>
+                                    </td>
+                                    {% if item.giftMessage %}                                    
+                                        <td class="gift-message">
+                                            <div class="label">Message</div>
+                                            <div>{{ item.giftMessage }}</div>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="section section-order-level-gift-message">
+                <table>
+                    <tr>
+                        <td class="label">Order Gift Message</td>
+                        {% if model.shopperNotes.giftMessage %}
+                           <td>{{ model.shopperNotes.giftMessage }}</td>                    
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tbody>
+</table>
