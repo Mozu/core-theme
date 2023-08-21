@@ -769,3 +769,54 @@ color: #000000;
   border-top: 1px solid #bfbfbf !important;
 }
 .align-right { text-align: right !important;}
+
+.gift-receipt .header th {
+  vertical-align: bottom;
+  padding-left: 14px;
+}
+
+.gift-receipt .section-giftitems h2 {
+  border-bottom: 0px;
+  padding: 20px 14px;
+}
+
+.gift-receipt .section table, .gift-receipt .header th h3 {
+  margin: 10px 2%;
+}
+
+.gift-receipt .section-giftitems .label {
+  font-size: 14px;
+  color: #7c7c7c;
+  padding-bottom: 5px;
+}
+
+.gift-receipt .section td {
+  padding: 8px 14px;
+}
+
+.gift-receipt .section-giftitems table td {
+  vertical-align: top;
+}
+
+.gift-receipt .section-giftitems .item-details {
+  width: 200px;
+}
+
+.gift-receipt .section-giftitems .item-details .item-name {
+  font-weight: bold;
+}
+
+.gift-receipt .section-giftitems .item-details div {
+  padding-bottom: 10px;
+}
+
+.gift-receipt .section-giftitems .gift-message {
+  padding-bottom: 10px;
+  width: 500px;
+}
+
+.gift-receipt .section-order-level-gift-message .label {
+  font-weight: bold;
+  width: 180px;
+}
+
