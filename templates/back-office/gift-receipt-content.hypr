@@ -6,12 +6,12 @@
     <thead class="header">
         <tr>
             <th>
-                <h3>Gift Receipt</h3>
+                <h3>{{ labels.giftReceipt }}</h3>
             </th>
             <th class="order-essentials">
-                <div class="order-number"><span class="label">Order</span><span>#{{ model.orderNumber }}</span></div>
-                <div class="order-number"><span class="label">External Order</span><span>#{{ model.externalOrderId }}</span></div>
-                <div><span class="label">Order Date: </span><span>{{ model.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+                <div class="order-number"><span class="label">{{ labels.order }}</span><span> #{{ model.orderNumber }}</span></div>
+                <div class="order-number"><span class="label">{{ labels.externalOrder }}</span><span> #{{ model.externalOrderId }}</span></div>
+                <div class="order-date"><span>{{ labels.orderDate }}: </span><span class="label">{{ model.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
             </th>
         </tr>
     </thead>
@@ -20,7 +20,7 @@
             <div class="section section-contacts">
                 <table class="panes"><tbody><tr>
                     <td class="billing-address">
-                        <div class="label">Bill To</div>
+                        <div class="label">{{ labels.billTo }}</div>
                         <div>{{ model.customer.customerContact.firstName }} {{ model.customer.customerContact.lastNameOrSurname }}</div>
                         {% if model.customer.customerContact.companyOrOrganization %}<div>{{ model.customer.customerContact.companyOrOrganization }}</div>{% endif %}
                         <div>{{ model.customer.customerContact.address.address1 }}</div>
@@ -34,7 +34,7 @@
                         <div>{{ model.customer.customerContact.email }}</div>
                     </td>
                     <td class="shipping-address">
-                        <div class="label">Ship To</div>
+                        <div class="label">{{ labels.shipTo }}</div>
                         <div>{{ model.destination.destinationContact.firstName }} {{ model.destination.destinationContact.lastNameOrSurname }}</div>
                         {% if model.destination.destinationContact.companyOrOrganization %}<div>{{ model.destination.destinationContact.companyOrOrganization }}</div>{% endif %}
                         <div>{{ model.destination.destinationContact.address.address1 }}</div>
@@ -49,7 +49,7 @@
                     </td>
                     {% if pickupLocation %}
                         <td>
-                            <div class="label">Pickup At</div>
+                            <div class="label">{{ labels.pickupAt1 }}</div>
                             <div>{{ pickupLocation.name }}</div>
                             <div>{{ pickupLocation.shippingOriginContact.email }}</div>
                             <div>{{ pickupLocation.address.address1 }}</div>
@@ -64,7 +64,7 @@
                 </table>
             </div>
             <div class="section section-giftitems">
-                <h2>Gift Items</h2>
+                <h2>{{ labels.giftItems }}</h2>
                 <table>
                     <tbody>
                         {% for item in model.items %}
@@ -72,12 +72,12 @@
                                 <tr>
                                     <td class="item-details">
                                         <div class="item-name">{{ item.name }}</b></div>
-                                        <div>Code: {{ item.productCode  }}</div>
-                                        <div>Qty: {{ item.quantity }}</div>
+                                        <div>{{ labels.code }}: {{ item.productCode  }}</div>
+                                        <div>{{ labels.qty }}: {{ item.quantity }}</div>
                                     </td>
                                     {% if item.giftMessage %}                                    
                                         <td class="gift-message">
-                                            <div class="label">Message</div>
+                                            <div class="label">{{ labels.message }}</div>
                                             <div>{{ item.giftMessage }}</div>
                                         </td>
                                     {% endif %}
@@ -90,7 +90,7 @@
             <div class="section section-order-level-gift-message">
                 <table>
                     <tr>
-                        <td class="label">Order Gift Message</td>
+                        <td class="label">{{ labels.orderGiftMessage }}</td>
                         {% if model.shopperNotes.giftMessage %}
                            <td>{{ model.shopperNotes.giftMessage }}</td>                    
                         {% endif %}
