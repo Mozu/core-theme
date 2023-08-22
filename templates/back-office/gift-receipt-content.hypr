@@ -1,3 +1,7 @@
+{% comment %} 
+    Model passed here is Shipment object. It will have all updated gift messages.
+    Since pickup location address is not present on Shipment, it is passed separately from storefront in ViewData.
+{% endcomment %}
 <table class="mz-printable-order gift-receipt">
     <thead class="header">
         <tr>
