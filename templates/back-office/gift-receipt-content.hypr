@@ -33,20 +33,22 @@
                         {% if model.customer.customerContact.phoneNumbers.mobile %}<div>{{ model.customer.customerContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
                         <div>{{ model.customer.customerContact.email }}</div>
                     </td>
-                    <td class="shipping-address">
-                        <div class="label">{{ labels.shipTo }}</div>
-                        <div>{{ model.destination.destinationContact.firstName }} {{ model.destination.destinationContact.lastNameOrSurname }}</div>
-                        {% if model.destination.destinationContact.companyOrOrganization %}<div>{{ model.destination.destinationContact.companyOrOrganization }}</div>{% endif %}
-                        <div>{{ model.destination.destinationContact.address.address1 }}</div>
-                        {% if model.destination.destinationContact.address.address2 %}<div>{{ model.destination.destinationContact.address.address2 }}</div>{% endif %}
-                        {% if model.destination.destinationContact.address.address3 %}<div>{{ model.destination.destinationContact.address.address3 }}</div>{% endif %}
-                        {% if model.destination.destinationContact.address.address4 %}<div>{{ model.destination.destinationContact.address.address4 }}</div>{% endif %}
-                        <div>{{ model.destination.destinationContact.address.cityOrTown }}, {{ model.destination.destinationContact.address.stateOrProvince }} {{ model.destination.destinationContact.address.postalOrZipCode }}</div>
-                        {% if model.destination.destinationContact.phoneNumbers.home %}<div>{{ model.destination.destinationContact.phoneNumbers.home }} (home)</div>{% endif %}
-                        {% if model.destination.destinationContact.phoneNumbers.work %}<div>{{ model.destination.destinationContact.phoneNumbers.work }} (work)</div>{% endif %}
-                        {% if model.destination.destinationContact.phoneNumbers.mobile %}<div>{{ model.destination.destinationContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
-                        <div>{{ model.destination.destinationContact.email }}</div>
-                    </td>
+                    {% if model.shipmentType == "STH" %}
+                        <td class="shipping-address">
+                            <div class="label">{{ labels.shipTo }}</div>
+                            <div>{{ model.destination.destinationContact.firstName }} {{ model.destination.destinationContact.lastNameOrSurname }}</div>
+                            {% if model.destination.destinationContact.companyOrOrganization %}<div>{{ model.destination.destinationContact.companyOrOrganization }}</div>{% endif %}
+                            <div>{{ model.destination.destinationContact.address.address1 }}</div>
+                            {% if model.destination.destinationContact.address.address2 %}<div>{{ model.destination.destinationContact.address.address2 }}</div>{% endif %}
+                            {% if model.destination.destinationContact.address.address3 %}<div>{{ model.destination.destinationContact.address.address3 }}</div>{% endif %}
+                            {% if model.destination.destinationContact.address.address4 %}<div>{{ model.destination.destinationContact.address.address4 }}</div>{% endif %}
+                            <div>{{ model.destination.destinationContact.address.cityOrTown }}, {{ model.destination.destinationContact.address.stateOrProvince }} {{ model.destination.destinationContact.address.postalOrZipCode }}</div>
+                            {% if model.destination.destinationContact.phoneNumbers.home %}<div>{{ model.destination.destinationContact.phoneNumbers.home }} (home)</div>{% endif %}
+                            {% if model.destination.destinationContact.phoneNumbers.work %}<div>{{ model.destination.destinationContact.phoneNumbers.work }} (work)</div>{% endif %}
+                            {% if model.destination.destinationContact.phoneNumbers.mobile %}<div>{{ model.destination.destinationContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                            <div>{{ model.destination.destinationContact.email }}</div>
+                        </td>
+                    {% endif %}
                     {% if pickupLocation %}
                         <td>
                             <div class="label">{{ labels.pickupAt1 }}</div>
