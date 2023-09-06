@@ -780,5 +780,6 @@
   "subtotalSubstituteEmail":"Zwischensumme",
   "returnReceiptSubstitutedQty":"Ersatzmenge",
   "returnReceiptSubstitutedProductName":"Produktname",
-  "returnReceiptSubstituteUPCColumn": "UPC ersetzen"
+  "returnReceiptSubstituteUPCColumn": "UPC ersetzen",
+  "priceIncreasedBlob1": "Ein Artikel in Ihrer Bestellung {0}. wurde durch einen anderen Artikel ersetzt. Ihre Bestellung wird erst nach erfolgter Restzahlung ausgeführt. Für weitere Informationen wenden Sie sich bitte an den Kundendienst. Wenn Sie Ihre Bestellung einsehen oder verwalten möchten, besuchen Sie bitte <a href=\"https://{1}/myaccount\">My Account</a>."
 }
