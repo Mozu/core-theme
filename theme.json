@@ -409,6 +409,12 @@
       "properties": {},
       "template": "email/subscription-reactivation-reminder",
       "title": "Subscription reactivation reminder"
+    },
+    {
+      "id": "shipment.priceincreased",
+      "properties": {},
+      "template": "email/price-increased.hypr",
+      "title": "Payment Required Due To Substitution"
     }
   ],
   "backOfficeTemplates": [
@@ -546,12 +552,6 @@
       "properties": {},
       "template": "email/items-ready-for-delivery.hypr",
       "title": "Items Ready For Delivery"
-    },
-    {
-      "id": "shipment.priceincreased",
-      "properties": {},
-      "template": "email/price-increased.hypr",
-      "title": "Payment Required Due To Substitution"
     }
   ],
   "mobileNotificationTemplates": [
