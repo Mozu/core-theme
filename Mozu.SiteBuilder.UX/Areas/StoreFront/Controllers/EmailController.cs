@@ -286,6 +286,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                         new EmailTypeInfo
                                            {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.SubstitutionPaymentRequired
+                                           },
+                                        new EmailTypeInfo
+                                           {
                                                ModelType = typeof (GatewayGiftCardEmail),
                                                Topic = Topics.GatewayGiftCardCreated
                                            },
@@ -976,6 +981,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string SubscriptionItemQuantityUpdated = "subscription.itemquantityupdated";
             public const string SubscriptionOrderReminder = "subscription.orderreminder";
             public const string SubscriptionReactivationReminder = "subscription.reactivationreminder";
+
+            public const string SubstitutionPaymentRequired = "shipment.priceincreased";
         }
     }
 
