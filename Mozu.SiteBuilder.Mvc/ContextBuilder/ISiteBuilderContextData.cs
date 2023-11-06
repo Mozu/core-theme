@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         Dictionary<string, Tuple<Theme, ThemeRuntimeSettingsCollection>> Themes { get; set; }
 
         List<Category> GetFlatCategoryList();
+        Dictionary<int,Category> GetCategoryDictionary();
         UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings();
         UX.Models.Settings.GeneralSettings GetMappedGeneralSettings();
         List<UX.Models.Settings.SiteDomain> GetMappedSiteDomains();

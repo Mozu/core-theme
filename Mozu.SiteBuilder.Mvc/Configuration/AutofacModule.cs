@@ -50,7 +50,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<ClientApiContext>();
             builder.AddScoped<NavigationContext>();
             builder.AddScoped<UrlHelper>();
-
+            builder.AddSingleton<ICatalogFlyweightFactory, SingletonCatalogFlyweightFactory>();
+            builder.AddSingleton<CatalogFlyweightFactoryOptions>();
 
             builder.AddScoped<PageContext>();
             builder.AddScoped<IPageContext>(cfg => cfg.GetService<PageContext>());

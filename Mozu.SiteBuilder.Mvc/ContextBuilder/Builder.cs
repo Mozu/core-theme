@@ -4,6 +4,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteSettings.General.Contracts;
 using Mozu.SiteSettings.Order.Contracts;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,7 @@ using Mozu.Core.EnsureThat;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.ProductRuntime.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -44,7 +46,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
     {
         Task<List<RedirectEntry>> GetRedirectsAsync(ISiteBuilderContextData ctxData, IApiContext apiContext);
         Task PutAsync(List<RedirectEntry> redirects, ISiteBuilderContextData ctxData, IApiContext apiContext);
-        Task<ISiteBuilderContextData> GetAsync(IApiContext apiContext );
+        Task<ISiteBuilderContextData> GetAsync(IApiContext apiContext);
+        string GetContextCacheKey(IApiContext apiContext);
         Task PutAsync(ISiteBuilderContextData item, IApiContext apiContext);
        // Task Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dataViewMode);
         Task Invalidate(int tenantId, int value1, int value2, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewModeType);
@@ -62,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly ISettings _settings;
         private readonly string _machineId;
         private readonly IServiceProvider _globalScope;
+        private readonly ICatalogFlyweightFactory _catalogFlyweightFactory;
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
@@ -74,7 +78,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly System.Collections.Concurrent.ConcurrentDictionary<int, DateTime> _requestedSites = new System.Collections.Concurrent.ConcurrentDictionary<int, DateTime>();
         private readonly ILogger _logger;
         private static readonly Random _random = new Random();
-        public SitebuilderContextCacheRepository(ICacheProvider cacheProvider, Mozu.Core.Settings.ISettings settings, IServiceProvider globalScope)
+        public SitebuilderContextCacheRepository(
+            ICacheProvider cacheProvider, 
+            Mozu.Core.Settings.ISettings settings, 
+            IServiceProvider globalScope,
+            ICatalogFlyweightFactory catalogFlyweightFactory)
         {
             _mdbProvider = new Core.Mongo.MongoDatabaseProvider("CacheDB", "Cache", settings);
             _ensureIndexTask = EnsureIndexes();
@@ -95,7 +103,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 _backgroundJobCleanTimer = new Timer(CleanJobQueuCallback, null, GetNextCleanInterval(), Timeout.Infinite);
             }
             
-            _globalScope = globalScope; 
+            _globalScope = globalScope;
+            _catalogFlyweightFactory = catalogFlyweightFactory;
         }
 
        
@@ -166,11 +175,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 if (work.CategoriesOnly)
                 {
                     var catList = await ProcessCategoryListWork(work, apiContext).ConfigureAwait(false);
+                    _catalogFlyweightFactory.PerformCategoryContentFlyweight(apiContext, catList, false);
                     await ((ISitebuilderContextCacheRepository)this).PutCategoryAsync(catList, apiContext).ConfigureAwait(false);
                 }
                 else
                 {
                     var ctxData = await ProcessCtxWork(work, apiContext).ConfigureAwait(false);
+                    _catalogFlyweightFactory.PerformCategoryContentFlyweight(apiContext, ctxData?.GetFlatCategoryList(), false);
                     await ((ISitebuilderContextCacheRepository)this).PutAsync(ctxData, apiContext).ConfigureAwait(false);
                 }
                 lastWorkId = work.Id;
@@ -336,7 +347,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-        private string GetContextCacheKey(IApiContext apiContext)
+        public  string GetContextCacheKey(IApiContext apiContext)
         {
             var dvm = apiContext.DataViewMode == DataViewModeType.Pending ? 
                 DataViewModeType.Pending : 
@@ -424,6 +435,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             var cacheKey = GetContextCacheKey(apiContext);
             var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
+            _catalogFlyweightFactory.PerformCategoryContentFlyweight(apiContext, existing?.RootCategoryTree, false);
             if (existing?.Hash != item.Hash)
             {
                 var tags = GetTags(apiContext.TenantId, apiContext.MasterCatalogId.GetValueOrDefault(-1), apiContext.CatalogId.GetValueOrDefault(-1), apiContext.SiteId, apiContext.DataViewMode);
@@ -546,7 +558,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var existing = await ((ISitebuilderContextCacheRepository)this).GetCategoryAsync(apiContext).ConfigureAwait(false);
             var existingHash = CatagoryTreeHasher.ComputerHash(existing);
             var newHash = CatagoryTreeHasher.ComputerHash(catTree);
-
+            _catalogFlyweightFactory.PerformCategoryContentFlyweight(apiContext, existing, false);
+            _catalogFlyweightFactory.PerformCategoryContentFlyweight(apiContext, catTree, false);
             if (existingHash != newHash)
             {
                 var tags = GetTags(apiContext.TenantId, apiContext.MasterCatalogId.GetValueOrDefault(-1), apiContext.CatalogId.GetValueOrDefault(-1), apiContext.SiteId, apiContext.DataViewMode);
@@ -663,7 +676,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
     public interface ISiteBuilderContextDataRepository
     {
         Task<ISiteBuilderContextData> GetContextData();
-        //   Task<ISiteBuilderContextData> GetCategoryTree(ISiteBuilderContextData existing);
+        string GetCacheKey();
         Task<ISiteBuilderContextData> BuildContextData(ISiteBuilderContextData existing);
     }
 
@@ -672,24 +685,28 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly IApiContext _context;
         private readonly ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
         private readonly Lazy<IContextServiceAggregator> _contextServiceAggregator;
+        private readonly ICatalogFlyweightFactory _catalogFlyweightFactory;
 
         public SiteBuilderContextDataRepository(
             ISitebuilderContextCacheRepository sitebuilderContextCacheRepository,
             IApiContext context,
-            Lazy<IContextServiceAggregator> contextServiceAggregator)
+            Lazy<IContextServiceAggregator> contextServiceAggregator,
+            ICatalogFlyweightFactory catalogFlyweightFactory)
         {
             _sitebuilderContextCacheRepository = sitebuilderContextCacheRepository;
             _context = context;
             _contextServiceAggregator = contextServiceAggregator;
+            _catalogFlyweightFactory = catalogFlyweightFactory;
         }
-        
-        
+
+        public string GetCacheKey()
+        {
+            return _sitebuilderContextCacheRepository.GetContextCacheKey(_context);
+        }
 
         public async Task<ISiteBuilderContextData> GetContextData()
         {
             var ctxData = await _sitebuilderContextCacheRepository.GetAsync(_context).ConfigureAwait(false);
-          //pants
-
             if ( ctxData != null )
             {
                 if (ctxData != null && ctxData.RedirectUpdateDate.HasValue && ctxData.RuntimeRedirects == null)
@@ -707,6 +724,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             if (string.IsNullOrEmpty(this._context.PriceListCode))
             {
+                _catalogFlyweightFactory.PerformCategoryContentFlyweight(_context, data?.RootCategoryTree, false);
                 return data;
             }
             try
@@ -722,7 +740,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                         .PutCategoryAsync(catTree, _context)
                         .ConfigureAwait(false);
                 }
-                
+                _catalogFlyweightFactory.PerformCategoryContentFlyweight(_context, catTree, false);
+              
                 return new PriceListSpecificSiteBuilderContextDataProxy(data, catTree);
             }
             catch
@@ -732,7 +751,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return data;
 
         }
-
         
         public  Task<ISiteBuilderContextData> BuildContextData(ISiteBuilderContextData existing)
         {
@@ -746,6 +764,87 @@ namespace Mozu.SiteBuilder.Mvc.Context
         
     }
 
+    public interface ICatalogFlyweightFactory
+    {
+        void PerformCategoryContentFlyweight(IApiContext apiContext, List<SBCategory> categories, bool readOnly);
+    }
+    
+   
+
+    public class CatalogFlyweightFactoryOptions
+    {
+        public CatalogFlyweightFactoryOptions(IMozuSettings setting)
+        {
+            var cacheSize = setting?.AppSettings
+                .GetValue<int?>("sitebuilder-flyweight-cachesize", 30000) ?? 30000;
+            if (cacheSize == 0)
+            {
+                return;
+            }
+
+            this.Cache = new MemoryCache(new MemoryCacheOptions()
+            {
+                SizeLimit = cacheSize
+            });
+        }
+        public int MaxFlyweightSize { get; set; }
+
+        public MemoryCache Cache { get; set; }
+    }
+    public class SingletonCatalogFlyweightFactory : ICatalogFlyweightFactory
+    {
+        private readonly IMemoryCache _memoryCache;
+
+        public SingletonCatalogFlyweightFactory(CatalogFlyweightFactoryOptions  options)
+        {
+            _memoryCache = options.Cache;
+            
+        }
+
+        public void PerformCategoryContentFlyweight(IApiContext apiContext, List<SBCategory> categories, bool readOnly)
+        {
+            if (_memoryCache == null || categories == null || !categories.Any() )
+            {
+                return;
+            }
+            var prefix = $"{apiContext.TenantId}-{apiContext.CatalogId}-{apiContext.LocaleCode?.ToLowerInvariant()}-c-";
+            categories.ForEach(newCategory =>
+            {
+                if (newCategory.IsFlyweight)
+                {
+                    return;
+                }
+                if ( newCategory.ChildrenCategories?.Any() ?? false)
+                {
+                    PerformCategoryContentFlyweight(apiContext, newCategory.ChildrenCategories, readOnly);
+                }
+                newCategory.IsFlyweight = true;
+                if (newCategory.Content == null )
+                {
+                    return;
+                }
+                newCategory.Content.MetaTagDescription =
+                    newCategory.Content.MetaTagKeywords = newCategory.Content.MetaTagTitle = null;
+               
+                var key = prefix + newCategory.CategoryId;
+                
+                if (_memoryCache.TryGetValue(key, out var existingCategory))
+                {
+                    newCategory.Content = existingCategory as Mozu.ProductRuntime.Contracts.CategoryContent;
+                }
+                else if (!readOnly)
+                {
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    {
+                        Size = 1
+                    };
+                    _memoryCache.Set(key, newCategory.Content, cacheEntryOptions);
+                }
+            });
+
+        }
+        
+    }
 
     public interface ISiteBuilderContextProvider
     {
@@ -761,6 +860,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private Task<ISiteBuilderContextData> _dataTask;
         private ISiteBuilderContextData _data;
         private Exception _ex;
+        static ConcurrentDictionary<string,Task<ISiteBuilderContextData>> _contextDataCache = new ConcurrentDictionary<string, Task<ISiteBuilderContextData>>();
         public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo)
         {
             _repo = repo;
@@ -776,19 +876,52 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return _data;
         }
 
-        public Task<ISiteBuilderContextData> GetContextDataAsync()
+        static readonly SemaphoreSlim Lock = new SemaphoreSlim(1, 1);
+        
+        public async Task<ISiteBuilderContextData> GetContextDataAsync()
         {
-            return _dataTask ??= _repo.GetContextData().ContinueWith(_ =>
+            if (_data != null)
             {
-                if (_.IsFaulted)
-                {
-                    _ex = _.Exception;
-                }
-                _data = _.Result;
                 return _data;
-            }) ;
-        }
+            }
+            if (_dataTask != null)
+            {
+                return _data = await _dataTask;
+            }
+            
+            var key = _repo.GetCacheKey();
+    
+            // get from task cache or _dataTask
+            if (_contextDataCache.TryGetValue(key, out _dataTask))
+            {
+                return _data = await _dataTask;
+            }
 
+            var addedToCache = false;
+            await Lock.WaitAsync();
+            try
+            {
+                // Check cache again after acquiring the lock
+                if (!_contextDataCache.TryGetValue(key, out _dataTask))
+                {
+                    _dataTask = _repo.GetContextData();
+                    addedToCache = _contextDataCache.TryAdd(key, _dataTask);
+                }
+            }
+            finally
+            {
+                Lock.Release();
+            }
+
+            // Await the _dataTask outside the lock to avoid blocking
+            _data = await _dataTask;
+
+            _contextDataCache.TryRemove(key, out _);    
+            
+
+            return _data;
+        }
+       
     }
 
     public static class CBExtentions
@@ -1698,8 +1831,17 @@ namespace Mozu.SiteBuilder.Mvc.Context
             ProcessCategoryTree();
             return _flatCategories;
         }
+        
+        public Dictionary<int, SBCategory> GetCategoryDictionary()
+        {
+            ProcessCategoryTree();
+            return _categoryDictionary;
+        }
+
 
         private List<SBCategory> _flatCategories;
+        private Dictionary<int,SBCategory> _categoryDictionary;
+
         public void ProcessCategoryTree()
         {
             if (_flatCategories != null || this.RootCategoryTree == null)
@@ -1738,6 +1880,17 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             }
 
+            Dictionary<int, SBCategory> categoryDictionary = new Dictionary<int, SBCategory>();
+            foreach (var cat in categories ?? new List<SBCategory>())
+            {
+                if (cat.Content != null)
+                {
+                    cat.Content.MetaTagDescription = cat.Content.MetaTagKeywords = cat.Content.MetaTagTitle = null;
+                }
+                categoryDictionary[cat.CategoryId] = cat;
+            }
+
+            _categoryDictionary = categoryDictionary;
             _flatCategories = categories;
 
         }
