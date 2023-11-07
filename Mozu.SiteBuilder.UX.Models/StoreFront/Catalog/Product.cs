@@ -896,6 +896,13 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
 
         [IgnoreDataMember()]
         [System.Text.Json.Serialization.JsonIgnore]
+        public bool IsFlyweight
+        {
+            get;
+            set;
+        }
+        [IgnoreDataMember()]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int? Index
         {
             get { return this.Sequence; }
