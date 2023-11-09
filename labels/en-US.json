@@ -936,5 +936,6 @@
   "subtotalSubstituteEmail":"Subtotal",
   "returnReceiptSubstitutedQty":"Substitute Qty",
   "returnReceiptSubstitutedProductName":"Product Name",
-  "returnReceiptSubstituteUPCColumn": "Substitute UPC"
+  "returnReceiptSubstituteUPCColumn": "Substitute UPC",
+  "priceIncreasedBlob1": "An item on your order {0}. was substituted with another item. Your order will be fulfilled only after balance payment is made. Please contact customer care for more details. If you would like to view or manage your order, please visit <a href=\"https://{1}/myaccount\">My Account</a>."
 }

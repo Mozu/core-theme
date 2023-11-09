@@ -409,6 +409,12 @@
       "properties": {},
       "template": "email/subscription-reactivation-reminder",
       "title": "Subscription reactivation reminder"
+    },
+    {
+      "id": "shipment.priceincreased",
+      "properties": {},
+      "template": "email/price-increased.hypr",
+      "title": "Payment Required Due To Substitution"
     }
   ],
   "backOfficeTemplates": [

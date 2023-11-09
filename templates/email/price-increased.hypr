@@ -1,0 +1,143 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<br>
+<p>{{ labels.orderWelcome }}
+  {% with model.payments|first as payment %}
+    {{ payment.billingInfo.billingContact.firstName }} {{ payment.billingInfo.billingContact.lastNameOrSurname }}!</p>
+  {% endwith %}
+<br>
+<p>{{ labels.priceIncreasedBlob1|string_format(model.orderNumber, domainName)|safe }}</p>
+<br>
+<table width="100%" cellpadding="1" width="100%">
+    <thead>
+        <tr>
+            <td bgcolor="#666666">
+                <font color="#FFFFFF">{{ labels.orderDetails }}</font>
+            </td>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="https://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
+                <b>{{ labels.externalOrderId }}</b>: {{ model.order.externalId }}<br/><br/>
+                <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
+                <b>{{ labels.trackingInfo }}</b>:<br><br>
+                {% for package in model.packages %}
+                    {% if package.shippingMethodName %}
+                        {{ labels.shippingMethod }}: {{ package.shippingMethodName }}<br>
+                    {% endif %}
+                    {% if package.trackings %}
+                        {{labels.trackingNumber}}:
+                        {% for tracking in package.trackings %}
+                            {% if not forloop.first %}, {% endif %}
+                            {% if tracking.url %}
+                                <a href="{{ tracking.url }}">{{ tracking.number }}</a>
+                            {% else %}
+                                {{ tracking.number }}
+                            {% endif %}
+                        {% endfor %}
+                        <br><br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+
+        {% ifnotequal model.total 0 %}
+        <tr>
+            <td>
+                {% if model.origin.firstName or model.origin.lastNameOrSurname %}
+                    <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.origin %}<br><br>
+                {% endif %}
+            </td>
+        </tr>
+
+        {% endifnotequal %}
+    </tbody>
+</table>
+
+{% set_var showOriginalItemHeader=false %}              
+{% for item in model.items %}
+    {% if (not item.originalLineId) %}
+        {% if (item.quantity > 0) %}
+            {% set_var showOriginalItemHeader=true %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+<table class="mz-ordersummary" cellpadding="1" width="100%">
+    {% if showOriginalItemHeader %}
+    <thead>
+        <tr>
+            <td bgcolor="#666666" class="mz-ordersummary-header-product"><font color="#ffffff">{{ labels.product }}</font></td>
+            <td bgcolor="#666666" class="mz-ordersummary-header-qty"><font color="#ffffff">{{ labels.qty }}</font></td>
+            <td bgcolor="#666666" class="mz-ordersummary-header-each"><font color="#ffffff">{{ labels.each }}</font></td>
+            <td bgcolor="#666666" class="mz-ordersummary-header-total"><font color="#ffffff">{{ labels.total }}</font></td>
+        </tr>
+    </thead>
+    {% endif %}
+    {% for item in model.items %}
+        <tbody class="mz-ordersummary-lineitems">
+        {% if (not item.originalLineId) %}
+            {% if (item.quantity > 0) %}
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.itemDiscount > 0 %}is-discounted{% endif %}">
+                    <td class="mz-ordersummary-item-product">
+                    {{ item.name }}
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td align="right">{{ item.overridePrice|default(item.unitPrice)|currency }}</td>
+                    <td align="right">{{ item.lineItemCost|currency }}</td>
+                </tr>
+            {% endif %}
+        {% endif %}
+        </tbody>
+    {% endfor %}
+    {% if model.substitutedItems.length > 0 %}
+        <table class="grid no-border">
+            <tr>
+                <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
+            </tr>
+        </table>
+        <table class="grid substitute-table">
+            <thead>
+                <tr>
+                    <th class="break-word">{{ labels.productSubstitutedEmail }}</th>
+                    <th class="break-word">{{ labels.substituteEmail }}</th>
+                    <th class="break-word">{{ labels.qtySubstituteEmail }}</th>
+                    <th class="break-word">{{ labels.eachSubstituteEmail }}</th>
+                    <th class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for substituteItem in model.items %}
+                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
+                    <tr>
+                        <td>
+                            {% for item in model.items %}
+                            {% if substituteItem.originalLineId == item.lineId %}
+                            <div class="product-name">{{ item.name }}</div>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <div class="product-name">{{ substituteItem.name }}</div>
+                        </td>
+                        <td align="right">{{ substituteItem.quantity }}</td>
+                        <td align="right">{{ substituteItem.actualPrice|currency }}</td>
+                        <td class="align-right">
+                            {{ substituteItem.lineItemCost|currency}}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</table>
+<div class="forPadding">
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+</div>
+
+{% endblock body-content %}
