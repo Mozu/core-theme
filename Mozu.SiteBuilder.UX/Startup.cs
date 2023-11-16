@@ -145,6 +145,7 @@ namespace Mozu.SiteBuilder.UX
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/_mzhealth");
+                endpoints.MapStartupChecks("/_kbstartup");
             });
             
             app.UseStaticFiles(new StaticFileOptions()

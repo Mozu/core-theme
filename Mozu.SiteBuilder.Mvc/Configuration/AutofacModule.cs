@@ -34,6 +34,7 @@ using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.OAF;
+using Mozu.SiteBuilder.Mvc.Middleware;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -50,6 +51,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<ClientApiContext>();
             builder.AddScoped<NavigationContext>();
             builder.AddScoped<UrlHelper>();
+            builder.AddSingleton<ICustomStartupMongoClient,CustomStartupMongoClient>();
+            builder.AddSingleton<CustomStartupMiddleware>();            
             builder.AddSingleton<ICatalogFlyweightFactory, SingletonCatalogFlyweightFactory>();
             builder.AddSingleton<CatalogFlyweightFactoryOptions>();
 
