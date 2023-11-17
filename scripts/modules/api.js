@@ -4,8 +4,24 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) { 
+
+  
+define(['sdk', 'jquery', 'hyprlive', 'hyprlivecontext'], function (Mozu, $, Hypr, hlc) { 
+    function replaceApiUrls(object, siteSubdirectory) {
+        for (let key in object) {
+          if (object.hasOwnProperty(key) && typeof object[key] === 'string') {
+            object[key] = object[key].replace('/api/', siteSubdirectory+'/api/');
+          }
+        }
+        return object;
+    };
+
     var apiConfig = require.mozuData('apicontext');
+    var siteSubdirectory = hlc.locals.siteContext.siteSubdirectory;
+    if (siteSubdirectory){
+        apiConfig = replaceApiUrls(replaceApiUrls, siteSubdirectory);
+    }
+
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
 
