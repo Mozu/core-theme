@@ -1,0 +1,4 @@
+{% extends "back-office/base" %}
+{% block body-content %}
+{% include "back-office/gift-receipt-content" %}
+{% endblock body-content %}
