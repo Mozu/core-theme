@@ -79,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
         private const string SHIPMENT3_PREVIEW_RESOURCE_NAME = "backoffice.shipment3";
         private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
+        private const string SHIPMENT_FOR_GIFT_RECEIPT_PREVIEW_RESOURCE_NAME = "backoffice.shipment-for-gift-receipt";
         private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
         private const string CUSTOMER_AT_CURBSIDE_PREVIEW_RESOURCE_NAME = "backoffice.customeratcurbside";
         private const string CUSTOMER_AT_CURBSIDE_QRCODE_PREVIEW_RESOURCE_NAME = "backoffice.customer-at-curbside-qrcode";
@@ -605,6 +606,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return await RenderWithContext(template, quoteObject);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PrintGiftReceipt(int shipmentNumber)
+        {
+            var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
+            if (shipment == null)
+            {
+                return NotFound($"Could not find shipment {shipmentNumber}");
+            }
+            
+            // shipment doesn't store the pickup location address, so we need to get it from the location service
+            var shipmentTypesWithPickupLocation = new List<string> { "bopis", "bopis_curbside", "delivery" };
+            if (shipmentTypesWithPickupLocation.Any(type => shipment.ShipmentType.EqualsIgnoreCase(type)))
+            {
+                ViewData["pickupLocation"] = await GetLocation(shipment?.FulfillmentLocationCode);
+            }
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("gift-receipt"));
+            if (template == null)
+            {
+                return NotFound("Could not find gift receipt template for the current Theme.");
+            }
+
+            return await RenderWithContext(template, shipment);
+        }
+
         /// <summary>
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
@@ -742,6 +768,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 object userAccount = TestDataBroker.GetFileContents(B2BUSER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["account"] = account;
                 ViewData["userAccount"] = userAccount;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "gift-receipt")
+            {
+                object model = TestDataBroker.GetFileContents(SHIPMENT_FOR_GIFT_RECEIPT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickupLocation = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["pickupLocation"] = pickupLocation;
                 return await RenderWithContext(template, model);
             }
             else

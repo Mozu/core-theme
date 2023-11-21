@@ -1,0 +1,457 @@
+{
+  "shipmentNumber": 180,
+  "orderId": "15e36fed0dfece0001689f800000461f",
+  "orderNumber": 228,
+  "orderSubmitDate": "2023-08-21T12:23:34.887Z",
+  "customerAccountId": 1002,
+  "tenantId": 17951,
+  "siteId": 22289,
+  "shipmentType": "BOPIS",
+  "shipmentStatus": "READY",
+  "fulfillmentLocationCode": "W001",
+  "assignedLocationCode": "W001",
+  "workflowProcessId": "fulfillment.FulfillmentProcess-BOPIS",
+  "workflowProcessContainerId": "kibo-fulfillment-workflows",
+  "shipmentAdjustment": 0.0,
+  "lineItemSubtotal": 20.0,
+  "lineItemTaxAdjustment": 0.0,
+  "lineItemTaxTotal": 0.0,
+  "lineItemTotal": 20.0,
+  "shippingAdjustment": 0.0,
+  "shippingSubtotal": 0.0,
+  "shippingTaxAdjustment": 0.0,
+  "shippingTaxTotal": 0.0,
+  "shippingTotal": 0.0,
+  "handlingAdjustment": 0.0,
+  "handlingSubtotal": 0.0,
+  "handlingTaxAdjustment": 0.0,
+  "handlingTaxTotal": 0.0,
+  "handlingTotal": 0.0,
+  "dutyAdjustment": 0.0,
+  "dutyTotal": 0.0,
+  "total": 20.0,
+  "currencyCode": "USD",
+  "destination": {
+    "destinationContact": {
+      "id": 1004,
+      "address": {
+        "address1": "717 N. Harwood St.",
+        "address2": "",
+        "address3": "",
+        "address4": "",
+        "addressType": "Residential",
+        "cityOrTown": "Dallas",
+        "countryCode": "US",
+        "isValidated": false,
+        "postalOrZipCode": "75201",
+        "stateOrProvince": "TX"
+      },
+      "companyOrOrganization": "",
+      "email": "prakhar@gmail.com",
+      "firstName": "Prakhar",
+      "lastNameOrSurname": "Khandelwal",
+      "middleNameOrInitial": "",
+      "shortFullName": "Prakhar Khandelwal",
+      "fullName": "Prakhar Khandelwal",
+      "phoneNumbers": {
+        "home": "15-129991111",
+        "mobile": "",
+        "work": ""
+      }
+    },
+    "isDestinationCommercial": false
+  },
+  "customer": {
+    "customerContact": {
+      "id": 1004,
+      "address": {
+        "address1": "717 N. Harwood St.",
+        "address2": "",
+        "address3": "",
+        "address4": "",
+        "addressType": "Residential",
+        "cityOrTown": "Dallas",
+        "countryCode": "US",
+        "isValidated": false,
+        "postalOrZipCode": "75201",
+        "stateOrProvince": "TX"
+      },
+      "companyOrOrganization": "",
+      "email": "prakhar@gmail.com",
+      "firstName": "Prakhar",
+      "lastNameOrSurname": "Khandelwal",
+      "middleNameOrInitial": "",
+      "shortFullName": "Prakhar Khandelwal",
+      "fullName": "Prakhar Khandelwal",
+      "phoneNumbers": {
+        "home": "15-129991111",
+        "mobile": "",
+        "work": ""
+      }
+    }
+  },
+  "items": [
+    {
+      "lineId": 1,
+      "originalOrderItemId": "db90477a32be49038a2bb06500c9fcbe",
+      "goodsType": "Physical",
+      "productCode": "sp_02",
+      "quantity": 1,
+      "transferQuantity": 0,
+      "name": "Standard Product 2",
+      "upc": "sp_02",
+      "allowsBackOrder": false,
+      "unitPrice": 20.0,
+      "isTaxable": true,
+      "actualPrice": 20.0,
+      "itemDiscount": 0.0,
+      "lineItemCost": 20.0,
+      "itemTax": 0.0,
+      "shipping": 0.0,
+      "shippingDiscount": 0.0,
+      "shippingTax": 0.0,
+      "handling": 0.0,
+      "handlingDiscount": 0.0,
+      "handlingTax": 0.0,
+      "duty": 0.0,
+      "weightedShipmentAdjustment": 0.0,
+      "weightedLineItemTaxAdjustment": 0.0,
+      "weightedShippingAdjustment": 0.0,
+      "weightedShippingTaxAdjustment": 0.0,
+      "weightedHandlingAdjustment": 0.0,
+      "weightedHandlingTaxAdjustment": 0.0,
+      "weightedDutyAdjustment": 0.0,
+      "taxableShipping": 0.0,
+      "taxableLineItemCost": 20.0,
+      "taxableHandling": 0.0,
+      "weight": 3.0,
+      "length": 10.0,
+      "width": 5.0,
+      "height": 8.0,
+      "weightUnit": "lbs",
+      "auditInfo": {
+        "updateDate": "2023-08-21T12:23:48Z",
+        "createDate": "2023-08-21T12:23:47Z",
+        "updateBy": "",
+        "createBy": ""
+      },
+      "options": [],
+      "manageStock": true,
+      "creditValue": 20.0,
+      "isAssemblyRequired": false,
+      "isPackagedStandAlone": false,
+      "allowsFutureAllocate": false,
+      "inventoryTags": [],
+      "isReservedInventory": false,
+      "allowsSubstitution": false,
+      "originalQuantity": 1,
+      "isGift": true,
+      "giftMessage": "Wishing you the happiest of birthdays! On this special day, I wanted to take a moment to express how much your friendship means to me. You bring so much joy and positivity into my life, and I'm grateful for every moment we've spent together.As a small token of my appreciation, I've included a little gift to help you celebrate your special day. I hope it brings a smile to your face and reminds you of how much you are loved."
+    }
+  ],
+  "canceledItems": [],
+  "reassignedItems": [],
+  "rejectedItems": [],
+  "transferredItems": [],
+  "packages": [],
+  "workflowState": {
+    "shipmentState": "PRE_ACCEPT_SHIPMENT",
+    "taskList": [
+      {
+        "taskId": "135424",
+        "name": "Accept Shipment",
+        "subject": "",
+        "description": "Accept shipment",
+        "skippable": false,
+        "inputs": [
+          {
+            "name": "shipmentAccepted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": true,
+        "completed": false,
+        "_links": {
+          "execute": {
+            "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/tasks/Accept%20Shipment/completed",
+            "method": "PUT"
+          }
+        }
+      },
+      {
+        "name": "Print Pick List",
+        "subject": "",
+        "inputs": [],
+        "active": false,
+        "completed": false,
+        "_links": {}
+      },
+      {
+        "name": "Validate Items In Stock",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "createTransfer",
+            "type": "BOOLEAN"
+          },
+          {
+            "name": "stockLevel",
+            "type": "STRING"
+          }
+        ],
+        "active": false,
+        "completed": false,
+        "_links": {}
+      },
+      {
+        "name": "Wait for Transfer",
+        "subject": "",
+        "inputs": [],
+        "active": false,
+        "completed": false,
+        "_links": {}
+      },
+      {
+        "name": "Order Preparation",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "assemblyCompleted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": false,
+        "completed": false,
+        "_links": {}
+      },
+      {
+        "name": "Customer Pickup",
+        "subject": "",
+        "inputs": [
+          {
+            "name": "customerAccepted",
+            "type": "BOOLEAN"
+          }
+        ],
+        "active": false,
+        "completed": false,
+        "_links": {}
+      }
+    ],
+    "activeTaskName": "Accept Shipment",
+    "processInstanceId": "123674",
+    "auditInfo": {
+      "updateDate": "2023-08-21T14:00:00Z",
+      "createDate": "2023-08-21T12:23:47Z",
+      "updateBy": "",
+      "createBy": ""
+    },
+    "variables": {
+      "initiator": {
+        "name": "initiator",
+        "oldValue": "",
+        "value": "wbadmin",
+        "updateDate": "2023-08-21T12:23:47Z"
+      },
+      "currentState": {
+        "name": "currentState",
+        "oldValue": "",
+        "value": "PRE_ACCEPT_SHIPMENT",
+        "updateDate": "2023-08-21T12:23:47Z"
+      },
+      "assemblyRequired": {
+        "name": "assemblyRequired",
+        "oldValue": "",
+        "value": "false",
+        "updateDate": "2023-08-21T12:23:47Z"
+      }
+    }
+  },
+  "changeMessages": [
+    {
+      "changeMessageId": "64e357548d7e8b6f8c5b1a97",
+      "appId": "2CC1D66690B6427568BA2D374AEBC96D",
+      "appKey": "mozu.CommerceRuntimePostOrderSubmittedProcessor.2318.3.0.Release",
+      "createdDate": "2023-08-21T12:23:48.586Z",
+      "correlationId": "be196498c9594d44b8589c90e4abe200",
+      "message": "'workflowState.shipmentState' value changed from '' to 'PRE_ACCEPT_SHIPMENT'",
+      "oldValue": "null",
+      "newValue": "PRE_ACCEPT_SHIPMENT",
+      "subject": "shipmentState",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "64e357548d7e8b6f8c5b1a98",
+      "appId": "2CC1D66690B6427568BA2D374AEBC96D",
+      "appKey": "mozu.CommerceRuntimePostOrderSubmittedProcessor.2318.3.0.Release",
+      "createdDate": "2023-08-21T12:23:48.586Z",
+      "correlationId": "be196498c9594d44b8589c90e4abe200",
+      "message": "'workflowState.activeTaskName' value changed from '' to 'Accept Shipment'",
+      "oldValue": "null",
+      "newValue": "Accept Shipment",
+      "subject": "activeTaskName",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "64e357548d7e8b6f8c5b1a99",
+      "appId": "2CC1D66690B6427568BA2D374AEBC96D",
+      "appKey": "mozu.CommerceRuntimePostOrderSubmittedProcessor.2318.3.0.Release",
+      "createdDate": "2023-08-21T12:23:48.586Z",
+      "correlationId": "be196498c9594d44b8589c90e4abe200",
+      "message": "'shipmentStatus' value changed from '' to 'READY'",
+      "oldValue": "null",
+      "newValue": "READY",
+      "subject": "shipmentStatus",
+      "userId": ""
+    },
+    {
+      "changeMessageId": "64e357548d7e8b6f8c5b1a9a",
+      "appId": "2CC1D66690B6427568BA2D374AEBC96D",
+      "appKey": "mozu.CommerceRuntimePostOrderSubmittedProcessor.2318.3.0.Release",
+      "createdDate": "2023-08-21T12:23:48.586Z",
+      "correlationId": "be196498c9594d44b8589c90e4abe200",
+      "message": "Shipment [180] created",
+      "userId": ""
+    },
+    {
+      "attributes": {
+        "metadata": [
+          {
+            "changeReason": "Updated gift message on shipment"
+          }
+        ]
+      },
+      "changeMessageId": "64e3578e8d7e8b6f8c5b1ec6",
+      "appId": "kibo-developer-key",
+      "appKey": "kibo-developer-key",
+      "createdDate": "2023-08-21T12:24:46.082Z",
+      "correlationId": "5237668fe4da44f1b94710c4cd06782b",
+      "message": "'shopperNotes.giftMessage' value changed from '' to 'Happ Birthday Bitchhhhhh!!!!'",
+      "oldValue": "null",
+      "newValue": "Happ Birthday Bitchhhhhh!!!!",
+      "subject": "giftMessage",
+      "userId": "",
+      "metadata": "Updated gift message on shipment"
+    },
+    {
+      "attributes": {
+        "metadata": [
+          {
+            "changeReason": "Updated gift message on item"
+          }
+        ]
+      },
+      "changeMessageId": "64e36db28d7e8b6f8c5c08e9",
+      "appId": "kibo-developer-key",
+      "appKey": "kibo-developer-key",
+      "createdDate": "2023-08-21T13:59:14.503Z",
+      "correlationId": "18f5ae8f14114013b67fefbe11ade49d",
+      "message": "'giftMessage' value changed from '' to 'Wishing you the happiest of birthdays! On this special day, I wanted to take a moment to express how much your friendship means to me. You bring so much joy and positivity into my life, and I'm grateful for every moment we've spent together.As a small token of my appreciation, I've included a little gift to help you celebrate your special day. I hope it brings a smile to your face and reminds you of how much you are loved.'",
+      "oldValue": "null",
+      "newValue": "Wishing you the happiest of birthdays! On this special day, I wanted to take a moment to express how much your friendship means to me. You bring so much joy and positivity into my life, and I'm grateful for every moment we've spent together.As a small token of my appreciation, I've included a little gift to help you celebrate your special day. I hope it brings a smile to your face and reminds you of how much you are loved.",
+      "subject": "giftMessage",
+      "userId": "",
+      "metadata": "Updated gift message on item"
+    },
+    {
+      "attributes": {
+        "metadata": [
+          {
+            "changeReason": "Updated gift message on shipment"
+          }
+        ]
+      },
+      "changeMessageId": "64e36de08d7e8b6f8c5c0c7f",
+      "appId": "kibo-developer-key",
+      "appKey": "kibo-developer-key",
+      "createdDate": "2023-08-21T14:00:00.575Z",
+      "correlationId": "2d69ad6b0e274c769220264e145002a7",
+      "message": "'shopperNotes.giftMessage' value changed from 'Happ Birthday Bitchhhhhh!!!!' to 'Order I placed for friends’ birthday HApppy birthday!!!!!!!'",
+      "oldValue": "Happ Birthday Bitchhhhhh!!!!",
+      "newValue": "Order I placed for friends’ birthday HApppy birthday!!!!!!!",
+      "subject": "giftMessage",
+      "userId": "",
+      "metadata": "Updated gift message on shipment"
+    }
+  ],
+  "email": "prakhar@gmail.com",
+  "auditInfo": {
+    "updateDate": "2023-08-21T14:00:00Z",
+    "createDate": "2023-08-21T12:23:47Z",
+    "updateBy": "",
+    "createBy": ""
+  },
+  "readyToCapture": false,
+  "isOptInForSms": false,
+  "shopperNotes": {
+    "giftMessage": "Order I placed for friends’ birthday HApppy birthday!!!!!!!"
+  },
+  "shipmentNotes": [],
+  "isAutoAssigned": false,
+  "isHistoricalImport": false,
+  "substitutedItems": [],
+  "orderType": "Offline",
+  "workflowProcessVersion": "1.2120.0",
+  "_links": {
+    "self": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180"
+    },
+    "shipments": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments"
+    },
+    "tasks": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/tasks"
+    },
+    "workflowInstanceImage": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/workflow-instance-image"
+    },
+    "backorder": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/backordered",
+      "method": "POST"
+    },
+    "backorderItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/backorderedItems",
+      "method": "POST"
+    },
+    "pickupItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/pickedUpItems",
+      "method": "POST"
+    },
+    "transfer": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/transferred",
+      "method": "PUT"
+    },
+    "transferItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/transferredItems",
+      "method": "PUT"
+    },
+    "reject": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/rejected",
+      "method": "PUT"
+    },
+    "rejectItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/rejectedItems",
+      "method": "PUT"
+    },
+    "cancel": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/canceled",
+      "method": "PUT"
+    },
+    "fulfill": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/fulfilled",
+      "method": "PUT"
+    },
+    "reassign": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/reassigned",
+      "method": "PUT"
+    },
+    "reassignItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/reassignedItems",
+      "method": "PUT"
+    },
+    "cancelItems": {
+      "href": "https://services-tp.dev09.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce/shipments/180/canceledItems",
+      "method": "PUT"
+    }
+  }
+}

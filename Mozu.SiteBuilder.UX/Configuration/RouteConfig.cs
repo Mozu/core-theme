@@ -236,6 +236,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 _constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                 "Print Gift Receipt",
+                 "back-office/gift-receipt/shipments/{shipmentNumber}",
+                 new { controller = "BackOffice", action = "PrintGiftReceipt" },
+                 _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                "back office (admin view) - PREVIEW",
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" },
