@@ -829,9 +829,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
                
                 var key = prefix + newCategory.CategoryId;
                 
-                if (_memoryCache.TryGetValue(key, out var existingCategory))
+                if (_memoryCache.TryGetValue(key, out var cacheItem) 
+                    && cacheItem is Tuple<DateTime, Mozu.ProductRuntime.Contracts.CategoryContent> existingCategory
+                    && newCategory.UpdateDate - existingCategory.Item1 < TimeSpan.FromSeconds(5))
                 {
-                    newCategory.Content = existingCategory as Mozu.ProductRuntime.Contracts.CategoryContent;
+                    newCategory.Content = existingCategory.Item2;
                 }
                 else if (!readOnly)
                 {
@@ -839,7 +841,9 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         Size = 1
                     };
-                    _memoryCache.Set(key, newCategory.Content, cacheEntryOptions);
+                    _memoryCache.Set(key, 
+                        new Tuple<DateTime,Mozu.ProductRuntime.Contracts.CategoryContent >(newCategory.UpdateDate, newCategory.Content), 
+                        cacheEntryOptions);
                 }
             });
 
