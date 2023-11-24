@@ -1,4 +1,4 @@
-@Library('kibo-pipeline-shared-lib')_
+@Library('kibo-pipeline-shared-lib@startup')_
 
 
 
@@ -14,6 +14,7 @@ ngProjectPipeline (
 	INGRESS_REWRITE_TARGET: '/',
 	INGRESS_HOST_PREFIX :'sitebuilder',
 	KUBE_HEALTHCHECK_URL: '/_mzhealth',
+	KUBE_HEALTHCHECK_STARTUP_URL : '/_kbstartup',
     KUBE_SERVICE_NAME :'mozu-sitebuilder-ui',
     KUBE_TEMPLATE_FILE : 'com/kibo/kubernetes/ng-web-service.yml');
 

@@ -39,6 +39,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.ProductRuntime.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Mozu.Core.Exceptions;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -828,9 +829,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
                
                 var key = prefix + newCategory.CategoryId;
                 
-                if (_memoryCache.TryGetValue(key, out var existingCategory))
+                if (_memoryCache.TryGetValue(key, out var cacheItem) 
+                    && cacheItem is Tuple<DateTime, Mozu.ProductRuntime.Contracts.CategoryContent> existingCategory
+                    && newCategory.UpdateDate - existingCategory.Item1 < TimeSpan.FromSeconds(5))
                 {
-                    newCategory.Content = existingCategory as Mozu.ProductRuntime.Contracts.CategoryContent;
+                    newCategory.Content = existingCategory.Item2;
                 }
                 else if (!readOnly)
                 {
@@ -838,7 +841,9 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         Size = 1
                     };
-                    _memoryCache.Set(key, newCategory.Content, cacheEntryOptions);
+                    _memoryCache.Set(key, 
+                        new Tuple<DateTime,Mozu.ProductRuntime.Contracts.CategoryContent >(newCategory.UpdateDate, newCategory.Content), 
+                        cacheEntryOptions);
                 }
             });
 
@@ -857,16 +862,17 @@ namespace Mozu.SiteBuilder.Mvc.Context
     public class SiteBuilderContextProvider : ISiteBuilderContextProvider
     {
         private readonly ISiteBuilderContextDataRepository _repo;
+        private readonly ILogger<SiteBuilderContextProvider> _logger;
         private Task<ISiteBuilderContextData> _dataTask;
         private ISiteBuilderContextData _data;
         private Exception _ex;
         static ConcurrentDictionary<string,Task<ISiteBuilderContextData>> _contextDataCache = new ConcurrentDictionary<string, Task<ISiteBuilderContextData>>();
-        public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo)
+        public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo, ILogger<SiteBuilderContextProvider> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
-        // Mozu.SiteBuilder.Mvc.Contexts.ISiteContext _siteContext;
         public ISiteBuilderContextData GetContextData()
         {
             if (_ex != null)
@@ -886,7 +892,26 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
             if (_dataTask != null)
             {
-                return _data = await _dataTask;
+                try
+                {
+                    return _data = await _dataTask;
+                }
+                catch (VaeValidationConflictException ex)
+                {
+                    _ex = ex;
+                    if (ex?.ValidationFailures.Any()==true)
+                    {
+                        _logger.LogWarning(ex , $"{ex.ValidationFailures[0].ErrorMessage} : {ex.ValidationFailures[0].PropertyName}");    
+                    }
+
+                    throw ;
+                }
+                catch (Exception ex)
+                {
+                    _ex = ex;
+                    throw;
+                }
+                
             }
             
             var key = _repo.GetCacheKey();
@@ -897,7 +922,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 return _data = await _dataTask;
             }
 
-            var addedToCache = false;
+           
             await Lock.WaitAsync();
             try
             {
@@ -905,7 +930,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 if (!_contextDataCache.TryGetValue(key, out _dataTask))
                 {
                     _dataTask = _repo.GetContextData();
-                    addedToCache = _contextDataCache.TryAdd(key, _dataTask);
+                    _contextDataCache.TryAdd(key, _dataTask);
                 }
             }
             finally
@@ -914,11 +939,30 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
 
             // Await the _dataTask outside the lock to avoid blocking
-            _data = await _dataTask;
+            try
+            {
+                _data = await _dataTask;
+            }
+            catch (VaeValidationConflictException ex)
+            {
+                _ex = ex;
+                if (ex?.ValidationFailures.Any()==true)
+                {
+                    _logger.LogWarning(ex,
+                        $"{ex.ValidationFailures[0].ErrorMessage} : {ex.ValidationFailures[0].PropertyName}");
+                }
 
-            _contextDataCache.TryRemove(key, out _);    
-            
-
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _ex = ex;
+                throw;
+            }
+            finally
+            {
+                _contextDataCache.TryRemove(key, out _);  
+            }
             return _data;
         }
        
