@@ -207,9 +207,21 @@ module.exports = function (grunt) {
         },
         src: '<%= mozusync.upload.src %>'
       }
+    },
+    'check-labels': {
+        build: {
+        }
     }
   });
-
+    
+  grunt.registerMultiTask('check-labels', 'Double check that the necessary JSON files are well-formed', function() {
+      grunt.file.recurse('labels/', function(file) {
+         var labelsFile = grunt.file.read(file);
+         // This will stop the build process if JSON is not well formed
+         JSON.parse(labelsFile);
+      });
+  });
+    
   grunt.registerTask('build', [
     'jshint:develop',
     'copy',
@@ -228,6 +240,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
+    'check-labels',
     'build',
     'watch:sync'
     ]);
