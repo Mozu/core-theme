@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "c10";
+        public const string CacheVersion = "c11";
         private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -824,8 +824,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 {
                     return;
                 }
-                newCategory.Content.MetaTagDescription =
-                    newCategory.Content.MetaTagKeywords = newCategory.Content.MetaTagTitle = null;
                
                 var key = prefix + newCategory.CategoryId;
                 
