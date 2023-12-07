@@ -1,4 +1,7 @@
 {% autoescape on %}
+{% block cacheheaders %}
+{# Blank by default, assume all pages are not cached. Invididual pages that want to be cached can override this block and include templates/cache-headers.hypr #}
+{% endblock cacheheaders %}
 {% block doctype %}
 <!doctype html>
 {% endblock doctype %}
