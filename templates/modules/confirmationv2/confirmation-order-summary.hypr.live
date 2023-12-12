@@ -20,13 +20,13 @@
           {% for bundledProduct in item.product.bundledProducts %}
           <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
           <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-          {% if bundledProduct.stock and bundledProduct.stock.isOnBackOrder and bundledProduct.stock.manageStock and bundledProduct.stock.stockAvailable < item.quantity|multiply(bundledProduct.quantity) %}
+          {% if bundledProduct.stock and bundledProduct.stock.isOnBackOrder and bundledProduct.stock.manageStock and bundledProduct.stock.totalAvailableStock < item.quantity|multiply(bundledProduct.quantity) %}
                         <br/> <dd>
             <div class="mz-product-backorder">
               <div class="is-warning mz-product-backorder-warning">
-                {{ labels.qty }} {{ bundledProduct.stock.stockAvailable }} {{ labels.productBackorderAvailable }}
+                {{ labels.qty }} {{ bundledProduct.stock.totalAvailableStock }} {{ labels.productBackorderAvailable }}
                 {% if bundledProduct.stock.availableDate  %}. {% else %}, {% endif %}
-                <br />{{ labels.qty }} {{ item.quantity|multiply(bundledProduct.quantity)|subtract(bundledProduct.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+                <br />{{ labels.qty }} {{ item.quantity|multiply(bundledProduct.quantity)|subtract(bundledProduct.stock.totalAvailableStock) }} {{ labels.itemOnBackorder }}
 
                 {% if bundledProduct.stock.availableDate  %}
                 ,<br /> {{ labels.productBackorderAvailableDate }} {{bundledProduct.stock.availableDate | date("m/d/Y")}}
@@ -38,13 +38,13 @@
           {% endfor %}
         </dl>
         {% else %}
-        {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock and Math.max(item.product.stock.aggregateInventory, item.product.stock.stockAvailable) < item.quantity %}
+        {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock and Math.max(item.product.stock.aggregateInventory, item.product.stock.totalAvailableStock) < item.quantity %}
         <div class="mz-product-backorder">
           <div class="is-warning mz-product-backorder-warning">
-          {% if item.product.stock.aggregateInventory > item.product.stock.stockAvailable %}
+          {% if item.product.stock.aggregateInventory > item.product.stock.totalAvailableStock %}
             {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.aggregateInventory) }} {{ labels.itemOnBackorder }}
           {% else %}
-            {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+            {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.totalAvailableStock) }} {{ labels.itemOnBackorder }}
           {% endif %}
           {% if item.product.stock.availableDate  %}
           .<br /> {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
