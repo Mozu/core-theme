@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "c11";
+        public const string CacheVersion = "c12";
         private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -1925,10 +1925,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
             Dictionary<int, SBCategory> categoryDictionary = new Dictionary<int, SBCategory>();
             foreach (var cat in categories ?? new List<SBCategory>())
             {
-                if (cat.Content != null)
-                {
-                    cat.Content.MetaTagDescription = cat.Content.MetaTagKeywords = cat.Content.MetaTagTitle = null;
-                }
                 categoryDictionary[cat.CategoryId] = cat;
             }
 
