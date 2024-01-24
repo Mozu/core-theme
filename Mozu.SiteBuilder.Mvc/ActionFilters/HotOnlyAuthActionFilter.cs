@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
@@ -25,6 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         async Task TryRefresh(ActionExecutingContext actionContext)
         {
             var sbCtx = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
+            var siteContext = actionContext.HttpContext.RequestServices.GetService<SiteContext>();
             var userClaims = sbCtx.UserClaims;
             
             if(userClaims.IsAnonymous || !userClaims.IsAuthenticationHot)
@@ -58,7 +60,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                         return;
                     }
                 }
-                actionContext.Result = new RedirectResult(new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(actionContext.HttpContext.Request.Path) + actionContext.HttpContext.Request.QueryString.Value, UriKind.Relative).ToString());
+                
+                var redirect = new Uri(siteContext.SiteSubdirectory+ "/user/login", UriKind.Relative).ToString();
+                
+                actionContext.Result = new RedirectResult(redirect);
              
             }
         }
