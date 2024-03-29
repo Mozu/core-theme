@@ -396,11 +396,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (!string.IsNullOrEmpty(query))
             {
                 queryCollection.Add("query", query);
+                if (categoryId.HasValue)
+                {
+                    queryCollection.Add("categoryId", categoryId.Value.ToString());
+                }
             }
-            if (categoryId.HasValue)
-            {
-                queryCollection.Add("categoryId", categoryId.Value.ToString());
-            }
+
             if (urlBase != null && urlBase.IndexOf('?') > 0)
             {
                 urlBase = urlBase.Substring(0, urlBase.IndexOf('?'));

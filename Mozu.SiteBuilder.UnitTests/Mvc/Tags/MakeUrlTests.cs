@@ -29,11 +29,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             RunTemplate(desc);
         }
 
-        [Test, TestCaseSource("GetSearchPageTests")]
-        public void MakeUrlSearchPage(TestDescriptor desc)
-        {
-            RunTemplate(desc);
-        }
         private static List<TestDescriptor> GetTests()
         {
             var ctx = new DefaultHttpContext();
@@ -329,96 +324,5 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             };
         }
          
-        private static List<TestDescriptor> GetSearchPageTests()
-        {
-            var ctx = new DefaultHttpContext();
-            ctx.Request.Path = "/search";
-            ctx.Request.Host = new HostString("localhost");
-            ctx.Request.QueryString = new QueryString("?facetTemplate=categoryId:2&facetHierValue=categoryCode:_root&facetHierDepth=categoryCode:2&facetValueFilter=tenant~brand-name-attribute:3m&pageSize=30");
-            ctx.Request.Scheme = "http";
-            ctx.Request.Method = "GET";
-            
-            var sc = Substitute.For<ISiteContext>();
-            sc.ThemeSettings = new SiteBuilder.Mvc.Themes.ThemeRuntimeSettingsCollection(new Dictionary<string, object>(), new byte[0] { }, DateTime.MaxValue);
-            sc.CdnPrefix.Returns("//cdn/1-m2");
-            sc.GeneralSettings = new UX.Models.Settings.GeneralSettings()
-            {
-                CdnCacheBustKey = "123"
-            };
-            var customRouteHandler = Substitute.For<ICustomRouteHandler>();
-            customRouteHandler.GetCanonicalUrl(NSubstitute.Arg.Any<SiteSettings.General.Contracts.General.Routing.FancyRoute>()  , NSubstitute.Arg.Any<Func<IDictionary<string, object>>>(), NSubstitute.Arg.Any<bool>()).Returns((string)null);
-            var catTreeProvider = Substitute.For<ICategoryTreeProvider>();
-            var catTree = new CategoryTree
-            {
-                AllCategories = new List<Category>() { new Category() { CategoryId = 66, CategoryCode = "steve"}}
-            };
-            catTreeProvider.GetAllCategories().Returns(catTree);
-            var pc = Substitute.For<IPageContext>();
-            pc.PageType = "search";
-            pc.Search = new SearchContext(ctx);
-            pc.Url = ctx.GetRequestUri().ToString();
-
-            var ac = Substitute.For<ISiteBuilderApiContext>();
-            
-            var urlHelper = new UrlHelper(sc, ac, pc, customRouteHandler, ctx, new Lazy<ICategoryTreeProvider>(()=> catTreeProvider));
-
-            void ContainerMods(IServiceCollection cb)
-            {
-                cb.AddScoped(c => sc);
-                cb.AddScoped(c => pc);
-                cb.AddScoped(c => urlHelper);
-            }
-            /* Search Context LN 399 */
-            return new List<TestDescriptor>
-            {
-                new TestDescriptor
-                {
-                    Name = "categoryFacet_on_search_page_no_query_parameter",
-                    Template = @"{% make_url ""facet"" facetValue %}",
-                    ContainerModifier = builder =>
-                    {
-                        ContainerMods(builder);
-                        builder.AddScoped(
-                            bctx =>
-                            {
-                                var hctx = new DefaultHttpContext();
-                                hctx.Request.Path = "/search";
-                                ctx.Request.QueryString = new QueryString("?facetTemplate=categoryId:2&facetHierValue=categoryCode:_root&facetHierDepth=categoryCode:2&facetValueFilter=tenant~brand-name-attribute:3m&pageSize=30");
-                                hctx.Request.Scheme = "http";
-                                hctx.Request.Method = "GET";
-
-                                bctx.Resolve<PageContext>().Search = new SearchContext(hctx);
-                                return bctx.Resolve<PageContext>();
-                            }
-                        );
-                    },
-                    Context = new Dictionary<string, object>()
-                    {
-                        {
-                            "facetValue", new Mozu.ProductRuntime.Contracts.FacetValue()
-                            {
-                                ChildrenFacetValues = new List<ProductRuntime.Contracts.FacetValue>(),
-                                Value = "66",
-                                FilterValue = "categoryId:66"
-
-                            }
-                        }
-                    },
-                    ExpectedFunc = actual =>
-                    {
-                        Console.WriteLine(actual);
-                        if (actual.Contains("categoryId=66"))
-                        {
-                            return Tuple.Create(true, string.Empty);
-                        }
-                        else
-                        {
-                            return Tuple.Create(false, "the expected value either contained the wrong category id or the category id is missing");
-                            // return Tuple.Create(false, ".");
-                        }
-                    }
-                }
-            };
-        }
     }
 }
