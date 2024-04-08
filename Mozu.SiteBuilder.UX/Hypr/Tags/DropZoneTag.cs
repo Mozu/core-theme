@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class EditResourcesTag : SimpleTagBase
     {
         static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
-        const string CalienteScriptFormat = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/caliente/build/{1}.js?{2},{3}\"></script>\r\n";
+        const string CalienteScriptFormat = "\t\t<script type=\"text/javascript\" src=\"/admin/scripts/chorizo/caliente/build/{1}.js?{2},{3}\"></script>\r\n";
         static AssemblyInformationalVersionAttribute  AssemblyInfoAtt = (System.Reflection.AssemblyInformationalVersionAttribute)(typeof(BaseApiController).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).FirstOrDefault() ?? new System.Reflection.AssemblyInformationalVersionAttribute("local"));
         static string AssemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(AssemblyInfoAtt.InformationalVersion))).ToString();
 
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var sb = sbItemDisposer.Item;
 
                 sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1},{2}\">\r", siteContext.CdnPrefix, FileVersion, AssemblyInfoHash);
-                sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"{2}/admin/scripts/chorizo/build/chorizo.css?{0},{1},\">", FileVersion, AssemblyInfoHash, cdn);
+                sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css?{0},{1},\">", FileVersion, AssemblyInfoHash);
                 sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG
