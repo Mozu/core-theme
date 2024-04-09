@@ -78,6 +78,7 @@
     <None Remove="TestData\shipment.transfercreatedbyfulfiller\Shipment1.json" />
 
     <None Remove="TestData\subscription.reactivationreminder\subscription1.json" />
+    <None Remove="TestData\subscription.pausereminder\subscription1.json" />
 
     <EmbeddedResource Include="ArcJsExtensions\Content\dist\webpack.bundle.js" />
   </ItemGroup>

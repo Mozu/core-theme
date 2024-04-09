@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "12eaf7e439c3470a20b1274200004626",
   "siteId": 22296,
   "tenantId": 17958,
@@ -466,7 +466,7 @@
       }
     },
     "shippingMethodCode": "fedex_FEDEX_GROUND",
-    "shippingMethodName": "FedEx Ground�",
+    "shippingMethodName": "FedEx Ground®",
     "auditInfo": {
       "updateDate": "2021-12-14T16:45:06.922Z",
       "createDate": "2021-12-14T16:30:03.638Z",

@@ -430,6 +430,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (Subscription),
                                                Topic = Topics.SubscriptionReactivationReminder
+                                           },
+                                                    new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Subscription),
+                                               Topic = Topics.SubscriptionPausedReminder
                                            }
                 };
         }
@@ -969,8 +974,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string SubscriptionItemQuantityUpdated = "subscription.itemquantityupdated";
             public const string SubscriptionOrderReminder = "subscription.orderreminder";
             public const string SubscriptionReactivationReminder = "subscription.reactivationreminder";
-
             public const string SubstitutionPaymentRequired = "shipment.priceincreased";
+            public const string SubscriptionPausedReminder = "subscription.pausereminder";
         }
     }
 
