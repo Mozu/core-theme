@@ -41,7 +41,7 @@
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2011.0-pr-13.7" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2013.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
-    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2013.2" />
+    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2342.0-develop.53" />
     <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2037.2" />
     <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2037.2" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2101.3" />
