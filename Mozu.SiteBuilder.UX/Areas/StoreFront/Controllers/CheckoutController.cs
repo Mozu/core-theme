@@ -88,7 +88,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order.OrderStatusConst.PENDING_REVIEW,
             Order.OrderStatusConst.PROCESSING,
             Order.OrderStatusConst.COMPLETED,
-            Order.OrderStatusConst.ERRORED
+            Order.OrderStatusConst.ERRORED,
+            Order.OrderStatusConst.PENDING_SHIPMENT
         };
 
 

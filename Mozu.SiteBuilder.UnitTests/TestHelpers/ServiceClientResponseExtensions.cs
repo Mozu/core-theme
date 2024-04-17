@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
 
 namespace Mozu.SiteBuilder.UnitTests.Extensions
@@ -9,12 +10,17 @@ namespace Mozu.SiteBuilder.UnitTests.Extensions
         /// Wraps an object as the result of a Task<ServiceClientResponse<T>>.
         /// Ideal for mocking the return object of service clients.
         /// </summary>
-        public static Task<ServiceClientResponse<T>> AsServiceClientResponseAsync<T>(this T response)
+        public static Task<ServiceClientResponse<T>> AsServiceClientResponseAsync<T>(this T response, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var serviceResult = new ServiceClientResponse<T> {
                 HasException = false,
                 ReadAsSync = () => response,
                 ReadAsAsync = () => response.AsTaskResult()
+            };
+
+            serviceResult.ResponseMessage = new System.Net.Http.HttpResponseMessage()
+            {
+                StatusCode = statusCode
             };
 
             return serviceResult.AsTaskResult();
