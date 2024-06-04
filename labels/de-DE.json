@@ -794,5 +794,5 @@
   "digitalItemEmailIntro": "<p>Bedankt voor uw aankoop van een digitaal item.</p>",
   "digitalMessage": "Digitale boodschap",
   "digitalItemEmailInstructions": "Volg deze stappen om uw digitale item te claimen.",
-  "digitalItemBlob": "Als u vragen heeft over de toegang tot uw digitale item, gaat u naar {0}"
+  "digitalItemBlob": "Als u vragen heeft over de toegang tot uw digitale item, gaat u naar <a href=\"https://{1}/myaccount\">{0}</a>."
 }
