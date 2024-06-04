@@ -950,5 +950,5 @@
   "digitalItemEmailIntro": "<p>Thank you for your Digital Item purchase.</p>",
   "digitalMessage": "Digital Message",
   "digitalItemEmailInstructions": "Follow these steps to claim your digital item.",
-  "digitalItemBlob": "If you have questions about accessing your digital item, please visit {0}"  
+  "digitalItemBlob": "If you have questions about accessing your digital item, please visit <a href=\"https://{1}/myaccount\">{0}</a>."
 }

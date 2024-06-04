@@ -19,7 +19,7 @@
 		
 	{{ labels.digitalItemEmailInstructions|safe }}
 
-    <p>{{ labels.digitalItemBlob|string_format(siteContext.generalSettings.websiteName)|safe }} </p>
+    <p>{{ labels.digitalItemBlob|string_format(siteContext.generalSettings.websiteName, domainName)|safe }} </p>
 
     {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
