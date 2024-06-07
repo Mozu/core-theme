@@ -24,12 +24,28 @@ using Mozu.Core.Configuration;
 namespace Mozu.SiteBuilder.UX.Filters
 {
 
-    public class IgnoreDataViewModeAttribute : Attribute, IFilterMetadata { };
+    public class IgnoreDataViewModeAttribute : ActionFilterAttribute, IAsyncAuthorizationFilter
+    {
+        public IgnoreDataViewModeAttribute()
+        {
+            Order = -100;
+        }
+        public Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            context.HttpContext.Items["IgnoreDataViewMode"] = DataViewModeEnforcementAttribute.IgnoreDataViewMode;
+            return Task.CompletedTask;
+        }
+    };
 
     public class DataViewModeEnforcementAttribute : ActionFilterAttribute, IAsyncAuthorizationFilter
     {
+        public static object IgnoreDataViewMode = new object();
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            if (context.HttpContext.Items["IgnoreDataViewMode"]   == IgnoreDataViewMode )
+            {
+                return;
+            }
             var request = context.HttpContext.Request;
             var resolver = context.HttpContext.RequestServices;
             var apiContext = resolver.Resolve<ISiteBuilderApiContext>();
