@@ -5,12 +5,12 @@ define(['modules/jquery-mozu',
         'underscore'],
 function($, Api, CartModels, hyprlivecontext, _) {
     var siteContext = hyprlivecontext.locals.siteContext,
-        externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayPalExpress2"});
+        externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "paypal_complete_payments_application"});
 
     window.paypalCheckoutReady = function() {
 
       var siteContext = hyprlivecontext.locals.siteContext,
-          externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayPalExpress2"});
+          externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "paypal_complete_payments_application"});
     
        if (!externalPayment || !externalPayment.isEnabled) return;
 
