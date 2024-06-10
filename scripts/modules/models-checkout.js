@@ -2089,7 +2089,7 @@
             isNonMozuCheckout: function() {
                 var activePayments = this.apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'paypal_complete_payments_application' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
             },
             validateReviewCheckoutFields: function(){
                 var validationResults = [];
