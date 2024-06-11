@@ -790,5 +790,9 @@
   "returnReceiptSubstitutedQty":"Ersatzmenge",
   "returnReceiptSubstitutedProductName":"Produktname",
   "returnReceiptSubstituteUPCColumn": "UPC ersetzen",
-  "priceIncreasedBlob1": "Ein Artikel in Ihrer Bestellung {0}. wurde durch einen anderen Artikel ersetzt. Ihre Bestellung wird erst nach erfolgter Restzahlung ausgeführt. Für weitere Informationen wenden Sie sich bitte an den Kundendienst. Wenn Sie Ihre Bestellung einsehen oder verwalten möchten, besuchen Sie bitte <a href=\"https://{1}/myaccount\">My Account</a>."
+  "priceIncreasedBlob1": "Ein Artikel in Ihrer Bestellung {0}. wurde durch einen anderen Artikel ersetzt. Ihre Bestellung wird erst nach erfolgter Restzahlung ausgeführt. Für weitere Informationen wenden Sie sich bitte an den Kundendienst. Wenn Sie Ihre Bestellung einsehen oder verwalten möchten, besuchen Sie bitte <a href=\"https://{1}/myaccount\">My Account</a>.",
+  "digitalItemEmailIntro": "<p>Bedankt voor uw aankoop van een digitaal item.</p>",
+  "digitalMessage": "Geschenk-Nachricht",
+  "digitalItemEmailInstructions": "Volg deze stappen om uw digitale item te claimen.",
+  "digitalItemBlob": "Als u vragen heeft over de toegang tot uw digitale item, gaat u naar <a href=\"https://{1}/myaccount\">{0}</a>."
 }
