@@ -435,7 +435,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (Subscription),
                                                Topic = Topics.SubscriptionPausedReminder
-                                           }
+                                           },
+                                                    new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (EmailDigitalOther),
+                                               Topic = Topics.DigitalItemFulfilled
+                                           },
                 };
         }
 
@@ -840,6 +845,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 quoteEmail.isShippable = quoteEmail.Items.Any(a => a.FulfillmentMethod == "Ship");
             }
 
+            if (obj is EmailDigitalOther digitalOtherEmail)
+            {
+                //get order by shipment orderId
+                var shipmentOrder = (await _orderWebApiClient.GetOrder(digitalOtherEmail.OrderId)).ReadAsSync();
+                digitalOtherEmail.Order = shipmentOrder;
+                if (shipmentOrder.Shipments.SafeAny())
+                {
+                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == digitalOtherEmail.ShipmentNumber).ToList();
+                }
+            }
+
             return obj;
         }
 
@@ -974,8 +990,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string SubscriptionItemQuantityUpdated = "subscription.itemquantityupdated";
             public const string SubscriptionOrderReminder = "subscription.orderreminder";
             public const string SubscriptionReactivationReminder = "subscription.reactivationreminder";
-            public const string SubstitutionPaymentRequired = "shipment.priceincreased";
             public const string SubscriptionPausedReminder = "subscription.pausereminder";
+
+            // Fulfillment
+            public const string SubstitutionPaymentRequired = "shipment.priceincreased";
+            public const string DigitalItemFulfilled = "digitalitem.created";
         }
     }
 

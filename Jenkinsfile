@@ -1,4 +1,4 @@
-@Library('kibo-pipeline-shared-lib@startup')_
+@Library('kibo-pipeline-shared-lib')_
 
 
 

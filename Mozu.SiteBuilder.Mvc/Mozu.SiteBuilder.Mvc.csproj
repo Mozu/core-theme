@@ -28,7 +28,7 @@
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2008.0-net461-backwards-compatability.3" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="1.2249.0-net-core-3-1.3" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2422.7" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2424.2" />
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2328.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2009.0-contracts-dotnetcore-net461.1" />
@@ -43,7 +43,6 @@
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2014.0-dotnetcore.92" />
     <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2342.0-develop.53" />
     <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2037.2" />
-    <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2037.2" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2101.3" />
     <PackageReference Include="NDjangoParser40" Version="1.2019.0-pr-1.1" />
     <PackageReference Include="NDjangoParserFilters40" Version="1.2019.0-pr-1.1" />
