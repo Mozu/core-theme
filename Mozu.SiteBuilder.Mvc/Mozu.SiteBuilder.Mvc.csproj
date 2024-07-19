@@ -18,7 +18,7 @@
   <ItemGroup>
 
 
-    <PackageReference Include="DeviceDetector.NET" Version="4.3.0" />
+    <PackageReference Include="DeviceDetector.NET" Version="6.3.3" />
 
 
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />

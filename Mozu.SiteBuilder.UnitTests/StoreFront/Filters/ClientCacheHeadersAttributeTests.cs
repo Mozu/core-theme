@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,11 +25,10 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Filters
             var mvcOpts = Options.Create<MvcOptions>(new MvcOptions());
             var settings = Substitute.For<ISettings>();
             var logger = Substitute.For<ILoggerFactory>();
-            var sp = new ServiceCollection()
-                .AddSingleton<ISettings>(settings)
-                .AddSingleton<ILoggerFactory>(logger)
-                .AddSingleton<IOptions<MvcOptions>>(mvcOpts)
-                .BuildServiceProvider();
+            var sp = Substitute.For<IServiceProvider>();
+            sp.GetService<ISettings>().Returns(settings);
+            sp.GetService<ILoggerFactory>().Returns(logger);
+            sp.GetService<IOptions<MvcOptions>>().Returns(mvcOpts);
             var filter = ff.CreateInstance(sp);
             var nostore = (bool)filter.GetType().GetProperty("NoStore", BindingFlags.Public | BindingFlags.Instance).GetMethod
                 .Invoke(filter, new object[] { });
@@ -46,11 +46,11 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Filters
             var settings = Substitute.For<ISettings>();
             settings.AppSettings("clientCacheHeaderLength:images").Returns("2000");
             var logger = Substitute.For<ILoggerFactory>();
-            var sp = new ServiceCollection()
-                .AddSingleton<ISettings>(settings)
-                .AddSingleton<ILoggerFactory>(logger)
-                .AddSingleton<IOptions<MvcOptions>>(mvcOpts)
-                .BuildServiceProvider();
+            var sp = Substitute.For<IServiceProvider>();
+            sp.GetService<ISettings>().Returns(settings);
+            sp.GetService<ILoggerFactory>().Returns(logger);
+            sp.GetService<IOptions<MvcOptions>>().Returns(mvcOpts);
+            
             var filter = ff.CreateInstance(sp);
             var nostore = (bool)filter.GetType().GetProperty("NoStore", BindingFlags.Public | BindingFlags.Instance).GetMethod
                 .Invoke(filter, new object[] { });
