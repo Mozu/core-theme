@@ -6,10 +6,12 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Expressions;
 using Mozu.Core.Settings;
+using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -22,19 +24,21 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
+using Should;
 
 namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 {
     [TestFixture]
     public class EmailControllerTests
     {
-     private EmailController _emailController;
-      private IOrderWebApiClient _orderWebApiClient;
-
+        private EmailController _emailController;
+        private IOrderWebApiClient _orderWebApiClient;
+        private ICustomerAccountWebApiClient _customerAccountWebApiClient;
+    
         [SetUp]
         public void Setup()
         {
-            var customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
+            _customerAccountWebApiClient = Substitute.For<ICustomerAccountWebApiClient>();
             var sitesWebApiClient = Substitute.For<ISitesWebApiClient>();
             var logger = Substitute.For<ILogger<EmailController>>();
             var locationRuntimeWebApiClient = Substitute.For<ILocationRuntimeWebApiClient>();
@@ -50,7 +54,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             var b2bAccountWebApiClient = Substitute.For<IB2BAccountWebApiClient>();
             
             _emailController = new EmailController(
-                customerAccountWebApiClient,
+                _customerAccountWebApiClient,
                 sitesWebApiClient,
                 logger,
                 locationRuntimeWebApiClient,
@@ -108,6 +112,51 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             // Act & Assert
             Assert.DoesNotThrowAsync(async () => await _emailController.Convert(json, new EmailTypeInfo { ModelType = typeof(CheckoutEmail) }));
 
+        }
+
+        [Test]
+        public void Convert_succeeds_for_new_user_email()
+        {
+            var customerAccount = new CustomerAccount();
+
+            var response = Task.FromResult(new ServiceClientResponse<CustomerAccount>
+            {
+                ReadAsAsync = new Func<Task<CustomerAccount>>(() => Task.FromResult(customerAccount)),
+                ReadAsSync = new Func<CustomerAccount>(() => customerAccount)
+            });
+            
+            _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(Arg.Any<int>()).Returns(response);
+
+            var json = "{\"UserEmailAddress\":\"rg1@testmail.com\",\"IsB2BAccount\":true,\"AccountId\":1064}";
+
+            Assert.DoesNotThrowAsync(async () => await _emailController.Convert(json, new EmailTypeInfo { ModelType = typeof(NewUserEmail) }));
+        }
+
+        [Test]
+        public async Task Convert_assigns_values_to_obj_from_json_new_user()
+        {
+            var customerAccount = new CustomerAccount();
+
+            var response = Task.FromResult(new ServiceClientResponse<CustomerAccount>
+            {
+                ReadAsAsync = new Func<Task<CustomerAccount>>(() => Task.FromResult(customerAccount)),
+                ReadAsSync = new Func<CustomerAccount>(() => customerAccount)
+            });
+
+            _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(Arg.Any<int>()).Returns(response);
+
+            var json = "{\"UserEmailAddress\":\"rg1@testmail.com\",\"IsB2BAccount\":true,\"AccountId\":1064}";
+
+            var obj = await _emailController.Convert(json, new EmailTypeInfo { ModelType = typeof(NewUserEmail) });
+
+            obj.ShouldNotBeNull();
+            obj.ShouldBeType<NewUserEmail>();
+
+            var newUserEmail = obj as NewUserEmail;
+            newUserEmail.UserEmailAddress.ShouldEqual("rg1@testmail.com");
+            newUserEmail.IsB2BAccount.ShouldBeTrue();
+            newUserEmail.AccountId.ShouldEqual(1064);
+            newUserEmail.Account.ShouldNotBeNull();
         }
     }
 }

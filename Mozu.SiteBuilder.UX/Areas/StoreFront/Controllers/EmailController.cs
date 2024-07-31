@@ -112,6 +112,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public string UserEmailAddress { get; set; }
         public bool IsB2BAccount { get; set; }
+        public int AccountId { get; set; }
+        public Customer.Contracts.CustomerAccount Account { get; set; }
     }
 
     [ContextInitialization]
@@ -698,6 +700,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             await stringWriter.FlushAsync();
             return stringWriter.ToString();
         }
+
         public async Task<object> Convert(string json, EmailTypeInfo eti)
         {
             if (eti == null || eti.ModelType == null)
@@ -854,6 +857,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == digitalOtherEmail.ShipmentNumber).ToList();
                 }
+            }
+
+            if (obj is NewUserEmail newUserEmail)
+            {
+                newUserEmail.Account = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(newUserEmail.AccountId)).ReadAsSync();
             }
 
             return obj;
