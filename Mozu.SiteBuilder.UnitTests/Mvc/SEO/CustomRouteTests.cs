@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         }
     }
 
-    [TestFixture, Category("CustomRoutes")]
+    [TestFixture, NUnit.Framework.Category("CustomRoutes")]
     public class CustomRouteTests
     {
         [TestCaseSource("GoodCases")]
@@ -600,7 +600,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         }
     }
 
-    [TestFixture, Category("CustomRoutes")]
+    [TestFixture, NUnit.Framework.Category("CustomRoutes")]
+  
     public class BfCustomRouteTests
     {
         public class TestCase

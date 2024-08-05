@@ -14,6 +14,7 @@ using System;
 using System.Threading;
 using MassTransit;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.UX.Messaging
 {
@@ -27,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
         
         private Task _drainTask;
 
-        public SiteBuilderContextInvalidatorConsumer(ISitebuilderContextCacheRepository sitebuilderContextCacheRepository)
+        public SiteBuilderContextInvalidatorConsumer(ILoggerFactory loggerFactory,   ISitebuilderContextCacheRepository sitebuilderContextCacheRepository):base(loggerFactory)
         {
             _sitebuilderContextCacheRepository = sitebuilderContextCacheRepository;
         }

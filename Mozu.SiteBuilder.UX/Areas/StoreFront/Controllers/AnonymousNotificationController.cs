@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> RenderCurbsideArriveView(int shipmentNumber, string orderId)
         {
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
-            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
             if (shipment == null)
             {
@@ -222,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> CurbSideShipmentReadyView(int shipmentNumber, string orderId)
         {
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
-            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
             if (shipment == null)
             {
@@ -253,7 +253,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var model = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
             var location = await GetLocation(model.FulfillmentLocationCode);
-            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
             if (model == null)
             {
@@ -300,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> PartialCurbsideReadyView(int shipmentNumber, string orderId)
         {
             var shipment = (await _shipmentControllerApiClient.CloneWithoutUserClaims().GetShipmentUsingGET(shipmentNumber)).ReadAsSync();
-            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.CloneWithoutUserClaims().GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
             if (shipment == null)
             {

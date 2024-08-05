@@ -242,14 +242,14 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
         {
             return container.DoWithUpdate<IAuthenticationHelper>(ah =>
             {
-                ah.GetAdminAccessToken().Returns(LightweightUserClaims.CreateForAdminUser("testuser", string.Empty, string.Empty, new int[] { new T().Id }, new UserScope(), DateTime.UtcNow.AddDays(7)).ToAccessToken());
+                ah.GetAdminAccessToken().Returns(LightweightUserClaims.CreateForAdminUser("testuser", string.Empty, string.Empty,string.Empty,  new int[] { new T().Id }, new UserScope(), DateTime.UtcNow.AddDays(7)).ToAccessToken());
             }).DoWithUpdate<ISiteBuilderApiContext>(ctx => ctx.UserClaims.Returns(LightweightUserClaims.CreateForAnonymousShopper(10, 12)));
         }
         public static AutoSubstitute WithoutPermission(this AutoSubstitute container)
         {
             return container.DoWithUpdate<IAuthenticationHelper>(ah =>
             {
-                ah.GetAdminAccessToken().Returns(LightweightUserClaims.CreateForAdminUser("testuser", string.Empty, string.Empty, new int[] { }, new UserScope(), DateTime.UtcNow.AddDays(7)).ToAccessToken());
+                ah.GetAdminAccessToken().Returns(LightweightUserClaims.CreateForAdminUser("testuser", string.Empty, string.Empty, string.Empty,  new int[] { }, new UserScope(), DateTime.UtcNow.AddDays(7)).ToAccessToken());
             }).DoWithUpdate<ISiteBuilderApiContext>(ctx => ctx.UserClaims.Returns(LightweightUserClaims.CreateForAnonymousShopper(10, 12)));
         }
 

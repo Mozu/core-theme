@@ -35,13 +35,25 @@
       },
       "applicationUrl": "http://localhost:57521/"
     },
-    "dev08-sb": {
+    "dev10-sb": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "http_proxy":"http://localhost:8866",
-        "mozu__appsettings__environment": "dev08",
+        "http_proxy": "http://localhost:8866",
+        "mozu__appsettings__environment": "dev10",
+        "mozu__appsettings__scaleunint": "sb",
+
+      },
+      "applicationUrl": "http://localhost:57521/"
+    },
+    "dev01-sb": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "http_proxy": "http://localhost:8866",
+        "mozu__appsettings__environment": "dev01",
         "mozu__appsettings__scaleunint": "sb"
       },
       "applicationUrl": "http://localhost:57521/"

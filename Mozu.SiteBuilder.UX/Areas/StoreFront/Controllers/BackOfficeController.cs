@@ -709,7 +709,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
                 ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
                 ViewData["order"] = order;
@@ -730,7 +730,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else if (templateid == "curbside-shipment-ready" || templateid == "shipment-pickup-ready" || templateid == "customer-on-way-confirmation")
             {
-                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
                 object model = TestDataBroker.GetFileContents(SHIPMENT2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
@@ -739,7 +739,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else if (templateid == "curbside-partial-pickup-ready")
             {
-                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+                var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
                 object model = TestDataBroker.GetFileContents(SHIPMENT3_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();

@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<Role> GetRole(int? id)
         {
-            var response = _rolesWebApiClient.GetRole(id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
+            var response = _rolesWebApiClient.GetRole(id.Value, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return null;
@@ -70,9 +70,15 @@ namespace Mozu.SiteBuilder.Mvc.Users
             return InTask(Mapper.Map<Role>(newRole));
         }
 
-        public Task<ActionResult> DeleteRole(Role role)
+        public async Task<ActionResult> DeleteRole(Role role)
         {
-            return _rolesWebApiClient.DeleteRole(role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result.ReadAsAsync();
+            var res = await _rolesWebApiClient.DeleteRole(role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
+            if (res.HasException)
+            {
+                throw res.ReadException();
+            }
+
+            return new OkResult();
         }
 
         public Task<Role> UpdateRole(Role role)

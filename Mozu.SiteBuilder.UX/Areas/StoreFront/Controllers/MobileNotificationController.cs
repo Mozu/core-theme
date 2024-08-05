@@ -285,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return NotFound(warnMessage);
             }
 
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
 
             _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
 
@@ -430,7 +430,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private async Task<KuttLink> CreateTinyUrl(string url)
         {
-            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
+            var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId.Value)).ReadAsSync();
             var kuttServerUrl = "http://" + _settings.AppSettings(KUTTIT_DEFAULT_DOMAIN_CONFIG);
             var kuttApi = new KuttApiV2(_settings.AppSettings(KUTTIT_API_KEY_CONFIG), kuttServerUrl);
             var kuttCustomDomain = _settings.AppSettings(KUTTIT_CUSTOM_DOMAIN_CONFIG);

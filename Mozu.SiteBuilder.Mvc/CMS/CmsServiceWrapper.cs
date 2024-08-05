@@ -77,11 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return pageTypeDef;
         }
 
-        [Obsolete]
-        public Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<ServiceClientResponse<DC.Document>> UpdateInternal(DC.Document doc)
         {

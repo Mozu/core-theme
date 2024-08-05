@@ -24,9 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<ServiceClientResponse<DC.DocumentCollection>> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0, bool? includeInactive = null);
 
-        [Obsolete]
-        Task<Tuple<DC.FolderTree, ServiceClientResponse<DC.FolderTree>>> GetFolderTree(string collection, string parentId = null, int? levels = null);
-
+        
         [Obsolete]
         Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName);
 

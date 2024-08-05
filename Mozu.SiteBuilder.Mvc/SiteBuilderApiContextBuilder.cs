@@ -221,6 +221,7 @@ namespace Mozu.SiteBuilder.Mvc
                     Guid.NewGuid().ToString("N"),
                     string.Empty,
                     string.Empty,
+                    string.Empty,
                     new int[0],
                     new UserScope() { Id = apiCtx.TenantId, Type = UserScopeType.Tenant },
                     DateTime.Today.AddYears(1));

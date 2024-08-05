@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
  
   <ItemGroup>
@@ -27,14 +27,21 @@
   </ItemGroup>
   <ItemGroup>
     
+    <PackageReference Include="coverlet.collector" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    
     <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="Mozu.Core.Api.Test" Version="1.2316.2" />
-    <PackageReference Include="Mozu.Core.JunitTestLogger" Version="1.2316.2" />
-    <PackageReference Include="Mozu.Core.Prime" Version="1.2426.1" />
-    <PackageReference Include="Mozu.Core.Test" Version="1.2316.2" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.32" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+      <PackageReference Include="Mozu.Core.Api.Test" Version="2.2426.6" />
+    <PackageReference Include="Mozu.Core.JunitTestLogger" Version="2.2426.6" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2426.6" />
+    <PackageReference Include="Mozu.Core.Test" Version="2.2426.6" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

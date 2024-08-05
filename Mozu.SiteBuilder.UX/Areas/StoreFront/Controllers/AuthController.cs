@@ -8,7 +8,7 @@ using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Exceptions;
-using Mozu.Core.Extensions;
+//using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts;
@@ -33,6 +33,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Middleware;
 using Newtonsoft.Json.Linq;
 
@@ -632,7 +633,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var orders = res.ReadAsSync().Items;
-            if (orders == null || !orders.Any())
+            if (orders == null || !Enumerable.Any(orders))
             {
                 return new NotFoundObjectResult("anonOrderNumberMissing");
             }
@@ -727,7 +728,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 validationToken = t,
             };
 
-            var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
+            var template = Enumerable.FirstOrDefault(this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template), "Reset-Password");
 
 
             PageContext.CmsContext = new CmsPageContext()
@@ -763,7 +764,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return new RedirectResult(MakeRedirectUri().ToString());
             }
 
-            var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
+            var template = Enumerable.FirstOrDefault(this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template), "Reset-Password");
 
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -855,7 +856,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return;
             }
-            var val = exp.Invoke(parent);
+
+            
+            var val = exp.Compile()(parent);
 
             if (val != null && val != HttpUtility.HtmlEncode(val))
             {

@@ -44,13 +44,29 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddMemoryCache();
             configure.AddScoped<ILoggingContextProvider, CurrentRequestLoggingContextProvider>();
             configure.AddScoped<VisitEventPublisher>();
-            configure.AddMozuBus("SiteBuilderMessageQueue", (cfg, host, connectionSettings, provider) =>
-            {
-                cfg.ReceiveEndpoint(host, connectionSettings.QueueName +"_UCP" , ep =>
-                {
-                    ep.Consumer<SiteBuilderContextInvalidatorConsumer>(provider);
+            
+            
+            configure.AddMozuBus("SiteBuilderMessageQueue", (configurator, settings, registration, serviceBussConfig) =>
+            { 
+                //concat the host name of the machine to the queue name to make it unique
+                var queueName = settings.QueueName + "_dnc6";
+                                
+                configurator.ReceiveEndpoint(queueName, e =>
+                {   
+                    e.ConfigureConsumeTopology = false;
+                    e.Bind("siteBuilder_fanOut_exchange",x =>
+                    {
+                        x.ExchangeType = "fanout";
+                        x.RoutingKey = "";
+                    });
+                    e.Durable = false;
+                    e.AutoDelete = true; 
+                    e.SetQueueArgument("x-message-ttl", 30000);
+                    e.Consumer<SiteBuilderContextInvalidatorConsumer>(registration);
                 });
             });
+            
+            
             configure.AddScoped<AMDModuleProvider>();
             configure.AddScoped<LessLogger>();
             configure.AddScoped<LessTransFormer>();

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -45,6 +46,7 @@ using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Actions;
 using Mozu.SiteBuilder.UX.StartupTasks;
+using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.UX
 {
@@ -101,6 +103,7 @@ namespace Mozu.SiteBuilder.UX
                     opt.OutputFormatters.Insert(0, new HtmlActionResultMediaTypeFormatter());
                     opt.OutputFormatters.Insert(1, new HtmlErrorMediaTypeHyperFormatter());
                     opt.OutputFormatters.Insert(0, new JsonpOutputFormatter(opt));
+                    opt.OutputFormatters.Add(new  SystemTextJsonOutputFormatter(JsonHelper.DefaultWriteOptions));
                     var duration = Configuration.GetValue("mozu:appsettings:clientCacheHeaderLength:default", "1209700");
                     opt.CacheProfiles.Add("default", new CacheProfile()
                     {

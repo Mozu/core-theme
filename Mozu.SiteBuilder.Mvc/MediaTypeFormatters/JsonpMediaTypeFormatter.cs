@@ -43,14 +43,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
            
         }
 
-        NewtonsoftJsonOutputFormatter _formatter;
-        NewtonsoftJsonOutputFormatter JsonFormatter
+        SystemTextJsonOutputFormatter _formatter;
+        SystemTextJsonOutputFormatter JsonFormatter
         {
             get
             {
                 if (_formatter == null)
                 {
-                    _formatter = _formatters.OfType<NewtonsoftJsonOutputFormatter>().First();
+                    _formatter = _formatters.OfType<SystemTextJsonOutputFormatter>().First();
                 }
                 return _formatter;
             }
