@@ -24,7 +24,7 @@
     <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.32" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2426.6" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2426.7" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.2410.2" />
     <PackageReference Include="NDjangoParser40" Version="1.2019.0-pr-1.1" />
