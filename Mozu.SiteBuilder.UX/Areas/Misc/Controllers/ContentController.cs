@@ -275,11 +275,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 		private static string GetDocumentNameForContent(string pathInfo)
         {
-	        if(pathInfo.IsNullOrEmpty()) return string.Empty;
-
-	        return pathInfo.Contains('/') 
-		        ? HttpUtility.UrlEncode(pathInfo.Replace('/', '\\')) 
-		        : pathInfo;
+            return pathInfo?.Replace("/", "%5C");
         }
 
         private async Task<HttpResponseMessage> ProcessNotFound(
