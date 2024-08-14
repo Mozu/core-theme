@@ -11,8 +11,6 @@
 
       <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2430.2" />
 
-      <PackageReference Include="Kibo.Inventory.Contracts" Version="1.2430.2" />
-
       <PackageReference Include="Kibo.OrderRouting.Contracts" Version="1.2430.2" />
     
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2420.2" />

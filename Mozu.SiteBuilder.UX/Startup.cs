@@ -1,31 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Api.Health;
-using Mozu.Core.Caching;
 using Mozu.Core.Configuration;
-using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
 using Mozu.MZDB.Contracts.Clients;
@@ -37,7 +25,6 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.Mvc.Users;
-using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Configuration;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Providers;
@@ -89,7 +76,7 @@ namespace Mozu.SiteBuilder.UX
                         .UsingAssembly(typeof(ReferenceDataWebApiClient).Assembly)
                         .UsingAssembly(typeof(IEntityListsWebApiClient).Assembly)
                         .UsingAssembly(typeof(IDocumentListWebApiClient).Assembly)
-                        .UsingAssembly(typeof(Kibo.Inventory.Contracts.Api.InventoryControllerApiClient).Assembly)
+                        .UsingAssembly(typeof(Kibo.RealtimeInventory.Contracts.Api.InventoryControllerApiClient).Assembly)
                         .UsingAssembly(Assembly.Load("Kibo.Fulfillment.Contracts"))
                         .UsingAssembly(typeof(Mozu.Core.Messaging.Configuration.AutofacModule).Assembly)
                         .UsingAssembly(typeof(Mozu.SiteBuilder.Mvc.Configuration.AutofacModule).Assembly)

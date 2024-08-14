@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using Kibo.Fulfillment.Contracts.Api;
-using Kibo.Inventory.Contracts.Api;
-using Kibo.Inventory.Contracts.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core;
@@ -12,8 +9,6 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Location.Contracts.Clients;
-using Mozu.ProductAdmin.Contracts;
-using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -37,10 +32,11 @@ using DCReturns = Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.Customer.Contracts.Clients;
 using DCShipment = Kibo.Fulfillment.Contracts.Model.EntityModelOfShipment;
-using Mozu.CommerceRuntime.Contracts.Payments;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
+using Kibo.RealtimeInventory.Contracts.Api;
+using Kibo.RealtimeInventory.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -92,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger<BackOfficeController> logger,
+        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient,
             IShipmentControllerApiClient shipmentControllerApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             IPickWaveControllerApiClient pickWaveControllerApiClient,
@@ -202,12 +198,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             dcShipment.Packages = packages;
         }
 
-        private void PopulateInventoryDetails(DCShipment shipment)
+        private async Task PopulateInventoryDetails(DCShipment shipment)
         {
             if (shipment == null)
                 return;
 
-            var inventories = GetInventories(shipment.Items.Select(shipmentItem => shipmentItem.VariationProductCode ?? shipmentItem.ProductCode).ToList(), shipment.FulfillmentLocationCode);
+            var inventories = await GetInventories(shipment.Items.Select(shipmentItem => shipmentItem.VariationProductCode ?? shipmentItem.ProductCode).ToList(), shipment.FulfillmentLocationCode);
             IEnumerable<Kibo.Fulfillment.Contracts.Model.Item> items = shipment.Items.Select(i => GetShipmentInventoryItem(i, inventories));
             shipment.Items = items.ToList();
         }
@@ -244,22 +240,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return result;
         }
 
-        private ShipmentInventoryDetails GetShipmentInventoryItem(Kibo.Fulfillment.Contracts.Model.Item shipmentItem, List<InventoryResponse> inventories)
+        private ShipmentInventoryDetails GetShipmentInventoryItem(Kibo.Fulfillment.Contracts.Model.Item shipmentItem, List<GetInventoryResponseItem> inventories)
         {
             var result = Mapper.Map<ShipmentInventoryDetails>(shipmentItem);
-            if(inventories.Count > 0)
+            if(inventories.SafeAny())
             {
                 GetInventoryDetails(result, inventories);
             }
             return result;
         }
 
-        private List<InventoryResponse> GetInventories(List<string> productCodes, string locationCode)
+        private async Task<List<GetInventoryResponseItem>> GetInventories(List<string> productCodes, string locationCode)
         {
             var inventoryRequest = CreateInventoryGetRequest(productCodes, locationCode);
-            return _inventoryControllerApiClient.Value.PostQueryInventory(inventoryRequest, null).Result.ReadAsSync().ToList();
+            var response = await _inventoryControllerApiClient.Value.GetInventory(inventoryRequest, null);
+            return await response.ReadAsAsync();
         }
-        private void GetInventoryDetails(ShipmentInventoryDetails item, List<InventoryResponse> inventories)
+        private void GetInventoryDetails(ShipmentInventoryDetails item, List<GetInventoryResponseItem> inventories)
         {
             var inventory = inventories.FirstOrDefault(x => x.Upc == (item.VariationProductCode ?? item.ProductCode));
 
@@ -441,7 +438,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
             PopulateShipmentDetails(shipment, order);
-            PopulateInventoryDetails(dcShipment);
+            await PopulateInventoryDetails(dcShipment);
 
             // If we are getting `packageId` then filter the `orderShipments => packages`,
             // `shipments => packages` by `packageId`.
@@ -552,7 +549,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             PopulateShipmentDetails(dcShipment, order);
-            PopulateInventoryDetails(shipment);
+            await PopulateInventoryDetails(shipment);
 
             var locationCode = shipment.FulfillmentLocationCode;
             if (!locationCode.IsNullOrEmpty())
