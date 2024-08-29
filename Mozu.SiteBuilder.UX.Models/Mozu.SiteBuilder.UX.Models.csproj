@@ -21,7 +21,7 @@
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="2.2426.2" />
     <PackageReference Include="Mozu.Core.Messaging" Version="2.2408.2" />
     <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2408.2" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2426.7" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2426.10" />
     
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2426.3" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
