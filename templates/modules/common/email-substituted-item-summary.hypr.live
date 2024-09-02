@@ -1,0 +1,78 @@
+<table class="substitute-table" width="100%">
+  <thead>
+    <tr>
+      <td bgcolor="#666666" class="">
+        <font color="#ffffff">{{ labels.product}}</font>
+      </td>
+      <td bgcolor="#666666" class="mz-ordersummary-header-qty">
+        <font color="#ffffff">{{ labels.qty }}</font>
+      </td>
+      <td bgcolor="#666666" class="mz-ordersummary-header-each">
+        <font color="#ffffff">{{ labels.each }}</font>
+      </td>
+      <td align="right" bgcolor="#666666" class="mz-ordersummary-header-total">
+        <font color="#ffffff">{{ labels.total }}</font>
+      </td>
+    </tr>
+  </thead>
+  {% for item in model %}
+  <tbody class="mz-ordersummary-lineitems">
+  {% if item.isParentProduct %}
+    <tr>
+      <td>
+       {{ item.name }}
+      </td>
+      <td>{{ item.quantity }}</td>
+      <td>{{ item.actualPrice|currency }}</td>
+      <td align="right">
+      {{ item.lineItemCost|currency}}
+    </td>
+    </tr>
+    {% endif %}
+  </tbody>
+  {% endfor %}
+</table>
+<br/>
+<br/>
+<div class="substitutes-heading">{{ labels.substitutes}}:</div>
+<table class="substitute-table" width="100%">
+  <thead>
+
+    <tr>
+      <td bgcolor="#666666" class="mz-ordersummary-header-product">
+        <font color="#ffffff">{{ labels.product}}</font>
+      </td>
+      <td bgcolor="#666666" class="mz-ordersummary-header-qty">
+        <font color="#ffffff">{{ labels.substitute}}</font>
+      </td>
+      <td bgcolor="#666666" class="mz-ordersummary-header-qty">
+        <font color="#ffffff">{{ labels.qty }}</font>
+      </td>
+      <td bgcolor="#666666" class="mz-ordersummary-header-each">
+        <font color="#ffffff">{{ labels.each }}</font>
+      </td>
+      <td align="right" bgcolor="#666666" class="mz-ordersummary-header-total">
+        <font color="#ffffff">{{ labels.total }}</font>
+      </td>
+    </tr>
+  </thead>
+  {% for item in model %}
+  <tbody class="">
+  {% if item.substitutedProductName %}
+    <tr>
+    <td>
+       {{item.substitutedProductName}}
+      </td>
+      <td>
+        <div class="">{{ item.name }}</div>
+      </td>
+      <td >{{ item.quantity }}</td>
+      <td>{{ item.actualPrice|currency }}</td>
+      <td align="right">
+      {{ item.lineItemCost|currency}}
+    </td>
+    </tr>
+    {% endif %}
+  </tbody>
+  {% endfor %}
+</table>

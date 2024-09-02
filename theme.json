@@ -123,6 +123,13 @@
       "title": "Order Confirmation"
     },
     {
+      "id": "order.itemssubstituted",
+      "customEditor": "email-order-items-substituted",
+      "properties": {},
+      "template": "email/order-items-substituted",
+      "title": "Item on order was substituted"
+    },
+    {
       "id": "shipment.pickupready",
       "properties": {},
       "template": "email/order-pickup-ready",

@@ -613,6 +613,8 @@
   "printWindowPrintButton": "Print",
   "proceedToCheckout": "Checkout",
   "product": "Product",
+  "substitutes": "Substitutes",
+  "substitute": "Substitute",
   "productBackorderAvailable": "available",
   "productBackorderAvailableDate": "Available on ",
   "productCode": "Product Code",
@@ -950,5 +952,6 @@
   "digitalItemEmailIntro": "<p>Thank you for your Digital Item purchase.</p>",
   "digitalMessage": "Gift Message",
   "digitalItemEmailInstructions": "Follow these steps to claim your digital item.",
-  "digitalItemBlob": "If you have questions about accessing your digital item, please visit <a href=\"https://{1}/myaccount\">{0}</a>."
+  "digitalItemBlob": "If you have questions about accessing your digital item, please visit <a href=\"https://{1}/myaccount\">{0}</a>.",
+  "substituteItemNote" : "Item(s) on your order {0} was substituted with another item. If there is anything you don't want, please contact customer care . If you would like to view or manage your order, please visit <a href=\"https://{1}/myaccount\">My Account</a>."
 }
