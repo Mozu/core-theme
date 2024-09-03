@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return new RedirectResult(uri.ToString());
             }
 
-            var account = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId, null, PageContext.User.UserId)).ReadAsSync();
+            var account = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId.GetValueOrDefault(-1), null, PageContext.User.UserId)).ReadAsSync();
 
             if (account == null)
             {
@@ -152,7 +152,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", string.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", account.Id, DateTime.UtcNow.ToString("o")));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
             var purchaseOrderAccount =
-                (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId))
+                (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId.GetValueOrDefault(-1)))
                     .ReadAsSync();
 
             var shipTask = GetShippableCountries();
@@ -415,7 +415,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var userId = CurrentUser.UserId;
            
 
-            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
+            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId.GetValueOrDefault(-1))).ReadAsSync();
             account.EmailAddress = email;
 
             account = (await _customerAccountWebApiClient.UpdateAccount(account, account.Id)).ReadAsSync();
@@ -431,7 +431,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                                              {
                                                                                  NewPassword = info.NewPassword,
                                                                                  OldPassword = info.OldPassword
-                                                                             }, this.PageContext.User.AccountId ));
+                                                                             }, this.PageContext.User.AccountId.GetValueOrDefault(-1) ));
 
 
             if (account.HasException)

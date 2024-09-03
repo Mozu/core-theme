@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (PageContext.User.AccountId != accId)
             {
-                var currentUserAccount = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId, null, PageContext.User.UserId)).ReadAsSync();
+                var currentUserAccount = (await _customerAccountWebApiClient.GetAccount(PageContext.User.AccountId.GetValueOrDefault(-1), null, PageContext.User.UserId)).ReadAsSync();
 
                 if (currentUserAccount == null)
                 {

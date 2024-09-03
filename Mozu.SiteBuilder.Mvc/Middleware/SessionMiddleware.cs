@@ -173,10 +173,10 @@ namespace Mozu.SiteBuilder.Mvc.Middleware
             try
             {
                 apiContext.UserClaims.SessionInfo.LastModified = DateTime.UtcNow;
-                var res = await priceListResolutionHandler.ResolvePriceList().ConfigureAwait(false);
+                var res = await priceListResolutionHandler.ResolvePriceList(apiContext.UserClaims.AccountId).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(res))
                 {
-                    session.SetValue(SessionMessageHandler.PristListCodeKey, res);
+                    await session.SetValueAsync(SessionMessageHandler.PristListCodeKey, res);
                 }
                 apiContext.SetPriceListCode(res);
                 authHelper.SaveStoreFrontAccessToken(apiContext.UserClaims.ToAccessToken(), authHelper.GetProfileToken());

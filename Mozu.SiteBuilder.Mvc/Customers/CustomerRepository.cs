@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<CustomerAccount> Get(int? customerId)
         {
-            var result = await (await _customerAccountWebApiClient.GetAccount(customerId).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
+            var result = await (await _customerAccountWebApiClient.GetAccount(customerId.GetValueOrDefault(-1)).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
 
             return Mapper.Map<SB.CustomerAccount>(result);
         }
@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<CustomerAccount> Update(SB.CustomerAccount customerAccount, int? customerId)
         {
             var account = Mapper.Map<CS.CustomerAccount>(customerAccount);
-            var result = await (await _customerAccountWebApiClient.UpdateAccount(account, customerId).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
+            var result = await (await _customerAccountWebApiClient.UpdateAccount(account, customerId.GetValueOrDefault(-1)).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
 
             return Mapper.Map<SB.CustomerAccount>(result);
         }
@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<List<CustomerAccountNote>> GetCustomerNotes(int? customerAccountId, int? startIndex = 0, int? pageSize = 25)
         {
-            var result = await (await _customerAccountWebApiClient.GetAccountNotes(customerAccountId, startIndex, pageSize, null, null).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false); ;
+            var result = await (await _customerAccountWebApiClient.GetAccountNotes(customerAccountId.GetValueOrDefault(-1), startIndex, pageSize, null, null).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false); ;
 
 
             return Mapper.Map<List<SB.CustomerAccountNote>>(result.Items);
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<CustomerAccountNote> CreateCustomerNote(SB.CustomerAccountNote customerAccountNote, int? customerAccountId)
         {
             var note = Mapper.Map<CS.CustomerNote>(customerAccountNote);
-            var task = await _customerAccountWebApiClient.AddAccountNote(note, customerAccountId).ConfigureAwait(false);
+            var task = await _customerAccountWebApiClient.AddAccountNote(note, customerAccountId.GetValueOrDefault(-1)).ConfigureAwait(false);
             var result = await task.ReadAsAsync().ConfigureAwait(false);
 
             return Mapper.Map<SB.CustomerAccountNote>(result);

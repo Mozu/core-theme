@@ -20,25 +20,46 @@ namespace Mozu.SiteBuilder.Mvc.Handler
     {
 
         Lazy<IMozuSession> _session;
-        readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
+        private readonly Lazy<IPriceListResolutionHandler> _oldPriceListRuntimeWebApiClient;
+        readonly Lazy<Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient> _priceListRuntimeWebApiClient;
         ISiteBuilderApiContext _apiContext;
         ILogger _logger;
         public PriceListResolutionHandler(ISiteBuilderApiContext apiContext,
             Lazy<IMozuSession> session,
-            Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
+            Lazy<IPriceListResolutionHandler> oldPriceListRuntimeWebApiClient,
+            Lazy<Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient> priceListRuntimeWebApiClient,
             ILogger<PriceListResolutionHandler> logger
             )
         {
             _apiContext = apiContext;
             _session = session;
+            _oldPriceListRuntimeWebApiClient = oldPriceListRuntimeWebApiClient;
             _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
             _logger = logger;
         }
 
-        Task<string> IPriceListResolutionHandler.ResolvePriceList(int? customerAccoutnid )
+        private const string HasErrorKey = "x-vol-has-error";
+
+        async Task<string> IPriceListResolutionHandler.ResolvePriceList(int? customerAccountId )
         {
-            return _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: customerAccoutnid)
-                .ContinueWith(x =>  x.Result?.ReadAsSync()?.PriceListCode);
+            var priceListResponse = await
+                _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: customerAccountId);
+            
+            if ( priceListResponse.ResponseMessage.IsSuccessStatusCode)
+            {
+                return priceListResponse.ReadAsSync();
+            }
+            else if( priceListResponse.ResponseMessage.Headers.Contains(HasErrorKey))
+            {
+                return null;
+            }
+            else
+            {
+                return (await _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(
+                    customerAccountId: customerAccountId)).ReadAsSync();
+
+            }
+           
         }
     }
 }

@@ -841,7 +841,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (obj is QuoteEmail quoteEmail)
             {
-                var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteEmail.CustomerAccountId)).ReadAsSync();
+                var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteEmail.CustomerAccountId.GetValueOrDefault(-1))).ReadAsSync();
                 var b2bUsers = (await _b2bAccountWebApiClient.CloneWithoutUserClaims().GetUsers(quoteEmail.CustomerAccountId)).ReadAsSync();
                 quoteEmail.B2BAccount = b2bAccount;
                 quoteEmail.B2BUsers = b2bUsers;

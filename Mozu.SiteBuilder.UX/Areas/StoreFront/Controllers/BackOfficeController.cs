@@ -587,7 +587,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> PrintQuoteSummary(string quoteId)
         {
             var quoteObject = (await _quoteWebApiClient.CloneWithoutUserClaims().GetQuote(quoteId)).ReadAsSync();
-            var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteObject.CustomerAccountId)).ReadAsSync();
+            var b2bAccount = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(quoteObject.CustomerAccountId.GetValueOrDefault(-1))).ReadAsSync();
             var userAccount = (await _b2bAccountWebApiClient.CloneWithoutUserClaims().GetUsers(quoteObject.CustomerAccountId)).ReadAsSync();
             ViewData["isShippable"] = quoteObject.Items.Any(a => a.FulfillmentMethod == "Ship");
             ViewData["account"] = b2bAccount;

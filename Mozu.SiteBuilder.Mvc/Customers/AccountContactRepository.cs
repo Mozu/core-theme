@@ -20,14 +20,14 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<SB.CustomerAccountContact> Get(int? customerAccountId, int? contactId)
         {
-            var result = await  (await _customerAccountWebApiClient.GetAccountContact( customerAccountId, contactId).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
+            var result = await  (await _customerAccountWebApiClient.GetAccountContact( customerAccountId.GetValueOrDefault(-1), contactId.GetValueOrDefault(-1)).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
 
         public async Task<IEnumerable<SB.CustomerAccountContact>> GetAll(int? customerId)
         {
-            var result = await (await _customerAccountWebApiClient.GetAccountContacts(customerId, 0, 25, null, null).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
+            var result = await (await _customerAccountWebApiClient.GetAccountContacts(customerId.GetValueOrDefault(-1), 0, 25, null, null).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);
 
             return Mapper.Map<List<SB.CustomerAccountContact>>(result.Items);
         }
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<SB.CustomerAccountContact> Create(SB.CustomerAccountContact accountContact, int? customerAccountId)
         {
             var newAccountContact = Mapper.Map<CustomerContact>(accountContact);
-            var result = await(await _customerAccountWebApiClient.AddAccountContact( newAccountContact, customerAccountId).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);;
+            var result = await(await _customerAccountWebApiClient.AddAccountContact( newAccountContact, customerAccountId.GetValueOrDefault(-1)).ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false);;
 
             return Mapper.Map<SB.CustomerAccountContact>(result);
         }
