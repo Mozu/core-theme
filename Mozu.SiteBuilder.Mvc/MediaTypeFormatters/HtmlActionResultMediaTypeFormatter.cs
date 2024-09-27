@@ -119,7 +119,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var hvc = new HyprViewContext(httpContext, vrb.ViewData, null);
                 InitAdditioanViewContext(hvc);
                 //httpContext.Response.Buffer = true;
-                var sw = new StreamWriter(httpContext.Response.Body);
+                var sw = context.WriterFactory(httpContext.Response.Body,
+                    new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true));
 
                 if (view == null)
                 {
@@ -129,7 +130,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 {
                     if (_.IsFaulted)
                     {
-                        throw CreateandLogFormattingException(_.Exception, context);
+                        HtmlErrorMediaTypeHyperFormatter.WriteYSOD(context.HttpContext,_.Exception, sw);
+                        return true;
                     }
                     return _.Result;
                 });
@@ -145,9 +147,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 {
                     if (_.IsFaulted)
                     {
-                        throw CreateandLogFormattingException(_.Exception, context);
+                        HtmlErrorMediaTypeHyperFormatter.WriteYSOD(context.HttpContext,_.Exception, context.HttpContext.Response.Body);
                     }
-                    return _;
                 }, TaskContinuationOptions.ExecuteSynchronously);
             }
 

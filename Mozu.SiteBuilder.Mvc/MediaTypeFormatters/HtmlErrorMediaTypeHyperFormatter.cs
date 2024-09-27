@@ -30,13 +30,32 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
         }
- 
 
-        void WriteYSOD(HttpContext context, Exception ex, Stream writeStream)
+        public static void WriteYSOD(HttpContext context, Exception ex, Stream writeStream)
         {
             var stw = new StreamWriter(writeStream);
+            WriteYSOD(context, ex, stw);
+        }
+
+        public static void WriteYSOD(HttpContext context, Exception ex, TextWriter stw)
+        {
+            
             stw.Write("<pre>");
-            stw.Write(ex.ToString());
+            
+            var showYSOD = context.RequestServices.Resolve<ISettings>().AppSettings("YSOD_ERRORS") == "true";
+
+            if (showYSOD)
+            {
+                stw.Write(ex.ToString());    
+            }
+            else
+            {
+                var siteContext = context.RequestServices.GetService<ISiteContext>();
+                string errorMsg =  "An error occurred while processing your request.";
+                siteContext?.Labels?.TryGetValue("errorDetail", out  errorMsg);
+                errorMsg ??= "An error occurred while processing your request.";
+                stw.Write(errorMsg);
+            }
 
             var correlationId = context.RequestServices.Resolve<ISiteBuilderApiContext>().TraceContext.CorrelationId;
             var visist = context.RequestServices.GetService<PageContext>()?.Visit;
@@ -47,6 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             stw.Flush();
         }
 
+       
         protected override bool CanWriteType(Type type)
         {
             return type == typeof(ErrorCollection);
