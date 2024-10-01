@@ -794,5 +794,6 @@
   "digitalItemEmailIntro": "<p>Bedankt voor uw aankoop van een digitaal item.</p>",
   "digitalMessage": "Geschenk-Nachricht",
   "digitalItemEmailInstructions": "Volg deze stappen om uw digitale item te claimen.",
-  "digitalItemBlob": "Als u vragen heeft over de toegang tot uw digitale item, gaat u naar <a href=\"https://{1}/myaccount\">{0}</a>."
+  "digitalItemBlob": "Als u vragen heeft over de toegang tot uw digitale item, gaat u naar <a href=\"https://{1}/myaccount\">{0}</a>.",
+  "substituteItemNote" : "Les articles de votre commande {0} ont été remplacés par un autre article. Si vous ne voulez pas quelque chose, veuillez contacter le service client. Si vous souhaitez consulter ou gérer votre commande, veuillez visiter <a href=\"https://{1}/myaccount\">Mon compte</a>.."
 }
