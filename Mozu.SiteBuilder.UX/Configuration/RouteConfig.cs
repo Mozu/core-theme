@@ -487,7 +487,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "devdocs/{action}/{id?}",
                 new { action = "Index", controller = "DeveloperDocumentation" },
 				_constraintResolver);
-
+            
+            routes.MapRoute(_defaultHandler,
+                "StoreFront_SingleSitemap",
+                "singlesitemap.xml",
+                new { controller = "Sitemap", action = "Index", includeSiblingSites = false },
+                _constraintResolver);
+            
             routes.MapRoute(_defaultHandler,
                 "StoreFront_Sitemap",
                 "sitemap.xml/{action}/{page?}",

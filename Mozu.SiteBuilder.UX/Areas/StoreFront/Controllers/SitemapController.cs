@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool includeSiblingSites = true)
         {
             var cursor = (await _productSearchWebApiClient
                 .CloneWithoutUserClaims()
@@ -67,12 +67,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteStartElement("sitemap", NS);
             writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
-
+            
             var isOnSiteDomain =
                 this.SiteContext.Domains.All.FirstOrDefault(sd =>
                     string.Equals(sd.DomainName, nakedDomain, StringComparison.OrdinalIgnoreCase))?.SiteId == SiteContext.SiteId;
 
-            if (isOnSiteDomain)
+            if (isOnSiteDomain && includeSiblingSites)
             {
                 foreach (var subDirecotry in this.GetSubDirectorySitePaths())
                 {
