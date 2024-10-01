@@ -55,6 +55,10 @@
     <None Remove="TestData\backoffice\PickwaveDetails.json" />
 
     <None Remove="TestData\backoffice\shipment-for-gift-receipt.json" />
+
+    <None Remove="TestData\order.changed\Order1.json" />
+
+    <None Remove="TestData\order.itemssubstituted\Order1.json" />
     <None Remove="TestData\shipment.transfercreatedbyfulfiller\Location1.json" />
 
     <None Remove="TestData\shipment.transfercreatedbyfulfiller\Shipment1.json" />

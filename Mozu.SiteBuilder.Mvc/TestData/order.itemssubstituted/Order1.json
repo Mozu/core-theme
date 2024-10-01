@@ -1,0 +1,1682 @@
+{
+  "order": {
+    "orderNumber": 1708,
+    "version": "1",
+    "isPartialOrder": false,
+    "availableActions": [
+      "AcceptOrder",
+      "ValidateOrder",
+      "CancelOrder"
+    ],
+    "customerAccountId": 1006,
+    "isTaxExempt": false,
+    "email": "wwilson@deadpool.net",
+    "ipAddress": "172.16.12.39",
+    "status": "PendingReview",
+    "type": "Offline",
+    "paymentStatus": "Unpaid",
+    "returnStatus": "None",
+    "isEligibleForReturns": false,
+    "totalCollected": 0.0,
+    "attributes": [
+      {
+        "auditInfo": {
+          "updateDate": "2019-10-01T16:29:41.156Z",
+          "createDate": "2019-10-01T16:29:41.156Z",
+          "updateBy": "e997e8fdcd7e4b979b3cb22e8c24d690",
+          "createBy": "e997e8fdcd7e4b979b3cb22e8c24d690"
+        },
+        "fullyQualifiedName": "mozuadmin~Kount Fraud Detection Results",
+        "attributeDefinitionId": 2,
+        "values": [
+          "Auto-decision response code\n(A=Accept,D=Decline,R=Review,E=Escalate): R\n\nFraudScore: 34\n\nCredit card brand: NONE\n\nDevice data collected: N\n\nDevice layers: ....\n\nKount API version: 0630\n\nKount transaction ID: 71N70Y08Z19V\n\nMerchant ID: 630000\n\nMerchant Order Number: 1708\n\nNumber of rules triggered by RIS request: 2\n\nNumber persona cards: 1\n\nNumber persona devices: 1\n\nNumber persona emails: 1\n\nNumber request warnings: 0\n\nPersona related country with highest probability of fraud: US\n\nPersona set local time:  \n\nQuantity of orders from persona within the most active 6 hour window in last 14 days: 0\n\nQuantity of orders seen from persona within last 14 days: 0\n\nRIS Post mode: Q\n\nRULE_DESCRIPTION_0: Kaptcha Missing\n\nRULE_DESCRIPTION_1: Order Amount > $150\n\nRULE_ID_0: 687638\n\nRULE_ID_1: 687652\n\nRiskiest network type associated with persona within the last 14 days\nA-Anonymous,H-High School,L-Library,N-Normal,O-Open Proxy,P-Prison,S-Satellite: A\n\nRules counters triggered: 0\n\nSession ID: 0e93cea121203100015b80de0000433f\n\nWebsite identifier: DEFAULT\n\n"
+        ]
+      }
+    ],
+    "shippingDiscounts": [],
+    "handlingDiscounts": [],
+    "handlingAmount": 0.00,
+    "handlingSubTotal": 0.00,
+    "handlingTotal": 0.00,
+    "fulfillmentStatus": "NotFulfilled",
+    "submittedDate": "2019-10-01T16:29:39.511Z",
+    "notes": [],
+    "items": [
+      {
+        "id": "19b907832ce74dc5afc7aad900ff28b0",
+        "fulfillmentLocationCode": "warehouselocation1",
+        "fulfillmentMethod": "Curbside",
+        "lineId": 1,
+        "product": {
+          "fulfillmentTypesSupported": [
+            "DirectShip",
+            "InStorePickup"
+          ],
+          "options": [],
+          "properties": [],
+          "categories": [
+            {
+              "id": 1
+            }
+          ],
+          "price": {
+            "price": 50.0
+          },
+          "discountsRestricted": false,
+          "isTaxable": true,
+          "productType": "StandardProductType1",
+          "productUsage": "Standard",
+          "bundledProducts": [],
+          "productCode": "sp_02",
+          "name": "Standard Product - 2",
+          "goodsType": "Physical",
+          "isPackagedStandAlone": false,
+          "stock": {
+            "manageStock": true,
+            "isOnBackOrder": false
+          },
+          "measurements": {
+            "height": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "width": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "length": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "weight": {
+              "unit": "lbs",
+              "value": 1.000
+            }
+          },
+          "fulfillmentStatus": "PendingFulfillment"
+        },
+        "quantity": 1,
+        "subtotal": 50.0,
+        "extendedTotal": 50.0,
+        "taxableTotal": 50.0,
+        "discountTotal": 0.0,
+        "discountedTotal": 50.0,
+        "itemTaxTotal": 0.0,
+        "shippingTaxTotal": 0.0,
+        "shippingTotal": 3.0,
+        "handlingAmount": 5.0,
+        "feeTotal": 0.0,
+        "total": 53.0,
+        "unitPrice": {
+          "extendedAmount": 50.0,
+          "listAmount": 50.0
+        },
+        "productDiscounts": [],
+        "shippingDiscounts": [],
+        "auditInfo": {
+          "updateDate": "2019-10-01T15:29:00.341Z",
+          "createDate": "2019-10-01T15:29:00.341Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "shippingAmountBeforeDiscountsAndAdjustments": 3.00,
+        "weightedOrderAdjustment": 0.0,
+        "weightedOrderDiscount": 0.00,
+        "adjustedLineItemSubtotal": 50.0000,
+        "totalWithoutWeightedShippingAndHandling": 50.0000,
+        "weightedOrderTax": 0.00,
+        "weightedOrderShipping": 0.00,
+        "weightedOrderShippingDiscount": 0.00,
+        "weightedOrderShippingManualAdjustment": 0.00,
+        "weightedOrderShippingTax": 0.00,
+        "weightedOrderHandlingFee": 20.00,
+        "weightedOrderHandlingFeeTax": 0.0,
+        "weightedOrderHandlingFeeDiscount": 0.00,
+        "weightedOrderDuty": 0.00,
+        "totalWithWeightedShippingAndHandling": 78.0000,
+        "weightedOrderHandlingAdjustment": 0.0
+      },
+      {
+        "id": "8e832d1dab0c44fdb85aaad9010e6729",
+        "fulfillmentLocationCode": "storelocation1",
+        "fulfillmentMethod": "Pickup",
+        "lineId": 2,
+        "product": {
+          "fulfillmentTypesSupported": [
+            "DirectShip",
+            "InStorePickup"
+          ],
+          "options": [],
+          "properties": [],
+          "categories": [
+            {
+              "id": 1
+            }
+          ],
+          "price": {
+            "price": 50.0
+          },
+          "discountsRestricted": false,
+          "isTaxable": true,
+          "productType": "StandardProductType1",
+          "productUsage": "Standard",
+          "bundledProducts": [],
+          "productCode": "sp_02",
+          "name": "Standard Product - 2",
+          "goodsType": "Physical",
+          "isPackagedStandAlone": false,
+          "stock": {
+            "manageStock": true,
+            "isOnBackOrder": false
+          },
+          "measurements": {
+            "height": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "width": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "length": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "weight": {
+              "unit": "lbs",
+              "value": 1.000
+            }
+          },
+          "fulfillmentStatus": "PendingFulfillment"
+        },
+        "quantity": 1,
+        "subtotal": 50.0,
+        "extendedTotal": 50.0,
+        "taxableTotal": 50.0,
+        "discountTotal": 0.0,
+        "discountedTotal": 50.0,
+        "itemTaxTotal": 4.13,
+        "shippingTaxTotal": 0.0,
+        "shippingTotal": 0.0,
+        "feeTotal": 0.0,
+        "total": 54.13,
+        "unitPrice": {
+          "extendedAmount": 50.0,
+          "listAmount": 50.0
+        },
+        "productDiscounts": [],
+        "shippingDiscounts": [],
+        "auditInfo": {
+          "updateDate": "2019-10-01T16:24:30.465Z",
+          "createDate": "2019-10-01T16:24:30.465Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "shippingAmountBeforeDiscountsAndAdjustments": 0.0,
+        "weightedOrderAdjustment": 0.0,
+        "weightedOrderDiscount": 0.00,
+        "adjustedLineItemSubtotal": 50.0000,
+        "totalWithoutWeightedShippingAndHandling": 54.1300,
+        "weightedOrderTax": 0.00,
+        "weightedOrderShipping": 0.00,
+        "weightedOrderShippingDiscount": 0.00,
+        "weightedOrderShippingManualAdjustment": 0.00,
+        "weightedOrderShippingTax": 0.00,
+        "weightedOrderHandlingFee": 0.00,
+        "weightedOrderHandlingFeeTax": 0.0,
+        "weightedOrderHandlingFeeDiscount": 0.00,
+        "weightedOrderDuty": 0.00,
+        "totalWithWeightedShippingAndHandling": 54.1300,
+        "weightedOrderHandlingAdjustment": 0.0,
+        "storeLocation": {
+          "code": "storelocation1",
+          "locationTypes": [
+            {
+              "code": "storelocationtype1",
+              "name": "Store Location Type1",
+              "auditInfo": {
+                "updateDate": "2016-05-04T20:07:18.859Z",
+                "createDate": "2016-05-04T20:07:18.859Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            }
+          ],
+          "name": "Store Location 1",
+          "description": "",
+          "address": {
+            "address1": "1835 Kramer Ln",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "cityOrTown": "Austin",
+            "stateOrProvince": "TX",
+            "postalOrZipCode": "78758",
+            "countryCode": "US",
+            "isValidated": false
+          },
+          "geo": {
+            "lat": 30.3871389,
+            "lng": -97.7100097
+          },
+          "phone": "",
+          "fax": "",
+          "supportsInventory": true,
+          "fulfillmentTypes": [
+            {
+              "code": "SP",
+              "name": "In Store Pickup"
+            }
+          ],
+          "regularHours": {
+            "sunday": {
+              "label": "9AM-4PM"
+            },
+            "monday": {
+              "label": "9AM-6PM"
+            },
+            "tuesday": {
+              "label": "9AM-6PM"
+            },
+            "wednesday": {
+              "label": "9AM-6PM"
+            },
+            "thursday": {
+              "label": "9AM-6PM"
+            },
+            "friday": {
+              "label": "9AM-6PM"
+            },
+            "saturday": {
+              "label": "9AM-9PM"
+            }
+          },
+          "shippingOriginContact": {
+            "firstName": "a",
+            "middleNameOrInitial": "",
+            "lastNameOrSurname": "b",
+            "companyOrOrganization": "Volusion",
+            "phoneNumber": "6662227878",
+            "email": "ab@volusion.com"
+          },
+          "note": "",
+          "tags": [],
+          "attributes": [],
+          "auditInfo": {
+            "updateDate": "2019-09-03T16:58:16.279Z",
+            "createDate": "2016-05-04T20:27:23.589Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "allowFulfillmentWithNoStock": false,
+          "isDisabled": false,
+          "express": false,
+          "transferEnabled": false,
+          "includeInInventoryAggregrate": true,
+          "includeInLocationExport": false,
+          "warehouseEnabled": false
+        }
+      },
+      {
+        "id": "f43120309757471f80daaad9010ef6f7",
+        "fulfillmentLocationCode": "sp_2",
+        "fulfillmentMethod": "Pickup",
+        "lineId": 3,
+        "product": {
+          "fulfillmentTypesSupported": [
+            "DirectShip",
+            "InStorePickup"
+          ],
+          "options": [],
+          "properties": [],
+          "categories": [
+            {
+              "id": 1
+            }
+          ],
+          "price": {
+            "price": 50.0
+          },
+          "discountsRestricted": false,
+          "isTaxable": true,
+          "productType": "StandardProductType1",
+          "productUsage": "Standard",
+          "bundledProducts": [],
+          "productCode": "sp_02",
+          "name": "Standard Product - 2",
+          "goodsType": "Physical",
+          "isPackagedStandAlone": false,
+          "stock": {
+            "manageStock": true,
+            "isOnBackOrder": false
+          },
+          "measurements": {
+            "height": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "width": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "length": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "weight": {
+              "unit": "lbs",
+              "value": 1.000
+            }
+          },
+          "fulfillmentStatus": "PendingFulfillment"
+        },
+        "quantity": 1,
+        "subtotal": 50.0,
+        "extendedTotal": 50.0,
+        "taxableTotal": 50.0,
+        "discountTotal": 0.0,
+        "discountedTotal": 50.0,
+        "itemTaxTotal": 0.0,
+        "shippingTaxTotal": 0.0,
+        "shippingTotal": 0.0,
+        "feeTotal": 0.0,
+        "total": 50.0,
+        "unitPrice": {
+          "extendedAmount": 50.0,
+          "listAmount": 50.0
+        },
+        "productDiscounts": [],
+        "shippingDiscounts": [],
+        "auditInfo": {
+          "updateDate": "2019-10-01T16:26:33.168Z",
+          "createDate": "2019-10-01T16:26:33.168Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "shippingAmountBeforeDiscountsAndAdjustments": 0.0,
+        "weightedOrderAdjustment": 0.0,
+        "weightedOrderDiscount": 0.00,
+        "adjustedLineItemSubtotal": 50.0000,
+        "totalWithoutWeightedShippingAndHandling": 50.0000,
+        "weightedOrderTax": 0.00,
+        "weightedOrderShipping": 0.00,
+        "weightedOrderShippingDiscount": 0.00,
+        "weightedOrderShippingManualAdjustment": 0.00,
+        "weightedOrderShippingTax": 0.00,
+        "weightedOrderHandlingFee": 0.00,
+        "weightedOrderHandlingFeeTax": 0.0,
+        "weightedOrderHandlingFeeDiscount": 0.00,
+        "weightedOrderDuty": 0.00,
+        "totalWithWeightedShippingAndHandling": 50.0000,
+        "weightedOrderHandlingAdjustment": 0.0,
+        "storeLocation": {
+          "code": "sp_2",
+          "locationTypes": [
+            {
+              "code": "storelocationtype1",
+              "name": "Store Location Type1",
+              "auditInfo": {
+                "updateDate": "2016-05-04T20:07:18.859Z",
+                "createDate": "2016-05-04T20:07:18.859Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            }
+          ],
+          "name": "PickUp2",
+          "address": {
+            "address1": "22 Faculty Ct",
+            "cityOrTown": "Bozeman",
+            "stateOrProvince": "MT",
+            "postalOrZipCode": "59715",
+            "countryCode": "US",
+            "addressType": "Commercial",
+            "isValidated": false
+          },
+          "geo": {
+            "lat": 45.6626499,
+            "lng": -111.0468397
+          },
+          "supportsInventory": true,
+          "fulfillmentTypes": [
+            {
+              "code": "SP",
+              "name": "In Store Pickup"
+            }
+          ],
+          "regularHours": {
+            "sunday": {
+              "label": ""
+            },
+            "monday": {
+              "label": "9:00 AM - 9:00 PM"
+            },
+            "tuesday": {
+              "label": "9:00 AM - 9:00 PM"
+            },
+            "wednesday": {
+              "label": "9:00 AM - 9:00 PM"
+            },
+            "thursday": {
+              "label": "9:00 AM - 9:00 PM"
+            },
+            "friday": {
+              "label": "9:00 AM - 10:00 PM"
+            },
+            "saturday": {
+              "label": "9:00 AM - 10:00 PM"
+            }
+          },
+          "shippingOriginContact": {
+            "firstName": "i",
+            "lastNameOrSurname": "j",
+            "companyOrOrganization": "Kibo",
+            "phoneNumber": "6262227878",
+            "email": "i_j@kibo.com"
+          },
+          "tags": [],
+          "attributes": [],
+          "auditInfo": {
+            "updateDate": "2019-09-06T17:42:23.558Z",
+            "createDate": "2019-07-23T15:16:18.069Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "allowFulfillmentWithNoStock": false,
+          "isDisabled": false,
+          "express": false,
+          "transferEnabled": false,
+          "includeInInventoryAggregrate": false,
+          "includeInLocationExport": false,
+          "warehouseEnabled": false
+        }
+      },
+      {
+        "id": "d5d38cac9d9144a3afa6aad9010f2603",
+        "fulfillmentLocationCode": "storelocation1",
+        "fulfillmentMethod": "Pickup",
+        "lineId": 4,
+        "product": {
+          "fulfillmentTypesSupported": [
+            "DirectShip",
+            "InStorePickup"
+          ],
+          "options": [],
+          "properties": [],
+          "categories": [
+            {
+              "id": 3,
+              "parent": {
+                "id": 2
+              }
+            }
+          ],
+          "price": {
+            "price": 50.0
+          },
+          "discountsRestricted": false,
+          "isTaxable": true,
+          "productType": "StandardProductType1",
+          "productUsage": "Standard",
+          "bundledProducts": [],
+          "productCode": "sp_01",
+          "name": "Standard Product - 1",
+          "goodsType": "Physical",
+          "isPackagedStandAlone": false,
+          "stock": {
+            "manageStock": true,
+            "isOnBackOrder": false
+          },
+          "measurements": {
+            "height": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "width": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "length": {
+              "unit": "in",
+              "value": 1.000
+            },
+            "weight": {
+              "unit": "lbs",
+              "value": 1.000
+            }
+          },
+          "fulfillmentStatus": "PendingFulfillment"
+        },
+        "quantity": 1,
+        "subtotal": 50.0,
+        "extendedTotal": 50.0,
+        "taxableTotal": 50.0,
+        "discountTotal": 0.0,
+        "discountedTotal": 50.0,
+        "itemTaxTotal": 4.13,
+        "shippingTaxTotal": 0.0,
+        "shippingTotal": 0.0,
+        "feeTotal": 0.0,
+        "total": 54.13,
+        "unitPrice": {
+          "extendedAmount": 50.0,
+          "listAmount": 50.0
+        },
+        "productDiscounts": [],
+        "shippingDiscounts": [],
+        "auditInfo": {
+          "updateDate": "2019-10-01T16:27:13.323Z",
+          "createDate": "2019-10-01T16:27:13.323Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "shippingAmountBeforeDiscountsAndAdjustments": 0.0,
+        "weightedOrderAdjustment": 0.0,
+        "weightedOrderDiscount": 0.00,
+        "adjustedLineItemSubtotal": 50.0000,
+        "totalWithoutWeightedShippingAndHandling": 54.1300,
+        "weightedOrderTax": 0.00,
+        "weightedOrderShipping": 0.00,
+        "weightedOrderShippingDiscount": 0.00,
+        "weightedOrderShippingManualAdjustment": 0.00,
+        "weightedOrderShippingTax": 0.00,
+        "weightedOrderHandlingFee": 0.00,
+        "weightedOrderHandlingFeeTax": 0.0,
+        "weightedOrderHandlingFeeDiscount": 0.00,
+        "weightedOrderDuty": 0.00,
+        "totalWithWeightedShippingAndHandling": 54.1300,
+        "weightedOrderHandlingAdjustment": 0.0,
+        "storeLocation": {
+          "code": "storelocation1",
+          "locationTypes": [
+            {
+              "code": "storelocationtype1",
+              "name": "Store Location Type1",
+              "auditInfo": {
+                "updateDate": "2016-05-04T20:07:18.859Z",
+                "createDate": "2016-05-04T20:07:18.859Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            }
+          ],
+          "name": "Store Location 1",
+          "description": "",
+          "address": {
+            "address1": "1835 Kramer Ln",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "cityOrTown": "Austin",
+            "stateOrProvince": "TX",
+            "postalOrZipCode": "78758",
+            "countryCode": "US",
+            "isValidated": false
+          },
+          "geo": {
+            "lat": 30.3871389,
+            "lng": -97.7100097
+          },
+          "phone": "",
+          "fax": "",
+          "supportsInventory": true,
+          "fulfillmentTypes": [
+            {
+              "code": "SP",
+              "name": "In Store Pickup"
+            }
+          ],
+          "regularHours": {
+            "sunday": {
+              "label": "9AM-4PM"
+            },
+            "monday": {
+              "label": "9AM-6PM"
+            },
+            "tuesday": {
+              "label": "9AM-6PM"
+            },
+            "wednesday": {
+              "label": "9AM-6PM"
+            },
+            "thursday": {
+              "label": "9AM-6PM"
+            },
+            "friday": {
+              "label": "9AM-6PM"
+            },
+            "saturday": {
+              "label": "9AM-9PM"
+            }
+          },
+          "shippingOriginContact": {
+            "firstName": "a",
+            "middleNameOrInitial": "",
+            "lastNameOrSurname": "b",
+            "companyOrOrganization": "Volusion",
+            "phoneNumber": "6662227878",
+            "email": "ab@volusion.com"
+          },
+          "note": "",
+          "tags": [],
+          "attributes": [],
+          "auditInfo": {
+            "updateDate": "2019-09-03T16:58:16.279Z",
+            "createDate": "2016-05-04T20:27:23.589Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+          },
+          "allowFulfillmentWithNoStock": false,
+          "isDisabled": false,
+          "express": false,
+          "transferEnabled": false,
+          "includeInInventoryAggregrate": true,
+          "includeInLocationExport": false,
+          "warehouseEnabled": false
+        }
+      }
+    ],
+    "validationResults": [
+      {
+        "validationId": "630000",
+        "validatorName": "KountValidator",
+        "validatorType": "Fraud",
+        "status": "Review",
+        "createdDate": "2019-10-01T16:29:40.977Z",
+        "messages": [
+          {
+            "messageType": "Kount API version",
+            "message": "0630"
+          },
+          {
+            "messageType": "RIS Post mode",
+            "message": "Q"
+          },
+          {
+            "messageType": "Kount transaction ID",
+            "message": "71N70Y08Z19V"
+          },
+          {
+            "messageType": "Merchant ID",
+            "message": "630000"
+          },
+          {
+            "messageType": "Session ID",
+            "message": "0e93cea121203100015b80de0000433f"
+          },
+          {
+            "messageType": "Merchant Order Number",
+            "message": "1708"
+          },
+          {
+            "messageType": "Auto-decision response code\n(A=Accept,D=Decline,R=Review,E=Escalate)",
+            "message": "R"
+          },
+          {
+            "messageType": "FraudScore",
+            "message": "34"
+          },
+          {
+            "messageType": "Persona related country with highest probability of fraud",
+            "message": "US"
+          },
+          {
+            "messageType": "Credit card brand",
+            "message": "NONE"
+          },
+          {
+            "messageType": "Riskiest network type associated with persona within the last 14 days\nA-Anonymous,H-High School,L-Library,N-Normal,O-Open Proxy,P-Prison,S-Satellite",
+            "message": "A"
+          },
+          {
+            "messageType": "Device data collected",
+            "message": "N"
+          },
+          {
+            "messageType": "Number persona cards",
+            "message": "1"
+          },
+          {
+            "messageType": "Number persona devices",
+            "message": "1"
+          },
+          {
+            "messageType": "Number persona emails",
+            "message": "1"
+          },
+          {
+            "messageType": "Quantity of orders seen from persona within last 14 days",
+            "message": "0"
+          },
+          {
+            "messageType": "Quantity of orders from persona within the most active 6 hour window in last 14 days",
+            "message": "0"
+          },
+          {
+            "messageType": "Website identifier",
+            "message": "DEFAULT"
+          },
+          {
+            "messageType": "Device layers",
+            "message": "...."
+          },
+          {
+            "messageType": "Persona set local time",
+            "message": " "
+          },
+          {
+            "messageType": "Number of rules triggered by RIS request",
+            "message": "2"
+          },
+          {
+            "messageType": "RULE_ID_0",
+            "message": "687638"
+          },
+          {
+            "messageType": "RULE_DESCRIPTION_0",
+            "message": "Kaptcha Missing"
+          },
+          {
+            "messageType": "RULE_ID_1",
+            "message": "687652"
+          },
+          {
+            "messageType": "RULE_DESCRIPTION_1",
+            "message": "Order Amount > $150"
+          },
+          {
+            "messageType": "Rules counters triggered",
+            "message": "0"
+          },
+          {
+            "messageType": "Number request warnings",
+            "message": "0"
+          }
+        ]
+      }
+    ],
+    "billingInfo": {
+      "billingContact": {
+        "id": 1004,
+        "email": "wwilson@deadpool.net",
+        "firstName": "Wade",
+        "lastNameOrSurname": "Wilson",
+        "phoneNumbers": {
+          "home": "512-555-5555",
+          "mobile": "512-555-5555"
+        },
+        "address": {
+          "address1": "123 ABC",
+          "address2": "",
+          "cityOrTown": "Austin",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "78758",
+          "countryCode": "US",
+          "addressType": "Residential",
+          "isValidated": true
+        }
+      },
+      "isSameBillingShippingAddress": false,
+      "auditInfo": {
+        "updateDate": "2019-10-01T15:28:38.350Z",
+        "createDate": "2019-10-01T15:28:38.350Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    },
+    "payments": [],
+    "refunds": [],
+    "packages": [],
+    "pickups": [],
+    "digitalPackages": [],
+    "isDraft": false,
+    "hasDraft": false,
+    "isImport": false,
+    "couponCodes": [],
+    "invalidCoupons": [],
+    "amountAvailableForRefund": 0.0,
+    "amountRemainingForPayment": 208.26,
+    "amountRefunded": 0.0,
+    "id": "0e93cea121203100015b80de0000433f",
+    "tenantId": 17215,
+    "siteId": 21153,
+    "channelCode": "ONL",
+    "currencyCode": "USD",
+    "customerInteractionType": "Unknown",
+    "fulfillmentInfo": {
+      "fulfillmentContact": {
+        "id": 1005,
+        "email": "epratt@legend.net",
+        "firstName": "Ernest",
+        "middleNameOrInitial": "",
+        "lastNameOrSurname": "Pratt",
+        "companyOrOrganization": "",
+        "phoneNumbers": {
+          "home": "303-303-3003",
+          "mobile": "",
+          "work": ""
+        },
+        "address": {
+          "address1": "1900 W Girard Ave",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Sheridan",
+          "stateOrProvince": "CO",
+          "postalOrZipCode": "80110",
+          "countryCode": "US",
+          "addressType": "Residential",
+          "isValidated": true
+        }
+      },
+      "shippingMethodCode": "21e62ddf172c4205b840a5fc010ab216",
+      "shippingMethodName": "Flat Rate Per Item - $3",
+      "auditInfo": {
+        "updateDate": "2019-10-01T16:28:06.559Z",
+        "createDate": "2019-10-01T15:28:32.780Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+      }
+    },
+    "orderDiscounts": [],
+    "suggestedDiscounts": [],
+    "subtotal": 200.0,
+    "discountedSubtotal": 200.0,
+    "discountTotal": 0.00,
+    "discountedTotal": 200.00,
+    "shippingTotal": 3.0,
+    "shippingSubTotal": 0.00,
+    "shippingTaxTotal": 0.0,
+    "handlingTaxTotal": 0.0,
+    "itemTaxTotal": 8.26,
+    "taxTotal": 8.26,
+    "feeTotal": 0.0,
+    "total": 208.26,
+    "lineItemSubtotalWithOrderAdjustments": 200.00,
+    "shippingAmountBeforeDiscountsAndAdjustments": 3.00,
+    "lastValidationDate": "2019-10-01T16:27:13.903Z",
+    "changeMessages": [
+      {
+        "id": "240b7c84c997460ca868aad900ff0899",
+        "correlationId": "64340c28ff0d4a80a5f0c3b3c13ad919",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "StateChange.WorkflowAction",
+        "success": true,
+        "identifier": "0e93cea121203100015b80de0000433f",
+        "subject": "CreateOrder",
+        "verb": "Applied",
+        "message": "Workflow action succeeded.",
+        "metadata": [
+          {
+            "oldValue": "Null",
+            "newValue": "Pending"
+          }
+        ],
+        "oldValue": "Null",
+        "newValue": "Pending",
+        "createDate": "2019-10-01T15:28:32.932Z"
+      },
+      {
+        "id": "771ac3ae3efc4caaab78aad900ff0ef4",
+        "correlationId": "8808b2266dd24033bab64c6f4097ea13",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "Order",
+        "identifier": "0e93cea121203100015b80de0000433f",
+        "subject": "Fulfillment Info Updated",
+        "verb": "Updated",
+        "message": "Fulfillment Info Updated",
+        "metadata": [
+          {
+            "updatedFulfillment": {
+              "FulfillmentContact": {
+                "Id": 1005,
+                "Email": "epratt@legend.net",
+                "FirstName": "Ernest",
+                "MiddleNameOrInitial": "",
+                "LastNameOrSurname": "Pratt",
+                "CompanyOrOrganization": "",
+                "PhoneNumbers": {
+                  "Home": "303-303-3003",
+                  "Mobile": "",
+                  "Work": ""
+                },
+                "Address": {
+                  "Address1": "1900 W Girard Ave",
+                  "Address2": "",
+                  "Address3": "",
+                  "Address4": "",
+                  "CityOrTown": "Sheridan",
+                  "StateOrProvince": "CO",
+                  "PostalOrZipCode": "80110",
+                  "CountryCode": "US",
+                  "AddressType": "Residential",
+                  "IsValidated": true
+                }
+              },
+              "ShippingMethodCode": null,
+              "ShippingMethodName": null,
+              "IsDestinationCommercial": null,
+              "Data": null,
+              "AuditInfo": {
+                "UpdateDate": "2019-10-01T15:28:38.356Z",
+                "CreateDate": "2019-10-01T15:28:32.780Z",
+                "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            },
+            "originalFulfillment": {
+              "FulfillmentContact": null,
+              "ShippingMethodCode": null,
+              "ShippingMethodName": null,
+              "IsDestinationCommercial": null,
+              "Data": null,
+              "AuditInfo": {
+                "UpdateDate": "2019-10-01T15:28:32.780Z",
+                "CreateDate": "2019-10-01T15:28:32.780Z",
+                "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            }
+          }
+        ],
+        "createDate": "2019-10-01T15:28:38.356Z"
+      },
+      {
+        "id": "afb57376fabc437cb5c5aad900ff28f4",
+        "correlationId": "94968baeef914b31a5615d5c2559ab07",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "19b907832ce74dc5afc7aad900ff28b0",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 2 (Code: sp_02) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_02",
+            "productName": "Standard Product - 2",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T15:29:00.542Z"
+      },
+      {
+        "id": "53c788c519494a04be14aad9010e3c3f",
+        "correlationId": "26bcbf45dee94567bc534760eb99c5dc",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "f9b54298d5ef42f7bc04aad9010e3bd4",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 3 (Code: sp_03) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_03",
+            "productName": "Standard Product - 3",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:23:53.805Z"
+      },
+      {
+        "id": "1c5f65627c9642faa069aad9010e46b7",
+        "correlationId": "10bdf2e324634211a7d406f1327d93f4",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "f9b54298d5ef42f7bc04aad9010e3bd4",
+        "subject": "Item Removed",
+        "verb": "Removed",
+        "message": "Product Standard Product - 3 (Code: sp_03) was removed.",
+        "metadata": [
+          {
+            "productCode": "sp_03",
+            "productName": "Standard Product - 3",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:24:02.739Z"
+      },
+      {
+        "id": "32a0a18b0b664497b998aad9010e67a8",
+        "correlationId": "a7f207e34efc4310bf591df4ee6a0b9a",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "8e832d1dab0c44fdb85aaad9010e6729",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 2 (Code: sp_02) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_02",
+            "productName": "Standard Product - 2",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:24:30.848Z"
+      },
+      {
+        "id": "a6fddd8c37704978a776aad9010ece9b",
+        "correlationId": "3f1cd28bf1de4e0bab608d0a42c3086f",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "a8433e1fd4844a9a8133aad9010ece65",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 4 (Code: sp_04) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_04",
+            "productName": "Standard Product - 4",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:25:58.699Z"
+      },
+      {
+        "id": "95dd8fc59ff744deaaa6aad9010ed467",
+        "correlationId": "f1ec500c615343279f103095d64fe748",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "a8433e1fd4844a9a8133aad9010ece65",
+        "subject": "Fulfillment Change",
+        "message": "Product Standard Product - 4 (Code: sp_04) fulfillment information changed.",
+        "metadata": [
+          {
+            "oldLocation": "warehouselocation1",
+            "oldMethod": 1,
+            "newLocation": "sp_2",
+            "newMethod": 1,
+            "productCode": "sp_04",
+            "productName": "Standard Product - 4"
+          }
+        ],
+        "oldValue": "Original Location: warehouselocation1, Original Method:Pickup",
+        "newValue": "New Location: sp_2, New Method:Pickup",
+        "createDate": "2019-10-01T16:26:03.647Z"
+      },
+      {
+        "id": "d09abaaada7341918443aad9010edbc6",
+        "correlationId": "004478a94bf34630ad7295a0b4aea048",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "a8433e1fd4844a9a8133aad9010ece65",
+        "subject": "Fulfillment Change",
+        "message": "Product Standard Product - 4 (Code: sp_04) fulfillment information changed.",
+        "metadata": [
+          {
+            "oldLocation": "sp_2",
+            "oldMethod": 1,
+            "newLocation": "sp_2",
+            "newMethod": 1,
+            "productCode": "sp_04",
+            "productName": "Standard Product - 4"
+          }
+        ],
+        "oldValue": "Original Location: sp_2, Original Method:Pickup",
+        "newValue": "New Location: sp_2, New Method:Pickup",
+        "createDate": "2019-10-01T16:26:09.935Z"
+      },
+      {
+        "id": "f4cb9af6640a48bdb51faad9010ee26a",
+        "correlationId": "851f5cb649e842f8a2c0e6916be007fd",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "a8433e1fd4844a9a8133aad9010ece65",
+        "subject": "Item Removed",
+        "verb": "Removed",
+        "message": "Product Standard Product - 4 (Code: sp_04) was removed.",
+        "metadata": [
+          {
+            "productCode": "sp_04",
+            "productName": "Standard Product - 4",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:26:15.603Z"
+      },
+      {
+        "id": "0dd92a0e5e044cf7842faad9010ef776",
+        "correlationId": "26236571a02e4eff9c13bda90da6ef1f",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "f43120309757471f80daaad9010ef6f7",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 2 (Code: sp_02) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_02",
+            "productName": "Standard Product - 2",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:26:33.563Z"
+      },
+      {
+        "id": "b3705b6c6bbb478092fcaad9010f265b",
+        "correlationId": "f3c4e8886390494fa227c8106881284d",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "OrderItem",
+        "identifier": "d5d38cac9d9144a3afa6aad9010f2603",
+        "subject": "Item Added",
+        "verb": "Added",
+        "message": "Product Standard Product - 1 (Code: sp_01) was added.",
+        "metadata": [
+          {
+            "productCode": "sp_01",
+            "productName": "Standard Product - 1",
+            "quantity": 1
+          }
+        ],
+        "createDate": "2019-10-01T16:27:13.579Z"
+      },
+      {
+        "id": "51b45065a6634bc29391aad9010f6471",
+        "correlationId": "8dc02a46576b4e3f99f9b4bdc177fae3",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "Order",
+        "identifier": "0e93cea121203100015b80de0000433f",
+        "subject": "Fulfillment Info Updated",
+        "verb": "Updated",
+        "message": "Fulfillment Info Updated",
+        "metadata": [
+          {
+            "updatedFulfillment": {
+              "FulfillmentContact": {
+                "Id": 1005,
+                "Email": "epratt@legend.net",
+                "FirstName": "Ernest",
+                "MiddleNameOrInitial": "",
+                "LastNameOrSurname": "Pratt",
+                "CompanyOrOrganization": "",
+                "PhoneNumbers": {
+                  "Home": "303-303-3003",
+                  "Mobile": "",
+                  "Work": ""
+                },
+                "Address": {
+                  "Address1": "1900 W Girard Ave",
+                  "Address2": "",
+                  "Address3": "",
+                  "Address4": "",
+                  "CityOrTown": "Sheridan",
+                  "StateOrProvince": "CO",
+                  "PostalOrZipCode": "80110",
+                  "CountryCode": "US",
+                  "AddressType": "Residential",
+                  "IsValidated": true
+                }
+              },
+              "ShippingMethodCode": "21e62ddf172c4205b840a5fc010ab216",
+              "ShippingMethodName": "Flat Rate Per Item - $3",
+              "IsDestinationCommercial": null,
+              "Data": null,
+              "AuditInfo": {
+                "UpdateDate": "2019-10-01T16:28:06.559Z",
+                "CreateDate": "2019-10-01T15:28:32.780Z",
+                "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            },
+            "originalFulfillment": {
+              "FulfillmentContact": {
+                "Id": 1005,
+                "Email": "epratt@legend.net",
+                "FirstName": "Ernest",
+                "MiddleNameOrInitial": "",
+                "LastNameOrSurname": "Pratt",
+                "CompanyOrOrganization": "",
+                "PhoneNumbers": {
+                  "Home": "303-303-3003",
+                  "Mobile": "",
+                  "Work": ""
+                },
+                "Address": {
+                  "Address1": "1900 W Girard Ave",
+                  "Address2": "",
+                  "Address3": "",
+                  "Address4": "",
+                  "CityOrTown": "Sheridan",
+                  "StateOrProvince": "CO",
+                  "PostalOrZipCode": "80110",
+                  "CountryCode": "US",
+                  "AddressType": "Residential",
+                  "IsValidated": true
+                }
+              },
+              "ShippingMethodCode": null,
+              "ShippingMethodName": null,
+              "IsDestinationCommercial": null,
+              "Data": null,
+              "AuditInfo": {
+                "UpdateDate": "2019-10-01T15:28:38.356Z",
+                "CreateDate": "2019-10-01T15:28:32.780Z",
+                "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+              }
+            }
+          }
+        ],
+        "createDate": "2019-10-01T16:28:06.560Z"
+      },
+      {
+        "id": "ec2238e08aa44a15864caad9010fd168",
+        "correlationId": "1cdc71489f774b0083b75a011f60b57d",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "StateChange.WorkflowAction",
+        "success": true,
+        "identifier": "0e93cea121203100015b80de0000433f",
+        "subject": "SubmitOrder",
+        "verb": "Applied",
+        "message": "Workflow action succeeded.",
+        "metadata": [
+          {
+            "oldValue": "Pending",
+            "newValue": "Submitted"
+          }
+        ],
+        "oldValue": "Pending",
+        "newValue": "Submitted",
+        "createDate": "2019-10-01T16:29:39.543Z"
+      },
+      {
+        "id": "6db6449b55c8407c8a73aad9010fd319",
+        "correlationId": "1cdc71489f774b0083b75a011f60b57d",
+        "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "userFirstName": "Kibo",
+        "userLastName": "admin",
+        "userScopeType": "Tenant",
+        "appId": "2e778ae20c7c433885c8e5e418774cb4",
+        "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+        "subjectType": "StateChange.WorkflowAction",
+        "success": true,
+        "identifier": "0e93cea121203100015b80de0000433f",
+        "subject": "ValidateOrder",
+        "verb": "Applied",
+        "message": "Workflow action succeeded.",
+        "metadata": [
+          {
+            "oldValue": "Submitted",
+            "newValue": "PendingReview"
+          }
+        ],
+        "oldValue": "Submitted",
+        "newValue": "PendingReview",
+        "createDate": "2019-10-01T16:29:40.986Z"
+      }
+    ],
+    "extendedProperties": [],
+    "discountThresholdMessages": [],
+    "auditInfo": {
+      "updateDate": "2019-10-01T16:29:41.185Z",
+      "createDate": "2019-10-01T15:28:32.949Z",
+      "updateBy": "e997e8fdcd7e4b979b3cb22e8c24d690",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    },
+    "isCurbside": true,
+    "locations": [
+      {
+        "code": "storelocation1",
+        "locationTypes": [
+          {
+            "code": "storelocationtype1",
+            "name": "Store Location Type1",
+            "auditInfo": {
+              "updateDate": "2016-05-04T20:07:18.859Z",
+              "createDate": "2016-05-04T20:07:18.859Z",
+              "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+              "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+          }
+        ],
+        "name": "Store Location 1",
+        "description": "",
+        "address": {
+          "address1": "1835 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "78758",
+          "countryCode": "US",
+          "isValidated": false
+        },
+        "geo": {
+          "lat": 30.3871389,
+          "lng": -97.7100097
+        },
+        "phone": "(512) 555-8925",
+        "fax": "",
+        "supportsInventory": true,
+        "fulfillmentTypes": [
+          {
+            "code": "SP",
+            "name": "In Store Pickup"
+          }
+        ],
+        "regularHours": {
+          "sunday": {
+
+            "label": "9AM-4PM",
+            "isClosed": true
+          },
+          "monday": {
+            "label": "9AM-6PM",
+            "closeTime": "9:00 AM",
+            "openTime": "11:00 PM",
+            "isClosed": false
+          },
+          "tuesday": {
+            "label": "9AM-6PM",
+            "closeTime": "9:00 AM",
+            "openTime": "11:00 PM",
+            "isClosed": false
+          },
+          "wednesday": {
+            "label": "9AM-6PM",
+            "closeTime": "9:00 AM",
+            "openTime": "11:00 PM",
+            "isClosed": false
+          },
+          "thursday": {
+            "label": "9AM-6PM",
+            "closeTime": "9:00 AM",
+            "openTime": "11:00 PM",
+            "isClosed": false
+          },
+          "friday": {
+            "label": "9AM-6PM",
+            "closeTime": "9:00 AM",
+            "openTime": "11:00 PM",
+            "isClosed": false
+          },
+          "saturday": {
+            "label": "9AM-9PM",
+            "isClosed": true
+          }
+        },
+        "shippingOriginContact": {
+          "firstName": "a",
+          "middleNameOrInitial": "",
+          "lastNameOrSurname": "b",
+          "companyOrOrganization": "Volusion",
+          "phoneNumber": "6662227878",
+          "email": "ab@volusion.com"
+        },
+        "note": "",
+        "tags": [],
+        "attributes": [],
+        "auditInfo": {
+          "updateDate": "2019-09-03T16:58:16.279Z",
+          "createDate": "2016-05-04T20:27:23.589Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "allowFulfillmentWithNoStock": false,
+        "isDisabled": false,
+        "express": false,
+        "transferEnabled": false,
+        "includeInInventoryAggregrate": true,
+        "includeInLocationExport": false,
+        "warehouseEnabled": false
+      },
+      {
+        "code": "storelocation1",
+        "locationTypes": [
+          {
+            "code": "storelocationtype1",
+            "name": "Store Location Type1",
+            "auditInfo": {
+              "updateDate": "2016-05-04T20:07:18.859Z",
+              "createDate": "2016-05-04T20:07:18.859Z",
+              "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+              "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+          }
+        ],
+        "name": "Store Location 1",
+        "description": "",
+        "address": {
+          "address1": "1835 Kramer Ln",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "cityOrTown": "Austin",
+          "stateOrProvince": "TX",
+          "postalOrZipCode": "78758",
+          "countryCode": "US",
+          "isValidated": false
+        },
+        "geo": {
+          "lat": 30.3871389,
+          "lng": -97.7100097
+        },
+        "phone": "(512) 555-8925",
+        "fax": "",
+        "supportsInventory": true,
+        "fulfillmentTypes": [
+          {
+            "code": "SP",
+            "name": "In Store Pickup"
+          }
+        ],
+        "regularHours": {
+          "sunday": {
+
+            "label": "9AM-4PM",
+            "closeTime": "",
+            "openTime": "",
+            "isClosed": true
+          },
+          "monday": {
+            "label": "9AM-6PM",
+            "closeTime": "9: 00 AM",
+            "openTime": "11: 00 PM",
+            "isClosed": false
+          },
+          "tuesday": {
+            "label": "9AM-6PM",
+            "closeTime": "9: 00 AM",
+            "openTime": "11: 00 PM",
+            "isClosed": false
+          },
+          "wednesday": {
+            "label": "9AM-6PM",
+            "closeTime": "9: 00 AM",
+            "openTime": "11: 00 PM",
+            "isClosed": false
+          },
+          "thursday": {
+            "label": "9AM-6PM",
+            "closeTime": "9: 00 AM",
+            "openTime": "11: 00 PM",
+            "isClosed": false
+          },
+          "friday": {
+            "label": "9AM-6PM",
+            "closeTime": "9: 00 AM",
+            "openTime": "11: 00 PM",
+            "isClosed": false
+          },
+          "saturday": {
+            "label": "9AM-9PM",
+            "closeTime": "",
+            "openTime": "",
+            "isClosed": true
+          }
+        },
+        "shippingOriginContact": {
+          "firstName": "a",
+          "middleNameOrInitial": "",
+          "lastNameOrSurname": "b",
+          "companyOrOrganization": "Volusion",
+          "phoneNumber": "6662227878",
+          "email": "ab@volusion.com"
+        },
+        "note": "",
+        "tags": [],
+        "attributes": [],
+        "auditInfo": {
+          "updateDate": "2019-09-03T16:58:16.279Z",
+          "createDate": "2016-05-04T20:27:23.589Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        },
+        "allowFulfillmentWithNoStock": false,
+        "isDisabled": false,
+        "express": false,
+        "transferEnabled": false,
+        "includeInInventoryAggregrate": true,
+        "includeInLocationExport": false,
+        "warehouseEnabled": false
+      }
+    ],
+    "alternateContact": {
+      "firstName": "alternatefirst",
+      "lastNameOrSurname": "alternateLast",
+      "emailAddress": "alternateemail@test.com",
+      "phoneNumber": "876-543-2112"
+    }
+  },
+  "shipments": [
+    {
+      "Id":  1,
+      "items": [
+        {
+          "name":  "sp01",
+          "lineId": 1,
+          "quantity": 2,
+          "actualPrice": 10,
+          "unitPrice": 5,
+          "originalLineId": null,
+          "lineItemCost": 10,
+          "originalOrderItemId": 1
+        },
+        {
+          "name": "sp02",
+          "lineId": 2,
+          "quantity": 1,
+          "actualPrice": 5,
+          "unitPrice": 5,
+          "lineItemCost": 5,
+          "originalLineId": 1,
+          "originalOrderItemId": 1
+        },
+        {
+          "name": "sp03",
+          "lineId": 3,
+          "quantity": 1,
+          "actualPrice": 5,
+          "lineItemCost": 5,
+          "unitPrice": 5,
+          "originalLineId": 1,
+          "originalOrderItemId": 1
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "items": [
+        {
+          "name": "sp01",
+          "lineId": 1,
+          "quantity": 0,
+          "actualPrice": 0,
+          "lineItemCost": 0,
+          "unitPrice": 0,
+          "originalLineId": null,
+          "originalOrderItemId": 1
+        },
+        {
+          "name": "sp04",
+          "lineId": 2,
+          "quantity": 1,
+          "actualPrice": 5,
+          "lineItemCost": 5,
+          "unitPrice": 5,
+          "originalLineId": 1,
+          "originalOrderItemId": 1
+        },
+        {
+          "name": "sp06",
+          "lineId": 3,
+          "quantity": 1,
+          "lineItemCost": 5,
+          "actualPrice": 5,
+          "unitPrice": 5,
+          "originalLineId": null
+        }
+      ]
+    }
+  ]
+}

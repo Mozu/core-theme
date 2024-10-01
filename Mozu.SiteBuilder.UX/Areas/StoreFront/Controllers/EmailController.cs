@@ -50,6 +50,8 @@ using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using System.Globalization;
 using Mozu.CommerceRuntime.Contracts.Subscriptions;
 using Mozu.Core.Exceptions;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -71,6 +73,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
         public bool IsShopperCanceled { get; set; }
+    }
+
+    public class OrderItemsSubstitutedEmail
+    {
+        public Order Order { get; set; }
+
+        public List<SubstituteItemData> ShipmentItems { get; set; }
+
+        public List<Shipment> Shipments{ get; set; }
+    }
+
+    public class SubstituteItemData : ShipmentItem
+    {
+        public string SubstitutedProductName {  get; set; }
+        public bool IsParentProduct { get; set; }
     }
 
     public class OrderEmail : Order {
@@ -121,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class EmailController : CmsPagesController
     {
         private readonly ISitesWebApiClient _sitesWebApiClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<EmailController> _logger;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
@@ -171,10 +188,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            ModelType = typeof (CheckoutEmail),
                                            Topic = Topics.CheckoutEmailTopic
                                        },
-                                       new EmailTypeInfo
+                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (OrderEmail),
                                                Topic = Topics.OrderEmailTopic
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (OrderItemsSubstitutedEmail),
+                                               Topic = Topics.OrderItemsSubstitutedEmailTopic
                                            },
                                        new EmailTypeInfo
                                            {
@@ -484,16 +506,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var locationCode = string.Empty;
 
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
-
-            var queryStringParams = Request.Query;
+            var queryStringParams = Request.Query; 
             if (emailTemplate == null)
             {
                 return NotFound("could not find an email template for the current Theme.");
             }
 
             var model = TestDataBroker.GetFileContents(id).FirstOrDefault() ?? new object();
+
+
             if (model != null)
             {
+
                 var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, id, StringComparison.OrdinalIgnoreCase));
                 if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof(Order))
                 {
@@ -502,6 +526,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     locationCode = (model is OrderEmail orderEmail) ? orderEmail.LocationCode : string.Empty;
                 }
 
+                if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof(OrderItemsSubstitutedEmail))
+                {
+                    var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
+                    model = ConvertToSubstituteItemData(str);
+                }
                 else
                 {
                     model = MergeEmailParams(queryStringParams, model);
@@ -588,8 +617,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     cmdContent = vr.ViewData.Model;
                 }
             }
+            _logger.LogInformation($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
             _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
-
             ViewData["smsEnabled"] = IsSmsEnabled(tenant);
             ViewData["adminDomainName"] = tenant.Domain.DomainName;
             var model = await Convert(notification.Payload, emailTypeInfo);
@@ -645,6 +674,45 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
+        private static object ConvertToSubstituteItemData(string str)
+        {
+            var model = JsonConvert.DeserializeObject<OrderItemsSubstitutedEmail>(str, CaseInsensitiveJsonSerializerSettings.Default);
+
+            List<SubstituteItemData> shipmentItems = new();
+
+            var allItems = model.Shipments.SelectMany(x => x.Items);
+            foreach (var orderItem in model.Order.Items)
+            {
+                var parentItems = allItems.Where(x => x.OriginalOrderItemId == orderItem.Id && !x.OriginalLineId.HasValue);
+
+                if(!parentItems.SafeAny()) continue;
+
+                var parentItem = parentItems.FirstOrDefault();
+
+                var substitutedItems = allItems.Where(x => x.OriginalOrderItemId == orderItem.Id
+                    && x.OriginalLineId.HasValue && x.OriginalLineId == parentItem.LineId);
+
+                var clonedParentItem = Mapper.Map<SubstituteItemData>(parentItem);
+                clonedParentItem.Quantity = parentItems.Sum(x => x.Quantity);
+
+                clonedParentItem.IsParentProduct = true;
+                shipmentItems.Add(clonedParentItem);
+
+                if (substitutedItems.SafeAny())
+                {
+                    foreach(var substitutedItem in substitutedItems)
+                    {
+                        var clonedSubstituteItem = Mapper.Map<SubstituteItemData>(substitutedItem);
+                        clonedSubstituteItem.SubstitutedProductName = parentItem.Name;
+                        shipmentItems.Add(clonedSubstituteItem);
+                    }
+                }
+            }
+
+            model.ShipmentItems = shipmentItems;
+            return model;
+
+        }
         private async Task<string> GetRenderedTemplate(EmailNotification notification, VM.PageTypeDefinition emailTemplate, object model, object cmdContent, User user, Site site)
         {
             var viewEngine = Request.HttpContext.RequestServices.Resolve<HyprViewEngine>();
@@ -707,8 +775,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return JsonConvert.DeserializeObject(json, CaseInsensitiveJsonSerializerSettings.Default);
             }
+
+            if (eti.ModelType == typeof(OrderItemsSubstitutedEmail))
+                return  ConvertToSubstituteItemData(json);
+
             var obj = JsonConvert.DeserializeObject(json, eti.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
             var order = obj as Order;
+            
             if (order?.Items != null && order.Packages != null && order.Packages.Count > 0)
             {
                 var ht = new Hashtable(StringComparer.OrdinalIgnoreCase);
@@ -954,6 +1027,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string GiftCardCreated = "giftcard.created";
             public const string OrderCancellation = "order.cancelled";
             public const string OrderCancellationPOSE = "order.cancelled.POSE";
+            public const string OrderItemsSubstitutedEmailTopic = "order.itemssubstituted";
+
+
             public const string Backorder = "shipment.backordered";
             //public const string BackorderUpdate = "shipment.backorderdatechanged";
             public const string ShipmentConfirmation = "shipment.fulfilled";
@@ -982,7 +1058,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string QuoteExpired = "quote.expired";
             public const string DeliveryDateUpdated = "shipment.deliverydateupdated";
             public const string ReadyForDelivery = "shipment.readyfordelivery";
-            
+
             // Subscription
             public const string SubscriptionActivated = "subscription.activated";
             public const string SubscriptionCancelled = "subscription.cancelled";

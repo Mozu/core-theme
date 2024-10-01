@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Newtonsoft.Json.Linq;
 using CR = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using F = Kibo.Fulfillment.Contracts.Model;
@@ -111,6 +112,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(dest => dest.Quantity, o => o.MapFrom(v => v.Quantity))
                 .ForMember(dest => dest.Attributes, o => o.MapFrom(v => v.Attributes));
 
+            CreateMap<CR.ShipmentItem, SubstituteItemData>()
+                .ForMember(x => x.SubstitutedProductName, opt => opt.Ignore())
+                .ForMember(x => x.IsParentProduct, opt => opt.Ignore());
         }
     }
 }
