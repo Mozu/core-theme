@@ -640,7 +640,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!string.IsNullOrEmpty(email))
             {
-                if (!orders.Any(order => order.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+                if (!orders.Any(order => order.Email?.Equals(email, StringComparison.OrdinalIgnoreCase) ?? false))
                 {
                     return GenerateInvalidChallengeResponse();
                 }
@@ -687,7 +687,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             return BadRequest(new
             {
-                Message = "anonAuthError"
+                Message = "anonAuthError",
+                ErrorMessage = "No matching records found for the provided information."
             });
         }
 
