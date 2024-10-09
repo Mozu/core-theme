@@ -1,29 +1,20 @@
-﻿using Mozu.CommerceRuntime.Contracts.Clients;
+﻿using Kibo.Fulfillment.Contracts.Api;
+using Kibo.Fulfillment.Contracts.Model;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.ActionConstraints;
 using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Tenant.Contracts.Clients;
-using Newtonsoft.Json.Linq;
 using QRCoder;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
-using Kibo.Fulfillment.Contracts.Api;
-using Microsoft.AspNetCore.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionConstraints;
-using System.Globalization;
-using Kibo.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -338,13 +329,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return null;
         }
 
+        // Upgraded the QRCode library to version 1.6.0 and modified the code to remove the bitmap dependency,
+        // ensuring compatibility with windows and non windows platforms. 
         private string GetQRCode(string qrCodeinfo)
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodeinfo, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            Bitmap qrCodeImage = qrCode.GetGraphic(20);
-            return $"data:image/bmp;base64,{qrCodeImage.ToBase64String(ImageFormat.Bmp)}";
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodeinfo, QRCodeGenerator.ECCLevel.Q))
+            using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+            {
+                byte[] qrCodeImage = qrCode.GetGraphic(20);
+                return $"data:image/png;base64,{Convert.ToBase64String(qrCodeImage)}";
+            }
         }
 
         private void FormatRegularHours(Location.Contracts.Location location)
@@ -474,26 +469,5 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public int? OrderNumber { get; set; }
         public ICollection<CurbsideFormData> CurbsideSurveyFormData { get; set; }
         public bool hasCurbsideSurveyData { get; set; }
-    }
-
-    public static class ImageExtension
-    {
-        public static string ToBase64String(this Bitmap bmp, ImageFormat imageFormat)
-        {
-            string base64String = string.Empty;
-
-            MemoryStream memoryStream = new MemoryStream();
-            bmp.Save(memoryStream, imageFormat);
-
-            memoryStream.Position = 0;
-            byte[] byteBuffer = memoryStream.ToArray();
-
-            memoryStream.Close();
-
-            base64String = Convert.ToBase64String(byteBuffer);
-            byteBuffer = null;
-
-            return base64String;
-        }
     }
 }
