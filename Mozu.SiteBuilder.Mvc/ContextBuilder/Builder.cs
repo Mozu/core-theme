@@ -39,7 +39,10 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.ProductRuntime.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using Mozu.Core.Exceptions;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -51,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         string GetContextCacheKey(IApiContext apiContext);
         Task PutAsync(ISiteBuilderContextData item, IApiContext apiContext);
        // Task Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dataViewMode);
-        Task Invalidate(int tenantId, int value1, int value2, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewModeType);
+        Task Invalidate(int tenantId, int value1, int value2, int? siteId, string localeCode, string currencyCode, bool flushStorefront);
         Task<List<SBCategory>> GetCategoryAsync(IApiContext _context);
         Task PutCategoryAsync(List<SBCategory> catTree, IApiContext _context);
     }
@@ -67,7 +70,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly string _machineId;
         private readonly IServiceProvider _globalScope;
         private readonly ICatalogFlyweightFactory _catalogFlyweightFactory;
-        public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
+        public static string CacheName = "Sitebuilder.ContextBuilder.Compressed";
+        public static string StoreFrontCacheName = "Sitebuilder.ContextBuilder.Compressed";
+        public static string AdminCacheName = "SitebuilderAdmin.ContextBuilder.Compressed";
+        
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         private const int TimerInterval = 15 * 1000;
         public const string CacheVersion = "c12";
@@ -79,12 +85,15 @@ namespace Mozu.SiteBuilder.Mvc.Context
         private readonly System.Collections.Concurrent.ConcurrentDictionary<int, DateTime> _requestedSites = new System.Collections.Concurrent.ConcurrentDictionary<int, DateTime>();
         private readonly ILogger _logger;
         private static readonly Random _random = new Random();
+        private readonly bool _isSb;
+
         public SitebuilderContextCacheRepository(
             ICacheProvider cacheProvider, 
             Mozu.Core.Settings.ISettings settings, 
             IServiceProvider globalScope,
             ICatalogFlyweightFactory catalogFlyweightFactory)
         {
+            _isSb = settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
             _mdbProvider = new Core.Mongo.MongoDatabaseProvider("CacheDB", "Cache", settings);
             _ensureIndexTask = EnsureIndexes();
             _cacheProvider = cacheProvider;
@@ -93,13 +102,14 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _logger = LoggingService.LoggerFor<SitebuilderContextCacheRepository>();
 
           
-            if( settings.AppSettingsAsNullableBool("sitebuilder.enableContextCacheBackgroundBuilds").GetValueOrDefault(true))
+            
+            if( settings.AppSettingsAsNullableBool("sitebuilder.enableContextCacheBackgroundBuilds").GetValueOrDefault(!_isSb))
             {
                 _backgroundBuildTimer = new Timer(BuildCallback, null, TimerInterval, Timeout.Infinite);
             }
             
-            bool isSandBox = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
-            if ( _settings.AppSettingsAsNullableBool(EnableCleanJobConfigKey).GetValueOrDefault(isSandBox))
+            
+            if ( _settings.AppSettingsAsNullableBool(EnableCleanJobConfigKey).GetValueOrDefault(!_isSb))
             {
                 _backgroundJobCleanTimer = new Timer(CleanJobQueuCallback, null, GetNextCleanInterval(), Timeout.Infinite);
             }
@@ -169,7 +179,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 if (work == null || work.Id == lastWorkId)
                 {
                     return;
-                }                
+                }
 
                 var apiContext = ToApiContext(work);
 
@@ -253,9 +263,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
         
             foreach ( var work in workItems)
             {
-                var cache = _cacheProvider.GetCache(CacheName, this.ToApiContext(work));
+                
                 var tags = GetTags(work.TenantId, work.MasterCatalogId, work.CatalogId, work.SiteId, DataViewModeType.Live);
-                await cache.InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any).ConfigureAwait(false);
+                var cache = _cacheProvider.GetCache(StoreFrontCacheName, this.ToApiContext(work));
+                var adminCache = _cacheProvider.GetCache(AdminCacheName, this.ToApiContext(work));
+                await Task.WhenAll( cache.InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any),
+                    adminCache.InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any)).ConfigureAwait(false);
             }
         }
 
@@ -392,21 +405,37 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _requestedSites[apicontext.SiteId.GetValueOrDefault(-1)] = DateTime.Now;
         }
 
-        async Task ISitebuilderContextCacheRepository.Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewMode)
+        async Task ISitebuilderContextCacheRepository.Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, string localeCode, string currencyCode, bool flushStorefront)
         {
-            //clear staging...
-            var tags = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending).ToList();
+            
+            var tags = GetTagsForInvalidation(tenantId, masterCatalogId, catalogId, siteId);
+            
             var apiContext = new Mozu.Core.ApiContext() {
                 TenantId = tenantId,
                 MasterCatalogId = masterCatalogId,
                 CatalogId = catalogId,
                 SiteId = siteId
             };
-            await _cacheProvider.GetCache(CacheName, apiContext).InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any).ConfigureAwait(false);
-            if ( dataViewMode == DataViewModeType.Pending)
+            var adminCache = _cacheProvider.GetCache(AdminCacheName, apiContext);
+            var storeFrontCache = _cacheProvider.GetCache(StoreFrontCacheName, apiContext);
+           
+            if (flushStorefront || _isSb)
+            {
+                await Task.WhenAll(
+                    adminCache.InvalidateItemsByTagsAsync(tags, tagQueryType: TagQueryType.Any),
+                    storeFrontCache.InvalidateItemsByTagsAsync(tags, tagQueryType: TagQueryType.Any)
+                );   
+            }
+            else
+            {
+                await adminCache.InvalidateItemsByTagsAsync(tags, tagQueryType: TagQueryType.Any);
+            }
+
+            if (_isSb)
             {
                 return;
             }
+            
             var fBuilder = Builders<SiteBuilderContextWorkItem>.Filter;
             var uBuilder = Builders<SiteBuilderContextWorkItem>.Update;
             var filterParts = new List<FilterDefinition<SiteBuilderContextWorkItem>>{
@@ -425,11 +454,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
 
             var update = uBuilder.Set(x => x.SchedualedBuildTime, DateTime.MinValue);
-
             var col = GetCollection();
 
-            var res = await col.UpdateManyAsync(filter, update, new UpdateOptions() { IsUpsert = false }).ConfigureAwait(false);
-            
+            await col.UpdateManyAsync(filter, update, new UpdateOptions() { IsUpsert = false });
+
         }
 
         async Task ISitebuilderContextCacheRepository.PutAsync(ISiteBuilderContextData item, IApiContext apiContext)
@@ -462,14 +490,22 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var isPending = dvm == DataViewModeType.Pending;
             var ret= new List<string>()
             {
-                $"t:{tenantId}&mc={masterCatalogId}&c={catalogId}&isPending={isPending}&v={CacheVersion}"
+                $"t:{tenantId}&mc={masterCatalogId}&c={catalogId}&isPending={isPending}"
             };
             if ( siteId.HasValue)
             {
-                ret.Add($"t:{tenantId}&mc={masterCatalogId}&c={catalogId}&s={siteId}&isPending={isPending}&v={CacheVersion}");
+                ret.Add($"t:{tenantId}&mc={masterCatalogId}&c={catalogId}&s={siteId}&isPending={isPending}");
             }
             return ret;
         }
+
+        private List<string> GetTagsForInvalidation(int tenantId, int masterCatalogId, int catalogId, int? siteId)
+        {
+            var lst = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Live);
+            lst.AddRange(GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending));
+            return lst;
+        }
+        
 
         private async Task UpsertWorkQueue (IApiContext apiContext, bool includePriceList)
         {

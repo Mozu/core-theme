@@ -46,25 +46,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddScoped<VisitEventPublisher>();
             
             
-            configure.AddMozuBus("SiteBuilderMessageQueue", (configurator, settings, registration, serviceBussConfig) =>
-            { 
-                //concat the host name of the machine to the queue name to make it unique
-                var queueName = settings.QueueName + "_dnc6";
-                                
-                configurator.ReceiveEndpoint(queueName, e =>
-                {   
-                    e.ConfigureConsumeTopology = false;
-                    e.Bind("siteBuilder_fanOut_exchange",x =>
-                    {
-                        x.ExchangeType = "fanout";
-                        x.RoutingKey = "";
-                    });
-                    e.Durable = false;
-                    e.AutoDelete = true; 
-                    e.SetQueueArgument("x-message-ttl", 30000);
-                    e.Consumer<SiteBuilderContextInvalidatorConsumer>(registration);
-                });
-            });
             
             
             configure.AddScoped<AMDModuleProvider>();
@@ -74,9 +55,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddScoped<IFileReader, MyLessFileReader>();
             configure.AddScoped<TemplateInheritanceHandler>();
             configure.AddScoped<ITemplateInheritanceHandler, TemplateInheritanceHandler>();
-            configure.AddSingleton<SiteBuilderContextInvalidatorConsumer>();
-            configure.AddSingleton<BusService>();
-            configure.AddHostedService<BusService>();
+           
             configure.AddScoped<ContentFetcher>();
             configure.AddHttpClient<ContentFetcher>()
                 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()

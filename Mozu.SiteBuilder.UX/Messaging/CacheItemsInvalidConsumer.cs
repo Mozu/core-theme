@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿/*
+using System.Collections.Generic;
 using Mozu.Core;
 using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Contracts;
@@ -138,3 +139,4 @@ namespace Mozu.SiteBuilder.UX.Messaging
 
     
 }
+*/
