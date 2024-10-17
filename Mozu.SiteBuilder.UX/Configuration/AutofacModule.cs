@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.UX.Messaging;
 using System;
 using System.Net.Http;
+using System.Reflection;
 using Microsoft.AspNetCore.StaticFiles;
 using Mozu.SiteBuilder.Mvc.Middleware;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
@@ -44,10 +45,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddMemoryCache();
             configure.AddScoped<ILoggingContextProvider, CurrentRequestLoggingContextProvider>();
             configure.AddScoped<VisitEventPublisher>();
-            
-            
-            
-            
+            configure.AddMozuBus("SiteBuilderMessageQueue", (Assembly)null);
             configure.AddScoped<AMDModuleProvider>();
             configure.AddScoped<LessLogger>();
             configure.AddScoped<LessTransFormer>();
