@@ -94,7 +94,7 @@
                     {% set_var showSubstituteItemHeader=false %}     
                     {% for packageItemDetail in package.packingSlipItemDetails %}            
                             {% for item in model.items %} <!-- model represents the shipment -->
-                                {% if not item.originalLineId %}
+                                {% if (not item.originalLineId) or (item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT') %}
                                     {% if (item.quantity > 0) %}
                                         {% if packageItemDetail.lineId == item.lineId %}
                                             {% set_var showOriginalItemHeader=true %}
@@ -102,7 +102,7 @@
                                     {% endif %}
                                 {% endif %}
                                 {% if packageItemDetail.lineId == item.lineId  %}
-                                    {% if item.originalLineId %}
+                                    {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
                                         {% if item.quantity > 0 %}
                                             {% set_var showSubstituteItemHeader=true %}
                                         {% endif %}
@@ -122,7 +122,7 @@
                     <tbody>
                     {% for packageItemDetail in package.packingSlipItemDetails %}
                         {% for item in model.items %} <!-- model represents the shipment -->
-                            {% if (not item.originalLineId) %}
+                            {% if ((not item.originalLineId) or (item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT')) %}
                                 {% if (item.quantity > 0) %}
                                     {% if packageItemDetail.lineId == item.lineId %}
                                     <tr>
@@ -171,27 +171,30 @@
                             {% for substituteItem in model.items %}
                                 {% if packageItemDetail.lineId == substituteItem.lineId  %}
                                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                                    <tr>
-                                        <td>
-                                            {% for item in model.items %}
-                                                {% if substituteItem.originalLineId == item.lineId %}
-                                                    <div class="product-name">{{ item.name }}</div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </td>
-                                        <td>
-                                            {{ substituteItem.productCode }}
-                                        </td>
-                                        <td>
-                                            <div class="product-name">{{ substituteItem.name }}</div>
-                                        </td>
-                                        <td>
-                                            {{ packageItemDetail.quantity }}
-                                        </td>
-                                        <td>
-                                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
-                                        </td>
-                                    </tr>
+                                        {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                                        <tr>
+                                            <td>
+                                                {% for item in model.items %}
+                                                
+                                                    {% if substituteItem.originalLineId == item.lineId %}
+                                                        <div class="product-name">{{ item.name }}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {{ substituteItem.productCode }}
+                                            </td>
+                                            <td>
+                                                <div class="product-name">{{ substituteItem.name }}</div>
+                                            </td>
+                                            <td>
+                                                {{ packageItemDetail.quantity }}
+                                            </td>
+                                            <td>
+                                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
                                     {% endif  %}
                                 {% endif  %}
                             {% endfor %}
@@ -294,12 +297,12 @@
         {% set_var showOriginalItemHeaderInWithElse=false %} 
         {% set_var showSubstituteItemHeaderInWithElse=false %}                 
         {% for item in model.items %} <!-- model represents the shipment -->
-            {% if (not item.originalLineId) %}
+            {% if ((not item.originalLineId) or (item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT')) %}
                 {% if (item.quantity > 0) %}
                     {% set_var showOriginalItemHeaderInWithElse=true %}
                 {% endif %}
             {% endif %}
-            {% if item.originalLineId %}
+            {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
                 {% if item.quantity > 0 %}
                     {% set_var showSubstituteItemHeaderInWithElse=true %}
                 {% endif %}    
@@ -316,7 +319,7 @@
             {% endif %}
             <tbody>
                 {% for item in model.items %} <!-- model represents the shipment -->
-                    {% if (not item.originalLineId) %}
+                    {% if ((not item.originalLineId) or (item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT')) %}
                         {% if (item.quantity > 0) %}
                         <tr>
                             <td>
@@ -360,27 +363,29 @@
             <tbody>
                 {% for substituteItem in model.items %}
                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                    <tr>
-                        <td>
-                            {% for item in model.items %}
-                                {% if substituteItem.originalLineId == item.lineId %}
-                                    <div class="product-name">{{ item.name }}</div>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {{ substituteItem.productCode }}
-                        </td>
-                        <td>
-                            <div class="product-name">{{ substituteItem.name }}</div>
-                        </td>
-                        <td>
-                            {{ substituteItem.quantity }}
-                        </td>
-                        <td>
-                            {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
-                        </td>
-                    </tr>
+                        {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                        <tr>
+                            <td>
+                                {% for item in model.items %}
+                                    {% if substituteItem.originalLineId == item.lineId %}
+                                        <div class="product-name">{{ item.name }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {{ substituteItem.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ substituteItem.name }}</div>
+                            </td>
+                            <td>
+                                {{ substituteItem.quantity }}
+                            </td>
+                            <td>
+                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                            </td>
+                        </tr>
+                        {% endif %}
                     {% endif  %}
                 {% endfor %}
             </tbody>
@@ -482,12 +487,12 @@
     {% set_var showOriginalItemHeaderInElse=false %} 
     {% set_var showSubstituteItemHeaderInElse=false %}                 
     {% for item in model.items %} <!-- model represents the shipment -->
-        {% if (not item.originalLineId) %}
+        {% if ((not item.originalLineId) or item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT') %}
             {% if (item.quantity > 0) %}
                 {% set_var showOriginalItemHeaderInElse=true %}
             {% endif %}
         {% endif %}
-        {% if item.originalLineId %}
+        {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
             {% if item.quantity > 0 %}
                 {% set_var showSubstituteItemHeaderInElse=true %}
             {% endif %}    
@@ -504,7 +509,7 @@
         {% endif %}
         <tbody>
             {% for item in model.items %} <!-- model represents the shipment -->
-                {% if (not item.originalLineId) %}
+                {% if ((not item.originalLineId) or item.originalLineId and item.substitutionType == 'PRE_FULFILLMENT') %}
                     {% if (item.quantity > 0) %}
                     <tr>
                         <td>
@@ -548,27 +553,29 @@
         <tbody>
             {% for substituteItem in model.items %}
                 {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                <tr>
-                    <td>
-                        {% for item in model.items %}
-                            {% if substituteItem.originalLineId == item.lineId %}
-                                <div class="product-name">{{ item.name }}</div>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {{ substituteItem.productCode }}
-                    </td>
-                    <td>
-                        <div class="product-name">{{ substituteItem.name }}</div>
-                    </td>
-                    <td>
-                        {{ substituteItem.quantity }}
-                    </td>
-                    <td>
-                        {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
-                    </td>
-                </tr>
+                    {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                        <tr>
+                            <td>
+                                {% for item in model.items %}
+                                    {% if substituteItem.originalLineId == item.lineId %}
+                                        <div class="product-name">{{ item.name }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {{ substituteItem.productCode }}
+                            </td>
+                            <td>
+                                <div class="product-name">{{ substituteItem.name }}</div>
+                            </td>
+                            <td>
+                                {{ substituteItem.quantity }}
+                            </td>
+                            <td>
+                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endif  %}
             {% endfor %}
         </tbody>
