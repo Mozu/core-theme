@@ -359,9 +359,14 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 });
                 return hasfulfilledPackage;
             },
-            getReturnableItems: function() {
-                var filteredReturnItems = this.get('returnableItems').filter(function(item) {
-                    var method = item.getOrderItem().get('fulfillmentMethod');
+            getReturnableItems: function () {
+                var filteredReturnItems = this.get('returnableItems').filter(function (item) {
+                    var method = '';
+                    if(item.getOrderItem()){
+                        method = item.getOrderItem().get('fulfillmentMethod');
+                    } else {
+                        method = item.get('fulfillmentMethod');
+                    }
                     return method !== "Digital";
                 });
                 return _.invoke(filteredReturnItems, 'toJSON');
@@ -499,14 +504,24 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         }) :
                         returnableParents[0];
 
-                    var originalOrderItem = self.get('items').find(function(item) {
-                        return item.get('lineId') === returnableParent.orderLineId;
+                    var originalOrderItem = self.get('items').find(function (item) {
+                        // look for correct order item id.
+                        // if order is synthesized, we need to look for the synthesized source based on shipment number and line id.
+                        var itemData = item.get('data');
+                        if (itemData && itemData.synthesizedSource) {
+                            var syntData = itemData.synthesizedSource;
+                            return syntData.shipmentNumber === returnableParent.shipmentNumber &&
+                                syntData.shipmentItemId === returnableParent.shipmentItemId;
+                        } else {
+                            return item.get('id') === returnableParent.orderItemId;
+                        }
                     });
 
                     if (returnableParent.quantityReturnable > 0) {
                         // Clone does not deep copy, each individual node must be cloned to avoid overriding of the orignal orderitem
                         var parentItem = JSON.parse(JSON.stringify(originalOrderItem));
                         returnableParent.product = parentItem.product;
+                        returnableParent.fulfillmentMethod = originalOrderItem.get('fulfillmentMethod');
 
                         // If we need to exclude extras, strip off bundle items with an OptionAttributeFQN and the corresponding Product.Options.
                         if (returnableParent.excludeProductExtras) {
@@ -552,6 +567,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         if (childProductMatch) {
                             var childProduct = _.clone(childProductMatch);
                             returnableChild.product = childProduct;
+                            returnableChild.fulfillmentMethod = originalOrderItem.get('fulfillmentMethod');
                             self.get('returnableItems').add(returnableChild);
                         }
                     });
