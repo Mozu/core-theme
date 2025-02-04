@@ -209,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICustomRouteHandler customRouteHandler,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> pageRuleEvaluator,
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> pageRuleEvaluator,
             IOrderWebApiClient orderWebApiClient,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient)
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)

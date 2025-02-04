@@ -198,6 +198,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (OrderItemsSubstitutedEmail),
                                                Topic = Topics.OrderItemsSubstitutedEmailTopic
                                            },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (OrderEmail),
+                                               Topic = Topics.OrderItemCanceledEmailTopic
+                                           },
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
@@ -481,7 +486,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ITenantsWebApiClient tenantsWebApiClient,
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> pageRuleEvaluator,
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> pageRuleEvaluator,
             IB2BAccountWebApiClient b2bAccountWebApiClient
             ) //why does this extend CMSPageController??  Ugh...
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
@@ -1028,6 +1033,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string OrderCancellation = "order.cancelled";
             public const string OrderCancellationPOSE = "order.cancelled.POSE";
             public const string OrderItemsSubstitutedEmailTopic = "order.itemssubstituted";
+            public const string OrderItemCanceledEmailTopic = "order.itemscanceled";
 
 
             public const string Backorder = "shipment.backordered";

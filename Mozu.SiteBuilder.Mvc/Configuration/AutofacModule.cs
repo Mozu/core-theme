@@ -110,7 +110,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             //metadata provider facade
             builder.AddScoped<IExpressionContextMetadataProvider<CmsPageRuleContext>, ExpressionContextMetadataProvider<CmsPageRuleContext>>();
 
-            builder.AddScoped<IExpressionContextFactory<CmsPageRuleContext>, CmsPageRuleContextFactory>();
+            //builder.AddScoped<IExpressionContextFactory<CmsPageRuleContext>, CmsPageRuleContextFactory>();
 
             //expression evaluator visitor
             builder.AddScoped<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();

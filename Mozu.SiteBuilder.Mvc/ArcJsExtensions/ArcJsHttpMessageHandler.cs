@@ -74,8 +74,8 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
         public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, ILoggerFactory loggingService,
             ISecureAppDataHandler secureAppDataHandler, IApiContext apiContext, NodePoolManager nodePoolManager,
-            IMozuSettings mozuSettings, IApiExceptionHandlerService apiExceptionHandlerService) : base(functionProvider,
-            loggingService, secureAppDataHandler, apiContext, nodePoolManager, mozuSettings, apiExceptionHandlerService)
+            IMozuSettings mozuSettings, IApiExceptionHandlerService apiExceptionHandlerService, IHttpContextAccessor httpContextAccessor) : base(functionProvider,
+            loggingService, secureAppDataHandler, apiContext, nodePoolManager, mozuSettings, apiExceptionHandlerService, httpContextAccessor)
         {
             _functionProvider = functionProvider;
         }

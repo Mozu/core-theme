@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICustomRouteHandler customRouteHandler, 
             Lazy<UrlHelper> urlhelper, 
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> expressionEvaluator)
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> expressionEvaluator)
         {
             _customRouteHandler = customRouteHandler;
             _urlhelper = urlhelper;

@@ -28,5 +28,26 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             return await Task.FromResult(new List<ExpressionContextPropertyDescriptor>());
         }
+
+        public Task<object> GetDynamicPropertyValue(string propertyPath, ExpressionContextPropertyInfo info, object o, RelationalExpression.DataType rightType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ExpressionContextPropertyInfo GetPropertyInfo(RelationalExpression propertyPath,
+            ExpressionContextPropertyInfo infoContextAttribute)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<TDescriptorType>> GetPropertyDescriptors<TDescriptorType>() where TDescriptorType : ExpressionContextPropertyDescriptor, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<TAttributeValue>> GetPropertyAttributeValues<TAttributeValue>(string propertyPath) where TAttributeValue : class, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

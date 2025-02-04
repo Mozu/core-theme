@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IProductSearchWebApiClient searchClient, ICustomRouteHandler customRouteHandler,
             IStorefrontCache storeFrontCache, UrlHelper urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> expressionEvaluator, ILogger<CatalogController> logger)
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> expressionEvaluator, ILogger<CatalogController> logger)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;

@@ -2,7 +2,6 @@
 using System.Linq;
 using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using System.Threading.Tasks;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Microsoft.Extensions.Logging;
@@ -15,14 +14,18 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         /// <inheritdoc />
         public CmsPageRelationalExpressionEvaluator(IExpressionContextMetadataProvider<CmsPageRuleContext> binaryExpressionContextMetadataProvider, ILogger<CmsPageRelationalExpressionEvaluator> logger) : 
-            base(binaryExpressionContextMetadataProvider, logger)
+            base(binaryExpressionContextMetadataProvider)
         {
             _logger = logger;
         }
 
         /// <inheritdoc />
-        public override Task<bool> Evaluate(CmsPageRuleContext context, RelationalExpression expression)
+
+        protected override bool EvaluateExpression(object contextValueOfLeftSide, RelationalExpression expression,
+            ExpressionEvaluationResult results)
         {
+            var context = contextValueOfLeftSide as CmsPageRuleContext;
+            
             switch (expression.Left.ToLowerInvariant())
             {
                 //handle special properties with case stmts
@@ -35,12 +38,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             if (context?.Customer?.CustomerSegments == null)
                             {
                                 _logger.Debug($"{expression} is false for null");
-                                return Task.FromResult(false);
+                                return false;
                             }
 
-                            var value = context.Customer.CustomerSegments?.ToArray()?.Join(",");
-                            var result = Task.FromResult((context?.Customer?.CustomerSegments )
-                                .Intersect((string[]) expression.Right, StringComparer.OrdinalIgnoreCase).Any());
+                            var value = context.Customer.CustomerSegments?.ToArray().Join(",");
+                            var result = context.Customer.CustomerSegments != null && 
+                                         context.Customer.CustomerSegments
+                                             .Intersect((string[]) expression.Right, StringComparer.OrdinalIgnoreCase)
+                                             .Any();
                             
                             _logger.Debug($"{expression} is {result} for {value}");
 
@@ -51,12 +56,14 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                             if (context?.Customer?.CustomerSegments == null)
                             {
                                 _logger.Debug($"{expression} is true for null");
-                                return Task.FromResult(true);
+                                return true;
                             }
 
-                            var value = context.Customer.CustomerSegments?.ToArray()?.Join(",");
-                            var result = Task.FromResult(!context.Customer.CustomerSegments
-                                .Intersect((string[]) expression.Right, StringComparer.OrdinalIgnoreCase).Any());
+                            var value = context.Customer.CustomerSegments?.ToArray().Join(",");
+                            var result = context.Customer.CustomerSegments != null && 
+                                         !context.Customer.CustomerSegments
+                                            .Intersect((string[]) expression.Right, StringComparer.OrdinalIgnoreCase)
+                                            .Any();
                             
                             _logger.Debug($"{expression} is {result} for {value}");
 
@@ -68,7 +75,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
 
                 default:
-                    return base.Evaluate(context, expression);
+                    return Evaluate(context, expression, results).GetAwaiter().GetResult();
             }
         }
     }
