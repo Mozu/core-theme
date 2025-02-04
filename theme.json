@@ -130,6 +130,13 @@
       "title": "Item on order was substituted"
     },
     {
+      "id": "order.itemscanceled",
+      "customEditor": "email-order-items-canceled",
+      "properties": {},
+      "template": "email/order-items-canceled",
+      "title": "Order Items Canceled"
+    },
+    {
       "id": "shipment.pickupready",
       "properties": {},
       "template": "email/order-pickup-ready",
