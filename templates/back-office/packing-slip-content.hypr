@@ -102,7 +102,7 @@
                                     {% endif %}
                                 {% endif %}
                                 {% if packageItemDetail.lineId == item.lineId  %}
-                                    {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
+                                    {% if item.originalLineId and item.substitutionType == 'AT_FULFILLMENT' %}
                                         {% if item.quantity > 0 %}
                                             {% set_var showSubstituteItemHeader=true %}
                                         {% endif %}
@@ -171,7 +171,7 @@
                             {% for substituteItem in model.items %}
                                 {% if packageItemDetail.lineId == substituteItem.lineId  %}
                                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                                        {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                                        {% if substituteItem.substitutionType == 'AT_FULFILLMENT' %}
                                         <tr>
                                             <td>
                                                 {% for item in model.items %}
@@ -302,7 +302,7 @@
                     {% set_var showOriginalItemHeaderInWithElse=true %}
                 {% endif %}
             {% endif %}
-            {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
+            {% if item.originalLineId and item.substitutionType == 'AT_FULFILLMENT' %}
                 {% if item.quantity > 0 %}
                     {% set_var showSubstituteItemHeaderInWithElse=true %}
                 {% endif %}    
@@ -363,7 +363,7 @@
             <tbody>
                 {% for substituteItem in model.items %}
                     {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                        {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                        {% if substituteItem.substitutionType == 'AT_FULFILLMENT' %}
                         <tr>
                             <td>
                                 {% for item in model.items %}
@@ -492,7 +492,7 @@
                 {% set_var showOriginalItemHeaderInElse=true %}
             {% endif %}
         {% endif %}
-        {% if item.originalLineId and item.substitutionType == 'AT_FULLFILLMENT' %}
+        {% if item.originalLineId and item.substitutionType == 'AT_FULFILLMENT' %}
             {% if item.quantity > 0 %}
                 {% set_var showSubstituteItemHeaderInElse=true %}
             {% endif %}    
@@ -553,7 +553,7 @@
         <tbody>
             {% for substituteItem in model.items %}
                 {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                    {% if substituteItem.substitutionType == 'AT_FULLFILLMENT' %}
+                    {% if substituteItem.substitutionType == 'AT_FULFILLMENT' %}
                         <tr>
                             <td>
                                 {% for item in model.items %}
