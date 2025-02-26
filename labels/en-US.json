@@ -953,5 +953,8 @@
   "digitalMessage": "Gift Message",
   "digitalItemEmailInstructions": "Follow these steps to claim your digital item.",
   "digitalItemBlob": "If you have questions about accessing your digital item, please visit <a href=\"https://{1}/myaccount\">{0}</a>.",
-  "substituteItemNote" : "Item(s) on your order {0} was substituted with another item. If there is anything you don't want, please contact customer care . If you would like to view or manage your order, please visit <a href=\"https://{1}/myaccount\">My Account</a>."
+  "substituteItemNote" : "Item(s) on your order {0} was substituted with another item. If there is anything you don't want, please contact customer care . If you would like to view or manage your order, please visit <a href=\"https://{1}/myaccount\">My Account</a>.",
+  "quantityOrdered": "Qty Ordered",
+  "quantityCanceled": "Qty Canceled",
+  "orderItemsCanceledBlob": "Following items on the order {0} exceeded the purchase limit and have been canceled."
 }
