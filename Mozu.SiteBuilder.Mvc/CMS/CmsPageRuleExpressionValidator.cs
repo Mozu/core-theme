@@ -38,9 +38,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         }
 
         /// <inheritdoc />
-        protected override void VaildatePropertyType(RelationalExpression expr, Type propertyType, ExpressionValidationResult result)
+        protected override void ValidatePropertyType(RelationalExpression expr, Type propertyType, ExpressionValidationResult result)
         {
-            base.VaildatePropertyType(expr, propertyType, result);
+            base.ValidatePropertyType(expr, propertyType, result);
         }
 
         /// <inheritdoc />

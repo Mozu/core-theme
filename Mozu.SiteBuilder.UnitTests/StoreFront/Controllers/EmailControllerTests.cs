@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             var tenantsWebApiClient = Substitute.For<ITenantsWebApiClient>();
             var urlHelper = new Lazy<UrlHelper>();
             var pageRuleVisitor = new Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();
-            var pageRuleEvaluator = new Lazy<IExpressionEvaluator>();
+            var pageRuleEvaluator = new Lazy<IExpressionEvaluator<CmsPageRuleContext>>();
             var b2bAccountWebApiClient = Substitute.For<IB2BAccountWebApiClient>();
             
             _emailController = new EmailController(

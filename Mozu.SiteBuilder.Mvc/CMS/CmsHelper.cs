@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         public async Task InitCmsPageContext(IPageContext pageContext,
             ISiteContext siteContext,
             ISiteBuilderApiContext sbApiContext,
-            Lazy<IExpressionEvaluator> expressionEvaluator = null,
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> expressionEvaluator = null,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor = null,
             ILogger<CmsHelper> logger = null)
         {

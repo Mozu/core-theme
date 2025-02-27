@@ -9,13 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public static class BinaryExpressionEvaluatorExt
     {
         //todo: might want to convert this to a real class so we can inject things like logging...
-        public static async Task EvaluatePageRules(this IExpressionEvaluator evaluator, PageContext pageContext, ExpressionEvaluatorVisitor<CmsPageRuleContext> visitor)
+        public static async Task EvaluatePageRules(this IExpressionEvaluator<CmsPageRuleContext> evaluator, PageContext pageContext, ExpressionEvaluatorVisitor<CmsPageRuleContext> visitor)
         {
             if (evaluator == null)
             {
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 variation.TryGetValue("isDisabled", StringComparison.OrdinalIgnoreCase, out var isDisabled);
 
-                if (isDisabled != null && isDisabled?.Value<bool>() == true) continue;
+                if (isDisabled != null && isDisabled.Value<bool>() == true) continue;
                 //variation.TryGetValue("variation_rule", StringComparison.OrdinalIgnoreCase, out var rule);
                 variation.TryGetValue("properties", StringComparison.OrdinalIgnoreCase, out var varProps);
 
@@ -57,11 +58,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 var stringRule = rule.ToString();
                 var abstractExp = JsonConvert.DeserializeObject<AbstractExpression>(stringRule);
 
-                await evaluator.Evaluate(abstractExp, visitor);
+                await evaluator.Evaluate(abstractExp, visitor, GetPageRuleContext(pageContext));
                 if(rank?.Value<int?>() == null)
                     rank = new JValue((int?)1);
 
-                if (visitor.Result)
+                if (visitor.Results.Result)
                     validPages.Add(new Tuple<int?, JObject>(rank.Value<int?>(),variation));
             }
 
@@ -75,6 +76,25 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             pageContext.CmsContext.Page.Document.Properties = retValue.ToJObject();
         }
 
-        
+        private static CmsPageRuleContext GetPageRuleContext(PageContext pageContext)
+        {
+                var retVal = new CmsPageRuleContext();
+                if (pageContext == null) return retVal;
+
+                if (pageContext.DataViewMode == DataViewModeType.Pending)
+                {
+                    retVal.StartDate = pageContext.Now;
+                    retVal.EndDate = pageContext.Now;
+                }
+                else
+                {
+                    retVal.StartDate = DateTime.UtcNow;
+                    retVal.EndDate = DateTime.UtcNow;
+                }
+
+                retVal.Customer.CustomerSegments = pageContext.User?.Segments;
+
+                return retVal;
+        }
     }
 }

@@ -105,8 +105,8 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set => _pageRuleVisitor = value;
         }
 
-        private Lazy<IExpressionEvaluator> _expressionEvaluator;
-        public Lazy<IExpressionEvaluator> ExpressionEvaluator
+        private Lazy<IExpressionEvaluator<CmsPageRuleContext>> _expressionEvaluator;
+        public Lazy<IExpressionEvaluator<CmsPageRuleContext>> ExpressionEvaluator
         {
             get =>
                 _expressionEvaluator;
