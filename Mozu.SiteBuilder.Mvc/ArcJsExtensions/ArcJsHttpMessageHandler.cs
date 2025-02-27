@@ -21,6 +21,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using Mozu.Core.Observability;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -72,10 +73,24 @@ namespace Mozu.SiteBuilder.Mvc.OAF
     {
         private readonly IFunctionProvider _functionProvider;
 
-        public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, ILoggerFactory loggingService,
-            ISecureAppDataHandler secureAppDataHandler, IApiContext apiContext, NodePoolManager nodePoolManager,
-            IMozuSettings mozuSettings, IApiExceptionHandlerService apiExceptionHandlerService, IHttpContextAccessor httpContextAccessor) : base(functionProvider,
-            loggingService, secureAppDataHandler, apiContext, nodePoolManager, mozuSettings, apiExceptionHandlerService, httpContextAccessor)
+        public ArcJSHttpHandlerRunner(IFunctionProvider functionProvider, 
+            ILoggerFactory loggingService,
+            ISecureAppDataHandler secureAppDataHandler, 
+            IApiContext apiContext, 
+            NodePoolManager nodePoolManager,
+            IMozuSettings mozuSettings, 
+            IApiExceptionHandlerService apiExceptionHandlerService, 
+            IHttpContextAccessor httpContextAccessor, 
+            IObservabilityOptions observabilityOptions) : 
+            base(functionProvider,
+            loggingService, 
+            secureAppDataHandler, 
+            apiContext, 
+            nodePoolManager, 
+            mozuSettings, 
+            apiExceptionHandlerService, 
+            httpContextAccessor, 
+            observabilityOptions)
         {
             _functionProvider = functionProvider;
         }
