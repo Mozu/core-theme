@@ -31,6 +31,8 @@ using Headers = Mozu.Core.Api.Contracts.Constants.Headers;
 using Mozu.SiteBuilder.Mvc.Context;
 using Microsoft.Extensions.DependencyInjection;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
+using Microsoft.Extensions.Logging;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -82,7 +84,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config, IHttpClientFactory clientFactory,
-            ITenantsWebApiClient tenantsWebApiClient)
+            ITenantsWebApiClient tenantsWebApiClient,
+            ILogger<TestingController> logger) 
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
             _cookies = cookies;
@@ -91,6 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _config = config;
             _clientFactory = clientFactory;
             _tenantsWebApiClient = tenantsWebApiClient;
+            _logger = logger;
             //SuppressMissingContextRedirect = true;
         }
 
@@ -116,6 +120,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly ILogger<TestingController> _logger;
         private static HttpClient _client;
 
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
@@ -124,10 +129,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var resource = _config.GetSection("mozu:routes").GetChildren()
                 .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).Where(x =>
                 {
-                    var u = new Uri(x);
-                    var idx = u.LocalPath.IndexOf('/', 2);
-                    var test = u.LocalPath.Substring(idx + 1).TrimEnd('/').TrimStart('/');
-                    return !test.IsNullOrEmpty() && url.StartsWith(test, StringComparison.OrdinalIgnoreCase);
+                    try{
+                        var u = new Uri(x);
+                        if ( u.LocalPath.Length < 2)
+                        {
+                            return false;
+                        }
+                        var idx = u.LocalPath.IndexOf('/', 2);
+                        if (idx == -1 || idx + 1 >= u.LocalPath.Length)
+                        {
+                            return false;
+                        }
+                        var test = u.LocalPath.Substring(idx + 1).TrimEnd('/').TrimStart('/');
+                        return !test.IsNullOrEmpty() && test.StartsWith(test, StringComparison.OrdinalIgnoreCase);
+                    }
+                    catch(Exception ex){
+                        _logger.Error("error parsing url: " + x, ex);
+                        return false;
+                    }
                 }).Select(_ =>
                 {
                     var uri = new Uri(_);

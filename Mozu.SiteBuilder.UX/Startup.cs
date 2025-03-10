@@ -51,6 +51,7 @@ namespace Mozu.SiteBuilder.UX
         {
             services
                 .AddSiteBuilderContextWarmup()
+                .AddObservability(Configuration)
                 .ConfigureArcJs(settings =>
                 {
                      settings.AddPipelineScript(typeof(Mozu.SiteBuilder.Mvc.OAF.ArcJsHttpRouter), "/ArcJsExtensions/Content/dist/webpack.bundle.js");
