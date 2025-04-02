@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     {
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
+            
             var templateName = (string)arguments[0].Value;
             var additionalState = new Dictionary<string, object>();
             if (arguments.Count > 1)
@@ -52,9 +53,48 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 additionalState.Add(item.Name, item.Value);
             }
 
+            RecursionTest(context, templateName, additionalState);
+
             var nodes = getTemplateFunc(templateName).Nodes;
 
-            return WalkResultHelpers.RenderNodesWithContextMods(nodes, additionalState, Enumerable.Empty<string>()).ToFSharpList();
+            var tags = WalkResultHelpers.RenderNodesWithContextMods(nodes, additionalState, Enumerable.Empty<string>());
+            
+            return tags.ToFSharpList();
+            
         }
+
+        public static void RecursionTest(IContext context, string templateName, Dictionary<string, object> additionalState)
+        {
+            const string includeKey = nameof(IncludeTag.RecursionTest);
+            
+            // Since we expect small sets (around 5 entries), optimize for this case
+            HashSet<string> newIncludeTracker;
+            
+            // Try to get existing include tracking set - use direct check for the key for better performance
+            var includeEntry = context.Items.FirstOrDefault(item => item.Item1 == includeKey);
+
+            if (includeEntry?.Item2 is ISet<string> existingTracker)
+            {
+                // Fast check for recursion
+                if (existingTracker.Contains(templateName))
+                {
+                    throw new Exception($"Infinite loop detected: template '{templateName}' is recursively included");
+                }
+                
+                // For small sets (≤5 items), this is very efficient
+                newIncludeTracker = new HashSet<string>(existingTracker, StringComparer.Ordinal);
+            }
+            else
+            {
+                // First template in the chain, create a small initial capacity
+                newIncludeTracker = new HashSet<string>(5, StringComparer.Ordinal);
+            }
+            
+            newIncludeTracker.Add(templateName);
+            additionalState[includeKey] = newIncludeTracker;
+        }
+
+
+
     }
 }
