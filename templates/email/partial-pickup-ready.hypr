@@ -269,32 +269,49 @@
                 </tr>
                 </thead>
             <tbody>
-                {% for substituteItem in model.items %}
-                    {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                    <tr>
-                        <td>
-                            <img style="height: 100px; width:100px;" src="{{ substituteItem.imageUrl }}">
+                {% for substitutedItem in model.substitutedItems %}
+                {% set_var rowspan_count=0 %}
+                {% set_var first_row_printed=false %}
+            
+                {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+                {% for item in model.items %}
+                    {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                    {% set_var rowspan_count=rowspan_count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                {% endfor %}
+            
+                {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+                {% for item in model.items %}
+                    {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                    <tr class="break-word">
+                    
+                        {% if not first_row_printed %}
+
+                            <td
+                                class="break-word"
+                                rowspan="{{ rowspan_count }}"
+                            >
+                                <div class="product-name">{{ substitutedItem.name }}</div>
+                            </td>
+
+                        {% set_var first_row_printed=true %}
+                        {% endif %}
+            
+            
+                        <td class="break-word">{{ item.productCode }}</td>
+                        <td class="break-word">
+                        <div class="product-name">{{ item.name }}</div>
                         </td>
-                        <td>
-                            {% for item in model.items %}
-                            {% if substituteItem.originalLineId == item.lineId %}
-                            <div class="product-name">{{ item.name }}</div>
-                            <dl>
-                                <dd>{{ item.productCode }}</dd>&nbsp;
-                            </dl>
-                            {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <div class="product-name">{{ substituteItem.name }}</div>
-                        </td>
-                        <td> {{ substituteItem.unitPrice }} </td>
-                        <td> {{ substituteItem.readyForPickupQuantity }} </td>
-                        <td class="align-right">
-                            <span class="mz-item-price">{% filter currency %} {{ substituteItem.actualPrice|multiply(substituteItem.quantity) }} {% endfilter %}</span>
+                        <td class="break-word">{{ item.unitPrice }}</td>
+                        <td class="break-word">{{ item.readyForPickupQuantity }}</td>
+                        <td class="align-right break-word">
+                            <span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span>
                         </td>
                     </tr>
-                    {% endif  %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
                 {% endfor %}
             </tbody>
         </table>
