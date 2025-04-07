@@ -39,36 +39,60 @@
                     <td class="no-left-padding"><b>{{ labels.substituteBy }}:</b><br></td>
                 </tr>
             </table>
-            <table class="grid substitute-table">
+            <table class="grid substitute-table" width="100%">
                 <thead>
                     <tr>
-                        <th class="break-word">{{ labels.productSubstitutedEmail }}</th>
-                        <th class="break-word">{{ labels.substituteEmail }}</th>
-                        <th class="break-word">{{ labels.eachSubstituteEmail }}</th>
-                        <th class="break-word align-right">{{ labels.subtotalSubstituteEmail }}</th>
+                        <td bgcolor="#666666" class="break-word"><font color="#ffffff">{{ labels.productSubstitutedEmail }}</font></td>
+                        <td bgcolor="#666666" class="break-word"><font color="#ffffff">{{ labels.substituteEmail }}</font></td>
+                        <td bgcolor="#666666" class="break-word"><font color="#ffffff">{{ labels.qtySubstituteEmail  }}</font></td>
+                        <td bgcolor="#666666"class="break-word"><font color="#ffffff">{{ labels.eachSubstituteEmail }}</font></td>
+                        <td bgcolor="#666666" class="break-word align-right" align="right"><font color="#ffffff">{{ labels.subtotalSubstituteEmail }}</font></td>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for substituteItem in model.items %}
-                        {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                        <tr>
-                            <td>
-                                {% for item in model.items %}
-                                {% if substituteItem.originalLineId == item.lineId %}
-                                <div class="product-name">{{ item.name }}</div>
+                    {% for substitutedItem in model.substitutedItems %}
+                        {% set_var rowspan_count=0 %}
+                        {% set_var first_row_printed=false %}
+                    
+                        {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+                          {% for item in model.canceledItems %}
+                            {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                              {% set_var rowspan_count=rowspan_count + 1 %}
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                    
+                        {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+                          {% for item in model.items %}
+                            {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                              <tr class="break-word">
+                              
+                                {% if not first_row_printed %}
+            
+                                      <td
+                                        class="break-word"
+                                        rowspan="{{ rowspan_count }}"
+                                      >
+                                        <div class="product-name">{{ substitutedItem.name }}</div>
+                                      </td>
+            
+                                  {% set_var first_row_printed=true %}
                                 {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <div class="product-name">{{ substituteItem.name }}</div>
-                            </td>
-                            <td align="right">{{ item.overridePrice|default(item.unitPrice)|currency }}</td>
-                            <td class="align-right">
-                                {{ substituteItem.lineItemCost|currency}}
-                            </td>
-                        </tr>
-                        {% endif  %}
-                    {% endfor %}
+                                <td>
+                                    <div class="product-name">{{ item.name }}</div>
+                                </td>
+                                <td>
+                                    {{ item.quantity }}
+                                </td>
+								<td>{{ item.overridePrice|default(item.unitPrice)|currency }}</td>
+                                <td class="align-right" align="right">
+                                    {{ item.lineItemCost|currency}}
+                                </td>
+                              </tr>
+                            {% endif %}
+                          {% endfor %}
+                        {% endfor %}
+                      {% endfor %}
                 </tbody>
             </table>
         {% endif %}
