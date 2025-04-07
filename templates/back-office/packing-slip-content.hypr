@@ -551,33 +551,44 @@
         </thead>
         {% endif %}
         <tbody>
-            {% for substituteItem in model.items %}
-                {% if substituteItem.originalLineId && substituteItem.quantity > 0 %}
-                    {% if substituteItem.substitutionType == 'AT_FULFILLMENT' %}
-                        <tr>
-                            <td>
-                                {% for item in model.items %}
-                                    {% if substituteItem.originalLineId == item.lineId %}
-                                        <div class="product-name">{{ item.name }}</div>
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {{ substituteItem.productCode }}
-                            </td>
-                            <td>
-                                <div class="product-name">{{ substituteItem.name }}</div>
-                            </td>
-                            <td>
-                                {{ substituteItem.quantity }}
-                            </td>
-                            <td>
-                                {{ substituteItem.weight }} {{ substituteItem.weightUnit }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endif  %}
+          {% for substitutedItem in model.substitutedItems %}
+            {% set_var rowspan_count=0 %}
+            {% set_var first_row_printed=false %}
+        
+            {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+              {% for item in model.items %}
+                {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                  {% set_var rowspan_count=rowspan_count + 1 %}
+                {% endif %}
+              {% endfor %}
             {% endfor %}
+        
+            {% for substituteItemLineId in substitutedItem.substituteItemLineIds %}
+              {% for item in model.items %}
+                {% if item.lineId == substituteItemLineId && item.originalLineId && item.quantity > 0 && item.substitutionType == 'AT_FULFILLMENT' && item.bundleInfo %}
+                  <tr class="break-word">
+                    {% if not first_row_printed %}
+
+                          <td
+                            class="break-word"
+                            rowspan="{{ rowspan_count }}"
+                          >
+                            <div class="product-name">{{ substitutedItem.name }}</div>
+                          </td>
+
+                      {% set_var first_row_printed=true %}
+                    {% endif %}
+                    <td class="break-word">{{ item.productCode }}</td>
+                    <td class="break-word">
+                      <div class="product-name">{{ item.name }}</div>
+                    </td>
+                    <td class="break-word">{{ item.quantity }}</td>
+                    <td class="break-word">{{ item.weight }} {{ item.weightUnit }}</td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
         </tbody>
     </table>
     {% endif %}
