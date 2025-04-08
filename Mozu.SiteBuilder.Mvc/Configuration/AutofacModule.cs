@@ -29,6 +29,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mozu.Core.Api.Health;
 using Mozu.Core.Exceptions;
+using Mozu.Core.FilterParsing.Expressions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
@@ -98,40 +99,30 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<IStorefrontCache, StorefrontCache>();
             builder.AddSingleton<IThemeCache, ThemeCache>();
             builder.AddSingleton<ISitebuilderContextCacheRepository, SitebuilderContextCacheRepository>();
-
-          
-            //Rule based page stuff
-            //static property provider
-            builder.AddSingleton<StaticMetadataProvider<CmsPageRuleContext>>();
-
-            //dynamic property provider
-            builder.AddScoped<IDynamicContextPropertyMetadataProvider<CmsPageRuleContext>, CmsPageRuleDynamicMetadataProvider>();  //todo: update when we add customer attributes
-
-            //metadata provider facade
-            builder.AddScoped<IExpressionContextMetadataProvider<CmsPageRuleContext>, ExpressionContextMetadataProvider<CmsPageRuleContext>>();
-
-            //builder.AddScoped<IExpressionContextFactory<CmsPageRuleContext>, CmsPageRuleContextFactory>();
-
-            //expression evaluator visitor
-            builder.AddScoped<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();
-            builder.RegisterAllImplementedInterfaces<ExpressionEvaluatorVisitor<CmsPageRuleContext>>(ServiceLifetime.Scoped);
-
-            //evaluator
-            builder.AddScoped<IRelationalExpressionEvaluator<CmsPageRuleContext>, CmsPageRelationalExpressionEvaluator>();
-            
-            //expression validator visitor
-            builder.AddScoped<CmsPageRuleExpressionValidator>();
-            builder.RegisterAllImplementedInterfaces<CmsPageRuleExpressionValidator>(ServiceLifetime.Scoped);
-
-            builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
-            //builder.AddSingleton<HtmlActionResultMediaTypeFormatter>();
             builder.AddHttpClient();
-           // builder.AddScoped<IApiContextAccessor, SBAPiContextAccessor>();
+            builder.AddSingleton<IOutOfMemoryExceptionsHandler, OutOfMemoryHandler>();
+          
+            #region Rule based page stuff
+            
+            //Context metadata provider stuff
+            builder.AddSingleton<StaticMetadataProvider<CmsPageRuleContext>>();
+            builder.AddScoped<IExpressionContextMetadataProvider<CmsPageRuleContext>, ExpressionContextMetadataProvider<CmsPageRuleContext>>();
+           
+            //Expression evaluation Stuff
+            builder.AddSingleton<IExpressionEvaluator<CmsPageRuleContext>, ExpressionEvaluatorImpl<CmsPageRuleContext>>();
+            builder.AddScoped<IRelationalExpressionEvaluator<CmsPageRuleContext>, RelationalExpressionEvaluator<CmsPageRuleContext>>();
+            builder.AddTransient<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();
 
-           builder.AddSingleton<IOutOfMemoryExceptionsHandler, OutOfMemoryHandler>();
-
-
-
+            //Expression Validation stuff
+            builder.AddScoped<CmsPageRuleExpressionValidator>();
+            builder.AddCoreExpressionEvaluation()
+            .AddScoped<CmsPageRuleRelationalExpressionValidator>()
+            .AddScoped<IExpressionParser, ExpressionParser>()
+            .AddScoped<IExpressionValidator<CmsPageRuleContext>, ExpressionValidator<CmsPageRuleContext>>()
+            .AddScoped<IRelationalExpressionValidator<CmsPageRuleContext>, RelationalExpressionValidator<CmsPageRuleContext>>()
+            .AddScoped<ExpressionValidationVisitor<CmsPageRuleContext>>()
+            ;
+            #endregion
         }
 
         private static void RegisterThemeInfrastructure(IServiceCollection builder)
@@ -140,8 +131,6 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddSingleton<IThemeRepository, ThemeRepository>();
             builder.AddScoped<HyprViewEngine>()
                 .AddSingleton<SbApiActionExtensionFilter>();
-
-
 
             builder.AddSingleton(c =>
             {

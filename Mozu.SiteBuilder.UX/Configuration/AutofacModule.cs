@@ -32,7 +32,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             SiteBuilderSessionMessageHandler.ReplaceMozuCoreSessionManagerHandler(configure);
             configure.AddScoped<EnforceSiteWideSsLMiddleware>();
-            configure.AddCoreExpressionEvaluation();
             configure.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
             configure.AddScoped<IApiContext>(c=> c.GetService<IApiContextAccessor>().ApiContext);
             configure.AddScoped<ISiteBuilderApiContext>(c => (ISiteBuilderApiContext)c.GetService<IApiContextAccessor>().ApiContext);

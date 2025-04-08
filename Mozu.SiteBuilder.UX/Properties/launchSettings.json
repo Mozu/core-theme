@@ -1,5 +1,4 @@
 {
-
   "profiles": {
     "Mozu.SiteBuilder.UX": {
       "commandName": "Project",
@@ -30,7 +29,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy_2": "http://localhost:8866",
         "mozu__appsettings__environment": "dev04",
-        "mozu__appsettings__scaleunint": "sb",
+        "mozu__appsettings__scaleunint": "sb"
 
       },
       "applicationUrl": "http://localhost:57521/"
@@ -42,8 +41,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy": "http://localhost:8866",
         "mozu__appsettings__environment": "dev10",
-        "mozu__appsettings__scaleunint": "sb",
-
+        "mozu__appsettings__scaleunint": "sb"
       },
       "applicationUrl": "http://localhost:57521/"
     },
@@ -66,6 +64,18 @@
         "http_proxy": "http://localhost:8866",
         "mozu__appsettings__environment": "prod",
         "mozu__appsettings__scaleunint": "sb"
+      },
+      "applicationUrl": "http://localhost:57521/"
+    },
+    "qa-sb": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "mozu__appsettings__environment": "qa",
+        "mozu__appsettings__scaleunint": "sb",
+        "Mozu__domains__tp": "http://2.services.sb.ng-qa.dev.kibocommerce.com"
+        
       },
       "applicationUrl": "http://localhost:57521/"
     }

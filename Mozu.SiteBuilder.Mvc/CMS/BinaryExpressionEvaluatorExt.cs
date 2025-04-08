@@ -41,24 +41,27 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 variation.TryGetValue("isDisabled", StringComparison.OrdinalIgnoreCase, out var isDisabled);
 
-                if (isDisabled != null && isDisabled.Value<bool>() == true) continue;
-                //variation.TryGetValue("variation_rule", StringComparison.OrdinalIgnoreCase, out var rule);
+                if (isDisabled != null && isDisabled.Value<bool>()) continue;
+                
                 variation.TryGetValue("properties", StringComparison.OrdinalIgnoreCase, out var varProps);
-
                 var variationProps = varProps.ToJObject();
 
                 if (variationProps == null) continue;
+                
                 variationProps.TryGetValue("variation_rule", StringComparison.OrdinalIgnoreCase, out var rule);
                 variationProps.TryGetValue("rank", StringComparison.OrdinalIgnoreCase, out var rank);
 
                 if ( rule == null) continue;
 
                 rule.ToJObject().TryGetValue("expressions", StringComparison.OrdinalIgnoreCase, out var expressions);
+                
                 if(expressions == null) continue;
+                
                 var stringRule = rule.ToString();
                 var abstractExp = JsonConvert.DeserializeObject<AbstractExpression>(stringRule);
+                var pageRuleContext = GetPageRuleContext(pageContext);
+                await evaluator.Evaluate(abstractExp, visitor, pageRuleContext);
 
-                await evaluator.Evaluate(abstractExp, visitor, GetPageRuleContext(pageContext));
                 if(rank?.Value<int?>() == null)
                     rank = new JValue((int?)1);
 
