@@ -487,19 +487,23 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         updateQuantity: function (newQty) {
             var me = this;
             if (this.get('quantity') === newQty) return;
+            
             this.set('quantity', newQty);
-            if (!this._hasVolumePricing) return;
-            if (newQty < this._minQty) {
-                return this.showBelowQuantityWarning();
+            if (!this._hasVolumePricing){
+                if (newQty < this._minQty) {
+                    this.showBelowQuantityWarning();
+                }
             }
             this.isLoading(true);
             me.toggleSubscriptionConfigureCall(false);
             var newConfiguration = this.getConfiguredOptions();
-            this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true }).then(function (apiModel) {
+            var segments = require.mozuData('customerSegments');
+            var customerSegments = segments && segments.length > 0 ? segments.join(',') : null;
+            this.apiConfigure({ options: newConfiguration, customerSegments:customerSegments }, { useExistingInstances: true}).then(function (apiModel) {
                 if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                     me.toggleSubscriptionConfigureCall(true, apiModel);
                     // make secondary call
-                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    me.apiConfiguresubscription({ options: newConfiguration, customerSegments:customerSegments}, { useExistingInstances: true})
                     .then(function (apiModel) {
                         me.toggleSubscriptionConfigureCall(false);
                         me.resetSubscriptionElements();
@@ -525,7 +529,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                     me.toggleSubscriptionConfigureCall(true, apiModel);
                     // make secondary call for subscription pricing
-                    me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                    var segments = require.mozuData('customerSegments');
+                    var customerSegments = segments && segments.length > 0 ? segments.join(',') : null;
+                    me.apiConfiguresubscription({ options: newConfiguration, customerSegments:customerSegments }, { useExistingInstances: true })
                     .then(function () {
                         me.toggleSubscriptionConfigureCall(false);
                         me.resetSubscriptionElements();
@@ -547,7 +553,9 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             me.toggleSubscriptionConfigureCall(false);
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
-                this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true })
+                var segments = require.mozuData('customerSegments');
+                var customerSegments = segments && segments.length > 0 ? segments.join(',') : null;
+                this.apiConfigure({ options: newConfiguration, customerSegments: customerSegments }, { useExistingInstances: true })
                     .then(function (apiModel) {
                         if (me._hasVolumePricing) {
                             if (me.isSubscriptionOnly())
@@ -557,7 +565,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me.get('subscriptionMode') === Product.Constants.SubscriptionMode.SubscriptionAndOneTime) {
                             me.toggleSubscriptionConfigureCall(true, apiModel);
                             // make secondary call
-                            me.apiConfiguresubscription({ options: newConfiguration }, { useExistingInstances: true })
+                            me.apiConfiguresubscription({ options: newConfiguration, customerSegments: customerSegments }, { useExistingInstances: true })
                             .then(function (apiModel) {
                                 me.toggleSubscriptionConfigureCall(false);
                                 me.resetSubscriptionElements();
