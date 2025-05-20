@@ -5,11 +5,9 @@
 {% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
 
 {% block body-content %}
-
-{% require_script "pages/product-collection" %}
-
-{% preload_json model "product" %}
 {% preload_json pageContext.user.segments "customerSegments" %}
+{% require_script "pages/product-collection" %}
+{% preload_json model "product" %}
 
 <div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
 

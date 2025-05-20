@@ -649,10 +649,11 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 me.set('volumePriceRange', me._originalVolumePriceRange);    
         },
         setCartPayloadForSubscription: function() {
+            var me = this;
             var subscriptionFrequency = this.get('subscriptionFrequency');            
             if (subscriptionFrequency && subscriptionFrequency.length > 1) {
                 var subscriptionPayload = {
-                    required: this.isSubscriptionOnly() ? true : false
+                    required: this.isSubscriptionOnly() || me.get('purchaseType') === 'subscribe' ? true : false
                 };    
                 var frequency = {};
                 // parse (ie D3, M30)
