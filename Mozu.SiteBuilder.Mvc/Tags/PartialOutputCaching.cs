@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
                 var siteCtx = walker.context.Resolve<SiteContext>();
                 var pageCtx = walker.context.Resolve<PageContext>();
-
+                
                 var arguments = ProcessArguments(walker);
                 if (TagBase.ArguemntParserStrategy != null)
                 {
@@ -146,7 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return Uncached(walker);
                 }
 
-                bool disabled = IsDisabled(arguments, pageCtx, siteCtx); ;
+                bool disabled = IsDisabled(arguments, pageCtx, siteCtx ); 
 
 
 
@@ -235,8 +235,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                         {
                             return true;
                         }
-
-                        return false;
+                        var segments = x.Value as List<string>;
+                        return segments != null && pageCtx.User?.Segments != null && segments.Count > 0 && segments.SequenceEqual(pageCtx.User.Segments);
                     });
 
                 }

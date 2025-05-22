@@ -20,6 +20,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Mozu.Core.Configuration;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -38,15 +39,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         readonly IProductRuntimeWebApiClient _productClient;
 
         readonly IProductSearchWebApiClient _searchClient;
+        readonly ICustomerSegmentPricingService _customerSegmentPricingService;
 
         public SearchController(IProductCategoryRuntimeWebApiClient catClient,
             IProductRuntimeWebApiClient productClient, IProductSearchWebApiClient searchClient,
-            ICustomRouteHandler customRouteHandler)
+            ICustomRouteHandler customRouteHandler,
+            ICustomerSegmentPricingService customerSegmentPricingService)
         {
             _catClient = catClient;
             _productClient = productClient;
             _searchClient = searchClient;
             _customRouteHandler = customRouteHandler;
+            _customerSegmentPricingService = customerSegmentPricingService;
         }
 
         [HttpOptions]
@@ -77,12 +81,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             bool debug_explain_structure = false,
             [FromQuery(Name = "debug")] string debug = null)
         {
+            
             if (string.Equals(this.HttpContext.Request.Method, "OPTIONS", StringComparison.OrdinalIgnoreCase))
             {
                 return OptionsIndex();
             }
 
             var _ = searchParams;
+
+            _.customerSegments  = await _customerSegmentPricingService.GetAllowedCustomerSegmentsAsString(_.customerSegments);
 
             //set back for post actions
             //todo:cole revisit for server-side JS
@@ -127,7 +134,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         sortBy: _.sortBy,
                         startIndex: _.startIndex,
                         mid: this.PageContext.MonetateId,
-                        targetContextLevel: _.targetContextLevel))
+                        targetContextLevel: _.targetContextLevel,
+                        customerSegments: _.customerSegments))
                     .ResponseMessage
                     .Content
                     .ReadAsStringAsync();
@@ -143,7 +151,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         searchSettingsName: _.searchSettings,
                         mid: this.PageContext.MonetateId,
                         returnUrl: debug == "suggest.returnUrl",
-                        targetContextLevel: _.targetContextLevel))
+                        targetContextLevel: _.targetContextLevel,
+                        customerSegments: _.customerSegments))
                     .ResponseMessage
                     .Content
                     .ReadAsStringAsync();
@@ -180,7 +189,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 startIndex: _.startIndex,
                 mid: this.PageContext.MonetateId,
                 targetContextLevel: _.targetContextLevel,
-                spellcorrectOverride: _.spellcorrectOverride)).ReadAsSync();
+                spellcorrectOverride: _.spellcorrectOverride,
+                customerSegments: _.customerSegments)).ReadAsSync();
 
             
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
@@ -463,6 +473,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string groups { get; set; }
             public Core.Api.Contracts.TargetContextLevelType targetContextLevel { get; set; }
             public string spellcorrectOverride { get; set; }
+            
+            public string customerSegments { get; set; }
         }
 
         private IDictionary<string, object> MakeSearchDict(string query, int? categoryId, int? page, string w)

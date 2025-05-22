@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
@@ -372,6 +373,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             catch
             {
+                Debug.WriteLine("Failed to parse profile token: " + ptoken);
             }
 
             return prof;
@@ -401,7 +403,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         segments = JsonConvert.DeserializeObject<List<string>>(tempStr);
                     }
-                    catch { }
+                    catch
+                    {
+                        Debug.WriteLine("Failed to parse segments: " + tempStr);
+                    }
                 }
             }
             var behaviors = new List<int>();

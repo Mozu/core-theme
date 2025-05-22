@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2022-07-28
+ * Mozu JavaScript SDK - v0.3.0 - 2025-05-06
  *
- * Copyright (c) 2022 Volusion, Inc.
+ * Copyright (c) 2025 Volusion, Inc.
  *
  */
 
@@ -3645,7 +3645,7 @@ module.exports=
     "returnType": "json"
   },
   "search": {
-    "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex}",
+    "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex, customerSegments}",
     "shortcutParam": "query",
     "defaultParams": {
       "startIndex": 0,
@@ -3688,7 +3688,7 @@ module.exports=
     },
     "configure": {
       "verb": "POST",
-      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity}",
+      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity,customerSegments}",
       "defaultParams": {
         "includeOptionDetails": true,
         "quantity": 1
@@ -3697,7 +3697,7 @@ module.exports=
     },
     "configuresubscription": {
       "verb": "POST",
-      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity,useSubscriptionPricing}",
+      "template": "{+productService}{productCode}/configure{?includeOptionDetails,quantity,useSubscriptionPricing,customerSegments}",
       "defaultParams": {
         "includeOptionDetails": true,
         "quantity": 1,
@@ -4510,7 +4510,6 @@ module.exports=
   },
   "checkout": {
     "template": "{+checkoutService}{id}",
-    //Check if needed
     "includeSelf": true,
     "create-from-cart": {
       "template": "{+checkoutService}{?cartId*}",

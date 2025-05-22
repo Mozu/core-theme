@@ -1,9 +1,11 @@
 ﻿# Notes on HyprLive
 
 ### Generate mozu-hyprlive.min/debug files
+```bash
   1. cd to /BuiltInScripts/HyprLive
   2. npm install
   3. grunt dist
+```
 
 ### Future Considerations
 This should ultimately become either a fork or a rework of SwigJS, the library we used as a starting point. Currently we have a very suboptimal thing going on where we just modify the browserified build of Swig instead of modifying the source. This originally happened because we can't build Swig: Swig has a *NIX-bound build process with a Makefile, instead of something cross-platform like Grunt that we could build on Windows.

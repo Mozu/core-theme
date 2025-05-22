@@ -4,39 +4,45 @@ The Mozu JavaScript SDK provides a JavaScript API for connecting to Mozu web ser
 
 ## Development requirements
 
-*   NodeJS >= 0.8
-*   GruntJS > 0.4
-*   `grunt-cli` installed globally
+* NodeJS >= 0.8
+* GruntJS > 0.4
+* `grunt-cli` installed globally
 
 ## Browser requirements
 
-*   Native JSON or json2.js. In the Core theme this library is provided by the Mozu-Require module loader.
+* Native JSON or json2.js. In the Core theme this library is provided by the Mozu-Require module loader.
 
 ## NodeJS requirements
 
-*   NodeJS >= 0.10
-*   [microevent](https://npmjs.org/package/microevent)
-*   [uritemplate](https://npmjs.org/package/uritemplate)
-*   [when](https://npmjs.org/package/when)
-*   [xmlhttprequest](https://npmjs.org/package/xmlhttprequest)
+* NodeJS >= 0.10
+* [microevent](https://npmjs.org/package/microevent)
+* [uritemplate](https://npmjs.org/package/uritemplate)
+* [when](https://npmjs.org/package/when)
+* [xmlhttprequest](https://npmjs.org/package/xmlhttprequest)
 
 ## Build
 
 Uses NPM for packaging and testing.
 
-    $ npm install -g grunt-cli
-    $ npm install
-    $ grunt
+```bash
+npm install -g grunt-cli
+npm install
+grunt
+```
 
 This should work on all platforms.
 
 ## Test
 
-    $ grunt test
+```bash
+grunt test
+```
 
 ## Test and debug with a browser
 
-    $ grunt testbrowser
+```bash
+grunt testbrowser
+```
 
 ## Usage
 
@@ -93,6 +99,6 @@ define(['mozu-javascript-sdk/dist/mozu-javascript-sdk.min'], function(Mozu) {
 
 ## Planned
 
-*   Real NodeJS testing (Nock)
-*   Support for Admin services
-*   Full method documentation
+* Real NodeJS testing (Nock)
+* Support for Admin services
+* Full method documentation

@@ -19,19 +19,20 @@
     <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2508.3" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2414.4" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="2.2426.2" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="2.2408.2" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2408.2" />
+    <PackageReference Include="Mozu.Core.Messaging" Version="2.2512.3" />
+    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2512.3" />
     <PackageReference Include="Mozu.Core.Prime" Version="2.2512.3" />
+
     
-    <PackageReference Include="Mozu.Customer.Contracts" Version="1.2434.2" />
+    <PackageReference Include="Mozu.Customer.Contracts" Version="1.2508.2" />
     <PackageReference Include="Mozu.DNS.Contracts" Version="1.1915.0-dotnetcore.2" />
     <PackageReference Include="Mozu.InstalledApplications.Contracts" Version="1.2220.2" />
     <PackageReference Include="Mozu.Location.Contracts" Version="1.2404.2" />
     <PackageReference Include="Mozu.MZDB.Contracts" Version="1.2426.3" />
     <PackageReference Include="Mozu.PaymentService.Contracts" Version="1.2010.0-dotnetcorecontracts.11" />
-    <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="2.2438.0-develop.343" />
-    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="1.2428.4" />
-    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="1.2428.4" />
+    <PackageReference Include="Mozu.PricingRuntime.Contracts" Version="2.2516.0-pr-1464.2" />
+    <PackageReference Include="Mozu.ProductAdmin.Contracts" Version="2.2516.0-pr-1464.2" />
+    <PackageReference Include="Mozu.ProductRuntime.Contracts" Version="2.2516.0-pr-1464.2" />
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2318.2" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2420.2" />

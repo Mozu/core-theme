@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
      <TargetFramework>net6.0</TargetFramework>
@@ -39,7 +39,7 @@
       <PackageReference Include="Mozu.Core.Api.Test" Version="2.2508.4" />
     <PackageReference Include="Mozu.Core.JunitTestLogger" Version="2.2508.4" />
     <PackageReference Include="Mozu.Core.Prime" Version="2.2512.3" />
-    <PackageReference Include="Mozu.Core.Test" Version="2.2508.4" />
+    <PackageReference Include="Mozu.Core.Test" Version="2.2512.3" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.1.0">
       <PrivateAssets>all</PrivateAssets>

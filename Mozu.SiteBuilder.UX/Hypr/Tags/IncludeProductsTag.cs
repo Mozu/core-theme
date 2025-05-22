@@ -17,6 +17,7 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder.Extensions;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -75,6 +76,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var filter = arguments.GetValueOrDefault<string>("query" , arguments.GetValueOrDefault<string>("filter"));
             var searchQueryString = arguments.GetValueOrDefault<string>("searchQuery", "*:*");
             var sort = arguments.GetValueOrDefault<string>("sort");
+            var customerSegments = arguments.GetValueOrDefault<string>("customerSegments");
+            if (customerSegments == null)
+            {
+                var customerSegmentArray = arguments.GetValueOrDefault<List<string>>("customerSegments");
+                customerSegments = customerSegmentArray?.Count> 0 ? string.Join(",", customerSegmentArray) : null;
+            }
+            
+            
 
             IEnumerable productCodes = null;
             if ( !arguments.TryGetValue< IEnumerable>("productCodes", out productCodes ))
@@ -133,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             ProcessSearchTuningRuleContext(categoryId, ref searchTuningRuleContext);
             var sortBy = ProcessSortBy(siteContext, searchContext, sortWithUrl, sort);
-
+            cacheResults = cacheResults && string.IsNullOrEmpty(customerSegments);
             
             var cache = context.Resolve<ILiveModeOnlyCache>();
             var pc = await DoSearch(
@@ -167,7 +176,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 responseGroups,
                 includeUserClaims,
                 mid:pageContext.MonetateId,
-                searchSettings:searchSettings
+                searchSettings:searchSettings,
+                customerSegments:customerSegments
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -220,7 +230,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string responseGroups,
             bool includeUserClaims,
             string mid,
-            string searchSettings
+            string searchSettings,
+            string customerSegments
             )
         {
             string cacheKey = null;
@@ -238,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (cacheResults)
             {
-                cacheKey = new StringBuilder()
+                var sb = new StringBuilder()
                     .Append(searchQueryString)
                     .Append(parsedFilter)
                     .Append(facetHierValue)
@@ -259,9 +270,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(facetPrefix)
                     .Append(responseOptions)
                     .Append(responseGroups)
-                    .Append(searchSettings)
-                    .ToString();
-
+                    .Append(searchSettings);
+                cacheKey = sb.ToString();
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
             }
             if (pc == null)
@@ -287,7 +297,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         searchTuningRuleContext: searchTuningRuleContext,
                         mid:mid,
                         searchSettings: searchSettings,
-                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
+                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null,
+                        customerSegments: customerSegments
                     ).ConfigureAwait(false)
                     : await productSearchWebApiClient.CloneWithoutUserClaims().Search(
                         query: searchQueryString,
@@ -309,7 +320,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         searchTuningRuleContext: searchTuningRuleContext,
                         mid:mid,
                         searchSettings: searchSettings,
-                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
+                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null,
+                        customerSegments: customerSegments
                     ).ConfigureAwait(false);
 
 
@@ -500,7 +512,4 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
     }
-
-
-   
 }

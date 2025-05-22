@@ -22,15 +22,16 @@
       },
       "applicationUrl": "http://localhost:57521/"
     },
-    "dev04-sb": {
+    "gdev05-sb": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy_2": "http://localhost:8866",
-        "mozu__appsettings__environment": "dev04",
-        "mozu__appsettings__scaleunint": "sb"
-
+        "mozu__appsettings__environment": "gdev05",
+        "mozu__appsettings__scaleunint": "sb",
+        "spring__cloud__config__label": "environment(_)gdev",
+        "spring__cloud__config__uri": "http://shared.kube-int-dev.gcp-kibo-dev.int/kibo.config/"
       },
       "applicationUrl": "http://localhost:57521/"
     },

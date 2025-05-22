@@ -54,11 +54,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly UrlHelper _urlhelper;
         private static readonly JsonSerializer ProductSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
         private readonly ILogger _logger;
+        private readonly ICustomerSegmentPricingService _customerSegmentPricingService;
+
         public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient,
             IProductSearchWebApiClient searchClient, ICustomRouteHandler customRouteHandler,
             IStorefrontCache storeFrontCache, UrlHelper urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator<CmsPageRuleContext>> expressionEvaluator, ILogger<CatalogController> logger)
+            Lazy<IExpressionEvaluator<CmsPageRuleContext>> expressionEvaluator, ILogger<CatalogController> logger,
+            ICustomerSegmentPricingService customerSegmentPricingService) 
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
@@ -69,6 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _urlhelper = urlhelper;
             PageRuleVisitor = pageRuleVisitor;
             ExpressionEvaluator = expressionEvaluator;
+            _customerSegmentPricingService = customerSegmentPricingService;
         }
 
         /// <summary>
@@ -81,10 +85,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<IActionResult> ProductDetail(string productCode, string vpc = null, string sliceValue = null)
+        public async Task<IActionResult> ProductDetail(string productCode, string vpc = null, string sliceValue = null, string customerSegments = null)
         {
+            customerSegments = await _customerSegmentPricingService.GetAllowedCustomerSegmentsAsString(customerSegments);
             var productResponse = await _productClient.GetProduct(productCode, vpc,
-                "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true, sliceValue:sliceValue).ConfigureAwait(false);
+                "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true, sliceValue:sliceValue, customerSegments: customerSegments);
 
             if (!productResponse.ResponseMessage.IsSuccessStatusCode)
             {
@@ -231,8 +236,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<UX.Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
+        public async Task<UX.Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null, string customerSegments = null)
         {
+            customerSegments = await _customerSegmentPricingService.GetAllowedCustomerSegmentsAsString(customerSegments);
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
             if (useUrlParams.GetValueOrDefault(false))
             {
@@ -270,8 +276,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     filter = "categoryId req " + categoryId;
                 }
             }
-            //todo do i need to replace recurese
-            // recurse: recurse,
 
             var isVolumePricingBandsEnabled = ((bool?)SiteContext.ThemeSettings["listVolumePricing"]);
             var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
@@ -279,14 +283,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
             {
                 string facetValueFilter = Request.Query["facetValueFilter"];
-                var pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
+                var pcDC = await (await _searchClient.Search(query: "*:*",
+                    filter: filter,
+                    startIndex: startIdx,
+                    pageSize: itemsPerPage,
+                    sortBy: sortBy,
+                    facetTemplate: "categoryId:" + categoryId,
+                    facetHierValue: "categoryId:" + categoryId,
+                    facetHierDepth: "categoryId:2",
+                    facetValueFilter: facetValueFilter,
+                    responseOptions: responseOptions,
+                    customerSegments: customerSegments)).ReadAsAsync();
+                
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                 pc.Init(true, this.PageContext.Search);
                 return pc;
             }
             else
             {
-                var pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseOptions: responseOptions)).ReadAsAsync();
+                var pcDC = await (await _productClient.GetProducts(filter: filter,
+                    startIndex: startIdx,
+                    pageSize: itemsPerPage,
+                    sortBy: sortBy,
+                    responseOptions: responseOptions,
+                    customerSegments: customerSegments)).ReadAsAsync();
+                
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductCollection>(pcDC);
                 pc.Init(true, this.PageContext.Search);
                 return pc;
