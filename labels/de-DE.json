@@ -824,14 +824,10 @@
   "orderItemsCanceledBlob": "Die folgenden Artikel der Bestellung {0} haben das Kauflimit überschritten und wurden storniert.",
   "requestCode": "Anfrage Code",
   "backToPasswordLogin": "Zurück zur Anmeldung mit Passwort",
-  "backToLogin": "Zurück zur Anmeldung"
-  "orderItemsCanceledBlob": "Die folgenden Artikel der Bestellung {0} haben das Kauflimit überschritten und wurden storniert.",
+  "backToLogin": "Zurück zur Anmeldung",
   "otpForLoginAdminLabel": "OTP für Login",
   "emailSubjectOtp": "Ihr Einmal-Passwort (OTP) für die Anmeldung",
-  "hi": "Hallo",
   "otpEmailInstruction": "Bitte verwenden Sie das folgende Einmal-Passwort (OTP), um Ihre Anmeldung abzuschließen. Dieses OTP ist für eine begrenzte Zeit gültig.",
   "otpNotRequested": "Wenn Sie dieses OTP nicht angefordert haben, ignorieren Sie diese E-Mail bitte oder wenden Sie sich bei Bedenken an unser Support-Team.",
-  "systemGeneratedEmail": "Dies ist eine systemgenerierte E-Mail. Bitte antworten Sie nicht.",
-  "sincerely": "Mit freundlichen Grüßen",
-  "customerService": "Kundendienst"
+  "systemGeneratedEmail": "Dies ist eine systemgenerierte E-Mail. Bitte antworten Sie nicht."
 }

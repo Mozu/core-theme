@@ -1,25 +1,33 @@
 {% extends "email/email" %}
+
 {% block body-content %}
-<div class="emailWrapper">
-    <div class="header-container">
-        <div class="delivery-logo text-left">
-            <!-- You might want to use a generic logo or make it configurable if needed -->
-            <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
-        </div>
-        <div class="delivery-title">
-            <p class="storename">{{ siteContext.generalSettings.websiteName }}</p>
-            <p class="title">{{ labels.emailSubjectOtp }}</p> {# Or a more specific title label if you prefer #}
-        </div>
+  <!--- Header --->
+  <div class="mz-otp-email-header">  
+    <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+    <div class="mz-otp-header-body">
+      <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+      <h3>{{ labels.emailSubjectOtp }}</h3>
     </div>
-    <div class="body-container">
-        <p>{{ labels.hi }}</p><br/>
-        <p>{{ labels.otpEmailInstruction }}</p><br/>
-        <p style="font-size: 18px; font-weight: bold; text-align: center; letter-spacing: 2px; padding: 10px; border: 1px dashed #ccc; background-color: #f9f9f9;">{{ model.Otp }}</p><br/>
-        <p>{{ labels.otpNotRequested }}</p><br/>
-        <p><small>{{ labels.systemGeneratedEmail }}</small></p><br/>
-        <p>{{ labels.sincerely }}<br />
-        {{ labels.customerService }}<br />
-        {{ siteContext.generalSettings.websiteName }}</p>
+  </div>
+  <br/>
+
+  <div class="mz-otp-email-body">
+    {% if user and user.firstName %}
+      {{ labels.emailOpening|string_format(user.firstName)|safe }}
+    {% else %}
+      {{ labels.emailOpeningAlternative|safe }}
+    {% endif %}
+
+    <p>{{ labels.otpEmailInstruction }}</p>
+    
+    <div class="mz-otp-code" style="font-size: 18px; font-weight: bold; text-align: center; letter-spacing: 2px; padding: 15px; border: 1px dashed #ccc; background-color: #f9f9f9; margin: 20px 0;">
+      {{ model.Otp }}
     </div>
-</div>
+
+    <p>{{ labels.otpNotRequested }}</p>
+    
+    <p><small>{{ labels.systemGeneratedEmail }}</small></p>
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+  </div>
 {% endblock body-content %}

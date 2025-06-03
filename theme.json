@@ -435,12 +435,17 @@
       "properties": {},
       "template": "email/subscription-paused-reminder",
       "title": "Want to reactivate your paused subscription ?"
-    },
-    {
+    },    {
       "id": "digitalitem.created",
       "properties": {},
       "template": "email/digitalitem-created",
       "title": "Digital Item Created"
+    },
+    {
+      "id": "otp.login",
+      "properties": {},
+      "template": "email/email-otp-login",
+      "title": "OTP for Login"
     }
   ],
   "backOfficeTemplates": [
