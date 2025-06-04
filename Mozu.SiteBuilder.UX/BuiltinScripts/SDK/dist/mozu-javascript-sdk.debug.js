@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2025-05-06
+ * Mozu JavaScript SDK - v0.3.0 - 2025-06-03
  *
  * Copyright (c) 2025 Volusion, Inc.
  *
@@ -3645,7 +3645,7 @@ module.exports=
     "returnType": "json"
   },
   "search": {
-    "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex, customerSegments}",
+    "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,facetPrefix,sortBy,pageSize,PageSize,startIndex,StartIndex,customerSegments}",
     "shortcutParam": "query",
     "defaultParams": {
       "startIndex": 0,
