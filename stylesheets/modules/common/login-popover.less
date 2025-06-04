@@ -8,11 +8,27 @@
 
     .mz-login-form {
         padding-right: @gutter;
-    }
-
-    a {
+    }    a {
         .permalink(@textColor);
         font-size: @fontSizeSmall;
+    }
+
+    .mz-otp-login-option {
+        margin-top: 10px;
+        text-align: center;
+        border-top: 1px solid @borderColor;
+        padding-top: 10px;
+        
+        a {
+            color: @primaryColor;
+            text-decoration: none;
+            font-weight: 500;
+            
+            &:hover {
+                text-decoration: underline;
+                color: darken(@primaryColor, 10%);
+            }
+        }
     }
 
     input[type="text"], input[type="email"], input[type="password"] {

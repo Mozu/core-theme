@@ -1,0 +1,40 @@
+<div class="mz-otp-login">
+  <div class="mz-otp-header">
+    <h3>{{ labels.otpLoginTitle }}</h3>
+    <p>{{ labels.otpLoginInstructions }}</p>
+  </div>
+  
+  <div class="mz-otp-form">
+    <input type="email" class="mz-otp-email" placeholder="{{ labels.emailAddress }}" data-mz-otp-email />
+    
+    <div class="mz-otp-input-section" style="display: none;">
+      <label>{{ labels.enterVerificationCode }}</label>
+      <div class="mz-otp-input-container">
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="0" />
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="1" />
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="2" />
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="3" />
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="4" />
+        <input type="text" maxlength="1" class="mz-otp-digit" data-index="5" />
+      </div>
+    </div>
+    
+    <div class="mz-otp-actions">
+      <button class="mz-button mz-button-primary mz-send-otp" data-mz-action="sendOtp">
+        {{ labels.sendVerificationCode }}
+      </button>
+      <button class="mz-button mz-button-primary mz-verify-otp" data-mz-action="verifyOtp" style="display: none;" disabled>
+        {{ labels.signIn }}
+      </button>
+      <button class="mz-button mz-button-secondary mz-resend-otp" data-mz-action="resendOtp" style="display: none;">
+        {{ labels.resendCode }}
+      </button>
+    </div>
+    
+    <div class="mz-otp-alternative">
+      <a href="javascript:;" data-mz-action="backToPasswordLogin">{{ labels.backToPasswordLogin }}</a>
+    </div>
+  </div>
+  
+  <section data-mz-role="otp-message" class="mz-otp-message"></section>
+</div>

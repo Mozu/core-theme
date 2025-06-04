@@ -1,0 +1,328 @@
+// 2FA and OTP Authentication Styles
+
+// 2FA Challenge Styles
+.mz-2fa-challenge {
+    .mz-2fa-code-container {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 20px 0;
+        
+        .mz-2fa-digit {
+            width: 45px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            transition: all 0.2s ease;
+            
+            &:focus {
+                outline: none;
+                border-color: #007cba;
+                box-shadow: 0 0 0 3px rgba(0, 124, 186, 0.1);
+            }
+            
+            &:invalid {
+                border-color: #e74c3c;
+            }
+        }
+    }
+    
+    .mz-2fa-actions {
+        text-align: center;
+        margin-top: 20px;
+        
+        .mz-button {
+            margin: 0 5px;
+        }
+    }
+    
+    .mz-2fa-resend {
+        margin-top: 15px;
+        text-align: center;
+        
+        .mz-resend-link {
+            color: #007cba;
+            text-decoration: none;
+            font-size: 14px;
+            
+            &:hover:not(:disabled) {
+                text-decoration: underline;
+            }
+            
+            &:disabled {
+                color: #999;
+                cursor: not-allowed;
+            }
+        }
+    }
+    
+    .mz-2fa-message {
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 4px;
+        
+        &.mz-error {
+            background: #ffeaea;
+            color: #e74c3c;
+            border: 1px solid #f5c6cb;
+        }
+        
+        &.mz-success {
+            background: #eafaf1;
+            color: #27ae60;
+            border: 1px solid #c3e6cb;
+        }
+        
+        &.mz-info {
+            background: #e6f3ff;
+            color: #007cba;
+            border: 1px solid #b8d4ed;
+        }
+    }
+}
+
+// OTP Login Styles
+.mz-otp-login {
+    .mz-otp-email-section {
+        .mz-otp-email-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            
+            &:focus {
+                outline: none;
+                border-color: #007cba;
+            }
+        }
+    }
+    
+    .mz-otp-verify-section {
+        display: none;
+        
+        &.active {
+            display: block;
+        }
+        
+        .mz-otp-email-display {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+            
+            .mz-email-highlight {
+                font-weight: 600;
+                color: #333;
+            }
+        }
+    }
+    
+    .mz-otp-code-container {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 20px 0;
+        
+        .mz-otp-digit {
+            width: 45px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            transition: all 0.2s ease;
+            
+            &:focus {
+                outline: none;
+                border-color: #007cba;
+                box-shadow: 0 0 0 3px rgba(0, 124, 186, 0.1);
+            }
+            
+            &:invalid {
+                border-color: #e74c3c;
+            }
+        }
+    }
+    
+    .mz-otp-actions {
+        text-align: center;
+        margin-top: 20px;
+        
+        .mz-button {
+            margin: 0 5px;
+        }
+    }
+    
+    .mz-otp-resend {
+        margin-top: 15px;
+        text-align: center;
+        
+        .mz-resend-link {
+            color: #007cba;
+            text-decoration: none;
+            font-size: 14px;
+            
+            &:hover:not(:disabled) {
+                text-decoration: underline;
+            }
+            
+            &:disabled {
+                color: #999;
+                cursor: not-allowed;
+            }
+        }
+    }
+    
+    .mz-otp-back-link {
+        margin-top: 15px;
+        text-align: center;
+        
+        a {
+            color: #007cba;
+            text-decoration: none;
+            font-size: 14px;
+            
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    
+    .mz-otp-message {
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 4px;
+        
+        &.mz-error {
+            background: #ffeaea;
+            color: #e74c3c;
+            border: 1px solid #f5c6cb;
+        }
+        
+        &.mz-success {
+            background: #eafaf1;
+            color: #27ae60;
+            border: 1px solid #c3e6cb;
+        }
+        
+        &.mz-info {
+            background: #e6f3ff;
+            color: #007cba;
+            border: 1px solid #b8d4ed;
+        }
+    }
+}
+
+// Shared Styles
+.mz-auth-popup {
+    .mz-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &.mz-button-primary {
+            background: #007cba;
+            color: white;
+            
+            &:hover:not(:disabled) {
+                background: #005a8a;
+            }
+            
+            &:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+        }
+        
+        &.mz-button-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            
+            &:hover:not(:disabled) {
+                background: #e9ecef;
+            }
+            
+            &:disabled {
+                background: #f8f9fa;
+                color: #999;
+                cursor: not-allowed;
+            }
+        }
+    }
+    
+    .mz-form-field {
+        margin-bottom: 15px;
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+    }
+    
+    .mz-loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        
+        .mz-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007cba;
+            border-radius: 50%;
+            animation: mz-spin 1s linear infinite;
+        }
+    }
+}
+
+@keyframes mz-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+// Mobile Responsiveness
+@media (max-width: 480px) {
+    .mz-2fa-challenge,
+    .mz-otp-login {
+        .mz-2fa-code-container,
+        .mz-otp-code-container {
+            gap: 4px;
+            
+            .mz-2fa-digit,
+            .mz-otp-digit {
+                width: 35px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+        
+        .mz-button {
+            font-size: 12px;
+            padding: 8px 16px;
+        }
+    }
+}

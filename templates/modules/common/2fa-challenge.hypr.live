@@ -1,0 +1,32 @@
+<div class="mz-2fa-challenge">
+  <div class="mz-2fa-header">
+    <h3>{{ labels.twoFactorAuthTitle }}</h3>
+    <p>{{ labels.twoFactorAuthInstructions }}</p>
+  </div>
+  
+  <div class="mz-2fa-form">
+    <div class="mz-otp-input-container">
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="0" />
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="1" />
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="2" />
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="3" />
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="4" />
+      <input type="text" maxlength="1" class="mz-otp-digit" data-index="5" />
+    </div>
+    
+    <div class="mz-2fa-actions">
+      <button class="mz-button mz-button-primary" data-mz-action="submit2fa" disabled>
+        {{ labels.verify }}
+      </button>
+      <button class="mz-button mz-button-secondary" data-mz-action="resend2fa">
+        {{ labels.resendCode }}
+      </button>
+    </div>
+    
+    <div class="mz-2fa-alternative">
+      <a href="javascript:;" data-mz-action="backToLogin">{{ labels.backToLogin }}</a>
+    </div>
+  </div>
+  
+  <section data-mz-role="2fa-message" class="mz-2fa-message"></section>
+</div>
