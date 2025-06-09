@@ -440,11 +440,10 @@
       "properties": {},
       "template": "email/digitalitem-created",
       "title": "Digital Item Created"
-    },
-    {
-      "id": "otp.login",
+    },    {
+      "id": "user.otpsent",
       "properties": {},
-      "template": "email/email-otp-login",
+      "template": "email/otp-login",
       "title": "OTP for Login"
     }
   ],

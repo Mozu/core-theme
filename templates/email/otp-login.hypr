@@ -21,7 +21,7 @@
     <p>{{ labels.otpEmailInstruction }}</p>
     
     <div class="mz-otp-code" style="font-size: 18px; font-weight: bold; text-align: center; letter-spacing: 2px; padding: 15px; border: 1px dashed #ccc; background-color: #f9f9f9; margin: 20px 0;">
-      {{ model.Otp }}
+      {{ model.OtpCode }}
     </div>
 
     <p>{{ labels.otpNotRequested }}</p>
