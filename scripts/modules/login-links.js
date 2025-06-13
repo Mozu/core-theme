@@ -7,12 +7,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
      function ($, api, Hypr, _, HyprLiveContext) {    var usePopovers = function() {
         // Check if Modernizr is available and test for larger screens
         var result = (typeof Modernizr !== 'undefined') && !Modernizr.mq('(max-width: 480px)');
-        console.log('usePopovers check:', {
-            modernizrExists: typeof Modernizr !== 'undefined',
-            screenWidth: window.innerWidth,
-            mediaQuery: (typeof Modernizr !== 'undefined') ? Modernizr.mq('(max-width: 480px)') : 'unknown',
-            result: result
-        });
         return result;
     },
     isTemplate = function(path) {
@@ -72,14 +66,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // in the absence of JS or in a small viewport, these links go to the login page.
             // Prevent them from going there!
             var self = this;
-            console.log('createPopover called, usePopovers():', usePopovers());
             
             if (usePopovers()) {
                 e.preventDefault();
                 
                 // Check if Bootstrap popover is available
                 if (typeof $.fn.popover === 'undefined') {
-                    console.error('Bootstrap popover not available, redirecting to page instead');
                     return; // Let the link redirect naturally
                 }
                 
@@ -98,13 +90,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }).on('shown.bs.popover', this.onPopoverShow)
                     .popover('show');
                 } catch (error) {
-                    console.error('Error creating popover:', error);
                     // Fall back to page navigation
                     window.location.href = e.target.href;
                 }
-            } else {
-                console.log('Popovers disabled, allowing natural navigation');
-            }
+            } 
         },
         retrieveErrorLabel: function (xhr) {
             var message = "";
@@ -159,10 +148,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         template: (function() {
             try {
                 var template = Hypr.getTemplate('modules/common/login-popover').render();
-                console.log('Login popover template loaded successfully');
                 return template;
             } catch (e) {
-                console.error('Failed to load login popover template:', e);
                 return '<div class="mz-popover-error">Template loading failed</div>';
             }
         })(),
@@ -805,14 +792,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
     $(document).ready(function() {
         $docBody = $(document.body);
-        console.log('Initializing login and signup popovers', HyprLiveContext.locals.siteContext);        
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
         });
         $('[data-mz-action="signup"]').each(function() {
-            console.log('Initializing signup popover');
             var popover = new SignupPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
@@ -835,7 +820,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
           // Initialize forgot password popover with comprehensive error handling
         $('[data-mz-action="launchforgotpassword"]').each(function() {
             var $el = $(this);
-            console.log('Initializing forgot password popover for element:', $el);
             
             try {
                 // Check dependencies first
@@ -848,21 +832,17 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 }
                 
                 if (!usePopovers()) {
-                    console.log('Popovers disabled for this viewport, using page navigation');
                     return; // Let the link work normally
                 }
                 
                 var popover = new LoginPopover();
                 popover.init(this);
                 $el.data('mz.popover', popover);
-                console.log('Forgot password popover initialized successfully');
                 
             } catch (e) {
-                console.warn('Popover initialization failed, falling back to page redirect:', e);
                 // Fallback: if popover fails, just redirect to forgot password page
                 $el.off('click').on('click', function(e) {
                     e.preventDefault();
-                    console.log('Redirecting to forgot password page');
                     window.location.href = '/user/forgotpassword';
                 });
             }        });          $('[data-mz-action="otplogin"]').on('click', function(e) {
@@ -870,7 +850,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Check if OTP login is allowed
             if (!HyprLiveContext.locals.siteContext.generalSettings.isEmailOtpLoginAllowed) {
-                console.warn('Email OTP login is not enabled');
                 return;
             }
             
