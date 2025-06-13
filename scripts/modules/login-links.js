@@ -928,7 +928,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Validate email
                 if (!email) {
-                    alert('Please enter your email address to request a one-time password.');
+                    var $messageArea = $form.find('[data-mz-role="popover-message"]');
+                    $messageArea.html('<span class="mz-validationmessage-success">Please enter your email address to request a one-time password.</span>');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
