@@ -70,7 +70,7 @@
             <div class="mz-l-column">
                 <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
                 <p>Orders placed as a guest or single order lookup</p>
-                <form method="post" class="mz-loginform mz-loginform-page" name="mz-anonymousorder">
+                <form method="post" class="mz-loginform mz-loginform-page mz-anonymousorder-form" name="mz-anonymousorder">
                     <input type="hidden" name="order-returnUrl" value="{{ model.returnUrl }}"/>
                     <div class="mz-l-formfieldgroup">
                         <div class="mz-l-formfieldgroup-row">
@@ -99,6 +99,14 @@
                             </div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <input name="verification" value="" type="text" data-mz-verification />
+                            </div>
+                        </div>                        <div class="mz-l-formfieldgroup-row">
+                            <div class="mz-l-formfieldgroup-cell"></div>
+                            <div class="mz-l-formfieldgroup-cell">
+                                {% if siteContext.generalSettings.isEmailOtpLoginAllowed %}
+                                <a href="#" class="mz-otp-login" data-mz-action="otplogin">Login with One-Time Password</a>
+                                {% endif %}
+                                <section data-mz-role="popover-message" class="mz-popover-message"></section>
                             </div>
                         </div>
                         <div class="mz-l-formfieldgroup-row">

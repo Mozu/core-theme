@@ -1,3 +1,159 @@
-﻿.mz-login-button {
+﻿.mz-login-separator {
+    margin: 0 8px;
+    color: #999;
+}
+
+.mz-otp-login {
+    color: #337ab7;
+    text-decoration: none;
+    font-size: 14px;
     
+    &:hover {
+        color: #23527c;
+        text-decoration: underline;
+    }
+}
+
+// OTP Mode Styles
+.mz-request-code-button {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    
+    &:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        color: white;
+    }
+    
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+}
+
+.mz-back-to-password {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    
+    &:hover {
+        color: #495057;
+        text-decoration: underline;
+    }
+    
+    &:before {
+        content: "←";
+        margin-right: 5px;
+        font-weight: bold;
+    }
+}
+
+.mz-otp-back-row {
+    margin-bottom: 10px;
+}
+
+// 2FA Challenge Styles & OTP Instruction Styles
+.mz-twofa-title-row, .mz-otp-instruction-row {
+    h3 {
+        color: #28a745;
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    p {
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+}
+
+.mz-verify-twofa-button {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    margin-right: 15px;
+    
+    &:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        color: white;
+    }
+    
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+}
+
+.mz-request-twofa-button {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    
+    &:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        color: white;
+    }
+    
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+}
+
+.mz-resend-twofa, .mz-resend-code {
+    color: #337ab7;
+    text-decoration: none;
+    font-size: 14px;
+    
+    &:hover {
+        color: #23527c;
+        text-decoration: underline;
+    }
+    
+    &.is-loading {
+        color: #999;
+        pointer-events: none;
+    }
+}
+
+.mz-back-to-login {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    
+    &:hover {
+        color: #495057;
+        text-decoration: underline;
+    }
+    
+    &:before {
+        content: "←";
+        margin-right: 5px;
+        font-weight: bold;
+    }
+}
+
+.mz-twofa-input-row input[data-mz-twofa-code], 
+.mz-otp-input-row input[data-mz-otp-code] {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.mz-twofa-buttons-row, .mz-otp-resend-row {
+    .mz-l-formfieldgroup-cell {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+}
+
+.mz-twofa-back-row, .mz-otp-back-row {
+    margin-top: 10px;
 }
