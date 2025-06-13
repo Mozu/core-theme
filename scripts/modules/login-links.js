@@ -791,7 +791,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     });
 
     $(document).ready(function() {
-        $docBody = $(document.body);
+        $docBody = $(document.body);        
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
@@ -902,12 +902,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Show the original login button
                 $loginButton.closest('.mz-l-formfieldgroup-row').show();
-                
-                // Remove all OTP-specific elements
+                  // Remove all OTP-specific elements
                 $('.mz-otp-request-row, .mz-otp-back-row, .mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
                 
                 // Clear form data
-                $form.removeData('mockOtpCode otpAttempts otpEmail otpExpiry');
+                $form.removeData('otpAttempts otpEmail otpSessionId');
                 
                 // Remove event handlers to prevent duplicates
                 $form.off('click', '[data-mz-action="backtopassword"]');
@@ -918,8 +917,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Clear any messages
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 $messageArea.empty();
-            });
-              // Add event handler for Request Code button
+            });              // Add event handler for Request Code button
             $form.on('click', '[data-mz-action="request-otp-code"]', function(e) {
                 e.preventDefault();
                 
@@ -929,7 +927,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Validate email
                 if (!email) {
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                    $messageArea.html('<span class="mz-validationmessage-success">Please enter your email address to request a one-time password.</span>');
+                    $messageArea.html('<span class="mz-validationmessage">Please enter your email address to request a one-time password.</span>');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
@@ -937,13 +935,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Show loading state
                 $requestButton.prop('disabled', true).text('Requesting...');
                 
-                // Mock API call delay
-                setTimeout(function() {
-                    // Store mock code and attempt counter in form data
-                    $form.data('mockOtpCode', '123456');
+                // Generate OTP using API
+                api.action('customer', 'generateAndSendOtp', {
+                    EmailAddress: email
+                }).then(function(response) {
+                    // Store OTP session data
                     $form.data('otpAttempts', 0);
                     $form.data('otpEmail', email);
-                    $form.data('otpExpiry', Date.now() + (5 * 60 * 1000)); // 5 minutes from now
+                    $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
                     // Show success message
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
@@ -958,8 +957,30 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                     // Show OTP input field and resend link
                     showOtpInputUI($form, email);
+                      })
+                      ['catch'](function(error) {
+                    // Handle error
+                    var errorMessage = "Failed to send verification code. Please try again.";
                     
-                }, 1000); // 1 second delay to simulate API call
+                    // Check for specific error conditions
+                    if (error && error.message) {
+                        if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                            errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                        } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('not found')) {
+                            errorMessage = "Email address not found. Please check your email and try again.";
+                        }
+                    }
+                    
+                    var $messageArea = $form.find('[data-mz-role="popover-message"]');
+                    if ($messageArea.length === 0) {
+                        $messageArea = $('<div data-mz-role="popover-message"></div>');
+                        $('.mz-otp-request-row').before($messageArea);
+                    }
+                    $messageArea.html('<span class="mz-validationmessage">' + errorMessage + '</span>');
+                    
+                    // Reset button state
+                    $requestButton.prop('disabled', false).text('Request Code');
+                });
             });
             
             // Function to show OTP input UI
@@ -1004,62 +1025,96 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     resendOtpCode($form, email);
                 });
             }
-            
-            // Function to verify OTP code
+              // Function to verify OTP code
             function verifyOtpCode($form, enteredCode) {
-                var mockCode = $form.data('mockOtpCode');
                 var attempts = $form.data('otpAttempts') || 0;
-                var expiry = $form.data('otpExpiry');
+                var email = $form.data('otpEmail');
+                var sessionId = $form.data('otpSessionId');
                 var maxAttempts = 3;
-                
-                // Check if code has expired
-                if (Date.now() > expiry) {
-                    showOtpError($form, "The code has expired. Please request a new one.");
-                    resetOtpState($form);
-                    return;
-                }
                 
                 attempts++;
                 $form.data('otpAttempts', attempts);
                 
-                if (enteredCode === mockCode) {
+                // Show loading state
+                var $input = $form.find('[data-mz-otp-code]');
+                $input.prop('disabled', true);
+                  // Validate OTP using API
+                api.action('customer', 'validateOtpAndCreateAuthTicket', {
+                    OtpCode: enteredCode
+                }).then(function(response) {
                     // Success - login user
                     showOtpSuccess($form);
                     setTimeout(function() {
                         handleSuccessfulLogin($form);
                     }, 1000);
-                } else {
-                    // Incorrect code
+                    
+                })
+                ['catch'](function(error) {
+                    // Handle error
+                    $input.prop('disabled', false);
+                    
+                    var errorMessage = "The code you entered is incorrect. Please try again.";
+                    
+                    // Check for specific error conditions
+                    if (error && error.message) {
+                        if (error.message.toLowerCase().includes('expired')) {
+                            errorMessage = "The code has expired. Please request a new one.";
+                            resetOtpState($form);
+                            return;
+                        } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('incorrect')) {
+                            // Use the default incorrect message with attempts
+                        } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                            errorMessage = "Too many attempts. Please request a new code.";
+                            resetOtpState($form);
+                            return;
+                        }
+                    }
+                    
                     if (attempts >= maxAttempts) {
                         showOtpError($form, "You have entered an incorrect code too many times. Please request a new code.");
                         resetOtpState($form);
                     } else {
                         var remainingAttempts = maxAttempts - attempts;
-                        showOtpError($form, "The code you entered is incorrect. Please try again. (" + remainingAttempts + " attempts remaining)");
+                        errorMessage = errorMessage + " (" + remainingAttempts + " attempts remaining)";
+                        showOtpError($form, errorMessage);
                         // Clear the input field
                         $form.find('[data-mz-otp-code]').val('').focus();
                     }
-                }
+                });
             }
-            
-            // Function to resend OTP code
+              // Function to resend OTP code
             function resendOtpCode($form, email) {
                 var $resendLink = $form.find('[data-mz-action="resend-otp-code"]');
                 $resendLink.text('Sending...').addClass('is-loading');
-                
-                // Mock API call delay
-                setTimeout(function() {
-                    // Generate new mock code and reset attempts
-                    $form.data('mockOtpCode', '123456'); // In real implementation, this would be a new code
+                  // Generate new OTP using API
+                api.action('customer', 'generateAndSendOtp', {
+                    EmailAddress: email
+                }).then(function(response) {
+                    // Update session data
                     $form.data('otpAttempts', 0);
-                    $form.data('otpExpiry', Date.now() + (5 * 60 * 1000)); // 5 minutes from now
+                    $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
                     showOtpSuccess($form, "A new code has been sent to your email address.");
                     $resendLink.text('Resend Code').removeClass('is-loading');
                     
                     // Clear the input field
                     $form.find('[data-mz-otp-code]').val('').focus();
-                }, 1000);
+                    
+                })
+                ['catch'](function(error) {
+                    // Handle error
+                    var errorMessage = "Failed to send verification code. Please try again.";
+                    
+                    // Check for specific error conditions
+                    if (error && error.message) {
+                        if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                            errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                        }
+                    }
+                    
+                    showOtpError($form, errorMessage);
+                    $resendLink.text('Resend Code').removeClass('is-loading');
+                });
             }
             
             // Function to show OTP error
@@ -1074,8 +1129,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var successMessage = message || "Code verified successfully. Logging you in...";
                 $messageArea.html('<span class="mz-validationmessage-success">' + successMessage + '</span>');
             }
-            
-            // Function to reset OTP state
+              // Function to reset OTP state
             function resetOtpState($form) {
                 // Remove OTP-specific UI elements
                 $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
@@ -1084,11 +1138,15 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $('.mz-otp-request-row').show();
                 
                 // Clear form data
-                $form.removeData('mockOtpCode otpAttempts otpEmail otpExpiry');
+                $form.removeData('otpAttempts otpEmail otpSessionId');
                 
                 // Remove OTP-specific event handlers
                 $form.off('input', '[data-mz-otp-code]');
                 $form.off('click', '[data-mz-action="resend-otp-code"]');
+                
+                // Clear any messages
+                var $messageArea = $form.find('[data-mz-role="popover-message"]');
+                $messageArea.empty();
             }
             
             // Function to handle successful login
@@ -1118,8 +1176,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                 }
             }
-            
-            // Handle browser refresh - reset to initial state
+              // Handle browser refresh - reset to initial state
             $(window).on('beforeunload', function() {
                 // When page is about to unload, ensure we clear any OTP state
                 var $forms = $('.mz-loginform-page, .mz-anonymousorder-form');
@@ -1127,7 +1184,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     var $form = $(this);
                     if ($form.find('.mz-otp-input-row').length > 0) {
                         // OTP state exists, it will be cleared on page reload
-                        $form.removeData('mockOtpCode otpAttempts otpEmail otpExpiry');
+                        $form.removeData('otpAttempts otpEmail otpSessionId');
                     }
                 });
             });
