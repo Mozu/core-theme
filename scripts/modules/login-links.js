@@ -483,21 +483,36 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Bind event handlers for 2FA
             this.bind2FAHandlers();
-        },
-        send2FACode: function(email) {
+        },        send2FACode: function(email) {
             var self = this;
             
-            // Mock API call delay
-            setTimeout(function() {
-                // Store mock code and attempt counter
-                self.$parent.data('mock2FACode', '123456');
+            // Generate 2FA OTP using API
+            api.action('customer', 'generateAndSend2FAOtp', {
+                EmailAddress: email
+            }).then(function(response) {
+                // Store session data
                 self.$parent.data('twoFA-attempts', 0);
                 self.$parent.data('twoFA-email', email);
-                self.$parent.data('twoFA-expiry', Date.now() + (5 * 60 * 1000)); // 5 minutes from now
+                self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 // Show success message
                 self.show2FAMessage('If your account requires 2FA, a verification code has been sent to your email address.', 'success');
-            }, 1000);
+                
+            })["catch"](function(error) {
+                // Handle error
+                var errorMessage = "Failed to send verification code. Please try again.";
+                
+                // Check for specific error conditions
+                if (error && error.message) {
+                    if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                        errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                    } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('not found')) {
+                        errorMessage = "Email address not found. Please check your email and try again.";
+                    }
+                }
+                
+                self.show2FAMessage(errorMessage, 'error');
+            });
         },
         bind2FAHandlers: function() {
             var self = this;
@@ -535,62 +550,99 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     self.verify2FACode(codeValue);
                 }
             });
-        },
-        verify2FACode: function(enteredCode) {
-            var mockCode = this.$parent.data('mock2FACode');
+        },        verify2FACode: function(enteredCode) {
             var attempts = this.$parent.data('twoFA-attempts') || 0;
-            var expiry = this.$parent.data('twoFA-expiry');
+            var email = this.$parent.data('twoFA-email');
+            var sessionId = this.$parent.data('twoFA-sessionId');
             var maxAttempts = 3;
             
-            // Check if code has expired
-            if (Date.now() > expiry) {
-                this.show2FAMessage("The verification code has expired. Please request a new one.", 'error');
-                this.reset2FAChallenge();
-                return;
-            }
-            
             attempts++;
-            this.$parent.data('twoFA-attempts', attempts);            if (enteredCode === mockCode) {
+            this.$parent.data('twoFA-attempts', attempts);
+            
+            // Show loading state
+            var $input = this.$parent.find('[data-mz-twofa-code]');
+            $input.prop('disabled', true);
+            
+            var self = this;
+            
+            // Validate 2FA using API
+            api.action('customer', 'validate2FAAndCreateAuthTicket', {
+                OtpCode: enteredCode
+            }).then(function(response) {
                 // Success - proceed with login
-                this.$parent.data('verified2FACode', enteredCode);
-                this.show2FAMessage('Code verified successfully. Logging you in...', 'success');
-                var self = this;
+                self.$parent.data('verified2FACode', enteredCode);
+                self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
                 setTimeout(function() {
                     self.complete2FAChallenge();
                 }, 1000);
-            } else {
-                // Incorrect code
+                
+            })["catch"](function(error) {
+                // Handle error
+                $input.prop('disabled', false);
+                
+                var errorMessage = "The code you entered is incorrect. Please try again.";
+                
+                // Check for specific error conditions
+                if (error && error.message) {
+                    if (error.message.toLowerCase().includes('expired')) {
+                        errorMessage = "The code has expired. Please request a new one.";
+                        self.reset2FAChallenge();
+                        return;
+                    } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('incorrect')) {
+                        // Use the default incorrect message with attempts
+                    } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                        errorMessage = "Too many attempts. Please request a new code.";
+                        self.reset2FAChallenge();
+                        return;
+                    }
+                }
+                
                 if (attempts >= maxAttempts) {
-                    this.show2FAMessage("You have entered an incorrect code too many times. Please request a new code.", 'error');
-                    this.reset2FAChallenge();
+                    self.show2FAMessage("You have entered an incorrect code too many times. Please request a new code.", 'error');
+                    self.reset2FAChallenge();
                 } else {
                     var remainingAttempts = maxAttempts - attempts;
-                    this.show2FAMessage("The code you entered is incorrect. Please try again. (" + remainingAttempts + " attempts remaining)", 'error');
+                    errorMessage = errorMessage + " (" + remainingAttempts + " attempts remaining)";
+                    self.show2FAMessage(errorMessage, 'error');
                     // Clear the input field
-                    this.$parent.find('[data-mz-twofa-code]').val('').focus();
+                    self.$parent.find('[data-mz-twofa-code]').val('').focus();
                 }
-            }
-        },
-        resend2FACode: function(email) {
+            });
+        },        resend2FACode: function(email) {
             var self = this;
             var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
             
             $resendLink.text('Sending...').addClass('is-loading');
             
-            // Mock API call delay
-            setTimeout(function() {
-                // Generate new mock code and reset attempts
-                self.$parent.data('mock2FACode', '123456'); // In real implementation, this would be a new code
+            // Generate new 2FA OTP using API
+            api.action('customer', 'generateAndSend2FAOtp', {
+                EmailAddress: email
+            }).then(function(response) {
+                // Update session data
                 self.$parent.data('twoFA-attempts', 0);
-                self.$parent.data('twoFA-expiry', Date.now() + (5 * 60 * 1000)); // 5 minutes from now
+                self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 self.show2FAMessage("A new verification code has been sent to your email address.", 'success');
                 $resendLink.text('Resend Code').removeClass('is-loading');
                 
                 // Clear the input field
                 self.$parent.find('[data-mz-twofa-code]').val('').focus();
-            }, 1000);
-        },        cancel2FAChallenge: function() {
+                
+            })["catch"](function(error) {
+                // Handle error
+                var errorMessage = "Failed to send verification code. Please try again.";
+                
+                // Check for specific error conditions
+                if (error && error.message) {
+                    if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                        errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                    }
+                }
+                
+                self.show2FAMessage(errorMessage, 'error');
+                $resendLink.text('Resend Code').removeClass('is-loading');
+            });
+        },cancel2FAChallenge: function() {
             var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             this.is2FAInProgress = false;
             
@@ -625,9 +677,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $linksRow.show();
                 $loginButtonRow.show();
             }
-            
-            // Clear any 2FA data
-            this.$parent.removeData('mock2FACode twoFA-attempts twoFA-email twoFA-expiry verified2FACode orderLoginData');
+              // Clear any 2FA data
+            this.$parent.removeData('twoFA-attempts twoFA-email twoFA-sessionId verified2FACode orderLoginData');
             
             // Clear any messages
             this.clearMessages();
@@ -681,9 +732,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                                     '</div>';
             
             this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);
-            
-            // Clear 2FA data
-            this.$parent.removeData('mock2FACode twoFA-attempts twoFA-email twoFA-expiry');
+              // Clear 2FA data
+            this.$parent.removeData('twoFA-attempts twoFA-email twoFA-sessionId');
             
             // Bind handler for request new code
             var self = this;
