@@ -987,7 +987,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Generate OTP using API
                 api.action('customer', 'generateAndSendOtp', {
-                    EmailAddress: email
+                    email: email
                 }).then(function(response) {
                     // Store OTP session data
                     $form.data('otpAttempts', 0);
@@ -1138,7 +1138,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $resendLink.text('Sending...').addClass('is-loading');
                   // Generate new OTP using API
                 api.action('customer', 'generateAndSendOtp', {
-                    EmailAddress: email
+                    email: email
                 }).then(function(response) {
                     // Update session data
                     $form.data('otpAttempts', 0);
