@@ -487,7 +487,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var self = this;
             
             // Generate 2FA OTP using API
-            api.action('customer', 'generateAndSend2FAOtp', {
+            api.action('customer', 'generateAndSend2faOtp', {
                 EmailAddress: email
             }).then(function(response) {
                 // Store session data
@@ -615,7 +615,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $resendLink.text('Sending...').addClass('is-loading');
             
             // Generate new 2FA OTP using API
-            api.action('customer', 'generateAndSend2FAOtp', {
+            api.action('customer', 'generateAndSend2faOtp', {
                 EmailAddress: email
             }).then(function(response) {
                 // Update session data
