@@ -143,7 +143,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         this.login = _.debounce(this.login, 150);
         this.retrievePassword = _.debounce(this.retrievePassword, 150);
     };
-    LoginPopover.prototype = new DismissablePopover();    $.extend(LoginPopover.prototype, {
+    LoginPopover.prototype = new DismissablePopover();    
+    $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
         template: (function() {
             try {
@@ -253,14 +254,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
 
             grecaptcha.execute();
-        },        login: function (token) {
-            // Check if 2FA challenge is required before proceeding with login
-            var requires2FA = this.check2FARequired();
-            if (requires2FA && !this.is2FAInProgress) {
-                this.start2FAChallenge();
-                return;
-            }
-
+        },          
+        login: function (token) {
             this.setLoading(true);
 
             //NGCOM-623
@@ -288,15 +283,32 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             } else if (window.captchaToken) {
                 data.token = window.captchaToken;
             }
-
+            
             // Add 2FA code if we're in 2FA mode
             if (this.is2FAInProgress) {
                 data.twoFactorCode = this.$parent.find('[data-mz-twofa-code]').val();
             }
 
-            api.action('customer', 'loginStorefront', data).then(this.handleLoginComplete.bind(this, returnUrl), this.displayApiMessage);
+            var self = this;
+            api.action('customer', 'loginStorefront', data).then(
+                this.handleLoginComplete.bind(this, returnUrl), 
+                function(error) {
 
-        },        anonymousorder: function() {
+                    // Check if this is a 401 error requiring 2FA
+                    if (error && error.message && 
+                        error.message.toLowerCase().includes('two factor authentication is required')) {
+                        
+                        // Start 2FA challenge for this specific error
+                        self.start2FAChallenge();
+                    } else {
+                        // Handle all other errors normally
+                        self.displayApiMessage(error);
+                    }
+                }
+            );
+
+        },        
+        anonymousorder: function() {
             // Check if 2FA challenge is required before proceeding with order login
             var requires2FA = this.check2FARequired();
             if (requires2FA && !this.is2FAInProgress) {
@@ -370,80 +382,41 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             return siteContext.generalSettings.is2FAAlwaysRequired ||
                    siteContext.generalSettings.is2FARequiredOnFingerprintChange ||
                    siteContext.generalSettings.is2FARequiredOnRegionChange;
-        },        start2FAChallenge: function() {
+        },        
+        start2FAChallenge: function() {
             var self = this;
             
-            // Determine if this is regular login or order status
-            var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
+            var email = this.$parent.find('[data-mz-login-email]').val();
+            var password = this.$parent.find('[data-mz-login-password]').val();
             
-            if (isOrderStatus) {
-                // For order status, validate order number and verification
-                var orderNumber = this.$parent.find('[data-mz-order-number]').val();
-                var verification = this.$parent.find('[data-mz-verification]').val();
-                
-                if (!orderNumber || !verification) {
-                    this.displayMessage('Please enter both order number and verification information.');
-                    return;
-                }
-                
-                // Store values for later use
-                this.$parent.data('orderLoginData', {
-                    orderNumber: orderNumber,
-                    verification: verification,
-                    verifyWith: this.$parent.find('[data-mz-verify-with]').val()
-                });
-                
-                // Use verification value as email for 2FA
-                this.show2FAChallenge(verification);
-            } else {
-                // Regular login validation
-                var email = this.$parent.find('[data-mz-login-email]').val();
-                var password = this.$parent.find('[data-mz-login-password]').val();
-                
-                if (!email || !password) {
-                    this.displayMessage('Please enter both email and password.');
-                    return;
-                }
-                
-                // Show 2FA challenge with email
-                this.show2FAChallenge(email);
+            if (!email || !password) {
+                this.displayMessage('Please enter both email and password.');
+                return;
             }
+            
+            // Show 2FA challenge with email
+            this.show2FAChallenge(email);
             
             // Set flag to indicate 2FA is in progress
             this.is2FAInProgress = true;
-        },        show2FAChallenge: function(email) {
+        },       
+         show2FAChallenge: function(email) {
             var self = this;
             var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             
-            // Hide original form elements based on form type
-            if (isOrderStatus) {
-                // Hide order status form elements
-                var $orderNumberRow = this.$parent.find('input[data-mz-order-number]').closest('.mz-l-formfieldgroup-row');
-                var $verifyWithRow = this.$parent.find('select[data-mz-verify-with]').closest('.mz-l-formfieldgroup-row');
-                var $verificationRow = this.$parent.find('input[data-mz-verification]').closest('.mz-l-formfieldgroup-row');
-                var $otpLinksRow = this.$parent.find('.mz-otp-login').closest('.mz-l-formfieldgroup-row');
-                var $submitButtonRow = this.$parent.find('[data-mz-action="anonymousorder-submit"]').closest('.mz-l-formfieldgroup-row');
-                
-                $orderNumberRow.hide();
-                $verifyWithRow.hide();
-                $verificationRow.hide();
-                $otpLinksRow.hide();
-                $submitButtonRow.hide();
-            } else {
-                // Hide regular login form elements
-                var $emailRow = this.$parent.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
-                var $passwordRow = this.$parent.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
-                var $recaptchaRow = this.$parent.find('#recaptcha-container').closest('.mz-l-formfieldgroup-row');
-                var $linksRow = this.$parent.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
-                var $loginButtonRow = this.$parent.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]').closest('.mz-l-formfieldgroup-row');
-                
-                $emailRow.hide();
-                $passwordRow.hide();
-                $recaptchaRow.hide();
-                $linksRow.hide();
-                $loginButtonRow.hide();
-            }
-              // Show 2FA challenge UI
+            var $emailRow = this.$parent.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
+            var $passwordRow = this.$parent.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
+            var $recaptchaRow = this.$parent.find('#recaptcha-container').closest('.mz-l-formfieldgroup-row');
+            var $linksRow = this.$parent.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
+            var $loginButtonRow = this.$parent.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]').closest('.mz-l-formfieldgroup-row');
+            
+            $emailRow.hide();
+            $passwordRow.hide();
+            $recaptchaRow.hide();
+            $linksRow.hide();
+            $loginButtonRow.hide();
+
+            // Show 2FA challenge UI
             var twoFAHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-title-row">' +
                            '<div class="mz-l-formfieldgroup-cell" colspan="2">' +
                            '<h3>Verification Required</h3>' +
@@ -483,7 +456,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Bind event handlers for 2FA
             this.bind2FAHandlers();
-        },        send2FACode: function(email) {
+        },        
+        
+        send2FACode: function(email) {
             var self = this;
             
             // Generate 2FA OTP using API
@@ -550,7 +525,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     self.verify2FACode(codeValue);
                 }
             });
-        },        verify2FACode: function(enteredCode) {
+        },        
+        verify2FACode: function(enteredCode) {
             var attempts = this.$parent.data('twoFA-attempts') || 0;
             var email = this.$parent.data('twoFA-email');
             var sessionId = this.$parent.data('twoFA-sessionId');
@@ -608,7 +584,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     self.$parent.find('[data-mz-twofa-code]').val('').focus();
                 }
             });
-        },        resend2FACode: function(email) {
+        },        
+        resend2FACode: function(email) {
             var self = this;
             var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
             
@@ -642,7 +619,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.show2FAMessage(errorMessage, 'error');
                 $resendLink.text('Resend Code').removeClass('is-loading');
             });
-        },cancel2FAChallenge: function() {
+        },
+        cancel2FAChallenge: function() {
             var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             this.is2FAInProgress = false;
             
@@ -682,7 +660,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Clear any messages
             this.clearMessages();
-        },        complete2FAChallenge: function() {
+        },        
+        complete2FAChallenge: function() {
             var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             
             // Reset 2FA UI but keep the flag true so the corresponding function knows we're completing 2FA
