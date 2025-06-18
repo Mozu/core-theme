@@ -29,6 +29,7 @@ npm install -g grunt-cli
 npm install
 grunt
 ```
+(If that doesn't work try npx grunt... you might need to specify --force too.)
 
 This should work on all platforms.
 
