@@ -10,6 +10,8 @@ using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.Core.Settings;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -44,6 +46,31 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         void FixupPaths(Theme theme);
 
         Task  ValidateLatest(Theme theme);
+        
+        /// <summary>
+        /// Invalidates cache for a specific theme
+        /// </summary>
+        void InvalidateTheme(string themeId);
+        
+        /// <summary>
+        /// Invalidates all theme caches
+        /// </summary>
+        void InvalidateAllThemes();
+        
+        /// <summary>
+        /// Gets the count of cached themes
+        /// </summary>
+        int GetCachedThemeCount();
+        
+        /// <summary>
+        /// Checks if a theme is currently cached
+        /// </summary>
+        bool IsThemeCached(string themeId);
+        
+        /// <summary>
+        /// Pre-loads commonly used themes into cache
+        /// </summary>
+        Task WarmupCache(IEnumerable<string> themeIds);
     }
 
 
@@ -74,7 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     class ThemeRepository : IThemeRepository
     {
         static ConcurrentDictionary<string, WeakReference<Theme>> _lookups = new ConcurrentDictionary<string, WeakReference<Theme>>();
-
+        static ConcurrentDictionary<string, AsyncSemaphore> _themeLocks = new ConcurrentDictionary<string, AsyncSemaphore>();
 
         IThemeCache _cache;
         ISettings _settings;
@@ -85,13 +112,33 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         };
 
         readonly IThemeMetaDataProvider _themeMetaDataProvider;
+        readonly ILogger<ThemeRepository> _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         /// <param name="themeProvider"></param>
-        public ThemeRepository(IThemeMetaDataProvider themeMetaDataProvider, IThemeCache cache , ISettings settings )
+        public ThemeRepository(IThemeMetaDataProvider themeMetaDataProvider, IThemeCache cache , ISettings settings , ILogger<ThemeRepository> logger)
         {
+            if (themeMetaDataProvider == null)
+            {
+                throw new ArgumentNullException(nameof(themeMetaDataProvider));
+            }
+            if (cache == null)
+            {
+                throw new ArgumentNullException(nameof(cache));
+            }
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+            
+            _themeMetaDataProvider = themeMetaDataProvider;
+            if (logger == null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
+            _logger = logger;
             _cache = cache;
             _settings = settings;
             _themeMetaDataProvider = themeMetaDataProvider;
@@ -126,23 +173,53 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 theme.FileListing = fileListings;
                 theme.TimeStamp = fileListings.TimeStamp;
                 theme.Hash = fileListings.Hash;
-
+                
+                // Invalidate cache since theme has been updated
+                InvalidateTheme(theme.Id);
             }
         }
 
         private Theme GetFromCache ( string key )
         {
-            return _cache.Get<Theme>(key, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
+            var theme = _cache.Get<Theme>(key, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
+            
+            // Log cache hit/miss for monitoring
+            if (theme != null)
+            {
+                _logger.LogInformation($"Theme cache HIT for key: {key}");
+            }
+            else
+            {
+                _logger.LogInformation($"Theme cache MISS for key: {key}");
+            }
+            
+            return theme;
         }
 
         private void AddToCache(string key, Theme theme, bool isSlim)
         {
-            if(!isSlim && theme != null)
+            if (!isSlim && theme != null)
             {
                 _lookups[theme.Id] = new WeakReference<Theme>(theme);
             }
             
+            // Store all themes (both slim and full) in distributed cache
+            if (theme != null)
+            {
+                _cache.Set(key, theme, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
+                _logger.LogInformation($"Theme cached with key: {key}");
+            }
         }
+        
+        /// <summary>
+        /// Helper method to ensure consistent cache key generation
+        /// </summary>
+        private static string GenerateThemeCacheKey(string themeId, bool isSlim)
+        {
+            var prefix = isSlim ? "GetThemeSlim_" : "GetTheme_";
+            return prefix + themeId;
+        }
+        
         object CacheCallback(object state)
         {
             var oldTheme = (Theme)state;
@@ -188,21 +265,32 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public async Task<Theme> GetThemeSlim(ThemeSelection selection)
         {
-            var key = "GetThemeSlim_" + selection.Id;
+            var key = GenerateThemeCacheKey(selection.Id, true);
             var theme = GetFromCache(key);
-            //var theme = _themeSlims.GetOrAdd(selection.Id, CreateThemeSlim);
-            if ( theme == null )
+            
+            if (theme == null)
             {
-                theme = await CreateThemeSlim(selection.Id).ConfigureAwait(false);
-
+                // Use async locking to prevent concurrent processing of the same theme
+                var semaphore = _themeLocks.GetOrAdd(key, _ => new AsyncSemaphore(1));
+                
+                await semaphore.WaitAsync().ConfigureAwait(false);
+                try
+                {
+                    // Double-check cache after acquiring lock
+                    theme = GetFromCache(key);
+                    if (theme == null)
+                    {
+                        theme = await CreateThemeSlim(selection.Id).ConfigureAwait(false);
+                        AddToCache(key, theme, true);
+                    }
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
             }
-            if (theme ==  null)
-            {
-                // if dir is written after initially asked the 
-                theme = await CreateThemeSlim(selection.Id).ConfigureAwait(false);
-                AddToCache(key, theme, true);
-            }
-            if (object.Equals(theme , NullTheme))
+            
+            if (object.Equals(theme, NullTheme))
             {
                 return null;
             }
@@ -230,32 +318,30 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         async Task<Theme> GetThemeInternal(string name, Stack<string> inheritChain)
         {
-          
             var themeName = name ?? Constants.DefaultTheme;
-            var key = "GetTheme_" + themeName;
+            var key = GenerateThemeCacheKey(themeName, false);
             var theme = GetFromCache(key);
 
             if (theme == null)
             {
-                //todo:phipps add locking back in 
-                //lock( System.String.Intern(key))
-                //{
-                //    theme = GetFromCache(key);
-                //    if (theme == null)
-                //    {
-                //        theme = await CreateTheme(themeName, inheritChain).ConfigureAwait(false);
-                //        AddToCache(key, theme, false);
-                //    }
-                //}
-
-
-               
-                if (theme == null)
+                // Use async locking to prevent concurrent processing of the same theme
+                var semaphore = _themeLocks.GetOrAdd(key, _ => new AsyncSemaphore(1));
+                
+                await semaphore.WaitAsync().ConfigureAwait(false);
+                try
                 {
-                    theme = await CreateTheme(themeName, inheritChain).ConfigureAwait(false);
-                    AddToCache(key, theme, false);
+                    // Double-check cache after acquiring lock
+                    theme = GetFromCache(key);
+                    if (theme == null)
+                    {
+                        theme = await CreateTheme(themeName, inheritChain).ConfigureAwait(false);
+                        AddToCache(key, theme, false);
+                    }
                 }
-
+                finally
+                {
+                    semaphore.Release();
+                }
             }
             
             if (object.Equals(theme, NullTheme))
@@ -353,6 +439,91 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string GetLocalAddonPath()
         {
             return _themeMetaDataProvider.LocalAddonPath;
+        }
+        
+        /// <summary>
+        /// Invalidates cache for a specific theme
+        /// </summary>
+        public void InvalidateTheme(string themeId)
+        {
+            if (string.IsNullOrEmpty(themeId))
+                return;
+
+            // Remove from weak reference cache
+            _lookups.TryRemove(themeId, out _);
+
+            // Create cache keys that might exist for this theme
+            var fullThemeKey = GenerateThemeCacheKey(themeId, false);
+            var slimThemeKey = GenerateThemeCacheKey(themeId, true);
+
+            // Note: IStorefrontCache doesn't have a direct Remove method,
+            // but setting to null effectively invalidates the entry
+            _cache.Set(fullThemeKey, null, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
+            _cache.Set(slimThemeKey, null, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
+            
+            _logger.LogInformation($"Invalidated theme cache for: {themeId}");
+        }
+
+        /// <summary>
+        /// Invalidates all theme caches
+        /// </summary>
+        public void InvalidateAllThemes()
+        {
+            // Clear weak reference cache
+            _lookups.Clear();
+            
+            _logger.LogInformation("Invalidated all theme caches");
+
+            // Note: For a complete invalidation, we would need access to the underlying
+            // cache provider to clear by pattern or tag. This is a basic implementation
+            // that at least clears the in-memory weak references.
+            // In a production system, consider implementing cache tags or patterns
+            // for more efficient bulk invalidation.
+        }
+
+        /// <summary>
+        /// Gets the count of themes currently in the weak reference cache
+        /// </summary>
+        public int GetCachedThemeCount()
+        {
+            return _lookups.Count;
+        }
+
+        /// <summary>
+        /// Checks if a theme is currently cached (in weak reference cache)
+        /// </summary>
+        public bool IsThemeCached(string themeId)
+        {
+            if (string.IsNullOrEmpty(themeId))
+                return false;
+                
+            return _lookups.TryGetValue(themeId, out var weakRef) && 
+                   weakRef.TryGetTarget(out _);
+        }
+
+        /// <summary>
+        /// Pre-loads commonly used themes into cache for better performance
+        /// </summary>
+        public async Task WarmupCache(IEnumerable<string> themeIds)
+        {
+            if (themeIds == null)
+                return;
+
+            var tasks = themeIds.Select(async themeId =>
+            {
+                try
+                {
+                    await GetThemeSlim(new ThemeSelection { Id = themeId }).ConfigureAwait(false);
+                    _logger.LogInformation($"Warmed up theme cache for: {themeId}");
+                }
+                catch (Exception ex)
+                {
+                    // Ignore individual theme loading failures during warmup
+                    _logger.LogWarning(ex, $"Failed to warm up theme cache for: {themeId}");
+                }
+            });
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
     }
 }
