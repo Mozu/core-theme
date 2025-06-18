@@ -542,7 +542,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var self = this;
             
             // Validate 2FA using API
-            api.action('customer', 'validate2FAAndCreateAuthTicket', {
+            api.action('customer', 'validate2faAndCreateAuthTicket', {
                 OtpCode: enteredCode
             }).then(function(response) {
                 // Success - proceed with login
