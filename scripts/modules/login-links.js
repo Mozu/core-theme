@@ -371,11 +371,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
         },
         handleLoginComplete: function (returnUrl) {
-            if ( returnUrl ){
-                window.location.href= returnUrl;
-            }else{
-                window.location.reload();
-            }        },
+            // if ( returnUrl ){
+            //     window.location.href= returnUrl;
+            // }else{
+            //     window.location.reload();
+            // }        
+        },
         check2FARequired: function() {
             // Check if any 2FA settings are enabled
             var siteContext = HyprLiveContext.locals.siteContext;
@@ -457,8 +458,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // Bind event handlers for 2FA
             this.bind2FAHandlers();
         },        
-        
-        send2FACode: function(email) {
+          send2FACode: function(email) {
             var self = this;
             
             // Generate 2FA OTP using API
@@ -466,7 +466,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 EmailAddress: email
             }).then(function(response) {
                 // Store session data
-                self.$parent.data('twoFA-attempts', 0);
                 self.$parent.data('twoFA-email', email);
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
@@ -484,6 +483,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('not found')) {
                         errorMessage = "Email address not found. Please check your email and try again.";
                     }
+                }
+                
+                // Check for 302 redirect or authentication issues
+                if (error.status === 302 || error.statusCode === 302 || 
+                    (error.message && error.message.toLowerCase().includes('redirect')) ||
+                    (error.message && error.message.toLowerCase().includes('unauthorized')) ||
+                    (error.message && error.message.toLowerCase().includes('authentication'))) {
+                    // Session expired or user not authenticated
+                    errorMessage = "Your session has expired. Please refresh the page and try logging in again.";
+                    // Optionally, we could redirect to login page
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 3000);
                 }
                 
                 self.show2FAMessage(errorMessage, 'error');
@@ -527,13 +539,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             });
         },        
         verify2FACode: function(enteredCode) {
-            var attempts = this.$parent.data('twoFA-attempts') || 0;
             var email = this.$parent.data('twoFA-email');
             var sessionId = this.$parent.data('twoFA-sessionId');
-            var maxAttempts = 3;
-            
-            attempts++;
-            this.$parent.data('twoFA-attempts', attempts);
             
             // Show loading state
             var $input = this.$parent.find('[data-mz-twofa-code]');
@@ -564,8 +571,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         errorMessage = "The code has expired. Please request a new one.";
                         self.reset2FAChallenge();
                         return;
-                    } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('incorrect')) {
-                        // Use the default incorrect message with attempts
                     } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
                         errorMessage = "Too many attempts. Please request a new code.";
                         self.reset2FAChallenge();
@@ -573,16 +578,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                 }
                 
-                if (attempts >= maxAttempts) {
-                    self.show2FAMessage("You have entered an incorrect code too many times. Please request a new code.", 'error');
-                    self.reset2FAChallenge();
-                } else {
-                    var remainingAttempts = maxAttempts - attempts;
-                    errorMessage = errorMessage + " (" + remainingAttempts + " attempts remaining)";
-                    self.show2FAMessage(errorMessage, 'error');
-                    // Clear the input field
-                    self.$parent.find('[data-mz-twofa-code]').val('').focus();
-                }
+                self.show2FAMessage(errorMessage, 'error');
+                // Clear the input field
+                self.$parent.find('[data-mz-twofa-code]').val('').focus();
             });
         },        
         resend2FACode: function(email) {
@@ -590,13 +588,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
             
             $resendLink.text('Sending...').addClass('is-loading');
-            
-            // Generate new 2FA OTP using API
+              // Generate new 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
                 EmailAddress: email
             }).then(function(response) {
                 // Update session data
-                self.$parent.data('twoFA-attempts', 0);
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 self.show2FAMessage("A new verification code has been sent to your email address.", 'success');
@@ -614,6 +610,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
                         errorMessage = "Too many requests. Please wait a few minutes before trying again.";
                     }
+                }
+                
+                // Check for 302 redirect or authentication issues
+                if (error.status === 302 || error.statusCode === 302 || 
+                    (error.message && error.message.toLowerCase().includes('redirect')) ||
+                    (error.message && error.message.toLowerCase().includes('unauthorized')) ||
+                    (error.message && error.message.toLowerCase().includes('authentication'))) {
+                    // Session expired or user not authenticated
+                    errorMessage = "Your session has expired. Please refresh the page and try logging in again.";
+                    // Optionally, we could redirect to login page
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 3000);
                 }
                 
                 self.show2FAMessage(errorMessage, 'error');
@@ -654,9 +663,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $recaptchaRow.show();
                 $linksRow.show();
                 $loginButtonRow.show();
-            }
-              // Clear any 2FA data
-            this.$parent.removeData('twoFA-attempts twoFA-email twoFA-sessionId verified2FACode orderLoginData');
+            }              // Clear any 2FA data
+            this.$parent.removeData('twoFA-email twoFA-sessionId verified2FACode orderLoginData');
             
             // Clear any messages
             this.clearMessages();
@@ -710,9 +718,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                                     '</div>' +
                                     '</div>';
             
-            this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);
-              // Clear 2FA data
-            this.$parent.removeData('twoFA-attempts twoFA-email twoFA-sessionId');
+            this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);              // Clear 2FA data
+            this.$parent.removeData('twoFA-email twoFA-sessionId');
             
             // Bind handler for request new code
             var self = this;
@@ -933,9 +940,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $loginButton.closest('.mz-l-formfieldgroup-row').show();
                   // Remove all OTP-specific elements
                 $('.mz-otp-request-row, .mz-otp-back-row, .mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
-                
-                // Clear form data
-                $form.removeData('otpAttempts otpEmail otpSessionId');
+                  // Clear form data
+                $form.removeData('otpEmail otpSessionId');
                 
                 // Remove event handlers to prevent duplicates
                 $form.off('click', '[data-mz-action="backtopassword"]');
@@ -967,9 +973,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Generate OTP using API
                 api.action('customer', 'generateAndSendOtp', {
                     email: email
-                }).then(function(response) {
-                    // Store OTP session data
-                    $form.data('otpAttempts', 0);
+                }).then(function(response) {                    // Store OTP session data
                     $form.data('otpEmail', email);
                     $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
@@ -985,8 +989,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $requestButton.closest('.mz-otp-request-row').hide();
                     
                     // Show OTP input field and resend link
-                    showOtpInputUI($form, email);
-                      })
+                    showOtpInputUI($form, email);                      })
                       ['catch'](function(error) {
                     // Handle error
                     var errorMessage = "Failed to send verification code. Please try again.";
@@ -998,6 +1001,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('not found')) {
                             errorMessage = "Email address not found. Please check your email and try again.";
                         }
+                    }
+                    
+                    // Check for 302 redirect or authentication issues
+                    if (error.status === 302 || error.statusCode === 302 || 
+                        (error.message && error.message.toLowerCase().includes('redirect')) ||
+                        (error.message && error.message.toLowerCase().includes('unauthorized')) ||
+                        (error.message && error.message.toLowerCase().includes('authentication'))) {
+                        // Session expired or user not authenticated
+                        errorMessage = "Your session has expired. Please refresh the page and try logging in again.";
+                        // Optionally, we could redirect to login page
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3000);
                     }
                     
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
@@ -1053,16 +1069,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     e.preventDefault();
                     resendOtpCode($form, email);
                 });
-            }
-              // Function to verify OTP code
+            }              // Function to verify OTP code
             function verifyOtpCode($form, enteredCode) {
-                var attempts = $form.data('otpAttempts') || 0;
                 var email = $form.data('otpEmail');
                 var sessionId = $form.data('otpSessionId');
-                var maxAttempts = 3;
-                
-                attempts++;
-                $form.data('otpAttempts', attempts);
                 
                 // Show loading state
                 var $input = $form.find('[data-mz-otp-code]');
@@ -1090,8 +1100,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                             errorMessage = "The code has expired. Please request a new one.";
                             resetOtpState($form);
                             return;
-                        } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('incorrect')) {
-                            // Use the default incorrect message with attempts
                         } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
                             errorMessage = "Too many attempts. Please request a new code.";
                             resetOtpState($form);
@@ -1099,28 +1107,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         }
                     }
                     
-                    if (attempts >= maxAttempts) {
-                        showOtpError($form, "You have entered an incorrect code too many times. Please request a new code.");
-                        resetOtpState($form);
-                    } else {
-                        var remainingAttempts = maxAttempts - attempts;
-                        errorMessage = errorMessage + " (" + remainingAttempts + " attempts remaining)";
-                        showOtpError($form, errorMessage);
-                        // Clear the input field
-                        $form.find('[data-mz-otp-code]').val('').focus();
-                    }
+                    showOtpError($form, errorMessage);
+                    // Clear the input field
+                    $form.find('[data-mz-otp-code]').val('').focus();
                 });
             }
               // Function to resend OTP code
             function resendOtpCode($form, email) {
                 var $resendLink = $form.find('[data-mz-action="resend-otp-code"]');
-                $resendLink.text('Sending...').addClass('is-loading');
-                  // Generate new OTP using API
+                $resendLink.text('Sending...').addClass('is-loading');                  // Generate new OTP using API
                 api.action('customer', 'generateAndSendOtp', {
                     email: email
                 }).then(function(response) {
                     // Update session data
-                    $form.data('otpAttempts', 0);
                     $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
                     showOtpSuccess($form, "A new code has been sent to your email address.");
@@ -1157,8 +1156,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 var successMessage = message || "Code verified successfully. Logging you in...";
                 $messageArea.html('<span class="mz-validationmessage-success">' + successMessage + '</span>');
-            }
-              // Function to reset OTP state
+            }              // Function to reset OTP state
             function resetOtpState($form) {
                 // Remove OTP-specific UI elements
                 $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
@@ -1167,7 +1165,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $('.mz-otp-request-row').show();
                 
                 // Clear form data
-                $form.removeData('otpAttempts otpEmail otpSessionId');
+                $form.removeData('otpEmail otpSessionId');
                 
                 // Remove OTP-specific event handlers
                 $form.off('input', '[data-mz-otp-code]');
@@ -1210,10 +1208,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // When page is about to unload, ensure we clear any OTP state
                 var $forms = $('.mz-loginform-page, .mz-anonymousorder-form');
                 $forms.each(function() {
-                    var $form = $(this);
-                    if ($form.find('.mz-otp-input-row').length > 0) {
+                    var $form = $(this);                    if ($form.find('.mz-otp-input-row').length > 0) {
                         // OTP state exists, it will be cleared on page reload
-                        $form.removeData('otpAttempts otpEmail otpSessionId');
+                        $form.removeData('otpEmail otpSessionId');
                     }
                 });
             });
