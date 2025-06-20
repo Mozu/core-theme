@@ -463,7 +463,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Generate 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
-                EmailAddress: email
+                email: email
             }).then(function(response) {
                 // Store session data
                 self.$parent.data('twoFA-email', email);
@@ -590,7 +590,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $resendLink.text('Sending...').addClass('is-loading');
               // Generate new 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
-                EmailAddress: email
+                email: email
             }).then(function(response) {
                 // Update session data
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
