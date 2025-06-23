@@ -14,13 +14,33 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     },
     returnFalse = function () {
         return false;
-    },
-    returnUrl = function() {
+    },    returnUrl = function() {
         var returnURL = $('input[name=returnUrl]').val();
         if(!returnURL) {
             returnURL = '/';
         }
         return returnURL;
+    },
+    getQueryParam = function(name) {
+        // Cross-browser compatible query parameter extraction
+        var urlParams = window.location.search;
+        if (!urlParams) {
+            return null;
+        }
+        
+        // Remove the leading '?' if present
+        if (urlParams.charAt(0) === '?') {
+            urlParams = urlParams.substring(1);
+        }
+        
+        var params = urlParams.split('&');
+        for (var i = 0; i < params.length; i++) {
+            var param = params[i].split('=');
+            if (param[0] === name) {
+                return param[1] ? decodeURIComponent(param[1]) : '';
+            }
+        }
+        return null;
     },
     $docBody,
 
@@ -263,10 +283,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             //is no returnUrl value provided by the server,
             //we'll use the one specified in the url query. If a returnURl has been
             //provided by the server, it will live in an invisible input in the
-            //login links box.
-
-            var returnUrl = "";
-            var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
+            //login links box.            var returnUrl = "";
+            var returnUrlParam = getQueryParam('returnUrl');
             if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
               returnUrl = returnUrlParam;
             } else {
@@ -371,11 +389,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
         },
         handleLoginComplete: function (returnUrl) {
-            // if ( returnUrl ){
-            //     window.location.href= returnUrl;
-            // }else{
-            //     window.location.reload();
-            // }        
+            if ( returnUrl ){
+                window.location.href= returnUrl;
+            }else{
+                window.location.reload();
+            }        
         },
         check2FARequired: function() {
             // Check if any 2FA settings are enabled
@@ -550,13 +568,21 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Validate 2FA using API
             api.action('customer', 'validate2faAndCreateAuthTicket', {
-                OtpCode: enteredCode
-            }).then(function(response) {
-                // Success - proceed with login
+                OtpCode: enteredCode            }).then(function(response) {
+                // Success - proceed with login completion
                 self.$parent.data('verified2FACode', enteredCode);
                 self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
+                  // Get return URL for login completion
+                var returnUrl = "";
+                var returnUrlParam = getQueryParam('returnUrl');
+                if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
+                    returnUrl = returnUrlParam;
+                } else {
+                    returnUrl = self.$parent.find('input[name=returnUrl]').val();
+                }
+                
                 setTimeout(function() {
-                    self.complete2FAChallenge();
+                    self.handleLoginComplete(returnUrl);
                 }, 1000);
                 
             })["catch"](function(error) {
@@ -1079,12 +1105,27 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $input.prop('disabled', true);
                   // Validate OTP using API
                 api.action('customer', 'validateOtpAndCreateAuthTicket', {
-                    OtpCode: enteredCode
+                    OtpCode: enteredCode                
                 }).then(function(response) {
-                    // Success - login user
+                    // Success - call handleLoginComplete like regular login
                     showOtpSuccess($form);
-                    setTimeout(function() {
-                        handleSuccessfulLogin($form);
+                    
+                    // Get return URL for login completion
+                    var returnUrl = "";
+                    var urlParams = window.location.search;
+                    var returnUrlMatch = urlParams.match(/returnUrl=([^&]*)/);
+                    if (returnUrlMatch && !$form.find('input[name=returnUrl]').val()) {
+                        returnUrl = decodeURIComponent(returnUrlMatch[1]);
+                    } else {
+                        returnUrl = $form.find('input[name=returnUrl]').val();
+                    }
+                      setTimeout(function() {
+                        // For regular login, use the same login completion logic as regular login
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        } else {
+                            window.location.reload();
+                        }
                     }, 1000);
                     
                 })
@@ -1173,36 +1214,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Clear any messages
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                $messageArea.empty();
-            }
-            
-            // Function to handle successful login
-            function handleSuccessfulLogin($form) {
-                var isOrderStatus = $form.hasClass('mz-anonymousorder-form');
-                
-                if (isOrderStatus) {
-                    // For order status login, redirect to anonymous account page
-                    window.location.href = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + 
-                                          "/my-anonymous-account?returnUrl=" + 
-                                          (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/myaccount";
-                } else {
-                    // For regular login, get return URL
-                    var returnUrl = "";
-                    var urlParams = window.location.search;
-                    var returnUrlMatch = urlParams.match(/returnUrl=([^&]*)/);
-                    if (returnUrlMatch && !$form.find('input[name=returnUrl]').val()) {
-                        returnUrl = decodeURIComponent(returnUrlMatch[1]);
-                    } else {
-                        returnUrl = $form.find('input[name=returnUrl]').val();
-                    }
-                    
-                    if (returnUrl) {
-                        window.location.href = returnUrl;
-                    } else {
-                        window.location.reload();
-                    }
-                }
-            }
+                $messageArea.empty();            }
               // Handle browser refresh - reset to initial state
             $(window).on('beforeunload', function() {
                 // When page is about to unload, ensure we clear any OTP state
