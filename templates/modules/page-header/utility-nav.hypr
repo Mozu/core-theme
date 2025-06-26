@@ -18,7 +18,7 @@
         </div>
       </li>
       {%else%}
-      {% if not user.isAnonymous %}
+      {% if user.isAuthenticated %}
       <li class="mz-utilitynav-item">
         <div id="mz-logged-in-notice">
           Welcome, <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
