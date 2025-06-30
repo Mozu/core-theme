@@ -7,6 +7,16 @@
 {% block body-content %}
     <div class="mz-l-container">
         {% include "modules/common/message-bar" with model=model.messages %}
+        {% if user.isAuthenticated %}
+        <div class="mz-authenticated-user-notice">
+            <h1 class="mz-pagetitle">Already Signed In</h1>
+            <div class="mz-message mz-message-info">
+                <p>You are already signed in as <strong>{{ user.firstName|default:user.emailAddress }}</strong>. 
+                You can go to your <a href="{{ siteContext.siteSubdirectory }}/myaccount">account dashboard</a> 
+                or <a href="{{ siteContext.siteSubdirectory }}/logout" data-mz-action="logout">sign out</a> to sign in with a different account.</p>
+            </div>
+        </div>
+        {% else %}
         <div class="mz-l-2column mz-l-2column-right ">            
         <div class="mz-l-column mz-l-formfieldgroup">
                 <h1 class="mz-pagetitle">{{ labels.loginNoAccount }}</h1>
@@ -83,5 +93,6 @@
                 </form>
             </div>
         </div>
+        {% endif %}
     </div>
 {% endblock body-content %}

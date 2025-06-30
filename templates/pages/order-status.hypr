@@ -8,6 +8,16 @@
     <div class="mz-l-container">
         {% include "modules/common/message-bar" with model=model.messages %}
         <div class="mz-l-2column mz-l-2column-right">
+            {% if user.isAuthenticated %}
+            <div class="mz-authenticated-user-notice">
+                <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
+                <div class="mz-message mz-message-info">
+                    <p>You are signed in as <strong>{{ user.firstName|default:user.emailAddress }}</strong>. 
+                    All orders associated with your account are available in your 
+                    <a href="{{ siteContext.siteSubdirectory }}/myaccount">account dashboard</a>.</p>
+                </div>
+            </div>
+            {% else %}
             <div class="mz-l-column">
                 <h1 class="mz-pagetitle">{{ labels.logIn2 }}</h1>
                 <p>Orders placed with your account</p>
@@ -67,6 +77,7 @@
                     </div>
                 </form>
             </div>
+            {% endif %}
             <div class="mz-l-column">
                 <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
                 <p>Orders placed as a guest or single order lookup</p>
