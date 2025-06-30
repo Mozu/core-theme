@@ -595,6 +595,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.handleLoginComplete.bind(self, returnUrl);
                 
             })["catch"](function(error) {
+                  console.log("error", error);
+                 if(error.status === 302) {
+                        var returnUrl = "";
+                        var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
+                        if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
+                        returnUrl = returnUrlParam;
+                        } else {
+                        returnUrl = self.$parent.find('input[name=returnUrl]').val();
+                    }
+                    self.handleLoginComplete.bind(self, returnUrl);
+                    return;
+                }
+
                 // Handle error
                 $input.prop('disabled', false);
                 
@@ -1230,6 +1243,18 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                 })
                 ['catch'](function(error) {
+                    console.log("error", error);
+                    if(error.status === 302) {
+                        var returnUrl = "";
+                        var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
+                        if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
+                        returnUrl = returnUrlParam;
+                        } else {
+                        returnUrl = self.$parent.find('input[name=returnUrl]').val();
+                    }
+                        self.handleLoginComplete.bind(self, returnUrl);
+                        return;
+                    }
                     // Handle error
                     $input.prop('disabled', false);
                     
