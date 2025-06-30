@@ -14,7 +14,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     },
     returnFalse = function () {
         return false;
-    },    returnUrl = function() {
+    },
+    returnUrl = function() {
         var returnURL = $('input[name=returnUrl]').val();
         if(!returnURL) {
             returnURL = '/';
@@ -41,6 +42,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         }
         return null;
+    },
+    isValidEmail = function(email) {
+        // Simple email validation regex
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     },
     $docBody,
 
@@ -924,12 +930,49 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var $passwordRow = $form.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
             var $loginButton = $form.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"], [data-mz-action="anonymousorder-submit"]');
             var $linksRow = $form.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
+            var $emailField = $form.find('input[data-mz-login-email], input[data-mz-order-email]');
+            var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
             
-            // Hide password field
-            $passwordRow.hide();
-            
-            // Hide the forgot password and OTP links
-            $linksRow.hide();
+            // For order status form, we need to handle the case where there's no email field initially
+            if ($emailField.length === 0 && $form.hasClass('mz-anonymousorder-form')) {
+                // This is order status form - we need to create an email field
+                var emailFieldHtml = '<div class="mz-l-formfieldgroup-row mz-otp-email-row">' +
+                                    '<div class="mz-l-formfieldgroup-cell">' +
+                                    '<label for="otp-email">Email Address</label>' +
+                                    '</div>' +
+                                    '<div class="mz-l-formfieldgroup-cell">' +
+                                    '<input name="otp-email" type="email" data-mz-order-email placeholder="Enter your email address" />' +
+                                    '</div>' +
+                                    '</div>';
+                
+                // Insert the email field at the top of the form
+                $form.find('.mz-l-formfieldgroup').prepend(emailFieldHtml);
+                
+                // Update our references
+                $emailField = $form.find('input[data-mz-order-email]');
+                $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
+                
+                // Hide all existing form fields
+                $form.find('.mz-l-formfieldgroup-row').not('.mz-otp-email-row').hide();
+            } else {
+                // Store original label text for restoration
+                $form.data('originalEmailLabel', $emailLabel.text());
+                
+                // Change email label to "Email Address" only
+                $emailLabel.text('Email Address');
+                
+                // Validate current email field value - if it's not a valid email, clear it
+                var currentValue = $emailField.val();
+                if (currentValue && !isValidEmail(currentValue)) {
+                    $emailField.val('');
+                }
+                
+                // Hide password field
+                $passwordRow.hide();
+                
+                // Hide the forgot password and OTP links
+                $linksRow.hide();
+            }
             
             // Create a separate "Request Code" button instead of changing the existing one
             var requestCodeButtonHtml = '<div class="mz-l-formfieldgroup-row mz-otp-request-row">' +
@@ -958,16 +1001,32 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $form.on('click', '[data-mz-action="backtopassword"]', function(e) {
                 e.preventDefault();
                 
-                // Show password field and links again
-                $passwordRow.show();
-                $linksRow.show();
+                if ($form.hasClass('mz-anonymousorder-form') && $form.find('.mz-otp-email-row').length > 0) {
+                    // Order status form - remove the email field we added and show original fields
+                    $form.find('.mz-otp-email-row').remove();
+                    $form.find('.mz-l-formfieldgroup-row').show();
+                } else {
+                    // Regular login form - restore original email label and show hidden fields
+                    var $emailField = $form.find('input[data-mz-login-email], input[data-mz-order-email]');
+                    var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
+                    var originalLabel = $form.data('originalEmailLabel');
+                    if (originalLabel) {
+                        $emailLabel.text(originalLabel);
+                    }
+                    
+                    // Show password field and links again
+                    $passwordRow.show();
+                    $linksRow.show();
+                    
+                    // Show the original login button
+                    $loginButton.closest('.mz-l-formfieldgroup-row').show();
+                }
                 
-                // Show the original login button
-                $loginButton.closest('.mz-l-formfieldgroup-row').show();
-                  // Remove all OTP-specific elements
+                // Remove all OTP-specific elements
                 $('.mz-otp-request-row, .mz-otp-back-row, .mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
-                  // Clear form data
-                $form.removeData('otpEmail otpSessionId');
+                
+                // Clear form data
+                $form.removeData('otpEmail otpSessionId originalEmailLabel');
                 
                 // Remove event handlers to prevent duplicates
                 $form.off('click', '[data-mz-action="backtopassword"]');
@@ -989,6 +1048,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 if (!email) {
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
                     $messageArea.html('<span class="mz-validationmessage">Please enter your email address to request a one-time password.</span>');
+                    $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
+                    return;
+                }
+                
+                // Validate email format
+                if (!isValidEmail(email)) {
+                    var $messageArea = $form.find('[data-mz-role="popover-message"]');
+                    $messageArea.html('<span class="mz-validationmessage">Please enter a valid email address.</span>');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
@@ -1099,6 +1166,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             function verifyOtpCode($form, enteredCode) {
                 var email = $form.data('otpEmail');
                 var sessionId = $form.data('otpSessionId');
+
+                var self = this;
                 
                 // Show loading state
                 var $input = $form.find('[data-mz-otp-code]');
@@ -1119,13 +1188,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     } else {
                         returnUrl = $form.find('input[name=returnUrl]').val();
                     }
-                      setTimeout(function() {
-                        // For regular login, use the same login completion logic as regular login
-                        if (returnUrl) {
-                            window.location.href = returnUrl;
-                        } else {
-                            window.location.reload();
-                        }
+                    setTimeout(function() {
+                        self.handleLoginComplete(returnUrl);
                     }, 1000);
                     
                 })
@@ -1220,7 +1284,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // When page is about to unload, ensure we clear any OTP state
                 var $forms = $('.mz-loginform-page, .mz-anonymousorder-form');
                 $forms.each(function() {
-                    var $form = $(this);                    if ($form.find('.mz-otp-input-row').length > 0) {
+                    var $form = $(this);                    
+                    if ($form.find('.mz-otp-input-row').length > 0) {
                         // OTP state exists, it will be cleared on page reload
                         $form.removeData('otpEmail otpSessionId');
                     }
