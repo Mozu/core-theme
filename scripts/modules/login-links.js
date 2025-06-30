@@ -149,12 +149,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             if ($messageArea && $messageArea.length > 0) {
                 $messageArea.html('<span class="mz-validationmessage">' + msg + '</span>');
-                console.log('Message displayed successfully:', msg);
+                window.console.log('Message displayed successfully:', msg);
             } else {
-                console.error('No message area found in displayMessage! Cannot display message:', msg);
+                window.console.error('No message area found in displayMessage! Cannot display message:', msg);
                 // Fallback: try to show an alert or log to help debug
                 if (window.console) {
-                    console.warn('Display Message (fallback):', msg);
+                    window.console.warn('Display Message (fallback):', msg);
                 }
             }
         },
@@ -827,12 +827,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             if ($messageArea && $messageArea.length > 0) {
                 $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
-                console.log('2FA Message displayed successfully:', message);
+                window.console.log('2FA Message displayed successfully:', message);
             } else {
-                console.error('No message area found for 2FA! Cannot display message:', message);
+                window.console.error('No message area found for 2FA! Cannot display message:', message);
                 // Fallback: try to show an alert or log to help debug
                 if (window.console) {
-                    console.warn('2FA Message (fallback):', message);
+                    window.console.warn('2FA Message (fallback):', message);
                 }
             }
         },
@@ -867,9 +867,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var $messageArea = this.findMessageArea();
             if ($messageArea && $messageArea.length > 0) {
                 $messageArea.empty();
-                console.log('Messages cleared successfully');
+                window.console.log('Messages cleared successfully');
             } else {
-                console.warn('No message area found to clear');
+                window.console.warn('No message area found to clear');
             }
         },
         displayResetPasswordMessage: function () {
