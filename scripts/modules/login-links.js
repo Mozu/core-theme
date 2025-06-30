@@ -575,13 +575,24 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Validate 2FA using API
             api.action('customer', 'validate2faAndCreateAuthTicket', {
-                OtpCode: enteredCode            }).then(function(response) {
+                OtpCode: enteredCode            
+            }).then(function(response) {
                 // Success - server will handle redirect internally
                 self.$parent.data('verified2FACode', enteredCode);
                 self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
                 
                 // Note: Server handles redirect internally, no need for client-side redirect
                 // The server will redirect to my-account or returnUrl automatically
+
+                var returnUrl = "";
+                var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
+                if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
+                returnUrl = returnUrlParam;
+                } else {
+                returnUrl = self.$parent.find('input[name=returnUrl]').val();
+                }
+
+                self.handleLoginComplete.bind(self, returnUrl);
                 
             })["catch"](function(error) {
                 // Handle error
@@ -1206,6 +1217,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                     // Note: Server handles redirect internally, no need for client-side redirect
                     // The server will redirect to my-account or returnUrl automatically
+
+                    var returnUrl = "";
+                    var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
+                    if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
+                    returnUrl = returnUrlParam;
+                    } else {
+                    returnUrl = self.$parent.find('input[name=returnUrl]').val();
+                    }
+
+                    self.handleLoginComplete.bind(self, returnUrl);
                     
                 })
                 ['catch'](function(error) {
@@ -1475,6 +1496,5 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $orderStatusContainer.prepend($message);
             }
         }
-    });
-    
+    });    
 });
