@@ -575,44 +575,55 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // Validate 2FA using API
             api.action('customer', 'validate2faAndCreateAuthTicket', {
                 OtpCode: enteredCode            }).then(function(response) {
-                // Success - proceed with login completion
+                // Success - server will handle redirect internally
                 self.$parent.data('verified2FACode', enteredCode);
                 self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
-                  // Get return URL for login completion
-                var returnUrl = "";
-                var returnUrlParam = getQueryParam('returnUrl');
-                if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
-                    returnUrl = returnUrlParam;
-                } else {
-                    returnUrl = self.$parent.find('input[name=returnUrl]').val();
-                }
                 
-                setTimeout(function() {
-                    self.handleLoginComplete(returnUrl);
-                }, 1000);
+                // Note: Server handles redirect internally, no need for client-side redirect
+                // The server will redirect to my-account or returnUrl automatically
                 
             })["catch"](function(error) {
                 // Handle error
                 $input.prop('disabled', false);
                 
                 var errorMessage = "The code you entered is incorrect. Please try again.";
+                var shouldReset2FA = false;
                 
-                // Check for specific error conditions
-                if (error && error.message) {
+                // Check for specific error conditions based on API response
+                if (error && error.responseJSON && error.responseJSON.result && error.responseJSON.result.message) {
+                    var apiMessage = error.responseJSON.result.message;
+                    
+                    if (apiMessage.includes('Invalid OTP')) {
+                        errorMessage = "The code you entered is incorrect. Please try again.";
+                    } else if (apiMessage.includes('Retry count exceeded')) {
+                        errorMessage = "You have entered an incorrect code too many times. Please request a new code.";
+                        shouldReset2FA = true;
+                    }
+                } else if (error && error.message) {
+                    // Fallback to error.message for other error formats
                     if (error.message.toLowerCase().includes('expired')) {
                         errorMessage = "The code has expired. Please request a new one.";
-                        self.reset2FAChallenge();
-                        return;
+                        shouldReset2FA = true;
                     } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
                         errorMessage = "Too many attempts. Please request a new code.";
-                        self.reset2FAChallenge();
-                        return;
+                        shouldReset2FA = true;
                     }
                 }
                 
                 self.show2FAMessage(errorMessage, 'error');
-                // Clear the input field
-                self.$parent.find('[data-mz-twofa-code]').val('').focus();
+                
+                if (shouldReset2FA) {
+                    // Check if this is a retry count exceeded case
+                    var isRetryExceeded = error && error.responseJSON && error.responseJSON.result && 
+                                        error.responseJSON.result.message && 
+                                        error.responseJSON.result.message.includes('Retry count exceeded');
+                    
+                    // Hide the verify button and optionally hide request new code option
+                    self.reset2FAChallenge(isRetryExceeded);
+                } else {
+                    // Clear the input field and allow retry
+                    self.$parent.find('[data-mz-twofa-code]').val('').focus();
+                }
             });
         },        
         resend2FACode: function(email) {
@@ -738,30 +749,38 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $hiddenInput.remove();
             this.is2FAInProgress = false;
         },
-        reset2FAChallenge: function() {
+        reset2FAChallenge: function(hideRequestButton) {
             // Remove 2FA input UI but keep the request/resend interface
             this.$parent.find('.mz-twofa-input-row, .mz-twofa-buttons-row').remove();
             
-            // Show request new code button
-            var requestNewCodeHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-request-row">' +
-                                    '<div class="mz-l-formfieldgroup-cell"></div>' +
-                                    '<div class="mz-l-formfieldgroup-cell">' +
-                                    '<button type="button" class="mz-button mz-request-twofa-button" data-mz-action="request-new-twofa">Request New Code</button>' +
-                                    '</div>' +
-                                    '</div>';
+            // Show or hide request new code button based on parameter
+            if (!hideRequestButton) {
+                // Show request new code button
+                var requestNewCodeHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-request-row">' +
+                                        '<div class="mz-l-formfieldgroup-cell"></div>' +
+                                        '<div class="mz-l-formfieldgroup-cell">' +
+                                        '<button type="button" class="mz-button mz-request-twofa-button" data-mz-action="request-new-twofa">Request New Code</button>' +
+                                        '</div>' +
+                                        '</div>';
+                
+                this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);              
+                
+                // Bind handler for request new code
+                var self = this;
+                this.$parent.on('click', '[data-mz-action="request-new-twofa"]', function(e) {
+                    e.preventDefault();
+                    var email = self.$parent.data('twoFA-email') || self.$parent.find('[data-mz-login-email]').val();
+                    self.$parent.find('.mz-twofa-request-row').remove();
+                    self.show2FAInputUI();
+                    self.send2FACode(email);
+                });
+            } else {
+                // Remove any existing request button if we're hiding it
+                this.$parent.find('.mz-twofa-request-row').remove();
+            }
             
-            this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);              // Clear 2FA data
+            // Clear 2FA data
             this.$parent.removeData('twoFA-email twoFA-sessionId');
-            
-            // Bind handler for request new code
-            var self = this;
-            this.$parent.on('click', '[data-mz-action="request-new-twofa"]', function(e) {
-                e.preventDefault();
-                var email = self.$parent.data('twoFA-email') || self.$parent.find('[data-mz-login-email]').val();
-                self.$parent.find('.mz-twofa-request-row').remove();
-                self.show2FAInputUI();
-                self.send2FACode(email);
-            });
         },
         show2FAInputUI: function() {
             var inputHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
@@ -1175,21 +1194,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 api.action('customer', 'validateOtpAndCreateAuthTicket', {
                     OtpCode: enteredCode                
                 }).then(function(response) {
-                    // Success - call handleLoginComplete like regular login
+                    // Success - server will handle redirect internally
                     showOtpSuccess($form);
                     
-                    // Get return URL for login completion
-                    var returnUrl = "";
-                    var urlParams = window.location.search;
-                    var returnUrlMatch = urlParams.match(/returnUrl=([^&]*)/);
-                    if (returnUrlMatch && !$form.find('input[name=returnUrl]').val()) {
-                        returnUrl = decodeURIComponent(returnUrlMatch[1]);
-                    } else {
-                        returnUrl = $form.find('input[name=returnUrl]').val();
-                    }
-                    setTimeout(function() {
-                        self.handleLoginComplete(returnUrl);
-                    }, 1000);
+                    // Note: Server handles redirect internally, no need for client-side redirect
+                    // The server will redirect to my-account or returnUrl automatically
                     
                 })
                 ['catch'](function(error) {
@@ -1197,23 +1206,43 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $input.prop('disabled', false);
                     
                     var errorMessage = "The code you entered is incorrect. Please try again.";
+                    var shouldReset = false;
                     
-                    // Check for specific error conditions
-                    if (error && error.message) {
+                    // Check for specific error conditions based on API response
+                    if (error && error.responseJSON && error.responseJSON.result && error.responseJSON.result.message) {
+                        var apiMessage = error.responseJSON.result.message;
+                        
+                        if (apiMessage.includes('Invalid OTP')) {
+                            errorMessage = "The code you entered is incorrect. Please try again.";
+                        } else if (apiMessage.includes('Retry count exceeded')) {
+                            errorMessage = "You have entered an incorrect code too many times. Please request a new code.";
+                            shouldReset = true;
+                        }
+                    } else if (error && error.message) {
+                        // Fallback to error.message for other error formats
                         if (error.message.toLowerCase().includes('expired')) {
                             errorMessage = "The code has expired. Please request a new one.";
-                            resetOtpState($form);
-                            return;
+                            shouldReset = true;
                         } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
                             errorMessage = "Too many attempts. Please request a new code.";
-                            resetOtpState($form);
-                            return;
+                            shouldReset = true;
                         }
                     }
                     
                     showOtpError($form, errorMessage);
-                    // Clear the input field
-                    $form.find('[data-mz-otp-code]').val('').focus();
+                    
+                    if (shouldReset) {
+                        // Check if this is a retry count exceeded case
+                        var isRetryExceeded = error && error.responseJSON && error.responseJSON.result && 
+                                            error.responseJSON.result.message && 
+                                            error.responseJSON.result.message.includes('Retry count exceeded');
+                        
+                        // Reset state - keep input visible but change "Resend" to "Request New Code" if retry exceeded
+                        resetOtpState($form, isRetryExceeded);
+                    } else {
+                        // Clear the input field and allow retry
+                        $form.find('[data-mz-otp-code]').val('').focus();
+                    }
                 });
             }
               // Function to resend OTP code
@@ -1261,23 +1290,41 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var successMessage = message || "Code verified successfully. Logging you in...";
                 $messageArea.html('<span class="mz-validationmessage-success">' + successMessage + '</span>');
             }              // Function to reset OTP state
-            function resetOtpState($form) {
-                // Remove OTP-specific UI elements
-                $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
-                
-                // Show the Request Code button again
-                $('.mz-otp-request-row').show();
-                
-                // Clear form data
-                $form.removeData('otpEmail otpSessionId');
-                
-                // Remove OTP-specific event handlers
-                $form.off('input', '[data-mz-otp-code]');
-                $form.off('click', '[data-mz-action="resend-otp-code"]');
-                
-                // Clear any messages
-                var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                $messageArea.empty();            }
+            function resetOtpState($form, isRetryExceeded) {
+                if (isRetryExceeded) {
+                    // When retry count exceeded, change "Resend Code" to "Request New Code"
+                    $('.mz-otp-resend-row .mz-resend-code')
+                        .text('Request New Code')
+                        .removeClass('mz-resend-code')
+                        .addClass('mz-request-new-code')
+                        .attr('data-mz-action', 'request-new-otp-code');
+                    
+                    // Remove the existing resend event handler and add new one
+                    $form.off('click', '[data-mz-action="resend-otp-code"]');
+                    $form.on('click', '[data-mz-action="request-new-otp-code"]', function(e) {
+                        e.preventDefault();
+                        // Reset to initial state and start fresh
+                        $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
+                        $('.mz-otp-request-row').show();
+                        $form.removeData('otpEmail otpSessionId');
+                        $form.off('input', '[data-mz-otp-code]');
+                        $form.off('click', '[data-mz-action="request-new-otp-code"]');
+                    });
+                } else {
+                    // Normal reset - remove OTP-specific UI elements
+                    $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
+                    
+                    // Always show the Request Code button
+                    $('.mz-otp-request-row').show();
+                    
+                    // Clear form data
+                    $form.removeData('otpEmail otpSessionId');
+                    
+                    // Remove OTP-specific event handlers
+                    $form.off('input', '[data-mz-otp-code]');
+                    $form.off('click', '[data-mz-action="resend-otp-code"]');
+                }
+            }
               // Handle browser refresh - reset to initial state
             $(window).on('beforeunload', function() {
                 // When page is about to unload, ensure we clear any OTP state
