@@ -148,7 +148,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 type = 'error';
             }
             this.setLoading(false);
-            this.$parent.find('[data-mz-role="popover-message"]').html("<span class='mz-validationmessage" + type === "success" ? '-success' : '' + ">" + msg + '</span>');
+            this.$parent.find('[data-mz-role="popover-message"]').html("<span class='mz-validationmessage" + type === "success" ? '-success' : '' + "'>" + msg + '</span>');
         },
         init: function (el) {
             this.$el = $(el);
@@ -339,13 +339,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
         },        
         anonymousorder: function() {
-            // Check if 2FA challenge is required before proceeding with order login
-            var requires2FA = this.check2FARequired();
-            if (requires2FA && !this.is2FAInProgress) {
-                this.start2FAChallenge();
-                return;
-            }
-
             var email = "";
             var billingZipCode = "";
             var billingPhoneNumber = "";
@@ -407,13 +400,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 window.location.reload();
             }        
         },
-        check2FARequired: function() {
-            // Check if any 2FA settings are enabled
-            var siteContext = HyprLiveContext.locals.siteContext;
-            return siteContext.generalSettings.is2FAAlwaysRequired ||
-                   siteContext.generalSettings.is2FARequiredOnFingerprintChange ||
-                   siteContext.generalSettings.is2FARequiredOnRegionChange;
-        },        
         start2FAChallenge: function() {
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
@@ -775,7 +761,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         clearMessages: function() {
            var $messageArea = this.$parent.find('[data-mz-role="popover-message"]');
-            $messageArea.empty();
+           $messageArea.html('<span>' + '' + '</span>');
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
@@ -787,7 +773,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         this.signup = _.debounce(this.signup, 150);
     };
     SignupPopover.prototype = new DismissablePopover();    $.extend(SignupPopover.prototype, LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'check2FARequired', 'start2FAChallenge'],
+        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'start2FAChallenge'],
         template: Hypr.getTemplate('modules/common/signup-popover').render(),
         bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";

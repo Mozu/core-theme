@@ -71,8 +71,10 @@
                             <div class="mz-l-formfieldgroup-cell"></div>                            
                             <div class="mz-l-formfieldgroup-cell">
                                 <a href="/user/forgotpassword" class="mz-forgot" data-mz-action="launchforgotpassword">{{ labels.forgotPassword }}</a>
+                                {% if siteContext.generalSettings.isEmailOtpLoginAllowed %}
                                 <span class="mz-login-separator"> | </span>
                                 <a href="#" class="mz-otp-login" data-mz-action="otplogin">Login with One-Time Password</a>
+                                {% endif %}
                                 <section data-mz-role="popover-message" class="mz-popover-message"></section>
                             </div>
                         </div>
