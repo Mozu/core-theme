@@ -460,6 +460,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                            '<input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
                            '</div>' +
                            '</div>' +
+                           '<section data-mz-role="popover-message" class="mz-popover-message"></section>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-buttons-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
@@ -597,9 +598,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 if (shouldReset2FA) {
                     // Check if this is a retry count exceeded case
-                    var isRetryExceeded = error && error.responseJSON && error.responseJSON.result && 
-                                        error.responseJSON.result.message && 
-                                        error.responseJSON.result.message.includes('Retry count exceeded');
+                    var isRetryExceeded = error && error.result && 
+                                        error.result.message && 
+                                        error.result.message.includes('Retry count exceeded');
                     
                     // Hide the verify button and optionally hide request new code option
                     self.reset2FAChallenge(isRetryExceeded);
@@ -920,9 +921,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             e.preventDefault();
             
             // Check if OTP login is allowed
-            if (!HyprLiveContext.locals.siteContext.generalSettings.isEmailOtpLoginAllowed) {
-                return;
-            }
+            // if (!HyprLiveContext.locals.siteContext.generalSettings.isEmailOtpLoginAllowed) {
+            //     return;
+            // }
             
             // Check if we're on the main login page or order status login page
             var $form = $('.mz-loginform-page, .mz-anonymousorder-form');
@@ -981,6 +982,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var requestCodeButtonHtml = '<div class="mz-l-formfieldgroup-row mz-otp-request-row">' +
                                        '<div class="mz-l-formfieldgroup-cell"></div>' +
                                        '<div class="mz-l-formfieldgroup-cell">' +
+                                       '<section data-mz-role="popover-message" class="mz-popover-message"></section>'+
                                        '<button type="button" class="mz-button mz-request-code-button" data-mz-action="request-otp-code">Request Code</button>' +
                                        '</div>' +
                                        '</div>';
@@ -1048,16 +1050,34 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var email = $form.find('input[data-mz-login-email], input[data-mz-order-email]').val();
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 
+                // Helper function to display message in this context
+                var displayMessage = function(message, type) {
+                    console.log('Displaying message:', message, type, $('[data-mz-role="popover-message"]:visible'));
+                    var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
+                    if ($messageArea.length === 0) {
+                        // Try to find message area in different ways
+                        $messageArea = $('[data-mz-role="popover-message"]:visible').first();
+                         console.log("$messageArea", $messageArea);
+                    }
+                    if ($messageArea.length > 0) {
+                        $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
+                        console.log("$messageArea > 0", $messageArea);
+                    } else {
+                        console.log("Cannot display message");
+                        console.error('Cannot display message:', message);
+                    }
+                };
+                
                 // Validate email
                 if (!email) {
-                    this.displayMessage('Please enter your email address to request a one-time password.');
+                    displayMessage('Please enter your email address to request a one-time password.', 'error');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
                 
                 // Validate email format
                 if (!isValidEmail(email)) {
-                    this.displayMessage('Please enter a valid email address.');
+                    displayMessage('Please enter a valid email address.', 'error');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
@@ -1084,8 +1104,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $requestButton.closest('.mz-otp-request-row').hide();
                     
                     // Show OTP input field and resend link
-                    showOtpInputUI($form, email);                      })
-                      ['catch'](function(error) {
+                    showOtpInputUI($form, email);                      
+                })['catch'](function(error) {
                     // Handle error
                     var errorMessage = "Failed to send verification code. Please try again.";
                     
@@ -1138,6 +1158,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                                   '<input type="text" id="mz-otp-code" data-mz-otp-code maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
                                   '</div>' +
                                   '</div>' +
+                                  '<section data-mz-role="popover-message" class="mz-popover-message"></section>' +
                                   '<div class="mz-l-formfieldgroup-row mz-otp-resend-row">' +
                                   '<div class="mz-l-formfieldgroup-cell"></div>' +
                                   '<div class="mz-l-formfieldgroup-cell">' +
@@ -1192,8 +1213,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     returnUrl = self.$parent.find('input[name=returnUrl]').val();
                     }
 
-                    self.handleLoginComplete.bind(self, returnUrl);
-                    
+                    if ( returnUrl ){
+                        window.location.href= returnUrl;
+                    }else{
+                        window.location.reload();
+                    }  
                 })
                 ['catch'](function(error) {
                     window.console.log("error", error);
