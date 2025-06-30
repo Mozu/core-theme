@@ -1043,10 +1043,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 var $requestButton = $(this);
                 var email = $form.find('input[data-mz-login-email], input[data-mz-order-email]').val();
+                var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 
                 // Validate email
                 if (!email) {
-                    var $messageArea = $form.find('[data-mz-role="popover-message"]');
                     $messageArea.html('<span class="mz-validationmessage">Please enter your email address to request a one-time password.</span>');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
@@ -1054,7 +1054,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Validate email format
                 if (!isValidEmail(email)) {
-                    var $messageArea = $form.find('[data-mz-role="popover-message"]');
                     $messageArea.html('<span class="mz-validationmessage">Please enter a valid email address.</span>');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;

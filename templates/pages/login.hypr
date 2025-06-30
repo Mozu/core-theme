@@ -58,7 +58,8 @@
                         </div>                        
                         {% endif %}
                         <div class="mz-l-formfieldgroup-row">
-                            <div class="mz-l-formfieldgroup-cell"></div>                            <div class="mz-l-formfieldgroup-cell">
+                            <div class="mz-l-formfieldgroup-cell"></div>                            
+                            <div class="mz-l-formfieldgroup-cell">
                                 <a href="/user/forgotpassword" class="mz-forgot" data-mz-action="launchforgotpassword">{{ labels.forgotPassword }}</a>
                                 {% if siteContext.generalSettings.isEmailOtpLoginAllowed %}
                                 <span class="mz-login-separator"> | </span>
