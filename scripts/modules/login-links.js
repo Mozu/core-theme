@@ -595,19 +595,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.handleLoginComplete.bind(self, returnUrl);
                 
             })["catch"](function(error) {
-                  window.console.log("error", error);
-                 if(error.status === 302) {
-                        var returnUrl = "";
-                        var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
-                        if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
-                        returnUrl = returnUrlParam;
-                        } else {
-                        returnUrl = self.$parent.find('input[name=returnUrl]').val();
-                    }
-                    self.handleLoginComplete.bind(self, returnUrl);
-                    return;
-                }
-
                 // Handle error
                 $input.prop('disabled', false);
                 
@@ -615,25 +602,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var shouldReset2FA = false;
                 
                 // Check for specific error conditions based on API response
-                if (error && error.responseJSON && error.responseJSON.result && error.responseJSON.result.message) {
-                    var apiMessage = error.responseJSON.result.message;
+                if (error && error.result && error.result.message) {
+                    var apiMessage = error.result.message;
                     
-                    if (apiMessage.includes('Invalid OTP')) {
+                    if (apiMessage.toLowerCase().includes('invalid otp')) {
                         errorMessage = "The code you entered is incorrect. Please try again.";
-                    } else if (apiMessage.includes('Retry count exceeded')) {
+                    } else if (apiMessage.toLowerCase().includes('retry count exceeded')) {
                         errorMessage = "You have entered an incorrect code too many times. Please request a new code.";
                         shouldReset2FA = true;
                     }
-                } else if (error && error.message) {
-                    // Fallback to error.message for other error formats
-                    if (error.message.toLowerCase().includes('expired')) {
-                        errorMessage = "The code has expired. Please request a new one.";
-                        shouldReset2FA = true;
-                    } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
-                        errorMessage = "Too many attempts. Please request a new code.";
-                        shouldReset2FA = true;
-                    }
-                }
+                } 
                 
                 self.show2FAMessage(errorMessage, 'error');
                 
@@ -1223,13 +1201,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $input.prop('disabled', true);
                   // Validate OTP using API
                 api.action('customer', 'validateOtpAndCreateAuthTicket', {
+                    email: email,
                     OtpCode: enteredCode                
                 }).then(function(response) {
                     // Success - server will handle redirect internally
                     showOtpSuccess($form);
-                    
-                    // Note: Server handles redirect internally, no need for client-side redirect
-                    // The server will redirect to my-account or returnUrl automatically
 
                     var returnUrl = "";
                     var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
@@ -1243,18 +1219,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                 })
                 ['catch'](function(error) {
-                    window.console.log("error", error);
-                    if(error.status === 302) {
-                        var returnUrl = "";
-                        var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
-                        if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
-                        returnUrl = returnUrlParam;
-                        } else {
-                        returnUrl = self.$parent.find('input[name=returnUrl]').val();
-                    }
-                        self.handleLoginComplete.bind(self, returnUrl);
-                        return;
-                    }
                     // Handle error
                     $input.prop('disabled', false);
                     
@@ -1262,26 +1226,17 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     var shouldReset = false;
                     
                     // Check for specific error conditions based on API response
-                    if (error && error.responseJSON && error.responseJSON.result && error.responseJSON.result.message) {
-                        var apiMessage = error.responseJSON.result.message;
+                    if (error && error.result && error.result.message) {
+                        var apiMessage = error.result.message;
                         
-                        if (apiMessage.includes('Invalid OTP')) {
+                        if (apiMessage.toLowerCase().includes('invalid otp')) {
                             errorMessage = "The code you entered is incorrect. Please try again.";
-                        } else if (apiMessage.includes('Retry count exceeded')) {
+                        } else if (apiMessage.toLowerCase().includes('retry count exceeded')) {
                             errorMessage = "You have entered an incorrect code too many times. Please request a new code.";
                             shouldReset = true;
                         }
-                    } else if (error && error.message) {
-                        // Fallback to error.message for other error formats
-                        if (error.message.toLowerCase().includes('expired')) {
-                            errorMessage = "The code has expired. Please request a new one.";
-                            shouldReset = true;
-                        } else if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
-                            errorMessage = "Too many attempts. Please request a new code.";
-                            shouldReset = true;
-                        }
-                    }
-                    
+                    } 
+
                     showOtpError($form, errorMessage);
                     
                     if (shouldReset) {
