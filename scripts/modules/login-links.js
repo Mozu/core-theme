@@ -143,20 +143,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
                 Hypr.getLabel('unexpectedError'));
         },
-        displayMessage: function (msg) {
-            this.setLoading(false);
-            var $messageArea = this.findMessageArea();
-            
-            if ($messageArea && $messageArea.length > 0) {
-                $messageArea.html('<span class="mz-validationmessage">' + msg + '</span>');
-                window.console.log('Message displayed successfully:', msg);
-            } else {
-                window.console.error('No message area found in displayMessage! Cannot display message:', msg);
-                // Fallback: try to show an alert or log to help debug
-                if (window.console) {
-                    window.console.warn('Display Message (fallback):', msg);
-                }
+        displayMessage: function (msg, type) {
+            if(!type) {
+                type = 'error';
             }
+            this.setLoading(false);
+            this.$parent.find('[data-mz-role="popover-message"]').html("<span class='mz-validationmessage" + type === "success" ? '-success' : '' + ">" + msg + '</span>');
         },
         init: function (el) {
             this.$el = $(el);
@@ -301,7 +293,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             //is no returnUrl value provided by the server,
             //we'll use the one specified in the url query. If a returnURl has been
             //provided by the server, it will live in an invisible input in the
-            //login links box.            var returnUrl = "";
+            //login links box.  
+                      
+            var returnUrl = "";
             var returnUrlParam = getQueryParam('returnUrl');
             if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
               returnUrl = returnUrlParam;
@@ -421,8 +415,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                    siteContext.generalSettings.is2FARequiredOnRegionChange;
         },        
         start2FAChallenge: function() {
-            var self = this;
-            
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
             
@@ -471,7 +463,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                            '<div class="mz-l-formfieldgroup-row mz-twofa-buttons-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<button type="button" class="mz-button mz-button-large mz-verify-twofa-button" data-mz-action="verify-twofa">Verify Code</button>' +
                            '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">Resend Code</a>' +
                            '</div>' +
                            '</div>' +
@@ -506,35 +497,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 // Show success message
-                self.show2FAMessage('If your account requires 2FA, a verification code has been sent to your email address.', 'success');
+                self.displayMessage('If your account requires 2FA, a verification code has been sent to your email address.', 'success');
                 
             })["catch"](function(error) {
-                // Handle error
-                var errorMessage = "Failed to send verification code. Please try again.";
-                
-                // Check for specific error conditions
-                if (error && error.message) {
-                    if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
-                        errorMessage = "Too many requests. Please wait a few minutes before trying again.";
-                    } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('not found')) {
-                        errorMessage = "Email address not found. Please check your email and try again.";
-                    }
-                }
-                
-                // Check for 302 redirect or authentication issues
-                if (error.status === 302 || error.statusCode === 302 || 
-                    (error.message && error.message.toLowerCase().includes('redirect')) ||
-                    (error.message && error.message.toLowerCase().includes('unauthorized')) ||
-                    (error.message && error.message.toLowerCase().includes('authentication'))) {
-                    // Session expired or user not authenticated
-                    errorMessage = "Your session has expired. Please refresh the page and try logging in again.";
-                    // Optionally, we could redirect to login page
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 3000);
-                }
-                
-                self.show2FAMessage(errorMessage, 'error');
+                self.displayMessage(error.message, 'error');
             });
         },
         bind2FAHandlers: function() {
@@ -592,7 +558,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 window.console.log("2FA code verified successfully:", response);
                 // Success - server will handle redirect internally
                 self.$parent.data('verified2FACode', enteredCode);
-                self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
+                self.displayMessage('Code verified successfully. Logging you in...', 'success');
                 
                 // Note: Server handles redirect internally, no need for client-side redirect
                 // The server will redirect to my-account or returnUrl automatically
@@ -627,7 +593,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                 } 
                 
-                self.show2FAMessage(errorMessage, 'error');
+                self.displayMessage(errorMessage, 'error');
                 
                 if (shouldReset2FA) {
                     // Check if this is a retry count exceeded case
@@ -655,7 +621,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Update session data
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
-                self.show2FAMessage("A new verification code has been sent to your email address.", 'success');
+                self.displayMessage("A new verification code has been sent to your email address.", 'success');
                 $resendLink.text('Resend Code').removeClass('is-loading');
                 
                 // Clear the input field
@@ -685,7 +651,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }, 3000);
                 }
                 
-                self.show2FAMessage(errorMessage, 'error');
+                self.displayMessage(errorMessage, 'error');
                 $resendLink.text('Resend Code').removeClass('is-loading');
             });
         },
@@ -821,56 +787,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // Focus on the input
             $('#mz-twofa-code').focus();
         },
-        show2FAMessage: function(message, type) {
-            var messageClass = type === 'success' ? 'mz-validationmessage-success' : 'mz-validationmessage';
-            var $messageArea = this.findMessageArea();
-            
-            if ($messageArea && $messageArea.length > 0) {
-                $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
-                window.console.log('2FA Message displayed successfully:', message);
-            } else {
-                window.console.error('No message area found for 2FA! Cannot display message:', message);
-                // Fallback: try to show an alert or log to help debug
-                if (window.console) {
-                    window.console.warn('2FA Message (fallback):', message);
-                }
-            }
-        },
-        findMessageArea: function() {
-            // First try to find it in the current parent context
-            var $messageArea = this.$parent ? this.$parent.find('[data-mz-role="popover-message"]') : $();
-            
-            // If not found in parent, try to find it in the popover itself
-            if ($messageArea.length === 0 && this.popoverInstance) {
-                var $popoverTip = this.popoverInstance.tip();
-                if ($popoverTip && $popoverTip.length > 0) {
-                    $messageArea = $popoverTip.find('[data-mz-role="popover-message"]');
-                }
-            }
-            
-            // If still not found, try to find it relative to the login element
-            if ($messageArea.length === 0 && this.$el) {
-                var $popover = this.$el.closest('.mz-popover');
-                if ($popover.length > 0) {
-                    $messageArea = $popover.find('[data-mz-role="popover-message"]');
-                }
-            }
-            
-            // Last resort: search the entire document for the first visible message area
-            if ($messageArea.length === 0) {
-                $messageArea = $('[data-mz-role="popover-message"]:visible').first();
-            }
-            
-            return $messageArea;
-        },
         clearMessages: function() {
-            var $messageArea = this.findMessageArea();
-            if ($messageArea && $messageArea.length > 0) {
-                $messageArea.empty();
-                window.console.log('Messages cleared successfully');
-            } else {
-                window.console.warn('No message area found to clear');
-            }
+           var $messageArea = this.$parent.find('[data-mz-role="popover-message"]');
+            $messageArea.empty();
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
@@ -1131,14 +1050,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Validate email
                 if (!email) {
-                    $messageArea.html('<span class="mz-validationmessage">Please enter your email address to request a one-time password.</span>');
+                    this.displayMessage('Please enter your email address to request a one-time password.');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
                 
                 // Validate email format
                 if (!isValidEmail(email)) {
-                    $messageArea.html('<span class="mz-validationmessage">Please enter a valid email address.</span>');
+                    this.displayMessage('Please enter a valid email address.');
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
