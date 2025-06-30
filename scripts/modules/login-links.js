@@ -145,7 +145,18 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         displayMessage: function (msg) {
             this.setLoading(false);
-            this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
+            var $messageArea = this.findMessageArea();
+            
+            if ($messageArea && $messageArea.length > 0) {
+                $messageArea.html('<span class="mz-validationmessage">' + msg + '</span>');
+                console.log('Message displayed successfully:', msg);
+            } else {
+                console.error('No message area found in displayMessage! Cannot display message:', msg);
+                // Fallback: try to show an alert or log to help debug
+                if (window.console) {
+                    console.warn('Display Message (fallback):', msg);
+                }
+            }
         },
         init: function (el) {
             this.$el = $(el);
@@ -812,12 +823,54 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         show2FAMessage: function(message, type) {
             var messageClass = type === 'success' ? 'mz-validationmessage-success' : 'mz-validationmessage';
-            var $messageArea = this.$parent.find('[data-mz-role="popover-message"]');
-            $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
+            var $messageArea = this.findMessageArea();
+            
+            if ($messageArea && $messageArea.length > 0) {
+                $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
+                console.log('2FA Message displayed successfully:', message);
+            } else {
+                console.error('No message area found for 2FA! Cannot display message:', message);
+                // Fallback: try to show an alert or log to help debug
+                if (window.console) {
+                    console.warn('2FA Message (fallback):', message);
+                }
+            }
+        },
+        findMessageArea: function() {
+            // First try to find it in the current parent context
+            var $messageArea = this.$parent ? this.$parent.find('[data-mz-role="popover-message"]') : $();
+            
+            // If not found in parent, try to find it in the popover itself
+            if ($messageArea.length === 0 && this.popoverInstance) {
+                var $popoverTip = this.popoverInstance.tip();
+                if ($popoverTip && $popoverTip.length > 0) {
+                    $messageArea = $popoverTip.find('[data-mz-role="popover-message"]');
+                }
+            }
+            
+            // If still not found, try to find it relative to the login element
+            if ($messageArea.length === 0 && this.$el) {
+                var $popover = this.$el.closest('.mz-popover');
+                if ($popover.length > 0) {
+                    $messageArea = $popover.find('[data-mz-role="popover-message"]');
+                }
+            }
+            
+            // Last resort: search the entire document for the first visible message area
+            if ($messageArea.length === 0) {
+                $messageArea = $('[data-mz-role="popover-message"]:visible').first();
+            }
+            
+            return $messageArea;
         },
         clearMessages: function() {
-            var $messageArea = this.$parent.find('[data-mz-role="popover-message"]');
-            $messageArea.empty();
+            var $messageArea = this.findMessageArea();
+            if ($messageArea && $messageArea.length > 0) {
+                $messageArea.empty();
+                console.log('Messages cleared successfully');
+            } else {
+                console.warn('No message area found to clear');
+            }
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));

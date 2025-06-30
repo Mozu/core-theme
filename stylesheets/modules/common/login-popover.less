@@ -30,4 +30,22 @@
         display: inline-block;
         margin: @gutter/4 @gutter/2;
     }
+
+    .mz-popover-message {
+        min-height: 20px;
+        margin: @gutter/4 0;
+        clear: both;
+
+        .mz-validationmessage {
+            display: block;
+            margin: @gutter/4 0;
+        }
+
+        .mz-validationmessage-success {
+            color: @successText;
+            font-size: @fontSizeSmall;
+            display: block;
+            margin: @gutter/4 0;
+        }
+    }
 }
