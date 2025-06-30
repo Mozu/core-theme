@@ -577,6 +577,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             api.action('customer', 'validate2faAndCreateAuthTicket', {
                 OtpCode: enteredCode            
             }).then(function(response) {
+
+                window.console.log("2FA code verified successfully:", response);
                 // Success - server will handle redirect internally
                 self.$parent.data('verified2FACode', enteredCode);
                 self.show2FAMessage('Code verified successfully. Logging you in...', 'success');
@@ -595,6 +597,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.handleLoginComplete.bind(self, returnUrl);
                 
             })["catch"](function(error) {
+                window.console.log("error", error);
                 // Handle error
                 $input.prop('disabled', false);
                 
@@ -1207,6 +1210,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     // Success - server will handle redirect internally
                     showOtpSuccess($form);
 
+                    window.console.log("response", response);
+
                     var returnUrl = "";
                     var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
                     if (returnUrlParam && !self.$parent.find('input[name=returnUrl]').val()){
@@ -1219,6 +1224,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                 })
                 ['catch'](function(error) {
+                    window.console.log("error", error);
                     // Handle error
                     $input.prop('disabled', false);
                     
