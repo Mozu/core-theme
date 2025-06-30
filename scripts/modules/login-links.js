@@ -1052,19 +1052,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
                 // Helper function to display message in this context
                 var displayMessage = function(message, type) {
-                    console.log('Displaying message:', message, type, $('[data-mz-role="popover-message"]:visible'));
+                    window.console.log('Displaying message:', message, type, $('[data-mz-role="popover-message"]:visible'));
                     var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
                     if ($messageArea.length === 0) {
                         // Try to find message area in different ways
                         $messageArea = $('[data-mz-role="popover-message"]:visible').first();
-                         console.log("$messageArea", $messageArea);
+                         window.console.log("$messageArea", $messageArea);
                     }
                     if ($messageArea.length > 0) {
                         $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
-                        console.log("$messageArea > 0", $messageArea);
+                        window.console.log("$messageArea > 0", $messageArea);
                     } else {
-                        console.log("Cannot display message");
-                        console.error('Cannot display message:', message);
+                        window.console.log("Cannot display message");
+                        window.console.error('Cannot display message:', message);
                     }
                 };
                 
