@@ -6,16 +6,6 @@
 
 {% block body-content %}
     <div class="mz-l-container">
-        {% if user.isAuthenticated %}
-        <div class="mz-authenticated-user-notice">
-            <h1 class="mz-pagetitle">Already Signed In</h1>
-            <div class="mz-message mz-message-info">
-                <p>You are already signed in as <strong>{{ user.firstName|default:user.emailAddress }}</strong>. 
-                You can go to your <a href="{{ siteContext.siteSubdirectory }}/myaccount">account dashboard</a> 
-                or <a href="{{ siteContext.siteSubdirectory }}/logout" data-mz-action="logout">sign out</a> to create a different account.</p>
-            </div>
-        </div>
-        {% else %}
         <h1 class="mz-pagetitle">{{ labels.signUp }}</h1>
         {% dropzone "signup-top" scope="template" %}
         <form method="post" class="mz-signupform mz-signup-page" name="mz-signupform">

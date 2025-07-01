@@ -8,7 +8,6 @@
     <div class="mz-l-container">
         {% include "modules/common/message-bar" with model=model.messages %}
         <div class="mz-l-2column mz-l-2column-right">
-            {% if not user.isAuthenticated %}
                 <div class="mz-l-column">
                     <h1 class="mz-pagetitle">{{ labels.logIn2 }}</h1>
                     <p>Orders placed with your account</p>
@@ -73,7 +72,7 @@
                         </div>
                     </form>
                 </div>
-            {% endif %}
+
             <div class="mz-l-column">
                 <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
                 <p>Orders placed as a guest or single order lookup</p>

@@ -867,11 +867,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         };
         
-        // Check authentication and redirect if necessary
-        if (checkAuthenticationAndRedirect()) {
-            return; // Exit early if redirect happened
-        }
-        
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
@@ -1413,53 +1408,5 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             window.renderedRecaptcha = true;
         });
-
-        function checkAuthenticationAndRedirect() {
-            // Check if user is authenticated
-            var user = HyprLiveContext.locals.user;
-            var isAuthenticated = user && user.isAuthenticated;
-            var currentPath = window.location.pathname.toLowerCase();
-            
-            if (isAuthenticated) {
-                // Redirect authenticated users away from login/signup pages
-                if (currentPath === '/user/login' || currentPath === '/user/signup') {
-                    var returnUrl = getQueryParam('returnUrl');
-                    if (returnUrl) {
-                        window.location.href = decodeURIComponent(returnUrl);
-                    } else {
-                        window.location.href = '/myaccount';
-                    }
-                    return true; // Indicate redirect happened
-                }
-                
-                // Hide signin options on order-status page
-                // if (currentPath === '/user/order-status' || currentPath.includes('order-status')) {
-                //     hideSigninOptionsForAuthenticatedUser();
-                // }
-            }
-            
-            return false; // No redirect
-        }
-    
-        // Hide signin options for authenticated users on order-status page
-        function hideSigninOptionsForAuthenticatedUser() {
-            // Hide the entire signin column/section
-            $('.mz-loginform-page').hide();
-            
-            // Hide signin-related links if they exist
-            $('[data-mz-action="login"], [data-mz-action="signup"], [data-mz-action="launchforgotpassword"]').hide();
-            
-            // Add a message indicating user is already signed in
-            var $orderStatusContainer = $('.mz-l-2column');
-            if ($orderStatusContainer.length > 0 && $('.mz-authenticated-message').length === 0) {
-                var userName = HyprLiveContext.locals.user.firstName || HyprLiveContext.locals.user.emailAddress || 'User';
-                var $message = $('<div class="mz-authenticated-message">' +
-                            '<p>You are signed in as <strong>' + userName + '</strong>. ' +
-                            'All orders associated with your account will be visible in your ' +
-                            '<a href="/myaccount">account dashboard</a>.</p>' +
-                            '</div>');
-                $orderStatusContainer.prepend($message);
-            }
-        }
     });    
 });
