@@ -579,11 +579,13 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 }
             });
         },        
-        resend2FACode: function(email) {
+        resend2FACode: function(email, $targetButton, buttonResetText) {
             var self = this;
-            var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
+            // Use provided button or fallback to default resend button
+            var $button = $targetButton || this.$parent.find('[data-mz-action="resend-twofa-code"]');
+            var resetText = buttonResetText || 'Resend Code';
             
-            $resendLink.text('Sending...').addClass('is-loading');
+            $button.text('Sending...').addClass('is-loading');
               // Generate new 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
                 email: email
@@ -592,7 +594,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 self.displayMessage("A new verification code has been sent to your email address.", 'success');
-                $resendLink.text('Resend Code').removeClass('is-loading');
+                $button.text(resetText).removeClass('is-loading');
                 
                 // Clear the input field
                 self.$parent.find('[data-mz-twofa-code]').val('').focus();
@@ -622,7 +624,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 }
                 
                 self.displayMessage(errorMessage, 'error');
-                $resendLink.text('Resend Code').removeClass('is-loading');
+                $button.text(resetText).removeClass('is-loading');
             });
         },
         cancel2FAChallenge: function() {
@@ -702,12 +704,33 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $hiddenInput.remove();
             this.is2FAInProgress = false;
         },
-        reset2FAChallenge: function(hideRequestButton) {
-            // Remove 2FA input UI but keep the request/resend interface
-            this.$parent.find('.mz-twofa-input-row, .mz-twofa-buttons-row').remove();
-            
-            // Show or hide request new code button based on parameter
-            if (!hideRequestButton) {
+        reset2FAChallenge: function(isRetryExceeded) {
+            if (isRetryExceeded) {
+                // When retry count exceeded, change "Resend Code" to "Request New Code"
+                this.$parent.find('.mz-twofa-buttons-row .mz-resend-twofa')
+                    .text('Request New Code')
+                    .removeClass('mz-resend-twofa')
+                    .addClass('mz-request-new-twofa')
+                    .attr('data-mz-action', 'request-new-twofa-code');
+                
+                // Remove the existing resend event handler and add new one
+                var self = this;
+                this.$parent.off('click', '[data-mz-action="resend-twofa-code"]');
+                this.$parent.on('click', '[data-mz-action="request-new-twofa-code"]', function(e) {
+                    e.preventDefault();
+                    
+                    var email = self.$parent.data('twoFA-email');
+                    var $requestButton = $(this);
+                    
+                    if (!email) return;
+                    
+                    // Reuse the existing resend2FACode function with custom button and text
+                    self.resend2FACode(email, $requestButton, 'Request New Code');
+                });
+            } else {
+                // Normal reset - remove 2FA input UI but keep the request/resend interface
+                this.$parent.find('.mz-twofa-input-row, .mz-twofa-buttons-row').remove();
+                
                 // Show request new code button
                 var requestNewCodeHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-request-row">' +
                                         '<div class="mz-l-formfieldgroup-cell"></div>' +
@@ -727,13 +750,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     self.show2FAInputUI();
                     self.send2FACode(email);
                 });
-            } else {
-                // Remove any existing request button if we're hiding it
-                this.$parent.find('.mz-twofa-request-row').remove();
+                
+                // Clear 2FA data
+                this.$parent.removeData('twoFA-email twoFA-sessionId');
             }
-            
-            // Clear 2FA data
-            this.$parent.removeData('twoFA-email twoFA-sessionId');
         },
         show2FAInputUI: function() {
             var inputHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
@@ -1212,9 +1232,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 });
             }
               // Function to resend OTP code
-            function resendOtpCode($form, email) {
-                var $resendLink = $form.find('[data-mz-action="resend-otp-code"]');
-                $resendLink.text('Sending...').addClass('is-loading');                  // Generate new OTP using API
+            function resendOtpCode($form, email, $targetButton, buttonResetText) {
+                // Use provided button or fallback to default resend button
+                var $button = $targetButton || $form.find('[data-mz-action="resend-otp-code"]');
+                var resetText = buttonResetText || 'Resend Code';
+                
+                $button.text('Sending...').addClass('is-loading');                  // Generate new OTP using API
                 api.action('customer', 'generateAndSendOtp', {
                     email: email
                 }).then(function(response) {
@@ -1222,7 +1245,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
                     showOtpSuccess($form, "A new code has been sent to your email address.");
-                    $resendLink.text('Resend Code').removeClass('is-loading');
+                    $button.text(resetText).removeClass('is-loading');
                     
                     // Clear the input field
                     $form.find('[data-mz-otp-code]').val('').focus();
@@ -1240,7 +1263,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                     
                     showOtpError($form, errorMessage);
-                    $resendLink.text('Resend Code').removeClass('is-loading');
+                    $button.text(resetText).removeClass('is-loading');
                 });
             }
             
@@ -1270,12 +1293,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $form.off('click', '[data-mz-action="resend-otp-code"]');
                     $form.on('click', '[data-mz-action="request-new-otp-code"]', function(e) {
                         e.preventDefault();
-                        // Reset to initial state and start fresh
-                        $('.mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
-                        $('.mz-otp-request-row').show();
-                        $form.removeData('otpEmail otpSessionId');
-                        $form.off('input', '[data-mz-otp-code]');
-                        $form.off('click', '[data-mz-action="request-new-otp-code"]');
+                        
+                        var email = $form.data('otpEmail');
+                        var $requestButton = $(this);
+                        
+                        if (!email) return;
+                        
+                        // Reuse the existing resendOtpCode function with custom button and text
+                        resendOtpCode($form, email, $requestButton, 'Request New Code');
                     });
                 } else {
                     // Normal reset - remove OTP-specific UI elements
