@@ -742,7 +742,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 this.$parent.find('.mz-twofa-title-row').after(requestNewCodeHtml);              
                 
                 // Bind handler for request new code
-                var self = this;
                 this.$parent.on('click', '[data-mz-action="request-new-twofa"]', function(e) {
                     e.preventDefault();
                     var email = self.$parent.data('twoFA-email') || self.$parent.find('[data-mz-login-email]').val();
