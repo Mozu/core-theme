@@ -925,13 +925,15 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     e.preventDefault();
                     window.location.href = '/user/forgotpassword';
                 });
-            }        });          $('[data-mz-action="otplogin"]').on('click', function(e) {
+            }        
+        });          
+        $('[data-mz-action="otplogin"]').on('click', function(e) {
             e.preventDefault();
             
             // Check if OTP login is allowed
-            // if (!HyprLiveContext.locals.siteContext.generalSettings.isEmailOtpLoginAllowed) {
-            //     return;
-            // }
+            if (!HyprLiveContext.locals.siteContext.generalSettings.isEmailOtpLoginAllowed) {
+                return;
+            }
             
             // Check if we're on the main login page or order status login page
             var $form = $('.mz-loginform-page, .mz-anonymousorder-form');
@@ -940,7 +942,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
             
             var $passwordRow = $form.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
-            var $loginButton = $form.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"], [data-mz-action="anonymousorder-submit"]');
+            var $loginButton = $form.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]');
             var $linksRow = $form.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
             var $emailField = $form.find('input[data-mz-login-email], input[data-mz-order-email]');
             var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
