@@ -1431,9 +1431,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 }
                 
                 // Hide signin options on order-status page
-                if (currentPath === '/user/order-status' || currentPath.includes('order-status')) {
-                    hideSigninOptionsForAuthenticatedUser();
-                }
+                // if (currentPath === '/user/order-status' || currentPath.includes('order-status')) {
+                //     hideSigninOptionsForAuthenticatedUser();
+                // }
             }
             
             return false; // No redirect
