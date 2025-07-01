@@ -148,7 +148,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 type = 'error';
             }
             this.setLoading(false);
-            this.$parent.find('[data-mz-role="popover-message"]').html("<span class='mz-validationmessage" + type === "success" ? '-success' : '' + "'>" + msg + '</span>');
+            var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
+            this.$parent.find('[data-mz-role="popover-message"]').html("<span class='" + messageClass + "'>" + msg + '</span>');
         },
         init: function (el) {
             this.$el = $(el);
@@ -830,6 +831,32 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     $(document).ready(function() {
         $docBody = $(document.body);
         
+        /**
+         * Helper function to display messages - available to all event handlers within document.ready
+         * This centralized function ensures consistent message formatting and display logic
+         * @param {string} message - The message text to display
+         * @param {string} type - Message type: 'error' or 'success'
+         * @param {jQuery} $messageArea - Optional specific message area element, auto-detects if not provided
+         */
+        var displayMessage = function(message, type, $messageArea) {
+            window.console.log('Displaying message:', message, type, $messageArea);
+            var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
+            
+            // If no specific message area provided, try to find one
+            if (!$messageArea || $messageArea.length === 0) {
+                $messageArea = $('[data-mz-role="popover-message"]:visible').first();
+                window.console.log("$messageArea fallback", $messageArea);
+            }
+            
+            if ($messageArea && $messageArea.length > 0) {
+                $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
+                window.console.log("$messageArea > 0", $messageArea);
+            } else {
+                window.console.log("Cannot display message");
+                window.console.error('Cannot display message:', message);
+            }
+        };
+        
         // Check authentication and redirect if necessary
         if (checkAuthenticationAndRedirect()) {
             return; // Exit early if redirect happened
@@ -1021,34 +1048,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var email = $form.find('input[data-mz-login-email], input[data-mz-order-email]').val();
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 
-                // Helper function to display message in this context
-                var displayMessage = function(message, type) {
-                    window.console.log('Displaying message:', message, type, $('[data-mz-role="popover-message"]:visible'));
-                    var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
-                    if ($messageArea.length === 0) {
-                        // Try to find message area in different ways
-                        $messageArea = $('[data-mz-role="popover-message"]:visible').first();
-                         window.console.log("$messageArea", $messageArea);
-                    }
-                    if ($messageArea.length > 0) {
-                        $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
-                        window.console.log("$messageArea > 0", $messageArea);
-                    } else {
-                        window.console.log("Cannot display message");
-                        window.console.error('Cannot display message:', message);
-                    }
-                };
-                
                 // Validate email
                 if (!email) {
-                    displayMessage('Please enter your email address to request a one-time password.', 'error');
+                    displayMessage('Please enter your email address to request a one-time password.', 'error', $messageArea);
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
                 
                 // Validate email format
                 if (!isValidEmail(email)) {
-                    displayMessage('Please enter a valid email address.', 'error');
+                    displayMessage('Please enter a valid email address.', 'error', $messageArea);
                     $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
                     return;
                 }
@@ -1069,7 +1078,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         $messageArea = $('<div data-mz-role="popover-message"></div>');
                         $('.mz-otp-request-row').before($messageArea);
                     }
-                    $messageArea.html('<span class="mz-validationmessage-success">If an account with that email address exists, a code has been sent to it.</span>');
+                    displayMessage('If an account with that email address exists, a code has been sent to it.', 'success', $messageArea);
                     
                     // Hide the Request Code button
                     $requestButton.closest('.mz-otp-request-row').hide();
@@ -1107,7 +1116,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         $messageArea = $('<div data-mz-role="popover-message"></div>');
                         $('.mz-otp-request-row').before($messageArea);
                     }
-                    $messageArea.html('<span class="mz-validationmessage">' + errorMessage + '</span>');
+                    displayMessage(errorMessage, 'error', $messageArea);
                     
                     // Reset button state
                     $requestButton.prop('disabled', false).text('Request Code');
@@ -1248,15 +1257,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // Function to show OTP error
             function showOtpError($form, message) {
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                $messageArea.html('<span class="mz-validationmessage">' + message + '</span>');
+                displayMessage(message, 'error', $messageArea);
             }
             
             // Function to show OTP success
             function showOtpSuccess($form, message) {
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 var successMessage = message || "Code verified successfully. Logging you in...";
-                $messageArea.html('<span class="mz-validationmessage-success">' + successMessage + '</span>');
-            }              // Function to reset OTP state
+                displayMessage(successMessage, 'success', $messageArea);
+            }              
+            // Function to reset OTP state
             function resetOtpState($form, isRetryExceeded) {
                 if (isRetryExceeded) {
                     // When retry count exceeded, change "Resend Code" to "Request New Code"
