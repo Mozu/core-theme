@@ -548,7 +548,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 window.location.reload();
                 
             })["catch"](function(error) {
-                window.console.log("error", error);
                 // Handle error
                 $input.prop('disabled', false);
                 
@@ -764,8 +763,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
            $('[data-mz-role="popover-message"]').filter(':visible').each(function () {
                 $(this).off().remove(); // or .empty() or .hide()
            });
-
-           console.log("Messages cleared", this.$parent.find('[data-mz-role="popover-message"]'));
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
@@ -842,21 +839,15 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
          * @param {jQuery} $messageArea - Optional specific message area element, auto-detects if not provided
          */
         var displayMessage = function(message, type, $messageArea) {
-            window.console.log('Displaying message:', message, type, $messageArea);
             var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
             
             // If no specific message area provided, try to find one
             if (!$messageArea || $messageArea.length === 0) {
                 $messageArea = $('[data-mz-role="popover-message"]:visible').first();
-                window.console.log("$messageArea fallback", $messageArea);
             }
             
             if ($messageArea && $messageArea.length > 0) {
                 $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
-                window.console.log("$messageArea > 0", $messageArea);
-            } else {
-                window.console.log("Cannot display message");
-                window.console.error('Cannot display message:', message);
             }
         };
         
@@ -1189,7 +1180,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     window.location.reload();
                 })
                 ['catch'](function(error) {
-                    window.console.log("error", error);
                     // Handle error
                     $input.prop('disabled', false);
                     
