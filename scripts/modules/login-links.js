@@ -1112,10 +1112,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                     
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                    if ($messageArea.length === 0) {
-                        $messageArea = $('<div data-mz-role="popover-message"></div>');
-                        $('.mz-otp-request-row').before($messageArea);
-                    }
+                    // if ($messageArea.length === 0) {
+                    //     $messageArea = $('<div data-mz-role="popover-message"></div>');
+                    //     $('.mz-otp-request-row').before($messageArea);
+                    // }
                     displayMessage(errorMessage, 'error', $messageArea);
                     
                     // Reset button state
