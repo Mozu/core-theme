@@ -402,6 +402,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }        
         },
         start2FAChallenge: function() {
+            this.clearMessages();
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
             
@@ -750,7 +751,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                            '<div class="mz-l-formfieldgroup-row mz-twofa-buttons-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<button type="button" class="mz-button mz-button-large mz-verify-twofa-button" data-mz-action="verify-twofa">Verify Code</button>' +
                            '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">Resend Code</a>' +
                            '</div>' +
                            '</div>';
@@ -761,8 +761,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $('#mz-twofa-code').focus();
         },
         clearMessages: function() {
-           var $messageArea = this.$parent.find('[data-mz-role="popover-message"]');
-           $messageArea.html('<span>' + '' + '</span>');
+           $('[data-mz-role="popover-message"]').filter(':visible').each(function () {
+                $(this).off().remove(); // or .empty() or .hide()
+           });
+
+           console.log("Messages cleared", this.$parent.find('[data-mz-role="popover-message"]'));
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent'));
