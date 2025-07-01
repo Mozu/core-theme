@@ -435,10 +435,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             // Show 2FA challenge UI
             var twoFAHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-title-row">' +
-                           '<div class="mz-l-formfieldgroup-cell" colspan="2">' +
                            '<h3>Verification Required</h3>' +
-                           '<p>A 6-digit verification code has been sent to your email address.</p>' +
-                           '</div>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
                            '<div class="mz-l-formfieldgroup-cell">' +
@@ -486,7 +483,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 // Show success message
-                self.displayMessage('If your account requires 2FA, a verification code has been sent to your email address.', 'success');
+                self.displayMessage("A 6-digit verification code has been sent to " + email + ". The code expires shortly, so please enter it soon.", 'success');
                 
             })["catch"](function(error) {
                 self.displayMessage(error.message, 'error');
@@ -1202,9 +1199,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     
                     if (shouldReset) {
                         // Check if this is a retry count exceeded case
-                        var isRetryExceeded = error && error.responseJSON && error.responseJSON.result && 
-                                            error.responseJSON.result.message && 
-                                            error.responseJSON.result.message.includes('Retry count exceeded');
+                        var isRetryExceeded = error && error.result && 
+                                            error.result.message && 
+                                            error.result.message.includes('Retry count exceeded');
                         
                         // Reset state - keep input visible but change "Resend" to "Request New Code" if retry exceeded
                         resetOtpState($form, isRetryExceeded);
