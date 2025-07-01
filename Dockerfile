@@ -1,11 +1,11 @@
-﻿FROM 542216209467.dkr.ecr.us-east-1.amazonaws.com/kibo/base-images:dotnet-6-run-1.2526.0-digicert-gs5-ca.7 AS base
+﻿FROM 542216209467.dkr.ecr.us-east-1.amazonaws.com/kibo/base-images:dotnet-6-run-latest AS base
 RUN apt-get update && \
     apt-get install -y libgdiplus libc6-dev
 
 WORKDIR /app
 EXPOSE 80
 
-FROM 542216209467.dkr.ecr.us-east-1.amazonaws.com/kibo/base-images:dotnet-6-build-1.2526.0-digicert-gs5-ca.7 AS build
+FROM 542216209467.dkr.ecr.us-east-1.amazonaws.com/kibo/base-images:dotnet-6-build-latest AS build
 WORKDIR /src
 COPY ["./**/*.csproj", "./Mozu.SiteBuilder.sln",   "./"]
 RUN /root/buildscripts/copyDotnetProjFiles.sh
