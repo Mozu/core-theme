@@ -83,6 +83,5 @@
                 </form>
             </div>
         </div>
-        {% endif %}
     </div>
 {% endblock body-content %}
