@@ -6,9 +6,7 @@
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder'],
      function ($, api, Hypr, _, HyprLiveContext) {    
     var usePopovers = function() {
-        // Check if Modernizr is available and test for larger screens
-        var result = (typeof Modernizr !== 'undefined') && !Modernizr.mq('(max-width: 480px)');
-        return result;
+        return (typeof Modernizr !== 'undefined') && !Modernizr.mq('(max-width: 480px)');
     },
     isTemplate = function(path) {
         return require.mozuData('pagecontext').cmsContext.template.path === path;
@@ -45,9 +43,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         return null;
     },
     isValidEmail = function(email) {
-        // Simple email validation regex
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        return email.match(Backbone.Validation.patterns.email);
     },
     $docBody,
 
@@ -89,38 +85,28 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (polyfillPlaceholders) {
                 this.$parent.find('[placeholder]').placeholder({ customClass: 'mz-placeholder' });
             }
-        },        createPopover: function (e) {
+        },        
+        createPopover: function (e) {
             // in the absence of JS or in a small viewport, these links go to the login page.
             // Prevent them from going there!
             var self = this;
-            
             if (usePopovers()) {
                 e.preventDefault();
-                
-                // Check if Bootstrap popover is available
-                if (typeof $.fn.popover === 'undefined') {
-                    return; // Let the link redirect naturally
-                }
-                
-                try {
-                    // If the parent element's not positioned at least relative,
-                    // the popover won't move with a window resize
-                    //var pos = $parent.css('position');
-                    //if (!pos || pos === "static") $parent.css('position', 'relative');
-                    this.$el.popover({
-                        //placement: "auto right",
-                        animation: true,
-                        html: true,
-                        trigger: 'manual',
-                        content: this.template,
-                        container: 'body'
-                    }).on('shown.bs.popover', this.onPopoverShow)
-                    .popover('show');
-                } catch (error) {
-                    // Fall back to page navigation
-                    window.location.href = e.target.href;
-                }
-            } 
+                // If the parent element's not positioned at least relative,
+                // the popover won't move with a window resize
+                //var pos = $parent.css('position');
+                //if (!pos || pos === "static") $parent.css('position', 'relative');
+                this.$el.popover({
+                    //placement: "auto right",
+                    animation: true,
+                    html: true,
+                    trigger: 'manual',
+                    content: this.template,
+                    container: 'body'
+                }).on('shown.bs.popover', this.onPopoverShow)
+                .popover('show');
+
+            }
         },
         retrieveErrorLabel: function (xhr) {
             var message = "";
@@ -182,7 +168,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var template = Hypr.getTemplate('modules/common/login-popover').render();
                 return template;
             } catch (e) {
-                return '<div class="mz-popover-error">Template loading failed</div>';
+                return '<div class="mz-popover-error">' + Hypr.getLabel('templateLoadingFailed', 'Template loading failed') + '</div>';
             }
         })(),
         bindListeners: function (on) {
@@ -435,27 +421,27 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             // Show 2FA challenge UI
             var twoFAHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-title-row">' +
-                           '<h3>Verification Required</h3>' +
+                           '<h3>' + Hypr.getLabel('verificationRequired') + '</h3>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<label for="mz-twofa-code">Verification Code</label>' +
+                           '<label for="mz-twofa-code">' + Hypr.getLabel('verificationCode') + '</label>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
+                           '<input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="' + Hypr.getLabel('enter6DigitCode') + '" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
                            '</div>' +
                            '</div>' +
                            '<section data-mz-role="popover-message" class="mz-popover-message"></section>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-buttons-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">Resend Code</a>' +
+                           '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">' + Hypr.getLabel('resendCode') + '</a>' +
                            '</div>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-back-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<a href="#" class="mz-back-to-login" data-mz-action="backto-login">Back to Login</a>' +
+                           '<a href="#" class="mz-back-to-login" data-mz-action="backto-login">' + Hypr.getLabel('backToLogin') + '</a>' +
                            '</div>' +
                            '</div>';
             
@@ -483,7 +469,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
                 // Show success message
-                self.displayMessage("A 6-digit verification code has been sent to " + email + ". The code expires shortly, so please enter it soon.", 'success');
+                self.displayMessage(Hypr.getLabel('otpCodeSent'), 'success');
                 
             })["catch"](function(error) {
                 self.displayMessage(error.message, 'error');
@@ -540,7 +526,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             api.action('customer', 'validate2faAndCreateAuthTicket', {
                 OtpCode: enteredCode            
             }).then(function(response) {
-                self.displayMessage('Code verified successfully. Logging you in...', 'success');
+                self.displayMessage(Hypr.getLabel('twoFACodeVerified'), 'success');
                 self.handleLoginComplete.bind(self, returnUrl);
                 window.location.reload();
                 
@@ -548,7 +534,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Handle error
                 $input.prop('disabled', false);
                 
-                var errorMessage = "The code you entered is incorrect. Please try again.";
+                var errorMessage = Hypr.getLabel('twoFACodeIncorrect');
                 var shouldReset2FA = false;
                 
                 // Check for specific error conditions based on API response
@@ -583,9 +569,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var self = this;
             // Use provided button or fallback to default resend button
             var $button = $targetButton || this.$parent.find('[data-mz-action="resend-twofa-code"]');
-            var resetText = buttonResetText || 'Resend Code';
+            var resetText = buttonResetText || Hypr.getLabel('resendCode');
             
-            $button.text('Sending...').addClass('is-loading');
+            $button.text(Hypr.getLabel('sending')).addClass('is-loading');
               // Generate new 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
                 email: email
@@ -593,7 +579,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Update session data
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
-                self.displayMessage("A new verification code has been sent to your email address.", 'success');
+                self.displayMessage(Hypr.getLabel('twoFACodeSent'), 'success');
                 $button.text(resetText).removeClass('is-loading');
                 
                 // Clear the input field
@@ -601,12 +587,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 
             })["catch"](function(error) {
                 // Handle error
-                var errorMessage = "Failed to send verification code. Please try again.";
+                var errorMessage = Hypr.getLabel('twoFASendFailed');
                 
                 // Check for specific error conditions
                 if (error && error.message) {
                     if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
-                        errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                        errorMessage = Hypr.getLabel('twoFARateLimited');
                     }
                 }
                 
@@ -675,7 +661,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.is2FAInProgress = true;
             
             // Create a temporary hidden input with the 2FA code
-            var twoFACode = this.$parent.data('verified2FACode') || '123456';
+            var twoFACode = this.$parent.data('verified2FACode');
             var $hiddenInput = $('<input type="hidden" data-mz-twofa-code value="' + twoFACode + '">');
             this.$parent.append($hiddenInput);
             
@@ -704,14 +690,13 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             $hiddenInput.remove();
             this.is2FAInProgress = false;
         },
-        reset2FAChallenge: function(isRetryExceeded) {
-            if (isRetryExceeded) {
-                // When retry count exceeded, change "Resend Code" to "Request New Code"
-                this.$parent.find('.mz-twofa-buttons-row .mz-resend-twofa')
-                    .text('Request New Code')
-                    .removeClass('mz-resend-twofa')
-                    .addClass('mz-request-new-twofa')
-                    .attr('data-mz-action', 'request-new-twofa-code');
+        reset2FAChallenge: function(isRetryExceeded) {                if (isRetryExceeded) {
+                    // When retry count exceeded, change "Resend Code" to "Request New Code"
+                    this.$parent.find('.mz-twofa-buttons-row .mz-resend-twofa')
+                        .text(Hypr.getLabel('requestNewCode'))
+                        .removeClass('mz-resend-twofa')
+                        .addClass('mz-request-new-twofa')
+                        .attr('data-mz-action', 'request-new-twofa-code');
                 
                 // Remove the existing resend event handler and add new one
                 var self = this;
@@ -725,7 +710,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     if (!email) return;
                     
                     // Reuse the existing resend2FACode function with custom button and text
-                    self.resend2FACode(email, $requestButton, 'Request New Code');
+                    self.resend2FACode(email, $requestButton, Hypr.getLabel('requestNewCode'));
                 });
             } else {
                 // Normal reset - remove 2FA input UI but keep the request/resend interface
@@ -735,7 +720,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var requestNewCodeHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-request-row">' +
                                         '<div class="mz-l-formfieldgroup-cell"></div>' +
                                         '<div class="mz-l-formfieldgroup-cell">' +
-                                        '<button type="button" class="mz-button mz-request-twofa-button" data-mz-action="request-new-twofa">Request New Code</button>' +
+                                        '<button type="button" class="mz-button mz-request-twofa-button" data-mz-action="request-new-twofa">' + 
+                                        Hypr.getLabel('requestNewCode') + '</button>' +
                                         '</div>' +
                                         '</div>';
                 
@@ -757,16 +743,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         show2FAInputUI: function() {
             var inputHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<label for="mz-twofa-code">Verification Code</label>' +
+                           '<label for="mz-twofa-code">' + Hypr.getLabel('verificationCode') + '</label>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
+                           '<input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="' + Hypr.getLabel('enter6DigitCode') + '" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
                            '</div>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-buttons-row">' +
                            '<div class="mz-l-formfieldgroup-cell"></div>' +
                            '<div class="mz-l-formfieldgroup-cell">' +
-                           '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">Resend Code</a>' +
+                           '<a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">' + Hypr.getLabel('resendCode') + '</a>' +
                            '</div>' +
                            '</div>';
             
@@ -1002,7 +988,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var backLinkHtml = '<div class="mz-l-formfieldgroup-row mz-otp-back-row">' +
                               '<div class="mz-l-formfieldgroup-cell"></div>' +
                               '<div class="mz-l-formfieldgroup-cell">' +
-                              '<a href="#" class="mz-back-to-password" data-mz-action="backtopassword">Back to Password Login</a>' +
+                              '<a href="#" class="mz-back-to-password" data-mz-action="backtopassword">' + Hypr.getLabel('backToPasswordLogin') + '</a>' +
                               '</div>' +
                               '</div>';
             
@@ -1204,9 +1190,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         var apiMessage = error.result.message;
                         
                         if (apiMessage.toLowerCase().includes('invalid otp')) {
-                            errorMessage = "The code you entered is incorrect. Please try again.";
+                            errorMessage = Hypr.getLabel('otpCodeIncorrect');
                         } else if (apiMessage.toLowerCase().includes('retry count exceeded')) {
-                            errorMessage = "You have entered an incorrect code too many times. Please request a new code.";
+                            errorMessage = Hypr.getLabel('otpRetryExceeded');
                             shouldReset = true;
                         }
                     } 
@@ -1231,16 +1217,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             function resendOtpCode($form, email, $targetButton, buttonResetText) {
                 // Use provided button or fallback to default resend button
                 var $button = $targetButton || $form.find('[data-mz-action="resend-otp-code"]');
-                var resetText = buttonResetText || 'Resend Code';
+                var resetText = buttonResetText || Hypr.getLabel('resendCode');
                 
-                $button.text('Sending...').addClass('is-loading');                  // Generate new OTP using API
+                $button.text(Hypr.getLabel('sending')).addClass('is-loading');                  // Generate new OTP using API
                 api.action('customer', 'generateAndSendOtp', {
                     email: email
                 }).then(function(response) {
                     // Update session data
                     $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
-                    showOtpSuccess($form, "A new code has been sent to your email address.");
+                    showOtpSuccess($form, Hypr.getLabel('otpCodeSent'));
                     $button.text(resetText).removeClass('is-loading');
                     
                     // Clear the input field
@@ -1249,12 +1235,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 })
                 ['catch'](function(error) {
                     // Handle error
-                    var errorMessage = "Failed to send verification code. Please try again.";
+                    var errorMessage = Hypr.getLabel('otpSendFailed');
                     
                     // Check for specific error conditions
                     if (error && error.message) {
                         if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
-                            errorMessage = "Too many requests. Please wait a few minutes before trying again.";
+                            errorMessage = Hypr.getLabel('otpRateLimited');
                         }
                     }
                     
@@ -1272,7 +1258,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // Function to show OTP success
             function showOtpSuccess($form, message) {
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                var successMessage = message || "Code verified successfully. Logging you in...";
+                var successMessage = message || Hypr.getLabel('otpCodeVerified');
                 displayMessage(successMessage, 'success', $messageArea);
             }              
             // Function to reset OTP state
@@ -1280,7 +1266,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 if (isRetryExceeded) {
                     // When retry count exceeded, change "Resend Code" to "Request New Code"
                     $('.mz-otp-resend-row .mz-resend-code')
-                        .text('Request New Code')
+                        .text(Hypr.getLabel('requestNewCode'))
                         .removeClass('mz-resend-code')
                         .addClass('mz-request-new-code')
                         .attr('data-mz-action', 'request-new-otp-code');
@@ -1296,7 +1282,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         if (!email) return;
                         
                         // Reuse the existing resendOtpCode function with custom button and text
-                        resendOtpCode($form, email, $requestButton, 'Request New Code');
+                        resendOtpCode($form, email, $requestButton, Hypr.getLabel('requestNewCode'));
                     });
                 } else {
                     // Normal reset - remove OTP-specific UI elements
