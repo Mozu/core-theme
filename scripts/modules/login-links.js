@@ -3,8 +3,9 @@
 /**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder', 'modules/backbone-mozu'],
-     function ($, api, Hypr, _, HyprLiveContext, Backbone) {    
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'modules/backbone-mozu', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder'],
+function ($, api, Hypr, Backbone, _, HyprLiveContext) {   
+    
     var usePopovers = function() {
         return (typeof Modernizr !== 'undefined') && !Modernizr.mq('(max-width: 480px)');
     },
@@ -41,9 +42,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         }
         return null;
-    },
-    isValidEmail = function(email) {
-        return email.match(Backbone.Validation.patterns.email);
     },
     $docBody,
 
@@ -398,7 +396,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
             
             // Show 2FA challenge with email
-            this.show2FAChallenge(email);
+            if(!this.is2FAInProgress) {
+                this.show2FAChallenge(email);
+            }
             
             // Set flag to indicate 2FA is in progress
             this.is2FAInProgress = true;
@@ -852,6 +852,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $messageArea.html('<span class="' + messageClass + '">' + message + '</span>');
             }
         };
+
+        function isValidEmail(email) {
+            return email.match(Backbone.Validation.patterns.email);
+        }
         
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
@@ -1009,7 +1013,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Clear any messages
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 $messageArea.empty();
-            });              // Add event handler for Request Code button
+            });              
+            // Add event handler for Request Code button
             $form.on('click', '[data-mz-action="request-otp-code"]', function(e) {
                 e.preventDefault();
                 
@@ -1090,24 +1095,19 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             
             // Function to show OTP input UI
             function showOtpInputUI($form, email) {
-                var otpInputHtml = '<div class="mz-l-formfieldgroup-row mz-otp-instruction-row">' +
-                                  '<div class="mz-l-formfieldgroup-cell" colspan="2">' +
-                                  '<p>A 6-digit code has been sent to your email address.</p>' +
-                                  '</div>' +
-                                  '</div>' +
-                                  '<div class="mz-l-formfieldgroup-row mz-otp-input-row">' +
+                var otpInputHtml ='<div class="mz-l-formfieldgroup-row mz-otp-input-row">' +
                                   '<div class="mz-l-formfieldgroup-cell">' +
-                                  '<label for="mz-otp-code">Verification Code</label>' +
+                                  '<label for="mz-otp-code">' + Hypr.getLabel("verificationCode") + '</label>' +
                                   '</div>' +
                                   '<div class="mz-l-formfieldgroup-cell">' +
-                                  '<input type="text" id="mz-otp-code" data-mz-otp-code maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
+                                  '<input type="text" id="mz-otp-code" data-mz-otp-code maxlength="6" placeholder="'+ Hypr.getLabel('enter6DigitCode') +'" autocomplete="one-time-code" pattern="[0-9]{6}" required>' +
                                   '</div>' +
                                   '</div>' +
                                   '<section data-mz-role="popover-message" class="mz-popover-message"></section>' +
                                   '<div class="mz-l-formfieldgroup-row mz-otp-resend-row">' +
                                   '<div class="mz-l-formfieldgroup-cell"></div>' +
                                   '<div class="mz-l-formfieldgroup-cell">' +
-                                  '<a href="#" class="mz-resend-code" data-mz-action="resend-otp-code">Resend Code</a>' +
+                                  '<a href="#" class="mz-resend-code" data-mz-action="resend-otp-code">'+ Hypr.getLabel('resendCode') +'</a>' +
                                   '</div>' +
                                   '</div>';
                 
@@ -1119,6 +1119,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 // Add input event listener for auto-verification
                 $form.on('input', '[data-mz-otp-code]', function() {
                     var otpValue = $(this).val();
+                    console.log("OTP Input Value: ", otpValue);
                     if (otpValue.length === 6) {
                         // Auto-verify when 6 digits are entered
                         verifyOtpCode($form, otpValue);
