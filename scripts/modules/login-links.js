@@ -1119,7 +1119,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 // Add input event listener for auto-verification
                 $form.on('input', '[data-mz-otp-code]', function() {
                     var otpValue = $(this).val();
-                    console.log("OTP Input Value: ", otpValue);
                     if (otpValue.length === 6) {
                         // Auto-verify when 6 digits are entered
                         verifyOtpCode($form, otpValue);
