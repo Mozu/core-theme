@@ -302,6 +302,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Add 2FA code if we're in 2FA mode
             if (this.is2FAInProgress) {
                 data.twoFactorCode = this.$parent.find('[data-mz-twofa-code]').val();
+                return;
             }
 
             var self = this;
