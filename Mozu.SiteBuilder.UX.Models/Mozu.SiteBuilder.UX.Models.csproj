@@ -9,14 +9,14 @@
 
       <PackageReference Include="Kibo.Cars.Contracts" Version="1.2430.2" />
 
-      <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2506.4" />
+      <PackageReference Include="Kibo.Fulfillment.Contracts" Version="1.2514.2" />
 
-      <PackageReference Include="Kibo.OrderRouting.Contracts" Version="1.2452.3" />
+      <PackageReference Include="Kibo.OrderRouting.Contracts" Version="1.2514.2" />
     
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.2420.2" />
     
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.2426.2" />
-    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2508.3" />
+    <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2524.6" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2414.4" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="2.2426.2" />
     <PackageReference Include="Mozu.Core.Messaging" Version="2.2512.3" />
@@ -36,7 +36,7 @@
     <PackageReference Include="Mozu.Provisioning.Contracts" Version="1.2318.2" />
     <PackageReference Include="Mozu.Reference.Contracts" Version="1.2113.2" />
     <PackageReference Include="Mozu.ShippingAdmin.Contracts" Version="1.2420.2" />
-    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2344.3" />
+    <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.2515.0-edd.6" />
     <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2424.2" />
     <PackageReference Include="Mozu.SiteSettings.General.Contracts" Version="1.2424.2" />
   </ItemGroup>
