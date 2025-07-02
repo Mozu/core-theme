@@ -291,6 +291,11 @@
   "otpRateLimited": "Too many code requests. Please wait a few minutes and try again.",
   "otpRetryExceeded": "Too many attempts. Please request a new code.",
   "otpSendFailed": "Failed to send code. Please try again.",
+  "twoFACodeVerified": "Code verified successfully. Logging you in...",
+  "twoFACodeIncorrect": "The code you entered is incorrect. Please try again.",
+  "twoFACodeSent": "Code sent successfully to your email.",
+  "twoFASendFailed": "Failed to send code. Please try again.",
+  "twoFARateLimited": "Too many code requests. Please wait a few minutes and try again.",
   "digitalDelivery": "Digital Delivery",
   "digitalDeliveryOnly": "This item is available via digital delivery only.",
   "digitalDownload": "Digital Download",
@@ -970,5 +975,8 @@
   "substituteItemNote" : "Item(s) on your order {0} was substituted with another item. If there is anything you don't want, please contact customer care . If you would like to view or manage your order, please visit <a href=\"https://{1}/myaccount\">My Account</a>.",
   "quantityOrdered": "Qty Ordered",
   "quantityCanceled": "Qty Canceled",
-  "orderItemsCanceledBlob": "Following items on the order {0} exceeded the purchase limit and have been canceled."
+  "orderItemsCanceledBlob": "Following items on the order {0} exceeded the purchase limit and have been canceled.",
+  "requestCode": "Request Code",
+  "backToPasswordLogin": "Back to Password Login",
+  "backToLogin": "Back to Login"
 }

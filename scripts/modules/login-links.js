@@ -421,7 +421,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             // Show 2FA challenge UI
             var twoFAHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-title-row">' +
-                           '<h3>' + Hypr.getLabel('verificationRequired') + '</h3>' +
+                           '<h3>' + Hypr.getLabel('loginVerificationRequired') + '</h3>' +
                            '</div>' +
                            '<div class="mz-l-formfieldgroup-row mz-twofa-input-row">' +
                            '<div class="mz-l-formfieldgroup-cell">' +
@@ -880,34 +880,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             });        });        
           // Initialize forgot password popover with comprehensive error handling
         $('[data-mz-action="launchforgotpassword"]').each(function() {
-            var $el = $(this);
-            
-            try {
-                // Check dependencies first
-                if (typeof LoginPopover === 'undefined') {
-                    throw new Error('LoginPopover class not defined');
-                }
-                
-                if (typeof Hypr === 'undefined') {
-                    throw new Error('Hypr template engine not available');
-                }
-                
-                if (!usePopovers()) {
-                    return; // Let the link work normally
-                }
-                
-                var popover = new LoginPopover();
-                popover.init(this);
-                $el.data('mz.popover', popover);
-                
-            } catch (e) {
-                // Fallback: if popover fails, just redirect to forgot password page
-                $el.off('click').on('click', function(e) {
-                    e.preventDefault();
-                    window.location.href = '/user/forgotpassword';
-                });
-            }        
-        });          
+            var popover = new LoginPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });     
         $('[data-mz-action="otplogin"]').on('click', function(e) {
             e.preventDefault();
             
@@ -974,7 +950,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                                        '<div class="mz-l-formfieldgroup-cell"></div>' +
                                        '<div class="mz-l-formfieldgroup-cell">' +
                                        '<section data-mz-role="popover-message" class="mz-popover-message"></section>'+
-                                       '<button type="button" class="mz-button mz-request-code-button" data-mz-action="request-otp-code">Request Code</button>' +
+                                       '<button type="button" class="mz-button mz-request-code-button" data-mz-action="request-otp-code">'+Hypr.getLabel("requestCode")+'</button>' +
                                        '</div>' +
                                        '</div>';
             
@@ -1105,10 +1081,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     }
                     
                     var $messageArea = $form.find('[data-mz-role="popover-message"]');
-                    // if ($messageArea.length === 0) {
-                    //     $messageArea = $('<div data-mz-role="popover-message"></div>');
-                    //     $('.mz-otp-request-row').before($messageArea);
-                    // }
                     displayMessage(errorMessage, 'error', $messageArea);
                     
                     // Reset button state

@@ -365,6 +365,11 @@
   "otpRateLimited": "Zu viele Codeanfragen. Bitte warten Sie einige Minuten und versuchen Sie es erneut.",
   "otpRetryExceeded": "Zu viele Versuche. Bitte fordern Sie einen neuen Code an.",
   "otpSendFailed": "Code konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+  "twoFACodeVerified": "Code erfolgreich verifiziert. Sie werden angemeldet...",
+  "twoFACodeIncorrect": "Der eingegebene Code ist falsch. Bitte versuchen Sie es erneut.",
+  "twoFACodeSent": "Code erfolgreich an Ihre E-Mail gesendet.",
+  "twoFASendFailed": "Code konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+  "twoFARateLimited": "Zu viele Codeanfragen. Bitte warten Sie einige Minuten und versuchen Sie es erneut.",
   "logOut": "Abmeldung",
   "mailCheckTo": "E-Mail-Check auf",
   "mapPrice": "in den Warenkorb Endpreis zu sehen",
@@ -812,5 +817,8 @@
   "substituteItemNote" : "Les articles de votre commande {0} ont été remplacés par un autre article. Si vous ne voulez pas quelque chose, veuillez contacter le service client. Si vous souhaitez consulter ou gérer votre commande, veuillez visiter <a href=\"https://{1}/myaccount\">Mon compte</a>..",
   "quantityOrdered": "Bestellte Menge",
   "quantityCanceled": "Menge storniert",
-  "orderItemsCanceledBlob": "Die folgenden Artikel der Bestellung {0} haben das Kauflimit überschritten und wurden storniert."
+  "orderItemsCanceledBlob": "Die folgenden Artikel der Bestellung {0} haben das Kauflimit überschritten und wurden storniert.",
+  "requestCode": "Anfrage Code",
+  "backToPasswordLogin": "Zurück zur Anmeldung mit Passwort",
+  "backToLogin": "Zurück zur Anmeldung"
 }
