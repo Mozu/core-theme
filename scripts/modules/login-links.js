@@ -1222,13 +1222,14 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     showOtpError($form, errorMessage);
                     
                     if (shouldReset) {
-                        // Check if this is a retry count exceeded case
-                        var isRetryExceeded = error && error.result && 
-                                            error.result.message && 
-                                            error.result.message.toLowerCase().includes('retry count exceeded');
+                        // Simply update the resend button text to "Request New Code"
+                        var $resendLink = $form.find('[data-mz-action="resend-otp-code"]');
+                        if ($resendLink.length > 0) {
+                            $resendLink.text(Hypr.getLabel('requestNewCode'));
+                        }
                         
-                        // Reset state - keep input visible but change "Resend" to "Request New Code" if retry exceeded
-                        resetOtpState($form, isRetryExceeded);
+                        // Clear the input field and focus
+                        $form.find('[data-mz-otp-code]').val('').focus();
                     } else {
                         // Clear the input field and allow retry
                         $form.find('[data-mz-otp-code]').val('').focus();
