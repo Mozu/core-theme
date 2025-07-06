@@ -286,7 +286,6 @@
   "loginSuccessful": "Login successful. Redirecting...",
   "loginVerificationRequired": "Verification Required",
   "otpCodeIncorrect": "The code you entered is incorrect. Please try again.",
-  "otpCodeSent": "Code sent successfully to your email.",
   "otpCodeVerified": "Code verified successfully. Logging you in...",
   "otpRateLimited": "Too many code requests. Please wait a few minutes and try again.",
   "otpRetryExceeded": "Too many attempts. Please request a new code.",

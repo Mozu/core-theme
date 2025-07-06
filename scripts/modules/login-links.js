@@ -594,7 +594,15 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Show loading state
             var $input = this.$parent.find('[data-mz-twofa-code]');
             $input.prop('disabled', true);
-            
+
+            var returnUrl = "";
+            var returnUrlParam = getQueryParam('returnUrl');
+            if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
+              returnUrl = returnUrlParam;
+            } else {
+              returnUrl = this.$parent.find('input[name=returnUrl]').val();
+            }
+
             var self = this;
             
             // Validate 2FA using API
@@ -606,9 +614,8 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 // Clear 2FA flag and remove form submission prevention
                 self.is2FAInProgress = false;
                 self.$parent.off('submit.twofa');
-                
-                self.handleLoginComplete.bind(self, returnUrl);
-                window.location.reload();
+
+                self.handleLoginComplete.bind(self, returnUrl)();
                 
             })["catch"](function(error) {
                 // Handle error
@@ -792,7 +799,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         this.signup = _.debounce(this.signup, 150);
     };
     SignupPopover.prototype = new DismissablePopover();    $.extend(SignupPopover.prototype, LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'start2FAChallenge'],
+        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'start2FAChallenge'],
         template: Hypr.getTemplate('modules/common/signup-popover').render(),
         bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";
@@ -1176,6 +1183,14 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 var email = $form.data('otpEmail');
                 var sessionId = $form.data('otpSessionId');
 
+                var returnUrl = "";
+                var returnUrlParam = getQueryParam('returnUrl');
+                if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
+                    returnUrl = returnUrlParam;
+                } else {
+                    returnUrl = this.$parent.find('input[name=returnUrl]').val();
+                }
+
                 var self = this;
                 
                 // Show loading state
@@ -1193,7 +1208,8 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     $form.data('mz-is-otp-in-progress', false);
                     $form.off('submit.otp');
 
-                    window.location.reload();
+                    self.handleLoginComplete.bind(self, returnUrl)();
+
                 })
                 ['catch'](function(error) {
                     // Handle error
@@ -1247,7 +1263,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     // Update session data
                     $form.data('otpSessionId', response.sessionId || 'otp-session');
                     
-                    showOtpSuccess($form, Hypr.getLabel('otpCodeSent'));
+                    showOtpSuccess($form, Hypr.getLabel('otpSentMessage'));
                     $resendLink.text(Hypr.getLabel('resendCode')).removeClass('is-loading');
                     
                     // Clear the input field

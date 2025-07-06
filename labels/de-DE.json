@@ -361,7 +361,6 @@
   "loginSuccessful": "Login erfolgreich. Weiterleitung...",
   "loginVerificationRequired": "Überprüfung erforderlich",
   "otpCodeIncorrect": "Der eingegebene Code ist falsch. Bitte versuchen Sie es erneut.",
-  "otpCodeSent": "Code erfolgreich an Ihre E-Mail gesendet.",
   "otpCodeVerified": "Code erfolgreich verifiziert. Sie werden angemeldet...",
   "otpRateLimited": "Zu viele Codeanfragen. Bitte warten Sie einige Minuten und versuchen Sie es erneut.",
   "otpRetryExceeded": "Zu viele Versuche. Bitte fordern Sie einen neuen Code an.",
