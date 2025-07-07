@@ -133,6 +133,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             }
             this.setLoading(false);
             var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
+            
             this.$parent.find('[data-mz-role="popover-message"]').html("<span class='" + messageClass + "'>" + msg + '</span>');
         },
         init: function (el) {
@@ -261,9 +262,14 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 }
                 
                 // For OTP request code screen: Enter on email input triggers request code
-                if ($target.is('[data-mz-login-email]') || $target.is('[data-mz-order-email]')) {
-                    var $container = $target.closest('[data-mz-role], .mz-loginform-page, .mz-anonymousorder-form');
+                if ($target.is('[data-mz-login-email]')) {
+                    var $container = $target.closest('[data-mz-role], .mz-loginform-page');
                     var $requestBtn = $container.find('[data-mz-action="request-otp-code"]');
+                    
+                    // Only proceed with OTP actions if we're in a login form, not an order status form
+                    if ($container.hasClass('mz-anonymousorder-form')) {
+                        return; // Skip OTP logic for order status forms
+                    }
                     
                     // Check if we're in OTP mode (request code button exists and is visible)
                     if ($requestBtn.length && $requestBtn.is(':visible')) {
@@ -288,7 +294,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 var $parentForm = $(e.currentTarget).parents('[data-mz-role]');
                 
                 // Only proceed with login if we're not in an email field during OTP mode
-                if (!($target.is('[data-mz-login-email]') || $target.is('[data-mz-order-email]'))) {
+                if (!$target.is('[data-mz-login-email]')) {
                     switch ($parentForm.data('mz-role')) {
                         case "login-form":
                             this.login();
@@ -456,6 +462,11 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             }        
         },
         start2FAChallenge: function() {
+            // Only allow 2FA on login forms, not order status forms
+            if (this.$parent.hasClass('mz-anonymousorder-form')) {
+                return; // Skip 2FA for order status forms
+            }
+            
             this.clearMessages();
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
@@ -473,7 +484,11 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         },       
          show2FAChallenge: function(email) {
             var self = this;
-            var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
+            
+            // Only allow 2FA on login forms, not order status forms
+            if (this.$parent.hasClass('mz-anonymousorder-form')) {
+                return; // Skip 2FA for order status forms
+            }
             
             // Set 2FA flag and prevent form submission
             this.is2FAInProgress = true;
@@ -670,7 +685,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 // Update session data
                 self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
                 
-                self.displayMessage(Hypr.getLabel('twoFACodeSent'), 'success');
+                self.displayMessage(Hypr.getLabel('twoFACodeSent', email), 'success');
                 $resendLink.text(Hypr.getLabel('resendCode')).removeClass('is-loading');
                 
                 // Clear the input field
@@ -705,7 +720,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             });
         },
         cancel2FAChallenge: function() {
-            var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             this.is2FAInProgress = false;
             
             // Remove form submission prevention
@@ -714,41 +728,24 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Remove 2FA UI elements
             this.$parent.find('.mz-twofa-title-row, .mz-twofa-input-row, .mz-twofa-buttons-row, .mz-twofa-back-row, .mz-twofa-request-row').remove();
             
-            // Show original form elements based on form type
-            if (isOrderStatus) {
-                // Show order status form elements
-                var $orderNumberRow = this.$parent.find('input[data-mz-order-number]').closest('.mz-l-formfieldgroup-row');
-                var $verifyWithRow = this.$parent.find('select[data-mz-verify-with]').closest('.mz-l-formfieldgroup-row');
-                var $verificationRow = this.$parent.find('input[data-mz-verification]').closest('.mz-l-formfieldgroup-row');
-                var $otpLinksRow = this.$parent.find('.mz-otp-login').closest('.mz-l-formfieldgroup-row');
-                var $submitButtonRow = this.$parent.find('[data-mz-action="anonymousorder-submit"]').closest('.mz-l-formfieldgroup-row');
-                
-                $orderNumberRow.show();
-                $verifyWithRow.show();
-                $verificationRow.show();
-                $otpLinksRow.show();
-                $submitButtonRow.show();
-            } else {
-                // Show regular login form elements
-                var $emailRow = this.$parent.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
-                var $passwordRow = this.$parent.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
-                var $recaptchaRow = this.$parent.find('#recaptcha-container').closest('.mz-l-formfieldgroup-row');
-                var $linksRow = this.$parent.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
-                var $loginButtonRow = this.$parent.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]').closest('.mz-l-formfieldgroup-row');
-                
-                $emailRow.show();
-                $passwordRow.show();
-                $recaptchaRow.show();
-                $linksRow.show();
-                $loginButtonRow.show();
-            }              // Clear any 2FA data
+            // Show regular login form elements
+            var $emailRow = this.$parent.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
+            var $passwordRow = this.$parent.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
+            var $recaptchaRow = this.$parent.find('#recaptcha-container').closest('.mz-l-formfieldgroup-row');
+            var $linksRow = this.$parent.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
+            var $loginButtonRow = this.$parent.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]').closest('.mz-l-formfieldgroup-row');
+            
+            $emailRow.show();
+            $passwordRow.show();
+            $recaptchaRow.show();
+            $linksRow.show();
+            $loginButtonRow.show();              // Clear any 2FA data
             this.$parent.removeData('twoFA-email twoFA-sessionId verified2FACode orderLoginData');
             
             // Clear any messages
             this.clearMessages();
         },        
         complete2FAChallenge: function() {
-            var isOrderStatus = this.$parent.hasClass('mz-anonymousorder-form');
             
             // Reset 2FA UI but keep the flag true so the corresponding function knows we're completing 2FA
             this.cancel2FAChallenge();
@@ -759,33 +756,22 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             var $hiddenInput = $('<input type="hidden" data-mz-twofa-code value="' + twoFACode + '">');
             this.$parent.append($hiddenInput);
             
-            if (isOrderStatus) {
-                // Restore order login data and proceed with anonymousorder
-                var orderData = this.$parent.data('orderLoginData');
-                if (orderData) {
-                    this.$parent.find('[data-mz-order-number]').val(orderData.orderNumber);
-                    this.$parent.find('[data-mz-verification]').val(orderData.verification);
-                    this.$parent.find('[data-mz-verify-with]').val(orderData.verifyWith);
-                }
-                this.anonymousorder();
-            } else {
-                // Get the original login values and proceed with login
-                var email = this.$parent.find('[data-mz-login-email]').val();
-                var password = this.$parent.find('[data-mz-login-password]').val();
-                
-                // Set the values back in case they were cleared
-                this.$parent.find('[data-mz-login-email]').val(email);
-                this.$parent.find('[data-mz-login-password]').val(password);
-                
-                this.login();
-            }
+            // Get the original login values and proceed with login
+            var email = this.$parent.find('[data-mz-login-email]').val();
+            var password = this.$parent.find('[data-mz-login-password]').val();
+            
+            // Set the values back in case they were cleared
+            this.$parent.find('[data-mz-login-email]').val(email);
+            this.$parent.find('[data-mz-login-password]').val(password);
+            
+            this.login();
             
             // Clean up after login attempt
             $hiddenInput.remove();
             this.is2FAInProgress = false;
         },
         clearMessages: function() {
-           $('[data-mz-role="popover-message"]').filter(':visible').each(function () {
+           this.$parent.find('[data-mz-role="popover-message"]').filter(':visible').each(function () {
                 $(this).off().remove(); // or .empty() or .hide()
            });
         },
@@ -877,9 +863,9 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         var displayMessage = function(message, type, $messageArea) {
             var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
             
-            // If no specific message area provided, try to find one
+            // If no specific message area provided, try to find one, but only in login forms, not order status forms
             if (!$messageArea || $messageArea.length === 0) {
-                $messageArea = $('[data-mz-role="popover-message"]:visible').first();
+                $messageArea = $('.mz-loginform-page:not(.mz-anonymousorder-form)').find('[data-mz-role="popover-message"]:visible').first();
             }
             
             if ($messageArea && $messageArea.length > 0) {
@@ -916,12 +902,12 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     }
             });        });        
           // Initialize forgot password popover with comprehensive error handling
-        $('[data-mz-action="launchforgotpassword"]').each(function() {
+        $('.mz-loginform-page:not(.mz-anonymousorder-form)').find('[data-mz-action="launchforgotpassword"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
         });
-        $('[data-mz-action="otplogin"]').on('click', function(e) {
+        $('.mz-loginform-page:not(.mz-anonymousorder-form)').find('[data-mz-action="otplogin"]').on('click', function(e) {
             e.preventDefault();
             
             // Check if OTP login is allowed
@@ -929,8 +915,8 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 return;
             }
             
-            // Check if we're on the main login page or order status login page
-            var $form = $('.mz-loginform-page, .mz-anonymousorder-form');
+            // Only apply OTP functionality to login forms, not order status forms
+            var $form = $(this).closest('.mz-loginform-page:not(.mz-anonymousorder-form)');
             if ($form.length === 0) {
                 return; // Not on a supported page
             }
@@ -943,51 +929,28 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             });
             
             var $passwordRow = $form.find('input[data-mz-login-password]').closest('.mz-l-formfieldgroup-row');
-            var $loginButton = $form.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"], [data-mz-action="anonymousorder-submit"]');
+            var $loginButton = $form.find('[data-mz-action="loginpage-submit"], [data-mz-action="recaptcha-submit"]');
             var $linksRow = $form.find('.mz-forgot').closest('.mz-l-formfieldgroup-row');
-            var $emailField = $form.find('input[data-mz-login-email], input[data-mz-order-email]');
+            var $emailField = $form.find('input[data-mz-login-email]');
             var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
             
-            // For order status form, we need to handle the case where there's no email field initially
-            if ($emailField.length === 0 && $form.hasClass('mz-anonymousorder-form')) {
-                // This is order status form - we need to create an email field
-                var emailFieldHtml = '<div class="mz-l-formfieldgroup-row mz-otp-email-row">' +
-                                    '<div class="mz-l-formfieldgroup-cell">' +
-                                    '<label for="otp-email">' + Hypr.getLabel('emailAddress') + '</label>' +
-                                    '</div>' +
-                                    '<div class="mz-l-formfieldgroup-cell">' +
-                                    '<input name="otp-email" type="email" data-mz-order-email placeholder="' + Hypr.getLabel('emailPlaceholderForLoginWithOtp') + '" />' +
-                                    '</div>' +
-                                    '</div>';
-                
-                // Insert the email field at the top of the form
-                $form.find('.mz-l-formfieldgroup').prepend(emailFieldHtml);
-                
-                // Update our references
-                $emailField = $form.find('input[data-mz-order-email]');
-                $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
-                
-                // Hide all existing form fields
-                $form.find('.mz-l-formfieldgroup-row').not('.mz-otp-email-row').hide();
-            } else {
-                // Store original label text for restoration
-                $form.data('originalEmailLabel', $emailLabel.text());
-                
-                // Change email label to "Email Address" only
-                $emailLabel.text(Hypr.getLabel('emailAddress'));
-                
-                // Validate current email field value - if it's not a valid email, clear it
-                var currentValue = $emailField.val();
-                if (currentValue && !isValidEmail(currentValue)) {
-                    $emailField.val('');
-                }
-                
-                // Hide password field
-                $passwordRow.hide();
-                
-                // Hide the forgot password and OTP links
-                $linksRow.hide();
+            // Store original label text for restoration
+            $form.data('originalEmailLabel', $emailLabel.text());
+            
+            // Change email label to "Email Address" only
+            $emailLabel.text(Hypr.getLabel('emailAddress'));
+            
+            // Validate current email field value - if it's not a valid email, clear it
+            var currentValue = $emailField.val();
+            if (currentValue && !isValidEmail(currentValue)) {
+                $emailField.val('');
             }
+            
+            // Hide password field
+            $passwordRow.hide();
+            
+            // Hide the forgot password and OTP links
+            $linksRow.hide();
             
             // Create a separate "Request Code" button instead of changing the existing one
             var requestCodeButtonHtml = '<div class="mz-l-formfieldgroup-row mz-otp-request-row">' +
@@ -1021,30 +984,24 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 $form.data('mz-is-otp-in-progress', false);
                 $form.off('submit.otp');
                 
-                if ($form.hasClass('mz-anonymousorder-form') && $form.find('.mz-otp-email-row').length > 0) {
-                    // Order status form - remove the email field we added and show original fields
-                    $form.find('.mz-otp-email-row').remove();
-                    $form.find('.mz-l-formfieldgroup-row').show();
-                } else {
-                    // Regular login form - restore original email label and show hidden fields
-                    var $emailField = $form.find('input[data-mz-login-email], input[data-mz-order-email]');
-                    var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
-                    var originalLabel = $form.data('originalEmailLabel');
-                    if (originalLabel) {
-                        $emailLabel.text(originalLabel);
-                    }
-                    
-                    // Show password field and links again
-                    $passwordRow.show();
-                    $linksRow.show();
-                    
-                    // Show the email input field again
-                    var $emailRow = $form.find('input[data-mz-login-email], input[data-mz-order-email]').closest('.mz-l-formfieldgroup-row');
-                    $emailRow.show();
-                    
-                    // Show the original login button
-                    $loginButton.closest('.mz-l-formfieldgroup-row').show();
+                // Regular login form - restore original email label and show hidden fields
+                var $emailField = $form.find('input[data-mz-login-email]');
+                var $emailLabel = $emailField.closest('.mz-l-formfieldgroup-row').find('label');
+                var originalLabel = $form.data('originalEmailLabel');
+                if (originalLabel) {
+                    $emailLabel.text(originalLabel);
                 }
+                
+                // Show password field and links again
+                $passwordRow.show();
+                $linksRow.show();
+                
+                // Show the email input field again
+                var $emailRow = $form.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
+                $emailRow.show();
+                
+                // Show the original login button
+                $loginButton.closest('.mz-l-formfieldgroup-row').show();
                 
                 // Remove all OTP-specific elements
                 $('.mz-otp-request-row, .mz-otp-back-row, .mz-otp-instruction-row, .mz-otp-input-row, .mz-otp-resend-row').remove();
@@ -1067,20 +1024,20 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 e.preventDefault();
                 
                 var $requestButton = $(this);
-                var email = $form.find('input[data-mz-login-email], input[data-mz-order-email]').val();
+                var email = $form.find('input[data-mz-login-email]').val();
                 var $messageArea = $form.find('[data-mz-role="popover-message"]');
                 
                 // Validate email
                 if (!email) {
                     displayMessage('Please enter your email address to request a one-time password.', 'error', $messageArea);
-                    $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
+                    $form.find('input[data-mz-login-email]').focus();
                     return;
                 }
                 
                 // Validate email format
                 if (!isValidEmail(email)) {
                     displayMessage('Please enter a valid email address.', 'error', $messageArea);
-                    $form.find('input[data-mz-login-email], input[data-mz-order-email]').focus();
+                    $form.find('input[data-mz-login-email]').focus();
                     return;
                 }
                 
@@ -1136,7 +1093,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Function to show OTP input UI
             function showOtpInputUI($form, email) {
                 // Hide the email input field since it's no longer needed during verification
-                var $emailRow = $form.find('input[data-mz-login-email], input[data-mz-order-email]').closest('.mz-l-formfieldgroup-row');
+                var $emailRow = $form.find('input[data-mz-login-email]').closest('.mz-l-formfieldgroup-row');
                 $emailRow.hide();
                 
                 var otpInputHtml ='<div class="mz-l-formfieldgroup-row mz-otp-input-row">' +
@@ -1185,13 +1142,11 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
 
                 var returnUrl = "";
                 var returnUrlParam = getQueryParam('returnUrl');
-                if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
+                if (returnUrlParam && !$form.find('input[name=returnUrl]').val()){
                     returnUrl = returnUrlParam;
                 } else {
-                    returnUrl = this.$parent.find('input[name=returnUrl]').val();
+                    returnUrl = $form.find('input[name=returnUrl]').val();
                 }
-
-                var self = this;
                 
                 // Show loading state
                 var $input = $form.find('[data-mz-otp-code]');
@@ -1208,7 +1163,12 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     $form.data('mz-is-otp-in-progress', false);
                     $form.off('submit.otp');
 
-                    self.handleLoginComplete.bind(self, returnUrl)();
+                    // Handle login complete - redirect or reload
+                    if (returnUrl) {
+                        window.location.href = returnUrl;
+                    } else {
+                        window.location.reload();
+                    }
 
                 })
                 ['catch'](function(error) {
@@ -1337,7 +1297,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
               // Handle browser refresh - reset to initial state
             $(window).on('beforeunload', function() {
                 // When page is about to unload, ensure we clear any OTP state
-                var $forms = $('.mz-loginform-page, .mz-anonymousorder-form');
+                var $forms = $('.mz-loginform-page:not(.mz-anonymousorder-form)');
                 $forms.each(function() {
                     var $form = $(this);                    
                     if ($form.find('.mz-otp-input-row').length > 0) {

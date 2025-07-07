@@ -69,9 +69,11 @@ Quick Reference
   - scripts/modules/models-checkout.js
   - scripts/modules/models-b2b-account.js
   - scripts/modules/message-handler.js
+  - scripts/modules/login-links.js
   - scripts/pages/checkout.js
   - scripts/pages/myaccount.js
   - scripts/pages/cart.js
+  - templates/pages/order-status.hypr
 * Important Classes/Services: Backbone Models (Customer, Cart, Order, B2BAccount), Collections, Views, Message Handler
 * API Endpoints: All via Kibo Commerce REST APIs (customers, cart, orders, products, B2B accounts, payments)
 * Configuration Keys: theme.json (theme settings), theme-ui.json (UI config), Gruntfile.js (build tasks)
@@ -219,7 +221,38 @@ Quick Reference
 
 ---
 
-Document Created: 2025-06-10
-Last Updated: 2025-06-10
-Analysis Depth: Comprehensive (with deep technical details)
+# Recent Security & UX Improvements
 
+## Order Status Page - Login/OTP/2FA Isolation (July 2025)
+**Problem:** Login, OTP, and 2FA functionality was leaking into the order status form, causing authentication errors and UI elements to appear inappropriately on order lookup forms.
+
+**Root Cause:** Both login and order status forms shared the `.mz-loginform-page` CSS class, causing login-related JavaScript logic to apply to both forms.
+
+**Solution Implemented:**
+- **Context-Aware Selectors:** Updated all login/OTP/2FA selectors from `.mz-loginform-page` to `.mz-loginform-page:not(.mz-anonymousorder-form)` 
+- **Form-Specific Logic:** Added context checks in OTP/2FA methods to prevent execution on order status forms
+- **Scoped Event Handlers:** Limited login-related event binding to actual login forms only
+- **Message Display Isolation:** Updated global message display functions to exclude order status forms
+
+**Key Changes in `login-links.js`:**
+- OTP/2FA initialization scoped to login forms only using `:not(.mz-anonymousorder-form)` selector
+- Added context safeguards in `start2FAChallenge()` and `show2FAChallenge()` methods
+- Updated global `displayMessage()` helper to exclude order status forms
+- Added form type checks in Enter key handling for OTP actions
+- Scoped browser refresh cleanup to login forms only
+
+**Impact:**
+- **Security:** Prevents authentication workflows from interfering with order lookup
+- **UX:** Clean separation - login errors stay in login forms, order status errors stay in order status forms
+- **Scalability:** Solution uses CSS selectors and form context, not hardcoded error filtering
+- **Maintainability:** Future error messages will automatically follow proper form scoping
+
+**Template Structure:**
+- Login Form: `<form class="mz-loginform mz-loginform-page" name="mz-loginform">` (gets login/OTP/2FA functionality)
+- Order Status Form: `<form class="mz-loginform mz-loginform-page mz-anonymousorder-form" name="mz-anonymousorder">` (excluded from login logic)
+
+---
+
+Document Created: 2025-06-10
+Last Updated: 2025-07-07
+Analysis Depth: Comprehensive (with deep technical details)
