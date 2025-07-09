@@ -380,6 +380,10 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 data.twoFactorCode = this.$parent.find('[data-mz-twofa-code]').val();
             }
 
+            if(require.mozuData('user').isAuthenticated) {
+                this.handleLoginComplete.bind(this, returnUrl);
+            }
+
             var self = this;
             api.action('customer', 'loginStorefront', data).then(
                 this.handleLoginComplete.bind(this, returnUrl), 
