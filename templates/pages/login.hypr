@@ -7,17 +7,15 @@
 {% block body-content %}
     <div class="mz-l-container">
         {% include "modules/common/message-bar" with model=model.messages %}
-        <div class="mz-l-2column mz-l-2column-right ">
-            <div class="mz-l-column mz-l-formfieldgroup">
+        <div class="mz-l-2column mz-l-2column-right ">            
+        <div class="mz-l-column mz-l-formfieldgroup">
                 <h1 class="mz-pagetitle">{{ labels.loginNoAccount }}</h1>
-                 <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell">
                         <button class="mz-button mz-button-large mz-login-button" data-mz-action="signup">
                             {{ labels.signUpLink }}
                         </button>
-                        <div class="mz-l-formfieldgroup-cell">
-                            <section data-mz-role="popover-message" class="mz-popover-message"></section>
-                        </div>
+                        <section data-mz-role="popover-message" class="mz-popover-message"></section>
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row">
@@ -57,15 +55,17 @@
                             <div class="mz-l-formfieldgroup-cell">
                                 <div id="recaptcha-container"></div>
                             </div>
-                        </div>
+                        </div>                        
                         {% endif %}
                         <div class="mz-l-formfieldgroup-row">
-                            <div class="mz-l-formfieldgroup-cell"></div>
+                            <div class="mz-l-formfieldgroup-cell"></div>                            
                             <div class="mz-l-formfieldgroup-cell">
                                 <a href="/user/forgotpassword" class="mz-forgot" data-mz-action="launchforgotpassword">{{ labels.forgotPassword }}</a>
-                                 <div class="mz-l-formfieldgroup-cell">
-                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
-                                </div>
+                                   {% if siteContext.generalSettings.isEmailOtpLoginAllowed %}
+                                    <span class="mz-login-separator"> | </span>
+                                    <a href="#" class="mz-otp-login" data-mz-action="otplogin">Login with One-Time Password</a>
+                                    {% endif %}
+                                <section data-mz-role="popover-message" class="mz-popover-message"></section>
                             </div>
                         </div>
                         <div class="mz-l-formfieldgroup-row">
@@ -76,9 +76,7 @@
                                 {% else %}
                                 <button class="mz-button mz-button-large mz-login-button" data-mz-action="loginpage-submit">{{ labels.logIn }}</button>
                                 {% endif %}
-                                <div class="mz-l-formfieldgroup-cell">
-                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
-                                </div>
+                                <section data-mz-role="popover-message" class="mz-popover-message"></section>
                             </div>
                         </div>
                     </div>
