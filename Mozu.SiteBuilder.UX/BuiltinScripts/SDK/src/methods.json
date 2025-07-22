@@ -441,6 +441,26 @@
       "template": "{+storefrontUserService}resetpassword",
       "returnType": "string"
     },
+    "validate2fa-and-create-auth-ticket": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}2fa/auth",
+      "returnType": "string"
+    },
+    "validate-otp-and-create-auth-ticket": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}otp/auth",
+      "returnType": "string"
+    },
+    "generate-and-send2fa-otp": {
+      "verb": "GET",
+      "template": "{+storefrontUserService}2fa/request",
+      "returnType": "string"
+    },
+    "generate-and-send-otp": {
+      "verb": "POST",
+      "template": "{+storefrontUserService}otp/request",
+      "returnType": "string"
+    },
     "change-password": {
       "verb": "POST",
       "template": "{+customerService}{id}/change-password{?userId}",

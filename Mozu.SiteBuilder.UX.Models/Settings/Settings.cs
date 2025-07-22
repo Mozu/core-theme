@@ -435,6 +435,15 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember(EmitDefaultValue = true)]
         public SMSTransactionSettings SupressedSmsTransactions { get; set; }
+
+        [DataMember]
+        public bool? Is2FAAlwaysRequired { get; set; }
+        [DataMember]
+        public bool? Is2FARequiredOnFingerprintChange { get; set; }
+        [DataMember]
+        public bool? Is2FARequiredOnRegionChange { get; set; }
+        [DataMember]
+        public bool? IsEmailOtpLoginAllowed { get; set; }
     }
 
     public class ViewModeToggles

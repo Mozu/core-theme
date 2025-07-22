@@ -343,6 +343,30 @@ namespace Mozu.SiteBuilder.UX.Configuration
 				_constraintResolver);
 
             routes.MapRoute(_defaultHandler,
+                "Validate 2FA And Create AuthTicket",
+                "user/2fa/auth",
+                new { controller = "Auth", action = "Validate2FAAndCreateAuthTicket" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Validate OTP And Create AuthTicket",
+                "user/otp/auth",
+                new { controller = "Auth", action = "ValidateOtpAndCreateAuthTicket" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Generate And Send 2FA Otp",
+                "user/2fa/request",
+                new { controller = "Auth", action = "GenerateAndSend2FAOtp" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
+                "Generate And Send Otp",
+                "user/otp/request",
+                new { controller = "Auth", action = "GenerateAndSendOtp" },
+                _constraintResolver);
+
+            routes.MapRoute(_defaultHandler,
                 "Anonymous Order Status",
                 "my-anonymous-account",
                 new { controller = "MyAnonymousAccount", action = "Index" },
