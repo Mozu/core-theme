@@ -33,6 +33,7 @@ COPY --from=build /src/Mozu.CoreTheme /approot/Mozu.CoreTheme
 COPY --from=build /src/Mozu.SiteBuilder.UX/BuiltinScripts /approot/sb/ux/BuiltinScripts
 COPY --from=build /buildoutput /buildoutput
 
-ENTRYPOINT ["dotnet"]
-CMD [ "Mozu.SiteBuilder.UX.dll"]
+COPY start-app.sh /app/start-app.sh
+RUN chmod +x /app/start-app.sh
+ENTRYPOINT ["/app/start-app.sh"]
 
