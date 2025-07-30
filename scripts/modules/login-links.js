@@ -895,8 +895,8 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         handleLoginComplete: function (returnUrl) {
             // For signup, we just reload the page after successful 2FA
             // (Override the parent method which handles login redirects)
-            if (this.redirectTemplate) {
-                window.location.pathname = this.redirectTemplate;
+            if (returnUrl) {
+                window.location.pathname = returnUrl;
             }
             else {
                 window.location.reload();
@@ -1108,6 +1108,16 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Show loading state
             var $input = this.$parent.find('[data-mz-twofa-code]');
             $input.prop('disabled', true);
+
+            var returnUrl = "";
+            var returnUrlParam = getQueryParam('returnUrl');
+            if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
+              returnUrl = returnUrlParam;
+            } else {
+              returnUrl = this.$parent.find('input[name=returnUrl]').val();
+            }
+
+            var self = this;
             
             var self = this;
             
@@ -1131,8 +1141,9 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 self.is2FAInProgress = false;
                 self.$parent.off('submit.twofa');
                 
-                // Complete signup with verified 2FA
-                self.completeSignupWith2FA();
+                // Skip completeSignupWith2FA since API already handles account creation
+                // Go directly to post-registration navigation
+                 self.handleLoginComplete.bind(self, returnUrl)();
                 
             })["catch"](function(error) {
                 // Handle error
@@ -1179,12 +1190,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             var self = this;
             var signupPayload = this.$parent.data('signupPayload');
             
-            if (!signupPayload) {
-                this.displayMessage('Signup data not found. Please try again.');
-                return;
-            }
-            
-            // Add 2FA code to signup payload
+            // Add 2FA code to signup payload and proceed directly to API call
             var twoFACode = this.$parent.find('[data-mz-twofa-code]').val();
             if (twoFACode) {
                 signupPayload.twoFactorCode = twoFACode;
