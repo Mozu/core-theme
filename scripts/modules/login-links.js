@@ -1067,13 +1067,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         send2FACode: function(email) {
             var self = this;
             
-            // Debug: Log whether 2FA flag is set
-            if (typeof console !== 'undefined' && console.log) {
-                console.log('send2FACode called with email:', email);
-                console.log('is2FAInProgress flag:', this.is2FAInProgress);
-                console.log('Message container exists:', this.$parent.find('.mz-twofa-message-row .mz-popover-message').length > 0);
-            }
-            
             // Generate 2FA OTP using API
             api.action('customer', 'generateAndSend2faOtp', {
                 email: email
