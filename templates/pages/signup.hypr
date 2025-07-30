@@ -66,6 +66,39 @@
                         <button class="mz-button mz-button-large mz-sign-up-page-button" data-mz-action="signuppage-submit">{{ labels.signUp }}</button>
                     </div>
                 </div>
+                <!-- 2FA UI Elements (hidden by default, shown during 2FA flow) -->
+                <div class="mz-l-formfieldgroup-row mz-twofa-title-row" style="display: none;">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <h3>{{ labels.loginVerificationRequired }}</h3>
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row mz-twofa-input-row" style="display: none;">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="mz-twofa-code">{{ labels.verificationCode }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="text" id="mz-twofa-code" data-mz-twofa-code maxlength="6" placeholder="{{ labels.enter6DigitCode }}" autocomplete="one-time-code" pattern="[0-9]{6}" required>
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row mz-twofa-message-row" style="display: none;">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row mz-twofa-buttons-row" style="display: none;">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <a href="#" class="mz-resend-twofa" data-mz-action="resend-twofa-code">{{ labels.resendCode }}</a>
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row mz-twofa-back-row" style="display: none;">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <a href="#" class="mz-back-to-signup" data-mz-action="backto-signup">{{ labels.backToSignUp }}</a>
+                    </div>
+                </div>
                 <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
