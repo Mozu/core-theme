@@ -1119,8 +1119,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
 
             var self = this;
             
-            var self = this;
-            
             // Validate 2FA using API
             api.action('customer', 'validate2faAndCreateAuthTicket', {
                 OtpCode: enteredCode            
