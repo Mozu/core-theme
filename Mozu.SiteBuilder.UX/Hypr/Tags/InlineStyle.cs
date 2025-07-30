@@ -16,6 +16,7 @@ using Mozu.Core.Logging;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -25,39 +26,30 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [Name("inline_style")]
     public class InlineStyle : SimpleTagBase
     {
-        // Static cache for compiled CSS content
-        private static readonly ConcurrentDictionary<string, string> _cssCache = new ConcurrentDictionary<string, string>();
         private static readonly ConcurrentDictionary<string, AsyncSemaphore> _cssLocks = new ConcurrentDictionary<string, AsyncSemaphore>();
         
         /// <summary>
         /// Generates a cache key for the CSS path
         /// </summary>
-        private static string GenerateCacheKey(string path)
+        private static string GenerateCacheKey(string path, IPageContext pageContext)
         {
-            return $"InlineStyle_CSS_{path}";
+            return $"InlineStyle_CSS_{path}_{pageContext.CdnCacheBustKey}";
         }
         
         /// <summary>
         /// Gets CSS content from cache or generates it if not cached
         /// </summary>
-        private async Task<string> GetCachedCssContent(string path, IStorefrontCache cache, IContext context, ILogger<InlineStyle> logger)
+        private async Task<string> GetCachedCssContent(string path, IStorefrontCache cache, IContext context, IPageContext pageContext, ILogger<InlineStyle> logger)
         {
-            var cacheKey = GenerateCacheKey(path);
+            var cacheKey = GenerateCacheKey(path, pageContext);
             
-            // Check distributed cache first
+            // Check cache first
             var cachedContent = cache.Get<string>(cacheKey, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
             
             if (cachedContent != null)
             {
                 logger.LogInformation($"InlineStyle cache HIT for path: {path}");
                 return cachedContent;
-            }
-            
-            // Check in-memory cache
-            if (_cssCache.TryGetValue(path, out var memoryCached))
-            {
-                logger.LogInformation($"InlineStyle memory cache HIT for path: {path}");
-                return memoryCached;
             }
             
             logger.LogInformation($"InlineStyle cache MISS for path: {path}");
@@ -75,18 +67,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     return cachedContent;
                 }
                 
-                if (_cssCache.TryGetValue(path, out memoryCached))
-                {
-                    return memoryCached;
-                }
-                
                 // Generate CSS content
                 var cssContent = await GenerateCssContent(path, context, logger).ConfigureAwait(false);
                 
-                // Store in both caches
+                // Store in cache
                 if (!string.IsNullOrEmpty(cssContent))
                 {
-                    _cssCache[path] = cssContent;
                     cache.Set(cacheKey, cssContent, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
                     logger.LogInformation($"InlineStyle cached content for path: {path}");
                 }
@@ -132,11 +118,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             try
             {
                 var cache = context.Resolve<IStorefrontCache>();
+                var pageContext = context.Resolve<IPageContext>();
                 var path = (string)arguments[0].Value;
                 var logger = context.Resolve<ILogger<InlineStyle>>();
                 
                 // Use async method to get cached CSS content
-                var cssContentTask = GetCachedCssContent(path, cache, context, logger);
+                var cssContentTask = GetCachedCssContent(path, cache, context, pageContext, logger);
                 var cssContent = cssContentTask.GetAwaiter().GetResult(); // Sync wait for compatibility with the interface
                 
                 return new[] { WalkResultHelpers.Buffer(cssContent) };
@@ -149,73 +136,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
         
-        /// <summary>
-        /// Invalidates cache for a specific CSS path
-        /// </summary>
-        public static void InvalidateCssCache(string path, ILogger<InlineStyle> logger = null)
-        {
-            if (string.IsNullOrEmpty(path))
-                return;
-                
-            // Remove from in-memory cache
-            _cssCache.TryRemove(path, out _);
-            
-            // Note: For distributed cache invalidation, you would need access to IStorefrontCache
-            // This method is primarily for clearing the in-memory cache
-            if (logger != null)
-                logger.LogInformation($"Invalidated CSS cache for path: {path}");
-            else
-                LoggingService.LoggerFor<InlineStyle>().Info($"Invalidated CSS cache for path: {path}");
-        }
-        
-        /// <summary>
-        /// Invalidates distributed cache for a specific CSS path using IStorefrontCache
-        /// </summary>
-        public static void InvalidateCssCache(string path, IStorefrontCache cache, ILogger<InlineStyle> logger = null)
-        {
-            if (string.IsNullOrEmpty(path))
-                return;
-                
-            // Remove from in-memory cache
-            _cssCache.TryRemove(path, out _);
-            
-            // Remove from distributed cache by setting to null
-            var cacheKey = GenerateCacheKey(path);
-            cache.Set(cacheKey, null, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
-            
-            if (logger != null)
-                logger.LogInformation($"Invalidated CSS cache (both memory and distributed) for path: {path}");
-            else
-                LoggingService.LoggerFor<InlineStyle>().Info($"Invalidated CSS cache (both memory and distributed) for path: {path}");
-        }
-        
-        /// <summary>
-        /// Clears all cached CSS content
-        /// </summary>
-        public static void ClearAllCssCache(ILogger<InlineStyle> logger = null)
-        {
-            _cssCache.Clear();
-            
-            if (logger != null)
-                logger.LogInformation("Cleared all CSS cache");
-            else
-                LoggingService.LoggerFor<InlineStyle>().Info("Cleared all CSS cache");
-        }
-        
-        /// <summary>
-        /// Gets the count of cached CSS entries
-        /// </summary>
-        public static int GetCachedCssCount()
-        {
-            return _cssCache.Count;
-        }
-        
-        /// <summary>
-        /// Checks if a CSS path is currently cached in memory
-        /// </summary>
-        public static bool IsCssCached(string path)
-        {
-            return !string.IsNullOrEmpty(path) && _cssCache.ContainsKey(path);
-        }
+       
     }
 }
