@@ -409,9 +409,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             api.action('customer', 'loginStorefront', data).then(
                 this.handleLoginComplete.bind(this, returnUrl), 
                 function(error) {
-                    // Log the error for debugging
-                    console.log('Login error:', error);
-
                     // Check if this is a 401 error requiring 2FA
                     // Handle both message text and requires2FA flag
                     var requiresTwoFA = false;
@@ -420,16 +417,11 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                         requiresTwoFA = true;
                     } 
 
-                    console.log('requiresTwoFA:', requiresTwoFA);
-                    
                     if (requiresTwoFA) {
                         // Start 2FA challenge for this specific error
-                        console.log('start2FAChallenge', requiresTwoFA);
                         self.start2FAChallenge();
                     } else {
                         // Handle all other errors normally
-                        console.log('displayApiMessage', requiresTwoFA);
-
                         self.displayApiMessage(error);
                     }
                 }
@@ -499,14 +491,11 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             }        
         },
         start2FAChallenge: function() {
-            console.log('Starting 2FA challenge');
             // Only allow 2FA on login forms, not order status forms
             if (this.$parent.hasClass('mz-anonymousorder-form')) {
-                console.log('Skipping 2FA for order status form');
                 return; // Skip 2FA for order status forms
             }
             
-            console.log('Starting 2FA challenge for login');
             this.clearMessages();
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
@@ -930,7 +919,6 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         },
         startSignup2FAChallenge: function() {
             // Only allow 2FA on signup forms
-            console.log('Starting 2FA challenge login');
             if (this.$parent.hasClass('mz-anonymousorder-form')) {
                 return; // Skip 2FA for order status forms
             }
