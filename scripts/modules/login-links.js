@@ -409,15 +409,27 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             api.action('customer', 'loginStorefront', data).then(
                 this.handleLoginComplete.bind(this, returnUrl), 
                 function(error) {
+                    // Log the error for debugging
+                    console.log('Login error:', error);
 
                     // Check if this is a 401 error requiring 2FA
-                    if (error && error.message && 
-                        error.message.toLowerCase().includes('two factor authentication is required')) {
-                        
+                    // Handle both message text and requires2FA flag
+                    var requiresTwoFA = false;
+                    
+                    if (error && error.requires2FA === true) {
+                        requiresTwoFA = true;
+                    } 
+
+                    console.log('requiresTwoFA:', requiresTwoFA);
+                    
+                    if (requiresTwoFA) {
                         // Start 2FA challenge for this specific error
+                        console.log('start2FAChallenge', requiresTwoFA);
                         self.start2FAChallenge();
                     } else {
                         // Handle all other errors normally
+                        console.log('displayApiMessage', requiresTwoFA);
+
                         self.displayApiMessage(error);
                     }
                 }
@@ -487,11 +499,14 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             }        
         },
         start2FAChallenge: function() {
+            console.log('Starting 2FA challenge');
             // Only allow 2FA on login forms, not order status forms
             if (this.$parent.hasClass('mz-anonymousorder-form')) {
+                console.log('Skipping 2FA for order status form');
                 return; // Skip 2FA for order status forms
             }
             
+            console.log('Starting 2FA challenge for login');
             this.clearMessages();
             var email = this.$parent.find('[data-mz-login-email]').val();
             var password = this.$parent.find('[data-mz-login-password]').val();
@@ -809,7 +824,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
         DismissablePopover.apply(this, arguments);
     };
     SignupPopover.prototype = new DismissablePopover();    $.extend(SignupPopover.prototype, LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'start2FAChallenge', 'show2FAChallenge', 'cancel2FAChallenge', 'bind2FAHandlers', 'storeSignupData', 'send2FACode', 'verify2FACode', 'completeSignupWith2FA', 'resend2FACode'],
+        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'startSignup2FAChallenge', 'showSignup2FAChallenge', 'cancelSignup2FAChallenge', 'bindSignup2FAHandlers', 'storeSignupData', 'sendSignup2FACode', 'verifySignup2FACode', 'completeSignupWith2FA', 'resendSignup2FACode'],
         template: Hypr.getTemplate('modules/common/signup-popover').render(),
         bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";
@@ -871,12 +886,23 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     }
                 }, function(error) {
                     // Check if this is a 2FA required error (same as login flow)
-                    if (error && error.message && 
-                        error.message.toLowerCase().includes('two factor authentication is required')) {
-                        
+                    var requiresTwoFA = false;
+                    
+                    if (error && error.requires2FA === true) {
+                        requiresTwoFA = true;
+                    } else if (error && error.message) {
+                        var errorMsg = error.message.toLowerCase();
+                        if (errorMsg.includes('two factor authentication is required') || 
+                            errorMsg.includes('two factor authentication') || 
+                            errorMsg.includes('2fa')) {
+                            requiresTwoFA = true;
+                        }
+                    }
+                    
+                    if (requiresTwoFA) {
                         // Store signup data and start 2FA challenge
                         self.storeSignupData(payload);
-                        self.start2FAChallenge();
+                        self.startSignup2FAChallenge();
                     } else {
                         // Handle all other errors normally
                         self.displayApiMessage(error);
@@ -902,8 +928,9 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 window.location.reload();
             }
         },
-        start2FAChallenge: function() {
+        startSignup2FAChallenge: function() {
             // Only allow 2FA on signup forms
+            console.log('Starting 2FA challenge login');
             if (this.$parent.hasClass('mz-anonymousorder-form')) {
                 return; // Skip 2FA for order status forms
             }
@@ -917,12 +944,12 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             }
             
             // Show 2FA challenge with email
-            this.show2FAChallenge(email);
+            this.showSignup2FAChallenge(email);
             
             // Set flag to indicate 2FA is in progress
             this.is2FAInProgress = true;
         },
-        show2FAChallenge: function(email) {
+        showSignup2FAChallenge: function(email) {
             var self = this;
             
             // Only allow 2FA on signup forms
@@ -987,12 +1014,12 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             this.$parent.find('[data-mz-twofa-code]').focus();
             
             // Send 2FA code
-            this.send2FACode(email);
+            this.sendSignup2FACode(email);
             
             // Bind event handlers for 2FA
-            this.bind2FAHandlers();
+            this.bindSignup2FAHandlers();
         },
-        cancel2FAChallenge: function() {
+        cancelSignup2FAChallenge: function() {
             this.is2FAInProgress = false;
             
             // Remove form submission prevention
@@ -1027,7 +1054,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             // Clear any messages
             this.clearMessages();
         },
-        bind2FAHandlers: function() {
+        bindSignup2FAHandlers: function() {
             var self = this;
             
             // Remove any existing handlers to prevent duplicates
@@ -1040,31 +1067,31 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             this.$parent.on('click', '[data-mz-action="verify-twofa"]', function(e) {
                 e.preventDefault();
                 var code = self.$parent.find('[data-mz-twofa-code]').val();
-                self.verify2FACode(code);
+                self.verifySignup2FACode(code);
             });
             
             // Resend code
             this.$parent.on('click', '[data-mz-action="resend-twofa-code"]', function(e) {
                 e.preventDefault();
                 var email = self.$parent.data('twoFA-email');
-                self.resend2FACode(email);
+                self.resendSignup2FACode(email);
             });
             
             // Back to signup
             this.$parent.on('click', '[data-mz-action="backto-signup"]', function(e) {
                 e.preventDefault();
-                self.cancel2FAChallenge();
+                self.cancelSignup2FAChallenge();
             });
             
             // Auto-verify when 6 digits are entered
             this.$parent.on('input', '[data-mz-twofa-code]', function() {
                 var codeValue = $(this).val();
                 if (codeValue.length === 6) {
-                    self.verify2FACode(codeValue);
+                    self.verifySignup2FACode(codeValue);
                 }
             });
         },
-        send2FACode: function(email) {
+        sendSignup2FACode: function(email) {
             var self = this;
             
             // Generate 2FA OTP using API
@@ -1101,7 +1128,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 }
             });
         },
-        verify2FACode: function(enteredCode) {
+        verifySignup2FACode: function(enteredCode) {
             var email = this.$parent.data('twoFA-email');
             var sessionId = this.$parent.data('twoFA-sessionId');
             
@@ -1208,7 +1235,7 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                 self.displayApiMessage(error);
             });
         },
-        resend2FACode: function(email) {
+        resendSignup2FACode: function(email) {
             var self = this;
             var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
             
