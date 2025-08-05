@@ -1,0 +1,33 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+  <!--- Header --->
+  <div class="mz-otp-email-header">  
+    <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
+    <div class="mz-otp-header-body">
+      <p><strong>{{ siteContext.generalSettings.websiteName }}</strong></p>
+      <h3>{{ labels.emailSubjectOtp }}</h3>
+    </div>
+  </div>
+  <br/>
+
+  <div class="mz-otp-email-body">
+    {% if user and user.firstName %}
+      {{ labels.emailOpening|string_format(user.firstName)|safe }}
+    {% else %}
+      {{ labels.emailOpeningAlternative|safe }}
+    {% endif %}
+
+    <p>{{ labels.otpEmailInstruction }}</p>
+    
+    <div class="mz-otp-code" style="font-size: 18px; font-weight: bold; text-align: center; letter-spacing: 2px; padding: 15px; border: 1px dashed #ccc; background-color: #f9f9f9; margin: 20px 0;">
+      {{ model.OtpCode }}
+    </div>
+
+    <p>{{ labels.otpNotRequested }}</p>
+    
+    <p><small>{{ labels.systemGeneratedEmail }}</small></p>
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+  </div>
+{% endblock body-content %}
