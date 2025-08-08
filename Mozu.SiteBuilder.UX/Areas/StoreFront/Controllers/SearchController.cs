@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc;
-using System.Net;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -97,14 +96,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //this.ActionContext.ActionArguments["query"] = query ?? _.query;
             //this.ActionContext.ActionArguments["categoryId"] = categoryId ?? this.PageContext.Search.CategoryId;
             PageContext.PageType = "search";
-            
+
             var parsedFilter = _.filter;
             // use the inStockLocation - TODO: could make sure it isn't already in the _.filter already
             if (!string.IsNullOrWhiteSpace(inStockLocation))
             {
-                // Sanitize the inStockLocation parameter to prevent XSS
-                inStockLocation = WebUtility.UrlEncode(inStockLocation);
-                
                 var locationFilter = $"locationsinstock eq {inStockLocation}";
                 parsedFilter = string.IsNullOrWhiteSpace(parsedFilter)
                     ? locationFilter
@@ -360,12 +356,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     query = res.Length > 0 ? res.FirstValue : null;
                 }
 
-                // Sanitize the query parameter to prevent XSS
-                if (!string.IsNullOrEmpty(query))
-                {
-                    query = WebUtility.UrlEncode(query);
-                }
-
                 avp.query = query;
 
                 int? categoryId = null;
@@ -378,11 +368,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (categoryId == null && res.Length > 0 && res.FirstValue != null)
                 {
                     categoryCode = res.FirstValue;
-                    // Sanitize the categoryCode parameter to prevent XSS
-                    if (!string.IsNullOrEmpty(categoryCode))
-                    {
-                        categoryCode = WebUtility.UrlEncode(categoryCode);
-                    }
                     categoryId = actionContext.HttpContext.RequestServices.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
                 }
                 if (categoryId == null)
