@@ -48,10 +48,13 @@ using Kibo.Fulfillment.Contracts.Api;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using System.Globalization;
+using System.Net.Http.Formatting;
+using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Subscriptions;
 using Mozu.Core.Exceptions;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using AutoMapper;
+using ViewResult = Mozu.SiteBuilder.Mvc.ActionResults.ViewResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -596,63 +599,65 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Warn(warnMessage);
                 return StatusCode((int)HttpStatusCode.Gone, warnMessage);
             }
-
-            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
+            
+            Tenant.Contracts.Tenant tenant =  null; 
+            try
             {
-                user = await TryGetUser(notification);
-                PageContext.User = user;
-            }
+                if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
+                {
+                    user = await TryGetUser(notification);
+                    PageContext.User = user;
+                }
 
-            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
-            var site = tenant.Sites.FirstOrDefault(x => x.Id == SbApiContext.SiteId);
-            var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
-            if (PageContext != null)
-            {
-                PageContext.PageType = "email";
-            }
-            object cmdContent = null;
+                tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
+                var site = tenant.Sites.FirstOrDefault(x => x.Id == SbApiContext.SiteId);
+                var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
+                if (PageContext != null)
+                {
+                    PageContext.PageType = "email";
+                }
+                object cmdContent = null;
 
-            Mvc.ActionResults.ViewResult vr = null;
-            if (res is OkObjectResult objRes)
-            {
-                vr = objRes.Value as Mvc.ActionResults.ViewResult;
-                if (vr != null)
+                if (res is OkObjectResult { Value: ViewResult vr })
                 {
                     ViewData["content"] = vr.ViewData.Model;
                     cmdContent = vr.ViewData.Model;
                 }
-            }
-            _logger.LogInformation($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
-            _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
-            ViewData["smsEnabled"] = IsSmsEnabled(tenant);
-            ViewData["adminDomainName"] = tenant.Domain.DomainName;
-            var model = await Convert(notification.Payload, emailTypeInfo);
+                
+                _logger.Debug($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
+                ViewData["smsEnabled"] = IsSmsEnabled(tenant);
+                ViewData["adminDomainName"] = tenant.Domain.DomainName;
+                var model = await Convert(notification.Payload, emailTypeInfo);
+                
+                _logger.Debug($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
+            
 
-            try
-            {
-                _logger.Info($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
+                var renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, model, cmdContent, user, site);
+                if (renderedTemplate.IsNullOrEmpty())
+                {
+                    return null;
+                }
+
+                var mozuDocument = (DC.Document)cmdContent;
+                var mozuDocument = cmdContent as DC.Document;
+                var subjectFromVrModel = mozuDocument != null && mozuDocument.Properties != null && mozuDocument.Properties.ContainsKey("subject")
+                    ? (string)mozuDocument.Properties["subject"]
+                    : "";
+
+                return Ok(new EmailResponse
+                {
+                    Subject = !string.IsNullOrWhiteSpace(subjectFromVrModel) ? subjectFromVrModel : emailTemplate.Title ?? notification.Topic,
+                    Body = renderedTemplate
+                });
             }
             catch (Exception ex)
             {
-                _logger.Error(ex);
+                /*  The 409 Conflict status code indicates that the request could not be completed due to a conflict with
+                 the current state of the resource. In your scenario, the "resource" that the request depends on—the data
+                 on the server side—is in a state that prevents the request from succeeding.*/
+                var foo = new HttpError(ex.Message);
+                return Conflict(foo);
             }
-
-            var renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, model, cmdContent, user, site);
-            if (renderedTemplate.IsNullOrEmpty())
-            {
-                return null;
-            }
-
-            var mozuDocument = (cmdContent != null) ? (Mozu.Content.Contracts.Document)cmdContent : null;
-            var subjectFromVrModel = (mozuDocument != null) ? (string)mozuDocument.Properties["subject"] : "";
-
-            var response = new EmailResponse
-            {
-                Subject = !string.IsNullOrWhiteSpace(subjectFromVrModel) ? subjectFromVrModel : (emailTemplate.Title ?? notification.Topic),
-                Body = renderedTemplate
-            };
-
-            return Ok(response);
         }
 
         private async Task<User> TryGetUser(EmailNotification notification)
@@ -747,11 +752,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return await Render(view, context);
         }
 
-        //private async Task<Location.Contracts.Location> GetDirectShipLocationOrDefault()
-        //{
-        //    var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
-        //    return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
-        //}
+        private async Task<string> Render(HyprView view, HyprViewContext context)
+        {
+            var stringWriter = new StringWriter();
+            await view.AsyncRender(context, stringWriter);
+            await stringWriter.FlushAsync();
+            return stringWriter.ToString();
+        }
 
         private async Task<Location.Contracts.Location> GetDefaultReturnLocation()
         {
@@ -766,13 +773,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return null;
         }
 
-        private static async Task<string> Render(HyprView view, HyprViewContext context)
-        {
-            var stringWriter = new StringWriter();
-            await view.AsyncRender(context, stringWriter);
-            await stringWriter.FlushAsync();
-            return stringWriter.ToString();
-        }
 
         public async Task<object> Convert(string json, EmailTypeInfo eti)
         {
