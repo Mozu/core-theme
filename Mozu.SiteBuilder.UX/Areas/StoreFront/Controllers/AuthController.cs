@@ -94,175 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext.SetUser(user);
         }
 
-        // NOTE: 2FA won't affect the CreateAccount flow
-        [SslOnlyActionFilter]
-        async Task<(int Satus, object body)> LoginAndTrackForCreateAccount(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
-        {
-            var response = await loginFunc();
-            object body = null;
-            if (response.ResponseMessage.IsSuccessStatusCode)
-            {
-                var authTicket = response.ReadAsSync();
-
-                var cust = authTicket.CustomerAccount;
-                body = authTicket;
-                var profile = new UserProfile()
-                {
-                    EmailAddress = cust.EmailAddress,
-                    FirstName = cust.FirstName,
-                    LastName = cust.LastName,
-                    UserId = cust.UserId,
-                    UserName = cust.UserName,
-                };
-
-                _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
-                _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
-                var userClaim = LightweightUserClaims.Parse(authTicket.AccessToken);
-                _apiContext.SetUser(userClaim);
-
-                // iff the visit is already tracked, update the visit with the new user id
-                if (_pageContext.Visit.IsTracked)
-                {
-                    _pageContext.Visit.UserId = userClaim.UserId;
-                    _pageContext.Visit.IsUserTracked = true;
-                    _visitPublisher.PublishVisit(_pageContext.Visit);
-                }
-            }
-            else
-            {
-                body = response.ResponseMessage;
-                try
-                {
-                    var strCnt = await response.ResponseMessage.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(strCnt))
-                    {
-                        body = JObject.Parse(strCnt);
-                    }
-
-                }
-                catch
-                {
-                }
-            }
-            return ((int)response.ResponseMessage.StatusCode, body);
-        }
-
-        [SslOnlyActionFilter]
-        async Task<TryLoginResult> ReadCustomerAuthTicket(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
-        {
-            var response = await loginFunc();
-            object body = null;
-            var requires2FA = false;
-            CustomerAuthTicket authTicket = null;
-            LightweightUserClaims userClaims = null;
-            if (response.ResponseMessage.IsSuccessStatusCode)
-            {
-                authTicket = response.ReadAsSync();
-
-                userClaims = LightweightUserClaims.Parse(authTicket.AccessToken);
-
-                if (userClaims.Bag.ContainsKey("requires2FA"))
-                    requires2FA = string.Equals(userClaims.Bag["requires2FA"], "true", StringComparison.OrdinalIgnoreCase);
-
-                var cust = authTicket.CustomerAccount;
-                body = authTicket;
-            }
-            else
-            {
-                body = await ReadClientErrorMsg(response);
-            }
-
-            return new TryLoginResult()
-            {
-                Status = (int)response.ResponseMessage.StatusCode,
-                Body = body,
-                Requires2FA = requires2FA,
-                AuthTicket = authTicket,
-                UserClaims = userClaims
-            };
-        }
-
-        private void ApplyLogin(CustomerAuthTicket authTicket, LightweightUserClaims userClaim, CustomerAccount cust)
-        {
-            var profile = new UserProfile()
-            {
-                EmailAddress = cust.EmailAddress,
-                FirstName = cust.FirstName,
-                LastName = cust.LastName,
-                UserId = cust.UserId,
-                UserName = cust.UserName,
-            };
-
-            _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
-            _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
-
-            _apiContext.SetUser(userClaim);
-
-            // iff the visit is already tracked, update the visit with the new user id
-            if (_pageContext.Visit.IsTracked)
-            {
-                _pageContext.Visit.UserId = userClaim.UserId;
-                _pageContext.Visit.IsUserTracked = true;
-                _visitPublisher.PublishVisit(_pageContext.Visit);
-            }
-        }
-
-        async Task<IActionResult> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
-        {
-            if (
-                HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
-                HasInvalidCharecters(accountInfo.Account?.LastName, "lastName", out ret) ||
-                HasInvalidCharecters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
-                HasInvalidCharecters(accountInfo.Account?.UserName, "userName", out ret) 
-                )
-            {
-                return ret;
-            }
-
-            // ISSUE: CustomerService received the wrong userId during signup instead of the new user's ID
-            // Use client without user claims to ensure the CustomerService gets anonymous context during signup
-            var (status, body) = (await LoginAndTrackForCreateAccount(() => _customerAccountWebApiClient.CloneWithoutUserClaims().AddAccountAndLogin(accountInfo)));
-            
-            return StatusCode(status, body);
-        }
-
-        bool HasInvalidCharecters(string str, string fieldName, out IActionResult resp)
-        {
-            resp = null;
-            str = (str ?? "").Trim();
-            if (str == HttpUtility.HtmlEncode(str)) return false;
-            var errorObj = _errorGenerator.ConvertExceptionToError(new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"), true);
-            resp = new BadRequestObjectResult(new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter()));
-            return true;
-        }
-
-        public class TryLoginResult
-        {
-            public int Status { get; set; }
-            public object Body { get; set; }
-            public bool Requires2FA { get; set; }
-            public CustomerAuthTicket AuthTicket { get; set; }
-            public LightweightUserClaims UserClaims { get; set; }
-        }
-
-        protected async Task<TryLoginResult> TryLogin(string email, string password,string token)
-        {
-            //add token header for arcjs integration.
-            var extraHeader = new System.Collections.Specialized.NameValueCollection {["racaptchaToken"] = token};
-
-            ExtractDetailsFromHeaders(out string fingerprint, out string region);
-
-            return await ReadCustomerAuthTicket(() => _authTicketWebApiClient
-            .CloneWithHeaders(extraHeader)
-            .CreateUserAuthTicket(new CustomerUserAuthInfo()
-            {
-                Username = email,
-                Password = password,
-                Fingerprint = fingerprint,
-                Region = region
-            }));
-        }
-            
+        
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
             var res = (await _customerAccountWebApiClient.ResetPassword(info));
@@ -406,13 +238,42 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [AcceptHeader("application/json", false)]
         public async Task<IActionResult> CreateAccount([FromBody]CustomerAccountAndAuthInfo authInfo)
         {
-            var res =  await DoCreateAccount(authInfo);
-            if (!(res is OkResult))
+            var res1 = ValidateCreateAccount(authInfo);
+            if (res1 != null)
             {
-                return  StatusCode(401, new { message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)) }); 
+                return StatusCode(401, new { message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)) }); 
             }
 
-            return res;
+            var res = await TrySignup(authInfo);
+
+            if (res.Status < 300)
+            {
+                ApplyLogin(res.AuthTicket, res.UserClaims, res.AuthTicket.CustomerAccount);
+
+                if (res.Requires2FA)
+                {
+                    FourHundredHandlerFilterAttribute.BypassErrorHandler(HttpContext);
+                    return StatusCode(401, new { message = "Two Factor Authentication is required.", res.Requires2FA });
+                }
+
+                return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(authInfo.Account?.EmailAddress)}.");
+            }
+
+            if (res.Body is JObject)
+            {
+                try
+                {
+                    var ex = ((JObject)res.Body).ToObject<ApiWebClientException>();
+                    _logger.LogError("Error creating account: {ErrorCode} - {Message}", ex.ErrorCode, ex.Message);
+                }
+                catch
+                {
+                    _logger.LogError("Error deserializing API response for CreateAccount: {Body}", res.Body);
+                }
+            }
+
+
+            return StatusCode(401, new { message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)) });
         }
 
         [AcceptVerbs("OPTIONS", "POST")]
@@ -425,7 +286,42 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Ok();
             }
 
-            return await DoCreateAccount(authInfo);
+            var res1 = ValidateCreateAccount(authInfo);
+            if(res1 != null)
+            {
+                return res1;
+            }
+
+            var res = await TrySignup(authInfo);
+
+            if (res.Status < 300)
+            {
+                ApplyLogin(res.AuthTicket, res.UserClaims, res.AuthTicket.CustomerAccount);
+
+                if (res.Requires2FA)
+                {
+                    FourHundredHandlerFilterAttribute.BypassErrorHandler(HttpContext);
+                    return StatusCode(401, new { message = "Two Factor Authentication is required.", res.Requires2FA });
+                }
+
+                return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(authInfo.Account?.EmailAddress)}.");
+            }
+
+            if (res.Body is JObject)
+            {
+                try
+                {
+                    var ex = ((JObject)res.Body).ToObject<ApiWebClientException>();
+                    _logger.LogError("Error creating account: {ErrorCode} - {Message}", ex.ErrorCode, ex.Message);
+                }
+                catch
+                {
+                    _logger.LogError("Error deserializing API response for CreateAccount: {Body}", res.Body);
+                }
+            }
+
+           
+            return StatusCode(401, new { message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account?.EmailAddress)) });
         }
 
         Task<CaptchResponse> ValidateToken( string token)
@@ -577,9 +473,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     var ex = ((JObject)res.Body).ToObject<ApiWebClientException>();
                     errorCode = ex.ErrorCode;
+                    _logger.LogError("Error logging in: {ErrorCode} - {Message}", errorCode, ex.Message);
                 }
                 catch
                 {
+                    _logger.LogError("Error deserializing API response for AjaxLogin: {Body}", res.Body);
                 }
             }
 
@@ -725,6 +623,129 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         #region 2FA And OTP Helper Methods and Models
+
+        [SslOnlyActionFilter]
+        async Task<TryLoginResult> ReadCustomerAuthTicket(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
+        {
+            var response = await loginFunc();
+            object body = null;
+            var requires2FA = false;
+            CustomerAuthTicket authTicket = null;
+            LightweightUserClaims userClaims = null;
+            if (response.ResponseMessage.IsSuccessStatusCode)
+            {
+                authTicket = response.ReadAsSync();
+
+                userClaims = LightweightUserClaims.Parse(authTicket.AccessToken);
+
+                if (userClaims.Bag.ContainsKey("requires2FA"))
+                    requires2FA = string.Equals(userClaims.Bag["requires2FA"], "true", StringComparison.OrdinalIgnoreCase);
+
+                body = authTicket;
+            }
+            else
+            {
+                body = await ReadClientErrorMsg(response);
+            }
+
+            return new TryLoginResult()
+            {
+                Status = (int)response.ResponseMessage.StatusCode,
+                Body = body,
+                Requires2FA = requires2FA,
+                AuthTicket = authTicket,
+                UserClaims = userClaims
+            };
+        }
+
+        private void ApplyLogin(CustomerAuthTicket authTicket, LightweightUserClaims userClaim, CustomerAccount cust)
+        {
+            var profile = new UserProfile()
+            {
+                EmailAddress = cust.EmailAddress,
+                FirstName = cust.FirstName,
+                LastName = cust.LastName,
+                UserId = cust.UserId,
+                UserName = cust.UserName,
+            };
+
+            _authenticationHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
+            _authenticationHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, authTicket.RefreshTokenExpiration);
+
+            _apiContext.SetUser(userClaim);
+
+            // iff the visit is already tracked, update the visit with the new user id
+            if (_pageContext.Visit.IsTracked)
+            {
+                _pageContext.Visit.UserId = userClaim.UserId;
+                _pageContext.Visit.IsUserTracked = true;
+                _visitPublisher.PublishVisit(_pageContext.Visit);
+            }
+        }
+
+        public class TryLoginResult
+        {
+            public int Status { get; set; }
+            public object Body { get; set; }
+            public bool Requires2FA { get; set; }
+            public CustomerAuthTicket AuthTicket { get; set; }
+            public LightweightUserClaims UserClaims { get; set; }
+        }
+
+        protected async Task<TryLoginResult> TryLogin(string email, string password, string token)
+        {
+            //add token header for arcjs integration.
+            var extraHeader = new System.Collections.Specialized.NameValueCollection { ["racaptchaToken"] = token };
+
+            ExtractDetailsFromHeaders(out string fingerprint, out string region);
+
+            return await ReadCustomerAuthTicket(() => _authTicketWebApiClient
+            .CloneWithHeaders(extraHeader)
+            .CreateUserAuthTicket(new CustomerUserAuthInfo()
+            {
+                Username = email,
+                Password = password,
+                Fingerprint = fingerprint,
+                Region = region
+            }));
+        }
+
+        protected async Task<TryLoginResult> TrySignup(CustomerAccountAndAuthInfo accountInfo)
+        {
+            ExtractDetailsFromHeaders(out string fingerprint, out string region);
+
+            accountInfo.Fingerprint = fingerprint;
+            accountInfo.Region = region;
+
+            return await ReadCustomerAuthTicket(() => _customerAccountWebApiClient
+            .CloneWithoutUserClaims()
+            .AddAccountAndLogin(accountInfo));
+        }
+
+        IActionResult ValidateCreateAccount(CustomerAccountAndAuthInfo accountInfo)
+        {
+            if (
+                HasInvalidCharacters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
+                HasInvalidCharacters(accountInfo.Account?.LastName, "lastName", out ret) ||
+                HasInvalidCharacters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
+                HasInvalidCharacters(accountInfo.Account?.UserName, "userName", out ret)
+                )
+            {
+                return ret;
+            }
+
+            return ret;
+        }
+
+        bool HasInvalidCharacters(string str, string fieldName, out IActionResult resp)
+        {
+            resp = null;
+            str = (str ?? "").Trim();
+            if (str == HttpUtility.HtmlEncode(str)) return false;
+            var errorObj = _errorGenerator.ConvertExceptionToError(new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"), true);
+            resp = new BadRequestObjectResult(new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter()));
+            return true;
+        }
 
         private static async Task<object> ReadClientErrorMsg<T>(ServiceClientResponse<T> response)
         {
