@@ -134,6 +134,26 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             this.setLoading(false);
             var messageClass = type === 'error' ? 'mz-validationmessage' : 'mz-validationmessage-success';
             
+            // During 2FA flow, target the message container in the 2FA UI section
+            if (this.is2FAInProgress) {
+                // First try to find a message container within the 2FA UI
+                var $twoFAMessageContainer = this.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                if ($twoFAMessageContainer.length > 0) {
+                    // Message container found in the 2FA UI, use it
+                    $twoFAMessageContainer.html("<span class='" + messageClass + "'>" + msg + '</span>');
+                    
+                    // Check if the message container is visible
+                    if (!$twoFAMessageContainer.is(':visible')) {
+                        // Make sure the containing row is visible
+                        $twoFAMessageContainer.closest('.mz-twofa-message-row').show();
+                    }
+                    
+                    return;
+                }
+            }
+            
+            // Default message container
             this.$parent.find('[data-mz-role="popover-message"]').html("<span class='" + messageClass + "'>" + msg + '</span>');
         },
         init: function (el) {
@@ -162,8 +182,9 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             var is2FAInProgress = this.is2FAInProgress || this.$parent.data('mz-is-2fa-in-progress');
             
             
-            // If 2FA is in progress, prevent login
-            if (is2FAInProgress || $twofaInput.length > 0 || $twofaElements.is(':visible')) {
+            // If 2FA is in progress, prevent form submission
+            // Only block if 2FA elements are visible (active), not just present in DOM
+            if (is2FAInProgress || ($twofaInput.length > 0 && $twofaElements.is(':visible'))) {
                 return false;
             }
             
@@ -388,11 +409,15 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
             api.action('customer', 'loginStorefront', data).then(
                 this.handleLoginComplete.bind(this, returnUrl), 
                 function(error) {
-
                     // Check if this is a 401 error requiring 2FA
-                    if (error && error.message && 
-                        error.message.toLowerCase().includes('two factor authentication is required')) {
-                        
+                    // Handle both message text and requires2FA flag
+                    var requiresTwoFA = false;
+                    
+                    if (error && error.requires2FA === true) {
+                        requiresTwoFA = true;
+                    } 
+
+                    if (requiresTwoFA) {
                         // Start 2FA challenge for this specific error
                         self.start2FAChallenge();
                     } else {
@@ -786,10 +811,9 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
 
     var SignupPopover = function() {
         DismissablePopover.apply(this, arguments);
-        this.signup = _.debounce(this.signup, 150);
     };
     SignupPopover.prototype = new DismissablePopover();    $.extend(SignupPopover.prototype, LoginPopover.prototype, {
-        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'start2FAChallenge'],
+        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow', 'login', 'startSignup2FAChallenge', 'showSignup2FAChallenge', 'cancelSignup2FAChallenge', 'bindSignup2FAHandlers', 'storeSignupData', 'sendSignup2FACode', 'verifySignup2FACode', 'completeSignupWith2FA', 'resendSignup2FACode'],
         template: Hypr.getTemplate('modules/common/signup-popover').render(),
         bindListeners: function (on) {
             var onOrOff = on ? "on" : "off";
@@ -849,10 +873,414 @@ function ($, api, Hypr, Backbone, _, HyprLiveContext) {
                     else {
                         window.location.reload();
                     }
-                }, self.displayApiMessage);
+                }, function(error) {
+                    // Check if this is a 2FA required error (same as login flow)
+                    var requiresTwoFA = false;
+                    
+                    if (error && error.requires2FA === true) {
+                        requiresTwoFA = true;
+                    } else if (error && error.message) {
+                        var errorMsg = error.message.toLowerCase();
+                        if (errorMsg.includes('two factor authentication is required') || 
+                            errorMsg.includes('two factor authentication') || 
+                            errorMsg.includes('2fa')) {
+                            requiresTwoFA = true;
+                        }
+                    }
+                    
+                    if (requiresTwoFA) {
+                        // Store signup data and start 2FA challenge
+                        self.storeSignupData(payload);
+                        self.startSignup2FAChallenge();
+                    } else {
+                        // Handle all other errors normally
+                        self.displayApiMessage(error);
+                    }
+                });
             }
+        },
+        storeSignupData: function(payload) {
+            // Store the signup payload for completion after 2FA
+            this.$parent.data('signupPayload', payload);
+            
+            // Extract email for 2FA process (reuse existing 2FA email storage)
+            var email = payload.account.emailAddress;
+            this.$parent.data('twoFA-email', email);
+        },
+        handleLoginComplete: function (returnUrl) {
+            // For signup, we just reload the page after successful 2FA
+            // (Override the parent method which handles login redirects)
+            if (returnUrl) {
+                window.location.pathname = returnUrl;
+            }
+            else {
+                window.location.reload();
+            }
+        },
+        startSignup2FAChallenge: function() {
+            // Only allow 2FA on signup forms
+            if (this.$parent.hasClass('mz-anonymousorder-form')) {
+                return; // Skip 2FA for order status forms
+            }
+            
+            this.clearMessages();
+            var email = this.$parent.data('twoFA-email');
+            
+            if (!email) {
+                this.displayMessage('Please complete the signup form first.');
+                return;
+            }
+            
+            // Show 2FA challenge with email
+            this.showSignup2FAChallenge(email);
+            
+            // Set flag to indicate 2FA is in progress
+            this.is2FAInProgress = true;
+        },
+        showSignup2FAChallenge: function(email) {
+            var self = this;
+            
+            // Only allow 2FA on signup forms
+            if (this.$parent.hasClass('mz-anonymousorder-form')) {
+                return; // Skip 2FA for order status forms
+            }
+            
+            // Set 2FA flag and prevent form submission
+            this.is2FAInProgress = true;
+            this.$parent.on('submit.twofa', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Hide all signup form fields
+            var $firstNameRow = this.$parent.find('input[data-mz-signup-firstname]').closest('.mz-l-formfieldgroup-row');
+            var $lastNameRow = this.$parent.find('input[data-mz-signup-lastname]').closest('.mz-l-formfieldgroup-row');
+            var $emailRow = this.$parent.find('input[data-mz-signup-emailaddress]').closest('.mz-l-formfieldgroup-row');
+            var $passwordRow = this.$parent.find('input[data-mz-signup-password]').closest('.mz-l-formfieldgroup-row');
+            var $confirmPasswordRow = this.$parent.find('input[data-mz-signup-confirmpassword]').closest('.mz-l-formfieldgroup-row');
+            var $gdprRow = this.$parent.find('input[data-mz-signup-agreeToGDPR]').closest('.mz-l-formfieldgroup-row');
+            var $signupButtonRow = this.$parent.find('[data-mz-action="signup"], [data-mz-action="signuppage-submit"]').closest('.mz-l-formfieldgroup-row');
+            
+            // Hide signup form elements
+            $firstNameRow.hide();
+            $lastNameRow.hide();
+            $emailRow.hide();
+            $passwordRow.hide();
+            $confirmPasswordRow.hide();
+            $gdprRow.hide();
+            $signupButtonRow.hide();
+
+            // Hide the default message container
+            this.$parent.find('.mz-l-formfieldgroup-row:last').hide();
+
+            // Check if 2FA message container exists
+            var $messageRow = this.$parent.find('.mz-twofa-message-row');
+            
+            // If message container doesn't exist, create it dynamically
+            if ($messageRow.length === 0) {
+                var messageHtml = '<div class="mz-l-formfieldgroup-row mz-twofa-message-row">' +
+                                  '<div class="mz-l-formfieldgroup-cell"></div>' +
+                                  '<div class="mz-l-formfieldgroup-cell">' +
+                                  '<section data-mz-role="popover-message" class="mz-popover-message"></section>' +
+                                  '</div>' +
+                                  '</div>';
+                
+                // Insert after input row
+                this.$parent.find('.mz-twofa-input-row').after(messageHtml);
+            }
+
+            // Make sure message row is visible
+            this.$parent.find('.mz-twofa-message-row').show();
+            
+            // Show 2FA challenge UI elements
+            this.$parent.find('.mz-twofa-title-row, .mz-twofa-input-row, .mz-twofa-buttons-row, .mz-twofa-back-row').show();
+            
+            // Set 2FA flag (ensure this is set before sending the code)
+            this.is2FAInProgress = true;
+            
+            // Focus on the 2FA input
+            this.$parent.find('[data-mz-twofa-code]').focus();
+            
+            // Send 2FA code
+            this.sendSignup2FACode(email);
+            
+            // Bind event handlers for 2FA
+            this.bindSignup2FAHandlers();
+        },
+        cancelSignup2FAChallenge: function() {
+            this.is2FAInProgress = false;
+            
+            // Remove form submission prevention
+            this.$parent.off('submit.twofa');
+            
+            // Hide 2FA UI elements
+            this.$parent.find('.mz-twofa-title-row, .mz-twofa-input-row, .mz-twofa-buttons-row, .mz-twofa-back-row, .mz-twofa-message-row').hide();
+            
+            // Show all signup form elements
+            var $firstNameRow = this.$parent.find('input[data-mz-signup-firstname]').closest('.mz-l-formfieldgroup-row');
+            var $lastNameRow = this.$parent.find('input[data-mz-signup-lastname]').closest('.mz-l-formfieldgroup-row');
+            var $emailRow = this.$parent.find('input[data-mz-signup-emailaddress]').closest('.mz-l-formfieldgroup-row');
+            var $passwordRow = this.$parent.find('input[data-mz-signup-password]').closest('.mz-l-formfieldgroup-row');
+            var $confirmPasswordRow = this.$parent.find('input[data-mz-signup-confirmpassword]').closest('.mz-l-formfieldgroup-row');
+            var $gdprRow = this.$parent.find('input[data-mz-signup-agreeToGDPR]').closest('.mz-l-formfieldgroup-row');
+            var $signupButtonRow = this.$parent.find('[data-mz-action="signup"], [data-mz-action="signuppage-submit"]').closest('.mz-l-formfieldgroup-row');
+            
+            $firstNameRow.show();
+            $lastNameRow.show();
+            $emailRow.show();
+            $passwordRow.show();
+            $confirmPasswordRow.show();
+            $gdprRow.show();
+            $signupButtonRow.show();
+            
+            // Clear any 2FA data
+            this.$parent.removeData('twoFA-email twoFA-sessionId verified2FACode signupPayload');
+            
+            // Show the default message container
+            this.$parent.find('.mz-l-formfieldgroup-row:last').show();
+            
+            // Clear any messages
+            this.clearMessages();
+        },
+        bindSignup2FAHandlers: function() {
+            var self = this;
+            
+            // Remove any existing handlers to prevent duplicates
+            this.$parent.off('click', '[data-mz-action="verify-twofa"]');
+            this.$parent.off('click', '[data-mz-action="resend-twofa-code"]');
+            this.$parent.off('click', '[data-mz-action="backto-signup"]');
+            this.$parent.off('input', '[data-mz-twofa-code]');
+            
+            // Verify code button
+            this.$parent.on('click', '[data-mz-action="verify-twofa"]', function(e) {
+                e.preventDefault();
+                var code = self.$parent.find('[data-mz-twofa-code]').val();
+                self.verifySignup2FACode(code);
+            });
+            
+            // Resend code
+            this.$parent.on('click', '[data-mz-action="resend-twofa-code"]', function(e) {
+                e.preventDefault();
+                var email = self.$parent.data('twoFA-email');
+                self.resendSignup2FACode(email);
+            });
+            
+            // Back to signup
+            this.$parent.on('click', '[data-mz-action="backto-signup"]', function(e) {
+                e.preventDefault();
+                self.cancelSignup2FAChallenge();
+            });
+            
+            // Auto-verify when 6 digits are entered
+            this.$parent.on('input', '[data-mz-twofa-code]', function() {
+                var codeValue = $(this).val();
+                if (codeValue.length === 6) {
+                    self.verifySignup2FACode(codeValue);
+                }
+            });
+        },
+        sendSignup2FACode: function(email) {
+            var self = this;
+            
+            // Generate 2FA OTP using API
+            api.action('customer', 'generateAndSend2faOtp', {
+                email: email
+            }).then(function(response) {
+                // Store session data
+                self.$parent.data('twoFA-email', email);
+                self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
+                
+                // Get the message container within the 2FA UI
+                var $messageContainer = self.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                // Show success message
+                if ($messageContainer.length > 0) {
+                    var successClass = 'mz-validationmessage-success';
+                    $messageContainer.html("<span class='" + successClass + "'>" + Hypr.getLabel('twoFACodeSent', email) + '</span>');
+                } else {
+                    // Fallback to normal display message
+                    self.displayMessage(Hypr.getLabel('twoFACodeSent', email), 'success');
+                }
+                
+            })["catch"](function(error) {
+                // Get the message container within the 2FA UI
+                var $messageContainer = self.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                // Show error message
+                if ($messageContainer.length > 0) {
+                    var errorClass = 'mz-validationmessage';
+                    $messageContainer.html("<span class='" + errorClass + "'>" + error.message + '</span>');
+                } else {
+                    // Fallback to normal display message
+                    self.displayMessage(error.message, 'error');
+                }
+            });
+        },
+        verifySignup2FACode: function(enteredCode) {
+            var email = this.$parent.data('twoFA-email');
+            var sessionId = this.$parent.data('twoFA-sessionId');
+            
+            // Show loading state
+            var $input = this.$parent.find('[data-mz-twofa-code]');
+            $input.prop('disabled', true);
+
+            var returnUrl = "";
+            var returnUrlParam = getQueryParam('returnUrl');
+            if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
+              returnUrl = returnUrlParam;
+            } else {
+              returnUrl = this.$parent.find('input[name=returnUrl]').val();
+            }
+
+            var self = this;
+            
+            // Validate 2FA using API
+            api.action('customer', 'validate2faAndCreateAuthTicket', {
+                OtpCode: enteredCode            
+            }).then(function(response) {
+                // Get the message container within the 2FA UI
+                var $messageContainer = self.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                // Show success message
+                if ($messageContainer.length > 0) {
+                    var successClass = 'mz-validationmessage-success';
+                    $messageContainer.html("<span class='" + successClass + "'>" + Hypr.getLabel('twoFACodeVerified') + '</span>');
+                } else {
+                    // Fallback to normal display message
+                    self.displayMessage(Hypr.getLabel('twoFACodeVerified'), 'success');
+                }
+                
+                // Clear 2FA flag and remove form submission prevention
+                self.is2FAInProgress = false;
+                self.$parent.off('submit.twofa');
+                
+                // Skip completeSignupWith2FA since API already handles account creation
+                // Go directly to post-registration navigation
+                 self.handleLoginComplete.bind(self, returnUrl)();
+                
+            })["catch"](function(error) {
+                // Handle error
+                $input.prop('disabled', false);
+                
+                var errorMessage = "";
+                var shouldReset2FA = false;
+                
+                // Check for specific error conditions based on API response
+                if (error && error.result && error.result.message) {
+                    var apiMessage = error.result.message;
+                    
+                    if (apiMessage.toLowerCase().includes('invalid otp')) {
+                        errorMessage = Hypr.getLabel('twoFACodeIncorrect');
+                    } else if (apiMessage.toLowerCase().includes('retry count exceeded')) {
+                        errorMessage = Hypr.getLabel('twoFARetryExceeded');
+                        shouldReset2FA = true;
+                    } else if (apiMessage.toLowerCase().includes('generate a new otp.')) {
+                        errorMessage = Hypr.getLabel('twoFAExpired');
+                        shouldReset2FA = true;
+                    } else {
+                        errorMessage = apiMessage;
+                    }
+                } 
+                
+                self.displayMessage(errorMessage, 'error');
+                
+                if (shouldReset2FA) {
+                    // Simply update the resend button text to "Request New Code"
+                    var $resendLink = self.$parent.find('[data-mz-action="resend-twofa-code"]');
+                    if ($resendLink.length > 0) {
+                        $resendLink.text(Hypr.getLabel('requestNewCode'));
+                    }
+                    
+                    // Clear the input field and focus
+                    self.$parent.find('[data-mz-twofa-code]').val('').focus();
+                } else {
+                    // Clear the input field and allow retry
+                    self.$parent.find('[data-mz-twofa-code]').val('').focus();
+                }
+            });
+        },
+        completeSignupWith2FA: function() {
+            var self = this;
+            var signupPayload = this.$parent.data('signupPayload');
+            
+            // Add 2FA code to signup payload and proceed directly to API call
+            var twoFACode = this.$parent.find('[data-mz-twofa-code]').val();
+            if (twoFACode) {
+                signupPayload.twoFactorCode = twoFACode;
+            }
+            
+            this.setLoading(true);
+            
+            return api.action('customer', 'createStorefront', signupPayload).then(function () {
+                if (self.redirectTemplate) {
+                    window.location.pathname = self.redirectTemplate;
+                }
+                else {
+                    window.location.reload();
+                }
+            }, function(error) {
+                self.setLoading(false);
+                self.displayApiMessage(error);
+            });
+        },
+        resendSignup2FACode: function(email) {
+            var self = this;
+            var $resendLink = this.$parent.find('[data-mz-action="resend-twofa-code"]');
+            
+            $resendLink.text(Hypr.getLabel('sending')).addClass('is-loading');
+            
+            // Generate new 2FA OTP using API
+            api.action('customer', 'generateAndSend2faOtp', {
+                email: email
+            }).then(function(response) {
+                // Update session data
+                self.$parent.data('twoFA-sessionId', response.sessionId || '2fa-session');
+                
+                // Get the message container within the 2FA UI
+                var $messageContainer = self.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                // Show success message
+                if ($messageContainer.length > 0) {
+                    var successClass = 'mz-validationmessage-success';
+                    $messageContainer.html("<span class='" + successClass + "'>" + Hypr.getLabel('twoFACodeSent', email) + '</span>');
+                } else {
+                    // Fallback to normal display message
+                    self.displayMessage(Hypr.getLabel('twoFACodeSent', email), 'success');
+                }
+                
+                $resendLink.text(Hypr.getLabel('resendCode')).removeClass('is-loading');
+                
+                // Clear the input field
+                self.$parent.find('[data-mz-twofa-code]').val('').focus();
+                
+            })["catch"](function(error) {
+                // Handle error
+                var errorMessage = Hypr.getLabel('twoFASendFailed');
+                
+                // Check for specific error conditions
+                if (error && error.message) {
+                    if (error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('too many')) {
+                        errorMessage = Hypr.getLabel('twoFARateLimited');
+                    }
+                }
+                
+                // Get the message container within the 2FA UI
+                var $messageContainer = self.$parent.find('.mz-twofa-message-row .mz-popover-message');
+                
+                // Show error message
+                if ($messageContainer.length > 0) {
+                    var errorClass = 'mz-validationmessage';
+                    $messageContainer.html("<span class='" + errorClass + "'>" + errorMessage + '</span>');
+                } else {
+                    // Fallback to normal display message
+                    self.displayMessage(errorMessage, 'error');
+                }
+                
+                $resendLink.text(Hypr.getLabel('resendCode')).removeClass('is-loading');
+            });
         }
     });
+    SignupPopover.prototype.signup = _.debounce(SignupPopover.prototype.signup, 150);
 
     $(document).ready(function() {
         $docBody = $(document.body);
