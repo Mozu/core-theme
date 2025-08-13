@@ -637,16 +637,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     return null;
                 }
-
-                var mozuDocument = (DC.Document)cmdContent;
-                var mozuDocument = cmdContent as DC.Document;
-                var subjectFromVrModel = mozuDocument != null && mozuDocument.Properties != null && mozuDocument.Properties.ContainsKey("subject")
-                    ? (string)mozuDocument.Properties["subject"]
-                    : "";
-
+                
+                // Try to extract the subject from the document properties if available; fallback to an empty string if not found.
+                var subjectFromVrModel = cmdContent is DC.Document { Properties: not null } mozuDocument && mozuDocument.Properties.TryGetValue("subject", out var property)
+                        ? (string)property
+                        : "";
+                
                 return Ok(new EmailResponse
                 {
-                    Subject = !string.IsNullOrWhiteSpace(subjectFromVrModel) ? subjectFromVrModel : emailTemplate.Title ?? notification.Topic,
+                    Subject = subjectFromVrModel.NotIsNullOrEmpty() ? subjectFromVrModel : emailTemplate.Title ?? notification.Topic,
                     Body = renderedTemplate
                 });
             }
