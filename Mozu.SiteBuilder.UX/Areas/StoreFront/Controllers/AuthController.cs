@@ -718,7 +718,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             accountInfo.Region = region;
 
             return await ReadCustomerAuthTicket(() => _customerAccountWebApiClient
-            .CloneWithoutUserClaims()
             .AddAccountAndLogin(accountInfo));
         }
 
