@@ -255,8 +255,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     FourHundredHandlerFilterAttribute.BypassErrorHandler(HttpContext);
                     return StatusCode(401, new { message = "Two Factor Authentication is required.", res.Requires2FA });
                 }
-
-                return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(authInfo.Account?.EmailAddress)}.");
+                // supporting non 2fa flow
+                return StatusCode(res.Status, res.Body);
             }
 
             if (res.Body is JObject)
@@ -304,7 +304,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     return StatusCode(401, new { message = "Two Factor Authentication is required.", res.Requires2FA });
                 }
 
-                return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(authInfo.Account?.EmailAddress)}.");
+                // supporting non 2fa flow
+                return StatusCode(res.Status, res.Body);
             }
 
             if (res.Body is JObject)
