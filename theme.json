@@ -427,7 +427,7 @@
     {
       "id": "shipment.priceincreased",
       "properties": {},
-      "template": "email/price-increased.hypr",
+      "template": "email/price-increased",
       "title": "Payment Required Due To Substitution"
     },
     {
@@ -445,6 +445,18 @@
       "properties": {},
       "template": "email/otp-login",
       "title": "OTP for Login"
+    },
+     {
+      "id": "shipment.deliverydateupdated",
+      "properties": {},
+      "template": "email/expected-delivery-date-update",
+      "title": "Expected Delivery Date Updated"
+    },
+    {
+      "id": "shipment.readyfordelivery",
+      "properties": {},
+      "template": "email/items-ready-for-delivery",
+      "title": "Items Ready For Delivery"
     }
   ],
   "backOfficeTemplates": [
@@ -570,18 +582,6 @@
       "template": "back-office/quote-summary",
       "title": "Quote Summary",
       "userCreatable": false
-    },
-    {
-      "id": "shipment.deliverydateupdated",
-      "properties": {},
-      "template": "email/expected-delivery-date-update.hypr",
-      "title": "Expected Delivery Date Updated"
-    },
-    {
-      "id": "shipment.readyfordelivery",
-      "properties": {},
-      "template": "email/items-ready-for-delivery.hypr",
-      "title": "Items Ready For Delivery"
     },
     {
       "id": "gift-receipt",
