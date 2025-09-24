@@ -971,11 +971,14 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         #region CreateAccount Method Tests
 
         [Test]
-        public async Task CreateAccount_WithFailedResponse_ShouldReturnUnauthorizedWithErrorMessage()
+        public async Task CreateAccount_WithExistingEmailAddress_ShouldReturnBadRequestWithDuplicateEmailError()
         {
             // Arrange
             var accountInfo = CreateValidCustomerAccountAndAuthInfo();
-            var failedResponse = CreateFailedAuthResponse(HttpStatusCode.BadRequest);
+            var failedResponse = CreateFailedAuthResponse(
+                HttpStatusCode.BadRequest, 
+                "MISSING_OR_INVALID_PARAMETER", 
+                "Missing or invalid parameter: EmailAddress EmailAddress already associated with a login");
 
             _customerClient.AddAccountAndLogin(Arg.Any<CustomerAccountAndAuthInfo>())
                 .Returns(Task.FromResult(failedResponse));
@@ -986,18 +989,29 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             // Assert
             Assert.That(result, Is.InstanceOf<ObjectResult>());
             var objectResult = (ObjectResult)result;
-            Assert.That(objectResult.StatusCode, Is.EqualTo(401));
+            Assert.That(objectResult.StatusCode, Is.EqualTo(400), "Should return BadRequest status code for duplicate email");
 
-            // The CreateAccount method returns a specific message format when not OkResult
-            var responseType = objectResult.Value.GetType();
-            var messageProperty = responseType.GetProperty("message");
-            Assert.That(messageProperty, Is.Not.Null, "Response should have 'message' property");
+            // The CreateAccount method returns the parsed error response from ReadClientErrorMsg
+            // which is a JObject containing the API error response
+            Assert.That(objectResult.Value, Is.InstanceOf<JObject>(), "Response should be a JObject");
+            var jsonResponse = (JObject)objectResult.Value;
+            
+            Assert.That(jsonResponse["ErrorCode"], Is.Not.Null, "Response should have 'ErrorCode' property");
+            Assert.That(jsonResponse["Message"], Is.Not.Null, "Response should have 'Message' property");
 
-            var messageValue = messageProperty.GetValue(objectResult.Value)?.ToString();
-            Assert.AreEqual(messageValue, $"Login as {HttpUtility.HtmlEncode(accountInfo.Account.EmailAddress)} failed. Please try again.");
+            var errorCodeValue = jsonResponse["ErrorCode"]?.ToString();
+            var messageValue = jsonResponse["Message"]?.ToString();
+            
+            Assert.That(errorCodeValue, Is.EqualTo("MISSING_OR_INVALID_PARAMETER"), 
+                "ErrorCode should indicate invalid parameter for duplicate email");
+            Assert.That(messageValue, Is.EqualTo("Missing or invalid parameter: EmailAddress EmailAddress already associated with a login"), 
+                "Message should indicate email address is already in use");
+            Assert.That(messageValue, Does.Contain("already associated"), 
+                "Error message should clearly indicate the email is already in use");
 
-            // Verify AddAccountAndLogin was NOT called
-            await _customerClient.Received().AddAccountAndLogin(Arg.Any<CustomerAccountAndAuthInfo>());
+            // Verify AddAccountAndLogin was called (API call made but failed due to duplicate email)
+            await _customerClient.Received(1).AddAccountAndLogin(Arg.Is<CustomerAccountAndAuthInfo>(
+                info => info.Account.EmailAddress == accountInfo.Account.EmailAddress));
         }
 
         #endregion
@@ -1063,6 +1077,59 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             _authHelper.Received(1).SaveStoreFrontAccessToken(Arg.Any<string>(), Arg.Any<string>());
             _authHelper.Received(1).SaveStoreFrontRefreshToken(Arg.Any<string>(), Arg.Any<DateTime?>());
             _apiContext.Received(1).SetUser(Arg.Any<LightweightUserClaims>());
+        }
+
+        [Test]
+        public async Task AjaxCreateAccount_WithExistingEmailAddress_ShouldReturnBadRequestWithDuplicateEmailError()
+        {
+            // Arrange
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Method = HttpMethod.Post.Method;
+            _authController.ControllerContext = new ControllerContext { HttpContext = httpContext };
+
+            var accountInfo = CreateValidCustomerAccountAndAuthInfo();
+            var failedResponse = CreateFailedAuthResponse(
+                HttpStatusCode.BadRequest, 
+                "MISSING_OR_INVALID_PARAMETER", 
+                "Missing or invalid parameter: EmailAddress EmailAddress already associated with a login");
+
+            _customerClient.AddAccountAndLogin(Arg.Any<CustomerAccountAndAuthInfo>())
+                .Returns(Task.FromResult(failedResponse));
+
+            // Act
+            var result = await _authController.AjaxCreateAccount(accountInfo);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            var objectResult = result as ObjectResult;
+            Assert.That(objectResult.StatusCode, Is.EqualTo(400), "Should return BadRequest status code for duplicate email");
+
+            // The AjaxCreateAccount method returns the parsed error response from ReadClientErrorMsg
+            // which is a JObject containing the API error response
+            Assert.That(objectResult.Value, Is.InstanceOf<JObject>(), "Response should be a JObject");
+            var jsonResponse = (JObject)objectResult.Value;
+            
+            Assert.That(jsonResponse["ErrorCode"], Is.Not.Null, "Response should have 'ErrorCode' property");
+            Assert.That(jsonResponse["Message"], Is.Not.Null, "Response should have 'Message' property");
+
+            var errorCodeValue = jsonResponse["ErrorCode"]?.ToString();
+            var messageValue = jsonResponse["Message"]?.ToString();
+            
+            Assert.That(errorCodeValue, Is.EqualTo("MISSING_OR_INVALID_PARAMETER"), 
+                "ErrorCode should indicate invalid parameter for duplicate email");
+            Assert.That(messageValue, Is.EqualTo("Missing or invalid parameter: EmailAddress EmailAddress already associated with a login"), 
+                "Message should indicate email address is already in use");
+            Assert.That(messageValue, Does.Contain("already associated"), 
+                "Error message should clearly indicate the email is already in use");
+
+            // Verify AddAccountAndLogin was called (API call made but failed due to duplicate email)
+            await _customerClient.Received(1).AddAccountAndLogin(Arg.Is<CustomerAccountAndAuthInfo>(
+                info => info.Account.EmailAddress == accountInfo.Account.EmailAddress));
+
+            // Verify authentication helpers were NOT called since signup failed
+            _authHelper.DidNotReceive().SaveStoreFrontAccessToken(Arg.Any<string>(), Arg.Any<string>());
+            _authHelper.DidNotReceive().SaveStoreFrontRefreshToken(Arg.Any<string>(), Arg.Any<DateTime?>());
+            _apiContext.DidNotReceive().SetUser(Arg.Any<LightweightUserClaims>());
         }
 
         #endregion
