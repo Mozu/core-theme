@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         public const string NotFoundAfterAction = "http.storefront.pages.404.request.after";
         public const string QuoteCheckoutBeforeAction = "http.storefront.pages.quotecheckout.request.before";
         public const string QuoteCheckoutAfterAction = "http.storefront.pages.quotecheckout.request.after";
-
+        public const string EmailRenderBeforeAction = "embedded.commerce.email.render.before";
     }
  
     [RefreshStoreFrontUserAuthTicketFilter]

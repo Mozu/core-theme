@@ -17,7 +17,7 @@
         "mozu__appsettings__environment": "perf",
         "mozu__appsettings__ScaleUnitId": "tp1",
         "spring__cloud__config__label": "environment(_)perf",
-        "mozu__appsettings__rabbit_default_host" : "linuxdb.dev10.dev.kibocommerce.com"
+        "mozu__appsettings__rabbit_default_host": "linuxdb.dev10.dev.kibocommerce.com"
 
       },
       "applicationUrl": "http://localhost:57521/"
@@ -29,6 +29,19 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "http_proxy_2": "http://localhost:8866",
         "mozu__appsettings__environment": "gdev05",
+        "mozu__appsettings__scaleunint": "sb",
+        "spring__cloud__config__label": "environment(_)gdev",
+        "spring__cloud__config__uri": "http://shared.kube-int-dev.gcp-kibo-dev.int/kibo.config/"
+      },
+      "applicationUrl": "http://localhost:57521/"
+    },
+    "gdev08-sb": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "http_proxy_2": "http://localhost:8866",
+        "mozu__appsettings__environment": "gdev08",
         "mozu__appsettings__scaleunint": "sb",
         "spring__cloud__config__label": "environment(_)gdev",
         "spring__cloud__config__uri": "http://shared.kube-int-dev.gcp-kibo-dev.int/kibo.config/"
@@ -76,7 +89,7 @@
         "mozu__appsettings__environment": "qa",
         "mozu__appsettings__scaleunint": "sb",
         "Mozu__domains__tp": "http://2.services.sb.ng-qa.dev.kibocommerce.com"
-        
+
       },
       "applicationUrl": "http://localhost:57521/"
     }

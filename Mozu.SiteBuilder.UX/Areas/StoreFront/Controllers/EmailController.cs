@@ -1,23 +1,18 @@
-﻿using Mozu.CommerceRuntime.Contracts.Checkouts;
-using Mozu.CommerceRuntime.Contracts.Clients;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Kibo.Fulfillment.Contracts.Api;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
+using Mozu.CommerceRuntime.Contracts.Checkouts;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.CommerceRuntime.Contracts.Returns;
-using Mozu.Content.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Subscriptions;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Configuration;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Expressions;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
@@ -25,13 +20,17 @@ using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Mozu.SiteBuilder.Mvc.ArcJsExtensions;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.SiteSettings.Order.Contracts.Clients;
@@ -39,22 +38,20 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.Content.Contracts;
-using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.Core.Expressions;
-using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Mozu.Core.Configuration;
-using Kibo.Fulfillment.Contracts.Api;
 using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
-using System.Globalization;
-using System.Net.Http.Formatting;
-using System.Web.Http;
-using Mozu.CommerceRuntime.Contracts.Subscriptions;
-using Mozu.Core.Exceptions;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using AutoMapper;
 using ViewResult = Mozu.SiteBuilder.Mvc.ActionResults.ViewResult;
+using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -151,6 +148,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IShipmentControllerApiClient _shipmentControllerApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly IB2BAccountWebApiClient _b2bAccountWebApiClient;
+        private readonly IEmailExtensionContextBuilder _emailExtensionContextBuilder;
 
         static EmailController()
         {
@@ -458,7 +456,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (Subscription),
                                                Topic = Topics.SubscriptionOrderReminder
                                            },
-                                                    new EmailTypeInfo                                           
+                                                    new EmailTypeInfo
                                            {
                                                ModelType = typeof (Subscription),
                                                Topic = Topics.SubscriptionReactivationReminder
@@ -490,7 +488,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Lazy<UrlHelper> urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
             Lazy<IExpressionEvaluator<CmsPageRuleContext>> pageRuleEvaluator,
-            IB2BAccountWebApiClient b2bAccountWebApiClient
+            IB2BAccountWebApiClient b2bAccountWebApiClient,
+            IEmailExtensionContextBuilder emailExtensionContextBuilder
             ) //why does this extend CMSPageController??  Ugh...
             : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
@@ -504,6 +503,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _b2bAccountWebApiClient = b2bAccountWebApiClient.CloneWithoutUserClaims();
+            _emailExtensionContextBuilder = emailExtensionContextBuilder;
         }
 
         //
@@ -587,7 +587,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Render([FromBody]EmailNotification notification)
+        public async Task<IActionResult> Render([FromBody] EmailNotification notification)
         {
             User user = null;
             var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
@@ -599,10 +599,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Warn(warnMessage);
                 return StatusCode((int)HttpStatusCode.Gone, warnMessage);
             }
-            
-            Tenant.Contracts.Tenant tenant =  null; 
+
             try
             {
+                Tenant.Contracts.Tenant tenant = null;
+                object cmdContent = null;
+                var renderedTemplate = string.Empty;
+
                 if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
                 {
                     user = await TryGetUser(notification);
@@ -611,43 +614,120 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
                 var site = tenant.Sites.FirstOrDefault(x => x.Id == SbApiContext.SiteId);
-                var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
-                if (PageContext != null)
-                {
-                    PageContext.PageType = "email";
-                }
-                object cmdContent = null;
 
-                if (res is OkObjectResult { Value: ViewResult vr })
+                // Convert the payload to the model before using it
+                var model = await Convert(notification.Payload, emailTypeInfo);
+
+                //get shopper order attributes for order related emails
+                var shopperOrderAttributes = await GetShopperOrderAttributes();
+
+                //get rmaLocation
+                Location.Contracts.Location storeLocation = null;
+                if (model is ReturnEmail returnEmail)
+                    storeLocation = returnEmail.StoreLocation;
+                else if (model is ShipmentEmail shipmentEmail)
+                    storeLocation = shipmentEmail.StoreLocation;
+
+                storeLocation = storeLocation == null ? await GetDefaultReturnLocation() : storeLocation;
+
+                // Build email context
+                var emailContext = _emailExtensionContextBuilder.BuildContext(notification, model, user, site, SiteContext, shopperOrderAttributes, storeLocation, emailTemplate.Title);
+
+                // Execute API Extension
+                emailContext = await _emailExtensionContextBuilder.ExecuteEmailRenderExtension(emailContext, ActionFilterConstants.EmailRenderBeforeAction);
+
+                // Handle template change
+                if (emailContext.TemplateChanged)
                 {
-                    ViewData["content"] = vr.ViewData.Model;
-                    cmdContent = vr.ViewData.Model;
+                    emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(emailContext.CurrentTemplate));
+                    if (emailTemplate == null)
+                    {
+                        _logger.Warn($"Template '{emailContext.CurrentTemplate}' specified by extension not found, using original");
+                        emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));
+                    }
+                    else
+                    {
+                        // Re-fetch CMS content for new template
+                        var newRes = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
+                        if (newRes is OkObjectResult newObjRes && newObjRes.Value is ViewResult newVr)
+                        {
+                            ViewData["content"] = newVr.ViewData.Model;
+                            cmdContent = newVr.ViewData.Model;
+                        }
+                    }
+                }
+
+                // Check suppression
+                if (emailContext.IsSuppressed)
+                {
+                    return Ok(new EmailResponse
+                    {
+                        Subject = emailContext.Subject ?? emailTemplate.Title ?? notification.Topic,
+                        Body = string.Empty,
+                        SuppressedSend = true,
+                        TemplateUsed = emailContext.CurrentTemplate
+                    });
+                }
+
+                //fetch the pages only when template is not changed by extension, if the template is changed by extension, the content is already fetched above
+                if (!emailContext.TemplateChanged)
+                {
+                    var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
+                    if (PageContext != null)
+                    {
+                        PageContext.PageType = "email";
+                    }
+
+                    if (res is OkObjectResult { Value: ViewResult vr })
+                    {
+                        ViewData["content"] = vr.ViewData.Model;
+                        cmdContent = vr.ViewData.Model;
+                    }
                 }
                 
                 _logger.Debug($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
                 ViewData["smsEnabled"] = IsSmsEnabled(tenant);
                 ViewData["adminDomainName"] = tenant.Domain.DomainName;
-                var model = await Convert(notification.Payload, emailTypeInfo);
-                
-                _logger.Debug($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
-            
 
-                var renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, model, cmdContent, user, site);
+                _logger.Debug($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
+
+                // Render template with updated context
+                renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, emailContext.Model, cmdContent, emailContext.User, site, shopperOrderAttributes, storeLocation);                  
+              
                 if (renderedTemplate.IsNullOrEmpty())
                 {
                     return null;
                 }
-                
-                // Try to extract the subject from the document properties if available; fallback to an empty string if not found.
-                var subjectFromVrModel = cmdContent is DC.Document { Properties: not null } mozuDocument && mozuDocument.Properties.TryGetValue("subject", out var property)
+
+                // Try to extract the subject from the document properties if available
+                var subjectFromVrModel = cmdContent is DC.Document { Properties: not null } mozuDocument
+                    && mozuDocument.Properties.TryGetValue("subject", out var property)
                         ? (string)property
                         : "";
-                
-                return Ok(new EmailResponse
+
+                // NEW: prefer extension-updated subject if provided
+                var finalSubject = !string.IsNullOrWhiteSpace(emailContext.Subject)
+                    ? emailContext.Subject
+                    : (subjectFromVrModel.NotIsNullOrEmpty()
+                        ? subjectFromVrModel
+                        : (emailTemplate.Title ?? notification.Topic));
+
+                // (Optional) sync back into document so existing template logic sees it
+                if (cmdContent is DC.Document docModel)
                 {
-                    Subject = subjectFromVrModel.NotIsNullOrEmpty() ? subjectFromVrModel : emailTemplate.Title ?? notification.Topic,
-                    Body = renderedTemplate
-                });
+                    docModel.Properties["subject"] = finalSubject;
+                }
+
+                // Build response
+                var response = new EmailResponse
+                {
+                    Subject = finalSubject,
+                    Body = renderedTemplate,
+                    SuppressedSend = false,
+                    TemplateUsed = emailContext.CurrentTemplate
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -722,7 +802,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return model;
 
         }
-        private async Task<string> GetRenderedTemplate(EmailNotification notification, VM.PageTypeDefinition emailTemplate, object model, object cmdContent, User user, Site site)
+        private async Task<string> GetRenderedTemplate(EmailNotification notification, VM.PageTypeDefinition emailTemplate, object model, object cmdContent, User user, Site site, List<Core.Extensible.Contracts.Attribute> attributes, Location.Contracts.Location location)
         {
             var viewEngine = Request.HttpContext.RequestServices.Resolve<HyprViewEngine>();
             var view = viewEngine.FindPageView(emailTemplate.Template);
@@ -734,18 +814,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return string.Empty;
             }
 
-            Location.Contracts.Location storeLocation = null;
-            if (model is ReturnEmail returnEmail)
-                storeLocation = returnEmail.StoreLocation;
-            else if (model is ShipmentEmail shipmentEmail)
-                storeLocation = shipmentEmail.StoreLocation;
-
             ViewData.Model = model;
             ViewData["content"] = cmdContent;
             ViewData["User"] = user;
-            ViewData["rmaLocation"] = storeLocation == null ? await GetDefaultReturnLocation() : storeLocation;
+            ViewData["rmaLocation"] = location;
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
+            ViewData["storefrontOrderAttributes"] = attributes;
+            ViewData["site"] = site;
 
             var context = new HyprViewContext(Request.HttpContext, ViewData);
             return await Render(view, context);
@@ -771,7 +846,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return null;
         }
-
 
         public async Task<object> Convert(string json, EmailTypeInfo eti)
         {
@@ -1092,6 +1166,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         public string Subject { get; set; }
         public string Body { get; set; }
+        /// <summary>
+        /// Indicates if the email should be suppressed from sending
+        /// </summary>
+        public bool SuppressedSend { get; set; }
+        public string TemplateUsed { get; set; }
     }
 
     public class EmailTypeInfo

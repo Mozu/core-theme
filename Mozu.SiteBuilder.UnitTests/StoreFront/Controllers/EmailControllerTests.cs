@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Kibo.Fulfillment.Contracts.Api;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
@@ -10,21 +6,22 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Expressions;
-using Mozu.Core.Settings;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.ArcJsExtensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 {
@@ -34,7 +31,9 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         private EmailController _emailController;
         private IOrderWebApiClient _orderWebApiClient;
         private ICustomerAccountWebApiClient _customerAccountWebApiClient;
-    
+
+        private IEmailExtensionContextBuilder _emailExtensionContextBuilder;
+
         [SetUp]
         public void Setup()
         {
@@ -52,7 +51,8 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             var pageRuleVisitor = new Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();
             var pageRuleEvaluator = new Lazy<IExpressionEvaluator<CmsPageRuleContext>>();
             var b2bAccountWebApiClient = Substitute.For<IB2BAccountWebApiClient>();
-            
+            _emailExtensionContextBuilder = Substitute.For<IEmailExtensionContextBuilder>();
+
             _emailController = new EmailController(
                 _customerAccountWebApiClient,
                 sitesWebApiClient,
@@ -67,7 +67,8 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                 urlHelper,
                 pageRuleVisitor,
                 pageRuleEvaluator,
-                b2bAccountWebApiClient
+                b2bAccountWebApiClient,
+                _emailExtensionContextBuilder
             );
         }
         [Test]
