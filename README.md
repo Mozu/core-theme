@@ -8,4 +8,4 @@ Mozu continually updates the Core theme. Sometimes, you may have to merge an upd
 
 For the latest enhancements, see the [Release Notes](https://github.com/Mozu/core-theme/blob/master/RELEASE_NOTES.md).
 
-
+Run npx grunt build-production to create a .zip of the theme for uploading to Admin.
