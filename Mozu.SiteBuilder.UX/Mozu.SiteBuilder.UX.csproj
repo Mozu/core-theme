@@ -20,7 +20,7 @@
     <PackageReference Include="Kibo.RealtimeInventory.Contracts" Version="1.2431.0-com-8621.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.32" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2540.3" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2540.4" />
 
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
   </ItemGroup>
