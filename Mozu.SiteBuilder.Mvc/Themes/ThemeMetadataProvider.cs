@@ -485,7 +485,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 Name = relPath.Split(CanonicalDirectorySeperator).Last(),
                 ThemeId = themeId,
-                CheckSum = x.MD5,
+                CheckSum = x.BackingDocument?.GetValue("md5", null)?.AsString ??
+                                 x.Metadata?.GetValue("md5", null)?.AsString ?? "",
                 MongoId = x.Id.ToString(),
                 //FullPath = themePath + "//"+ relPath,
                 TimsStamp = x.UploadDateTime,

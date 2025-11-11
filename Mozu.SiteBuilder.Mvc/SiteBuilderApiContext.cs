@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc
                 new QuoteDeleteBehavior().Id,       //276
                 new QuoteReadBehavior().Id          //277
             };
-            var isSalesRep = AdminUserClaim.BehaviorIds.ContainsAll(requiredBehaviorIds);
+            var isSalesRep = requiredBehaviorIds.All(id => AdminUserClaim.BehaviorIds.Contains(id));
 
             return isSalesRep;
         }
