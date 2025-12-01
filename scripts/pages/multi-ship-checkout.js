@@ -14,9 +14,10 @@ require(["modules/jquery-mozu",
     'modules/checkout/steps/step3/views-payments',
     'modules/checkout/contact-dialog/views-contact-dialog',
     'modules/amazonpay',
+    'modules/amazonpay-v2',
     'modules/checkout/views-pickup'],
     function ($, _, Hypr, Backbone, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,
-        CheckoutModels, CheckoutStepView, ShippingDestinationsView, ShippingMethodsView, PaymentView, ContactDialogView, AmazonPay, PickupView) {
+        CheckoutModels, CheckoutStepView, ShippingDestinationsView, ShippingMethodsView, PaymentView, ContactDialogView, AmazonPay, AmazonPayV2, PickupView) {
 
     var OrderSummaryView = Backbone.MozuView.extend({
         templateName: 'modules/multi-ship-checkout/checkout-order-summary',
@@ -203,6 +204,8 @@ require(["modules/jquery-mozu",
 
         AmazonPay.init(true); 
         checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+        AmazonPayV2.init(true);
+        checkoutData.isAmazonPayV2Enable = AmazonPayV2.isEnabled;
 
         var checkoutModel = window.order = new CheckoutModels(checkoutData),
             checkoutViews = {

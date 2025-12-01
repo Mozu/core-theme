@@ -87,6 +87,7 @@
         </div>
     {% endblock modal-dialog %}
     <div id="AmazonPayButton" style="display:none;"/>
+    <div id="AmazonPayV2Button" style="display:none;"/>
 
 
 </form>

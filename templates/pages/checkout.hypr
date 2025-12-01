@@ -75,6 +75,7 @@
 
         </div><!-- left .column -->
         <div id="AmazonPayButton" style="display:none;"/>
+        <div id="AmazonPayV2Button" style="display:none;"/>
     </form>
 </div>
 
