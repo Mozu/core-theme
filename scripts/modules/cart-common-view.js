@@ -10,11 +10,12 @@ define(['modules/api',
         'modules/modal-dialog',
         'modules/xpress-paypal',
         'modules/models-location',
-        'modules/amazonPay',
+        'modules/amazonpay',
+        'modules/amazonpay-v2',
         'modules/applepay',
         'modules/mozu-utilities',
         'modules/message-handler'
-], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, MozuUtilities, MessageHandler) {
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, AmazonPayV2, ApplePay, MozuUtilities, MessageHandler) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -43,8 +44,12 @@ define(['modules/api',
             });
 
             if(!AmazonPay.isEnabled) {
-              AmazonPay.init(true);
-          }
+                AmazonPay.init(true);
+            }
+            if(!AmazonPayV2.isEnabled) {
+                AmazonPayV2.init(true);
+            }
+
             this.listenTo(this.model.get('items'), 'quantityupdatefailed', this.onQuantityUpdateFailed, this);
 
             var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
@@ -84,7 +89,7 @@ define(['modules/api',
         return !this.userHasBehavior(1005) && !this.userHasBehavior(1000);
       },
         render: function() {
-            preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
+            preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#AmazonPayV2Button', '#applePayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
             

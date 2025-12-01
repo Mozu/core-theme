@@ -70,6 +70,7 @@
       {% endif %}
       {% if model.hasRequiredBehavior %}
         <button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
+        <!--<div id="AmazonPayV2Button"></div>-->
         {% if not model.isEmpty and not model.bf_ext_enabled %}
           {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
             {% if externalPaymentWorkflowsEnabled %}
@@ -80,6 +81,9 @@
                     <div class="mz-carttable-thirdpartypayment" >
                       {% if externalPayment.name|lower == "paywithamazon" %}
                           <div id="AmazonPayButton"></div>
+                      {% endif %}
+                      {% if externalPayment.name|lower == "paywithamazonv2" %}
+                          <div id="AmazonPayV2Button" style="float:right; width: 15em; max-width: 100%;"></div>
                       {% endif %}
                       {% if externalPayment.name == "VisaCheckout" %}
                         <img alt="Visa Checkout" class="v-button" role="button" src="{{pageContext.visaCheckoutButtonUrl}}"/>
