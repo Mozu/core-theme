@@ -1716,6 +1716,28 @@
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout',
                     'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
+                this.on('sync', this.normalizeDiscountThresholdMessages, this);
+
+            },
+
+            normalizeDiscountThresholdMessages: function(rawPayload) {
+                if (!rawPayload) return;
+
+                var hasThresholdField = Object.prototype.hasOwnProperty.call(rawPayload, 'discountThresholdMessages');
+                var existingMessages = this.get('discountThresholdMessages');
+                var hadMessages = Array.isArray(existingMessages) ? existingMessages.length > 0 : !!existingMessages;
+
+                if (!hadMessages) {
+                    if (hasThresholdField && rawPayload.discountThresholdMessages === null) {
+                        this.set('discountThresholdMessages', []);
+                    }
+                    return;
+                }
+
+                if (!hasThresholdField || rawPayload.discountThresholdMessages === null) {
+                    // Reset when the service stops sending threshold data so stale banners do not persist.
+                    this.set('discountThresholdMessages', []);
+                }
             },
 
             applyAttributes: function() {

@@ -101,6 +101,8 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             this.get("items").on('sync remove', this.fetch, this)
                              .on('loadingchange', this.isLoading, this);
 
+            this.on('sync', this.normalizeDiscountThresholdMessages, this);
+
             this.get("items").each(function(item, el) {
                 if(item.get('fulfillmentLocationCode') && item.get('fulfillmentLocationName')) {
                     self.get('storeLocationsCache').addLocation({
@@ -111,6 +113,25 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             });
 
             this.get('discountModal').set('discounts', this.getSuggestedDiscounts());
+        },
+        normalizeDiscountThresholdMessages: function(rawPayload) {
+            if (!rawPayload) return;
+
+            var hasThresholdField = Object.prototype.hasOwnProperty.call(rawPayload, 'discountThresholdMessages');
+            var existingMessages = this.get('discountThresholdMessages');
+            var hadMessages = Array.isArray(existingMessages) ? existingMessages.length > 0 : !!existingMessages;
+
+            if (!hadMessages) {
+                if (hasThresholdField && rawPayload.discountThresholdMessages === null) {
+                    this.set('discountThresholdMessages', []);
+                }
+                return;
+            }
+
+            if (!hasThresholdField || rawPayload.discountThresholdMessages === null) {
+                // Reset when the service stops sending threshold data so stale banners do not persist.
+                this.set('discountThresholdMessages', []);
+            }
         },
         getSuggestedDiscounts: function(){
             var self = this;
