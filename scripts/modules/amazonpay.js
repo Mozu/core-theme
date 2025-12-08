@@ -17,23 +17,21 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			var environment = this.getValue(paymentSettings, "environment");
 			var isSandbox = environment == "sandbox";
 			var region = this.getValue(paymentSettings, "awsRegion") || this.getValue(paymentSettings, "region");
-			this.sellerId = this.getValue(paymentSettings, "sellerId");
-			this.clientId = this.getValue(paymentSettings, "clientId");
-			this.buttonColor = "Gold";
-			this.buttonType = "PwA";
-			this.usePopUp = "true";
+		this.sellerId = this.getValue(paymentSettings, "sellerId");
+		this.clientId = this.getValue(paymentSettings, "clientId");
+		this.buttonColor = "Gold";
+		this.buttonType = "PwA";
+		this.usePopUp = true;
 			var regionMappings = {"de" : "eu", "uk" : "eu", "us" : "na", "jp" : "jp"};
 
-			if (this.sellerId && this.clientId && loadScript) {
-				var self = this;
-				window.sandbox = (isSandbox ? "/sandbox" : "");
+		if (this.sellerId && this.clientId && loadScript) {
+			var self = this;
+			var sandboxPath = (isSandbox ? "/sandbox" : "");
 
-				if (region != "us")
-					window.sandbox += "/lpa";
+			if (region != "us")
+				sandboxPath += "/lpa";
 
-				var payWithAmazonUrl = "https://static-"+regionMappings[region]+".payments-amazon.com/OffAmazonPayments/"+ region + window.sandbox + "/js/Widgets.js";
-
-				window.onAmazonLoginReady = function() {
+			var payWithAmazonUrl = "https://static-"+regionMappings[region]+".payments-amazon.com/OffAmazonPayments/"+ region + sandboxPath + "/js/Widgets.js";				window.onAmazonLoginReady = function() {
 					window.amazon.Login.setClientId(self.clientId); //use clientId
 				};
 			
