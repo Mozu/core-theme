@@ -31,17 +31,40 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			if (region != "us")
 				sandboxPath += "/lpa";
 
-			var payWithAmazonUrl = "https://static-"+regionMappings[region]+".payments-amazon.com/OffAmazonPayments/"+ region + sandboxPath + "/js/Widgets.js";				window.onAmazonLoginReady = function() {
-					window.amazon.Login.setClientId(self.clientId); //use clientId
-				};
-			
-				$.getScript(payWithAmazonUrl).done(function(scrit, textStatus){
-					//window.console.log(textStatus);
-					self.isScriptLoaded = true;
-					EventBus.trigger("aws-script-loaded");
-				}).fail(function(jqxhr, settings, exception) {
-					window.console.log(jqxhr);
-				});
+			// Suppress known Amazon Pay V1 SDK postMessage bug (for testing/comparison purposes)
+			// This is a bug in Amazon's legacy SDK where it uses invalid origin format
+			// Remove this when migrating to V2
+			var originalError = window.onerror;
+			window.onerror = function(message, source, lineno, colno, error) {
+				if (typeof message === 'string' && 
+					message.indexOf('postMessage') > -1 && 
+					message.indexOf('payments.amazon.com') > -1 &&
+					source && source.indexOf('amazon') > -1) {
+					// Suppress Amazon V1 SDK postMessage error
+					return true;
+				}
+				if (originalError) {
+					return originalError(message, source, lineno, colno, error);
+				}
+				return false;
+			};
+
+			var payWithAmazonUrl = "https://static-"+regionMappings[region]+".payments-amazon.com/OffAmazonPayments/"+ region + sandboxPath + "/js/Widgets.js";
+
+			window.onAmazonLoginReady = function() {
+				window.amazon.Login.setClientId(self.clientId);
+			};
+
+			window.onAmazonPaymentsReady = function() {
+				self.isScriptLoaded = true;
+				EventBus.trigger("aws-script-loaded");
+			};
+		
+			$.getScript(payWithAmazonUrl).done(function(script, textStatus){
+				// Script loaded, widgets will initialize via onAmazonPaymentsReady callback
+			}).fail(function(jqxhr, settings, exception) {
+				window.console.error("Failed to load Amazon Pay Widgets.js:", exception);
+			});
 			}
 		},
 		getValue: function(paymentSetting, key) {
@@ -66,24 +89,34 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			else
 				redirectUrl += checkoutUrl+"/"+id+"?isAwsCheckout=true&view="+self.viewName;
 
-			EventBus.on("aws-script-loaded", function(){
-				var authRequest;
-				window.OffAmazonPayments.Button("AmazonPayButton", self.sellerId, { //use seller id
-					type:  self.buttonType,
-					color: self.buttonColor,
-					useAmazonAddressBook: true,
-					size: (!isCart ? "small" : "medium"),
-					authorization: function() {
-						var scope = "profile postal_code payments:widget payments:shipping_address payments:billing_address";
-						var loginOptions = {scope: scope, popup: self.usePopUp};
-						authRequest = window.amazon.Login.authorize (loginOptions,redirectUrl);
-					},
-					onError: function(error) {
-						window.console.log("AmazonPay widget errorCode: "+error.getErrorCode());
-						window.console.log("AmazonPay widget erorMessage: "+error.getErrorMessage());
-					}
-				});
-			});
+			var buttonInitialized = false;
+			var initButton = function() {
+				if (buttonInitialized || !window.OffAmazonPayments) return;
+				buttonInitialized = true;
+				
+				try {
+					var authRequest;
+					window.OffAmazonPayments.Button("AmazonPayButton", self.sellerId, {
+						type:  self.buttonType,
+						color: self.buttonColor,
+						useAmazonAddressBook: true,
+						size: (!isCart ? "small" : "medium"),
+						authorization: function() {
+							var scope = "profile postal_code payments:widget payments:shipping_address payments:billing_address";
+							var loginOptions = {scope: scope, popup: self.usePopUp};
+							authRequest = window.amazon.Login.authorize(loginOptions, redirectUrl);
+						},
+						onError: function(error) {
+							window.console.log("AmazonPay widget errorCode: "+error.getErrorCode());
+							window.console.log("AmazonPay widget errorMessage: "+error.getErrorMessage());
+						}
+					});
+				} catch(e) {
+					window.console.error("Failed to initialize Amazon Pay button:", e);
+				}
+			};
+
+			EventBus.on("aws-script-loaded", initButton);
 		},
 		addAddressWidget: function(awsReferenceId) {
 			loadAddressWidget(this.sellerId,awsReferenceId);
