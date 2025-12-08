@@ -204,6 +204,7 @@ define([
            
         } else if (cartModel.count() === 0) {
             AmazonPay.isEnabled = false;
+            AmazonPayV2.isEnabled = false;
         }
 
 
