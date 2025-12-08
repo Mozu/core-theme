@@ -53,7 +53,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					self.isScriptLoaded = true;
 					EventBus.trigger("aws-script-loaded");
 				}).fail(function(jqxhr, settings, exception) {
-					window.console.error("Failed to load Amazon Pay checkout.js:", exception);
+					window.console.error("Failed to load Amazon Pay V2 checkout.js:", exception);
 				});
 			}
 		},
