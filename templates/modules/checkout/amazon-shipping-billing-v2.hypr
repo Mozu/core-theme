@@ -1,0 +1,23 @@
+{% comment %}
+Amazon Pay V2 - Exact same structure as V1
+{% endcomment %}
+
+<tr id="amazonAddressBookWidgetTR">
+	<td colspan="2">
+					<h3 class="amazon-section-title">{{ labels.awsShippingAddress }}</h3>
+				</div>
+					<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">
+					</div>
+	</td>
+</tr>
+
+<tr id="amazonWalletWidgetTR">
+	<td colspan="2">
+			<div class="amazon-section">
+					<h3 class="amazon-section-title">{{ labels.awsPaymentMethod }}</h3>
+				</div>
+					<div id="walletWidgetDiv" class="aws-widget amazon-loading">
+					</div>
+		</div>
+	</td>
+</tr>

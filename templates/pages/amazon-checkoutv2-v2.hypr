@@ -1,32 +1,26 @@
-﻿    
 {% extends "page" %}
-
-{% block title-tag-content %}{% firstof pageContext.metaTitle labels.checkout %} - {% parent %}{% endblock title-tag-content %}
-
-{% block head-tag-scripts %}
-{% parent %}
-{% if siteContext.checkoutSettings.visaCheckout.isEnabled and not pageContext.isEditMode %}
-{% include "modules/common/anti-clickjacking-script" %}
-{% endif %}
-{% endblock head-tag-scripts %}
-
-{% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
-
-{% block site-nav %}{% endblock site-nav %}
 
 {% block body-content %}
 
-{% if pageContext.query.view == "amazon-checkout-v2" %}  
-    {% require_script "pages/amazon-checkout-v2" %}
-{% else %}
-   {% require_script "pages/multi-ship-checkout" %}
-{% endif %}
-
 {% preload_json model "checkout" %}
+{% require_script "pages/amazon-checkoutv2-v2" %}
 
 <div class="mz-l-container">
-{% if pageContext.query.view == "amazon-checkout-v2" %}
-        <style>
+	<script type="text/javascript">
+		window.onload = function(){
+			var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
+
+			var elementId = 'shippingAndBillingTitle';
+			if(isQuoteOrder) {
+				elementId = 'billingTitle';
+			}
+
+			var element = document.getElementById(elementId);
+			element.style.display = 'block';
+		};
+
+	</script>
+	<style>
             /* Amazon Pay V2 Enhanced Styling */
 
             .amazon-loading {
@@ -200,85 +194,23 @@
                 padding: 30px;
             }
         </style>
-        <h1 class="mz-pagetitle">{{ labels.awsCheckout }}</h1>
-        <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
-            {% include "modules/common/message-bar" with model=model.messages %}
-            <table id="shippingBillingTbl" class="shippingBillingTbl">
-                {% include "modules/checkout/amazon-shipping-billing-v2" %}
-            </table>
-        </form>
-         {% else %}
-    <h1 class="mz-pagetitle">
-        {{ labels.checkout }}
-        {% if not user.isAuthenticated %}
-        <span class="mz-pagetitle-note">
-            {{ labels.registeredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ labels.logIn }}</a>
-        </span>
-        {% endif %}
+    <h1 class="mz-pagetitle" id="shippingAndBillingTitle">
+		{{ labels.awsCheckout }}
     </h1>
+    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
+    	{% include "modules/common/message-bar" with model=model.messages %}
+    	<table id="shippingBillingTbl" class="shippingBillingTbl">
+        	{% include "modules/checkout/amazon-shipping-billing-v2" %}
+            {% if model.destinations && model.destinations.length > 1%}
+                <tr>
+                    <td>
+                        <input type="checkbox" data-mz-value="overrideItemDestinations" value="true" {% if model.overrideItemDestinations %}checked="checked"{% endif %}> Override checkout address
+                    </td>
+                </tr>
+            {%endif%}
+	    </table>
+    </form>
 
-    <div id="mz-discount-threshold-messages">
-        {% include "modules/checkout/checkout-discount-threshold-messages" with model=model %}
-    </div>
-
-    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right fades-in" method="post" onsubmit="return false;">
-
-    {% include "modules/common/message-bar" with model=model.messages %}
-
-    <div class="mz-l-column" id="checkout-rightcol">
-
-        <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
-            {% include "modules/checkout/checkout-order-summary" %}
-        </div>
-
-        <div class="mz-l-formfieldgroup">
-            <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
-                {% include "modules/checkout/coupon-code-field" %}
-            </div>
-            {% if themeSettings.showCheckoutCommentsField %}
-            <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
-                {% include "modules/checkout/comments-field" %}
-            </div>
-            {% endif %}
-        </div>
-
-    </div>
-
-    <div class="mz-l-column">
-
-        <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
-            {% include "modules/multi-ship-checkout/step-shipping-destinations" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresShippingMethod %}style="display:none"{% endif %}>
-            {% include "modules/multi-ship-checkout/step-shipping-methods" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
-            {% include "modules/multi-ship-checkout/step-payment-info" %}
-        </div>
-        <div class="mz-formstep mz-checkoutform-pickup-contact mz-l-stack" id="pickup-contact">
-            {% include "modules/multi-ship-checkout/pickup-contact" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-review" id="step-review">
-            {% include "modules/checkout/step-review" %}
-        </div>
-
-    </div><!-- left .column -->
-
-    {% block modal-dialog %}
-        <div mz-modal-contact-dialog>
-          <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
-            {% include "modules/multi-ship-checkout/modal-contact" %}
-          </div>
-        </div>
-    {% endblock modal-dialog %}
-    <div id="AmazonPayButton" style="display:none;"/>
-    <div id="AmazonPayV2Button" style="display:none;"/>
-
-
-</form>
 </div>
- {% endif %}
+
 {% endblock body-content %}
