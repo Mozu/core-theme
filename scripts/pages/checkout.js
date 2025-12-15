@@ -736,10 +736,31 @@ require(["modules/jquery-mozu",
         $checkoutView.noFlickerFadeIn();
         
         var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
-        if (AmazonPay.isEnabled)
-            AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
-        if( AmazonPayV2.isEnabled)
-            AmazonPayV2.addCheckoutButton(window.order.id, false, isQuoteOrder);
+        
+        // Parse URL parameters using compatible approach
+        function getUrlParameter(name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results ? decodeURIComponent(results[1]) : null;
+        }
+        
+        var viewParam = getUrlParameter('view');
+        
+        // Check if we're on Amazon Pay V2 checkout page
+        if (viewParam === 'amazon-checkout-v2' && AmazonPayV2.isEnabled) {
+            // Initialize widgets for V2 checkout page
+            var checkoutSessionId = getUrlParameter('amazonCheckoutSessionId');
+            if (checkoutSessionId) {
+                AmazonPayV2.initializeWidgets(checkoutSessionId);
+            } else {
+                window.console.warn("Amazon Pay V2 checkout session ID not found");
+            }
+        } else {
+            // Regular flow - add buttons for cart/checkout
+            if (AmazonPay.isEnabled)
+                AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
+            if( AmazonPayV2.isEnabled)
+                AmazonPayV2.addCheckoutButton(window.order.id, false, isQuoteOrder);
+        }
 
         //For quote originated order, skip shipping address and shipping method steps
         if (checkoutData.originalQuoteId) {

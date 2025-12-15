@@ -81,6 +81,10 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 				window.order.set("fulfillmentInfo", fulfillmentInfo);
 			}
 
+			// Initialize Amazon Pay V2 widgets to display session info
+			window.console.log("=== Initializing Amazon Pay V2 widgets with session ID:", urlParams.amazonCheckoutSessionId, "===");
+			AmazonPayV2.initializeWidgets(urlParams.amazonCheckoutSessionId);
+
 			// Show continue button
 			$("#continue").show();
 		}
