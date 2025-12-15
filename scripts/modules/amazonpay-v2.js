@@ -70,7 +70,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSessionConfig: function(cartOrOrderId, isCart) {
 			var self = this;
-			var apiUrl = "http://localhost:3001/amazonpay/getcheckoutsession";
+			var apiUrl = "/amazonpay/checkoutsession";
 			cartOrOrderId = cartOrOrderId || "1234";
 
 			window.console.log("=== Making API call to:", apiUrl, "===");
@@ -79,7 +79,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				method: "POST",
 				url: apiUrl,
 				contentType: "application/json",
-				timeout: 3000,
+				// timeout: 3000,
 				data: JSON.stringify({
 					cartOrOrderId: cartOrOrderId,
 					isCart: isCart,
@@ -87,23 +87,10 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				})
 			}).then(function(response) {
 				window.console.log("=== API Response received ===", response);
-				if (!response) {
-					window.console.log("No response, using dummy data");
-					response = {
-						payloadJSON: "{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"http://localhost:57521/cart?cartId=1a36cbb23ffbb40001f6d435000186ce&isAwsCheckout=true&view=amazon-checkout-v2\"},\"storeId\":\"amzn1.application-oa2-client.bdbc80217b994497ae9e383e935c83d1\",\"scopes\":[\"name\",\"email\",\"phoneNumber\",\"billingAddress\"]}",
-						publicKeyId: "SANDBOX-AGLLPBMH6SWCMOIWXI4C3V7O",
-						signature: "HaDc6FL17cYzau0wswQZA9oHYa8jaKCYImiYcvx6Oj/qf4PaOuIFOQZY++0bL8P4W3HfgAqLDn4/o2YPtnxKfPLg7zjDr/Q1s/YPYeBxBwaiScfZ1kOnopXce0zTKfNH/0pat9cvVNjaVh+nNWz3/dlEUjRM9bBuMBXzuKefk6fYRrhK6QGXJFuyHRfvvuJMYX5sOGM2wH6ns9/Q1XQ7fAgcXa+Aoq4uZu6EakbCr/LEHsg350PyLna6GV56mqVDm6cMyGgSpyMeXpQFq1fcGL8VrF/9meJnN612PU3LxePz8j73h3nh0DPcnp3JHPgjp0RnH+1FOFhZIxxfPvHiyw=="
-					};
-				}
 				return response;
 			}).fail(function(error) {
 				window.console.warn("=== API call failed, using hardcoded response ===", error);
 				// Return hardcoded response on any failure
-				return {
-					payloadJSON: "{\"webCheckoutDetails\":{\"checkoutReviewReturnUrl\":\"http://localhost:57521/cart?cartId=1a36cbb23ffbb40001f6d435000186ce&isAwsCheckout=true&view=amazon-checkout-v2\"},\"storeId\":\"amzn1.application-oa2-client.bdbc80217b994497ae9e383e935c83d1\",\"scopes\":[\"name\",\"email\",\"phoneNumber\",\"billingAddress\"]}",
-					publicKeyId: "SANDBOX-AGLLPBMH6SWCMOIWXI4C3V7O",
-					signature: "HaDc6FL17cYzau0wswQZA9oHYa8jaKCYImiYcvx6Oj/qf4PaOuIFOQZY++0bL8P4W3HfgAqLDn4/o2YPtnxKfPLg7zjDr/Q1s/YPYeBxBwaiScfZ1kOnopXce0zTKfNH/0pat9cvVNjaVh+nNWz3/dlEUjRM9bBuMBXzuKefk6fYRrhK6QGXJFuyHRfvvuJMYX5sOGM2wH6ns9/Q1XQ7fAgcXa+Aoq4uZu6EakbCr/LEHsg350PyLna6GV56mqVDm6cMyGgSpyMeXpQFq1fcGL8VrF/9meJnN612PU3LxePz8j73h3nh0DPcnp3JHPgjp0RnH+1FOFhZIxxfPvHiyw=="
-				};
 			});
 		},
 
@@ -111,43 +98,21 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 * Get checkout session details using the session ID
 		 */
 		getCheckoutSession: function(checkoutSessionId) {
-			var self = this;
-			var apiUrl = "http://localhost:3001/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
+				var self = this;
+				var apiUrl = "/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
 
 			window.console.log("=== Making API call to get checkout session:", apiUrl, "===");
 			
 			return $.ajax({
 				method: "GET",
 				url: apiUrl,
-				contentType: "application/json",
-				timeout: 3000
+				contentType: "application/json"
+				// timeout: 3000
 			}).then(function(response) {
 				window.console.log("=== Checkout Session Response received ===", response);
 				return response;
 			}).fail(function(error) {
 				window.console.warn("=== Checkout Session API call failed ===", error);
-				// Return mock session data on failure
-				return {
-					checkoutSessionId: checkoutSessionId,
-					webCheckoutDetails: {
-						checkoutReviewReturnUrl: "http://localhost:57521/cart?isAwsCheckout=true&view=amazon-checkout-v2"
-					},
-					buyer: {
-						name: "John Doe",
-						email: "john.doe@example.com"
-					},
-					shippingAddress: {
-						name: "John Doe",
-						addressLine1: "123 Main St",
-						city: "Anytown", 
-						stateOrRegion: "CA",
-						postalCode: "12345",
-						countryCode: "US"
-					},
-					paymentPreferences: [{
-						paymentDescriptor: "**** 1234"
-					}]
-				};
 			});
 		},
 
