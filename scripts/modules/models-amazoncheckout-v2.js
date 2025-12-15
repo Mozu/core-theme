@@ -85,12 +85,19 @@ define([
                     }
                 };
 
-                // Amazon Pay v2 always uses token-based flow
-                billingInfo.newBillingInfo.paymentType  = "token";
-                billingInfo.newBillingInfo.token  = {
-                    "paymentServiceTokenId": me.awsData.id,
-                    "type": "PayWithAmazon" //TODO do we want this to be "PayWithAmazonV2" ?
-                };
+                if (me.isLegacyCheckout()) {
+                    // Legacy flow - direct payment with external transaction ID
+                    billingInfo.externalTransactionId = me.awsData.checkoutSessionId;
+                    billingInfo.newBillingInfo.paymentType = "PayWithAmazonV2";
+                    billingInfo.newBillingInfo.paymentWorkflow = "PayWithAmazonV2";
+                } else {
+                    // Modern flow - token-based payment
+                    billingInfo.newBillingInfo.paymentType = "token";
+                    billingInfo.newBillingInfo.token = {
+                        "paymentServiceTokenId": me.awsData.id,
+                        "type": "PayWithAmazonV2"
+                    };
+                }
 
                 me.apiModel.createPayment(billingInfo, {silent:true}).then( function() {
                     me.trigger('awscheckoutcomplete', me.id);
@@ -98,6 +105,10 @@ define([
                }, function(err) {
                     me.isLoading(false);
                });
+            },
+            isLegacyCheckout: function() {
+                var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazonV2"});
+                return paymentSettings && paymentSettings.namespace.toLowerCase() != "tenant" && paymentSettings.isEnabled;
             },
             submit: function() {
                 var me = this;
@@ -110,11 +121,36 @@ define([
                 else
                     fulfillmentInfo.data = me.awsData;
 
-                // Amazon Pay v2 flow - always use token-based checkout
-                var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
-                payWithAmazonToken.set('tokenObject', me.awsData);
-                payWithAmazonToken.apiCreate().then(function(response){
-                    me.awsData.id = response.id;
+                if (me.isLegacyCheckout()) {
+                    // Legacy flow - direct order update without token API
+                    var user = require.mozuData('user');
+                    if (user && user.email) {
+                        if (!fulfillmentInfo.fulfillmentContact)
+                            fulfillmentInfo.fulfillmentContact = {};
+
+                        fulfillmentInfo.fulfillmentContact.email = user.email;
+                    }
+                    else {
+                        fulfillmentInfo.fulfillmentContact = null;
+                    }
+
+                    me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
+                        me.set("fulfillmentInfo", result.data || result);
+                        if (me.apiModel.data.requiresFulfillmentInfo)
+                            me.applyShippingMethods(existingShippingMethodCode);
+                        else
+                            me.applyBilling();
+                    }, function(error) {
+                        me.onCheckoutError(error.message || 'Failed to update shipping info');
+                    });
+                } else {
+                    // Modern flow - token-based checkout
+                    var payWithAmazonToken = new TokenModel.Token({ 
+                        type: 'PayWithAmazon',
+                        token: me.awsData
+                    });
+                    payWithAmazonToken.apiCreate().then(function(response){
+                        me.awsData.id = response.id;
 
                     // Get shipping and billing details from checkout session
                     // TODO: Verify that thirdPartyPaymentExecute with methodName "tokenDetails"
@@ -124,7 +160,7 @@ define([
 
                     payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
                         methodName: "tokenDetails",
-                        cardType: "PayWithAmazon",
+                        cardType: "PayWithAmazonv2",
                         body: null,
                         tokenId: response.id
                     }).then(function(details) {
@@ -132,22 +168,35 @@ define([
                             me.onCheckoutError(details.error.message);
                             return;
                         }
+                        
+                        if (!details || !details.shippingContact) {
+                            me.onCheckoutError("Invalid response from Amazon Pay - missing shipping contact information");
+                            return;
+                        }
+                        
                         me.tokenDetails = details;
 
                         var shipping = details.shippingContact;
                         var user = require.mozuData('user');
                         if (user && user.email)
-                            shipping.email =  user.email;
+                            shipping.email = user.email;
 
                         me.apiModel.updateShippingInfo({fulfillmentContact : shipping, data: me.awsData}, { silent: true }).then(function(result) {
-                            me.set("fulfillmentInfo",result.data);
+                            me.set("fulfillmentInfo", result.data || result);
                             if (me.apiModel.data.requiresFulfillmentInfo)
                                 me.applyShippingMethods(existingShippingMethodCode);
                             else
                                 me.applyBilling();
+                        }, function(error) {
+                            me.onCheckoutError(error.message || 'Failed to update shipping info');
                         });
+                    }, function(error) {
+                        me.onCheckoutError(error.message || 'Failed to get token details');
                     });
+                }, function(error) {
+                    me.onCheckoutError(error.message || 'Failed to create Amazon Pay token');
                 });
+                }
             },
              onCheckoutError: function (msg) {
                 var me = this,

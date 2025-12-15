@@ -8,7 +8,13 @@
     </div>
    {%endif%}
     <div  class="mz-l-formfieldgroup-cell" style="margin-top:10px;">
-    <a data-mz-action="amazonShippingAndBilling" href="#">{{labels.aswChangeBilling}}</a>
+    {% if payment.paymentType|lower == "paywithamazonv2" %}
+        <a data-mz-action="amazonShippingAndBillingV2" href="#">{{labels.aswChangeBilling}}</a>
+    {% elif payment.paymentType|lower == "token" and payment.billingInfo.token.type|lower == "paywithamazonv2" %}
+        <a data-mz-action="amazonShippingAndBillingV2" href="#">{{labels.aswChangeBilling}}</a>
+    {% else %}
+        <a data-mz-action="amazonShippingAndBilling" href="#">{{labels.aswChangeBilling}}</a>
+    {% endif %}
     </div>
 </div>
 

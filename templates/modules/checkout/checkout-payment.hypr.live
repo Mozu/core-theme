@@ -12,8 +12,12 @@
         {% if model.billingInfo.paymentType == "GiftCard" %}{{ labels.giftCard }}{% endif %}
         {% if model.billingInfo.paymentType == "StoreCredit" %}{{ labels.digitalCredit }}{% endif %}
         {% if model.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
+        {% if model.billingInfo.paymentType|lower == "paywithamazonv2" %}{{ labels.payWithAmazon }}{% endif %}
         {% if model.billingInfo.paymentType|lower == "token" %}
           {%if model.billingInfo.token.type|lower == "paywithamazon" %}
+              {{ labels.payWithAmazon }}
+          {%endif%}
+          {%if model.billingInfo.token.type|lower == "paywithamazonv2" %}
               {{ labels.payWithAmazon }}
           {%endif%}
           {% if model.billingInfo.token.type|lower == "applepay" %}
@@ -29,7 +33,15 @@
         </div>
     {% endif %}
 
-    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" or model.paymentType|lower == "token"%}
+    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" %}
+    {% if model.billingInfo.billingContact.address %}
+    <div class="mz-l-stack-item">
+        <small>{{ labels.billingAddress }}</small>
+        <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% if model.billingInfo.paymentType|lower == "paywithamazon" or model.billingInfo.paymentType|lower == "paywithamazonv2" or model.paymentType|lower == "token"%}
     {% if model.billingInfo.billingContact.address %}
     <div class="mz-l-stack-item">
         <small>{{ labels.billingAddress }}</small>
@@ -41,11 +53,17 @@
             {%if model.billingInfo.token.type|lower == "paywithamazon" %}
                 <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
             {%endif%}
+            {%if model.billingInfo.token.type|lower == "paywithamazonv2" %}
+                <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+            {%endif%}
             {% if model.billingInfo.token.type|lower == "applepay" %}
             <dd><img width="100px" src="../../resources/images/Apple_Pay_Mark.png"/></dd>
             {% endif %}
         {%endif%}
         {%if model.billingInfo.paymentType|lower == "paywithamazon" %}
+                <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+        {%endif%}
+        {%if model.billingInfo.paymentType|lower == "paywithamazonv2" %}
                 <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
         {%endif%}
         {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}

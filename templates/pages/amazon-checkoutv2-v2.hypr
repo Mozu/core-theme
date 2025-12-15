@@ -3,7 +3,7 @@
 {% block body-content %}
 
 {% preload_json model "checkout" %}
-{% require_script "pages/amazon-checkout-v2" %}
+{% require_script "pages/amazon-checkoutv2-v2" %}
 
 <div class="mz-l-container">
 	<script type="text/javascript">

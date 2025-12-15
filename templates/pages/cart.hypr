@@ -15,9 +15,219 @@
 
 {% block body-content %}
 
-{% require_script "pages/cart" %}
+{% if pageContext.query.view == "amazon-checkout" %}
+    {% require_script "pages/amazon-checkout" %}
+{% else %}
+    {% if pageContext.query.view == "amazon-checkout-v2" %}
+        {% require_script "pages/amazon-checkout-v2" %}
+    {% else %}
+        {% if pageContext.query.view == "amazon-checkoutv2-v2" %}
+            {% require_script "pages/amazon-checkoutv2-v2" %}
+        {% else %}
+            {% require_script "pages/cart" %}
+        {% endif %}
+    {% endif %}
+{% endif %}
 
-{% preload_json model "cart" %}
+{% if pageContext.query.view == "amazon-checkout" or pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+    {% preload_json model "checkout" %}
+{% else %}
+    {% preload_json model "cart" %}
+{% endif %}
+
+{% if pageContext.query.view == "amazon-checkout" or pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+    {# Amazon Pay checkout view - show shipping/billing UI instead of cart #}
+    <style>
+        /* Amazon Pay V2 Enhanced Styling */
+
+        .amazon-loading {
+            text-align: center !important;
+            padding: 15px 10px !important;
+            color: #666 !important;
+        }
+        
+        .amazon-loading .amazon-spinner {
+            display: inline-block !important;
+            width: 40px !important;
+            height: 40px !important;
+            border: 4px solid #f3f3f3 !important;
+            border-top: 4px solid #ff9900 !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            margin-bottom: 15px !important;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .amazon-content {
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .amazon-v2-continue-btn{
+            background: #ff9900;
+            border: 1px solid #e47911;
+            color: white;
+            padding: 10px;
+            border-radius: 3px;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .amazon-section {
+            border-bottom: none !important;
+            display: inline-block !important;
+            vertical-align: top !important;
+            width: 48% !important;
+            margin-right: 2% !important;
+        }
+        
+        .amazon-section:last-child {
+            margin-right: 0 !important;
+        }
+
+        .amazon-section-header {
+            background: #f8f9fa !important;
+            padding: 6px 8px !important;
+            border-bottom: 1px solid #eee !important;
+            border-radius: 3px 3px 0 0 !important;
+        }
+        
+        .amazon-section-title {
+            margin: 0 !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #232f3e !important;
+        }
+
+        .amazon-widget-container {
+            padding: 6px !important;
+            min-height: auto !important;
+            border: 1px solid #ddd !important;
+            border-top: none !important;
+            border-radius: 0 0 3px 3px !important;
+            background: white !important;
+        }
+        
+        .amazon-address-display, .amazon-payment-display {
+            background: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 4px 6px !important;
+            margin-bottom: 2px !important;
+            line-height: 1.2 !important;
+            color: #333 !important;
+            font-size: 12px !important;
+            display: block !important;
+        }
+        
+        .amazon-address-display strong, .amazon-payment-display strong {
+            color: #232f3e !important;
+            font-weight: 600 !important;
+            display: block !important;
+            margin-bottom: 8px !important;
+        }
+        
+        .mz-button-small {
+            margin-top: 10px !important;
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            background: #ff9900 !important;
+            border: 1px solid #e47911 !important;
+            color: white !important;
+            border-radius: 3px !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+        }
+        
+        .mz-button-small:hover {
+            background: #e47911 !important;
+            border-color: #cd7511 !important;
+        }
+
+        .amazon-actions {
+            padding: 8px !important;
+            background: #f8f9fa !important;
+            border-top: 1px solid #eee !important;
+            clear: both !important;
+            margin-top: 10px !important;
+        }
+
+        .amazon-button-group {
+            display: flex !important;
+            justify-content: flex-end !important;
+            gap: 12px !important;
+        }
+        
+        .amazon-cancel-btn {
+            background: white !important;
+            border: 1px solid #ddd !important;
+            color: #333 !important;
+            padding: 10px 20px !important;
+            border-radius: 3px !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            font-size: 14px !important;
+        }
+        
+        .amazon-cancel-btn:hover {
+            background: #f5f5f5 !important;
+            border-color: #bbb !important;
+        }
+        
+        .amazon-continue-btn {
+            background: #ff9900 !important;
+            border: 1px solid #e47911 !important;
+            color: white !important;
+            padding: 10px !important;
+            border-radius: 3px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            font-size: 14px !important;
+            margin-right: 10px !important;
+        }
+        
+        .amazon-continue-btn:hover {
+            background: #e47911 !important;
+            border-color: #cd7511 !important;
+        }
+
+        .amazon-continue-btn:disabled {
+            border-color: #bbb !important;
+            cursor: not-allowed !important;
+        }
+
+        .shippingBillingTbl {
+            width: 70% !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            margin: auto;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            padding: 30px;
+        }
+    </style>
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ labels.awsCheckout }}</h1>
+        <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
+            {% include "modules/common/message-bar" with model=model.messages %}
+            <table id="shippingBillingTbl" class="shippingBillingTbl">
+                {% if pageContext.query.view == "amazon-checkout" %}
+                    {% include "modules/checkout/amazon-shipping-billing" %}
+                {% else %}
+                    {% if pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+                        {% include "modules/checkout/amazon-shipping-billing-v2" %}
+                    {% endif %}
+                {% endif %}
+            </table>
+        </form>
+    </div>
+{% else %}
+    {# Regular cart view #}
 <div class="modal fade" id="mz-location-selector">
 	{% include "modules/cart/cart-location-select" %}
 </div>
@@ -48,4 +258,5 @@
 		{% endblock modal-dialog %}
 	</form>
 </div>
+{% endif %}
 {% endblock body-content %}

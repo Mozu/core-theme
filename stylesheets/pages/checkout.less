@@ -1,18 +1,29 @@
 ﻿@-webkit-keyframes pulse {
-  from { .opacity(0.2); }
-  to { .opacity(0.3); }
+    from {
+        .opacity(0.2);
+    }
+
+    to {
+        .opacity(0.3);
+    }
 }
+
 @keyframes pulse {
-  from { .opacity(0.2); }
-  to { .opacity(0.3); }
+    from {
+        .opacity(0.2);
+    }
+
+    to {
+        .opacity(0.3);
+    }
 }
 
 
 .mz-checkout-mask {
-  position: absolute;
-  background-color: @textColor;
-  .opacity(0);
-  .animation(pulse, 0.5s, 0s, linear, alternate, infinite);
+    position: absolute;
+    background-color: @textColor;
+    .opacity(0);
+    .animation(pulse, 0.5s, 0s, linear, alternate, infinite);
 }
 
 .mz-checkoutform-comments-field {
@@ -22,53 +33,58 @@
 }
 
 .mz-l-security-box {
- padding: 20px;
- margin-bottom: 10px;
- font-size: 14px;
- line-height: 18px;
- font-family: SourceSansPro-Semibold;
- background-color: #DDDDDD;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 18px;
+    font-family: SourceSansPro-Semibold;
+    background-color: #DDDDDD;
 }
 
 #amazonAddressBookWidgetDiv {
-  min-width: 300px; 
-  max-width: 600px; 
-  min-height: 228px; 
-  max-height: 400px;
+    min-width: 300px;
+    max-width: 600px;
+    min-height: 228px;
+    max-height: 400px;
 }
 
 #walletWidgetDiv {
-  min-width: 300px; 
-  max-width:600px; 
-  min-height: 228px;
-  max-height: 400px;
+    min-width: 300px;
+    max-width: 600px;
+    min-height: 228px;
+    max-height: 400px;
 }
 
 /* Smartphone and small window */
 #amazonAddressBookWidgetDiv {
- width: 100%; 
- height: 228px;
+    width: 100%;
+    height: 228px;
 }
 
 #walletWidgetDiv {
-  width: 100%; 
-  height: 228px;
+    width: 100%;
+    height: 228px;
 }
-.mz-checkout{
-    .welcome-mat-widget,.mz-breadcrumbs,.mz-pagetitle{
+
+.mz-checkout {
+
+    .welcome-mat-widget,
+    .mz-breadcrumbs,
+    .mz-pagetitle {
         display: none;
     }
 }
+
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
     #amazonAddressBookWidgetDiv {
-    width: 400px; 
-    height: 228px;
+        width: 400px;
+        height: 228px;
     }
-    
+
     #walletWidgetDiv {
-    width: 400px; 
-    height: 228px;
+        width: 400px;
+        height: 228px;
     }
 }
 
@@ -81,43 +97,52 @@
 .mz-checkoutform {
     padding-left: @gutter/2;
     box-sizing: border-box;
+
     label {
-      cursor: default;
+        cursor: default;
     }
+
     a {
-      cursor: pointer;
+        cursor: pointer;
     }
+
     .mz-checkout-button-link {
-      padding: 3px;
-      border: 1px solid #ccc;
-      color: #666;
-      background-color: #f7f7f7;
-      cursor: pointer;
-      margin: @gutter/4;
+        padding: 3px;
+        border: 1px solid #ccc;
+        color: #666;
+        background-color: #f7f7f7;
+        cursor: pointer;
+        margin: @gutter/4;
     }
-    .mz-checkout-button-link:hover{
-      border: 1px solid #999;
-      color: black;
+
+    .mz-checkout-button-link:hover {
+        border: 1px solid #999;
+        color: black;
     }
 
 }
 
 .mz-checkoutform-shipping {
-  padding-top: @gutter/4;
+    padding-top: @gutter/4;
     display: block;
 }
 
-.mz-international-checkout{
-    .text-center{
+.mz-international-checkout {
+    .text-center {
         text-align: center;
     }
-    .mz-button{
+
+    .mz-button {
         text-decoration: none;
     }
-    .welcome-mat-widget,.mz-breadcrumbs,.mz-pagetitle{
+
+    .welcome-mat-widget,
+    .mz-breadcrumbs,
+    .mz-pagetitle {
         display: none;
     }
-    .mz-messagebar{
+
+    .mz-messagebar {
         margin-bottom: 50px;
     }
 }
@@ -131,21 +156,23 @@
 
 .mz-checkoutform-shipping-edit {
     padding: @gutter/4 @gutter/4 @gutter/4 @gutter/4;
+
     .mz-shipping-row {
-      margin: @gutter/4;
-      display: flex;
-      flex-wrap: wrap;
-      .mz-shipping-row-item{
+        margin: @gutter/4;
         display: flex;
-        align-items: center;
-        flex-grow: 1;
-      }
+        flex-wrap: wrap;
+
+        .mz-shipping-row-item {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
     }
 
 }
 
 .mz-l-formfieldgroup-cell {
-    > .mz-contactselector {
+    >.mz-contactselector {
         width: 100%;
     }
 }
@@ -155,7 +182,8 @@
         background-color: #666666;
         color: #ffffff;
         padding-left: 10px;
-        > a {
+
+        >a {
             color: #ffffff;
             padding-right: 10px;
         }
@@ -163,7 +191,7 @@
 }
 
 .mz-formstep-body {
-    > .mz-formstep-edit {
+    >.mz-formstep-edit {
         float: right;
         top: @gutter/4;
         position: relative;
@@ -177,28 +205,31 @@
     border-bottom: none;
 }
 
-.mz-shipping-method-address{
-  width: 100%;
-  display: flex;
+.mz-shipping-method-address {
+    width: 100%;
+    display: flex;
+
     .mz-l-formfieldgroup-cell {
-      flex-grow: 1;
-      margin-left: @gutter;
-      padding: @gutter/4 0px @gutter/4 0px;
+        flex-grow: 1;
+        margin-left: @gutter;
+        padding: @gutter/4 0px @gutter/4 0px;
 
     }
 
 }
 
 .mz-shipping-method-items {
-  div {
-    margin-left: @gutter;
-  }
-  span {
-    padding: @gutter/4;
-  }
+    div {
+        margin-left: @gutter;
+    }
+
+    span {
+        padding: @gutter/4;
+    }
 }
+
 .mz-shipping-method-section {
-  margin: @gutter/2;
+    margin: @gutter/2;
 }
 
 .mz-l-formfieldgroup {
@@ -225,26 +256,311 @@
         }
     }
 }
+
 .alternate-contact-section {
-  .mz-l-formfieldgroup {
-    .mz-l-formfieldgroup-row {
-      .cancel-button {
-        background:none;
-        border:none;
-        margin-left:20px
-      }
-      .cancel-button:hover {
-        text-decoration:underline;
-      }
+    .mz-l-formfieldgroup {
+        .mz-l-formfieldgroup-row {
+            .cancel-button {
+                background: none;
+                border: none;
+                margin-left: 20px
+            }
+
+            .cancel-button:hover {
+                text-decoration: underline;
+            }
+        }
     }
-  }
-  .img-action-button {
-    .delete-button {
-      margin-left: 150px;
-      opacity: 0.8;
+
+    .img-action-button {
+        .delete-button {
+            margin-left: 150px;
+            opacity: 0.8;
+        }
+
+        .delete-button:hover {
+            opacity: 1;
+        }
     }
-    .delete-button:hover {
-      opacity: 1;
+}
+
+/* Amazon Pay V2 Enhanced Styling */
+
+.amazon-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+
+    .amazon-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff9900;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
     }
-  }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.amazon-content {
+    padding: 0;
+}
+
+.amazon-section {
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.amazon-section-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+
+    .amazon-section-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #232f3e;
+    }
+}
+
+.amazon-widget-container {
+    padding: 20px;
+    min-height: 120px;
+
+    .amazon-address-display,
+    .amazon-payment-display {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 10px;
+
+        strong {
+            color: #232f3e;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .mz-button-small {
+            margin-top: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #ff9900;
+            border: 1px solid #e47911;
+            color: white;
+            border-radius: 3px;
+
+            &:hover {
+                background: #e47911;
+                border-color: #cd7511;
+            }
+        }
+    }
+}
+
+.amazon-actions {
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#amazonAddressBookWidgetTD {
+    display: table-row !important;
+    /* Force the row to be visible */
+    visibility: visible !important;
+}
+
+.amazon-checkout-v2-container {
+    display: flex;
+    width: 100%;
+
+    #addressBookWidgetDiv {
+        width: 50%;
+    }
+
+    #walletWidgetDiv {
+        width: 50%;
+    }
+}
+
+#continue {
+    display: block !important;
+    /* Force the button container to be visible */
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    /* Ensure buttons are on top */
+    pointer-events: auto !important;
+
+    .amazon-continue-btn {
+        background-color: #ff9900 !important;
+    }
+
+    .amazon-continue-btn:hover {
+        background-color: #e88800 !important;
+    }
+
+    .amazon-continue-btn:active,
+    .amazon-cancel-btn:active {
+        transform: scale(0.95) !important;
+    }
+}
+
+.amazon-button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    .amazon-cancel-btn {
+        background: white;
+        border: 1px solid #ddd;
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 3px;
+
+        &:hover {
+            background: #f5f5f5;
+            border-color: #bbb;
+        }
+    }
+
+    .amazon-v2-continue-btn{
+        background: #ff9900;
+        border: 1px solid #e47911;
+        color: white;
+        padding: 10px;
+        border-radius: 3px;
+        font-weight: 500;
+        margin-right: 10px;
+
+        &:hover {
+            background: #e47911;
+            border-color: #cd7511;
+        }
+    }
+}
+
+/* Amazon Pay error states */
+.amazon-error {
+    text-align: center;
+    padding: 20px;
+    color: #d32f2f;
+
+    p {
+        margin: 8px 0;
+    }
+
+    .amazon-v2-continue-btn {
+        margin-top: 10px;
+        background: #ff5722;
+        border-color: #e64a19;
+
+        &:hover {
+            background: #e64a19;
+        }
+    }
+}
+
+.amazon-error-message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button states */
+.amazon-continue-btn {
+    transition: all 0.2s ease;
+
+    &:disabled {
+        background: #ccc !important;
+        border-color: #bbb !important;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+}
+
+.amazon-cancel-btn,
+.amazon-continue-btn {
+    min-width: 120px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+/* Enhanced widget styling */
+.amazon-address-display,
+.amazon-payment-display {
+    position: relative;
+    transition: box-shadow 0.2s ease;
+
+    .mz-button-small {
+        transition: all 0.2s ease;
+        text-transform: none;
+        font-weight: 500;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+/* Mobile responsiveness for Amazon Pay */
+@media only screen and (max-width: 767px) {
+    .amazon-button-group {
+        flex-direction: column;
+        gap: 8px;
+
+        .amazon-cancel-btn,
+        .amazon-continue-btn {
+            width: 100%;
+            text-align: center;
+            min-width: auto;
+        }
+    }
+
+    .amazon-section-header {
+        padding: 12px 15px;
+
+        .amazon-section-title {
+            font-size: 16px;
+        }
+    }
+
+    .amazon-widget-container {
+        padding: 15px;
+    }
 }
