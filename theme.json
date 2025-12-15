@@ -684,6 +684,20 @@
   ],
   "pageTypes": [
     {
+      "entityType": "order",
+      "id": "amazon-checkout",
+      "template": "amazon-checkout",
+      "title": "Amazon Pay Checkout",
+      "userCreatable": false
+    },
+    {
+      "entityType": "order",
+      "id": "amazon-checkout-v2", 
+      "template": "amazon-checkout-v2",
+      "title": "Amazon Pay V2 Checkout",
+      "userCreatable": false
+    },
+    {
       "documentType": "web_page",
       "entityType": "webpage",
       "id": "about-us",

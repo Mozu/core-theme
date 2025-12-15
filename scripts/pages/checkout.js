@@ -22,13 +22,30 @@ require(["modules/jquery-mozu",
     var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
-        },
+         },
         cancel: function(){
             this.model.cancelStep();
         },
         amazonShippingAndBilling: function() {
             //isLoading(true);
             window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
+        },
+        amazonShippingAndBillingV2: function() {
+            // V2 uses checkout session ID instead of access token
+            var activePayments = window.order.apiModel.getActivePayments();
+            var v2Payment = activePayments && _.find(activePayments, function(payment) {
+                return payment.paymentType === 'PayWithAmazonV2' || 
+                       (payment.paymentType === 'token' && payment.billingInfo.token && payment.billingInfo.token.type === 'PayWithAmazonV2');
+            });
+            
+            if (v2Payment) {
+                var checkoutSessionId = v2Payment.paymentType === 'PayWithAmazonV2' ? 
+                    v2Payment.externalTransactionId : 
+                    v2Payment.billingInfo.token.paymentServiceTokenId;
+                
+                // Redirect to V2 checkout page with session ID
+                window.location = "/amazon-checkout-v2/"+window.order.id+"?checkoutSessionId="+checkoutSessionId;
+            }
         },
         next: function () {
             // wait for blur validation to complete
@@ -718,11 +735,24 @@ require(["modules/jquery-mozu",
         window.checkoutViews = checkoutViews;
 
         checkoutModel.on('complete', function() {
+            window.console.log("=== complete event fired, redirecting to confirmation ===");
+            var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
+            window.console.log("=== Confirmation URL:", confirmationUrl);
             CartMonitor.setCount(0);
             if (window.amazon)
                 window.amazon.Login.logout();
-            window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
+            window.console.log("=== About to redirect now ===");
+            window.location = confirmationUrl;
         });
+
+        // Check if returning from Amazon Pay V2 with checkout session and auto-submit
+        if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
+            window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
+            _.defer(function() {
+                window.console.log("=== Calling submitOrderAction ===");
+                checkoutModel.submitOrderAction();
+            });
+        }
 
         var $reviewPanel = $('#step-review');
         checkoutModel.on('change:isReady',function (model, isReady) {
@@ -736,10 +766,31 @@ require(["modules/jquery-mozu",
         $checkoutView.noFlickerFadeIn();
         
         var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
-        if (AmazonPay.isEnabled)
-            AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
-        if( AmazonPayV2.isEnabled)
-            AmazonPayV2.addCheckoutButton(window.order.id, false, isQuoteOrder);
+        
+        // Parse URL parameters using compatible approach
+        function getUrlParameter(name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results ? decodeURIComponent(results[1]) : null;
+        }
+        
+        var viewParam = getUrlParameter('view');
+        
+        // Check if we're on Amazon Pay V2 checkout page
+        if (viewParam === 'amazon-checkout-v2' && AmazonPayV2.isEnabled) {
+            // Initialize widgets for V2 checkout page
+            var checkoutSessionId = getUrlParameter('amazonCheckoutSessionId');
+            if (checkoutSessionId) {
+                AmazonPayV2.initializeWidgets(checkoutSessionId);
+            } else {
+                window.console.warn("Amazon Pay V2 checkout session ID not found");
+            }
+        } else {
+            // Regular flow - add buttons for cart/checkout
+            if (AmazonPay.isEnabled)
+                AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
+            if( AmazonPayV2.isEnabled)
+                AmazonPayV2.addCheckoutButton(window.order.id, false, isQuoteOrder);
+        }
 
         //For quote originated order, skip shipping address and shipping method steps
         if (checkoutData.originalQuoteId) {
