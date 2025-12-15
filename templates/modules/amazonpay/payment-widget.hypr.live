@@ -1,0 +1,14 @@
+<div class="amazon-payment-display">
+    <strong>Payment Method</strong>
+    {% if hasData %}
+    <div class="mz-payment-info">
+        {{ paymentDescriptor|default(descriptor)|default(maskedCardNumber)|default(type)|default("Payment method selected") }}
+    </div>
+    <button type="button" id="changePaymentBtn" class="mz-button mz-button-small change-payment-btn">Change</button>
+    {% else %}
+    <div class="mz-placeholder-text">
+        Please select a payment method from Amazon Pay
+    </div>
+    <button type="button" id="changePaymentBtn" class="mz-button mz-button-small change-payment-btn">Select Payment</button>
+    {% endif %}
+</div>

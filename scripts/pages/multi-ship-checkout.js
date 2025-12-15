@@ -265,6 +265,13 @@ require(["modules/jquery-mozu",
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkoutv2/" + checkoutModel.get('id') + "/confirmation";
         });
 
+        if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
+            window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
+            _.defer(function() {
+                window.console.log("=== Calling submitOrderAction() to complete order ===");
+                checkoutModel.submitOrderAction();
+            });
+        }
 
 
         var $reviewPanel = $('#step-review');
@@ -282,6 +289,8 @@ require(["modules/jquery-mozu",
 
         if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(window.order.id, false);
+        if (AmazonPayV2.isEnabled)
+            AmazonPayV2.addCheckoutButton(window.order.id, false);
 
     });
 });

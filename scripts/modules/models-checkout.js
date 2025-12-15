@@ -68,9 +68,17 @@
                     var tokenPayment = _.findWhere(activePayments, { paymentType: 'token' });
                     if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon")
                         return true;
+                    
+                    // Check for V2 token-based payment
+                    if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazonv2")
+                        return true;
 
                     var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
                     if (legacyPWA) return true;
+                    
+                    // Check for V2 legacy flow
+                    var v2Payment = _.findWhere(activePayments, { paymentType: 'PayWithAmazonV2' });
+                    if (v2Payment) return true;
                     
                     return false;
                 } else
@@ -1714,7 +1722,7 @@
                 }
 
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout',
-                    'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
+                    'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact', 'updateAmazonPayV2CheckoutSession', 'submitOrderAction');
 
                 this.on('sync', this.normalizeDiscountThresholdMessages, this);
 
@@ -1850,7 +1858,8 @@
                 });
             },
             onCheckoutSuccess: function () {
-                this.isLoading(true);
+                window.console.log("=== onCheckoutSuccess called, triggering complete event ===");
+                this.isLoading(false);
                 this.trigger('complete');
             },
             onCheckoutError: function (error) {
@@ -2105,6 +2114,111 @@
                     return customer.apiAddStoreCredit(cred.get('code'));
                 });
             },
+            submitOrderAction: function () {
+                var order = this;
+                window.console.log("=== submitOrderAction called ===");
+                order.isLoading(true);
+                return order.apiCheckout().then(function(result) {
+                    window.console.log("=== apiCheckout succeeded ===", result);
+                    
+                    // Redirect immediately to confirmation page
+                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + order.get('id') + "/confirmation";
+                    window.console.log("=== Redirecting to:", confirmationUrl);
+                    window.location.href = confirmationUrl;
+                    
+                    return result;
+                }, function(error) {
+                    window.console.error("=== apiCheckout failed ===", error);
+                    return order.onCheckoutError(error);
+                });
+            },
+            updateAmazonPayV2CheckoutSession: function () {
+                var order = this;
+                var activePayments = order.apiModel.getActivePayments();
+
+                var paymentSettings = HyprLiveContext.locals.siteContext && 
+                    HyprLiveContext.locals.siteContext.checkoutSettings && 
+                    (_.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PAYWITHAMAZONV2"}) ||
+                     _.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PayWithAmazonV2"}));
+                
+                var orderProcessing = paymentSettings && _.findWhere(paymentSettings.credentials, {"apiName": "orderProcessing"});
+                var paymentIntent = (orderProcessing && orderProcessing.value === "AuthAndCaptureOnOrderPlacement") ? 
+                    "AuthorizeWithCapture" : "Authorize";
+
+                    
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+                    // Check for legacy flow: paymentType === 'PayWithAmazonV2'
+                    if (payment.paymentType === 'PayWithAmazonV2') {
+                        return true;
+                    }
+                    // Check for modern token-based flow
+                    return payment.paymentType === 'token' && 
+                           payment.billingInfo && 
+                           payment.billingInfo.token && 
+                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                });
+
+                if (!amazonPayV2Payment) {
+                    var deferred = api.defer();
+                    deferred.resolve();
+                    return deferred.promise;
+                }
+
+                var checkoutSessionId = amazonPayV2Payment.paymentType === 'PayWithAmazonV2' ?
+                    amazonPayV2Payment.externalTransactionId :
+                    amazonPayV2Payment.billingInfo.token.paymentServiceTokenId;
+                var chargeAmount = {
+                    amount: amazonPayV2Payment.amountRequested,
+                    currencyCode: order.get('currencyCode') || 'USD'
+                };
+
+                // Get payment settings to determine paymentIntent based on orderProcessing
+                
+                var paymentDetails = {
+                    paymentIntent: paymentIntent,
+                    canHandlePendingAuthorization: false,
+                    chargeAmount: chargeAmount
+                };
+
+                var pageContext = require.mozuData('pagecontext');
+                var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
+                var orderNumber = this.getOrderNumber(order);
+                var payload = {
+                    checkoutSessionId: checkoutSessionId,
+                    webCheckoutDetails: {
+                        checkoutReviewReturnUrl: window.location.href,
+                        checkoutResultReturnUrl: window.location.href
+                    },
+                    paymentDetails: paymentDetails,
+                    merchantMetadata: {
+                        merchantReferenceId: orderNumber,
+                        merchantStoreName: siteName
+                    }
+                };
+
+                var apiUrl = "/amazonpay/v2/updatecheckoutsession";
+
+                return $.ajax({
+                    method: "POST",
+                    url: apiUrl,
+                    contentType: "application/json",
+                    data: JSON.stringify(payload)
+                }).then(function(response) {
+                    if (response && response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
+                    return response;
+                });
+            },
+            getOrderNumber: function(order) {
+                var orderNumber = order.id;
+                if(order.number){
+                    orderNumber = order.number;
+                }else if(order.apiModel && order.apiModel.data && order.apiModel.data.orderNumber){
+                    orderNumber = order.apiModel.data.orderNumber;
+                }
+                return orderNumber;
+            },
             isSavingNewCustomer: function() {
                 return this.get('createAccount') && !this.customerCreated;
             },
@@ -2238,9 +2352,29 @@
                     }
                 }
 
-                process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
-
-                api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
+                // Update Amazon Pay V2 checkout session before submitting order
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+                    // Check for legacy flow: paymentType === 'PayWithAmazonV2'
+                    if (payment.paymentType === 'PayWithAmazonV2') {
+                        return true;
+                    }
+                    // Check for modern token-based flow
+                    return payment.paymentType === 'token' && 
+                           payment.billingInfo && 
+                           payment.billingInfo.token && 
+                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                });
+                
+                if (amazonPayV2Payment) {
+                    // Only update session and redirect to Amazon, don't call apiCheckout
+                    // Order will be submitted via submitOrderAction when returning from Amazon
+                    // Don't call onCheckoutSuccess here - just execute the process and let it redirect
+                    api.steps(process).then(this.updateAmazonPayV2CheckoutSession);
+                } else {
+                    // For non-Amazon payments, proceed with normal order submission
+                    process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
+                    api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
+                }
 
             },
             update: function() {

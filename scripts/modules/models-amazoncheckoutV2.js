@@ -185,7 +185,7 @@ define([
 
                         payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
                             methodName: "tokenDetails",
-                            cardType: "PayWithAmazon",
+                            cardType: "PayWithAmazonV2",
                             body: null,
                             tokenId: response.id
                         }).then(function(details) {

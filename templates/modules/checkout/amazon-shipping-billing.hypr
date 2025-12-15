@@ -1,0 +1,38 @@
+{% comment %}
+Amazon Pay V1 shipping and billing template
+This template handles the V1 Amazon Pay checkout interface
+{% endcomment %}
+
+<tr id="amazonAddressBookWidgetTR" class="c">
+	<td colspan="2">
+		<div class="aws-step-content">
+			<h3>{{ labels.awsShippingAddress }}</h3>
+			<div id="addressBookWidgetDiv" class="aws-widget">
+				<!-- Amazon Pay V1 Address Widget will be rendered here -->
+			</div>
+		</div>
+	</td>
+</tr>
+
+<tr id="amazonWalletWidgetTR">
+	<td colspan="2">
+		<div class="aws-step-content">
+			<h3>{{ labels.awsPaymentMethod }}</h3>
+			<div id="walletWidgetDiv" class="aws-widget">
+				<!-- Amazon Pay V1 Wallet Widget will be rendered here -->
+			</div>
+		</div>
+	</td>
+</tr>
+
+<tr id="amazonAddressBookWidgetTD" style="display:none;">
+	<td colspan="2">
+		<div class="aws-step-content">
+			<div id="continue" style="display:none;">
+				<button type="button" onclick="window.checkoutView.submit();" class="mz-button mz-button-primary">
+					{{ labels.continueToReview }}
+				</button>
+			</div>
+		</div>
+	</td>
+</tr>

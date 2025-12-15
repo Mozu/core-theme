@@ -1,4 +1,5 @@
-﻿{% extends "page" %}
+﻿    
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.checkout %} - {% parent %}{% endblock title-tag-content %}
 
@@ -15,7 +16,7 @@
 
 {% block body-content %}
 
-{% require_script "pages/multi-ship-checkout" %}
+ {% require_script "pages/multi-ship-checkout" %}
 
 {% preload_json model "checkout" %}
 
@@ -91,7 +92,5 @@
 
 
 </form>
-
 </div>
-
 {% endblock body-content %}

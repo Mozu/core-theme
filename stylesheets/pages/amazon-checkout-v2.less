@@ -1,0 +1,227 @@
+/* Amazon Pay V2 Checkout Page Styles */
+
+/* Loading state */
+
+.shippingBillingTblv2 {
+    width: 70% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: auto;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 30px;
+
+    .amazon-address-bookrow {
+        display: flex;
+        justify-content: space-between;
+
+        td {
+            width: 100%;
+        }
+    }
+
+    .button-section{
+        display: flex;
+
+        .continue-btn {
+        background: #ff9900;
+        border: 1px solid #e47911;
+        color: white;
+        padding: 10px;
+        border-radius: 3px;
+        font-weight: 500;
+        margin-left: 10px;
+
+        &:hover {
+            background: #e47911;
+            border-color: #cd7511;
+        }
+    }
+    }
+}
+
+.change-address-btn,
+.change-payment-btn {
+    background-color: #ff9900;
+    border: 1px solid #e47911;
+    color: white;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 3px;
+    margin-top: 10px;
+    font-weight: 500;
+    &:hover {
+        background: #e47911;
+        border-color: #cd7511;
+    }
+}
+
+.amazon-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+
+    .amazon-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff9900;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Content sections */
+.amazon-content {
+    padding: 0;
+}
+
+
+.amazon-section-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+
+    .amazon-section-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #232f3e;
+    }
+}
+
+/* Widget container */
+.amazon-widget-container {
+    padding: 20px;
+    min-height: 120px;
+
+    .amazon-address-display,
+    .amazon-payment-display {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 10px;
+
+        strong {
+            color: #232f3e;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .mz-button-small {
+            margin-top: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #ff9900;
+            border: 1px solid #e47911;
+            color: white;
+            border-radius: 3px;
+
+            &:hover {
+                background: #e47911;
+                border-color: #cd7511;
+            }
+        }
+    }
+}
+
+/* Address and payment display widgets */
+.amazon-address-display,
+.amazon-payment-display {
+    position: relative;
+    transition: box-shadow 0.2s ease;
+
+    .mz-button-small {
+        transition: all 0.2s ease;
+        text-transform: none;
+        font-weight: 500;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+/* Actions section */
+.amazon-actions {
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* V2 Container */
+#amazonAddressBookWidgetTD {
+    display: table-row !important;
+    visibility: visible !important;
+}
+
+.amazon-checkout-v2-container {
+    display: flex;
+    width: 100%;
+
+    #addressBookWidgetDiv {
+        width: 50%;
+    }
+
+    #walletWidgetDiv {
+        width: 50%;
+    }
+}
+
+/* Error states */
+.amazon-error {
+    text-align: center;
+    padding: 20px;
+    color: #d32f2f;
+
+    p {
+        margin: 8px 0;
+    }
+
+    .amazon-v2-continue-btn {
+        margin-top: 10px;
+        background: #ff5722;
+        border-color: #e64a19;
+
+        &:hover {
+            background: #e64a19;
+        }
+    }
+}
+
+.amazon-error-message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
