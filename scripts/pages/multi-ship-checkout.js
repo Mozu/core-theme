@@ -1,3 +1,27 @@
+// Check if this is an Amazon checkout view and load the appropriate script
+(function() {
+    var getUrlParameter = function(name) {
+        var regex = new RegExp('[?&]' + name + '=([^&#]*)');
+        var results = regex.exec(window.location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')).trim();
+    };
+
+    var viewParam = getUrlParameter('view');
+    window.console.log('Multi-ship-checkout.js: view param =', viewParam);
+
+    if (viewParam === 'amazon-checkoutv2-v2') {
+        window.console.log('Detected Amazon checkout view, loading Amazon script...');
+        // Load Amazon checkout script instead
+        require(['pages/amazon-checkoutv2-v2'], function() {
+            window.console.log('Amazon checkoutv2-v2 script loaded successfully');
+        }, function(err) {
+            window.console.error('Failed to load Amazon script:', err);
+        });
+        return;
+    }
+    window.console.log('Normal multi-ship checkout, continuing...');
+})();
+
 require(["modules/jquery-mozu",
     "underscore",
     "hyprlive",
@@ -282,6 +306,8 @@ require(["modules/jquery-mozu",
 
         if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(window.order.id, false);
+        if (AmazonPayV2.isEnabled)
+            AmazonPayV2.addCheckoutButton(window.order.id, false);
 
     });
 });
