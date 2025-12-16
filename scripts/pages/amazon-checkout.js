@@ -81,7 +81,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 		var checkoutModel = '';
 		
 		if (hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled)
-			checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+			checkoutModel = window.order = new AmazonCheckoutModels.AwsCheckoutPage(checkoutData);
 		else
 			checkoutModel = window.order = new AmazonCheckoutModels.AwsCheckoutPage(checkoutData);
 

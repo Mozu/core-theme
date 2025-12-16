@@ -28,8 +28,19 @@ Amazon Pay V2 - Exact same structure as V1
 	<td colspan="2">
 		<div class="aws-step-content">
 			<div id="continue" class="amazon-actions" style="display:none;">
-				<button type="button" onclick="if(window.checkoutView && window.checkoutView.submit) { window.checkoutView.submit(); } else { alert('Checkout not ready. Please wait and try again.'); console.log('checkoutView status:', window.checkoutView); }" class="mz-button mz-button-primary amazon-continue-btn">
-					Continue to Review6
+				<button type="button" onclick="
+					console.log('Script started:', !!window.v2ScriptStarted);
+					console.log('Modules loaded:', !!window.v2ModulesLoaded); 
+					console.log('CheckoutView created:', !!window.v2CheckoutViewCreated);
+					console.log('CheckoutView available:', !!window.checkoutView);
+					
+					if (window.checkoutView && window.checkoutView.submit) {
+						window.checkoutView.submit();
+					} else {
+						alert('CheckoutView not available - check console logs');
+					}
+				" class="mz-button mz-button-primary amazon-continue-btn">
+					Continue to Review
 				</button>
 				<button type="button" onclick="window.history.back();" class="mz-button amazon-cancel-btn">
 					Cancel

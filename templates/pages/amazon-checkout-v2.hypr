@@ -19,18 +19,6 @@
 			element.style.display = 'block';
 		};
 
-		// Debug function to test checkoutView manually
-		window.testCheckoutView = function() {
-			console.log("=== Manual CheckoutView Test ===");
-			console.log("window.checkoutView exists:", !!window.checkoutView);
-			if (window.checkoutView) {
-				console.log("checkoutView type:", typeof window.checkoutView);
-				console.log("checkoutView submit method:", typeof window.checkoutView.submit);
-				console.log("checkoutView properties:", Object.keys(window.checkoutView));
-			}
-			console.log("window.order exists:", !!window.order);
-			return window.checkoutView;
-		};
 	</script>
     <h1 class="mz-pagetitle" id="shippingAndBillingTitle" style="display:none;">
 		{{ labels.awsCheckout }}

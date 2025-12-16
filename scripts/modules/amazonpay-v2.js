@@ -70,7 +70,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSessionConfig: function(cartOrOrderId, isCart) {
 			var self = this;
-			var apiUrl = "/amazonpay/checkoutsession";
+			var apiUrl = "http://localhost:3001/amazonpay/checkoutsession";
 			cartOrOrderId = cartOrOrderId || "1234";
 
 			window.console.log("=== Making API call to:", apiUrl, "===");
@@ -99,7 +99,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSession: function(checkoutSessionId) {
 				var self = this;
-				var apiUrl = "/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
+				var apiUrl = "http://localhost:3001/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
 
 			window.console.log("=== Making API call to get checkout session:", apiUrl, "===");
 			

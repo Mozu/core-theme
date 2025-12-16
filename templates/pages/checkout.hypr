@@ -19,7 +19,11 @@
 {% if pageContext.query.view == "amazon-checkout" %}  
     {% require_script "pages/amazon-checkout" %}
 {% else %}
-    {% require_script "pages/checkout" %}
+    {% if pageContext.query.view == "amazon-checkout-v2" %}
+        {% require_script "pages/amazon-checkout-v2" %}
+    {% else %}
+        {% require_script "pages/checkout" %}
+    {% endif %}
 {% endif %}
 
 {% preload_json model "checkout" %}
