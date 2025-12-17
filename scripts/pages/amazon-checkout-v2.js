@@ -1,15 +1,13 @@
-console.log("=== V2 SCRIPT FILE LOADING ===");
 window.v2ScriptLoaded = true;
 
 require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","underscore", 
-	"modules/amazonpay-v2","modules/models-amazoncheckout","modules/models-amazoncheckoutV2",'hyprlivecontext','modules/preserve-element-through-render'], 
-	function ($,Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModels, AmazonCheckoutModelsV2,hyprlivecontext) {
+	"modules/amazonpay-v2","modules/models-amazoncheckout-v2",'hyprlivecontext','modules/preserve-element-through-render'], 
+	function ($,Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2,hyprlivecontext) {
 
 	var AmazonCheckoutView = Backbone.MozuView.extend({
 		// Don't use templateName, render content directly
 		autoUpdate: ['overrideItemDestinations'],
 		initialize: function() {
-			console.log("=== V2 SCRIPT FILE LOADING  initilize===");
 			this.listenTo(this.model, "awscheckoutcomplete", function(id){
 				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
 
@@ -20,37 +18,35 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 			});
 		},
 		render: function() {
-			// Manually render V2 content instead of using template
-			var v2Content = '<tr id="amazonAddressBookWidgetTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<h3>Shipping Address</h3>' +
-						'<div id="addressBookWidgetDiv" class="aws-widget">' +
-							'<!-- Amazon Pay V2 Address Widget will be rendered here -->' +
+			// Manually render V2 content - matches V1 structure
+			var v2Content = 
+				'<tr id="amazonAddressBookWidgetTR">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<h3>Shipping Address</h3>' +
+							'<div id="addressBookWidgetDiv" class="aws-widget"><!-- Amazon Pay V2 Address Widget --></div>' +
 						'</div>' +
-					'</div>' +
-				'</td>' +
-			'</tr>' +
-			'<tr id="amazonWalletWidgetTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<h3>Payment Method</h3>' +
-						'<div id="walletWidgetDiv" class="aws-widget">' +
-							'<!-- Amazon Pay V2 Wallet Widget will be rendered here -->' +
+					'</td>' +
+				'</tr>' +
+				'<tr id="amazonWalletWidgetTR">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<h3>Payment Method</h3>' +
+							'<div id="walletWidgetDiv" class="aws-widget"><!-- Amazon Pay V2 Wallet Widget --></div>' +
 						'</div>' +
-					'</div>' +
-				'</td>' +
-			'</tr>' +
-			'<tr id="amazonContinueButtonTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<button id="continue" class="mz-button mz-button-large" onclick="if(window.checkoutView){window.checkoutView.submit();}else{alert(\'CheckoutView not available\');}" style="display:none;">Continu to Review Order2</button>' +
-					'</div>' +
-				'</td>' +
-			'</tr>';
+					'</td>' +
+				'</tr>' +
+				'<tr id="amazonAddressBookWidgetTD" style="display:none;">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<div id="continue" style="display:none;">' +
+								'<button type="button" onclick="if(window.checkoutView){window.checkoutView.submit();}else{alert(\'CheckoutView not available\');}" class="mz-button mz-button-primary">Continue to Review Order</button>' +
+							'</div>' +
+						'</div>' +
+					'</td>' +
+				'</tr>';
 			
 			this.$el.html(v2Content);
-			console.log("=== V2 content rendered manually ===");
 		},
 		redirectToCart: function() {
 			window.location = document.referrer;
@@ -61,86 +57,55 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 	});
 
 	$(document).ready(function () {
-		console.log("=== V2 READY FUNCTION CALLED ===");
 		window.v2ReadyCalled = true;
 		
 		AmazonPayV2.init(false);
 
 		var checkoutData = require.mozuData('checkout');
-		console.log("=== CHECKOUT DATA ===", checkoutData);
 		
-		// Use V2 model with proxy-routed API calls
-		var checkoutModel = '';
-		try {
-			// Use V2 model with proxy support
-			checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
-			console.log("=== Using V2 Amazon checkout model with proxy ===");
-		} catch (error) {
-			console.error("=== V2 Amazon model creation failed ===", error);
-			// Fallback to simple model if Amazon model fails
-			checkoutModel = new Backbone.Model(checkoutData || {});
-			checkoutModel.submit = function() {
-				console.log("=== Simple model submit - V2 model not available ===");
-				alert("V2 Amazon checkout model not available");
-			};
-		}
-		
-		window.order = checkoutModel;
-		console.log("=== SIMPLE MODEL CREATED ===");
+		// Use Amazon Pay V2 model
+		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 
-		console.log("=== Looking for shippingBillingTbl ===");
 		var tableElement = $('#shippingBillingTbl');
-		console.log("=== Element exists? ===", tableElement.length > 0);
 		
 		if (tableElement.length > 0) {
-			console.log("=== Using direct HTML injection - avoiding Backbone view ===");
 			
-			// Inject V2 content directly
-			var v2Content = '<tr id="amazonAddressBookWidgetTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<h3>Shipping Address</h3>' +
-						'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">' +
-							'Loading address widget...' +
+			// Inject V2 content directly - matches V1 structure
+			var v2Content = 
+				'<tr id="amazonAddressBookWidgetTR">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<h3>Shipping Address</h3>' +
+							'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">Loading address widget...</div>' +
 						'</div>' +
-					'</div>' +
-				'</td>' +
-			'</tr>' +
-			'<tr id="amazonWalletWidgetTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<h3>Payment Method</h3>' +
-						'<div id="walletWidgetDiv" class="aws-widget amazon-loading">' +
-							'Loading payment widget...' +
+					'</td>' +
+				'</tr>' +
+				'<tr id="amazonWalletWidgetTR">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<h3>Payment Method</h3>' +
+							'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
 						'</div>' +
-					'</div>' +
-				'</td>' +
-			'</tr>' +
-			'<tr id="amazonContinueButtonTR">' +
-				'<td colspan="2">' +
-					'<div class="aws-step-content">' +
-						'<button id="continue" class="mz-button mz-button-large" onclick="' +
-							'console.log(\'Button clicked\');' +
-							'console.log(\'CheckoutView exists:\', !!window.checkoutView);' +
-							'console.log(\'Submit function exists:\', !!(window.checkoutView && window.checkoutView.submit));' +
-							'if(window.submitV2Order) { window.submitV2Order(); } else { alert(\'submitV2Order not found\'); }' +
-						'" style="display:none;">Continue to Review Order</button>' +
-					'</div>' +
-				'</td>' +
-			'</tr>';
+					'</td>' +
+				'</tr>' +
+				'<tr id="amazonAddressBookWidgetTD" style="display:none;">' +
+					'<td colspan="2">' +
+						'<div class="aws-step-content">' +
+							'<div id="continue" style="display:none;">' +
+								'<button type="button" onclick="if(window.submitV2Order){window.submitV2Order();}else{alert(\'submitV2Order not found\');}" class="mz-button mz-button-primary">Continue to Review Order</button>' +
+							'</div>' +
+						'</div>' +
+					'</td>' +
+				'</tr>';
 			
 			tableElement.html(v2Content);
 			
 			// Create simple checkout view object - same as V1
 			window.checkoutView = {
 			submit: function() {
-				console.log("=== V2 Submit called - using V2 model with proxy ===");					// Debug the model state before submit
-					console.log("=== Model destinations ===", this.model.get("destinations"));
-					console.log("=== Model awsData ===", this.model.awsData);
 					
 					if (this.model.getAwsDestination) {
 						var awsDest = this.model.getAwsDestination();
-						console.log("=== getAwsDestination result ===", awsDest);
 					}
 					
 					// Call model.submit() exactly like V1 does
@@ -151,25 +116,18 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 			
 			// Also add a global function for the button onclick
 			window.submitV2Order = function() {
-				console.log("=== Global V2 submit called ===");
 				if (window.checkoutView && window.checkoutView.submit) {
 					window.checkoutView.submit();
 				} else {
-					console.error("CheckoutView not available");
 					alert("CheckoutView not available");
 				}
 			};
 			
-			console.log("=== Direct V2 content rendered ===");
 		} else {
-			console.error("=== shippingBillingTbl element not found ===");
 		}
 
 		// Extract Amazon Checkout Session ID from URL after Amazon redirect
 		var urlParams = $.deparam();
-		console.log("=== URL PARAMS (deparam) ===", urlParams);
-		console.log("=== urlParams.amazonCheckoutSessionId type ===", typeof urlParams.amazonCheckoutSessionId);
-		console.log("=== urlParams.amazonCheckoutSessionId value ===", urlParams.amazonCheckoutSessionId);
 		
 		// Fallback URL parsing
 		var sessionIdFromURL = null;
@@ -178,57 +136,41 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 			var match = urlSearch.match(/amazonCheckoutSessionId=([^&]*)/);
 			sessionIdFromURL = match ? decodeURIComponent(match[1]) : null;
 		}
-		console.log("=== amazonCheckoutSessionId (URLSearchParams) ===", sessionIdFromURL);
-		console.log("=== Full URL ===", window.location.href);
 		
 		var checkoutSessionId = urlParams.amazonCheckoutSessionId || sessionIdFromURL;
-		console.log("=== Final sessionId ===", checkoutSessionId);
-		console.log("=== sessionId type ===", typeof checkoutSessionId);
 		
 		// Ensure it's a string, not an object
 		if (checkoutSessionId && typeof checkoutSessionId === 'object') {
-			console.warn("=== sessionId is object, converting ===", checkoutSessionId);
 			checkoutSessionId = checkoutSessionId.toString();
 		}
 		
 		if (checkoutSessionId) {
-			console.log("=== Amazon Checkout Session ID found ===", checkoutSessionId);
 			
-			// Set up Amazon data for V2 model (destinations structure)
-			if (checkoutModel.get && typeof checkoutModel.get === 'function') {
-				var destinations = checkoutModel.get("destinations") || [];
-				// Ensure we have at least one destination with V2 data structure
-				if (destinations.length === 0) {
-					destinations = [{ data: {} }];
-				}
-				destinations[0].data = {
-					amazonCheckoutSessionId: checkoutSessionId
-				};
-				checkoutModel.set("destinations", destinations);
-				console.log("=== V2 destinations set ===", destinations);
-			}
-			
-			// Set awsData property exactly like V1 model expects
+			// Set up Amazon data for V2 model
+			// The model's submit() expects awsData with amazonCheckoutSessionId
 			checkoutModel.awsData = {
 				amazonCheckoutSessionId: checkoutSessionId
 			};
+			
+			// Also set in fulfillmentInfo.data for backup
+			var fulfillmentInfo = checkoutModel.get("fulfillmentInfo");
+			if (fulfillmentInfo) {
+				fulfillmentInfo.data = {
+					amazonCheckoutSessionId: checkoutSessionId
+				};
+				checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
+			}
 
-			// Try direct API call to get checkout session data
-			console.log("=== Making direct API call ===");
-			AmazonPayV2.getCheckoutSession(checkoutSessionId)
-				.then(function(response) {
-					console.log("=== API Response ===", response);
-					
-					// Check if displayCheckoutSessionInfo function exists
-					if (typeof AmazonPayV2.displayCheckoutSessionInfo === 'function') {
-						console.log("=== Calling displayCheckoutSessionInfo ===");
-						AmazonPayV2.displayCheckoutSessionInfo(response, checkoutSessionId);
-					} else {
-						console.error("=== displayCheckoutSessionInfo function not found ===");
+			// Use displayCheckoutSessionInfo which handles the API call internally
+			if (typeof AmazonPayV2.displayCheckoutSessionInfo === 'function') {
+				AmazonPayV2.displayCheckoutSessionInfo(checkoutSessionId);
+			} else {
+				// Fallback: direct API call if function doesn't exist
+				AmazonPayV2.getCheckoutSession(checkoutSessionId)
+					.then(function(response) {
 						// Manual data binding as fallback
 						if (response && response.data) {
 							var data = response.data;
-							console.log("=== Manual data binding ===", data);
 							
 							// Update address widget
 							if (data.shippingAddress) {
@@ -246,19 +188,16 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 								$('#walletWidgetDiv').html('<div><strong>Payment Method:</strong><br>Amazon Pay Selected</div>');
 							}
 						}
-					}
-					
-					$("#continue").show();
-					console.log("=== Continue button shown ===");
-				})
-				.fail(function(error) {
-					console.error("=== API Error ===", error);
-					$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
-					$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
-				});
+						
+						$("#continue").show();
+					})
+					.fail(function(error) {
+						$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
+						$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
+					});
+			}
 
 		} else {
-			console.warn("=== No Amazon Checkout Session ID found in URL ===");
 		}
 	});
 });

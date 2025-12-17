@@ -53,7 +53,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					self.isScriptLoaded = true;
 					EventBus.trigger("aws-script-loaded");
 				}).fail(function(jqxhr, settings, exception) {
-					window.console.error("Failed to load Amazon Pay V2 checkout.js:", exception);
 				});
 			}
 		},
@@ -70,26 +69,21 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSessionConfig: function(cartOrOrderId, isCart) {
 			var self = this;
-			var apiUrl = "http://localhost:3001/amazonpay/checkoutsession";
+			var apiUrl = "/amazonpay/checkoutsession";
 			cartOrOrderId = cartOrOrderId || "1234";
-
-			window.console.log("=== Making API call to:", apiUrl, "===");
 			
 			return $.ajax({
 				method: "POST",
 				url: apiUrl,
 				contentType: "application/json",
-				// timeout: 3000,
 				data: JSON.stringify({
 					cartOrOrderId: cartOrOrderId,
 					isCart: isCart,
 					returnUrl: self.getReturnUrl(cartOrOrderId, isCart)
 				})
 			}).then(function(response) {
-				window.console.log("=== API Response received ===", response);
 				return response;
 			}).fail(function(error) {
-				window.console.warn("=== API call failed, using hardcoded response ===", error);
 				// Return hardcoded response on any failure
 			});
 		},
@@ -99,20 +93,15 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSession: function(checkoutSessionId) {
 				var self = this;
-				var apiUrl = "http://localhost:3001/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
-
-			window.console.log("=== Making API call to get checkout session:", apiUrl, "===");
+				var apiUrl = "/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
 			
 			return $.ajax({
 				method: "GET",
 				url: apiUrl,
 				contentType: "application/json"
-				// timeout: 3000
 			}).then(function(response) {
-				window.console.log("=== Checkout Session Response received ===", response);
 				return response;
 			}).fail(function(error) {
-				window.console.warn("=== Checkout Session API call failed ===", error);
 			});
 		},
 
@@ -141,8 +130,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 
 			// For quote orders, use different flow if needed
 			if (isQuoteOrder) {
-				// TODO: Implement quote order flow
-				window.console.warn("Amazon Pay quote order flow not yet implemented in v2");
 				return;
 			}
 
@@ -166,7 +153,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			self.getCheckoutSessionConfig(cartOrOrderId, isCart).then(function(sessionConfig) {
 
 				if (!window.amazon || !window.amazon.Pay) {
-					window.console.error("Amazon Pay SDK not loaded");
 					return;
 				}
 
@@ -189,7 +175,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				});
 
 			}).fail(function(error) {
-				window.console.error("Failed to render Amazon Pay button:", error);
 			});
 		},
 
@@ -199,24 +184,15 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		initializeWidgets: function(checkoutSessionId) {
 			var self = this;
 			
-			window.console.log("=== Amazon Pay V2: Initialize Widgets ===");
-			window.console.log("Checkout Session ID:", checkoutSessionId);
-			window.console.log("Script Loaded:", self.isScriptLoaded);
-			
-			// Keep UI hidden until data loads
 			self.showLoadingState();
 			
-			// Wait for SDK to load if not already loaded
 			if (!self.isScriptLoaded) {
-				window.console.log("SDK not loaded yet, waiting for aws-script-loaded event");
 				EventBus.on("aws-script-loaded", function() {
-					window.console.log("SDK loaded event received, displaying checkout session info");
 					self.displayCheckoutSessionInfo(checkoutSessionId);
 				});
 				return;
 			}
 			
-			window.console.log("SDK already loaded, displaying checkout session info immediately");
 			self.displayCheckoutSessionInfo(checkoutSessionId);
 		},
 
@@ -227,41 +203,25 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		displayCheckoutSessionInfo: function(checkoutSessionId) {
 			var self = this;
 			
-			window.console.log("=== Amazon Pay V2: Display Checkout Session Info ===");
-			window.console.log("Checkout Session ID:", checkoutSessionId);
-			
-			// Keep UI in loading state until data arrives
 			var addressDiv = document.getElementById('addressBookWidgetDiv');
 			var walletDiv = document.getElementById('walletWidgetDiv');
 			
-			window.console.log("=== DOM Elements Found ===");
-			window.console.log("Address Div:", addressDiv);
-			window.console.log("Wallet Div:", walletDiv);
-			
-			// Call API to get session information using the checkout session ID
-			window.console.log("=== Calling API for checkout session:", checkoutSessionId, "===");
 			self.getCheckoutSession(checkoutSessionId).then(function(response) {
-				window.console.log("=== API Response Received ===", response);
 				
 				// Extract the actual session data from the response
 				var sessionInfo = response.data || response;
-				window.console.log("=== Session Data ===", sessionInfo);
 				
 				// Get shipping address and payment preferences from the correct structure
 				var shippingAddress = sessionInfo.shippingAddress;
 				var paymentMethod = sessionInfo.paymentPreferences;
 				
-				window.console.log("=== Shipping Address ===", shippingAddress);
-				window.console.log("=== Payment Preferences ===", paymentMethod);
 				
 				// Hide loading state
 				self.hideLoadingState();
 				
 				// Display read-only shipping address with Amazon change action
 				if (addressDiv) {
-					window.console.log("=== Processing Address Div ===");
 					if (shippingAddress) {
-						window.console.log("=== Binding shipping address data ===", shippingAddress);
 						var address = shippingAddress;
 						var addressHTML = 
 							'<div class="amazon-address-display">' +
@@ -275,18 +235,15 @@ function($,EventBus, Api, hyprlivecontext, _) {
 							'<button type="button" id="changeAddressBtn" class="mz-button mz-button-small">Change</button>' +
 							'</div>';
 						
-						window.console.log("=== Setting address HTML ===", addressHTML);
 						addressDiv.innerHTML = addressHTML;
 							
 						// Use Amazon Pay V2 change action - redirects to Amazon hosted page
 						setTimeout(function() {
 							var addressBtn = document.getElementById('changeAddressBtn');
 							if (addressBtn && window.amazon && window.amazon.Pay) {
-								window.console.log("=== Binding address change button ===");
 								if (typeof window.amazon.Pay.changeShippingAddress === 'function') {
 									// Newer V2 method (recommended)
 									addressBtn.onclick = function() {
-										window.console.log("Address change clicked");
 										window.amazon.Pay.changeShippingAddress({
 											amazonCheckoutSessionId: checkoutSessionId
 										});
@@ -299,12 +256,10 @@ function($,EventBus, Api, hyprlivecontext, _) {
 									});
 								}
 							} else {
-								window.console.error("Address button or Amazon SDK not found");
 							}
 						}, 100);
 					} else {
 						// Show placeholder if no address data
-						window.console.log("=== Showing address placeholder ===");
 						addressDiv.innerHTML = 
 							'<div class="amazon-address-display">' +
 							'<strong>Shipping Address</strong>' +
@@ -318,10 +273,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 						setTimeout(function() {
 							var addressBtn = document.getElementById('changeAddressBtn');
 							if (addressBtn && window.amazon && window.amazon.Pay) {
-								window.console.log("=== Binding placeholder address button ===");
 								if (typeof window.amazon.Pay.changeShippingAddress === 'function') {
 									addressBtn.onclick = function() {
-										window.console.log("Address selection clicked");
 										window.amazon.Pay.changeShippingAddress({
 											amazonCheckoutSessionId: checkoutSessionId
 										});
@@ -339,9 +292,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				
 				// Display read-only payment method with Amazon change action
 				if (walletDiv) {
-					window.console.log("=== Processing Payment Div ===");
 					if (paymentMethod && paymentMethod.length > 0) {
-						window.console.log("=== Binding payment method data ===", paymentMethod);
 						var payment = paymentMethod[0];
 						var paymentHTML = 
 							'<div class="amazon-payment-display">' +
@@ -352,18 +303,15 @@ function($,EventBus, Api, hyprlivecontext, _) {
 							'<button type="button" id="changePaymentBtn" class="mz-button mz-button-small">Change</button>' +
 							'</div>';
 							
-						window.console.log("=== Setting payment HTML ===", paymentHTML);
 						walletDiv.innerHTML = paymentHTML;
 							
 						// Use Amazon Pay V2 change action - redirects to Amazon hosted page
 						setTimeout(function() {
 							var paymentBtn = document.getElementById('changePaymentBtn');
 							if (paymentBtn && window.amazon && window.amazon.Pay) {
-								window.console.log("=== Binding payment change button ===");
 								if (typeof window.amazon.Pay.changePaymentMethod === 'function') {
 									// Newer V2 method (recommended)
 									paymentBtn.onclick = function() {
-										window.console.log("Payment change clicked");
 										window.amazon.Pay.changePaymentMethod({
 											amazonCheckoutSessionId: checkoutSessionId
 										});
@@ -376,12 +324,10 @@ function($,EventBus, Api, hyprlivecontext, _) {
 									});
 								}
 							} else {
-								window.console.error("Payment button or Amazon SDK not found");
 							}
 						}, 100);
 					} else {
 						// Show placeholder if no payment data
-						window.console.log("=== Showing payment placeholder ===");
 						walletDiv.innerHTML = 
 							'<div class="amazon-payment-display">' +
 							'<strong>Payment Method</strong>' +
@@ -395,10 +341,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 						setTimeout(function() {
 							var paymentBtn = document.getElementById('changePaymentBtn');
 							if (paymentBtn && window.amazon && window.amazon.Pay) {
-								window.console.log("=== Binding placeholder payment button ===");
 								if (typeof window.amazon.Pay.changePaymentMethod === 'function') {
 									paymentBtn.onclick = function() {
-										window.console.log("Payment selection clicked");
 										window.amazon.Pay.changePaymentMethod({
 											amazonCheckoutSessionId: checkoutSessionId
 										});
@@ -414,11 +358,16 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					}
 				}
 				
-				// Always show continue button at the end
-				var continueButton = document.getElementById('continue');
-				if (continueButton) {
-					continueButton.style.display = 'block';
-					window.console.log("Continue button shown at end");
+				// Show continue button wrapper and parent row
+				var continueDiv = document.getElementById('continue');
+				if (continueDiv) {
+					continueDiv.style.display = 'block';
+				}
+				
+				// Show the parent row containing the continue button
+				var continueRow = document.getElementById('amazonAddressBookWidgetTD');
+				if (continueRow) {
+					continueRow.style.display = '';
 				}
 				
 				// Ensure widgets have some content even if API data is missing
@@ -426,27 +375,20 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				var payDiv = document.getElementById('walletWidgetDiv');
 				
 				if (addrDiv && !addrDiv.innerHTML.trim()) {
-					window.console.log("Address widget empty, adding placeholder");
 					addrDiv.innerHTML = '<div class="amazon-address-display"><strong>Shipping Address</strong><div style="margin-top: 8px; color: #666;">Please select your shipping address</div><button type="button" class="mz-button mz-button-small">Select Address</button></div>';
 				}
 				
 				if (payDiv && !payDiv.innerHTML.trim()) {
-					window.console.log("Payment widget empty, adding placeholder");
 					payDiv.innerHTML = '<div class="amazon-payment-display"><strong>Payment Method</strong><div style="margin-top: 8px; color: #666;">Please select your payment method</div><button type="button" class="mz-button mz-button-small">Select Payment</button></div>';
 				}
 				
 			}, function(error) {
-				window.console.error("=== Error Callback Received ===");
-				window.console.error("Error Type:", typeof error);
-				window.console.error("Error Message:", error.message);
-				window.console.error("Full Error Object:", error);
 				
 				// Hide loading and show error
 				self.hideLoadingState();
 				self.showErrorState(error.message || "Failed to load Amazon Pay information");
 				
 				// Fallback to placeholder content
-				window.console.log("=== Falling back to placeholder content ===");
 				self.showPlaceholderContent(addressDiv, walletDiv, checkoutSessionId);
 			});
 		},
@@ -472,7 +414,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		hideLoadingState: function() {
 			// Loading state is hidden when content is replaced
-			window.console.log("Loading state hidden");
 		},
 
 		/**
@@ -495,7 +436,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 * Show placeholder content if API call fails
 		 */
 		showPlaceholderContent: function(addressDiv, walletDiv, checkoutSessionId) {
-			window.console.log("Showing placeholder content");
 			
 			if (addressDiv) {
 				addressDiv.innerHTML = 
