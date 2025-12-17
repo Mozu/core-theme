@@ -118,9 +118,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 			window.submitV2Order = function() {
 				if (window.checkoutView && window.checkoutView.submit) {
 					window.checkoutView.submit();
-				} else {
-					alert("CheckoutView not available");
-				}
+				} 
 			};
 			
 		} else {
