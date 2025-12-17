@@ -88,14 +88,14 @@ define([
                 if (me.isLegacyCheckout()) {
                     // Legacy flow - direct payment with external transaction ID
                     billingInfo.externalTransactionId = me.awsData.awsReferenceId;
-                    billingInfo.newBillingInfo.paymentType = "PayWithAmazon";
-                    billingInfo.newBillingInfo.paymentWorkflow = "PayWithAmazon";
+                    billingInfo.newBillingInfo.paymentType = "PayWithAmazonV2";
+                    billingInfo.newBillingInfo.paymentWorkflow = "PayWithAmazonV2";
                 } else {
                     // Modern flow - token-based payment
                     billingInfo.newBillingInfo.paymentType = "token";
                     billingInfo.newBillingInfo.token = {
                         "paymentServiceTokenId": me.awsData.id,
-                        "type": "PayWithAmazon"
+                        "type": "PayWithAmazonV2"
                     };
                 }
 
