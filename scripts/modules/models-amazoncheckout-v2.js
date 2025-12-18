@@ -87,7 +87,7 @@ define([
 
                 if (me.isLegacyCheckout()) {
                     // Legacy flow - direct payment with external transaction ID
-                    billingInfo.externalTransactionId = me.awsData.awsReferenceId;
+                    billingInfo.externalTransactionId = me.awsData.amazonCheckoutSessionId;
                     billingInfo.newBillingInfo.paymentType = "PayWithAmazonV2";
                     billingInfo.newBillingInfo.paymentWorkflow = "PayWithAmazonV2";
                 } else {
