@@ -145,16 +145,16 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 		if (checkoutSessionId) {
 			
 			// Set up Amazon data for V2 model
-			// The model's submit() expects awsData with amazonCheckoutSessionId
+			// The model's submit() expects awsData with checkoutSessionId
 			checkoutModel.awsData = {
-				amazonCheckoutSessionId: checkoutSessionId
+				checkoutSessionId: checkoutSessionId
 			};
 			
 			// Also set in fulfillmentInfo.data for backup
 			var fulfillmentInfo = checkoutModel.get("fulfillmentInfo");
 			if (fulfillmentInfo) {
 				fulfillmentInfo.data = {
-					amazonCheckoutSessionId: checkoutSessionId
+					checkoutSessionId: checkoutSessionId
 				};
 				checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
 			}
