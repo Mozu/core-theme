@@ -2146,7 +2146,7 @@
 
                 return $.ajax({
                     method: "PATCH",
-                    url: "/amazonpay/v2/checkout-sessions/" + checkoutSessionId,
+                    url: "/amazonpay/v2/update-checkout-session/" + checkoutSessionId,
                     contentType: "application/json",
                     data: JSON.stringify(payload)
                 }).then(function(response) {
