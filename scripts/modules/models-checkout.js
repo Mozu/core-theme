@@ -2303,10 +2303,13 @@
                 });
                 
                 if (amazonPayV2Payment) {
+                    // Only update session and redirect to Amazon, don't call apiCheckout
+                    // Order will be submitted via submitOrderAction when returning from Amazon
                     process.push(this.updateAmazonPayV2CheckoutSession);
+                } else {
+                    // For non-Amazon payments, proceed with normal order submission
+                    process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
                 }
-
-                process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
 
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
