@@ -1704,7 +1704,7 @@
 
                     self.applyAttributes();
 
-                    // Check if returning from Amazon Pay V2 and auto-submit order
+                    // Check if query param is present and call updateAmazonPayV2CheckoutSession for testing
                     if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
                         _.defer(function() {
                             self.submitOrderAction();
@@ -2120,7 +2120,7 @@
                     amazonPayV2Payment.externalTransactionId :
                     amazonPayV2Payment.billingInfo.token.paymentServiceTokenId;
                 var chargeAmount = {
-                    amount: amazonPayV2Payment.amount,
+                    amount: amazonPayV2Payment.amountRequested,
                     currencyCode: order.get('currencyCode') || 'USD'
                 };
 
@@ -2134,6 +2134,7 @@
                 var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
 
                 var payload = {
+                    checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
                         checkoutResultReturnUrl: window.location.href
                     },
@@ -2144,14 +2145,18 @@
                     }
                 };
 
+                var apiUrl = window.location.hostname === 'localhost' ? 
+                    "http://localhost:3001/amazonpay/v2/updatecheckoutsession" :
+                    "/amazonpay/v2/updatecheckoutsession";
+
                 return $.ajax({
-                    method: "PATCH",
-                    url: "/amazonpay/v2/update-checkout-session/" + checkoutSessionId,
+                    method: "POST",
+                    url: apiUrl,
                     contentType: "application/json",
                     data: JSON.stringify(payload)
                 }).then(function(response) {
-                    if (response && response.webCheckoutDetails && response.webCheckoutDetails.amazonPayRedirectUrl) {
-                        window.location.href = response.webCheckoutDetails.amazonPayRedirectUrl;
+                    if (response && response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
                     }
                     return response;
                 });
