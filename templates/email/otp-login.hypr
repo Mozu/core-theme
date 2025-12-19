@@ -1,6 +1,24 @@
 {% extends "email/email" %}
 
 {% block body-content %}
+  <!--- DEBUG: User Object Dump --->
+  <div style="background: #f0f0f0; border: 2px solid #ff0000; padding: 15px; margin: 10px 0; font-family: monospace; font-size: 12px;">
+    <h3 style="color: #ff0000; margin-top: 0;">DEBUG: User Object</h3>
+    <pre style="white-space: pre-wrap; word-wrap: break-word;">{{ user|json(pretty=True) }}</pre>
+    <hr/>
+    <h4>User Properties:</h4>
+    <ul style="list-style: none; padding: 0;">
+      {% if user %}
+        {% for key, value in user.items() %}
+          <li><strong>{{ key }}:</strong> {{ value }}</li>
+        {% endfor %}
+      {% else %}
+        <li style="color: red;">User object is null/undefined</li>
+      {% endif %}
+    </ul>
+  </div>
+  <!--- END DEBUG --->
+  
   <!--- Header --->
   <div class="mz-otp-email-header">  
     <img src="https://kibocommerce.com/wp-content/themes/kibo/images/logo.png" alt="logo">
