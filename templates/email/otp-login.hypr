@@ -3,19 +3,28 @@
 {% block body-content %}
   <!--- DEBUG: User Object Dump --->
   <div style="background: #f0f0f0; border: 2px solid #ff0000; padding: 15px; margin: 10px 0; font-family: monospace; font-size: 12px;">
-    <h3 style="color: #ff0000; margin-top: 0;">DEBUG: User Object</h3>
-    <pre style="white-space: pre-wrap; word-wrap: break-word;">{{ user|json(pretty=True) }}</pre>
-    <hr/>
-    <h4>User Properties:</h4>
-    <ul style="list-style: none; padding: 0;">
-      {% if user %}
-        {% for key, value in user.items() %}
-          <li><strong>{{ key }}:</strong> {{ value }}</li>
-        {% endfor %}
-      {% else %}
-        <li style="color: red;">User object is null/undefined</li>
-      {% endif %}
-    </ul>
+    <h3 style="color: #ff0000; margin-top: 0;">DEBUG: User Object Properties</h3>
+    {% if user %}
+      <table style="border-collapse: collapse; width: 100%; font-size: 11px;">
+        <tr style="background: #ddd;"><th style="border: 1px solid #999; padding: 5px; text-align: left;">Property</th><th style="border: 1px solid #999; padding: 5px; text-align: left;">Value</th></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user (raw):</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.firstName:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.firstName }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.lastName:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.lastName }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.emailAddress:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.emailAddress }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.id:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.id }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.userName:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.userName }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.isAnonymous:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.isAnonymous }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.isActive:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.isActive }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.acceptsMarketing:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.acceptsMarketing }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.taxId:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.taxId }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.companyOrOrganization:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.companyOrOrganization }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.localeCode:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.localeCode }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.attributes:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.attributes }}</td></tr>
+        <tr><td style="border: 1px solid #ccc; padding: 5px;"><strong>user.customerSet:</strong></td><td style="border: 1px solid #ccc; padding: 5px;">{{ user.customerSet }}</td></tr>
+      </table>
+    {% else %}
+      <p style="color: red; font-weight: bold;">⚠️ User object is NULL or UNDEFINED</p>
+    {% endif %}
   </div>
   <!--- END DEBUG --->
   
