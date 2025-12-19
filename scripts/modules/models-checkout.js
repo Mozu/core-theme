@@ -2130,6 +2130,9 @@
                     chargeAmount: chargeAmount
                 };
 
+                var pageContext = require.mozuData('pagecontext');
+                var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
+
                 var payload = {
                     webCheckoutDetails: {
                         checkoutResultReturnUrl: window.location.href
@@ -2137,7 +2140,7 @@
                     paymentDetails: paymentDetails,
                     merchantMetadata: {
                         merchantReferenceId: order.id,
-                        merchantStoreName: require.mozuData('pagecontext').site.name || ''
+                        merchantStoreName: siteName
                     }
                 };
 
