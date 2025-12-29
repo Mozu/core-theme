@@ -2125,7 +2125,7 @@
                 };
 
                 var paymentDetails = {
-                    paymentIntent: "Authorize",
+                    paymentIntent: "AuthorizeWithCapture",
                     canHandlePendingAuthorization: false,
                     chargeAmount: chargeAmount
                 };
