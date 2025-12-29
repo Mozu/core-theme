@@ -2136,6 +2136,7 @@
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
+                        checkoutReviewReturnUrl: window.location.href,
                         checkoutResultReturnUrl: window.location.href
                     },
                     paymentDetails: paymentDetails,
