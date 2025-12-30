@@ -1707,7 +1707,7 @@
                     // Check if query param is present and call updateAmazonPayV2CheckoutSession for testing
                     if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
                         _.defer(function() {
-                            self.updateAmazonPayV2CheckoutSession();
+                             self.submitOrderAction();
                         });
                     }
 
@@ -2145,18 +2145,12 @@
 
                 var pageContext = require.mozuData('pagecontext');
                 var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
-                
-                // Build return URL to checkout page (for "Continue to Review Order" flow)
-                var secureHost = HyprLiveContext.locals.pageContext.secureHost;
-                var isMultishipEnabled = HyprLiveContext.locals.siteContext.generalSettings.isMultishipEnabled;
-                var checkoutPath = isMultishipEnabled ? "/checkoutv2" : "/checkout";
-                var checkoutReturnUrl = secureHost + checkoutPath + "/" + order.id;
 
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
-                        checkoutReviewReturnUrl: checkoutReturnUrl,
-                        checkoutResultReturnUrl: checkoutReturnUrl
+                        checkoutReviewReturnUrl: window.location.href,
+                        checkoutResultReturnUrl: window.location.href
                     },
                     paymentDetails: paymentDetails,
                     merchantMetadata: {
