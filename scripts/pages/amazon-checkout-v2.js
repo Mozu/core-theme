@@ -66,6 +66,16 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 
+		// Listen for checkout complete event to navigate back to main checkout
+		checkoutModel.on("awscheckoutcomplete", function(id){
+			var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
+
+			if(checkoutModel.attributes.originalQuoteId)
+				window.location = "/checkout/quoteOrder/" + id;
+			else
+				window.location = checkoutUrl + "/" + id;
+		});
+
 		var tableElement = $('#shippingBillingTbl');
 		
 		if (tableElement.length > 0) {
