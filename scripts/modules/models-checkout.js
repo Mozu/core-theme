@@ -1707,7 +1707,7 @@
                     // Check if query param is present and call updateAmazonPayV2CheckoutSession for testing
                     if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
                         _.defer(function() {
-                            self.submitOrderAction();
+                            self.updateAmazonPayV2CheckoutSession();
                         });
                     }
 
@@ -2098,6 +2098,17 @@
             updateAmazonPayV2CheckoutSession: function () {
                 var order = this;
                 var activePayments = order.apiModel.getActivePayments();
+
+                var paymentSettings = HyprLiveContext.locals.siteContext && 
+                    HyprLiveContext.locals.siteContext.checkoutSettings && 
+                    (_.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PAYWITHAMAZONV2"}) ||
+                     _.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PayWithAmazonV2"}));
+                
+                var orderProcessing = paymentSettings && _.findWhere(paymentSettings.credentials, {"apiName": "orderProcessing"});
+                var paymentIntent = (orderProcessing && orderProcessing.value === "AuthAndCaptureOnOrderPlacement") ? 
+                    "AuthorizeWithCapture" : "Authorize";
+
+                    
                 var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
                     // Check for legacy flow: paymentType === 'PayWithAmazonV2'
                     if (payment.paymentType === 'PayWithAmazonV2') {
@@ -2124,20 +2135,28 @@
                     currencyCode: order.get('currencyCode') || 'USD'
                 };
 
+                // Get payment settings to determine paymentIntent based on orderProcessing
+                
                 var paymentDetails = {
-                    paymentIntent: "AuthorizeWithCapture",
+                    paymentIntent: paymentIntent,
                     canHandlePendingAuthorization: false,
                     chargeAmount: chargeAmount
                 };
 
                 var pageContext = require.mozuData('pagecontext');
                 var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
+                
+                // Build return URL to checkout page (for "Continue to Review Order" flow)
+                var secureHost = HyprLiveContext.locals.pageContext.secureHost;
+                var isMultishipEnabled = HyprLiveContext.locals.siteContext.generalSettings.isMultishipEnabled;
+                var checkoutPath = isMultishipEnabled ? "/checkoutv2" : "/checkout";
+                var checkoutReturnUrl = secureHost + checkoutPath + "/" + order.id;
 
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
-                        checkoutReviewReturnUrl: window.location.href,
-                        checkoutResultReturnUrl: window.location.href
+                        checkoutReviewReturnUrl: checkoutReturnUrl,
+                        checkoutResultReturnUrl: checkoutReturnUrl
                     },
                     paymentDetails: paymentDetails,
                     merchantMetadata: {
