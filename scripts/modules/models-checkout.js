@@ -1704,13 +1704,6 @@
 
                     self.applyAttributes();
 
-                    // Check if query param is present and call updateAmazonPayV2CheckoutSession for testing
-                    if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
-                        _.defer(function() {
-                             self.submitOrderAction();
-                        });
-                    }
-
                 });
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });

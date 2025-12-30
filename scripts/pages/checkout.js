@@ -724,6 +724,13 @@ require(["modules/jquery-mozu",
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
+        // Check if returning from Amazon Pay V2 with checkout session and auto-submit
+        if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
+            _.defer(function() {
+                checkoutModel.submitOrderAction();
+            });
+        }
+
         var $reviewPanel = $('#step-review');
         checkoutModel.on('change:isReady',function (model, isReady) {
             if (isReady) {
