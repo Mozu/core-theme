@@ -718,6 +718,7 @@ require(["modules/jquery-mozu",
         window.checkoutViews = checkoutViews;
 
         checkoutModel.on('complete', function() {
+            window.console.log("=== complete event fired, redirecting to confirmation ===");
             CartMonitor.setCount(0);
             if (window.amazon)
                 window.amazon.Login.logout();
@@ -726,7 +727,9 @@ require(["modules/jquery-mozu",
 
         // Check if returning from Amazon Pay V2 with checkout session and auto-submit
         if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
+            window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
             _.defer(function() {
+                window.console.log("=== Calling submitOrderAction ===");
                 checkoutModel.submitOrderAction();
             });
         }

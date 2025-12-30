@@ -1828,6 +1828,7 @@
                 });
             },
             onCheckoutSuccess: function () {
+                window.console.log("=== onCheckoutSuccess called, triggering complete event ===");
                 this.isLoading(true);
                 this.trigger('complete');
             },
@@ -2085,6 +2086,7 @@
             },
             submitOrderAction: function () {
                 var order = this;
+                window.console.log("=== submitOrderAction called ===");
                 order.isLoading(true);
                 return order.apiCheckout().then(this.onCheckoutSuccess, this.onCheckoutError);
             },
