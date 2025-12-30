@@ -719,10 +719,13 @@ require(["modules/jquery-mozu",
 
         checkoutModel.on('complete', function() {
             window.console.log("=== complete event fired, redirecting to confirmation ===");
+            var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
+            window.console.log("=== Confirmation URL:", confirmationUrl);
             CartMonitor.setCount(0);
             if (window.amazon)
                 window.amazon.Login.logout();
-            window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
+            window.console.log("=== About to redirect now ===");
+            window.location = confirmationUrl;
         });
 
         // Check if returning from Amazon Pay V2 with checkout session and auto-submit
