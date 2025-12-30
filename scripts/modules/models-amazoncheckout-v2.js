@@ -50,17 +50,20 @@ define([
             },
             applyBilling: function() {
                 var me = this;
-                return me.applyPayment();
+                //me.isLoading (true);
+
+                return api.all.apply(api,_.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                    return payment.paymentType !== "StoreCredit" && payment.paymentType !== "GiftCard";
+                }), function(payment) {
+                    return me.apiVoidPayment(payment.id);
+                })).then(function() {
+                    return me.apiGet(null, { silent: true });
+                }).then(function(order) {
+                    return me.applyPayment();
+                });
             },
             applyPayment: function() {
                 var me = this;
-                
-                // FOR LOCAL TESTING: Skip API calls and trigger navigation directly
-                me.trigger('awscheckoutcomplete', me.id);
-                me.isLoading(false);
-                return;
-                
-                /* COMMENTED FOR LOCAL TESTING
                 if (me.get("amountRemainingForPayment") < 0) {
                     me.trigger('awscheckoutcomplete', me.id);
                     return;
@@ -68,11 +71,51 @@ define([
                 var user = require.mozuData('user');
                 var billingContact = me.tokenDetails ? me.tokenDetails.billingContact  || {} : {};
                 billingContact.email = (user.email !== "" ? user.email : me.get("fulfillmentInfo").fulfillmentContact.email);
-            applyPayment: function() {
-                var me = this;
-                me.trigger('awscheckoutcomplete', me.id);
-                me.isLoading(false);
+
+                var billingInfo =  {
+                    "newBillingInfo" :
+                    {
+                        "card" : null,
+                        "billingContact" : billingContact,
+                        "orderId" : me.id,
+                        "isSameBillingShippingAddress" : false,
+                        data : {
+                            "awsData" : me.awsData
+                        }
+                    }
+                };
+
+                if (me.isLegacyCheckout()) {
+                    // Legacy flow - direct payment with external transaction ID
+                    billingInfo.externalTransactionId = me.awsData.checkoutSessionId;
+                    billingInfo.newBillingInfo.paymentType = "PayWithAmazonV2";
+                    billingInfo.newBillingInfo.paymentWorkflow = "PayWithAmazonV2";
+                } else {
+                    // Modern flow - token-based payment
+                    billingInfo.newBillingInfo.paymentType = "token";
+                    billingInfo.newBillingInfo.token = {
+                        "paymentServiceTokenId": me.awsData.id,
+                        "type": "PayWithAmazonV2"
+                    };
+                }
+
+                me.apiModel.createPayment(billingInfo, {silent:true}).then( function() {
+                    me.trigger('awscheckoutcomplete', me.id);
+                    me.isLoading(false);
+               }, function(err) {
+                    me.isLoading(false);
+               });
             },
+            isLegacyCheckout: function() {
+                var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazonV2"});
+                return paymentSettings && paymentSettings.namespace.toLowerCase() != "tenant" && paymentSettings.isEnabled;
+            },
+            submit: function() {
+                var me = this;
+                me.isLoading(true);
+                var fulfillmentInfo = me.get("fulfillmentInfo"),
+                    existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
+
                 if (me.awsData === null)
                     me.awsData = fulfillmentInfo.data;
                 else
@@ -108,7 +151,64 @@ define([
                         me.awsData.id = response.id;
 
                     // Get shipping and billing details from checkout session
-            submit: function() {
-                var me = this;
-                me.applyBilling();
+                    // TODO: Verify that thirdPartyPaymentExecute with methodName "tokenDetails"
+                    // is properly implemented in backend. This may need a custom action handler
+                    // to retrieve checkout session details from Amazon Pay v2 API.
+                    // If this returns errors during testing, implement a handler in PayWithAmazon service.
+
+                    payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
+                        methodName: "tokenDetails",
+                        cardType: "PayWithAmazonv2",
+                        body: null,
+                        tokenId: response.id
+                    }).then(function(details) {
+                        if (details.error) {
+                            me.onCheckoutError(details.error.message);
+                            return;
+                        }
+                        
+                        if (!details || !details.shippingContact) {
+                            me.onCheckoutError("Invalid response from Amazon Pay - missing shipping contact information");
+                            return;
+                        }
+                        
+                        me.tokenDetails = details;
+
+                        var shipping = details.shippingContact;
+                        var user = require.mozuData('user');
+                        if (user && user.email)
+                            shipping.email = user.email;
+
+                        me.apiModel.updateShippingInfo({fulfillmentContact : shipping, data: me.awsData}, { silent: true }).then(function(result) {
+                            me.set("fulfillmentInfo", result.data || result);
+                            if (me.apiModel.data.requiresFulfillmentInfo)
+                                me.applyShippingMethods(existingShippingMethodCode);
+                            else
+                                me.applyBilling();
+                        });
+                    });
+                });
+                }
             },
+             onCheckoutError: function (msg) {
+                var me = this,
+                    errorHandled = false,
+                    error = {};
+                    //me.messages.add(msg || Hypr.getLabel('unknownError'));
+                me.isLoading(false);
+                error = {
+                        items: [
+                            {
+                                message: msg || Hypr.getLabel('unknownError')
+                            }
+                        ]
+                    };
+                this.trigger('error', error);
+                throw error;
+            }
+        });
+
+    return {
+            AwsCheckoutPage: AwsCheckoutPage
+        };
+});
