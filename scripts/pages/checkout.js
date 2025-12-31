@@ -22,13 +22,30 @@ require(["modules/jquery-mozu",
     var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
-        },
+         },
         cancel: function(){
             this.model.cancelStep();
         },
         amazonShippingAndBilling: function() {
             //isLoading(true);
             window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
+        },
+        amazonShippingAndBillingV2: function() {
+            // V2 uses checkout session ID instead of access token
+            var activePayments = window.order.apiModel.getActivePayments();
+            var v2Payment = activePayments && _.find(activePayments, function(payment) {
+                return payment.paymentType === 'PayWithAmazonV2' || 
+                       (payment.paymentType === 'token' && payment.billingInfo.token && payment.billingInfo.token.type === 'PayWithAmazonV2');
+            });
+            
+            if (v2Payment) {
+                var checkoutSessionId = v2Payment.paymentType === 'PayWithAmazonV2' ? 
+                    v2Payment.externalTransactionId : 
+                    v2Payment.billingInfo.token.paymentServiceTokenId;
+                
+                // Redirect to V2 checkout page with session ID
+                window.location = "/amazon-checkout-v2/"+window.order.id+"?checkoutSessionId="+checkoutSessionId;
+            }
         },
         next: function () {
             // wait for blur validation to complete

@@ -68,9 +68,17 @@
                     var tokenPayment = _.findWhere(activePayments, { paymentType: 'token' });
                     if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon")
                         return true;
+                    
+                    // Check for V2 token-based payment
+                    if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazonv2")
+                        return true;
 
                     var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
                     if (legacyPWA) return true;
+                    
+                    // Check for V2 legacy flow
+                    var v2Payment = _.findWhere(activePayments, { paymentType: 'PayWithAmazonV2' });
+                    if (v2Payment) return true;
                     
                     return false;
                 } else
