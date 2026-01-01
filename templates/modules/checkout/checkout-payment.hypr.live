@@ -33,7 +33,15 @@
         </div>
     {% endif %}
 
-    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" or model.billingInfo.paymentType|lower == "paywithamazonv2" or model.paymentType|lower == "token"%}
+    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" %}
+    {% if model.billingInfo.billingContact.address %}
+    <div class="mz-l-stack-item">
+        <small>{{ labels.billingAddress }}</small>
+        <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% if model.billingInfo.paymentType|lower == "paywithamazon" or model.billingInfo.paymentType|lower == "paywithamazonv2" or model.paymentType|lower == "token"%}
     {% if model.billingInfo.billingContact.address %}
     <div class="mz-l-stack-item">
         <small>{{ labels.billingAddress }}</small>
