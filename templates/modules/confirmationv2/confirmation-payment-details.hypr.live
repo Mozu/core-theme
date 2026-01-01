@@ -13,8 +13,12 @@
         {% if model.billingInfo.paymentType == "StoreCredit" %}{{ labels.digitalCredit }}{% endif %}
         {% if model.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
         {% if model.billingInfo.paymentType|lower == "paypalexpress2" %} {{ labels.payPal }} {% endif %}
+        {% if model.billingInfo.paymentType|lower == "paywithamazonv2" %} {{ labels.payWithAmazon }} {% endif %}
         {% if model.billingInfo.paymentType|lower == "token" %}
           {%if model.billingInfo.token.type|lower == "paywithamazon" %}
+              {{ labels.payWithAmazon }}
+          {%endif%}
+          {%if model.billingInfo.token.type|lower == "paywithamazonv2" %}
               {{ labels.payWithAmazon }}
           {%endif%}
           {% if model.billingInfo.token.type|lower == "applepay" %}
@@ -30,10 +34,24 @@
                 <div>{{ model.billingInfo.billingContact.email }}</div>
             </div>
         {% endif %}
-        {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" %}
+        {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" or model.billingInfo.paymentType|lower == "paywithamazonv2" or model.billingInfo.paymentType|lower == "token" %}
                   {%if model.billingInfo.paymentType|lower == "paywithamazon" %}
                        <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
                     {%endif%}
+                  {%if model.billingInfo.paymentType|lower == "paywithamazonv2" %}
+                       <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+                    {%endif%}
+                {% if model.billingInfo.paymentType|lower == "token" %}
+                    {%if model.billingInfo.token.type|lower == "paywithamazon" %}
+                       <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+                    {%endif%}
+                    {%if model.billingInfo.token.type|lower == "paywithamazonv2" %}
+                       <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+                    {%endif%}
+                    {% if model.billingInfo.token.type|lower == "applepay" %}
+                    <dd><img width="100px" src="../../resources/images/Apple_Pay_Mark.png"/></dd>
+                    {% endif %}
+                {%endif%}
                 {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}
                     <div>
                         <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">

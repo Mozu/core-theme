@@ -83,17 +83,17 @@
       <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
                    {% endif %}
                    {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
-                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact payment=payment%}
                     {%endif%}
                    {%if payment.paymentType|lower == "paywithamazonv2" %}
-                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact payment=payment%}
                     {%endif%}
                    {%if payment.paymentType|lower == "token" %}
                         {%if payment.billingInfo.token.type|lower  == "paywithamazon" %}
-                            {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                            {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact payment=payment%}
                         {%endif%}
                         {%if payment.billingInfo.token.type|lower  == "paywithamazonv2" %}
-                            {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                            {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact payment=payment%}
                         {%endif%}
                         {% if payment.billingInfo.token.type|lower == "applepay" %}
                           <div class="mz-l-stack-section">
