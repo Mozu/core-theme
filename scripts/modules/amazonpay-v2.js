@@ -94,7 +94,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		getCheckoutSession: function(checkoutSessionId) {
 				var self = this;
 				// Direct API call without proxy
-				var apiUrl = "/api/commerce/payments/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
+				var apiUrl = "/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
 			
 			return $.ajax({
 				method: "GET",
