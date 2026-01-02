@@ -77,7 +77,7 @@
       {% endif %}
 
 
-      {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower == "token"  || payment.paymentType|lower  == "paywithamazon" || payment.paymentType|lower  == "paywithamazonv2" %}
+      {% if payment.billingInfo.paymentType|lower == "paypalexpress2" or payment.paymentType|lower == "token" or payment.paymentType|lower == "paywithamazon" or payment.paymentType|lower == "paywithamazonv2" %}
       {% if model.nonStoreCreditOrGiftCardTotal > 0%}
       {%if model.isExternalCheckoutFlowComplete%}
       <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
