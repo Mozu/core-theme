@@ -745,16 +745,40 @@ require(["modules/jquery-mozu",
             window.location = confirmationUrl;
         });
 
-        // Check if returning from Amazon Pay V2 with checkout session and auto-submit
-        if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
-            window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
-            _.defer(function() {
-                window.console.log("=== Calling submitOrderAction ===");
-                checkoutModel.submitOrderAction();
-            });
-        }
-
         var $reviewPanel = $('#step-review');
+        
+        // Check if returning from Amazon Pay V2 with checkout session and auto-submit
+        var amazonCheckoutSessionId = (function() {
+            var results = new RegExp('[\\?&]amazonCheckoutSessionId=([^&#]*)').exec(window.location.href);
+            return results ? decodeURIComponent(results[1]) : null;
+        })();
+        
+        if (amazonCheckoutSessionId) {
+            window.console.log("=== Amazon Pay V2 return detected, session ID:", amazonCheckoutSessionId);
+            window.console.log("=== Will auto-submit order after checkout is ready ===");
+            
+            // Wait for the checkout model to be ready before submitting
+            var attemptSubmit = function() {
+                window.console.log("=== Checking if ready to submit. isReady:", checkoutModel.get('isReady'), ", stepStatus:", checkoutModel.get('stepStatus'));
+                
+                if (checkoutModel.get('isReady')) {
+                    window.console.log("=== Checkout is ready, submitting order now ===");
+                    checkoutModel.submitOrderAction();
+                } else {
+                    window.console.log("=== Checkout not ready yet, will wait for ready event ===");
+                    checkoutModel.once('change:isReady', function(model, isReady) {
+                        if (isReady) {
+                            window.console.log("=== Checkout became ready, submitting order now ===");
+                            checkoutModel.submitOrderAction();
+                        }
+                    });
+                }
+            };
+            
+            // Give model time to initialize, then attempt submit
+            _.delay(attemptSubmit, 1000);
+        }
+        
         checkoutModel.on('change:isReady',function (model, isReady) {
             if (isReady) {
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
