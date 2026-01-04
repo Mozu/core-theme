@@ -66,7 +66,7 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 			// Listen for model error event to restore button
 			if (checkoutModel) {
 				checkoutModel.once('error', function(error) {
-					console.error('Checkout error:', error);
+					window.console.error('Checkout error:', error);
 					restoreButton();
 				});
 			}
@@ -76,11 +76,11 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 				try {
 					window.submitV2Order();
 				} catch(e) {
-					console.error('Error in submitV2Order:', e);
+					window.console.error('Error in submitV2Order:', e);
 					restoreButton();
 				}
 			} else {
-				alert('submitV2Order not found');
+				window.console.error('submitV2Order not found');
 				restoreButton();
 			}
 		});
