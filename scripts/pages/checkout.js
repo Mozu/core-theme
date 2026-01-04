@@ -633,10 +633,26 @@ require(["modules/jquery-mozu",
             this.model.on('userexists', function (user) {
                 me.$('[data-mz-validationmessage-for="emailAddress"]').html(Hypr.getLabel("customerAlreadyExists", user, encodeURIComponent(window.location.pathname)));
             });
+            
+            // Re-enable button on error
+            this.model.on('error', function() {
+                var $btn = me.$('[data-mz-action="submit"]');
+                $btn.prop('disabled', false).removeClass('is-loading');
+                $btn.text($btn.attr('data-original-text') || Hypr.getLabel('placeOrder'));
+            });
         },
 
         submit: function () {
             var self = this;
+            var $btn = self.$('[data-mz-action="submit"]');
+            
+            // Store original text and disable button
+            if (!$btn.attr('data-original-text')) {
+                $btn.attr('data-original-text', $btn.text());
+            }
+            $btn.prop('disabled', true).addClass('is-loading');
+            $btn.text($btn.attr('data-loading-text') || 'Processing...');
+            
             _.defer(function () {
                 self.model.submit();
             });
@@ -755,28 +771,49 @@ require(["modules/jquery-mozu",
         
         if (amazonCheckoutSessionId) {
             window.console.log("=== Amazon Pay V2 return detected, session ID:", amazonCheckoutSessionId);
-            window.console.log("=== Will auto-submit order after checkout is ready ===");
+            window.console.log("=== Current order state:", {
+                orderId: checkoutModel.id,
+                isReady: checkoutModel.get('isReady'),
+                stepStatus: checkoutModel.get('stepStatus'),
+                isSubmitting: checkoutModel.isSubmitting
+            });
             
             // Wait for the checkout model to be ready before submitting
             var attemptSubmit = function() {
-                window.console.log("=== Checking if ready to submit. isReady:", checkoutModel.get('isReady'), ", stepStatus:", checkoutModel.get('stepStatus'));
+                var isReady = checkoutModel.get('isReady');
+                var isSubmitting = checkoutModel.isSubmitting;
                 
-                if (checkoutModel.get('isReady')) {
+                window.console.log("=== Attempting auto-submit. isReady:", isReady, ", isSubmitting:", isSubmitting);
+                
+                if (isSubmitting) {
+                    window.console.log("=== Already submitting, skipping auto-submit ===");
+                    return;
+                }
+                
+                if (isReady) {
                     window.console.log("=== Checkout is ready, submitting order now ===");
-                    checkoutModel.submitOrderAction();
+                    try {
+                        checkoutModel.submitOrderAction();
+                    } catch (error) {
+                        window.console.error("=== Error calling submitOrderAction:", error);
+                    }
                 } else {
                     window.console.log("=== Checkout not ready yet, will wait for ready event ===");
                     checkoutModel.once('change:isReady', function(model, isReady) {
-                        if (isReady) {
+                        if (isReady && !model.isSubmitting) {
                             window.console.log("=== Checkout became ready, submitting order now ===");
-                            checkoutModel.submitOrderAction();
+                            try {
+                                model.submitOrderAction();
+                            } catch (error) {
+                                window.console.error("=== Error calling submitOrderAction:", error);
+                            }
                         }
                     });
                 }
             };
             
             // Give model time to initialize, then attempt submit
-            _.delay(attemptSubmit, 1000);
+            _.delay(attemptSubmit, 1500);
         }
         
         checkoutModel.on('change:isReady',function (model, isReady) {
