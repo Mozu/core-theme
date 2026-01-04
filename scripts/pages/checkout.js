@@ -742,7 +742,13 @@ require(["modules/jquery-mozu",
             if (window.amazon)
                 window.amazon.Login.logout();
             window.console.log("=== About to redirect now ===");
-            window.location = confirmationUrl;
+            
+            // Try multiple redirect methods to ensure it works
+            setTimeout(function() {
+                window.location.href = confirmationUrl;
+            }, 100);
+            
+            window.console.log("=== Redirect scheduled ===");
         });
 
         // Check if returning from Amazon Pay V2 with checkout session and auto-submit

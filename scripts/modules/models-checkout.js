@@ -1837,7 +1837,7 @@
             },
             onCheckoutSuccess: function () {
                 window.console.log("=== onCheckoutSuccess called, triggering complete event ===");
-                this.isLoading(true);
+                this.isLoading(false);
                 this.trigger('complete');
             },
             onCheckoutError: function (error) {
