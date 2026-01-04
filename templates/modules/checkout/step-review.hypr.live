@@ -62,7 +62,7 @@
             {% endif %}
 
             <div class="mz-formstep-next">
-                <button type="button" class="mz-button mz-button-large" data-mz-action="submit" data-loading-text="{{ labels.processing|default('Processing...') }}">{{ labels.placeOrder }}</button>
+                <button type="button" class="mz-button mz-button-large" data-mz-action="submit">{{ labels.placeOrder }}</button>
             </div>
         {% endif %}
     </div>

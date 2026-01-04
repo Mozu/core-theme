@@ -2096,7 +2096,13 @@
                 var order = this;
                 window.console.log("=== submitOrderAction called ===");
                 order.isLoading(true);
-                return order.apiCheckout().then(this.onCheckoutSuccess, this.onCheckoutError);
+                return order.apiCheckout().then(function(result) {
+                    window.console.log("=== apiCheckout succeeded ===", result);
+                    return order.onCheckoutSuccess(result);
+                }, function(error) {
+                    window.console.error("=== apiCheckout failed ===", error);
+                    return order.onCheckoutError(error);
+                });
             },
             updateAmazonPayV2CheckoutSession: function () {
                 var order = this;

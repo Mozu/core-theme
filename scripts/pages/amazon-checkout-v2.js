@@ -28,23 +28,62 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 			if (tableElement.length > 0) {
 
-				// Inject V2 content directly - matches V1 structure
-				var v2Content =
-					'<div class="amazon-checkout-v2-container">' +
-					'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">Loading address widget...</div>' +
-					'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
-					'</div>' +
-					'<button type="button" onclick="if(window.submitV2Order){window.submitV2Order();}else{alert(\'submitV2Order not found\');}" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
-					'<button type="button" onclick="window.history.back();" class="mz-button">' +
-					'Cancel' +
-					'</button>' +
-					'</div>' +
-					'</div>' +
-					'</td>' +
-					'</tr>';
+			// Inject V2 content directly - matches V1 structure
+			var v2Content =
+				'<div class="amazon-checkout-v2-container">' +
+				'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">Loading address widget...</div>' +
+				'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
+				'</div>' +
+				'<button type="button" id="amazon-v2-continue-btn" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
+				'<button type="button" onclick="window.history.back();" class="mz-button">' +
+				'Cancel' +
+				'</button>' +
+				'</div>' +
+				'</div>' +
+				'</td>' +
+				'</tr>';
 
-				tableElement.html(v2Content);
 
+		tableElement.html(v2Content);
+		
+		// Attach click handler with loading state to the continue button
+		$('#amazon-v2-continue-btn').on('click', function() {
+			var $btn = $(this);
+			var originalText = $btn.text();
+			
+			// Set loading state
+			$btn.prop('disabled', true)
+				.addClass('is-loading')
+				.text('Processing...');
+			
+			// Function to restore button state
+			var restoreButton = function() {
+				$btn.prop('disabled', false)
+					.removeClass('is-loading')
+					.text(originalText);
+			};
+			
+			// Listen for model error event to restore button
+			if (checkoutModel) {
+				checkoutModel.once('error', function(error) {
+					console.error('Checkout error:', error);
+					restoreButton();
+				});
+			}
+			
+			// Call submit function
+			if(window.submitV2Order) {
+				try {
+					window.submitV2Order();
+				} catch(e) {
+					console.error('Error in submitV2Order:', e);
+					restoreButton();
+				}
+			} else {
+				alert('submitV2Order not found');
+				restoreButton();
+			}
+		});
 				// Create simple checkout view object - same as V1
 				window.checkoutView = {
 					submit: function () {

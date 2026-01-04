@@ -140,6 +140,8 @@ define([
                             me.applyShippingMethods(existingShippingMethodCode);
                         else
                             me.applyBilling();
+                    }, function(error) {
+                        me.onCheckoutError(error.message || 'Failed to update shipping info');
                     });
                 } else {
                     // Modern flow - token-based checkout
@@ -185,8 +187,14 @@ define([
                                 me.applyShippingMethods(existingShippingMethodCode);
                             else
                                 me.applyBilling();
+                        }, function(error) {
+                            me.onCheckoutError(error.message || 'Failed to update shipping info');
                         });
+                    }, function(error) {
+                        me.onCheckoutError(error.message || 'Failed to get token details');
                     });
+                }, function(error) {
+                    me.onCheckoutError(error.message || 'Failed to create Amazon Pay token');
                 });
                 }
             },

@@ -69,7 +69,9 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSessionConfig: function(cartOrOrderId, isCart) {
 			var self = this;
-			var apiUrl = "/amazonpay/checkoutsession";
+			var apiUrl = window.location.hostname === 'localhost' ? 
+				"http://localhost:3001/amazonpay/checkoutsession" :
+				"/amazonpay/checkoutsession";
 			cartOrOrderId = cartOrOrderId || "1234";
 			
 			return $.ajax({
@@ -93,8 +95,10 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getCheckoutSession: function(checkoutSessionId) {
 				var self = this;
-				// Direct API call without proxy
-				var apiUrl = "/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
+				// Use proxy for local testing, direct API call for production
+				var apiUrl = window.location.hostname === 'localhost' ? 
+					"http://localhost:3001/amazonpay/v2/checkout-sessions/" + checkoutSessionId :
+					"/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
 			
 			return $.ajax({
 				method: "GET",
