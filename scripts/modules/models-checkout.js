@@ -2098,7 +2098,13 @@
                 order.isLoading(true);
                 return order.apiCheckout().then(function(result) {
                     window.console.log("=== apiCheckout succeeded ===", result);
-                    return order.onCheckoutSuccess(result);
+                    
+                    // Redirect immediately to confirmation page
+                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + order.get('id') + "/confirmation";
+                    window.console.log("=== Redirecting to:", confirmationUrl);
+                    window.location.href = confirmationUrl;
+                    
+                    return result;
                 }, function(error) {
                     window.console.error("=== apiCheckout failed ===", error);
                     return order.onCheckoutError(error);

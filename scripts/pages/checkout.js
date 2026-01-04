@@ -738,17 +738,15 @@ require(["modules/jquery-mozu",
             window.console.log("=== complete event fired, redirecting to confirmation ===");
             var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
             window.console.log("=== Confirmation URL:", confirmationUrl);
+            window.console.log("=== Current URL:", window.location.href);
+            
             CartMonitor.setCount(0);
             if (window.amazon)
                 window.amazon.Login.logout();
+            
             window.console.log("=== About to redirect now ===");
-            
-            // Try multiple redirect methods to ensure it works
-            setTimeout(function() {
-                window.location.href = confirmationUrl;
-            }, 100);
-            
-            window.console.log("=== Redirect scheduled ===");
+            window.console.log("=== Using window.location.replace ===");
+            window.location.replace(confirmationUrl);
         });
 
         // Check if returning from Amazon Pay V2 with checkout session and auto-submit
