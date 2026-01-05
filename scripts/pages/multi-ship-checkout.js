@@ -282,6 +282,8 @@ require(["modules/jquery-mozu",
 
         if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(window.order.id, false);
+        if (AmazonPayV2.isEnabled)
+            AmazonPayV2.addCheckoutButton(window.order.id, false);
 
     });
 });
