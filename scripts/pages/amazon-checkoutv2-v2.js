@@ -1,7 +1,7 @@
 window.v2ScriptLoaded = true;
 
 require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "underscore",
-	"modules/amazonpay-v2", "modules/models-amazoncheckoutV2-v2", 'hyprlivecontext', 'modules/preserve-element-through-render'],
+	"modules/amazonpay-v2", "modules/models-amazoncheckoutv2-v2", 'hyprlivecontext', 'modules/preserve-element-through-render'],
 	function ($, Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2, hyprlivecontext) {
 
 		$(document).ready(function () {
