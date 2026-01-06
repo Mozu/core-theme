@@ -141,13 +141,29 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 			// Create simple checkout view object - same as V1
 			window.checkoutView = {
 				submit: function () {
+					window.console.log('Amazon checkoutv2-v2: Submit called');
+
+					// Debug model data before submit
+					var fulfillmentInfo = this.model.get("fulfillmentInfo");
+					var destinations = this.model.get("destinations");
+					window.console.log('Amazon checkoutv2-v2: Model data:', {
+						fulfillmentInfo: fulfillmentInfo,
+						destinations: destinations ? destinations.length : 0,
+						awsData: this.model.awsData
+					});
 
 					if (this.model.getAwsDestination) {
 						var awsDest = this.model.getAwsDestination();
+						window.console.log('Amazon checkoutv2-v2: AWS destination:', awsDest);
 					}
 
-					// Call model.submit() exactly like V1 does
-					this.model.submit();
+					try {
+						// Call model.submit() exactly like V1 does
+						this.model.submit();
+					} catch (error) {
+						window.console.error('Amazon checkoutv2-v2: Submit error:', error);
+						window.console.error('Amazon checkoutv2-v2: Error stack:', error.stack);
+					}
 				},
 				model: checkoutModel
 			};
@@ -186,13 +202,31 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 					checkoutSessionId: checkoutSessionId
 				};
 
-				// Also set in fulfillmentInfo.data for backup - EXACT SAME as single ship
-				var fulfillmentInfo = checkoutModel.get("fulfillmentInfo");
-				if (fulfillmentInfo) {
-					fulfillmentInfo.data = {
-						checkoutSessionId: checkoutSessionId
-					};
-					checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
+				// Multi-ship needs different data structure - set up fulfillmentInfo properly
+				var fulfillmentInfo = checkoutModel.get("fulfillmentInfo") || {};
+
+				// Ensure fulfillmentInfo has required properties for multi-ship
+				if (!fulfillmentInfo.shippingMethodCode) {
+					fulfillmentInfo.shippingMethodCode = null; // Prevent undefined error
+				}
+
+				fulfillmentInfo.data = {
+					checkoutSessionId: checkoutSessionId
+				};
+
+				checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
+
+				// For multi-ship, also set on destinations if they exist
+				var destinations = checkoutModel.get("destinations");
+				if (destinations && destinations.length > 0) {
+					destinations.forEach(function(dest, index) {
+						if (!dest.data) {
+							dest.data = {};
+						}
+						dest.data.checkoutSessionId = checkoutSessionId;
+						dest.data.amazonCheckoutSessionId = checkoutSessionId;
+					});
+					checkoutModel.set("destinations", destinations);
 				}
 
 				// Use displayCheckoutSessionInfo which handles the API call internally
