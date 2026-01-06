@@ -96,10 +96,10 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		getCheckoutSession: function(checkoutSessionId) {
 				var self = this;
 				// Use proxy for local testing, direct API call for production
-				var apiUrl = window.location.hostname === 'localhost' ? 
+				var apiUrl = window.location.hostname === 'localhost' ?
 					"http://localhost:3001/amazonpay/v2/checkout-sessions/" + checkoutSessionId :
 					"/amazonpay/v2/checkout-sessions/" + checkoutSessionId;
-			
+
 			return $.ajax({
 				method: "GET",
 				url: apiUrl,
@@ -115,12 +115,16 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		getReturnUrl: function(id, isCart) {
 			var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
-			var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
+			var isMultishipEnabled = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled;
+			var checkoutUrl = isMultishipEnabled ? "/checkoutv2" : "/checkout";
+
+			// Use different view name for multi-ship vs single-ship
+			var viewName = isMultishipEnabled ? "amazon-checkoutv2-v2" : this.viewName;
 
 			if (isCart) {
-				redirectUrl += "/cart?cartId=" + id + "&isAwsCheckout=true&view=" + this.viewName;
+				redirectUrl += "/cart?cartId=" + id + "&isAwsCheckout=true&view=" + viewName;
 			} else {
-				redirectUrl += checkoutUrl + "/" + id + "?isAwsCheckout=true&view=" + this.viewName;
+				redirectUrl += checkoutUrl + "/" + id + "?isAwsCheckout=true&view=" + viewName;
 			}
 
 			return redirectUrl;
@@ -207,23 +211,43 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		displayCheckoutSessionInfo: function(checkoutSessionId) {
 			var self = this;
-			
+
+			// Show loading state immediately
+			self.showLoadingState();
+
+			// Wait for Amazon script to load before proceeding
+			if (!self.isScriptLoaded) {
+				EventBus.on("aws-script-loaded", function() {
+					self._displaySessionInfoWithData(checkoutSessionId);
+				});
+				return;
+			}
+
+			// Script is already loaded, proceed immediately
+			self._displaySessionInfoWithData(checkoutSessionId);
+		},
+
+		/**
+		 * Internal function to display session info once Amazon script is loaded
+		 */
+		_displaySessionInfoWithData: function(checkoutSessionId) {
+			var self = this;
+
 			var addressDiv = document.getElementById('addressBookWidgetDiv');
 			var walletDiv = document.getElementById('walletWidgetDiv');
-			
+
 			self.getCheckoutSession(checkoutSessionId).then(function(response) {
-				
+
 				// Extract the actual session data from the response
 				var sessionInfo = response.data || response;
-				
+
 				// Get shipping address and payment preferences from the correct structure
 				var shippingAddress = sessionInfo.shippingAddress;
 				var paymentMethod = sessionInfo.paymentPreferences;
-				
-				
+
 				// Hide loading state
 				self.hideLoadingState();
-				
+
 				// Display read-only shipping address with Amazon change action
 				if (addressDiv) {
 					if (shippingAddress) {
@@ -239,7 +263,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 							'</div>' +
 							'<button type="button" id="changeAddressBtn" class="mz-button mz-button-small">Change</button>' +
 							'</div>';
-						
+
 						addressDiv.innerHTML = addressHTML;
 							
 						// Use Amazon Pay V2 change action - redirects to Amazon hosted page
@@ -307,7 +331,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 							'</div>' +
 							'<button type="button" id="changePaymentBtn" class="mz-button mz-button-small">Change</button>' +
 							'</div>';
-							
+
 						walletDiv.innerHTML = paymentHTML;
 							
 						// Use Amazon Pay V2 change action - redirects to Amazon hosted page
@@ -386,7 +410,8 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				if (payDiv && !payDiv.innerHTML.trim()) {
 					payDiv.innerHTML = '<div class="amazon-payment-display"><strong>Payment Method</strong><div style="margin-top: 8px; color: #666;">Please select your payment method</div><button type="button" class="mz-button mz-button-small">Select Payment</button></div>';
 				}
-				
+
+
 			}, function(error) {
 				
 				// Hide loading and show error

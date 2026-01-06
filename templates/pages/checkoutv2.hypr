@@ -15,11 +15,32 @@
 
 {% block body-content %}
 
-{% require_script "pages/multi-ship-checkout" %}
+<script>
+console.log('DEBUG: view param = ', '{{ pageContext.query.view }}');
+console.log('DEBUG: isAwsCheckout = ', '{{ pageContext.query.isAwsCheckout }}');
+console.log('DEBUG: isMultiShipMode = ', {{ model.isMultiShipMode|yesno:"true,false" }});
+</script>
+
+{% comment %}Load appropriate script based on checkout type{% endcomment %}
+{% if pageContext.query.view == "amazon-checkoutv2-v2" %}
+    {% require_script "pages/amazon-checkoutv2-v2" %}
+{% else %}
+    {% comment %}Check if this is multi-ship or single ship checkout using proper model property{% endcomment %}
+    {% if model.isMultiShipMode %}
+        {% require_script "pages/multi-ship-checkout" %}
+    {% else %}
+        {% require_script "pages/checkout" %}
+    {% endif %}
+{% endif %}
 
 {% preload_json model "checkout" %}
 
 <div class="mz-l-container">
+    {% if pageContext.query.view == "amazon-checkoutv2-v2" %}
+    <h1 class="mz-pagetitle">
+        {{ labels.awsCheckout }}
+    </h1>
+    {% else %}
     <h1 class="mz-pagetitle">
         {{ labels.checkout }}
         {% if not user.isAuthenticated %}
@@ -28,6 +49,7 @@
         </span>
         {% endif %}
     </h1>
+    {% endif %}
 
     <div id="mz-discount-threshold-messages">
         {% include "modules/checkout/checkout-discount-threshold-messages" with model=model %}
@@ -37,47 +59,80 @@
 
     {% include "modules/common/message-bar" with model=model.messages %}
 
-    <div class="mz-l-column" id="checkout-rightcol">
-
-        <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
-            {% include "modules/checkout/checkout-order-summary" %}
-        </div>
-
-        <div class="mz-l-formfieldgroup">
-            <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
-                {% include "modules/checkout/coupon-code-field" %}
+    {% if pageContext.query.view == "amazon-checkoutv2-v2" %}
+    <script>console.log('DEBUG: Amazon checkout view detected - rendering table');</script>
+    <table id="shippingBillingTbl" class="shippingBillingTbl">
+        {% include "modules/checkout/amazon-shipping-billing-v2" %}
+    </table>
+    <script>console.log('DEBUG: Amazon table rendered, waiting for script injection');</script>
+    {% else %}
+        {% if model.isMultiShipMode %}
+            {% comment %}Multi-ship checkout layout{% endcomment %}
+            <div class="mz-l-column" id="checkout-rightcol">
+                <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
+                    {% include "modules/checkout/checkout-order-summary" %}
+                </div>
+                <div class="mz-l-formfieldgroup">
+                    <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
+                        {% include "modules/checkout/coupon-code-field" %}
+                    </div>
+                    {% if themeSettings.showCheckoutCommentsField %}
+                    <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
+                        {% include "modules/checkout/comments-field" %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            {% if themeSettings.showCheckoutCommentsField %}
-            <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
-                {% include "modules/checkout/comments-field" %}
+            <div class="mz-l-column">
+                <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
+                    {% include "modules/multi-ship-checkout/step-shipping-destinations" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresShippingMethod %}style="display:none"{% endif %}>
+                    {% include "modules/multi-ship-checkout/step-shipping-methods" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
+                    {% include "modules/multi-ship-checkout/step-payment-info" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-pickup-contact mz-l-stack" id="pickup-contact">
+                    {% include "modules/multi-ship-checkout/pickup-contact" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-review" id="step-review">
+                    {% include "modules/checkout/step-review" %}
+                </div>
+            </div><!-- left .column -->
+        {% else %}
+            {% comment %}Single ship checkout layout{% endcomment %}
+            <div id="checkout-rightcol" class="mz-l-column">
+                <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
+                    {% include "modules/checkout/checkout-order-summary" %}
+                </div>
+                <div class="mz-l-formfieldgroup">
+                    <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
+                        {% include "modules/checkout/coupon-code-field" %}
+                    </div>
+                    {% if themeSettings.showCheckoutCommentsField %}
+                    <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
+                        {% include "modules/checkout/comments-field" %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            {% endif %}
-        </div>
-
-    </div>
-
-    <div class="mz-l-column">
-
-        <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
-            {% include "modules/multi-ship-checkout/step-shipping-destinations" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresShippingMethod %}style="display:none"{% endif %}>
-            {% include "modules/multi-ship-checkout/step-shipping-methods" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
-            {% include "modules/multi-ship-checkout/step-payment-info" %}
-        </div>
-        <div class="mz-formstep mz-checkoutform-pickup-contact mz-l-stack" id="pickup-contact">
-            {% include "modules/multi-ship-checkout/pickup-contact" %}
-        </div>
-
-        <div class="mz-formstep mz-checkoutform-review" id="step-review">
-            {% include "modules/checkout/step-review" %}
-        </div>
-
-    </div><!-- left .column -->
+            <div id="checkout-leftcol" class="mz-l-column mz-l-column-primary">
+                <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
+                    {% include "modules/checkout/step-shipping-address" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresShippingMethod %}style="display:none"{% endif %}>
+                    {% include "modules/checkout/step-shipping-method" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
+                    {% include "modules/checkout/step-payment-info" %}
+                </div>
+                <div class="mz-formstep mz-checkoutform-review" id="step-review">
+                    {% include "modules/checkout/step-review" %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
     {% block modal-dialog %}
         <div mz-modal-contact-dialog>
