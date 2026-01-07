@@ -110,7 +110,7 @@ define([
                 var awsDestination = me.getAwsDestination();
                 var user = require.mozuData('user');
                 var billingContact = me.tokenDetails ? me.tokenDetails.billingContact  || {} : {};
-                billingContact.email = (user.email !== "" ? user.email : (awsDestination.destinationContact ? awsDestination.destinationContact.email : ""));
+                billingContact.email = (user.email !== "" ? user.email : (awsDestination && awsDestination.destinationContact ? awsDestination.destinationContact.email : ""));
                 var billingInfo =  {
                     "newBillingInfo" :
                     {
@@ -119,7 +119,7 @@ define([
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false,
                         data : {
-                            "awsData" : awsDestination.data
+                            "awsData" : awsDestination ? awsDestination.data : null
                         }
                     }
                 };
@@ -151,6 +151,15 @@ define([
                 var awsDestination = _.find(destinations, function(destination) {
                     return destination.data && (destination.data.amazonCheckoutSessionId || destination.data.awsReferenceId);
                 });
+
+                // If no AWS destination found, create a basic one
+                if (!awsDestination && this.awsData) {
+                    awsDestination = {
+                        data: this.awsData,
+                        destinationContact: {}
+                    };
+                }
+
                 return awsDestination;
             },
             isLegacyCheckout: function() {

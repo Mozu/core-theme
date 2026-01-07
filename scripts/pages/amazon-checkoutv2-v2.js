@@ -6,19 +6,17 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 		$(document).ready(function () {
 			window.v2ReadyCalled = true;
-			window.console.log('Amazon checkoutv2-v2: Document ready');
 
 			AmazonPayV2.init(true);
-			window.console.log('Amazon checkoutv2-v2: AmazonPayV2 initialized');
 
 			var checkoutData = require.mozuData('checkout');
 
-			// Use Amazon Pay V2 model - EXACT SAME as single ship
+			// Use Amazon Pay V2 model
 			var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 
-			// Listen for checkout complete event to navigate back to main checkout
+			// Listen for checkout complete event
 			checkoutModel.on("awscheckoutcomplete", function (id) {
-				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout"; // EXACT SAME as single ship
+				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
 
 				if (checkoutModel.attributes.originalQuoteId)
 					window.location = "/checkout/quoteOrder/" + id;
@@ -26,78 +24,14 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 					window.location = checkoutUrl + "/" + id;
 			});
 
-			// Check what elements exist
-			window.console.log('Amazon checkoutv2-v2: Found elements:', {
-				table: $('#shippingBillingTbl').length,
-				form: $('#checkout-form').length,
-				addressDiv: $('#addressBookWidgetDiv').length,
-				walletDiv: $('#walletWidgetDiv').length
-			});
-
-			// DON'T replace template content - use existing structure!
-			// Template already has addressBookWidgetDiv and walletWidgetDiv with proper styling
-
-			// Just add continue button if it doesn't exist
+			// Add continue button if it doesn't exist
 			if ($('#amazon-v2-continue-btn').length === 0) {
 				var buttonRow = '<tr><td colspan="2"><div class="amazon-actions"><div class="amazon-button-group">' +
 					'<button type="button" onclick="window.history.back();" class="mz-button amazon-cancel-btn">Cancel</button>' +
 					'<button type="button" id="amazon-v2-continue-btn" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
 					'</div></div></td></tr>';
 				$('#shippingBillingTbl').append(buttonRow);
-				window.console.log('Amazon checkoutv2-v2: Added continue button');
 			}
-
-			// FIX CSS VISIBILITY ISSUES - Force form to be visible and fix fades-in class
-			$('#checkout-form').css('opacity', '1').removeClass('fades-in');
-			$('#checkout-form').css({
-				'visibility': 'visible',
-				'opacity': '1',
-				'display': 'block'
-			});
-			window.console.log('Amazon checkoutv2-v2: Fixed form visibility and removed fades-in class');
-
-			// Check visibility after changes
-			setTimeout(function() {
-				window.console.log('Amazon checkoutv2-v2: Visibility check:', {
-					formVisible: $('#checkout-form').is(':visible'),
-					formOpacity: $('#checkout-form').css('opacity'),
-					tableVisible: $('#shippingBillingTbl').is(':visible'),
-					addressVisible: $('#addressBookWidgetDiv').is(':visible'),
-					walletVisible: $('#walletWidgetDiv').is(':visible')
-				});
-
-				// Check CSS classes for alignment issues
-				window.console.log('Amazon checkoutv2-v2: CSS debugging:', {
-					formClasses: $('#checkout-form').attr('class'),
-					tableClasses: $('#shippingBillingTbl').attr('class'),
-					addressDivClasses: $('#addressBookWidgetDiv').attr('class'),
-					addressParentClasses: $('#addressBookWidgetDiv').parent().attr('class')
-				});
-			}, 100);
-
-			// FIX ALIGNMENT ISSUES - Add single ship styling classes
-			$('#checkout-form').addClass('amazon-pay-checkout-form');
-			$('#shippingBillingTbl').addClass('amazon-pay-table');
-			$('.amazon-pay-container').css({
-				'max-width': '600px',
-				'margin': '0 auto',
-				'padding': '20px'
-			});
-			$('.amazon-section').css({
-				'margin-bottom': '20px',
-				'border': '1px solid #ddd',
-				'border-radius': '4px',
-				'padding': '15px'
-			});
-			$('.amazon-actions').css({
-				'text-align': 'right',
-				'padding': '20px 0',
-				'margin-top': '20px'
-			});
-			$('.amazon-button-group button').css({
-				'margin-left': '10px',
-				'padding': '10px 20px'
-			});
 
 			// Attach click handler with loading state to the continue button
 			$('#amazon-v2-continue-btn').on('click', function() {
@@ -141,28 +75,22 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 			// Create simple checkout view object - same as V1
 			window.checkoutView = {
 				submit: function () {
-					window.console.log('Amazon checkoutv2-v2: Submit called');
+					// Verify model exists
+					if (!this.model) {
+						window.console.error('Model is null or undefined!');
+						return;
+					}
 
-					// Debug model data before submit
-					var fulfillmentInfo = this.model.get("fulfillmentInfo");
-					var destinations = this.model.get("destinations");
-					window.console.log('Amazon checkoutv2-v2: Model data:', {
-						fulfillmentInfo: fulfillmentInfo,
-						destinations: destinations ? destinations.length : 0,
-						awsData: this.model.awsData
-					});
-
-					if (this.model.getAwsDestination) {
-						var awsDest = this.model.getAwsDestination();
-						window.console.log('Amazon checkoutv2-v2: AWS destination:', awsDest);
+					// Verify model has submit method
+					if (typeof this.model.submit !== 'function') {
+						window.console.error('Model does not have submit method!');
+						return;
 					}
 
 					try {
-						// Call model.submit() exactly like V1 does
 						this.model.submit();
 					} catch (error) {
-						window.console.error('Amazon checkoutv2-v2: Submit error:', error);
-						window.console.error('Amazon checkoutv2-v2: Error stack:', error.stack);
+						window.console.error('Submit error:', error);
 					}
 				},
 				model: checkoutModel
@@ -194,8 +122,6 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 			}
 
 			if (checkoutSessionId) {
-				window.console.log('Amazon checkoutv2-v2: Loading session data for ID:', checkoutSessionId);
-
 				// Set up Amazon data for V2 model - EXACT SAME as single ship
 				// The model's submit() expects awsData with checkoutSessionId
 				checkoutModel.awsData = {
@@ -216,9 +142,19 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 				checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
 
-				// For multi-ship, also set on destinations if they exist
+				// For multi-ship, ensure destinations array exists and has AWS data
 				var destinations = checkoutModel.get("destinations");
-				if (destinations && destinations.length > 0) {
+				if (!destinations || destinations.length === 0) {
+					// Create a default AWS destination if none exist
+					destinations = [{
+						data: {
+							checkoutSessionId: checkoutSessionId,
+							amazonCheckoutSessionId: checkoutSessionId
+						},
+						destinationContact: {}
+					}];
+				} else {
+					// Update existing destinations with AWS data
 					destinations.forEach(function(dest, index) {
 						if (!dest.data) {
 							dest.data = {};
@@ -226,14 +162,13 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 						dest.data.checkoutSessionId = checkoutSessionId;
 						dest.data.amazonCheckoutSessionId = checkoutSessionId;
 					});
-					checkoutModel.set("destinations", destinations);
 				}
+				checkoutModel.set("destinations", destinations);
 
-				// Use displayCheckoutSessionInfo which handles the API call internally
+				// For regular checkout or cart flow: load widgets normally
 				if (typeof AmazonPayV2.displayCheckoutSessionInfo === 'function') {
-					window.console.log('Amazon checkoutv2-v2: Calling displayCheckoutSessionInfo with ID:', checkoutSessionId);
 					AmazonPayV2.displayCheckoutSessionInfo(checkoutSessionId);
-				} else {
+					} else {
 					window.console.error('Amazon checkoutv2-v2: displayCheckoutSessionInfo function not found');
 					// Fallback: direct API call if function doesn't exist
 					AmazonPayV2.getCheckoutSession(checkoutSessionId)
@@ -257,18 +192,17 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 								if (data.paymentPreferences) {
 									$('#walletWidgetDiv').html('<div><strong>Payment Method:</strong><br>Amazon Pay Selected</div>');
 								}
-							}
+						}
 
-							$("#continue").show();
-						})
-						.fail(function (error) {
-							$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
-							$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
-						});
+						$("#continue").show();
+					})
+					.fail(function (error) {
+						$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
+						$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
+					});
 				}
-
-			} else {
-				window.console.log('Amazon checkoutv2-v2: No checkoutSessionId found - widgets will show loading state');
-			}
+				} else {
+					window.console.log('Amazon checkoutv2-v2: No checkoutSessionId found - widgets will show loading state');
+				}
+			});
 		});
-	});

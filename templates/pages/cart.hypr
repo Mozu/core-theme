@@ -15,9 +15,45 @@
 
 {% block body-content %}
 
-{% require_script "pages/cart" %}
+{% if pageContext.query.view == "amazon-checkout" %}
+    {% require_script "pages/amazon-checkout" %}
+{% else %}
+    {% if pageContext.query.view == "amazon-checkout-v2" %}
+        {% require_script "pages/amazon-checkout-v2" %}
+    {% else %}
+        {% if pageContext.query.view == "amazon-checkoutv2-v2" %}
+            {% require_script "pages/amazon-checkoutv2-v2" %}
+        {% else %}
+            {% require_script "pages/cart" %}
+        {% endif %}
+    {% endif %}
+{% endif %}
 
-{% preload_json model "cart" %}
+{% if pageContext.query.view == "amazon-checkout" or pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+    {% preload_json model "checkout" %}
+{% else %}
+    {% preload_json model "cart" %}
+{% endif %}
+
+{% if pageContext.query.view == "amazon-checkout" or pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+    {# Amazon Pay checkout view - show shipping/billing UI instead of cart #}
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ labels.awsCheckout }}</h1>
+        <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
+            {% include "modules/common/message-bar" with model=model.messages %}
+            <table id="shippingBillingTbl" class="shippingBillingTbl">
+                {% if pageContext.query.view == "amazon-checkout" %}
+                    {% include "modules/checkout/amazon-shipping-billing" %}
+                {% else %}
+                    {% if pageContext.query.view == "amazon-checkout-v2" or pageContext.query.view == "amazon-checkoutv2-v2" %}
+                        {% include "modules/checkout/amazon-shipping-billing-v2" %}
+                    {% endif %}
+                {% endif %}
+            </table>
+        </form>
+    </div>
+{% else %}
+    {# Regular cart view #}
 <div class="modal fade" id="mz-location-selector">
 	{% include "modules/cart/cart-location-select" %}
 </div>
@@ -48,4 +84,5 @@
 		{% endblock modal-dialog %}
 	</form>
 </div>
+{% endif %}
 {% endblock body-content %}

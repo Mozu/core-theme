@@ -4,18 +4,18 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 	"modules/amazonpay-v2", "modules/models-amazoncheckout-v2", 'hyprlivecontext', 'modules/preserve-element-through-render'],
 	function ($, Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2, hyprlivecontext) {
 
-		$(document).ready(function () {
-			window.v2ReadyCalled = true;
+	$(document).ready(function () {
+		window.v2ReadyCalled = true;
 
-			AmazonPayV2.init(true);
+		AmazonPayV2.init(true);
 
-			var checkoutData = require.mozuData('checkout');
+		var checkoutData = require.mozuData('checkout');
 
-			// Use Amazon Pay V2 model
-			var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		// Use Amazon Pay V2 model
+		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 
-			// Listen for checkout complete event to navigate back to main checkout
-			checkoutModel.on("awscheckoutcomplete", function (id) {
+		// Listen for checkout complete event to navigate back to main checkout
+		checkoutModel.on("awscheckoutcomplete", function (id) {
 				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
 
 				if (checkoutModel.attributes.originalQuoteId)
@@ -105,6 +105,7 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 					}
 				};
 
+
 			} else {
 			}
 
@@ -141,14 +142,14 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 						checkoutSessionId: checkoutSessionId
 					};
 					checkoutModel.set("fulfillmentInfo", fulfillmentInfo);
-				}
+			}
 
-				// Use displayCheckoutSessionInfo which handles the API call internally
-				if (typeof AmazonPayV2.displayCheckoutSessionInfo === 'function') {
-					AmazonPayV2.displayCheckoutSessionInfo(checkoutSessionId);
-				} else {
-					// Fallback: direct API call if function doesn't exist
-					AmazonPayV2.getCheckoutSession(checkoutSessionId)
+			// For regular checkout or cart flow: load widgets normally
+			if (typeof AmazonPayV2.displayCheckoutSessionInfo === 'function') {
+						AmazonPayV2.displayCheckoutSessionInfo(checkoutSessionId);
+					} else {
+						// Fallback: direct API call if function doesn't exist
+						AmazonPayV2.getCheckoutSession(checkoutSessionId)
 						.then(function (response) {
 							// Manual data binding as fallback
 							if (response && response.data) {
@@ -165,21 +166,22 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 									$('#addressBookWidgetDiv').html(addrHTML);
 								}
 
-								// Update payment widget
-								if (data.paymentPreferences) {
-									$('#walletWidgetDiv').html('<div><strong>Payment Method:</strong><br>Amazon Pay Selected</div>');
-								}
+
+							// Update payment widget
+							if (data.paymentPreferences) {
+								$('#walletWidgetDiv').html('<div><strong>Payment Method:</strong><br>Amazon Pay Selected</div>');
 							}
+						}
 
-							$("#continue").show();
-						})
-						.fail(function (error) {
-							$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
-							$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
-						});
+						$("#continue").show();
+					})
+					.fail(function (error) {
+						$('#addressBookWidgetDiv').html('Error loading address data: ' + (error.statusText || 'Unknown error'));
+						$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
+					});
 				}
-
-			} else {
-			}
+				} else {
+					window.console.log('Amazon checkout-v2: No checkoutSessionId found - widgets will show loading state');
+				}
 		});
 	});
