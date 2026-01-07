@@ -14,19 +14,41 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 		
-		// Debug: Check if this is a cart flow and what ID we have
-		var isCartFlow = window.location.search.indexOf('cartId=') !== -1;
+		// Check if this is a cart flow - need to convert cart to checkout first
+		var urlParams = $.deparam();
+		var isCartFlow = urlParams.cartId || window.location.search.indexOf('cartId=') !== -1;
+		
 		if (isCartFlow) {
-			window.console.log('Cart flow detected - Model ID:', checkoutModel.get('id'), 'Type:', checkoutModel.mozuType);
-		}			// Listen for checkout complete event
-			checkoutModel.on("awscheckoutcomplete", function (id) {
-				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
-
-				if (checkoutModel.attributes.originalQuoteId)
-					window.location = "/checkout/quoteOrder/" + id;
-				else
-					window.location = checkoutUrl + "/" + id;
+			// Cart flow - the preloaded data is actually cart data with cart ID
+			// We need to call the checkout creation API to get a proper checkout ID
+			var cartId = checkoutModel.get('id');
+			window.console.log('Cart flow detected - Converting cart to checkout, cart ID:', cartId);
+			
+			// Create checkout from cart
+			checkoutModel.apiModel.createCheckout().then(function(checkout) {
+				window.console.log('Checkout created from cart, checkout ID:', checkout.id);
+				// Update the model with the new checkout data
+				checkoutModel.set(checkout);
+				// Continue with Amazon setup
+				continueWithAmazonSetup();
+			}, function(error) {
+				window.console.error('Failed to create checkout from cart:', error);
 			});
+		} else {
+			// Regular checkout flow - data already has proper checkout ID
+			continueWithAmazonSetup();
+		}
+		
+		function continueWithAmazonSetup() {
+		// Listen for checkout complete event
+		checkoutModel.on("awscheckoutcomplete", function (id) {
+			var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
+
+			if (checkoutModel.attributes.originalQuoteId)
+				window.location = "/checkout/quoteOrder/" + id;
+			else
+				window.location = checkoutUrl + "/" + id;
+		});
 
 			// Add continue button if it doesn't exist
 			if ($('#amazon-v2-continue-btn').length === 0) {
@@ -205,8 +227,9 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 						$('#walletWidgetDiv').html('Error loading payment data: ' + (error.statusText || 'Unknown error'));
 					});
 				}
-				} else {
-					window.console.log('Amazon checkoutv2-v2: No checkoutSessionId found - widgets will show loading state');
-				}
-			});
+			} else {
+				window.console.log('Amazon checkoutv2-v2: No checkoutSessionId found - widgets will show loading state');
+			}
+		} // end continueWithAmazonSetup
 		});
+	});
