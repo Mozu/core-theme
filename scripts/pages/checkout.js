@@ -753,8 +753,8 @@ require(["modules/jquery-mozu",
         if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
             window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
             _.defer(function() {
-                window.console.log("=== Calling submit() to complete order ===");
-                checkoutModel.submit();
+                window.console.log("=== Calling submitOrderAction() to complete order ===");
+                checkoutModel.submitOrderAction();
             });
         }
 
