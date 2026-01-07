@@ -14,14 +14,11 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 		
-		// Check if this is a cart flow
+		// Parse URL parameters
 		var urlParams = $.deparam();
-		var isCartFlow = urlParams.cartId || window.location.search.indexOf('cartId=') !== -1;
-		var cartId = isCartFlow ? checkoutModel.get('id') : null;
 		
-		if (isCartFlow) {
-			window.console.log('Cart flow detected, cart ID:', cartId);
-		}
+		// NOTE: Backend already converted cart to order/checkout, so we're working with an order here
+		window.console.log('Amazon Pay V2 checkout page loaded with order ID:', checkoutModel.get('id'));
 
 		// Listen for checkout complete event to navigate back to main checkout
 		checkoutModel.on("awscheckoutcomplete", function (id) {
@@ -80,43 +77,18 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 				});
 			}
 			
-			// If cart flow, convert to order first before submitting
-			if (isCartFlow && cartId) {
-				window.console.log('Cart flow detected - Converting cart to order before submit, cart ID:', cartId);
-				
-				// Create cart model and convert
-				var cartModel = new CartModels.Cart({id: cartId});
-				cartModel.apiCheckout().then(function(orderData) {
-					window.console.log('Successfully converted cart to order, order ID:', orderData.data.id);
-					// Update the checkout model with the new order data
-					checkoutModel.set(orderData.data);
-					// Now submit the order
-					if(window.submitV2Order) {
-						try {
-							window.submitV2Order();
-						} catch(e) {
-							window.console.error('Error in submitV2Order:', e);
-							restoreButton();
-						}
-					}
-				}, function(error) {
-					window.console.error('Failed to convert cart to order:', error);
-					restoreButton();
-				});
-			} else {
-				// Regular checkout flow - submit directly
-				// Call submit function
-				if(window.submitV2Order) {
-					try {
-						window.submitV2Order();
-					} catch(e) {
-						window.console.error('Error in submitV2Order:', e);
-						restoreButton();
-					}
-				} else {
-					window.console.error('submitV2Order not found');
+			// Submit the order - backend already created it from cart
+			window.console.log('Submitting Amazon Pay V2 order');
+			if(window.submitV2Order) {
+				try {
+					window.submitV2Order();
+				} catch(e) {
+					window.console.error('Error in submitV2Order:', e);
 					restoreButton();
 				}
+			} else {
+				window.console.error('submitV2Order function not found');
+				restoreButton();
 			}
 		});
 		
