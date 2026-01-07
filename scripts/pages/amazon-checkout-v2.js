@@ -1,8 +1,8 @@
 window.v2ScriptLoaded = true;
 
 require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "underscore",
-	"modules/amazonpay-v2", "modules/models-amazoncheckout-v2", 'hyprlivecontext', 'modules/preserve-element-through-render'],
-	function ($, Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2, hyprlivecontext) {
+	"modules/amazonpay-v2", "modules/models-amazoncheckout-v2", "modules/models-cart", 'hyprlivecontext', 'modules/preserve-element-through-render'],
+	function ($, Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2, CartModels, hyprlivecontext) {
 
 	$(document).ready(function () {
 		window.v2ReadyCalled = true;
@@ -13,6 +13,15 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		
+		// Check if this is a cart flow
+		var urlParams = $.deparam();
+		var isCartFlow = urlParams.cartId || window.location.search.indexOf('cartId=') !== -1;
+		var cartId = isCartFlow ? checkoutModel.get('id') : null;
+		
+		if (isCartFlow) {
+			window.console.log('Cart flow detected, cart ID:', cartId);
+		}
 
 		// Listen for checkout complete event to navigate back to main checkout
 		checkoutModel.on("awscheckoutcomplete", function (id) {
@@ -84,21 +93,38 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 				restoreButton();
 			}
 		});
-				// Create simple checkout view object - same as V1
-				window.checkoutView = {
-					submit: function () {
+			// Create simple checkout view object - same as V1
+			window.checkoutView = {
+				submit: function () {
+					var self = this;
 
-						if (this.model.getAwsDestination) {
-							var awsDest = this.model.getAwsDestination();
-						}
+					if (this.model.getAwsDestination) {
+						var awsDest = this.model.getAwsDestination();
+					}
 
+					// If cart flow, convert to order first before submitting
+					if (isCartFlow && cartId) {
+						window.console.log('Converting cart to order before submit, cart ID:', cartId);
+						
+						// Create cart model and convert
+						var cartModel = new CartModels.Cart({id: cartId});
+						cartModel.apiCheckout().then(function(orderData) {
+							window.console.log('Successfully converted cart to order, order ID:', orderData.data.id);
+							// Update the model with the new order data
+							self.model.set(orderData.data);
+							// Now submit the order
+							self.model.submit();
+						}, function(error) {
+							window.console.error('Failed to convert cart to order:', error);
+						});
+					} else {
+						// Regular checkout flow - submit directly
 						// Call model.submit() exactly like V1 does
 						this.model.submit();
-					},
-					model: checkoutModel
-				};
-
-				// Also add a global function for the button onclick
+					}
+				},
+				model: checkoutModel
+			};				// Also add a global function for the button onclick
 				window.submitV2Order = function () {
 					if (window.checkoutView && window.checkoutView.submit) {
 						window.checkoutView.submit();
@@ -109,11 +135,11 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 			} else {
 			}
 
-			// Extract Amazon Checkout Session ID from URL after Amazon redirect
-			var urlParams = $.deparam();
+		// Extract Amazon Checkout Session ID from URL after Amazon redirect
+		// urlParams already defined above, reuse it
 
-			// Fallback URL parsing
-			var sessionIdFromURL = null;
+		// Fallback URL parsing
+		var sessionIdFromURL = null;
 			var urlSearch = window.location.search;
 			if (urlSearch) {
 				var match = urlSearch.match(/amazonCheckoutSessionId=([^&]*)/);
