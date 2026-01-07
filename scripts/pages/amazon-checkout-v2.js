@@ -44,7 +44,7 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 				'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
 				'</div>' +
 				'<button type="button" id="amazon-v2-continue-btn" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
-				'<button type="button" onclick="window.history.back();" class="mz-button">' +
+				'<button type="button" onclick="window.history.back();" class="mz-button amazon-cancel-btn">' +
 				'Cancel' +
 				'</button>' +
 				'</div>' +
