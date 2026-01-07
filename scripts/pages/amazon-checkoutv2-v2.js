@@ -9,12 +9,16 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 			AmazonPayV2.init(true);
 
-			var checkoutData = require.mozuData('checkout');
+		var checkoutData = require.mozuData('checkout');
 
-			// Use Amazon Pay V2 model
-			var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
-
-			// Listen for checkout complete event
+		// Use Amazon Pay V2 model
+		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		
+		// Debug: Check if this is a cart flow and what ID we have
+		var isCartFlow = window.location.search.indexOf('cartId=') !== -1;
+		if (isCartFlow) {
+			window.console.log('Cart flow detected - Model ID:', checkoutModel.get('id'), 'Type:', checkoutModel.mozuType);
+		}			// Listen for checkout complete event
 			checkoutModel.on("awscheckoutcomplete", function (id) {
 				var checkoutUrl = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled ? "/checkoutv2" : "/checkout";
 
