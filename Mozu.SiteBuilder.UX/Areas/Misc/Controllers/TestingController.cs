@@ -126,6 +126,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
         public void Api(string url)
         {
+            
             var resource = _config.GetSection("mozu:routes").GetChildren()
                 .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).Where(x =>
                 {
@@ -141,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             return false;
                         }
                         var test = u.LocalPath.Substring(idx + 1).TrimEnd('/').TrimStart('/');
-                        return !test.IsNullOrEmpty() && test.StartsWith(test, StringComparison.OrdinalIgnoreCase);
+                        return !test.IsNullOrEmpty() && url.StartsWith(test, StringComparison.OrdinalIgnoreCase);
                     }
                     catch(Exception ex){
                         _logger.Error("error parsing url: " + x, ex);
