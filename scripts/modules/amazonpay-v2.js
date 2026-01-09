@@ -72,6 +72,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			var apiUrl = window.location.hostname === 'localhost' ? 
 				"http://localhost:3001/amazonpay/checkoutsession" :
 				"/amazonpay/checkoutsession";
+				
 			cartOrOrderId = cartOrOrderId || "1234";
 			
 			return $.ajax({

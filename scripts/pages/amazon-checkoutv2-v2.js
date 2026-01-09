@@ -11,8 +11,28 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 		var checkoutData = require.mozuData('checkout');
 
+		// For multiship, we need to set mozuType to 'checkout' before creating the instance
+		// because backend creates a Checkout entity for multiship, not an Order
+		// Check site settings to determine if multiship is enabled
+		var isMultishipEnabled = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled;
+		
+		window.console.log('=== Multiship V2: isMultishipEnabled (from settings) =', isMultishipEnabled);
+		window.console.log('=== Multiship V2: checkoutData.id =', checkoutData ? checkoutData.id : 'no data');
+		window.console.log('=== Multiship V2: checkoutData has groupings =', checkoutData && checkoutData.groupings ? 'YES' : 'NO');
+		
+		if (isMultishipEnabled) {
+			window.console.log('=== Multiship V2: Setting mozuType to CHECKOUT (multiship enabled in settings)');
+			AmazonCheckoutModelsV2.AwsCheckoutPage.prototype.mozuType = 'checkout';
+		} else {
+			window.console.log('=== Multiship V2: Setting mozuType to ORDER (single-ship)');
+			AmazonCheckoutModelsV2.AwsCheckoutPage.prototype.mozuType = 'order';
+		}
+
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		
+		window.console.log('=== Multiship V2: After model creation, mozuType =', checkoutModel.mozuType);
+		window.console.log('=== Multiship V2: After model creation, apiModel type =', checkoutModel.apiModel ? checkoutModel.apiModel.type : 'no apiModel');
 
 		// Listen for checkout complete event to navigate back to main checkout
 		checkoutModel.on("awscheckoutcomplete", function (id) {
@@ -24,7 +44,7 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 					window.location = checkoutUrl + "/" + id;
 			});
 
-			var tableElement = $('#shippingBillingTbl');
+		var tableElement = $('#shippingBillingTbl');
 
 			if (tableElement.length > 0) {
 

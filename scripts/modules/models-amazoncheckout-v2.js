@@ -112,6 +112,11 @@ define([
             },
             submit: function() {
                 var me = this;
+                window.console.log('=== Amazon V2 Model: submit() called');
+                window.console.log('=== Amazon V2 Model: mozuType =', me.mozuType);
+                window.console.log('=== Amazon V2 Model: apiModel.type =', me.apiModel ? me.apiModel.type : 'no apiModel');
+                window.console.log('=== Amazon V2 Model: model ID =', me.id);
+                
                 me.isLoading(true);
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
                     existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
@@ -134,8 +139,8 @@ define([
                         fulfillmentInfo.fulfillmentContact = null;
                     }
 
-                    me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
-                        me.set("fulfillmentInfo", result.data || result);
+                    me.apiModel.update({ fulfillmentInfo: fulfillmentInfo }, { silent: true }).then(function(result) {
+                        me.set("fulfillmentInfo", result.data.fulfillmentInfo || result.fulfillmentInfo);
                         if (me.apiModel.data.requiresFulfillmentInfo)
                             me.applyShippingMethods(existingShippingMethodCode);
                         else
@@ -181,8 +186,8 @@ define([
                         if (user && user.email)
                             shipping.email = user.email;
 
-                        me.apiModel.updateShippingInfo({fulfillmentContact : shipping, data: me.awsData}, { silent: true }).then(function(result) {
-                            me.set("fulfillmentInfo", result.data || result);
+                        me.apiModel.update({fulfillmentInfo: {fulfillmentContact : shipping}}, { silent: true }).then(function(result) {
+                            me.set("fulfillmentInfo", result.data.fulfillmentInfo || result.fulfillmentInfo);
                             if (me.apiModel.data.requiresFulfillmentInfo)
                                 me.applyShippingMethods(existingShippingMethodCode);
                             else
