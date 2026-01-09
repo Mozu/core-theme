@@ -51,7 +51,6 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 				window.location.href = newUrl;
 			})['catch'](function(error) {
 				window.console.error('=== Failed to create checkout from cart ===', error);
-				alert('Failed to initialize checkout. Please try again.');
 			});
 			
 			return; // Stop processing until we redirect
