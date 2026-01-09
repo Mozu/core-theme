@@ -231,8 +231,14 @@ require(["modules/jquery-mozu",
         AmazonPayV2.init(true);
         checkoutData.isAmazonPayV2Enable = AmazonPayV2.isEnabled;
 
-        var checkoutModel = window.order = new CheckoutModels(checkoutData),
-            checkoutViews = {
+        var checkoutModel = window.order = new CheckoutModels(checkoutData);
+            
+        window.console.log('=== Multiship Checkout Model Created ===');
+        window.console.log('Model mozuType:', checkoutModel.mozuType);
+        window.console.log('Model apiModel.type:', checkoutModel.apiModel ? checkoutModel.apiModel.type : 'N/A');
+        window.console.log('Checkout ID:', checkoutModel.id);
+        
+        var checkoutViews = {
                 parentView: new ParentView({
                   el: $checkoutView,
                   model: checkoutModel
