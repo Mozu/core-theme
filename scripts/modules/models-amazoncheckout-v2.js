@@ -115,12 +115,23 @@ define([
                 window.console.log('Amazon V2 submit - mozuType:', me.mozuType, 'apiModel.type:', me.apiModel ? me.apiModel.type : 'N/A', 'ID:', me.id);
                 
                 me.isLoading(true);
+                
+                // For multiship checkouts, fulfillmentInfo doesn't exist at checkout level
+                // Skip the Amazon-specific submit logic and just trigger completion
+                if (me.mozuType === 'checkout') {
+                    window.console.log('Multiship checkout - skipping fulfillmentInfo update, triggering completion');
+                    me.isLoading(false);
+                    me.trigger("awscheckoutcomplete", me.id);
+                    return;
+                }
+                
+                // Single-ship logic below
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
-                    existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
+                    existingShippingMethodCode = fulfillmentInfo ? fulfillmentInfo.shippingMethodCode : null;
 
-                if (me.awsData === null)
+                if (me.awsData === null && fulfillmentInfo)
                     me.awsData = fulfillmentInfo.data;
-                else
+                else if (fulfillmentInfo)
                     fulfillmentInfo.data = me.awsData;
 
                 if (me.isLegacyCheckout()) {
