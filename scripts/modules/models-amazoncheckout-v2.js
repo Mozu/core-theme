@@ -112,10 +112,7 @@ define([
             },
             submit: function() {
                 var me = this;
-                window.console.log('=== Amazon V2 Model: submit() called');
-                window.console.log('=== Amazon V2 Model: mozuType =', me.mozuType);
-                window.console.log('=== Amazon V2 Model: apiModel.type =', me.apiModel ? me.apiModel.type : 'no apiModel');
-                window.console.log('=== Amazon V2 Model: model ID =', me.id);
+                window.console.log('Amazon V2 submit - mozuType:', me.mozuType, 'apiModel.type:', me.apiModel ? me.apiModel.type : 'N/A', 'ID:', me.id);
                 
                 me.isLoading(true);
                 var fulfillmentInfo = me.get("fulfillmentInfo"),

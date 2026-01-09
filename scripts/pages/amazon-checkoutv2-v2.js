@@ -11,28 +11,76 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 		var checkoutData = require.mozuData('checkout');
 
+		// Check if we need to convert cart to checkout first (for local dev when Arc.js action doesn't run)
+		var urlSearchParams = window.location.search.substring(1);
+		var urlParamsObj = {};
+		if (urlSearchParams) {
+			urlSearchParams.split('&').forEach(function(param) {
+				var parts = param.split('=');
+				urlParamsObj[parts[0]] = decodeURIComponent(parts[1] || '');
+			});
+		}
+		
+		var cartId = urlParamsObj.cartId;
+		var amazonCheckoutSessionId = urlParamsObj.amazonCheckoutSessionId;
+		
+		window.console.log('=== Multiship V2 Page Load ===');
+		window.console.log('cartId in URL:', cartId);
+		window.console.log('amazonCheckoutSessionId:', amazonCheckoutSessionId);
+		window.console.log('checkoutData.id:', checkoutData ? checkoutData.id : 'no data');
+
+		// If we have a cartId in the URL, the backend didn't convert it yet (local dev scenario)
+		// In this case, checkoutData.id will be the cart ID, not a checkout ID
+		if (cartId && checkoutData && checkoutData.id === cartId) {
+			window.console.log('=== Cart not yet converted to checkout, converting now ===');
+			
+			// Create checkout from cart
+			var api = require('modules/api');
+			var checkoutClient = api.createSync('checkout');
+			
+			checkoutClient.createCheckoutFromCart({ cartId: cartId }).then(function(newCheckout) {
+				window.console.log('=== Checkout created from cart ===');
+				window.console.log('New checkout ID:', newCheckout.id);
+				
+				// Redirect to the checkout page with the new checkout ID
+				var newUrl = window.location.pathname.replace('/cart', '/checkoutV2/' + newCheckout.id) + 
+					'?view=amazon-checkoutv2-v2&amazonCheckoutSessionId=' + amazonCheckoutSessionId + 
+					'&isAwsCheckout=true';
+				
+				window.console.log('Redirecting to:', newUrl);
+				window.location.href = newUrl;
+			})['catch'](function(error) {
+				window.console.error('=== Failed to create checkout from cart ===', error);
+				alert('Failed to initialize checkout. Please try again.');
+			});
+			
+			return; // Stop processing until we redirect
+		}
+
 		// For multiship, we need to set mozuType to 'checkout' before creating the instance
 		// because backend creates a Checkout entity for multiship, not an Order
-		// Check site settings to determine if multiship is enabled
-		var isMultishipEnabled = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled;
 		
-		window.console.log('=== Multiship V2: isMultishipEnabled (from settings) =', isMultishipEnabled);
-		window.console.log('=== Multiship V2: checkoutData.id =', checkoutData ? checkoutData.id : 'no data');
-		window.console.log('=== Multiship V2: checkoutData has groupings =', checkoutData && checkoutData.groupings ? 'YES' : 'NO');
+		// Detection: if URL path contains '/checkoutV2/', it's a multiship checkout entity
+		var isCheckoutV2Url = window.location.pathname.indexOf('/checkoutV2/') !== -1;
 		
-		if (isMultishipEnabled) {
-			window.console.log('=== Multiship V2: Setting mozuType to CHECKOUT (multiship enabled in settings)');
+		window.console.log('=== Amazon Pay V2 Multiship Checkout ===');
+		window.console.log('URL path:', window.location.pathname);
+		window.console.log('Is multiship URL:', isCheckoutV2Url);
+		window.console.log('Checkout ID:', checkoutData ? checkoutData.id : 'no data');
+		
+		// Use checkout mozuType if URL is /checkoutV2/ (multiship flow)
+		if (isCheckoutV2Url) {
+			window.console.log('Setting mozuType = checkout (multiship)');
 			AmazonCheckoutModelsV2.AwsCheckoutPage.prototype.mozuType = 'checkout';
 		} else {
-			window.console.log('=== Multiship V2: Setting mozuType to ORDER (single-ship)');
+			window.console.log('Setting mozuType = order (single-ship)');
 			AmazonCheckoutModelsV2.AwsCheckoutPage.prototype.mozuType = 'order';
 		}
 
 		// Use Amazon Pay V2 model
 		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
 		
-		window.console.log('=== Multiship V2: After model creation, mozuType =', checkoutModel.mozuType);
-		window.console.log('=== Multiship V2: After model creation, apiModel type =', checkoutModel.apiModel ? checkoutModel.apiModel.type : 'no apiModel');
+		window.console.log('Model created - mozuType:', checkoutModel.mozuType, 'apiModel.type:', checkoutModel.apiModel ? checkoutModel.apiModel.type : 'N/A');
 
 		// Listen for checkout complete event to navigate back to main checkout
 		checkoutModel.on("awscheckoutcomplete", function (id) {
