@@ -211,15 +211,6 @@
                 {% include "modules/checkout/amazon-shipping-billing-v2" %}
             </table>
         </form>
-    {% else %}
-        {% if pageContext.query.view == "amazon-checkout" %}
-            <h1 class="mz-pagetitle">{{ labels.awsCheckout }}</h1>  
-            <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
-                {% include "modules/common/message-bar" with model=model.messages %}
-                <table id="shippingBillingTbl" class="shippingBillingTbl">
-                    {% include "modules/checkout/amazon-shipping-billing" %}
-                </table>
-            </form>
         {% else %}
             <h1 class="mz-pagetitle">
                 {{ labels.checkout }}

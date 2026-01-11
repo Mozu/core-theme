@@ -114,19 +114,17 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 * Build the return URL where Amazon will redirect after checkout
 		 */
 		getReturnUrl: function(id, isCart) {
+			var self = this;
 			var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
 			var isMultishipEnabled = hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled;
 			var checkoutUrl = isMultishipEnabled ? "/checkoutv2" : "/checkout";
 
 			// Use different view name for multi-ship vs single-ship
-			var viewName = isMultishipEnabled ? "amazon-checkoutv2-v2" : this.viewName;
-
 			if (isCart) {
-				redirectUrl += "/cart?cartId=" + id + "&isAwsCheckout=true&view=" + viewName;
+				redirectUrl += "/cart?cartId=" + id + "&isAwsCheckout=true&view=" + self.viewName;
 			} else {
-				redirectUrl += checkoutUrl + "/" + id + "?isAwsCheckout=true&view=" + viewName;
+				redirectUrl += checkoutUrl + "/" + id + "?isAwsCheckout=true&view=" + self.viewName;
 			}
-
 			return redirectUrl;
 		},
 
@@ -192,7 +190,6 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		 */
 		initializeWidgets: function(checkoutSessionId) {
 			var self = this;
-			
 			self.showLoadingState();
 			
 			if (!self.isScriptLoaded) {

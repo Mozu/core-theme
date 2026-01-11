@@ -1,8 +1,8 @@
 window.v2ScriptLoaded = true;
 
 require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "underscore",
-	"modules/amazonpay-v2", "modules/models-amazoncheckout-v2", "modules/models-cart", 'hyprlivecontext', 'modules/preserve-element-through-render'],
-	function ($, Backbone, EventBus, _, AmazonPayV2, AmazonCheckoutModelsV2, CartModels, hyprlivecontext) {
+	"modules/amazonpay-v2", "modules/models-amazoncheckout-v2", "modules/models-amazoncheckoutv2-v2", "modules/models-cart", 'hyprlivecontext', 'modules/preserve-element-through-render'],
+	function ($, Backbone, EventBus, _, AmazonPayV2 , AmazonCheckoutModelsV2, multiamzonv2, CartModels, hyprlivecontext) {
 
 	$(document).ready(function () {
 		window.v2ReadyCalled = true;
@@ -12,7 +12,13 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 		var checkoutData = require.mozuData('checkout');
 
 		// Use Amazon Pay V2 model
-		var checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		var checkoutModel = null;
+		if(hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled) {
+		checkoutModel = window.order = new multiamzonv2.AwsCheckoutPage(checkoutData);
+		}
+		else {
+			checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+		}
 		
 		// Parse URL parameters
 		var urlParams = $.deparam();

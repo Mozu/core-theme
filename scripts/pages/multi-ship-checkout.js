@@ -1,26 +1,26 @@
 // Check if this is an Amazon checkout view and load the appropriate script
-(function() {
-    var getUrlParameter = function(name) {
-        var regex = new RegExp('[?&]' + name + '=([^&#]*)');
-        var results = regex.exec(window.location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')).trim();
-    };
+// (function() {
+//     var getUrlParameter = function(name) {
+//         var regex = new RegExp('[?&]' + name + '=([^&#]*)');
+//         var results = regex.exec(window.location.search);
+//         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' ')).trim();
+//     };
 
-    var viewParam = getUrlParameter('view');
-    window.console.log('Multi-ship-checkout.js: view param =', viewParam);
+//     var viewParam = getUrlParameter('view');
+//     window.console.log('Multi-ship-checkout.js: view param =', viewParam);
 
-    if (viewParam === 'amazon-checkoutv2-v2') {
-        window.console.log('Detected Amazon checkout view, loading Amazon script...');
-        // Load Amazon checkout script instead
-        require(['pages/amazon-checkoutv2-v2'], function() {
-            window.console.log('Amazon checkoutv2-v2 script loaded successfully');
-        }, function(err) {
-            window.console.error('Failed to load Amazon script:', err);
-        });
-        return;
-    }
-    window.console.log('Normal multi-ship checkout, continuing...');
-})();
+//     if (viewParam === 'amazon-checkoutv2-v2') {
+//         window.console.log('Detected Amazon checkout view, loading Amazon script...');
+//         // Load Amazon checkout script instead
+//         require(['pages/amazon-checkoutv2-v2'], function() {
+//             window.console.log('Amazon checkoutv2-v2 script loaded successfully');
+//         }, function(err) {
+//             window.console.error('Failed to load Amazon script:', err);
+//         });
+//         return;
+//     }
+//     window.console.log('Normal multi-ship checkout, continuing...');
+// })();
 
 require(["modules/jquery-mozu",
     "underscore",
@@ -289,6 +289,13 @@ require(["modules/jquery-mozu",
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkoutv2/" + checkoutModel.get('id') + "/confirmation";
         });
 
+        if (window.location.search.indexOf('amazonCheckoutSessionId') !== -1) {
+            window.console.log("=== Amazon checkout session ID detected, will auto-submit ===");
+            _.defer(function() {
+                window.console.log("=== Calling submitOrderAction() to complete order ===");
+                checkoutModel.submitOrderAction();
+            });
+        }
 
 
         var $reviewPanel = $('#step-review');

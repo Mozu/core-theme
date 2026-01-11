@@ -387,7 +387,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 }
 
                 _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout',
-                    'addDigitalCreditToCustomerAccount', 'saveCustomerContacts');
+                    'addDigitalCreditToCustomerAccount', 'saveCustomerContacts', 'updateAmazonPayV2CheckoutSession', 'submitOrderAction');
 
             },
             getCustomerInfo : function(){
@@ -860,6 +860,106 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 return isValid;
             },
 
+                        updateAmazonPayV2CheckoutSession: function () {
+                var order = this;
+                var activePayments = order.apiModel.getActivePayments();
+
+                var paymentSettings = HyprLiveContext.locals.siteContext && 
+                    HyprLiveContext.locals.siteContext.checkoutSettings && 
+                    (_.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PAYWITHAMAZONV2"}) ||
+                     _.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PayWithAmazonV2"}));
+                
+                var orderProcessing = paymentSettings && _.findWhere(paymentSettings.credentials, {"apiName": "orderProcessing"});
+                var paymentIntent = (orderProcessing && orderProcessing.value === "AuthAndCaptureOnOrderPlacement") ? 
+                    "AuthorizeWithCapture" : "Authorize";
+
+                    
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+                    // Check for legacy flow: paymentType === 'PayWithAmazonV2'
+                    if (payment.paymentType === 'PayWithAmazonV2') {
+                        return true;
+                    }
+                    // Check for modern token-based flow
+                    return payment.paymentType === 'token' && 
+                           payment.billingInfo && 
+                           payment.billingInfo.token && 
+                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                });
+
+                if (!amazonPayV2Payment) {
+                    var deferred = api.defer();
+                    deferred.resolve();
+                    return deferred.promise;
+                }
+
+                var checkoutSessionId = amazonPayV2Payment.paymentType === 'PayWithAmazonV2' ?
+                    amazonPayV2Payment.externalTransactionId :
+                    amazonPayV2Payment.billingInfo.token.paymentServiceTokenId;
+                var chargeAmount = {
+                    amount: amazonPayV2Payment.amountRequested,
+                    currencyCode: order.get('currencyCode') || 'USD'
+                };
+
+                // Get payment settings to determine paymentIntent based on orderProcessing
+                
+                var paymentDetails = {
+                    paymentIntent: paymentIntent,
+                    canHandlePendingAuthorization: false,
+                    chargeAmount: chargeAmount
+                };
+
+                var pageContext = require.mozuData('pagecontext');
+                var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
+
+                var payload = {
+                    checkoutSessionId: checkoutSessionId,
+                    webCheckoutDetails: {
+                        checkoutReviewReturnUrl: window.location.href,
+                        checkoutResultReturnUrl: window.location.href
+                    },
+                    paymentDetails: paymentDetails,
+                    merchantMetadata: {
+                        merchantReferenceId: order.id,
+                        merchantStoreName: siteName
+                    }
+                };
+
+                var apiUrl = window.location.hostname === 'localhost' ? 
+                    "http://localhost:3001/amazonpay/v2/updatecheckoutsession" :
+                    "/amazonpay/v2/updatecheckoutsession";
+
+                return $.ajax({
+                    method: "POST",
+                    url: apiUrl,
+                    contentType: "application/json",
+                    data: JSON.stringify(payload)
+                }).then(function(response) {
+                    if (response && response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
+                    return response;
+                });
+            },
+
+             submitOrderAction: function () {
+                var order = this;
+                window.console.log("=== submitOrderAction called ===");
+                order.isLoading(true);
+                return order.apiCheckout().then(function(result) {
+                    window.console.log("=== apiCheckout succeeded ===", result);
+                    
+                    // Redirect immediately to confirmation page
+                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + order.get('id') + "/confirmation";
+                    window.console.log("=== Redirecting to:", confirmationUrl);
+                    window.location.href = confirmationUrl;
+                    
+                    return result;
+                }, function(error) {
+                    window.console.error("=== apiCheckout failed ===", error);
+                    return order.onCheckoutError(error);
+                });
+            },
+
             submit: function () {
                 var checkout = this,
                     billingInfo = this.get('billingInfo'),
@@ -960,9 +1060,29 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     process.push(this.addDigitalCreditToCustomerAccount);
                 }
 
-                process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
+                // Update Amazon Pay V2 checkout session before submitting order
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+                    // Check for legacy flow: paymentType === 'PayWithAmazonV2'
+                    if (payment.paymentType === 'PayWithAmazonV2') {
+                        return true;
+                    }
+                    // Check for modern token-based flow
+                    return payment.paymentType === 'token' && 
+                           payment.billingInfo && 
+                           payment.billingInfo.token && 
+                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                });
 
-                api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
+                if (amazonPayV2Payment) {
+                    // Only update session and redirect to Amazon, don't call apiCheckout
+                    // Order will be submitted via submitOrderAction when returning from Amazon
+                    // Don't call onCheckoutSuccess here - just execute the process and let it redirect
+                    api.steps(process).then(this.updateAmazonPayV2CheckoutSession);
+                } else {
+                    // For non-Amazon payments, proceed with normal order submission
+                   process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
+                  api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
+                }
 
             },
             update: function() {

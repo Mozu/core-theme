@@ -114,7 +114,7 @@ define([
                 var me = this;
                 me.isLoading(true);
                 var fulfillmentInfo = me.get("fulfillmentInfo"),
-                    existingShippingMethodCode = fulfillmentInfo.shippingMethodCode;
+                    existingShippingMethodCode = null;
 
                 if (me.awsData === null)
                     me.awsData = fulfillmentInfo.data;
