@@ -679,6 +679,8 @@ require(["modules/jquery-mozu",
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
+            window.console.error("=== Initializing checkout page ===");
+
         AmazonPay.init(true);
         AmazonPayV2.init(true);
 
