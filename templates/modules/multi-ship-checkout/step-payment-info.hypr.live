@@ -84,6 +84,9 @@
                     {%if payment.billingInfo.token.type|lower == "paywithamazon" %}
                         {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
                     {%endif%}
+                    {%if payment.billingInfo.token.type|lower == "paywithamazonv2" %}
+                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                    {%endif%}
                     {% if payment.billingInfo.token.type|lower == "applepay" %}
                       <div class = "mz-l-formfieldgroup-cell">
                         <img width="100px" style="margin-right:7px;" src="../../resources/images/Apple_Pay_Mark.png"/>

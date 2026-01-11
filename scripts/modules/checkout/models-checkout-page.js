@@ -943,19 +943,19 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
              submitOrderAction: function () {
                 var order = this;
-                window.console.log("=== submitOrderAction called ===");
+                window.console.log("=== submitOrderAction called (multiship) ===");
                 order.isLoading(true);
                 return order.apiCheckout().then(function(result) {
-                    window.console.log("=== apiCheckout succeeded ===", result);
+                    window.console.log("=== apiCheckout succeeded (multiship) ===", result);
                     
-                    // Redirect immediately to confirmation page
-                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + order.get('id') + "/confirmation";
+                    // Redirect immediately to confirmation page - use checkoutv2 for multiship
+                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkoutv2/" + order.get('id') + "/confirmation";
                     window.console.log("=== Redirecting to:", confirmationUrl);
                     window.location.href = confirmationUrl;
                     
                     return result;
                 }, function(error) {
-                    window.console.error("=== apiCheckout failed ===", error);
+                    window.console.error("=== apiCheckout failed (multiship) ===", error);
                     return order.onCheckoutError(error);
                 });
             },
