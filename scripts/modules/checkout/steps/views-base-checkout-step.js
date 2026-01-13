@@ -49,6 +49,23 @@ var CheckoutStepView = EditableView.extend({
 
             window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&access_token="+amazonpayment.data.awsData.addressAuthorizationToken+"&view="+AmazonPay.viewName;
         },
+        amazonShippingAndBillingV2: function() {
+            // V2 uses checkout session ID instead of access token
+            var activePayments = window.order.apiModel.getActivePayments();
+            var v2Payment = activePayments && _.find(activePayments, function(payment) {
+                return payment.paymentType === 'PayWithAmazonV2' || 
+                       (payment.paymentType === 'token' && payment.billingInfo.token && payment.billingInfo.token.type === 'PayWithAmazonV2');
+            });
+            
+            if (v2Payment) {
+                var checkoutSessionId = v2Payment.paymentType === 'PayWithAmazonV2' ? 
+                    v2Payment.externalTransactionId : 
+                    v2Payment.billingInfo.token.paymentServiceTokenId;
+                
+                // Redirect to checkout page with V2 view and session ID
+                window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
+            }
+        },
         initStepView: function() {
             this.model.initStep();
         },
