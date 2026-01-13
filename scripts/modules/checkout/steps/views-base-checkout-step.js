@@ -54,9 +54,9 @@ var CheckoutStepView = EditableView.extend({
                     v2Payment.billingInfo.token.paymentServiceTokenId;
                 
                 // Redirect to checkout page with V2 view and session ID
-                window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
+                window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
             } else {
-            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
+            window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
 
             }
         },
