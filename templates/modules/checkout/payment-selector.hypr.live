@@ -121,7 +121,7 @@
                                 </div>
                              {% endif %}
                              {% if name == "paywithamazonv2" %}
-                                <div class="mz-paymenttype" id="amazonPayV2ButtonPaymentSection">
+                                <div class="mz-paymenttype" id="amazonPayV2ButtonPaymentSection" style="position: relative">
                                 </div>
                              {% endif %}
                              {% if name == "applepay" %}

@@ -16,14 +16,10 @@
 {% block body-content %}
 
 {% comment %}Load appropriate script based on view parameter{% endcomment %}
-{% if pageContext.query.view == "amazon-checkout" %}  
-    {% require_script "pages/amazon-checkout" %}
+{% if pageContext.query.view == "amazon-checkout-v2" %}  
+    {% require_script "pages/amazon-checkout-v2" %}
 {% else %}
-    {% if pageContext.query.view == "amazon-checkout-v2" %}
-        {% require_script "pages/amazon-checkout-v2" %}
-    {% else %}
-        {% require_script "pages/checkout" %}
-    {% endif %}
+    {% require_script "pages/checkout" %}
 {% endif %}
 
 {% preload_json model "checkout" %}

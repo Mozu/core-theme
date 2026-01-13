@@ -40,25 +40,44 @@ require(["modules/jquery-mozu", "modules/backbone-mozu", "modules/eventbus", "un
 
 			if (tableElement.length > 0) {
 
-			// Inject V2 content directly - matches V1 structure
-			var v2Content =
-				'<div class="amazon-checkout-v2-container">' +
-				'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">Loading address widget...</div>' +
-				'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
-				'</div>' +
-				'<button type="button" id="amazon-v2-continue-btn" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
-				'<button type="button" onclick="window.history.back();" class="mz-button amazon-cancel-btn">' +
-				'Cancel' +
-				'</button>' +
-				'</div>' +
-				'</div>' +
+		// Inject V2 content directly - matches V1 structure
+		var v2Content =
+			'<tr>' +
+			'<td colspan="2">' +
+			'<div class="amazon-checkout-v2-container">' +
+			'<div id="addressBookWidgetDiv" class="aws-widget amazon-loading">Loading address widget...</div>' +
+			'<div id="walletWidgetDiv" class="aws-widget amazon-loading">Loading payment widget...</div>' +
+			'</div>' +
+			'</td>' +
+			'</tr>';
+		
+		// Add override checkbox if multiship is enabled and multiple destinations exist
+		if (checkoutData.destinations && checkoutData.destinations.length > 1) {
+			v2Content += 
+				'<tr>' +
+				'<td colspan="2">' +
+				'<input type="checkbox" data-mz-value="overrideItemDestinations" value="true" ' + 
+				(checkoutData.overrideItemDestinations ? 'checked="checked"' : '') + '> Override checkout address' +
 				'</td>' +
 				'</tr>';
-
-
-		tableElement.html(v2Content);
+		}
 		
-		// Attach click handler with loading state to the continue button
+		v2Content +=
+			'<tr>' +
+			'<td colspan="2">' +
+			'<button type="button" id="amazon-v2-continue-btn" class="mz-button amazon-continue-btn">Continue to Review Order</button>' +
+			'<button type="button" onclick="window.history.back();" class="mz-button amazon-cancel-btn">Cancel</button>' +
+			'</td>' +
+			'</tr>';
+
+	tableElement.html(v2Content);
+	
+	// Handle override checkbox for multiship
+	$('[data-mz-value="overrideItemDestinations"]').on('change', function() {
+		var isChecked = $(this).is(':checked');
+		checkoutModel.set('overrideItemDestinations', isChecked);
+		window.console.log('Override Item Destinations:', isChecked);
+	});		// Attach click handler with loading state to the continue button
 		$('#amazon-v2-continue-btn').on('click', function() {
 			var $btn = $(this);
 			var originalText = $btn.text();

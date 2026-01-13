@@ -201,6 +201,13 @@
     	{% include "modules/common/message-bar" with model=model.messages %}
     	<table id="shippingBillingTbl" class="shippingBillingTbl">
         	{% include "modules/checkout/amazon-shipping-billing-v2" %}
+            {% if model.destinations && model.destinations.length > 1%}
+                <tr>
+                    <td>
+                        <input type="checkbox" data-mz-value="overrideItemDestinations" value="true" {% if model.overrideItemDestinations %}checked="checked"{% endif %}> Override checkout address
+                    </td>
+                </tr>
+            {%endif%}
 	    </table>
     </form>
 
