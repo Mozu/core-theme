@@ -42,15 +42,6 @@ var CheckoutStepView = EditableView.extend({
             });
         },
         amazonShippingAndBilling: function() {
-            var payments = window.order.get('payments');
-            var amazonpayment = _.find(payments, function(payment){
-                return payment.paymentType === 'token' || payment.paymentType === 'PayWithAmazon';
-            });
-
-            window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&access_token="+amazonpayment.data.awsData.addressAuthorizationToken+"&view="+AmazonPay.viewName;
-        },
-        amazonShippingAndBillingV2: function() {
-            // V2 uses checkout session ID instead of access token
             var activePayments = window.order.apiModel.getActivePayments();
             var v2Payment = activePayments && _.find(activePayments, function(payment) {
                 return payment.paymentType === 'PayWithAmazonV2' || 
@@ -63,7 +54,10 @@ var CheckoutStepView = EditableView.extend({
                     v2Payment.billingInfo.token.paymentServiceTokenId;
                 
                 // Redirect to checkout page with V2 view and session ID
-                window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
+                window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
+            } else {
+            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
+
             }
         },
         initStepView: function() {

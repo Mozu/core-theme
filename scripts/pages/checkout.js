@@ -27,11 +27,6 @@ require(["modules/jquery-mozu",
             this.model.cancelStep();
         },
         amazonShippingAndBilling: function() {
-            //isLoading(true);
-            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
-        },
-        amazonShippingAndBillingV2: function() {
-            // V2 uses checkout session ID instead of access token
             var activePayments = window.order.apiModel.getActivePayments();
             var v2Payment = activePayments && _.find(activePayments, function(payment) {
                 return payment.paymentType === 'PayWithAmazonV2' || 
@@ -45,6 +40,9 @@ require(["modules/jquery-mozu",
                 
                 // Redirect to checkout page with V2 view and session ID
                 window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&view=amazon-checkout-v2&amazonCheckoutSessionId="+checkoutSessionId;
+            } else {
+            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
+
             }
         },
         next: function () {
