@@ -2160,7 +2160,7 @@
 
                 var pageContext = require.mozuData('pagecontext');
                 var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
-
+                var orderNumber = this.getOrderNumber(order);
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
@@ -2169,7 +2169,7 @@
                     },
                     paymentDetails: paymentDetails,
                     merchantMetadata: {
-                        merchantReferenceId: order.id,
+                        merchantReferenceId: orderNumber,
                         merchantStoreName: siteName
                     }
                 };
@@ -2189,6 +2189,15 @@
                     }
                     return response;
                 });
+            },
+            getOrderNumber: function(order) {
+                var orderNumber = order.id;
+                if(order.number){
+                    orderNumber = order.number;
+                }else if(order.apiModel && order.apiModel.data && order.apiModel.data.orderNumber){
+                    orderNumber = order.apiModel.data.orderNumber;
+                }
+                return orderNumber;
             },
             isSavingNewCustomer: function() {
                 return this.get('createAccount') && !this.customerCreated;

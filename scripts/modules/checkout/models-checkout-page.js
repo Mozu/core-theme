@@ -1,27 +1,27 @@
 define([
-    'modules/jquery-mozu',
-    'underscore',
-    'hyprlive',
-    'modules/backbone-mozu',
-    'modules/api',
-    'modules/models-customer',
-    'modules/models-address',
-    'modules/models-paymentmethods',
-    'hyprlivecontext',
-    'modules/models-orders',
-    'modules/checkout/steps/models-base-checkout-step',
-    'modules/checkout/steps/step1/models-step-shipping-info',
-    'modules/checkout/models-shipping-destinations',
-    'modules/checkout/steps/step2/models-step-shipping-methods',
-    'modules/checkout/steps/step3/models-payment',
-    'modules/checkout/contact-dialog/models-contact-dialog',
-    'modules/checkout/models-alternate-contact'
-],
+        'modules/jquery-mozu',
+        'underscore',
+        'hyprlive',
+        'modules/backbone-mozu',
+        'modules/api',
+        'modules/models-customer',
+        'modules/models-address',
+        'modules/models-paymentmethods',
+        'hyprlivecontext',
+        'modules/models-orders',
+        'modules/checkout/steps/models-base-checkout-step',
+        'modules/checkout/steps/step1/models-step-shipping-info',
+        'modules/checkout/models-shipping-destinations',
+        'modules/checkout/steps/step2/models-step-shipping-methods',
+        'modules/checkout/steps/step3/models-payment',
+        'modules/checkout/contact-dialog/models-contact-dialog',
+        'modules/checkout/models-alternate-contact'
+    ],
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods,
         HyprLiveContext, OrderModels, CheckoutStep, ShippingStep,
-        ShippingDestinationModels, ShippingInfo, BillingInfo, ContactDialogModels,AlternateContact) {
+        ShippingDestinationModels, ShippingInfo, BillingInfo, ContactDialogModels, AlternateContact) {
 
-    var checkoutPageValidation = {
+        var checkoutPageValidation = {
             'emailAddress': {
                 fn: function (value) {
                     if (this.attributes.createAccount && (!value || !value.match(Backbone.Validation.patterns.email))) return Hypr.getLabel('emailMissing');
@@ -47,15 +47,16 @@ define([
         }
 
         var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
-        if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0){
+        if (storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
 
             var requiredAttributes = _.filter(storefrontOrderAttributes,
-                function(attr) { return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered' ;  });
-            requiredAttributes.forEach(function(attr) {
-                if(attr.isRequired) {
+                function (attr) {
+                    return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered';
+                });
+            requiredAttributes.forEach(function (attr) {
+                if (attr.isRequired) {
 
-                    checkoutPageValidation['orderAttribute-' + attr.attributeFQN] =
-                    {
+                    checkoutPageValidation['orderAttribute-' + attr.attributeFQN] = {
                         required: true,
                         msg: attr.content.value + " " + Hypr.getLabel('missing')
                     };
@@ -65,213 +66,227 @@ define([
 
 
 
-var CheckoutOrder = OrderModels.Order.extend({
-    helpers : ['selectableDestinations', 'getDeliverableItems'],
-    validation : {
-        destinationId : {
-            required: true,
-            msg: Hypr.getLabel("shippingDestinationRequiredError")
-        }
-    },
-    initialize: function(){
+        var CheckoutOrder = OrderModels.Order.extend({
+            helpers: ['selectableDestinations', 'getDeliverableItems'],
+            validation: {
+                destinationId: {
+                    required: true,
+                    msg: Hypr.getLabel("shippingDestinationRequiredError")
+                }
+            },
+            initialize: function () {
 
-    },
-    getCheckout : function(){
-        return this.collection.parent;
-    },
-    getDestinations : function(){
-        return this.getCheckout().get('destinations');
-    },
-    selectableDestinations : function(){
-        var selectable = [];
-         var shippingDestinations = this.getCheckout().selectableDestinations("Shipping");
-         shippingDestinations.forEach(function(destination){
-            if(!destination.isSingleShipDestination){
-                selectable.push(destination);
-            }
-        });
-        return selectable;
-    },
-    addNewContact: function(){
-        var self = this;
-        this.getCheckout().get('dialogContact').resetDestinationContact();
-        this.getCheckout().get('dialogContact').unset('id');
-
-        this.getCheckout().get('dialogContact').trigger('openDialog');
-
-        this.listenToOnce(this.getCheckout().get('dialogContact'), 'dialogClose', function () {
-            self.set('editingDestination', false);
-        });
-    },
-    editContact: function(destinationId){
-        var destination = this.getDestinations().findWhere({'id': destinationId});
-
-        if(destination){
-            var destCopy = destination.toJSON();
-            destCopy = new ShippingDestinationModels.ShippingDestination(destCopy);
-            //destCopy.set('destinationContact', new CustomerModels.Contact(destCopy.get('destinationContact')));
-            //this.getCheckout().get('dialogContact').get("destinationContact").clear();
-            this.getCheckout().set('dialogContact', destCopy);
-            this.getCheckout().get('dialogContact').set("destinationContact", new CustomerModels.Contact(destCopy.get('destinationContact').toJSON()));
-            this.getCheckout().get('dialogContact').trigger('openDialog');
-        }
-
-    },
-    updateOrderItemDestination: function(destinationId, customerContactId){
-        var self = this;
-        self.isLoading(true);
-
-        if(!destinationId) {
-            var destination = self.getCheckout().get('destinations').findWhere({customerContactId: customerContactId});
-            if(destination){
-                return destination.saveDestinationAsync().then(function(data){
-                    return self.getCheckout().apiUpdateCheckoutItemDestination({
-                        id: self.getCheckout().get('id'),
-                        itemId: self.get('id'),
-                        destinationId: data.data.id
-                    }).ensure(function(){
-                        self.isLoading(false);
-                    });
+            },
+            getCheckout: function () {
+                return this.collection.parent;
+            },
+            getDestinations: function () {
+                return this.getCheckout().get('destinations');
+            },
+            selectableDestinations: function () {
+                var selectable = [];
+                var shippingDestinations = this.getCheckout().selectableDestinations("Shipping");
+                shippingDestinations.forEach(function (destination) {
+                    if (!destination.isSingleShipDestination) {
+                        selectable.push(destination);
+                    }
                 });
-            }
-        }
-        self.set('destinationId', destinationId);
-        return self.getCheckout().apiUpdateCheckoutItemDestination({
-            id: self.getCheckout().get('id'),
-            itemId: self.get('id'),
-            destinationId: destinationId
-        }).ensure(function(){
-            self.isLoading(false);
-        });
-    },
-    splitCheckoutItem : function(){
-        var self = this;
-        var me = this;
-        this.getCheckout().get('shippingStep').splitCheckoutItem(self.get('id'), 1);
-    },
-    getDeliverableItems: function() {
-        return this.getCheckout().apiModel.data.items.filter(function(item) {
-            return item.fulfillmentMethod == "Delivery";
-        });
-    },
-    updateSingleCheckoutDestination: function(destinationId, customerContactId, isFulfillmentMethodDelivery){
-        var self = this;
-        self.isLoading(true);
-        if(destinationId){
-            return self.getCheckout().apiSetAllShippingDestinations({
-                destinationId: destinationId,
-                isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
-            }).ensure(function(){
-                 self.isLoading(false);
-            });
-        }
+                return selectable;
+            },
+            addNewContact: function () {
+                var self = this;
+                this.getCheckout().get('dialogContact').resetDestinationContact();
+                this.getCheckout().get('dialogContact').unset('id');
 
-        var destination = self.getCheckout().get('destinations').findWhere({customerContactId: customerContactId});
-        if(destination){
-            return destination.saveDestinationAsync().then(function(data){
-                return self.getCheckout().apiSetAllShippingDestinations({
-                    destinationId: data.data.id,
-                    isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
-                }).ensure(function(){
+                this.getCheckout().get('dialogContact').trigger('openDialog');
+
+                this.listenToOnce(this.getCheckout().get('dialogContact'), 'dialogClose', function () {
+                    self.set('editingDestination', false);
+                });
+            },
+            editContact: function (destinationId) {
+                var destination = this.getDestinations().findWhere({
+                    'id': destinationId
+                });
+
+                if (destination) {
+                    var destCopy = destination.toJSON();
+                    destCopy = new ShippingDestinationModels.ShippingDestination(destCopy);
+                    //destCopy.set('destinationContact', new CustomerModels.Contact(destCopy.get('destinationContact')));
+                    //this.getCheckout().get('dialogContact').get("destinationContact").clear();
+                    this.getCheckout().set('dialogContact', destCopy);
+                    this.getCheckout().get('dialogContact').set("destinationContact", new CustomerModels.Contact(destCopy.get('destinationContact').toJSON()));
+                    this.getCheckout().get('dialogContact').trigger('openDialog');
+                }
+
+            },
+            updateOrderItemDestination: function (destinationId, customerContactId) {
+                var self = this;
+                self.isLoading(true);
+
+                if (!destinationId) {
+                    var destination = self.getCheckout().get('destinations').findWhere({
+                        customerContactId: customerContactId
+                    });
+                    if (destination) {
+                        return destination.saveDestinationAsync().then(function (data) {
+                            return self.getCheckout().apiUpdateCheckoutItemDestination({
+                                id: self.getCheckout().get('id'),
+                                itemId: self.get('id'),
+                                destinationId: data.data.id
+                            }).ensure(function () {
+                                self.isLoading(false);
+                            });
+                        });
+                    }
+                }
+                self.set('destinationId', destinationId);
+                return self.getCheckout().apiUpdateCheckoutItemDestination({
+                    id: self.getCheckout().get('id'),
+                    itemId: self.get('id'),
+                    destinationId: destinationId
+                }).ensure(function () {
                     self.isLoading(false);
                 });
-            });
-        }
-    }
-});
+            },
+            splitCheckoutItem: function () {
+                var self = this;
+                var me = this;
+                this.getCheckout().get('shippingStep').splitCheckoutItem(self.get('id'), 1);
+            },
+            getDeliverableItems: function () {
+                return this.getCheckout().apiModel.data.items.filter(function (item) {
+                    return item.fulfillmentMethod == "Delivery";
+                });
+            },
+            updateSingleCheckoutDestination: function (destinationId, customerContactId, isFulfillmentMethodDelivery) {
+                var self = this;
+                self.isLoading(true);
+                if (destinationId) {
+                    return self.getCheckout().apiSetAllShippingDestinations({
+                        destinationId: destinationId,
+                        isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+                    }).ensure(function () {
+                        self.isLoading(false);
+                    });
+                }
 
-
-var CheckoutGrouping = Backbone.MozuModel.extend({
-    helpers: ['groupingItemInfo', 'groupingDestinationInfo', 'groupingShippingMethods', 'loadingShippingMethods'],
-    validation : {
-        shippingMethodCode : {
-            fn: "validateShippingCode",
-            msg: Hypr.getLabel("shippingMethodRequiredError")
-        }
-    },
-    validateShippingCode: function(value, attr) {
-        if (!this.get('shippingMethodCode') && this.get('fulfillmentMethod') == "Ship") return this.validation[attr.split('.').pop()].msg;
-    },
-    getCheckout : function(){
-        return this.collection.parent;
-    },
-    groupingItemInfo : function(){
-        var self = this,
-            orderItems = [];
-
-        _.forEach(this.get('orderItemIds'), function(itemId, idx){
-            var item = self.getCheckout().get('items').findWhere({id: itemId});
-            if(item) orderItems.push(item.toJSON());
+                var destination = self.getCheckout().get('destinations').findWhere({
+                    customerContactId: customerContactId
+                });
+                if (destination) {
+                    return destination.saveDestinationAsync().then(function (data) {
+                        return self.getCheckout().apiSetAllShippingDestinations({
+                            destinationId: data.data.id,
+                            isFulfillmentMethodDelivery: isFulfillmentMethodDelivery
+                        }).ensure(function () {
+                            self.isLoading(false);
+                        });
+                    });
+                }
+            }
         });
 
-        return orderItems;
-    },
-    groupingDestinationInfo : function(){
-       var self = this,
-       destinationInfo = self.getCheckout().get('destinations').findWhere({id:this.get('destinationId')});
-       return (destinationInfo) ? destinationInfo.toJSON() : {};
-    },
-    groupingShippingMethods : function(){
-        var self = this,
-        shippingMethod = self.getCheckout().get('shippingMethods').findWhere({groupingId:this.get('id')});
-        return (shippingMethod) ? shippingMethod.toJSON().shippingRates : [];
-    },
-    loadingShippingMethods : function(){
-        this.getCheckout().get('shippingMethods').get('isLoading');
-    }
-});
 
-var CheckoutPage = Backbone.MozuModel.extend({
+        var CheckoutGrouping = Backbone.MozuModel.extend({
+            helpers: ['groupingItemInfo', 'groupingDestinationInfo', 'groupingShippingMethods', 'loadingShippingMethods'],
+            validation: {
+                shippingMethodCode: {
+                    fn: "validateShippingCode",
+                    msg: Hypr.getLabel("shippingMethodRequiredError")
+                }
+            },
+            validateShippingCode: function (value, attr) {
+                if (!this.get('shippingMethodCode') && this.get('fulfillmentMethod') == "Ship") return this.validation[attr.split('.').pop()].msg;
+            },
+            getCheckout: function () {
+                return this.collection.parent;
+            },
+            groupingItemInfo: function () {
+                var self = this,
+                    orderItems = [];
+
+                _.forEach(this.get('orderItemIds'), function (itemId, idx) {
+                    var item = self.getCheckout().get('items').findWhere({
+                        id: itemId
+                    });
+                    if (item) orderItems.push(item.toJSON());
+                });
+
+                return orderItems;
+            },
+            groupingDestinationInfo: function () {
+                var self = this,
+                    destinationInfo = self.getCheckout().get('destinations').findWhere({
+                        id: this.get('destinationId')
+                    });
+                return (destinationInfo) ? destinationInfo.toJSON() : {};
+            },
+            groupingShippingMethods: function () {
+                var self = this,
+                    shippingMethod = self.getCheckout().get('shippingMethods').findWhere({
+                        groupingId: this.get('id')
+                    });
+                return (shippingMethod) ? shippingMethod.toJSON().shippingRates : [];
+            },
+            loadingShippingMethods: function () {
+                this.getCheckout().get('shippingMethods').get('isLoading');
+            }
+        });
+
+        var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'checkout',
             handlesMessages: true,
             relations: {
-                items : Backbone.Collection.extend({
-                    model : CheckoutOrder
+                items: Backbone.Collection.extend({
+                    model: CheckoutOrder
                 }),
-                groupings : Backbone.Collection.extend({
-                    model : CheckoutGrouping
+                groupings: Backbone.Collection.extend({
+                    model: CheckoutGrouping
                 }),
                 billingInfo: BillingInfo,
                 shopperNotes: Backbone.MozuModel.extend(),
                 customer: CustomerModels.Customer,
-                destinations : ShippingDestinationModels.ShippingDestinations,
+                destinations: ShippingDestinationModels.ShippingDestinations,
                 shippingStep: ShippingStep,
                 shippingInfo: ShippingInfo,
                 dialogContact: ContactDialogModels,
-                shippingMethods : Backbone.Collection.extend()
+                shippingMethods: Backbone.Collection.extend()
             },
             validation: checkoutPageValidation,
             dataTypes: {
                 createAccount: Backbone.MozuModel.DataTypes.Boolean,
                 acceptsMarketing: Backbone.MozuModel.DataTypes.Boolean,
                 amountRemainingForPayment: Backbone.MozuModel.DataTypes.Float,
-                isMultiShipMode : Backbone.MozuModel.DataTypes.Boolean
+                isMultiShipMode: Backbone.MozuModel.DataTypes.Boolean
             },
             defaults: {
-                "isMultiShipMode" : false
+                "isMultiShipMode": false
             },
             requiredBehaviors: [1002],
-            setMultiShipMode : function(){
-            var directShipItems = this.get('items').where({fulfillmentMethod: "Ship"});
-            var destinationCount = [];
-             _.each(directShipItems, function(item){
-                var id = item.get('destinationId') ? item.get('destinationId') : 0;
-                if(destinationCount.indexOf(id) === -1) {
-                    destinationCount.push(id);
-                }
-             });
+            setMultiShipMode: function () {
+                var directShipItems = this.get('items').where({
+                    fulfillmentMethod: "Ship"
+                });
+                var destinationCount = [];
+                _.each(directShipItems, function (item) {
+                    var id = item.get('destinationId') ? item.get('destinationId') : 0;
+                    if (destinationCount.indexOf(id) === -1) {
+                        destinationCount.push(id);
+                    }
+                });
 
-            return (destinationCount.length > 1) ? this.set('isMultiShipMode', true) : this.set('isMultiShipMode', false);
+                return (destinationCount.length > 1) ? this.set('isMultiShipMode', true) : this.set('isMultiShipMode', false);
             },
-            addCustomerContacts : function(){
-                var self =this;
+            addCustomerContacts: function () {
+                var self = this;
                 var contacts = self.get('customer').get('contacts');
 
-                if(contacts.length){
-                    contacts.each(function(contact, key){
+                if (contacts.length) {
+                    contacts.each(function (contact, key) {
 
-                        if(!self.get('destinations').hasDestination(contact)){
-                            if(contact.contactTypeHelpers().isShipping() && contact.contactTypeHelpers().isBilling()){
+                        if (!self.get('destinations').hasDestination(contact)) {
+                            if (contact.contactTypeHelpers().isShipping() && contact.contactTypeHelpers().isBilling()) {
                                 self.get('destinations').newDestination(contact, true, "ShippingAndBilling");
                             } else if (contact.contactTypeHelpers().isShipping()) {
                                 self.get('destinations').newDestination(contact, true, "Shipping");
@@ -284,23 +299,23 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     self.get('destinations').trigger('destinationsUpdate');
                 }
             },
-            checkBOGA: function(){
-              var me = this;
-              var suggestedDiscounts = me.get('suggestedDiscounts') || [];
-              var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
-                return discount.autoAdd;
-              });
-              if (suggestedDiscounts.length && autoAddSuggestedDiscount){
-                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
-              }
+            checkBOGA: function () {
+                var me = this;
+                var suggestedDiscounts = me.get('suggestedDiscounts') || [];
+                var autoAddSuggestedDiscount = suggestedDiscounts.some(function (discount) {
+                    return discount.autoAdd;
+                });
+                if (suggestedDiscounts.length && autoAddSuggestedDiscount) {
+                    window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/cart";
+                }
             },
             initialize: function (data) {
 
                 var self = this,
                     user = require.mozuData('user');
-                    //self.get('shippingStep').initSet();
+                //self.get('shippingStep').initSet();
 
-                this.on('sync', function(rawJSON) {
+                this.on('sync', function (rawJSON) {
                     self.addCustomerContacts();
                     self.checkBOGA();
                 });
@@ -308,7 +323,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 self.addCustomerContacts();
                 self.checkBOGA();
 
-                _.defer(function() {
+                _.defer(function () {
                     self.setMultiShipMode();
 
 
@@ -320,9 +335,13 @@ var CheckoutPage = Backbone.MozuModel.extend({
                         billingInfo = self.get('billingInfo'),
                         steps = [shippingStep, shippingInfo, billingInfo],
                         paymentWorkflow = latestPayment && latestPayment.paymentWorkflow,
-                        visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' }),
+                        visaCheckoutPayment = activePayments && _.findWhere(activePayments, {
+                            paymentWorkflow: 'VisaCheckout'
+                        }),
                         allStepsComplete = function () {
-                            return _.reduce(steps, function(m, i) { return m + i.stepStatus(); }, '') === 'completecompletecomplete';
+                            return _.reduce(steps, function (m, i) {
+                                return m + i.stepStatus();
+                            }, '') === 'completecompletecomplete';
                         },
                         isReady = allStepsComplete();
 
@@ -336,8 +355,10 @@ var CheckoutPage = Backbone.MozuModel.extend({
                         paymentWorkflow = visaCheckoutPayment.paymentWorkflow;
                         billingInfo.unset('billingContact');
                         billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
-                        billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
-                     }
+                        billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, {
+                            silent: true
+                        });
+                    }
 
                     if (paymentWorkflow) {
                         billingInfo.set('paymentWorkflow', paymentWorkflow);
@@ -350,9 +371,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                     self.isReady(isReady);
 
-                    _.each(steps, function(step) {
-                        self.listenTo(step, 'stepstatuschange', function() {
-                            _.defer(function() {
+                    _.each(steps, function (step) {
+                        self.listenTo(step, 'stepstatuschange', function () {
+                            _.defer(function () {
                                 self.isReady(allStepsComplete());
                             });
                         });
@@ -362,14 +383,18 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     // E.g. When only Pickup Items are present in cart, 
                     // then remove all validations related to fulfillmentInfo. This will also remove shippingMethodCode validation.
                     if (!self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
-                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function (k) {
+                            return k.indexOf('fulfillment') === -1;
+                        }));
                     }
 
                     // If fulfillmentInfo is required and shippingMethod is not required,
                     // E.g. When only Delivery Items or Delivery and Pickup Items are present in cart,
                     // then remove only shippingMethodCode validation as fulfillmentInfo will be required for Delivery Items.
                     if (self.get('requiresFulfillmentInfo') && !self.get('requiresShippingMethod')) {
-                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('shippingMethodCode') === -1; }));    
+                        self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function (k) {
+                            return k.indexOf('shippingMethodCode') === -1;
+                        }));
                     }
 
                     var billingEmail = billingInfo.get('billingContact.email');
@@ -379,7 +404,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 });
                 if (user.isAuthenticated) {
-                    this.set('customer', { id: user.accountId });
+                    this.set('customer', {
+                        id: user.accountId
+                    });
                 }
                 // preloaded JSON has this as null if it's unset, which defeats the defaults collection in backbone
                 if (!data.acceptsMarketing) {
@@ -390,18 +417,18 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     'addDigitalCreditToCustomerAccount', 'saveCustomerContacts', 'updateAmazonPayV2CheckoutSession', 'submitOrderAction');
 
             },
-            getCustomerInfo : function(){
+            getCustomerInfo: function () {
                 return this.get('customer');
             },
-            getCheckout : function(){
+            getCheckout: function () {
                 return this;
             },
-            selectableDestinations : function(customerContactType){
-               var selectable = [];
-               this.getCheckout().get('destinations').each(function(destination){
-                    if(!destination.get('isGiftCardDestination')){
-                       if(customerContactType && destination.get('customerContactType')) {
-                            if(destination.get('customerContactType') === customerContactType || destination.get('customerContactType') === "ShippingAndBilling"){
+            selectableDestinations: function (customerContactType) {
+                var selectable = [];
+                this.getCheckout().get('destinations').each(function (destination) {
+                    if (!destination.get('isGiftCardDestination')) {
+                        if (customerContactType && destination.get('customerContactType')) {
+                            if (destination.get('customerContactType') === customerContactType || destination.get('customerContactType') === "ShippingAndBilling") {
                                 selectable.push(destination.toJSON());
                             }
                         } else {
@@ -411,30 +438,30 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 });
                 return selectable;
             },
-            applyAttributes: function() {
+            applyAttributes: function () {
                 var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
-                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                if (storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
                     this.set('orderAttributes', storefrontOrderAttributes);
                 }
             },
 
-            processDigitalWallet: function(digitalWalletType, payment) {
+            processDigitalWallet: function (digitalWalletType, payment) {
                 var me = this;
-                me.runForAllSteps(function() {
+                me.runForAllSteps(function () {
                     this.isLoading(true);
                 });
                 me.trigger('beforerefresh');
                 // void active payments; if there are none then the promise will resolve immediately
-                return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function(payment) {
+                return api.all.apply(api, _.map(_.filter(me.apiModel.getActivePayments(), function (payment) {
                     return payment.paymentType !== 'StoreCredit' && payment.paymentType !== 'GiftCard';
-                }), function(payment) {
+                }), function (payment) {
                     return me.apiVoidPayment(payment.id);
-                })).then(function() {
+                })).then(function () {
                     return me.apiProcessDigitalWallet({
                         digitalWalletData: JSON.stringify(payment)
                     }).then(function () {
                         me.updateVisaCheckoutBillingInfo();
-                        me.runForAllSteps(function() {
+                        me.runForAllSteps(function () {
                             this.trigger('sync');
                             this.isLoading(false);
                         });
@@ -442,21 +469,25 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     });
                 });
             },
-            updateShippingInfo: function() {
+            updateShippingInfo: function () {
                 var me = this;
                 this.get('shippingInfo').updateShippingMethods();
             },
-            updateVisaCheckoutBillingInfo: function() {
+            updateVisaCheckoutBillingInfo: function () {
                 //Update the billing info with visa checkout payment
                 var billingInfo = this.get('billingInfo');
                 var activePayments = this.apiModel.getActivePayments();
-                var visaCheckoutPayment = activePayments && _.findWhere(activePayments, { paymentWorkflow: 'VisaCheckout' });
+                var visaCheckoutPayment = activePayments && _.findWhere(activePayments, {
+                    paymentWorkflow: 'VisaCheckout'
+                });
                 if (visaCheckoutPayment) {
                     billingInfo.set('usingSavedCard', false);
                     billingInfo.unset('savedPaymentMethodId');
                     billingInfo.set('card', visaCheckoutPayment.billingInfo.card);
                     billingInfo.unset('billingContact');
-                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, { silent:true });
+                    billingInfo.set('billingContact', visaCheckoutPayment.billingInfo.billingContact, {
+                        silent: true
+                    });
                     billingInfo.set('paymentWorkflow', visaCheckoutPayment.paymentWorkflow);
                     billingInfo.set('paymentType', visaCheckoutPayment.paymentType);
                     this.refresh();
@@ -466,7 +497,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 var me = this;
                 var code = this.get('couponCode');
                 var orderDiscounts = me.get('orderDiscounts');
-                if (orderDiscounts && _.findWhere(orderDiscounts, { couponCode: code })) {
+                if (orderDiscounts && _.findWhere(orderDiscounts, {
+                        couponCode: code
+                    })) {
                     // to maintain promise api
                     var deferred = api.defer();
                     deferred.reject();
@@ -483,10 +516,10 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     me.get('billingInfo').trigger('sync');
                     me.set('couponCode', '');
                     var groupingShippingDiscounts = [];
-                    me.get("groupings").forEach(function(grouping){
-                      grouping.get('shippingDiscounts').forEach(function(discount){
-                        groupingShippingDiscounts.push(discount);
-                      });
+                    me.get("groupings").forEach(function (grouping) {
+                        grouping.get('shippingDiscounts').forEach(function (discount) {
+                            groupingShippingDiscounts.push(discount);
+                        });
                     });
 
                     /* BOGA cart redirect check -
@@ -499,11 +532,11 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     */
                     var redirectToCart = false;
                     var suggestedDiscounts = me.get('suggestedDiscounts') || [];
-                    var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
-                      return discount.autoAdd;
+                    var autoAddSuggestedDiscount = suggestedDiscounts.some(function (discount) {
+                        return discount.autoAdd;
                     });
-                    if (suggestedDiscounts.length && autoAddSuggestedDiscount){
-                      redirectToCart = true;
+                    if (suggestedDiscounts.length && autoAddSuggestedDiscount) {
+                        redirectToCart = true;
                     }
 
                     var productDiscounts = _.flatten(me.get('items').pluck('productDiscounts'));
@@ -522,13 +555,12 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
 
 
-                    if (_.contains(invalidCoupons, code)){
-                      me.trigger('error', {
-                        message: Hypr.getLabel('promoCodeInvalid', code)
-                      });
+                    if (_.contains(invalidCoupons, code)) {
+                        me.trigger('error', {
+                            message: Hypr.getLabel('promoCodeInvalid', code)
+                        });
 
-                  } else if (!redirectToCart && (!allDiscounts || !_.find(allDiscounts, matchesCode)))
-                    {
+                    } else if (!redirectToCart && (!allDiscounts || !_.find(allDiscounts, matchesCode))) {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
@@ -552,33 +584,40 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    var has10486Error = _.find(error.additionalErrorData, function(additionalData) { return additionalData.value.indexOf('10486') != -1;});
-                    if (has10486Error){
+                    var has10486Error = _.find(error.additionalErrorData, function (additionalData) {
+                        return additionalData.value.indexOf('10486') != -1;
+                    });
+                    if (has10486Error) {
                         var siteContext = HyprLiveContext.locals.siteContext,
-                            externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayPalExpress2"}),
-                            environment = _.findWhere(externalPayment.credentials, {"apiName" : "environment"}),
+                            externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {
+                                "name": "PayPalExpress2"
+                            }),
+                            environment = _.findWhere(externalPayment.credentials, {
+                                "apiName": "environment"
+                            }),
                             url = "";
 
-                        if (environment.value.toLowerCase() === "sandbox"){
+                        if (environment.value.toLowerCase() === "sandbox") {
                             url = "https://www.sandbox.paypal.com";
-                        }
-                        else{
+                        } else {
                             url = "https://www.paypal.com";
                         }
 
-                        var paypalPayments = _.filter(order.get("payments"),function(payment) { return payment.paymentType == "PayPalExpress2";});
-                        paypalPayments = _.sortBy(paypalPayments, function(payment) {return payment.auditInfo.updateDate;}).reverse();
+                        var paypalPayments = _.filter(order.get("payments"), function (payment) {
+                            return payment.paymentType == "PayPalExpress2";
+                        });
+                        paypalPayments = _.sortBy(paypalPayments, function (payment) {
+                            return payment.auditInfo.updateDate;
+                        }).reverse();
 
                         window.location.href = url + "/cgi-bin/webscr?cmd=_express-checkout&token=" + paypalPayments[0].externalTransactionId;
 
                         return;
                     } else {
                         error = {
-                            items: [
-                                {
-                                    message: error.message || Hypr.getLabel('unknownError')
-                                }
-                            ]
+                            items: [{
+                                message: error.message || Hypr.getLabel('unknownError')
+                            }]
                         };
                     }
                 }
@@ -601,20 +640,20 @@ var CheckoutPage = Backbone.MozuModel.extend({
             },
             addNewCustomer: function () {
                 var self = this,
-                billingInfo = this.get('billingInfo'),
-                billingContact = billingInfo.get('billingContact'),
-                email = this.get('emailAddress'),
-                captureCustomer = function (customer) {
-                    if (!customer || (customer.type !== 'customer' && customer.type !== 'login')) return;
-                    var newCustomer;
-                    if (customer.type === 'customer') newCustomer = customer.data;
-                    if (customer.type === 'login') newCustomer = customer.data.customerAccount;
-                    if (newCustomer && newCustomer.id) {
-                        self.set('customer', newCustomer);
-                        api.off('sync', captureCustomer);
-                        api.off('spawn', captureCustomer);
-                    }
-                };
+                    billingInfo = this.get('billingInfo'),
+                    billingContact = billingInfo.get('billingContact'),
+                    email = this.get('emailAddress'),
+                    captureCustomer = function (customer) {
+                        if (!customer || (customer.type !== 'customer' && customer.type !== 'login')) return;
+                        var newCustomer;
+                        if (customer.type === 'customer') newCustomer = customer.data;
+                        if (customer.type === 'login') newCustomer = customer.data.customerAccount;
+                        if (newCustomer && newCustomer.id) {
+                            self.set('customer', newCustomer);
+                            api.off('sync', captureCustomer);
+                            api.off('spawn', captureCustomer);
+                        }
+                    };
                 api.on('sync', captureCustomer);
                 api.on('spawn', captureCustomer);
                 return this.apiAddNewCustomer({
@@ -638,12 +677,12 @@ var CheckoutPage = Backbone.MozuModel.extend({
             addApiCustomerContacts: function () {
                 var self = this;
                 var destinations = self.get('destinations');
-                if(self.get('destinations').length) {
+                if (self.get('destinations').length) {
                     //Save some Contacts
 
                 }
             },
-            isEmptyAddress: function(obj){
+            isEmptyAddress: function (obj) {
                 var emptyAddress = new AddressModels.StreetAddress({}).toJSON();
                 var areEqual = _.isMatch(emptyAddress, {
                     addressType: obj.addressType,
@@ -654,61 +693,60 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 });
                 return areEqual;
             },
-            compareAddressObjects: function(obj1, obj2) {
+            compareAddressObjects: function (obj1, obj2) {
                 var areEqual = _.isMatch(obj1, {
-                    address1 : obj2.address1,
-                    addressType : obj2.addressType,
-                    cityOrTown : obj2.cityOrTown,
-                    countryCode : obj2.countryCode,
-                    postalOrZipCode : obj2.postalOrZipCode,
-                    stateOrProvince : obj2.stateOrProvince
+                    address1: obj2.address1,
+                    addressType: obj2.addressType,
+                    cityOrTown: obj2.cityOrTown,
+                    countryCode: obj2.countryCode,
+                    postalOrZipCode: obj2.postalOrZipCode,
+                    stateOrProvince: obj2.stateOrProvince
                 });
                 return areEqual;
             },
-            getContactIndex: function(contacts, contact) {
+            getContactIndex: function (contacts, contact) {
                 var self = this;
-                return _.findIndex(contacts, function(existingContact) {
-                        return self.compareAddressObjects(existingContact.address, contact.address);
-                    });
+                return _.findIndex(contacts, function (existingContact) {
+                    return self.compareAddressObjects(existingContact.address, contact.address);
+                });
             },
-            mergeContactTypes: function(originalContactTypes, newContactTypes) {
-                    var mergedTypes = originalContactTypes || [];
-                    var originalContactsTypesIndex = _.findIndex(originalContactTypes, function(type) {
-                        return type.name === "Billing";
-                    });
+            mergeContactTypes: function (originalContactTypes, newContactTypes) {
+                var mergedTypes = originalContactTypes || [];
+                var originalContactsTypesIndex = _.findIndex(originalContactTypes, function (type) {
+                    return type.name === "Billing";
+                });
 
-                    var newContactTypesIndex = _.findIndex(newContactTypes, function(type) {
-                        return type.name === "Billing";
-                    });
+                var newContactTypesIndex = _.findIndex(newContactTypes, function (type) {
+                    return type.name === "Billing";
+                });
 
-                    if (newContactTypes) {
-                        if (originalContactsTypesIndex > -1) {
-                            mergedTypes[originalContactsTypesIndex] = newContactTypes[newContactTypesIndex];
-                        }
-                        else {
-                            mergedTypes.push(newContactTypes[newContactTypesIndex]);
-                        }
+                if (newContactTypes) {
+                    if (originalContactsTypesIndex > -1) {
+                        mergedTypes[originalContactsTypesIndex] = newContactTypes[newContactTypesIndex];
+                    } else {
+                        mergedTypes.push(newContactTypes[newContactTypesIndex]);
                     }
+                }
 
-                    return mergedTypes;
+                return mergedTypes;
             },
-            saveCustomerContacts: function() {
+            saveCustomerContacts: function () {
                 var customer = this.get('customer');
                 var destinations = this.get('destinations');
                 var existingContacts = customer.get('contacts').toJSON() || [];
                 var updatedContacts = [];
                 var self = this;
 
-                destinations.each(function(destination) {
+                destinations.each(function (destination) {
                     if (!destination.get("isGiftCardDestination")) {
                         var destinationContact = destination.get('destinationContact').toJSON();
                         var existingContactIndex = existingContacts.length > 0 ?
-                            self.getContactIndex(existingContacts, destinationContact)
-                            : -1;
+                            self.getContactIndex(existingContacts, destinationContact) :
+                            -1;
 
                         if (existingContactIndex && existingContactIndex === -1) {
                             delete destinationContact.id;
-                            destinationContact.types =  [{
+                            destinationContact.types = [{
                                 "name": "Shipping",
                                 "isPrimary": (destination.get('destinationContact').contactTypeHelpers().isPrimaryShipping()) ? true : false
                             }];
@@ -732,39 +770,43 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 var billingContact = this.get('billingInfo').get('billingContact').toJSON();
                 delete billingContact.email;
-                billingContact.types =  [{
-                        "name": "Billing",
-                        "isPrimary": false
-                    }];
+                billingContact.types = [{
+                    "name": "Billing",
+                    "isPrimary": false
+                }];
 
                 var existingBillingContactIndex = existingContacts.length > 0 ?
-                    self.getContactIndex(existingContacts, billingContact)
-                    : -1;
+                    self.getContactIndex(existingContacts, billingContact) :
+                    -1;
                 var updatedContactIndex = updatedContacts.length > 0 ?
-                    self.getContactIndex(updatedContacts, billingContact)
-                    : -1;
+                    self.getContactIndex(updatedContacts, billingContact) :
+                    -1;
 
                 if (updatedContactIndex > -1) {
                     updatedContacts[updatedContactIndex].types = self.mergeContactTypes(updatedContacts[updatedContactIndex].types, billingContact.types);
-                }
-                else if (existingBillingContactIndex > -1) {
+                } else if (existingBillingContactIndex > -1) {
                     var newBillingContact = existingContacts[existingBillingContactIndex];
                     newBillingContact.types = self.mergeContactTypes(existingContacts[existingBillingContactIndex].types, billingContact.types);
                     updatedContacts.push(newBillingContact);
-                }
-                else {
+                } else {
                     if (!self.isEmptyAddress(billingContact.address))
                         updatedContacts.push(billingContact);
                 }
 
                 if (updatedContacts.length) {
-                    return customer.apiModel.updateCustomerContacts({id: customer.id, postdata:updatedContacts}).then(function(contactResult) {
-                        _.each(contactResult.data.items, function(contact) {
-                            if(contact.types){
-                                var found = _.findWhere(contact.types, {name: "Billing", isPrimary: true});
-                                if(found) {
+                    return customer.apiModel.updateCustomerContacts({
+                        id: customer.id,
+                        postdata: updatedContacts
+                    }).then(function (contactResult) {
+                        _.each(contactResult.data.items, function (contact) {
+                            if (contact.types) {
+                                var found = _.findWhere(contact.types, {
+                                    name: "Billing",
+                                    isPrimary: true
+                                });
+                                if (found) {
                                     self.get('billingInfo').set('billingContact', contact);
-                                return false;
+                                    return false;
                                 }
                             }
                         });
@@ -775,26 +817,26 @@ var CheckoutPage = Backbone.MozuModel.extend({
             },
             saveCustomerCard: function () {
                 var order = this,
-                customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
-                billingInfo = this.get('billingInfo'),
-                isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
-                isPrimaryAddress = this.isSavingNewCustomer(),
-                billingContact = billingInfo.get('billingContact').toJSON(),
-                card = billingInfo.get('card'),
+                    customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
+                    billingInfo = this.get('billingInfo'),
+                    isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
+                    isPrimaryAddress = this.isSavingNewCustomer(),
+                    billingContact = billingInfo.get('billingContact').toJSON(),
+                    card = billingInfo.get('card'),
 
-                doSaveCard = function() {
-                    order.cardsSaved = order.cardsSaved || customer.get('cards').reduce(function(saved, card) {
-                        saved[card.id] = true;
-                        return saved;
-                    }, {});
-                    var method = order.cardsSaved[card.get('id') || card.get('paymentServiceCardId')] ? 'updateCard' : 'addCard';
-                    card.set('contactId', billingContact.id);
-                    card.set('isDefaultPayMethod', true);
-                    return customer.apiModel[method](card.toJSON()).then(function(card) {
-                        order.cardsSaved[card.data.id] = true;
-                        return card;
-                    });
-                };
+                    doSaveCard = function () {
+                        order.cardsSaved = order.cardsSaved || customer.get('cards').reduce(function (saved, card) {
+                            saved[card.id] = true;
+                            return saved;
+                        }, {});
+                        var method = order.cardsSaved[card.get('id') || card.get('paymentServiceCardId')] ? 'updateCard' : 'addCard';
+                        card.set('contactId', billingContact.id);
+                        card.set('isDefaultPayMethod', true);
+                        return customer.apiModel[method](card.toJSON()).then(function (card) {
+                            order.cardsSaved[card.data.id] = true;
+                            return card;
+                        });
+                    };
 
                 if (billingContact.id) {
                     return doSaveCard();
@@ -818,10 +860,10 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     this.set('email', customerEmail);
                 }
             },
-            setNewCustomerEmailAddress : function(){
+            setNewCustomerEmailAddress: function () {
                 var self = this;
 
-                if(!self.get('emailAddress')){
+                if (!self.get('emailAddress')) {
                     self.set('emailAddress', this.get('billingInfo.billingContact.email'));
                 }
 
@@ -837,17 +879,17 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     return customer.apiAddStoreCredit(cred.get('code'));
                 });
             },
-            isSavingNewCustomer: function() {
+            isSavingNewCustomer: function () {
                 return this.get('createAccount') && !this.customerCreated;
             },
 
-            validateReviewCheckoutFields: function(){
+            validateReviewCheckoutFields: function () {
                 var validationResults = [];
                 var isValid = true;
                 for (var field in checkoutPageValidation) {
-                    if(checkoutPageValidation.hasOwnProperty(field)) {
+                    if (checkoutPageValidation.hasOwnProperty(field)) {
                         var result = this.preValidate(field, this.get(field));
-                        if(result) {
+                        if (result) {
                             this.trigger('error', {
                                 message: result
                             });
@@ -860,30 +902,36 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 return isValid;
             },
 
-                        updateAmazonPayV2CheckoutSession: function () {
+            updateAmazonPayV2CheckoutSession: function () {
                 var order = this;
                 var activePayments = order.apiModel.getActivePayments();
 
-                var paymentSettings = HyprLiveContext.locals.siteContext && 
-                    HyprLiveContext.locals.siteContext.checkoutSettings && 
-                    (_.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PAYWITHAMAZONV2"}) ||
-                     _.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {"name": "PayWithAmazonV2"}));
-                
-                var orderProcessing = paymentSettings && _.findWhere(paymentSettings.credentials, {"apiName": "orderProcessing"});
-                var paymentIntent = (orderProcessing && orderProcessing.value === "AuthAndCaptureOnOrderPlacement") ? 
+                var paymentSettings = HyprLiveContext.locals.siteContext &&
+                    HyprLiveContext.locals.siteContext.checkoutSettings &&
+                    (_.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {
+                            "name": "PAYWITHAMAZONV2"
+                        }) ||
+                        _.findWhere(HyprLiveContext.locals.siteContext.checkoutSettings.paymentSettings.externalPaymentWorkflowDefinitions, {
+                            "name": "PayWithAmazonV2"
+                        }));
+
+                var orderProcessing = paymentSettings && _.findWhere(paymentSettings.credentials, {
+                    "apiName": "orderProcessing"
+                });
+                var paymentIntent = (orderProcessing && orderProcessing.value === "AuthAndCaptureOnOrderPlacement") ?
                     "AuthorizeWithCapture" : "Authorize";
 
-                    
-                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function (payment) {
                     // Check for legacy flow: paymentType === 'PayWithAmazonV2'
                     if (payment.paymentType === 'PayWithAmazonV2') {
                         return true;
                     }
                     // Check for modern token-based flow
-                    return payment.paymentType === 'token' && 
-                           payment.billingInfo && 
-                           payment.billingInfo.token && 
-                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                    return payment.paymentType === 'token' &&
+                        payment.billingInfo &&
+                        payment.billingInfo.token &&
+                        payment.billingInfo.token.type === 'PayWithAmazonV2';
                 });
 
                 if (!amazonPayV2Payment) {
@@ -901,7 +949,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 };
 
                 // Get payment settings to determine paymentIntent based on orderProcessing
-                
+
                 var paymentDetails = {
                     paymentIntent: paymentIntent,
                     canHandlePendingAuthorization: false,
@@ -910,7 +958,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 var pageContext = require.mozuData('pagecontext');
                 var siteName = pageContext && pageContext.site ? pageContext.site.name : '';
-
+                var orderNumber = this.getOrderNumber(order);
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     webCheckoutDetails: {
@@ -919,12 +967,12 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     },
                     paymentDetails: paymentDetails,
                     merchantMetadata: {
-                        merchantReferenceId: order.id,
+                        merchantReferenceId: orderNumber,
                         merchantStoreName: siteName
                     }
                 };
 
-                var apiUrl = window.location.hostname === 'localhost' ? 
+                var apiUrl = window.location.hostname === 'localhost' ?
                     "http://localhost:3001/amazonpay/v2/updatecheckoutsession" :
                     "/amazonpay/v2/updatecheckoutsession";
 
@@ -933,7 +981,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     url: apiUrl,
                     contentType: "application/json",
                     data: JSON.stringify(payload)
-                }).then(function(response) {
+                }).then(function (response) {
                     if (response && response.redirectUrl) {
                         window.location.href = response.redirectUrl;
                     }
@@ -941,20 +989,30 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 });
             },
 
-             submitOrderAction: function () {
+             getOrderNumber: function(order) {
+                var orderNumber = order.id;
+                if(order.number){
+                    orderNumber = order.number;
+                }else if(order.apiModel && order.apiModel && order.apiModel.data && order.apiModel.data.orderNumber){
+                    orderNumber = order.apiModel.data.orderNumber;
+                }
+                return orderNumber;
+            },
+
+            submitOrderAction: function () {
                 var order = this;
                 window.console.log("=== submitOrderAction called (multiship) ===");
                 order.isLoading(true);
-                return order.apiCheckout().then(function(result) {
+                return order.apiCheckout().then(function (result) {
                     window.console.log("=== apiCheckout succeeded (multiship) ===", result);
-                    
+
                     // Redirect immediately to confirmation page - use checkoutv2 for multiship
-                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkoutv2/" + order.get('id') + "/confirmation";
+                    var confirmationUrl = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/checkoutv2/" + order.get('id') + "/confirmation";
                     window.console.log("=== Redirecting to:", confirmationUrl);
                     window.location.href = confirmationUrl;
-                    
+
                     return result;
-                }, function(error) {
+                }, function (error) {
                     window.console.error("=== apiCheckout failed (multiship) ===", error);
                     return order.onCheckoutError(error);
                 });
@@ -971,25 +1029,25 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     nonStoreCreditOrGiftCardTotal = billingInfo.nonStoreCreditOrGiftCardTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
                     requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
-                    process = [function() {
-                        var requestPayload =  {
+                    process = [function () {
+                        var requestPayload = {
                             ipAddress: checkout.get('ipAddress'),
                             shopperNotes: checkout.get('shopperNotes').toJSON(),
                             email: checkout.get('email')
                         };
-                        var alternateContactJson = checkout.get('alternateContact')?checkout.get('alternateContact').toJSON():{};
-                        if(Object.keys(alternateContactJson).length>0) {
-                            requestPayload.alternateContact =  alternateContactJson;
+                        var alternateContactJson = checkout.get('alternateContact') ? checkout.get('alternateContact').toJSON() : {};
+                        if (Object.keys(alternateContactJson).length > 0) {
+                            requestPayload.alternateContact = alternateContactJson;
                         }
                         return checkout.apiUpdateCheckout(requestPayload);
                     }];
 
                 var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
-                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                if (storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
                     var updateAttrs = [];
-                    storefrontOrderAttributes.forEach(function(attr){
+                    storefrontOrderAttributes.forEach(function (attr) {
                         var attrVal = checkout.get('orderAttribute-' + attr.attributeFQN);
-                        if(attrVal) {
+                        if (attrVal) {
                             updateAttrs.push({
                                 'fullyQualifiedName': attr.attributeFQN,
                                 'values': [attrVal],
@@ -997,11 +1055,11 @@ var CheckoutPage = Backbone.MozuModel.extend({
                             });
                         }
                     });
-                    
-                    if(updateAttrs.length > 0){
-                        process.push(function(){
+
+                    if (updateAttrs.length > 0) {
+                        process.push(function () {
                             return checkout.apiUpdateAttributes(updateAttrs);
-                        }, function() {
+                        }, function () {
                             return checkout.apiGet();
                         });
                     }
@@ -1015,7 +1073,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     // reconcile the empty address after we got back from paypal and possibly other situations.
                     // also happens with visacheckout ..
                     var billingInfoFromPayment = (this.apiModel.getCurrentPayment() || {}).billingInfo;
-                    billingInfo.set(billingInfoFromPayment, { silent: true });
+                    billingInfo.set(billingInfoFromPayment, {
+                        silent: true
+                    });
                 }
 
                 this.ensureEmailIsSet();
@@ -1044,12 +1104,14 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 var saveCreditCard = false;
 
                 if (activePayments !== null && activePayments.length > 0) {
-                     var creditCard = _.findWhere(activePayments, { paymentType: 'CreditCard' });
-                     if (creditCard && creditCard.billingInfo && creditCard.billingInfo.card) {
-                         saveCreditCard = creditCard.billingInfo.card.isCardInfoSaved;
-                         billingInfo.set('card', creditCard.billingInfo.card);
-                     }
-                 }
+                    var creditCard = _.findWhere(activePayments, {
+                        paymentType: 'CreditCard'
+                    });
+                    if (creditCard && creditCard.billingInfo && creditCard.billingInfo.card) {
+                        saveCreditCard = creditCard.billingInfo.card.isCardInfoSaved;
+                        billingInfo.set('card', creditCard.billingInfo.card);
+                    }
+                }
 
                 if (saveCreditCard && (this.get('createAccount') || isAuthenticated) && this.hasRequiredBehavior(1014)) {
                     isSavingCreditCard = true;
@@ -1061,16 +1123,16 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 }
 
                 // Update Amazon Pay V2 checkout session before submitting order
-                var amazonPayV2Payment = activePayments && _.find(activePayments, function(payment) {
+                var amazonPayV2Payment = activePayments && _.find(activePayments, function (payment) {
                     // Check for legacy flow: paymentType === 'PayWithAmazonV2'
                     if (payment.paymentType === 'PayWithAmazonV2') {
                         return true;
                     }
                     // Check for modern token-based flow
-                    return payment.paymentType === 'token' && 
-                           payment.billingInfo && 
-                           payment.billingInfo.token && 
-                           payment.billingInfo.token.type === 'PayWithAmazonV2';
+                    return payment.paymentType === 'token' &&
+                        payment.billingInfo &&
+                        payment.billingInfo.token &&
+                        payment.billingInfo.token.type === 'PayWithAmazonV2';
                 });
 
                 if (amazonPayV2Payment) {
@@ -1080,32 +1142,32 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     api.steps(process).then(this.updateAmazonPayV2CheckoutSession);
                 } else {
                     // For non-Amazon payments, proceed with normal order submission
-                   process.push(/*this.finalPaymentReconcile, */this.apiCheckout);
-                  api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
+                    process.push( /*this.finalPaymentReconcile, */ this.apiCheckout);
+                    api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
                 }
 
             },
-            update: function() {
+            update: function () {
                 var j = this.toJSON();
                 return this.apiModel.update(j);
             },
-            refresh: function() {
-              var me = this;
-              this.trigger('beforerefresh');
-              return this.apiGet().then(function() {
-                me.trigger('refresh');
-                // me.runForAllSteps(function() {
-                //   this.trigger("sync");
-                // });
-              });
+            refresh: function () {
+                var me = this;
+                this.trigger('beforerefresh');
+                return this.apiGet().then(function () {
+                    me.trigger('refresh');
+                    // me.runForAllSteps(function() {
+                    //   this.trigger("sync");
+                    // });
+                });
             },
-            runForAllSteps: function(cb) {
+            runForAllSteps: function (cb) {
                 var me = this;
                 _.each([
-                       'shippingStep',
-                       'shippingInfo',
-                       'billingInfo'
-                ], function(name) {
+                    'shippingStep',
+                    'shippingInfo',
+                    'billingInfo'
+                ], function (name) {
                     cb.call(me.get(name));
                 });
             },
@@ -1121,5 +1183,5 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 return j;
             }
         });
-    return CheckoutPage;
-});
+        return CheckoutPage;
+    });
