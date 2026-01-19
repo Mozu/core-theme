@@ -48,6 +48,9 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext) {
                 var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
                 if (legacyPWA) return true;
                 
+                // Check for V2 legacy flow
+                    var v2Payment = _.findWhere(activePayments, { paymentType: 'PayWithAmazonV2' });
+                    if (v2Payment) return true;
                 return false;
             } else
                return false;

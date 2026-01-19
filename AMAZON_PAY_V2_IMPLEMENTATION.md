@@ -2,7 +2,20 @@
 
 ## Overview
 
-This project now supports **both Amazon Pay v1 and v2** implementations side-by-side. Users can continue using the existing v1 implementation until they're ready to migrate to v2 by updating their configuration.
+This project supports **both Amazon Pay v1 and v2** implementations side-by-side, allowing seamless migration without disrupting existing functionality.
+
+**Key Architecture Decisions:**
+- **Template-Based Rendering:** v2 uses Hypr templates (`.hypr.live` files) instead of inline HTML for maintainability and reusability
+- **Hosted Checkout Flow:** Amazon handles address/payment collection on their hosted pages; merchant displays read-only data
+- **Smart SDK Loading:** SDK loads on-demand when checkout session returns, preventing unnecessary script loading
+- **Event-Driven Architecture:** Uses EventBus for loose coupling between SDK loading and UI initialization
+- **Deduplication:** Session ID tracking prevents duplicate API calls and duplicate event listeners
+
+**Recent Improvements (Jan 2026):**
+- Separated presentation from logic using Hypr templates for address and payment widgets
+- Fixed SDK loading issue where `init(loadScript=false)` prevented change buttons from working
+- Eliminated duplicate API calls using session deduplication and `EventBus.once()`
+- Simplified button binding by removing setTimeout hacks and legacy fallback code
 
 ## Implementation Structure
 
@@ -23,14 +36,39 @@ These files support the legacy Amazon Pay (OffAmazonPayments) API:
 These files support the new Amazon Pay Checkout v2 API:
 
 **JavaScript Modules:**
-- `scripts/modules/amazonpay-v2.js` - v2 SDK integration with checkout.js
-- `scripts/modules/models-amazoncheckout-v2.js` - v2 single-ship checkout model
-- `scripts/modules/models-amazoncheckoutV2-v2.js` - v2 multi-ship checkout model
-- `scripts/pages/amazon-checkout-v2.js` - v2 checkout page controller
+- `scripts/modules/amazonpay-v2.js` - **Core v2 integration module**
+  - SDK script loading with region-specific checkout.js URLs
+  - Button rendering via `amazon.Pay.renderButton()`
+  - Session data fetching via `getCheckoutSession()` API call
+  - Hypr template rendering for address/payment widgets
+  - Change button binding using `amazon.Pay.changeShippingAddress()` and `amazon.Pay.changePaymentMethod()`
+  - Session deduplication to prevent duplicate initialization
+  - EventBus integration for SDK-loaded notifications
+  
+- `scripts/models/models-amazoncheckout-v2.js` - v2 single-ship checkout model (order creation, charge processing)
+- `scripts/models/models-amazoncheckoutV2-v2.js` - v2 multi-ship checkout model (split shipments)
+- `scripts/pages/amazon-checkout-v2.js` - v2 checkout page controller (initializes widgets, handles return flow)
 
 **Templates:**
-- `templates/pages/amazon-checkout-v2.hypr` - v2 checkout page (no widgets)
-- `templates/modules/checkout/amazon-shipping-billing-v2.hypr.live` - v2 shipping/billing module (simplified)
+- `templates/pages/amazon-checkout-v2.hypr` - v2 checkout page container (no embedded widgets)
+- `templates/modules/checkout/amazon-shipping-billing-v2.hypr.live` - v2 shipping/billing module container
+- `templates/modules/amazonpay/address-widget.hypr.live` - **Address display template**
+  - Renders shipping address in read-only format
+  - Shows "Change" button that triggers Amazon hosted address page
+  - Conditional rendering: shows loading state if no data
+  - Uses Hypr filters: `{% firstof %}` for name fallback, `|default()` for optional fields
+  
+- `templates/modules/amazonpay/payment-widget.hypr.live` - **Payment display template**
+  - Renders payment method descriptor (e.g., "Visa ****1234")
+  - Shows "Change" button that triggers Amazon hosted payment page
+  - Conditional rendering: shows loading state if no data
+  - CSS class-based styling (no inline styles)
+
+**Technical Requirements:**
+- `.hypr.live` extension is **mandatory** (not `.hypr`) for runtime template access
+- Templates compiled by Grunt build process into `Hypr.getTemplate()` registry
+- Templates must be deployed with theme to production environment
+- Template syntax uses Hypr filters: `{{ variable|default("fallback") }}`, `{% firstof var1 var2 "default" %}`
 
 ### Backend (Supports Both v1 and v2)
 The backend PayWithAmazon service automatically detects and routes between v1 and v2:
@@ -41,6 +79,90 @@ The backend PayWithAmazon service automatically detects and routes between v1 an
 - `PayWithAmazon/assets/src/amazon/paymenthelper.js` - Payment processing with automatic v1/v2 detection
 - `PayWithAmazon/assets/src/amazon/checkout.js` - Checkout flow coordination
 
+**Required Backend API Endpoints:**
+
+Frontend makes AJAX calls to these endpoints (backend must implement):
+
+1. **POST** `/amazonpay/v2/checkoutsession`
+   - **Purpose:** Create signed checkout session payload for Amazon Pay button
+   - **Request Body:**
+     ```json
+     {
+       "cartOrOrderId": "string",
+       "isCart": boolean,
+       "returnUrl": "string"
+     }
+     ```
+   - **Response:**
+     ```json
+     {
+       "payloadJSON": "string (signed payload)",
+       "signature": "string",
+       "publicKeyId": "string"
+     }
+     ```
+
+2. **GET** `/amazonpay/v2/checkoutsession/{checkoutSessionId}`
+   - **Purpose:** Retrieve session details (shipping address, payment method)
+   - **Response:**
+     ```json
+     {
+       "data": {
+         "shippingAddress": {
+           "name": "string",
+           "addressLine1": "string",
+           "city": "string",
+           "stateOrRegion": "string",
+           "postalCode": "string",
+           "countryCode": "string"
+         },
+         "paymentPreferences": [
+           {
+             "paymentDescriptor": "string (e.g., 'Visa ****1234')"
+           }
+         ]
+       }
+     }
+     ```
+
+3. **POST** `/amazonpay/v2/updatecheckoutsession`
+   - **Purpose:** Update checkout session before final order submission
+   - **Request Body:**
+     ```json
+     {
+       "checkoutSessionId": "string",
+       "webCheckoutDetails": {
+         "checkoutReviewReturnUrl": "string",
+         "checkoutResultReturnUrl": "string"
+       },
+       "paymentDetails": {
+         "paymentIntent": "Authorize" | "AuthorizeWithCapture",
+         "canHandlePendingAuthorization": boolean,
+         "chargeAmount": {
+           "amount": number,
+           "currencyCode": "string"
+         }
+       },
+       "merchantMetadata": {
+         "merchantReferenceId": "string",
+         "merchantStoreName": "string"
+       }
+     }
+     ```
+   - **Response:**
+     ```json
+     {
+       "redirectUrl": "string (optional - for 3DS or challenges)"
+     }
+     ```
+
+**Backend Implementation Notes:**
+- Endpoints should proxy to Amazon Pay API v2 using merchant credentials
+- Session creation requires RSA signature generation with private key
+- GetCheckoutSession retrieves buyer info from Amazon
+- UpdateCheckoutSession prepares session for charge authorization
+- All endpoints require proper error handling and logging
+
 ## Key Differences: v1 vs v2
 
 | Feature | v1 (OffAmazonPayments) | v2 (Checkout v2) |
@@ -48,7 +170,9 @@ The backend PayWithAmazon service automatically detects and routes between v1 an
 | **SDK Script** | `OffAmazonPayments/*/Widgets.js` | `checkout.js` |
 | **Authentication** | Client ID + Seller ID | Public Key ID + Merchant ID + Store ID |
 | **Button Rendering** | `OffAmazonPayments.Button()` | `amazon.Pay.renderButton()` |
-| **Widgets** | AddressBook, Wallet widgets | No widgets (hosted checkout) |
+| **Widgets** | AddressBook, Wallet widgets | No widgets - data displayed via API |
+| **Address/Payment Display** | Interactive widgets on page | Read-only display with "Change" buttons |
+| **Change Actions** | Widget refresh | Redirect to Amazon hosted pages |
 | **Checkout Flow** | Widgets on merchant site | Hosted on Amazon |
 | **Order Reference** | `awsReferenceId` | `amazonCheckoutSessionId` |
 | **Return URL** | `view=amazon-checkout` | `view=amazon-checkout-v2` |
@@ -188,11 +312,169 @@ require(['modules/amazonpay-v2'], function(AmazonPay) {
 ## v2 Implementation Details
 
 ### Express Checkout (Current Status: ✅ Complete)
-The v2 implementation currently supports **Express Checkout** placement:
+The v2 implementation supports **Express Checkout** placement:
 - Amazon Pay button on cart page
 - Amazon collects shipping address and payment method
 - Customer returns to merchant site after completing on Amazon
+- Address and payment information displayed via GetCheckoutSession API
+- "Change" buttons redirect to Amazon's hosted pages for updates
 - Merchant creates charge and completes order
+
+### Key v2 Features Implemented
+
+#### 1. Hypr Template-Based Widget Rendering
+Instead of inline HTML in JavaScript, v2 uses proper Hypr templates:
+- `templates/modules/amazonpay/address-widget.hypr.live` - Displays shipping address
+- `templates/modules/amazonpay/payment-widget.hypr.live` - Displays payment method
+- Templates handle both "data available" and "placeholder" states
+- Clean separation of presentation (Hypr) from logic (JavaScript)
+
+#### 2. Smart Script Loading
+- `initializeWidgets()` automatically loads Amazon SDK if not loaded
+- Prevents duplicate initialization with session ID tracking
+- Script loading only happens when needed (checkout return page)
+
+##return; // Quote orders not supported in v2
+}
+```
+
+### Template Loading
+Hypr templates must be compiled and available in the theme:
+- Templates are in `templates/modules/amazonpay/` directory
+- Grunt automatically compiles `.hypr.live` files
+- Templates loaded via `Hypr.getTemplate('modules/amazonpay/address-widget')`
+- Ensure templates are uploaded with theme deploymentContinue button proceeds to order submission
+```
+
+#### 5. Error Handling
+- Loading states while fetching session data
+- Error states with fallback messaging
+- Placeholder content if API fails
+- Prevents duplicate API calls on re-render
+
+## Code Examples
+
+### Template Rendering
+The v2 implementation uses Hypr templates instead of inline HTML:
+
+```javascript
+// In amazonpay-v2.js
+function renderAddressWidget(address) {
+    return Hypr.getTemplate('modules/amazonpay/address-widget').render({
+        hasData: !!address,
+        address: address || {},
+        changeButtonText: "Change"
+    });
+}
+
+function renderPaymentWidget(payment) {
+    return Hypr.getTemplate('modules/amazonpay/payment-widget').render({
+        hasData: !!payment,
+        payment: payment || {},
+        changeButtonText: "Change"
+    });
+}
+
+// Usage in displaySessionInfoWithData
+var addressHtml = renderAddressWidget(address);
+$('#address-widget-container').html(addressHtml);
+```
+
+### Template Syntax Reference
+
+**address-widget.hypr.live:**
+```html
+{% if hasData %}
+<div class="mz-amazonpay-address-widget">
+    <div class="mz-amazonpay-address">
+        <p><strong>{% firstof address.name "No Name" %}</strong></p>
+        <p>{{ address.addressLine1|default("") }}</p>
+        {% if address.addressLine2 %}
+            <p>{{ address.addressLine2 }}</p>
+        {% endif %}
+        <p>{{ address.city|default("") }}, {{ address.stateOrRegion|default("") }} {{ address.postalCode|default("") }}</p>
+        <p>{{ address.countryCode|default("") }}</p>
+    </div>
+    <button class="mz-button mz-amazonpay-change-address" data-action="changeAddress">
+        {{ changeButtonText }}
+    </button>
+</div>
+{% else %}
+<div class="mz-amazonpay-loading">
+    <p>Loading address...</p>
+</div>
+{% endif %}
+```
+
+### EventBus Pattern
+
+```javascript
+// ❌ WRONG - Creates duplicate listeners on re-render
+EventBus.on("aws-script-loaded", function() {
+    bindChangeActions(checkoutSessionId);
+});
+
+// ✅ CORRECT - Listener fires only once
+EventBus.once("aws-script-loaded", function() {
+    bindChangeActions(checkoutSessionId);
+});
+```
+
+### Session Deduplication
+
+```javascript
+// Prevent duplicate initialization for same session
+var currentSessionId = null;
+
+function initializeWidgets(checkoutSessionId) {
+    if (currentSessionId === checkoutSessionId) {
+        return; // Already initialized
+    }
+    currentSessionId = checkoutSessionId;
+    
+    // Continue with initialization...
+}
+```
+
+## Migration Guide for Developers
+
+### From Inline HTML to Hypr Templates
+
+**Before (Inline HTML):**
+```javascript
+function displayAddress(address) {
+    var html = '<div class="address">' +
+        '<p>' + address.name + '</p>' +
+        '<p>' + address.addressLine1 + '</p>' +
+        '</div>';
+    $('#container').html(html);
+}
+```
+
+**After (Hypr Templates):**
+```javascript
+// 1. Create template file: templates/modules/amazonpay/address-widget.hypr.live
+// 2. Use template rendering:
+function renderAddressWidget(address) {
+    return Hypr.getTemplate('modules/amazonpay/address-widget').render({
+        hasData: !!address,
+        address: address || {}
+    });
+}
+```
+
+### Migration Checklist
+
+- [ ] **Step 1:** Create `.hypr.live` template files in `templates/modules/amazonpay/`
+- [ ] **Step 2:** Replace inline HTML string concatenation with `Hypr.getTemplate().render()`
+- [ ] **Step 3:** Pass data as objects to template's `render()` method
+- [ ] **Step 4:** Use Hypr filters for default values: `{{ value|default("fallback") }}`
+- [ ] **Step 5:** Use `{% firstof value1 value2 "default" %}` for multiple fallbacks
+- [ ] **Step 6:** Run `grunt build` to compile templates
+- [ ] **Step 7:** Test template rendering in browser
+- [ ] **Step 8:** Verify "Change" buttons bind correctly after SDK loads
+- [ ] **Step 9:** Use `EventBus.once()` instead of `.on()` for one-time events
+- [ ] **Step 10:** Add session deduplication to prevent duplicate API calls
 
 ### End-of-Checkout (Status: 🚧 Pending)
 Future enhancement for **End-of-Checkout** placement:
@@ -243,17 +525,34 @@ Check the `view` parameter in URL:
 - v1: `?view=amazon-checkout`
 - v2: `?view=amazon-checkout-v2`
 
-### "Token details not returned"
-The `tokenDetails` handler may need to be implemented in PayWithAmazon service. Check backend logs for errors from `thirdPartyPaymentExecute` call.
+### "window.amazon is null"
+**v2 only:** The Amazon SDK script must load before change buttons can work:
+- `init(true)` loads the script from Amazon's CDN
+- `initializeWidgets()` automatically calls `init(true)` if needed
+- Check that checkout.js URL is accessible in your region
+
+### "Template not found" error
+Template files must use `.hypr.live` extension (not just `.hypr`):
+- Correct: `address-widget.hypr.live`, `payment-widget.hypr.live`
+- Wrong: `address-widget.hypr`
+- Run `grunt build` to compile templates
+- Check `templates/modules/amazonpay/` directory exists
+- Verify templates uploaded to server with theme deployment
+
+### "Duplicate API calls"
+Fixed with session ID tracking:
+- `initializeWidgets()` now checks if already initialized for same session
+- Prevents duplicate `getCheckoutSession()` calls on re-render
+- Use `EventBus.once()` instead of `EventBus.on()` for one-time listeners
 
 ## References
 
-- [Amazon Pay v2 Documentation](https://developer.amazon.com/docs/amazon-pay-checkout/)
-- [Migration Guide (v1 to v2)](https://developer.amazon.com/docs/amazon-pay-checkout/v2-migration-guide.html)
+- [Amazon Pay API v2 Documentation](https://developer.amazon.com/docs/amazon-pay-api-v2/intro.html)
+- [Amazon Pay Checkout v2 Integration Guide](https://developer.amazon.com/docs/amazon-pay-checkout/introduction.html)
 - [End-of-Checkout Implementation](./AMAZON_PAY_V2_END_OF_CHECKOUT.md)
 - [Amazon Pay SDK - Node.js](https://github.com/amzn/amazon-pay-api-sdk-nodejs)
 
 ---
 
-**Last Updated:** 2025-11-21
-**Status:** v2 Express Checkout Complete, v1/v2 Coexistence Implemented
+**Last Updated:** 2026-01-18  
+**Status:** v2 Express Checkout Complete with Hypr Templates, v1/v2 Coexistence Implemented

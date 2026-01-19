@@ -1,6 +1,6 @@
 require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","underscore", 
-	"modules/amazonPay","modules/models-amazoncheckout","modules/models-amazoncheckoutv2",'hyprlivecontext','modules/preserve-element-through-render'], 
-	function ($,Backbone, EventBus, _, AmazonPay, AmazonCheckoutModels, AmazonCheckoutModelsV2,hyprlivecontext) {
+	"modules/amazonPay","modules/models-amazoncheckout",'hyprlivecontext','modules/preserve-element-through-render'], 
+	function ($,Backbone, EventBus, _, AmazonPay, AmazonCheckoutModels,hyprlivecontext) {
  
 
 	var AmazonCheckoutView = Backbone.MozuView.extend({
@@ -81,7 +81,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 		var checkoutModel = '';
 		
 		if (hyprlivecontext.locals.siteContext.generalSettings.isMultishipEnabled)
-			checkoutModel = window.order = new AmazonCheckoutModelsV2.AwsCheckoutPage(checkoutData);
+			checkoutModel = window.order = new AmazonCheckoutModels.AwsCheckoutPage(checkoutData);
 		else
 			checkoutModel = window.order = new AmazonCheckoutModels.AwsCheckoutPage(checkoutData);
 

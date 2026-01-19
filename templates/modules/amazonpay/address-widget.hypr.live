@@ -1,0 +1,17 @@
+<div class="amazon-address-display">
+    <strong>Shipping Address</strong>
+    {% if hasData %}
+    <div class="mz-address-info">
+        {{ name|default(recipientName)|default("Name not available") }}<br>
+        {{ addressLine1|default(line1)|default("Address not available") }}<br>
+        {% if addressLine2|default(line2) %}{{ addressLine2|default(line2) }}<br>{% endif %}
+        {{ city|default("City") }}, {{ stateOrRegion|default(state)|default(region)|default("State") }} {{ postalCode|default(zipCode)|default("ZIP") }}
+    </div>
+    <button type="button" id="changeAddressBtn" class="mz-button mz-button-small change-address-btn">Change</button>
+    {% else %}
+    <div class="mz-placeholder-text">
+        Please select your shipping address from Amazon Pay
+    </div>
+    <button type="button" id="changeAddressBtn" class="mz-button mz-button-small">Select Address</button>
+    {% endif %}
+</div>

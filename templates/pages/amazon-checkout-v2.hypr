@@ -18,18 +18,16 @@
 			var element = document.getElementById(elementId);
 			element.style.display = 'block';
 		};
+
 	</script>
-    <h1 class="mz-pagetitle" id="shippingAndBillingTitle" style="display:none;">
+	
+    <h1 class="mz-pagetitle" id="shippingAndBillingTitle">
 		{{ labels.awsCheckout }}
     </h1>
-	<h1 class="mz-pagetitle" id="billingTitle" style="display:none;">
-		{{ labels.awsCheckoutBilling }}
-    </h1>
-
     <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
     	{% include "modules/common/message-bar" with model=model.messages %}
-    	<table id="shippingBillingTbl" class="shippingBillingTbl">
-        	{% include "modules/checkout/amazon-shipping-billing-v2" %}
+    	<table id="shippingBillingTbl" class="shippingBillingTblv2">
+        {% include "modules/checkout/amazon-shipping-billing-v2" %}
 	    </table>
     </form>
 

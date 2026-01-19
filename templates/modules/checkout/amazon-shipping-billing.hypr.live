@@ -1,7 +1,7 @@
 
 <tbody>
 	<tr>
-		<td id="amazonAddressBookWidgetTD" style="padding:0px 10px 0px 0px; display:none;">
+		<td id="amazonAddressBookWidgetTD" class="cd" style="padding:0px 10px 0px 0px; display:none;">
 			<div id="amazonAddressBookWidgetDiv"></div>
 		</td>
 		<td id="walletWidgetTD" style="padding:0px 10px 0px 0px;">

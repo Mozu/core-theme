@@ -62,7 +62,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 			var quoteOrderUrl = "/checkout/quoteOrder";
 
 			if (isCart)
-				redirectUrl += "/cart?cartId="+id+"&isAwsCheckout=true&view="+self.viewName;
+				redirectUrl += "/cart?cartId="+id+"&isAwsCheckout=true&view="+self.viewName +"&iscart=true";
 			else if(isQuoteOrder)
 				redirectUrl += quoteOrderUrl+"/"+id+"?isAwsCheckout=true&view="+self.viewName;
 			else
