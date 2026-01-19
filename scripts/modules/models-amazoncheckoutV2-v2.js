@@ -124,17 +124,12 @@ define([
                     }
                 };
 
-                if (me.isLegacyCheckout()) {
-                    billingInfo.externalTransactionId =  awsDestination.data.awsReferenceId;
-                    billingInfo.newBillingInfo.paymentType  = "PayWithAmazon";
-                    billingInfo.newBillingInfo.paymentWorkflow  = "PayWithAmazon";
-                } else {
-                    billingInfo.newBillingInfo.paymentType  = "token";
-                    billingInfo.newBillingInfo.token  = {
-                        "paymentServiceTokenId": me.awsData.id,
-                        "type": "PayWithAmazon"
-                    };
-                }
+                // Amazon Pay v2 always uses token-based flow
+                billingInfo.newBillingInfo.paymentType  = "token";
+                billingInfo.newBillingInfo.token  = {
+                    "paymentServiceTokenId": me.awsData.id,
+                    "type": "PayWithAmazon"
+                };
 
                 me.apiModel.createPayment(billingInfo).then( function() {
                     me.trigger('awscheckoutcomplete', me.id);
@@ -145,12 +140,11 @@ define([
             },
             getAwsDestination: function() {
                 var destinations = this.get("destinations");
-                var awsDestination = _.find(destinations, function(destination) { return destination.data && destination.data.awsReferenceId;});
+                // v2 uses amazonCheckoutSessionId instead of awsReferenceId
+                var awsDestination = _.find(destinations, function(destination) {
+                    return destination.data && (destination.data.amazonCheckoutSessionId || destination.data.awsReferenceId);
+                });
                 return awsDestination;
-            },
-            isLegacyCheckout: function() {
-              var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
-              return paymentSettings  && paymentSettings.namespace.toLowerCase() != "tenant" && paymentSettings.isEnabled;
             },
             submit: function() {
                 var me = this;
@@ -158,59 +152,48 @@ define([
 
                 var awsDestination = me.getAwsDestination();
 
-
-                if (me.isLegacyCheckout()) {
-                    var user = require.mozuData('user');
-
-                    if (user && user.email)
-                        awsDestination.destinationContact= {email: user.email};
-                    else
-                        awsDestination.destinationContact = null;
-
-
-                    if (me.get('overrideItemDestinations')) {
-                        me.apiModel.unsetAllShippingDestinations().then(function(result){
-                            me.setShippingDestination(awsDestination);
-                        });
-                    } else
-                        me.setShippingDestination(awsDestination);
-                } else {
-                    if (me.awsData === null)
+                // Amazon Pay v2 flow - always use token-based checkout
+                if (me.awsData === null)
                     me.awsData = awsDestination.data;
 
-                    var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
-                    payWithAmazonToken.set('tokenObject', me.awsData);
-                    payWithAmazonToken.apiCreate().then(function(response){
-                        me.awsData.id = response.id;
+                var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
+                payWithAmazonToken.set('tokenObject', me.awsData);
+                payWithAmazonToken.apiCreate().then(function(response){
+                    me.awsData.id = response.id;
 
-                        payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
-                            methodName: "tokenDetails",
-                            cardType: "PayWithAmazon",
-                            body: null,
-                            tokenId: response.id
-                        }).then(function(details) {
-                            if (details.error) {
-                                me.onCheckoutError(details.error.message);
-                                return;
-                            }
-                            me.tokenDetails = details;
+                    // Get shipping and billing details from checkout session
+                    // TODO: Verify that thirdPartyPaymentExecute with methodName "tokenDetails"
+                    // is properly implemented in backend. This may need a custom action handler
+                    // to retrieve checkout session details from Amazon Pay v2 API.
+                    // If this returns errors during testing, implement a handler in PayWithAmazon service.
+
+                    payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
+                        methodName: "tokenDetails",
+                        cardType: "PayWithAmazon",
+                        body: null,
+                        tokenId: response.id
+                    }).then(function(details) {
+                        if (details.error) {
+                            me.onCheckoutError(details.error.message);
+                            return;
+                        }
+                        me.tokenDetails = details;
 
 
-                            var user = require.mozuData('user');
+                        var user = require.mozuData('user');
 
-                            awsDestination.destinationContact = details.shippingContact;
-                            if (user && user.email)
-                                awsDestination.destinationContact.email = user.email;
+                        awsDestination.destinationContact = details.shippingContact;
+                        if (user && user.email)
+                            awsDestination.destinationContact.email = user.email;
 
-                            if (me.get('overrideItemDestinations')) {
-                                me.apiModel.unsetAllShippingDestinations().then(function(result){
-                                    me.setShippingDestination(awsDestination);
-                                });
-                            } else
+                        if (me.get('overrideItemDestinations')) {
+                            me.apiModel.unsetAllShippingDestinations().then(function(result){
                                 me.setShippingDestination(awsDestination);
-                        });
+                            });
+                        } else
+                            me.setShippingDestination(awsDestination);
                     });
-                }
+                });
             },
              onCheckoutError: function (msg) {
                 var me = this,

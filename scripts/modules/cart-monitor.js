@@ -26,6 +26,9 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
                         CartMonitor.setCount(summary.count());
                     });
                 });
+                $document.ready(function() {
+                    CartMonitor.setCount(1);
+                });
             }
         },
         savedCounts,

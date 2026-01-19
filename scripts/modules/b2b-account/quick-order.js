@@ -14,13 +14,14 @@ define([
     "modules/models-product",
     'modules/xpress-paypal',
     'modules/amazonPay',
+    'modules/amazonpay-v2',
     'modules/applepay',
     'modules/cart-common-view',
     'modules/cart/discount-dialog/views-discount-dialog',
     'modules/models-discount',
     'modules/message-handler'
 ], function ($, api, _, Hypr, preserveElement, modalDialog, Backbone, HyprLiveContext, CartModels, CartMonitor, ProductModalViews,
-    ProductPicker, ProductModels, paypal, AmazonPay, ApplePay, CartView, DiscountModalView, MessageHandler) {
+    ProductPicker, ProductModels, paypal, AmazonPay, AmazonPayV2, ApplePay, CartView, DiscountModalView, MessageHandler) {
 
     var QuickOrderView = Backbone.MozuView.extend({
         templateName: 'modules/b2b-account/quick-order/quick-order',
@@ -195,11 +196,15 @@ define([
             if (AmazonPay.isEnabled) {
                 AmazonPay.addCheckoutButton(cartModel.id, true);
             }
+            if (AmazonPayV2.isEnabled) {
+                AmazonPayV2.addCheckoutButton(cartModel.id, true);
+            }
             ApplePay.init();
 
            
         } else if (cartModel.count() === 0) {
             AmazonPay.isEnabled = false;
+            AmazonPayV2.isEnabled = false;
         }
 
 

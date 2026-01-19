@@ -9,9 +9,10 @@ require(["modules/jquery-mozu",
     'modules/preserve-element-through-render',
     'modules/xpress-paypal',
     'modules/amazonpay',
+    'modules/amazonpay-v2',
     'modules/applepay',
     'modules/checkout/views-pickup'],
-    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements, PayPal, AmazonPay, ApplePay, PickupView) {
+    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements, PayPal, AmazonPay, AmazonPayV2, ApplePay, PickupView) {
 
 
     var ThresholdMessageView = Backbone.MozuView.extend({
@@ -270,12 +271,14 @@ require(["modules/jquery-mozu",
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
-            preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection', '.apple-pay-button'], function() {
+            preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection', '#amazonPayV2ButtonPaymentSection', '.apple-pay-button'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
             });
             var status = this.model.stepStatus();
             if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
                 $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButtonPaymentSection");
+            if ($("#AmazonPayV2Button").length > 0 && $("#amazonPayV2ButtonPaymentSection").length > 0)
+                $("#AmazonPayV2Button").removeAttr("style").appendTo("#amazonPayV2ButtonPaymentSection");
 
             if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                 window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
@@ -660,8 +663,10 @@ require(["modules/jquery-mozu",
             checkoutData = require.mozuData('checkout');
 
         AmazonPay.init(true);
+        AmazonPayV2.init(true);
 
         checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+        checkoutData.isAmazonPayV2Enable = AmazonPayV2.isEnabled;
 
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
@@ -733,6 +738,8 @@ require(["modules/jquery-mozu",
         var isQuoteOrder = window.location.href.indexOf("quoteOrder") > 0;
         if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(window.order.id, false, isQuoteOrder);
+        if( AmazonPayV2.isEnabled)
+            AmazonPayV2.addCheckoutButton(window.order.id, false, isQuoteOrder);
 
         //For quote originated order, skip shipping address and shipping method steps
         if (checkoutData.originalQuoteId) {
