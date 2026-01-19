@@ -1031,7 +1031,7 @@ define([
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ||  _.findWhere(activePayments, {paymentType: "token"}) ));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) || _.findWhere(activePayments, {paymentType: 'PayWithAmazonV2'}) ||  _.findWhere(activePayments, {paymentType: "token"}) ));
             },
             calculateStepStatus: function () {
                 var shippingStepComplete = this.parent.get('shippingStep').stepStatus() === 'complete',

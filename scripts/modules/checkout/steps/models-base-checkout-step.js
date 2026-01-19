@@ -42,7 +42,7 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext) {
             var activePayments = this.getCheckout().apiModel.getActivePayments();
             if (activePayments) {
                 var tokenPayment = _.findWhere(activePayments, { paymentType: 'token' });
-                if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon")
+                if (tokenPayment && tokenPayment.billingInfo.token && (tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon" || tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazonv2"))
                     return true;
 
                 var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });

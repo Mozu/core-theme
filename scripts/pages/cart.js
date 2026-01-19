@@ -10,13 +10,14 @@ define(['modules/api',
         'modules/modal-dialog',
         'modules/xpress-paypal',
         'modules/models-location',
-        'modules/amazonPay',
+        'modules/amazonpay',
+        'modules/amazonpay-v2',
         'modules/applepay',
         'modules/cart-common-view',
         'modules/cart/discount-dialog/views-discount-dialog',
         'modules/models-discount',
         'modules/message-handler'
-], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal , LocationModels, AmazonPay, ApplePay, CartView, DiscountModalView, Discount, MessageHandler) {
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal , LocationModels, AmazonPay, AmazonPayV2, ApplePay, CartView, DiscountModalView, Discount, MessageHandler) {
 
     
   function renderVisaCheckout(model) {
@@ -115,7 +116,7 @@ define(['modules/api',
 
         cartViews.cartView.render();
         //if (cartModel.get('discountModal').get('discounts').length) {
-            cartViews.discountModalView.render(); 
+            //cartViews.discountModalView.render(); 
         //}
         renderVisaCheckout(cartModel);
 
@@ -125,8 +126,10 @@ define(['modules/api',
         if (cartModel.count() > 0){
           ApplePay.init();
         }
-        if (AmazonPay.isEnabled && cartModel.count() > 0)
+        if (AmazonPay.isEnabled)
             AmazonPay.addCheckoutButton(cartModel.id, true);
+        if (AmazonPayV2.isEnabled)
+            AmazonPayV2.addCheckoutButton(cartModel.id, true);
     });
 
 });

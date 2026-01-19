@@ -3,7 +3,7 @@
 /**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'modules/backbone-mozu', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder'],
+define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/backbone-mozu', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder', 'shim!vendor/bootstrap/js/popover[modules/jquery-mozu=jQuery,shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]]'],
 function ($, api, Hypr, Backbone, _, HyprLiveContext) {   
     
     var usePopovers = function() {
