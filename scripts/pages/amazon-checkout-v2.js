@@ -73,10 +73,6 @@ require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","unde
 				window.order.set("fulfillmentInfo", fulfillmentInfo);
 			}
 		},
-		redirectToCart: function() {
-			window.amazon.Login.logout();
-			window.location = document.referrer;
-		},
 		submit: function(){
 			this.model.submit();	
 		}
