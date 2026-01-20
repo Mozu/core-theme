@@ -19,7 +19,7 @@
 {%endif%}
 <tr>
 	<td class="button-section">
-		<button id="cancel" class="mz-button mz-button-medium" data-mz-action="redirectToCart">{{ labels.cancel }}</button>
+		<button id="cancel" onclick="window.history.back();" class="mz-button mz-button-medium">{{ labels.cancel }}</button>
 		<button id="continue" class="mz-button mz-button-medium continue-btn" data-mz-action="submit">{{ labels.continue }}</button>
 	</td>
 </tr>
