@@ -829,5 +829,13 @@
   "emailSubjectOtp": "Ihr Einmal-Passwort (OTP) für die Anmeldung",
   "otpEmailInstruction": "Bitte verwenden Sie das folgende Einmal-Passwort (OTP), um Ihre Anmeldung abzuschließen. Dieses OTP ist für eine begrenzte Zeit gültig.",
   "otpNotRequested": "Wenn Sie dieses OTP nicht angefordert haben, ignorieren Sie diese E-Mail bitte oder wenden Sie sich bei Bedenken an unser Support-Team.",
-  "systemGeneratedEmail": "Dies ist eine systemgenerierte E-Mail. Bitte antworten Sie nicht."
+  "systemGeneratedEmail": "Dies ist eine systemgenerierte E-Mail. Bitte antworten Sie nicht.",
+  "customerEmailUpdatedSubject": "Ihre E-Mail-Adresse wurde aktualisiert",
+  "customerEmailUpdatedBody": "Wir informieren Sie darüber, dass die E-Mail-Adresse Ihres Kontos aktualisiert wurde.",
+  "customerEmailUpdatedWhen": "Zeitpunkt: {0}",
+  "customerEmailUpdatedSupport": "Wenn Sie diese Änderung nicht vorgenommen haben, kontaktieren Sie bitte den Support: <a href=\"{0}\">{0}</a>",
+  "customerPasswordUpdatedSubject": "Ihr Passwort wurde aktualisiert",
+  "customerPasswordUpdatedBody": "Wir informieren Sie darüber, dass das Passwort Ihres Kontos aktualisiert wurde.",
+  "customerPasswordUpdatedWhen": "Zeitpunkt: {0}",
+  "customerPasswordUpdatedSupport": "Wenn Sie diese Änderung nicht vorgenommen haben, kontaktieren Sie bitte den Support: <a href=\"{0}\">{0}</a>"
 }

@@ -227,6 +227,18 @@
       "title": "Password Reset"
     },
     {
+      "id": "customer-email-updated",
+      "properties": {},
+      "template": "email/customer-email-updated",
+      "title": "Customer Email Updated"
+    },
+    {
+      "id": "customer-password-updated",
+      "properties": {},
+      "template": "email/customer-password-updated",
+      "title": "Customer Password Updated"
+    },
+    {
       "id": "b2baccount.created",
       "properties": {},
       "template": "email/b2b-account-created",
