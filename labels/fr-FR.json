@@ -1,0 +1,10 @@
+{
+  "vendorCreatedEmailGreeting": "Félicitations !",
+  "vendorCreatedEmailIntro": "Un nouveau compte vendeur a été créé avec succès avec les détails suivants :",
+  "vendorCreatedEmailVendorName": "Nom du fournisseur",
+  "vendorCreatedEmailVendorCode": "Code du fournisseur",
+  "vendorCreatedEmailVendorEmail": "Adresse e-mail",
+  "vendorCreatedEmailLoginInstructions": "Pour accéder à votre portail fournisseur et commencer à gérer vos produits et commandes, veuillez vous connecter en utilisant le lien ci-dessous :",
+  "vendorCreatedEmailLoginLink": "Connexion au portail fournisseur",
+  "vendorCreatedEmailSupport": "Si vous avez des questions ou besoin d'aide, veuillez contacter notre équipe d'assistance aux fournisseurs."
+}

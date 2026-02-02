@@ -837,5 +837,13 @@
   "customerPasswordUpdatedSubject": "Ihr Passwort wurde aktualisiert",
   "customerPasswordUpdatedBody": "Wir informieren Sie darüber, dass das Passwort Ihres Kontos aktualisiert wurde.",
   "customerPasswordUpdatedWhen": "Zeitpunkt: {0}",
-  "customerPasswordUpdatedSupport": "Wenn Sie diese Änderung nicht vorgenommen haben, kontaktieren Sie bitte den Support: <a href=\"{0}\">{0}</a>"
+  "customerPasswordUpdatedSupport": "Wenn Sie diese Änderung nicht vorgenommen haben, kontaktieren Sie bitte den Support: <a href=\"{0}\">{0}</a>",
+  "vendorCreatedEmailGreeting": "Glückwunsch!",
+  "vendorCreatedEmailIntro": "Ein neues Vendorkonto wurde erfolgreich mit den folgenden Details erstellt:",
+  "vendorCreatedEmailVendorName": "Vendor-Name",
+  "vendorCreatedEmailVendorCode": "Vendor-Code",
+  "vendorCreatedEmailVendorEmail": "E-Mail-Adresse",
+  "vendorCreatedEmailLoginInstructions": "Um auf Ihr Vendor-Portal zuzugreifen und Ihre Produkte und Bestellungen zu verwalten, melden Sie sich bitte über den folgenden Link an:",
+  "vendorCreatedEmailLoginLink": "Login zum Vendor-Portal",
+  "vendorCreatedEmailSupport": "Wenn Sie Fragen haben oder Hilfe benötigen, wenden Sie sich bitte an unser Vendor-Support-Team."
 }

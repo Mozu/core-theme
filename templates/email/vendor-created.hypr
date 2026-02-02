@@ -1,0 +1,43 @@
+{% extends "email/email" %}
+{% block body-content %}
+
+<div class="vendor-email-body">
+  <h2>{{ labels.vendorCreatedEmailGreeting }}</h2>
+
+  <p>{{ labels.vendorCreatedEmailIntro }}</p>
+
+  <div class="vendor-info-box">
+    <div class="vendor-info-row">
+      <span class="vendor-info-label">{{ labels.vendorCreatedEmailVendorName }}:</span>
+      <span class="vendor-info-value">{{ model.name }}</span>
+    </div>
+    <div class="vendor-info-row">
+      <span class="vendor-info-label">{{ labels.vendorCreatedEmailVendorCode }}:</span>
+      <span class="vendor-info-value">{{ model.vendorCode }}</span>
+    </div>
+    <div class="vendor-info-row">
+      <span class="vendor-info-label">{{ labels.vendorCreatedEmailVendorEmail }}:</span>
+      <span class="vendor-info-value">{{ model.contactInfo.email }}</span>
+    </div>
+  </div>
+
+  <br>
+
+  <p>{{ labels.vendorCreatedEmailLoginInstructions }}</p>
+
+  <div style="text-align: center; margin: 20px 0;">
+    <a href="https://www.figma.com/make/UewZqRQ0PhUtLsnzDDxZiY/E-commerce-Platform-Wireframe?p=f" class="vendor-portal-link">
+      {{ labels.vendorCreatedEmailLoginLink }}
+    </a>
+  </div>
+
+  <br>
+
+  <p>{{ labels.vendorCreatedEmailSupport }}</p>
+
+  <br>
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+</div>
+
+{% endblock body-content %}
