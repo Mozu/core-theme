@@ -197,6 +197,12 @@
       "title": "Return Has Been Updated"
     },
     {
+      "id": "return.labeladded",
+      "properties": {},
+      "template": "email/product-return-label-added",
+      "title": "Return Label Added"
+    },
+    {
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",

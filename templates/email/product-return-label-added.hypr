@@ -1,0 +1,52 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+  <div class="mz-productdetails">
+    <dl class="mz-orderheader">
+        <dt>{{ labels.orderNo }}</dt>
+        <dd>{{ model.order.orderNumber }}</dd>
+
+        <dt>{{ labels.externalOrderId }}</dt>
+        <dd>{{ model.order.externalId }}</dd>
+
+        <dt>{{ labels.return }}</dt>
+        <dd>{{ model.return.returnNumber }}</dd>
+
+        <dt>{{ labels.orderDate }}:</dt>
+        <dd>{{ model.order.submittedDate }}</dd>
+    </dl>
+    <br />
+
+    <p>
+    {% if user and user.firstName %}
+        {{ labels.emailOpening|string_format(user.firstName)|safe }}
+    {% else %}
+        {{ labels.emailOpeningAlternative|safe }}
+    {% endif %}
+    </p>
+
+    {{ labels.returnLabelAddedBlob1|safe }}
+
+    {% if model.returnLabel and model.returnLabel.labelUrls and model.returnLabel.labelUrls.length %}
+        <p>{{ labels.returnLabelAddedDownloadHeader }}</p>
+        <ul>
+        {% for url in model.returnLabel.labelUrls %}
+            <li><a href="{{ url }}">{{ labels.returnLabelAddedDownloadLinkText }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if model.returnLabel and model.returnLabel.trackingNumbers and model.returnLabel.trackingNumbers.length %}
+        <p>{{ labels.returnLabelAddedTrackingHeader }}</p>
+        <ul>
+        {% for tracking in model.returnLabel.trackingNumbers %}
+            <li>{{ tracking }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {{ labels.returnLabelAddedBlob2|safe }}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+  </div>
+{% endblock body-content %}
