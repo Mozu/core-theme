@@ -1,0 +1,20 @@
+{
+  "order": {
+    "orderNumber": "1000001",
+    "externalId": "EXT-1000001",
+    "submittedDate": "2026-02-04T10:30:00Z"
+  },
+  "return": {
+    "returnNumber": 1
+  },
+  "returnLabel": {
+    "labelUrls": [
+      "https://example.com/returns/label-1000001-1.pdf",
+      "https://example.com/returns/label-1000001-2.pdf"
+    ],
+    "trackingNumbers": [
+      "1Z999AA10123456784",
+      "9400111899223856921000"
+    ]
+  }
+}

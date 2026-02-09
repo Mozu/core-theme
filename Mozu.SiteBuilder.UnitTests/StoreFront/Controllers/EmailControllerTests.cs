@@ -159,5 +159,39 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             newUserEmail.AccountId.ShouldEqual(1064);
             newUserEmail.Account.ShouldNotBeNull();
         }
+
+        [Test]
+        public async Task Convert_assigns_values_to_obj_from_json_customer_email_updated()
+        {
+            var json = "{\"OccurredUtc\":\"2026-01-29T12:34:56Z\",\"ChangeType\":\"emailUpdated\",\"SupportUrl\":\"https://support.example.com\",\"OldEmailAddress\":\"old@example.com\",\"NewEmailAddress\":\"new@example.com\"}";
+
+            var obj = await _emailController.Convert(json, new EmailTypeInfo { ModelType = typeof(CustomerAccountEmailUpdatedEmail) });
+
+            obj.ShouldNotBeNull();
+            obj.ShouldBeType<CustomerAccountEmailUpdatedEmail>();
+
+            var model = obj as CustomerAccountEmailUpdatedEmail;
+            model.OccurredUtc.ShouldEqual("2026-01-29T12:34:56Z");
+            model.ChangeType.ShouldEqual("emailUpdated");
+            model.SupportUrl.ShouldEqual("https://support.example.com");
+            model.OldEmailAddress.ShouldEqual("old@example.com");
+            model.NewEmailAddress.ShouldEqual("new@example.com");
+        }
+
+        [Test]
+        public async Task Convert_assigns_values_to_obj_from_json_customer_password_updated()
+        {
+            var json = "{\"OccurredUtc\":\"2026-01-29T12:34:56Z\",\"ChangeType\":\"passwordUpdated\",\"SupportUrl\":\"https://support.example.com\"}";
+
+            var obj = await _emailController.Convert(json, new EmailTypeInfo { ModelType = typeof(CustomerAccountPasswordUpdatedEmail) });
+
+            obj.ShouldNotBeNull();
+            obj.ShouldBeType<CustomerAccountPasswordUpdatedEmail>();
+
+            var model = obj as CustomerAccountPasswordUpdatedEmail;
+            model.OccurredUtc.ShouldEqual("2026-01-29T12:34:56Z");
+            model.ChangeType.ShouldEqual("passwordUpdated");
+            model.SupportUrl.ShouldEqual("https://support.example.com");
+        }
     }
 }

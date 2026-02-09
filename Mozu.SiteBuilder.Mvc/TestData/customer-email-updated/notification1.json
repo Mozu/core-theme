@@ -1,0 +1,7 @@
+{
+  "OccurredUtc": "2026-01-29T12:34:56Z",
+  "ChangeType": "emailUpdated",
+  "SupportUrl": "https://support.example.com",
+  "OldEmailAddress": "old.email@example.com",
+  "NewEmailAddress": "new.email@example.com"
+}

@@ -62,6 +62,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Location.Contracts.Location StoreLocation { get; set; }
     }
 
+    public class ReturnLabelAddedEmailModel
+    {
+        public Order Order { get; set; }
+        public Return Return { get; set; }
+        public ReturnLabelInfo ReturnLabel { get; set; }
+    }
+
+    public class ReturnLabelInfo
+    {
+        public List<string> LabelUrls { get; set; }
+        public List<string> TrackingNumbers { get; set; }
+    }
+
     public class CheckoutEmail : Checkout
     {
         public List<Order> Orders { get; set; }
@@ -133,6 +146,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Customer.Contracts.CustomerAccount Account { get; set; }
     }
 
+    public class CustomerAccountEmailUpdatedEmail
+    {
+        public string OccurredUtc { get; set; }
+        public string ChangeType { get; set; }
+        public string SupportUrl { get; set; }
+
+        public string OldEmailAddress { get; set; }
+        public string NewEmailAddress { get; set; }
+    }
+
+    public class CustomerAccountPasswordUpdatedEmail
+    {
+        public string OccurredUtc { get; set; }
+        public string ChangeType { get; set; }
+        public string SupportUrl { get; set; }
+    }
+
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -178,6 +208,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnChanged
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ReturnLabelAddedEmailModel),
+                                               Topic = Topics.ReturnLabelAdded
                                            },
                                        new EmailTypeInfo
                                            {
@@ -349,6 +384,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (NewUserEmail),
                                                Topic = Topics.NewUserCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (CustomerAccountEmailUpdatedEmail),
+                                               Topic = Topics.CustomerEmailUpdated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (CustomerAccountPasswordUpdatedEmail),
+                                               Topic = Topics.CustomerPasswordUpdated
                                            },
                                         new EmailTypeInfo
                                            {
@@ -1104,6 +1149,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             public const string PasswordReset = "user.passwordreset";
             public const string NewUserCreated = "user.created";
+            public const string CustomerEmailUpdated = "user.emailupdated";
+            public const string CustomerPasswordUpdated = "user.passwordupdated";
             public const string OrderEmailTopic = "order.changed";
             public const string CheckoutEmailTopic = "checkout.changed";
             public const string OrderShippedTopic = "order.shipped";
@@ -1113,6 +1160,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnAuthorized = "return.authorized";
             public const string ReturnRejected = "return.rejected";
             public const string ReturnClosed = "return.closed";
+            public const string ReturnLabelAdded = "return.labeladded";
             public const string RefundCreated = "refund.created";
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
