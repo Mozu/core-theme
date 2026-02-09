@@ -31,6 +31,8 @@ using Mozu.Tenant.Contracts;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 {
@@ -42,6 +44,9 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
         private IEmailExtensionContextBuilder _emailExtensionContextBuilder;
         private ITenantsWebApiClient _tenantsWebApiClient;
         private ISiteBuilderApiContext _siteBuilderApiContext;
+        private IOrderWebApiClient _orderWebApiClient;
+        private ILocationAdminWebApiClient _locationAdminWebApiClient;
+        private ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly string _arcFunctionId = "embedded.commerce.email.render.before";
 
         [SetUp]
@@ -51,6 +56,9 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             _emailExtensionContextBuilder = Substitute.For<IEmailExtensionContextBuilder>();
             _tenantsWebApiClient = Substitute.For<ITenantsWebApiClient>();
             _siteBuilderApiContext = Substitute.For<ISiteBuilderApiContext>();
+            _orderWebApiClient = Substitute.For<IOrderWebApiClient>();
+            _locationAdminWebApiClient = Substitute.For<ILocationAdminWebApiClient>();
+            _locationRuntimeWebApiClient = Substitute.For<ILocationRuntimeWebApiClient>();
             
             // Set up dummy tenant ID
             _siteBuilderApiContext.TenantId.Returns(12345);
@@ -60,10 +68,10 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                 Substitute.For<ICustomerAccountWebApiClient>(),
                 Substitute.For<ISitesWebApiClient>(),
                 _logger,
-                Substitute.For<ILocationRuntimeWebApiClient>(),
+                _locationRuntimeWebApiClient,
                 Substitute.For<ICustomRouteHandler>(),
-                Substitute.For<IOrderWebApiClient>(),
-                Substitute.For<ILocationAdminWebApiClient>(),
+                _orderWebApiClient,
+                _locationAdminWebApiClient,
                 Substitute.For<IReturnSettingsWebApiClient>(),
                 Substitute.For<IShipmentControllerApiClient>(),
                 _tenantsWebApiClient,
@@ -74,9 +82,23 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
                 _emailExtensionContextBuilder
             );
 
-            // Set up HttpContext to avoid null reference exceptions
+            // Set up HttpContext + RequestServices so GetShopperOrderAttributes() can resolve IOrderAttributeWebApiClient
+            var orderAttributeWebApiClient = Substitute.For<IOrderAttributeWebApiClient>();
+            orderAttributeWebApiClient
+                .GetAttributes(Arg.Any<int>(), Arg.Any<int>())
+                .Returns(Task.FromResult(new ServiceClientResponse<Mozu.Core.Extensible.Contracts.AttributeCollection>
+                {
+                    ResponseMessage = new HttpResponseMessage(HttpStatusCode.OK),
+                    ReadAsAsync = new Func<Task<Mozu.Core.Extensible.Contracts.AttributeCollection>>(() => Task.FromResult(new Mozu.Core.Extensible.Contracts.AttributeCollection { Items = new List<Core.Extensible.Contracts.Attribute>() })),
+                    ReadAsSync = new Func<Mozu.Core.Extensible.Contracts.AttributeCollection>(() => new Mozu.Core.Extensible.Contracts.AttributeCollection { Items = new List<Core.Extensible.Contracts.Attribute>() })
+                }));
+
+            var services = new ServiceCollection()
+                .AddSingleton(orderAttributeWebApiClient)
+                .BuildServiceProvider();
+
             var httpContext = new DefaultHttpContext();
-            httpContext.RequestServices = Substitute.For<IServiceProvider>();
+            httpContext.RequestServices = services;
             _controller.ControllerContext = new ControllerContext
             {
                 HttpContext = httpContext
@@ -89,6 +111,347 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
             var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
             sc.Theme = new Theme { EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>() };
             _controller.SiteContext = sc;
+
+            // Tenant lookup used by Render
+            var tenant = new Mozu.Tenant.Contracts.Tenant
+            {
+                Domain = new Domain { DomainName = "example.test" },
+                Sites = new List<Site> { new Site { Id = 1 } }
+            };
+            _tenantsWebApiClient.GetTenantInternal(Arg.Any<int>()).Returns(Task.FromResult(new ServiceClientResponse<Mozu.Tenant.Contracts.Tenant>
+            {
+                ResponseMessage = new HttpResponseMessage(HttpStatusCode.OK),
+                ReadAsAsync = new Func<Task<Mozu.Tenant.Contracts.Tenant>>(() => Task.FromResult(tenant)),
+                ReadAsSync = new Func<Mozu.Tenant.Contracts.Tenant>(() => tenant)
+            }));
+
+            // Render() -> Convert() -> GetStorageLocation() uses the runtime location client
+            _locationRuntimeWebApiClient.GetLocation(Arg.Any<string>()).Returns(Task.FromResult(new ServiceClientResponse<Mozu.Location.Contracts.Location>
+            {
+                ResponseMessage = new HttpResponseMessage(HttpStatusCode.OK),
+                ReadAsAsync = new Func<Task<Mozu.Location.Contracts.Location>>(() => Task.FromResult(new Mozu.Location.Contracts.Location { Code = "LOC1" })),
+                ReadAsSync = new Func<Mozu.Location.Contracts.Location>(() => new Mozu.Location.Contracts.Location { Code = "LOC1" })
+            }));
+
+            // ShipmentEmail conversion calls order + location APIs
+            _orderWebApiClient.GetOrder(Arg.Any<string>()).Returns(Task.FromResult(new ServiceClientResponse<Mozu.CommerceRuntime.Contracts.Orders.Order>
+            {
+                ResponseMessage = new HttpResponseMessage(HttpStatusCode.OK),
+                ReadAsAsync = new Func<Task<Mozu.CommerceRuntime.Contracts.Orders.Order>>(() => Task.FromResult(new Mozu.CommerceRuntime.Contracts.Orders.Order { Shipments = new List<Mozu.CommerceRuntime.Contracts.Fulfillment.Shipment>() })),
+                ReadAsSync = new Func<Mozu.CommerceRuntime.Contracts.Orders.Order>(() => new Mozu.CommerceRuntime.Contracts.Orders.Order { Shipments = new List<Mozu.CommerceRuntime.Contracts.Fulfillment.Shipment>() })
+            }));
+
+            _locationAdminWebApiClient.GetLocation(Arg.Any<string>()).Returns(Task.FromResult(new ServiceClientResponse<Mozu.Location.Contracts.Location>
+            {
+                ResponseMessage = new HttpResponseMessage(HttpStatusCode.OK),
+                ReadAsAsync = new Func<Task<Mozu.Location.Contracts.Location>>(() => Task.FromResult(new Mozu.Location.Contracts.Location { Code = "LOC1" })),
+                ReadAsSync = new Func<Mozu.Location.Contracts.Location>(() => new Mozu.Location.Contracts.Location { Code = "LOC1" })
+            }));
+        }
+
+        [Test]
+        public async Task Render_WhenTopicIsCustomPrefix_StripsPrefixAndUsesNotificationSubjectAsEmailTitleForExtension()
+        {
+            // Arrange
+            var strippedTopic = "shipment.fulfilled";
+            var customTopic = $"custom.{strippedTopic}";
+            var templateTitle = "Template Title";
+            var notificationSubject = "Subject For Custom Email";
+            var templateName = "email-template";
+
+            var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
+            sc.Theme = new Theme
+            {
+                EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>
+                {
+                    new Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition { Id = strippedTopic, Template = templateName, Title = templateTitle }
+                }
+            };
+            _controller.SiteContext = sc;
+
+            var emailContext = new EmailRenderContext
+            {
+                OriginalTemplate = templateName,
+                CurrentTemplate = templateName,
+                TemplateChanged = false,
+                IsSuppressed = true,
+                Subject = null,
+                Model = new { },
+                User = null
+            };
+
+            _emailExtensionContextBuilder
+                .BuildContext(
+                    Arg.Any<EmailNotification>(),
+                    Arg.Any<object>(),
+                    Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(),
+                    Arg.Any<Site>(),
+                    Arg.Any<SiteContext>(),
+                    Arg.Any<List<Core.Extensible.Contracts.Attribute>>(),
+                    Arg.Any<Location.Contracts.Location>(),
+                    Arg.Any<string>())
+                .Returns(emailContext);
+
+            _emailExtensionContextBuilder
+                .ExecuteEmailRenderExtension(Arg.Any<EmailRenderContext>(), Arg.Any<string>())
+                .Returns(Task.FromResult(emailContext));
+
+            var notification = new EmailNotification { Topic = customTopic, Subject = notificationSubject, Payload = "{\"OrderId\":\"order1\",\"ShipmentNumber\":1,\"FulfillmentLocationCode\":\"LOC1\"}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert
+            result.ShouldNotBeNull();
+            var ok = result as OkObjectResult;
+            ok.ShouldNotBeNull("Suppressed path should return 200 OK");
+
+            var response = ok.Value as EmailResponse;
+            response.ShouldNotBeNull();
+            response.SuppressedSend.ShouldBeTrue();
+
+            _emailExtensionContextBuilder
+                .Received(1)
+                .BuildContext(
+                    Arg.Is<EmailNotification>(n => n.Topic == strippedTopic),
+                    Arg.Any<object>(),
+                    Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(),
+                    Arg.Any<Site>(),
+                    Arg.Any<SiteContext>(),
+                    Arg.Any<List<Core.Extensible.Contracts.Attribute>>(),
+                    Arg.Any<Location.Contracts.Location>(),
+                    Arg.Is<string>(t => t == notificationSubject));
+        }
+
+        [Test]
+        public async Task Render_WhenTopicIsNotCustom_UsesTemplateTitleAsEmailTitleForExtension()
+        {
+            // Arrange
+            var topic = "shipment.fulfilled";
+            var templateTitle = "Template Title";
+            var notificationSubject = "Notification Subject";
+            var templateName = "email-template";
+
+            var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
+            sc.Theme = new Theme
+            {
+                EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>
+                {
+                    new Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition { Id = topic, Template = templateName, Title = templateTitle }
+                }
+            };
+            _controller.SiteContext = sc;
+
+            var emailContext = new EmailRenderContext
+            {
+                OriginalTemplate = templateName,
+                CurrentTemplate = templateName,
+                TemplateChanged = false,
+                IsSuppressed = true,
+                Subject = null,
+                Model = new { },
+                User = null
+            };
+
+            _emailExtensionContextBuilder
+                .BuildContext(
+                    Arg.Any<EmailNotification>(),
+                    Arg.Any<object>(),
+                    Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(),
+                    Arg.Any<Site>(),
+                    Arg.Any<SiteContext>(),
+                    Arg.Any<List<Core.Extensible.Contracts.Attribute>>(),
+                    Arg.Any<Location.Contracts.Location>(),
+                    Arg.Any<string>())
+                .Returns(emailContext);
+
+            _emailExtensionContextBuilder
+                .ExecuteEmailRenderExtension(Arg.Any<EmailRenderContext>(), Arg.Any<string>())
+                .Returns(Task.FromResult(emailContext));
+
+            var notification = new EmailNotification { Topic = topic, Subject = notificationSubject, Payload = "{\"OrderId\":\"order1\",\"ShipmentNumber\":1,\"FulfillmentLocationCode\":\"LOC1\"}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert
+            var ok = result as OkObjectResult;
+            ok.ShouldNotBeNull();
+
+            _emailExtensionContextBuilder
+                .Received(1)
+                .BuildContext(
+                    Arg.Is<EmailNotification>(n => n.Topic == topic),
+                    Arg.Any<object>(),
+                    Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(),
+                    Arg.Any<Site>(),
+                    Arg.Any<SiteContext>(),
+                    Arg.Any<List<Core.Extensible.Contracts.Attribute>>(),
+                    Arg.Any<Location.Contracts.Location>(),
+                    Arg.Is<string>(t => t == templateTitle));
+        }
+
+        [Test]
+        [TestCase("CUSTOM.shipment.fulfilled")]
+        [TestCase("Custom.shipment.fulfilled")]
+        [TestCase("cUsToM.shipment.fulfilled")]
+        public async Task Render_WhenTopicHasCaseInsensitiveCustomPrefix_StripsPrefixAndUsesSubjectAsMailTitle(string customTopic)
+        {
+            // Arrange
+            var strippedTopic = "shipment.fulfilled";
+            var notificationSubject = "My Custom Subject";
+            var templateName = "email-template";
+
+            var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
+            sc.Theme = new Theme
+            {
+                EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>
+                {
+                    new Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition { Id = strippedTopic, Template = templateName, Title = "Template Title" }
+                }
+            };
+            _controller.SiteContext = sc;
+
+            var emailContext = new EmailRenderContext
+            {
+                OriginalTemplate = templateName, CurrentTemplate = templateName,
+                TemplateChanged = false, IsSuppressed = true, Subject = null, Model = new { }, User = null
+            };
+
+            _emailExtensionContextBuilder
+                .BuildContext(Arg.Any<EmailNotification>(), Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(), Arg.Any<string>())
+                .Returns(emailContext);
+            _emailExtensionContextBuilder
+                .ExecuteEmailRenderExtension(Arg.Any<EmailRenderContext>(), Arg.Any<string>())
+                .Returns(Task.FromResult(emailContext));
+
+            var notification = new EmailNotification { Topic = customTopic, Subject = notificationSubject, Payload = "{\"OrderId\":\"order1\",\"ShipmentNumber\":1,\"FulfillmentLocationCode\":\"LOC1\"}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert
+            var ok = result as OkObjectResult;
+            ok.ShouldNotBeNull($"Expected OK for custom topic '{customTopic}'");
+
+            _emailExtensionContextBuilder
+                .Received(1)
+                .BuildContext(
+                    Arg.Is<EmailNotification>(n => n.Topic == strippedTopic),
+                    Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(),
+                    Arg.Is<string>(t => t == notificationSubject));
+        }
+
+        [Test]
+        public async Task Render_WhenCustomTopicHasNoMatchingTemplateAfterStripping_Returns410WithStrippedTopic()
+        {
+            // Arrange – template list does NOT contain "store-event-reminder"
+            var notification = new EmailNotification { Topic = "custom.store-event-reminder", Subject = "Reminder", Payload = "{}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert
+            var obj = result as Microsoft.AspNetCore.Mvc.ObjectResult;
+            obj.ShouldNotBeNull();
+            obj.StatusCode.ShouldEqual((int)HttpStatusCode.Gone);
+            obj.Value.ToString().ShouldContain("store-event-reminder"); // uses the *stripped* name
+            obj.Value.ToString().ShouldNotContain("custom."); // prefix was already removed
+        }
+
+        [Test]
+        public async Task Render_WhenCustomTopicHasNullSubject_PassesNullAsMailTitle()
+        {
+            // Arrange
+            var strippedTopic = "shipment.fulfilled";
+            var templateName = "email-template";
+
+            var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
+            sc.Theme = new Theme
+            {
+                EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>
+                {
+                    new Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition { Id = strippedTopic, Template = templateName, Title = "Template Title" }
+                }
+            };
+            _controller.SiteContext = sc;
+
+            var emailContext = new EmailRenderContext
+            {
+                OriginalTemplate = templateName, CurrentTemplate = templateName,
+                TemplateChanged = false, IsSuppressed = true, Subject = null, Model = new { }, User = null
+            };
+
+            _emailExtensionContextBuilder
+                .BuildContext(Arg.Any<EmailNotification>(), Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(), Arg.Any<string>())
+                .Returns(emailContext);
+            _emailExtensionContextBuilder
+                .ExecuteEmailRenderExtension(Arg.Any<EmailRenderContext>(), Arg.Any<string>())
+                .Returns(Task.FromResult(emailContext));
+
+            // Subject is explicitly null
+            var notification = new EmailNotification { Topic = "custom.shipment.fulfilled", Subject = null, Payload = "{\"OrderId\":\"order1\",\"ShipmentNumber\":1,\"FulfillmentLocationCode\":\"LOC1\"}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert
+            var ok = result as OkObjectResult;
+            ok.ShouldNotBeNull();
+
+            // mailTitle = isCustomEmail ? notification.Subject : emailTemplate.Title  →  null
+            _emailExtensionContextBuilder
+                .Received(1)
+                .BuildContext(
+                    Arg.Any<EmailNotification>(), Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(),
+                    Arg.Is<string>(t => t == null));
+        }
+
+        [Test]
+        public async Task Render_WhenTopicContainsMultipleCustomPrefixes_StripsAllOccurrences()
+        {
+            // Arrange – "custom.custom.shipment.fulfilled" → Replace removes ALL "custom." → "shipment.fulfilled"
+            var strippedTopic = "shipment.fulfilled";
+            var templateName = "email-template";
+
+            var sc = (SiteContext)FormatterServices.GetUninitializedObject(typeof(SiteContext));
+            sc.Theme = new Theme
+            {
+                EmailTemplates = new List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>
+                {
+                    new Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition { Id = strippedTopic, Template = templateName, Title = "Template Title" }
+                }
+            };
+            _controller.SiteContext = sc;
+
+            var emailContext = new EmailRenderContext
+            {
+                OriginalTemplate = templateName, CurrentTemplate = templateName,
+                TemplateChanged = false, IsSuppressed = true, Subject = null, Model = new { }, User = null
+            };
+
+            _emailExtensionContextBuilder
+                .BuildContext(Arg.Any<EmailNotification>(), Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(), Arg.Any<string>())
+                .Returns(emailContext);
+            _emailExtensionContextBuilder
+                .ExecuteEmailRenderExtension(Arg.Any<EmailRenderContext>(), Arg.Any<string>())
+                .Returns(Task.FromResult(emailContext));
+
+            var notification = new EmailNotification { Topic = "custom.custom.shipment.fulfilled", Subject = "Double Custom", Payload = "{\"OrderId\":\"order1\",\"ShipmentNumber\":1,\"FulfillmentLocationCode\":\"LOC1\"}" };
+
+            // Act
+            var result = await _controller.Render(notification);
+
+            // Assert – Replace("custom.", "") strips BOTH occurrences → "shipment.fulfilled"
+            var ok = result as OkObjectResult;
+            ok.ShouldNotBeNull();
+
+            _emailExtensionContextBuilder
+                .Received(1)
+                .BuildContext(
+                    Arg.Is<EmailNotification>(n => n.Topic == strippedTopic),
+                    Arg.Any<object>(), Arg.Any<Mozu.SiteBuilder.UX.Models.Customers.User>(), Arg.Any<Site>(), Arg.Any<SiteContext>(), Arg.Any<List<Core.Extensible.Contracts.Attribute>>(), Arg.Any<Location.Contracts.Location>(),
+                    Arg.Any<string>());
         }
 
         [Test]

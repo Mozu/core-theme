@@ -52,3 +52,6 @@ ext/
 /Mozu.SiteBuilder.UX.Admin/assets
 UpgradeLog.htm
 UpgradeLog2.htm
+
+# Claude local settings
+.claude/settings.local.json

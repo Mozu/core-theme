@@ -19,9 +19,9 @@
     <PackageReference Include="Mozu.CommerceRuntime.Contracts" Version="1.2524.6" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.2414.4" />
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="2.2426.2" />
-    <PackageReference Include="Mozu.Core.Messaging" Version="2.2512.3" />
-    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2512.3" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2540.4" />
+    <PackageReference Include="Mozu.Core.Messaging" Version="2.2604.2" />
+    <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2604.2" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2552.3" />
 
     
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2528.5" />

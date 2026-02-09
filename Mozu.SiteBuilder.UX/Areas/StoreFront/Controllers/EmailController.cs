@@ -590,6 +590,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<IActionResult> Render([FromBody] EmailNotification notification)
         {
             User user = null;
+            
+            //Support custom topics by stripping off the "custom." prefix, this is to support custom email templates sent to the /platform/email/sendCustom endpoint
+            //E.g. "custom.store-event-reminder"
+            var isCustomEmail = notification?.Topic?.StartsWith("custom.", StringComparison.OrdinalIgnoreCase) == true;
+
+            if (isCustomEmail)
+            {
+                var topic = notification.Topic.Replace("custom.", string.Empty, StringComparison.OrdinalIgnoreCase);
+                notification.Topic = topic;
+            }
+
             var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(notification.Topic));
 
@@ -599,6 +610,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Warn(warnMessage);
                 return StatusCode((int)HttpStatusCode.Gone, warnMessage);
             }
+
+            var mailTitle = isCustomEmail ? notification.Subject : emailTemplate.Title; 
 
             try
             {
@@ -631,7 +644,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 storeLocation = storeLocation == null ? await GetDefaultReturnLocation() : storeLocation;
 
                 // Build email context
-                var emailContext = _emailExtensionContextBuilder.BuildContext(notification, model, user, site, SiteContext, shopperOrderAttributes, storeLocation, emailTemplate.Title);
+                var emailContext = _emailExtensionContextBuilder.BuildContext(notification, model, user, site, SiteContext, shopperOrderAttributes, storeLocation, mailTitle);
 
                 // Execute API Extension
                 emailContext = await _emailExtensionContextBuilder.ExecuteEmailRenderExtension(emailContext, ActionFilterConstants.EmailRenderBeforeAction);
@@ -684,7 +697,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         cmdContent = vr.ViewData.Model;
                     }
                 }
-                
+
                 _logger.Debug($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
                 ViewData["smsEnabled"] = IsSmsEnabled(tenant);
                 ViewData["adminDomainName"] = tenant.Domain.DomainName;
@@ -692,8 +705,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Debug($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
 
                 // Render template with updated context
-                renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, emailContext.Model, cmdContent, emailContext.User, site, shopperOrderAttributes, storeLocation);                  
-              
+                renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, emailContext.Model, cmdContent, emailContext.User, site, shopperOrderAttributes, storeLocation);
+
                 if (renderedTemplate.IsNullOrEmpty())
                 {
                     return null;
