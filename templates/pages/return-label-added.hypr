@@ -1,0 +1,49 @@
+{% extends "page" %}
+
+{% block title-tag-content %}Return Label Added - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-email-preview {% endblock body-tag-classes %}
+
+{% block body-content %}
+  <div class="mz-l-container">
+    <h1>Return Label Added</h1>
+
+    {% if model and model.order %}
+      <dl class="mz-orderheader">
+        <dt>{{ labels.orderNo }}</dt>
+        <dd>{{ model.order.orderNumber }}</dd>
+
+        <dt>{{ labels.externalOrderId }}</dt>
+        <dd>{{ model.order.externalId }}</dd>
+
+        <dt>{{ labels.return }}</dt>
+        <dd>{{ model.return.returnNumber }}</dd>
+
+        <dt>{{ labels.orderDate }}:</dt>
+        <dd>{{ model.order.submittedDate }}</dd>
+      </dl>
+    {% endif %}
+
+    {{ labels.returnLabelAddedBlob1|safe }}
+
+    {% if model and model.returnLabel and model.returnLabel.labelUrls and model.returnLabel.labelUrls.length %}
+      <p>{{ labels.returnLabelAddedDownloadHeader }}</p>
+      <ul>
+        {% for url in model.returnLabel.labelUrls %}
+          <li><a href="{{ url }}">{{ labels.returnLabelAddedDownloadLinkText }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if model and model.returnLabel and model.returnLabel.trackingNumbers and model.returnLabel.trackingNumbers.length %}
+      <p>{{ labels.returnLabelAddedTrackingHeader }}</p>
+      <ul>
+        {% for tracking in model.returnLabel.trackingNumbers %}
+          <li>{{ tracking }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {{ labels.returnLabelAddedBlob2|safe }}
+  </div>
+{% endblock body-content %}

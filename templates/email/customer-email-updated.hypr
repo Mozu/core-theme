@@ -1,0 +1,25 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+  <div class="mz-security-email-header">
+    <div class="store-name">{{ siteContext.generalSettings.websiteName }}</div>
+    <div class="subject">{{ labels.customerEmailUpdatedSubject }}</div>
+  </div>
+  <br/>
+
+  <div class="mz-security-email-body">
+    {{ labels.emailOpeningAlternative|safe }}
+
+    <p>{{ labels.customerEmailUpdatedBody }}</p>
+
+    {% if model and model.OccurredUtc %}
+      <p>{{ labels.customerEmailUpdatedWhen|string_format(model.OccurredUtc) }}</p>
+    {% endif %}
+
+    {% if model and model.SupportUrl %}
+      <p>{{ labels.customerEmailUpdatedSupport|string_format(model.SupportUrl)|safe }}</p>
+    {% endif %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+  </div>
+{% endblock body-content %}

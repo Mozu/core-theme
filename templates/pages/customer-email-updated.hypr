@@ -1,0 +1,20 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{{ labels.customerEmailUpdatedSubject }} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-email-preview {% endblock body-tag-classes %}
+
+{% block body-content %}
+  <div class="mz-l-container">
+    <h1>{{ labels.customerEmailUpdatedSubject }}</h1>
+    <p>{{ labels.customerEmailUpdatedBody }}</p>
+
+    {% if model and model.OccurredUtc %}
+      <p>{{ labels.customerEmailUpdatedWhen|string_format(model.OccurredUtc) }}</p>
+    {% endif %}
+
+    {% if model and model.SupportUrl %}
+      <p>{{ labels.customerEmailUpdatedSupport|string_format(model.SupportUrl)|safe }}</p>
+    {% endif %}
+  </div>
+{% endblock body-content %}

@@ -197,6 +197,12 @@
       "title": "Return Has Been Updated"
     },
     {
+      "id": "return.labeladded",
+      "properties": {},
+      "template": "email/product-return-label-added",
+      "title": "Return Label Added"
+    },
+    {
       "id": "shipment.transfercreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
@@ -225,6 +231,18 @@
       "properties": {},
       "template": "email/password-reset",
       "title": "Password Reset"
+    },
+    {
+      "id": "user.emailupdated",
+      "properties": {},
+      "template": "email/customer-email-updated",
+      "title": "Customer Email Updated"
+    },
+    {
+      "id": "user.passwordupdated",
+      "properties": {},
+      "template": "email/customer-password-updated",
+      "title": "Customer Password Updated"
     },
     {
       "id": "b2baccount.created",
