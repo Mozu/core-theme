@@ -1,0 +1,82 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.storeEventReminder %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-store-event-reminder-page {% endblock body-tag-classes %}
+
+{% block body-content %}
+    <div class="mz-l-container border">
+       	{% if model.done %}
+			{{ labels.storeEventReminderSent }}
+		{% endif %}
+		{% if not model.done %}
+			<div class="col-xs-24 col-sm-24 col-md-24 col-lg-24" data-mz-event-reminder-panel>
+				<div class="col-xs-1 col-sm-4 col-md-6 col-lg-6"></div>
+				<div class="col-xs-22 col-sm-16 col-md-12 col-lg-12">
+					<div class="page-title">{{ labels.storeEventReminder }}</div>
+					<div class="label-event-form">
+						<form method="post" class="mz-eventform mz-eventform-page">
+							{% include "modules/common/message-bar" with model=model.messages %}
+							<div id="event-msg"></div>
+							
+							<div class="mz-l-formfieldgroup-row">
+								<div class="mz-l-formfieldgroup-cell">
+									<label for="location">{{ labels.eventLocation }}</label><span class="red-text">*</span>
+									<div class="mz-l-formfieldgroup-cell">
+										<input name="location" type="text" class="input-text" value="{{ model.location }}" />
+									</div>
+								</div>
+							</div>
+							
+							<div class="mz-l-formfieldgroup-row">
+								<div class="mz-l-formfieldgroup-cell">
+									<label for="time">{{ labels.eventTime }}</label><span class="red-text">*</span>
+									<div class="mz-l-formfieldgroup-cell">
+										<input name="time" type="text" class="input-text" value="{{ model.time }}" />
+									</div>
+								</div>
+							</div>
+							
+							<div class="mz-l-formfieldgroup-row">
+								<div class="mz-l-formfieldgroup-cell">
+									<label for="cost">{{ labels.eventCost }}</label><span class="red-text">*</span>
+									<div class="mz-l-formfieldgroup-cell">
+										<input name="cost" type="text" class="input-text" value="{{ model.cost }}" />
+									</div>
+								</div>
+							</div>
+							
+							<div class="mz-l-formfieldgroup-row">
+								<div class="mz-l-formfieldgroup-cell">
+									<label for="summary">{{ labels.eventSummaryTitle }}</label><span class="red-text">*</span>
+									<div class="mz-l-formfieldgroup-cell">
+										<textarea name="summary" class="input-text" rows="4">{{ model.summary }}</textarea>
+									</div>
+								</div>
+							</div>
+							
+							<div class="mz-l-formfieldgroup-row">
+								<div class="mz-l-formfieldgroup-cell">
+									<label for="disclaimer">{{ labels.eventDisclaimerTitle }}</label>
+									<div class="mz-l-formfieldgroup-cell">
+										<textarea name="disclaimer" class="input-text" rows="3">{{ model.disclaimer }}</textarea>
+									</div>
+								</div>
+							</div>
+							
+							<div class="mz-l-formfieldgroup-row">   
+								<div class="mz-l-formfieldgroup-cell">
+									<div class="mz-l-formfieldgroup-cell"></div>
+									<div class="mz-l-formfieldgroup-cell">
+										<button class="btn-event mz-button mz-button-large">{{ labels.sendEventReminder }}</button> 
+									</div>
+								</div>
+							</div>     
+						</form>
+					</div>
+				</div>
+				<div class="col-xs-1 col-sm-4 col-md-6 col-lg-6"></div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock body-content %}

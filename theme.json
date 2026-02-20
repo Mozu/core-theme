@@ -475,6 +475,12 @@
       "properties": {},
       "template": "email/items-ready-for-delivery",
       "title": "Items Ready For Delivery"
+    },
+    {
+      "id": "store-event-reminder",
+      "properties": {},
+      "template": "email/store-event-reminder",
+      "title": "Store event reminder1"
     }
   ],
   "backOfficeTemplates": [

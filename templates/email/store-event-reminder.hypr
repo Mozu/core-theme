@@ -1,0 +1,48 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+	{% if model and model.firstName %}
+		{{ labels.emailOpening|string_format(model.firstName)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+
+  {{ labels.eventReminderTop|safe }}
+
+  <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+    <tr>
+      <td style="padding: 10px 0;">
+        <strong>{{ labels.eventLocation }}:</strong> {{ model.location }}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 0;">
+        <strong>{{ labels.eventTime }}:</strong> {{ model.time }}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 0;">
+        <strong>{{ labels.eventCost }}:</strong> {{ model.cost }}
+      </td>
+    </tr>
+  </table>
+
+  <div style="margin: 20px 0;">
+    <h3>{{ labels.eventSummaryTitle }}</h3>
+    <p>{{ model.summary }}</p>
+  </div>
+
+  {% if model.disclaimer %}
+  <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #ccc;">
+    <p style="margin: 0; font-size: 12px; color: #666;">
+      <strong>{{ labels.eventDisclaimerTitle }}:</strong> {{ model.disclaimer }}
+    </p>
+  </div>
+  {% endif %}
+
+  {{ model.customContent }}
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}
