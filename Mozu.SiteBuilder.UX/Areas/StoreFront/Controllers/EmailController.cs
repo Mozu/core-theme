@@ -52,6 +52,7 @@ using Fulfillment = Kibo.Fulfillment.Contracts.Model;
 using Quote = Mozu.CommerceRuntime.Contracts.Quotes.Quote;
 using ViewResult = Mozu.SiteBuilder.Mvc.ActionResults.ViewResult;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using Vendor = Mozu.Location.Contracts.Vendor;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -516,6 +517,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (EmailDigitalOther),
                                                Topic = Topics.DigitalItemFulfilled
                                            },
+
+                                           new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Vendor),
+                                               Topic = Topics.VendorCreated
+                                           }
                 };
         }
 
@@ -1219,6 +1226,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // Fulfillment
             public const string SubstitutionPaymentRequired = "shipment.priceincreased";
             public const string DigitalItemFulfilled = "digitalitem.created";
+
+            //Vendor
+            public const string VendorCreated = "vendor.created";
         }
     }
 
