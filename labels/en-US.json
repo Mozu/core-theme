@@ -1001,5 +1001,13 @@
   "customerPasswordUpdatedSubject": "Your password was updated",
   "customerPasswordUpdatedBody": "We’re letting you know your account password was updated.",
   "customerPasswordUpdatedWhen": "Time: {0}",
-  "customerPasswordUpdatedSupport": "If you did not make this change, please contact support: <a href=\"{0}\">{0}</a>"
+  "customerPasswordUpdatedSupport": "If you did not make this change, please contact support: <a href=\"{0}\">{0}</a>",
+  "vendorCreatedEmailGreeting": "Congratulations!",
+  "vendorCreatedEmailIntro": "A new vendor account has been successfully created with the following details:",
+  "vendorCreatedEmailVendorName": "Vendor Name",
+  "vendorCreatedEmailVendorCode": "Vendor Code",
+  "vendorCreatedEmailVendorEmail": "Email Address",
+  "vendorCreatedEmailLoginInstructions": "To access your vendor portal and start managing your products and orders, please log in using the link below:",
+  "vendorCreatedEmailLoginLink": "Login to Vendor Portal",
+  "vendorCreatedEmailSupport": "If you have any questions or need assistance, please contact our vendor support team."
 }

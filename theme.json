@@ -293,6 +293,12 @@
       "title": "Gateway Gift Card Created"
     },
     {
+      "id": "vendor.created",
+      "properties": {},
+      "template": "email/vendor-created",
+      "title": "Vendor Account Created"
+    },
+    {
       "id": "shipment.assigned",
       "properties": {},
       "template": "email/shipment-assignment",

@@ -1,0 +1,10 @@
+{
+  "vendorCreatedEmailGreeting": "¡Felicidades!",
+  "vendorCreatedEmailIntro": "Se ha creado exitosamente una nueva cuenta de vendedor con los siguientes detalles:",
+  "vendorCreatedEmailVendorName": "Nombre del Vendedor",
+  "vendorCreatedEmailVendorCode": "Código del Vendedor",
+  "vendorCreatedEmailVendorEmail": "Dirección de Correo Electrónico",
+  "vendorCreatedEmailLoginInstructions": "Para acceder a su portal de vendedor y comenzar a gestionar sus productos y pedidos, inicie sesión utilizando el siguiente enlace:",
+  "vendorCreatedEmailLoginLink": "Iniciar sesión en el portal del vendedor",
+  "vendorCreatedEmailSupport": "Si tiene preguntas o necesita asistencia, póngase en contacto con nuestro equipo de soporte para vendedores."
+}
