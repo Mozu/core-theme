@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
      <TargetFramework>net6.0</TargetFramework>
@@ -21,7 +21,7 @@
     <PackageReference Include="Mozu.Core.Extensible.Contracts" Version="2.2426.2" />
     <PackageReference Include="Mozu.Core.Messaging" Version="2.2604.2" />
     <PackageReference Include="Mozu.Core.Messaging.Contracts" Version="2.2604.2" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2608.1" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2552.3" />
 
     
     <PackageReference Include="Mozu.Customer.Contracts" Version="1.2528.5" />

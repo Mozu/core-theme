@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
      <TargetFramework>net6.0</TargetFramework>
@@ -20,7 +20,7 @@
     <PackageReference Include="Kibo.RealtimeInventory.Contracts" Version="1.2431.0-com-8621.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.32" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="Mozu.Core.Prime" Version="2.2608.1" />
+    <PackageReference Include="Mozu.Core.Prime" Version="2.2552.3" />
     <PackageReference Include="Mozu.Location.Contracts" Version="1.2546.2" />
 
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
