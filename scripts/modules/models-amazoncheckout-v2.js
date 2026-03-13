@@ -40,17 +40,17 @@ define([
                         fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
 
                         // TEMPORARY: Add 3 second delay to reproduce race condition
-                        console.log("=== DELAY: Starting UpdateOrder call - waiting 3 seconds ===");
+                        if (window.console) window.console.log("=== DELAY: Starting UpdateOrder call - waiting 3 seconds ===");
                         setTimeout(function() {
-                            console.log("=== DELAY: Now executing UpdateOrder ===");
+                            if (window.console) window.console.log("=== DELAY: Now executing UpdateOrder ===");
                             me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}, {silent: true}).then(
                                 function() {
-                                    console.log("=== UpdateOrder completed successfully ===");
+                                    if (window.console) window.console.log("=== UpdateOrder completed successfully ===");
                                     //me.isLoading (false);
                                     me.set("fulfillmentInfo", fulfillmentInfo);
                                     me.applyBilling();
                                 }, function(error) {
-                                    console.error("=== UpdateOrder FAILED ===", error);
+                                    if (window.console) window.console.error("=== UpdateOrder FAILED ===", error);
                                 });
                         }, 3000);
                     });
@@ -107,7 +107,7 @@ define([
                 }
 
                 me.apiModel.createPayment(billingInfo, {silent:true}).then( function() {
-                    console.log("=== Payment created - triggering awscheckoutcomplete (redirect) ===");
+                    if (window.console) window.console.log("=== Payment created - triggering awscheckoutcomplete (redirect) ===");
                     me.trigger('awscheckoutcomplete', me.id);
                     me.isLoading(false);
                }, function(err) {
