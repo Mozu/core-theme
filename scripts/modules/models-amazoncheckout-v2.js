@@ -39,10 +39,11 @@ define([
                         fulfillmentInfo.shippingMethodCode = shippingMethod.shippingMethodCode;
                         fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
 
-                        // TEMPORARY: Add 3 second delay to reproduce race condition
-                        if (window.console) window.console.log("=== DELAY: Starting UpdateOrder call - waiting 3 seconds ===");
+                        // TEMPORARY: Add 15 second delay to reproduce race condition
+                        // This simulates slow API response that happens in production
+                        if (window.console) window.console.log("=== DELAY: Starting UpdateOrder call - waiting 15 seconds to simulate prod delay ===");
                         setTimeout(function() {
-                            if (window.console) window.console.log("=== DELAY: Now executing UpdateOrder ===");
+                            if (window.console) window.console.log("=== DELAY: Now executing UpdateOrder (should fail if redirect already happened) ===");
                             me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}, {silent: true}).then(
                                 function() {
                                     if (window.console) window.console.log("=== UpdateOrder completed successfully ===");
@@ -50,9 +51,9 @@ define([
                                     me.set("fulfillmentInfo", fulfillmentInfo);
                                     me.applyBilling();
                                 }, function(error) {
-                                    if (window.console) window.console.error("=== UpdateOrder FAILED ===", error);
+                                    if (window.console) window.console.error("=== UpdateOrder FAILED (expected in race condition) ===", error);
                                 });
-                        }, 3000);
+                        }, 6000);
                     });
             },
             applyBilling: function() {
