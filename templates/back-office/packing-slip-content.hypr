@@ -18,10 +18,11 @@
             <tbody><tr><td colspan="4">
                 <table class="grid">
                     <thead><tr>
-                        <th>{{ labels.billToPackingSlip }}:</th>
+                        {% if model.isDropship == false || model.isDropship == undefined || model.isDropship == null %}<th>{{ labels.billToPackingSlip }}:</th> {% endif %}
                         <th>{{ labels.shipToPackingSlip }}:</th>
                     </tr></thead>
                     <tbody><tr>
+                        {% if model.isDropship == false || model.isDropship == undefined || model.isDropship == null %}
                         <td>
                             <div>{{ order.billingInfo.billingContact.firstName }} {{ order.billingInfo.billingContact.lastNameOrSurname }}</div>
                             {% if order.billingInfo.billingContact.companyOrOrganization %}<div>{{ order.billingInfo.billingContact.companyOrOrganization }}</div>{% endif %}
@@ -34,7 +35,9 @@
                             {% if order.billingInfo.billingContact.phoneNumbers.work %}<div>{{ order.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
                            {% if order.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ order.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
                             <div>{{ order.billingInfo.billingContact.email }}</div>
-                        </td><td>
+                        </td>
+                        {% endif %}
+                        <td>
                             <div>{{ order.fulfillmentInfo.fulfillmentContact.firstName }} {{ order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
                             {% if order.fulfillmentInfo.fulfillmentContact.companyOrOrganization %}<div>{{ order.fulfillmentInfo.fulfillmentContact.companyOrOrganization }}</div>{% endif %}
                             <div>{{ order.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
