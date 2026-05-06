@@ -2185,6 +2185,7 @@
                 var orderNumber = this.getOrderNumber(order);
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
+                    orderId: order.id,
                     webCheckoutDetails: {
                         checkoutReviewReturnUrl: window.location.href,
                         checkoutResultReturnUrl: window.location.href
