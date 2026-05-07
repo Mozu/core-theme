@@ -1,0 +1,7 @@
+{# https://techdocs.akamai.com/property-mgr/docs/know-caching #}
+{% if themeSettings.edgeCachingEnabled and not pageContext.isEditMode %}
+    {% with "cache-maxage={0}m"|string_format(themeSettings.edgeCachingMaxAge) as maxage %}
+        <!-- Cache: {% now "Y-m-d\TH:i:s" %} {{ maxage }} -->
+        {% set_header name="Edge-control" value=maxage replace=true %}
+    {% endwith %}
+{% endif %}

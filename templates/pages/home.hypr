@@ -1,4 +1,9 @@
 ﻿{% extends "page" %}
+{% block cacheheaders %}
+{% if themeSettings.edgeCachingEnabledHome %}
+    {% include "modules/cache-headers" %}
+{% endif %}
+{% endblock cacheheaders %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
 
