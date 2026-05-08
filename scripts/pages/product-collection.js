@@ -22,9 +22,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var array = self.model.get('productMembers');
             if (array === null || array.length < 1)
                 return Promise.resolve();
-
+            
+            var segments = require.mozuData('customerSegments');
+            var customerSegments = segments && segments.length > 0 ? segments.join(',') : null;
+            var customerSegmentsArg = customerSegments ? "&customerSegments=" + customerSegments : "";
+           
             var productFilter = this.buildProductFilter(array);
-            var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter);
+            var member1 = api.request('GET', "/api/commerce/catalog/storefront/products/" + productFilter + customerSegmentsArg);
             return member1.then(function (response) {
                 var members = [];
                 //Sort based on collection member ranking

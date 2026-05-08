@@ -996,6 +996,7 @@
         "tagName": "p"
       }
     ],
+    "customerSegmentSpecificPricing":true,
     "defaultPageSize": 15,
     "defaultSort": "createDate asc",
     "disableEditOfSavedCreditCard": true,

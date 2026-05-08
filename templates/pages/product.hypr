@@ -9,6 +9,7 @@
 {% require_script "pages/product" %}
 
 {% preload_json model "product" %}
+{% preload_json pageContext.user.segments "customerSegments" %}
 
 <div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
 
