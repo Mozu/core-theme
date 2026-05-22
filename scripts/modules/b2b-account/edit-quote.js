@@ -457,14 +457,10 @@ define([
             var customerAccountId = self.model.get('customerAccountId');
             if (!self.model.get('b2bUsers')) {
                 var b2bAccount = new B2BAccountModels.b2bAccount({ id: customerAccountId });
-                b2bAccount.apiGet().then(function (account) {
-                    return b2bAccount.apiGetUsers().then(function (users) {
-                        self.model.isLoading(false);
-                        self.model.set("b2bUsers", users.data.items);
-                        self.render();
-                    }, function (error) {
-                        self.showMessageBar(error);
-                    });
+                b2bAccount.apiGetUsers().then(function (users) {
+                    self.model.isLoading(false);
+                    self.model.set("b2bUsers", users.data.items);
+                    self.render();
                 }, function (error) {
                     self.showMessageBar(error);
                 });
