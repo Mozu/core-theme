@@ -962,6 +962,7 @@ define([
                 var payload = {
                     checkoutSessionId: checkoutSessionId,
                     orderId: order.id,
+                    paymentId: amazonPayV2Payment.id,
                     webCheckoutDetails: {
                         checkoutReviewReturnUrl: window.location.href,
                         checkoutResultReturnUrl: window.location.href
